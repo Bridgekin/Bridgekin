@@ -5,11 +5,13 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
-  validates :email, uniqueness: { case_sensitive: false }, presence: true,
+  validates :email, uniqueness: { case_sensitive: false }, presence: true
 
   def generate_jwt
+    # debugger;
     JWT.encode({ id: id,
       exp: 60.days.from_now.to_i },
       Rails.application.secrets.secret_key_base)
   end
+
 end

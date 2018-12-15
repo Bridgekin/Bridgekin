@@ -8,18 +8,19 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   namespace :api, default: {format: :json} do
-    devise_for :users
-    # devise_for :users,
-    #   path: '',
-    #   path_names: {
-    #     sign_in: 'login',
-    #     sign_out: 'logout',
-    #     registration: 'signup'
-    #   },
-    #   controllers: {
-    #     sessions: 'api/users/sessions',
-    #     registrations: 'api/users/registrations'
-    #   }
+    # devise_for :users
+    devise_for :users,
+      path: '',
+      path_names: {
+        sign_in: 'login',
+        sign_out: 'logout',
+        registration: 'signup'
+      },
+      controllers: {
+        sessions: 'api/sessions',
+        registrations: 'api/registrations'
+      }
+    resource :user, only: [:show, :update]
     # resource :session, only: [:create, :destroy]
   end
 end
