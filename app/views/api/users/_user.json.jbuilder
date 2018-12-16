@@ -1,2 +1,2 @@
-json.extract! user, :email
+json.extract! user, :id
 # json.token user.generate_jwt

@@ -1,40 +1,52 @@
 class ApiController < ActionController::API
-  protect_from_forgery with: :null_session
+
+  # protect_from_forgery prepend: true, with: :exception
+  helper_method :logged_in, :current_user
+
+  # before_action :underscore_params!
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+  # before_action :authenticate_user
 
   respond_to :json
 
-  before_action :underscore_params!
-  before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :authenticate_user
+  def logged_in
+    !!current_user
+  end
 
-  # protect_from_forgery with: :exception
-  #
-  # def render_resource(resource)
-  #   if resource.errors.empty?
-  #     render json: resource
-  #   else
-  #     validation_error(resource)
-  #   end
-  # end
-  #
-  # def validation_error(resource)
-  #   render json: {
-  #     errors: [
-  #       {
-  #         status: '400',
-  #         title: 'Bad Request',
-  #         detail: resource.errors,
-  #         code: '100'
-  #       }
-  #     ]
-  #   }, status: :bad_request
-  # end
+  def current_user
+    @current_user ||= User.find_by(session_token: session[:session_token])
+  end
+
+  def login!(user)
+    session[:session_token] = user.reset_session_token!
+    @current_user = user
+    debugger
+  end
+
+  def logout!
+    debugger
+    current_user.reset_session_token!
+    session[:session_token] = nil
+    @current_user = nil
+  end
+
+  def require_signed_in!
+    redirect_to new_session_url unless signed_in?
+  end
+
+  def require_signed_out!
+    redirect_to user_url(current_user) if signed_in?
+  end
 
   private
 
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
-  end
+  # def underscore_params!
+  #   params.deep_transform_keys!(&:underscore)
+  # end
+  #
+  # def configure_permitted_parameters
+  #   devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
+  # end
 
   def authenticate_user
     if request.headers['Authorization'].present?
@@ -49,4 +61,5 @@ class ApiController < ActionController::API
       end
     end
   end
+
 end

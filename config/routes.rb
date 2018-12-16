@@ -9,18 +9,21 @@ Rails.application.routes.draw do
 
   namespace :api, default: {format: :json} do
     # devise_for :users
-    devise_for :users,
-      path: '',
-      path_names: {
-        sign_in: 'login',
-        sign_out: 'logout',
-        registration: 'signup'
-      },
-      controllers: {
-        sessions: 'api/sessions',
-        registrations: 'api/registrations'
-      }
-    resource :user, only: [:show, :update]
-    # resource :session, only: [:create, :destroy]
+    # devise_for :users,
+    #   path: '',
+    #   path_names: {
+    #     sign_in: 'login',
+    #     sign_out: 'logout',
+    #     registration: 'signup'
+    #   },
+    #   controllers: {
+    #     sessions: 'api/sessions',
+    #     registrations: 'api/registrations'
+    #   }
+    # resource :user, only: [:show, :update]
+    resources :users, only: [:create, :update]
+    resource :session, only: [:create, :destroy]
+    resources :opportunities
+    resource :waitlist_user, only: [:create]
   end
 end
