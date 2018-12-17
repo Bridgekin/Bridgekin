@@ -1,0 +1,24 @@
+{
+  "name": "bridgekin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --watch --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmlopardo/Bridgekin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmlopardo/Bridgekin/issues"
+  },
+  "homepage": "https://github.com/jmlopardo/Bridgekin#readme"
+}
