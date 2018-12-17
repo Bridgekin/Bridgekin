@@ -1,4 +1,4 @@
-class OpportunitiesController < ApplicationController
+class Api::OpportunitiesController < ApplicationController
   before_action :set_opportunity, only: [:show, :update, :destroy]
 
   # GET /opportunities
