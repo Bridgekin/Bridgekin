@@ -1,7 +1,7 @@
 class ApiController < ActionController::API
 
   # protect_from_forgery prepend: true, with: :exception
-  helper_method :logged_in, :current_user
+  helper_method :logged_in?, :current_user
 
   # before_action :underscore_params!
   # before_action :configure_permitted_parameters, if: :devise_controller?
@@ -9,7 +9,7 @@ class ApiController < ActionController::API
 
   respond_to :json
 
-  def logged_in
+  def logged_in?
     !!current_user
   end
 
@@ -20,22 +20,20 @@ class ApiController < ActionController::API
   def login!(user)
     session[:session_token] = user.reset_session_token!
     @current_user = user
-    debugger
   end
 
   def logout!
-    debugger
     current_user.reset_session_token!
     session[:session_token] = nil
     @current_user = nil
   end
 
   def require_signed_in!
-    redirect_to new_session_url unless signed_in?
+    redirect_to new_session_url unless logged_in?
   end
 
   def require_signed_out!
-    redirect_to user_url(current_user) if signed_in?
+    redirect_to user_url(current_user) if logged_in?
   end
 
   private

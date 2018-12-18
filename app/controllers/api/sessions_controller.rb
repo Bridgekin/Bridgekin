@@ -5,8 +5,8 @@ class Api::SessionsController < ApiController
   def create
     # @user = User.find_by(email: sign_in_params[:email])
     @user = User.find_by_credentials(
-      params[:email],
-      params[:password]
+      params[:user][:email],
+      params[:user][:password]
     )
 
     if @user
@@ -27,7 +27,7 @@ class Api::SessionsController < ApiController
   private
 
   def sign_in_params
-    params.permit(:email, :password)
+    params.require(:user).permit(:email, :password)
   end
 
   # def respond_with(resource, _opts = {})

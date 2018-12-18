@@ -132,8 +132,6 @@ class HomePage extends React.Component{
         },
       );
     }
-
-    console.log('Register for waitlist');
   }
 
   handleClose = () => {
@@ -225,7 +223,7 @@ class HomePage extends React.Component{
           disableAutoFocus={true}
           onClose={this.handleClose}>
 
-          <div style={{top:'40%', left: '30%'}} className={classes.paper}>
+          <div style={{top:'25%', left: '30%'}} className={classes.paper}>
             <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
               Thanks for signing up!
             </Typography>
