@@ -4,8 +4,28 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import './home.css';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Modal from '@material-ui/core/Modal';
+
 import JumboImage from '../../static/cogs.jpg';
+import HomeImage from '../../static/home_logo.png';
+import logo from '../../static/logo_blue.png';
+import './home.css';
+
+import { connect } from 'react-redux';
+import { registerWaitlist } from '../../actions/waitlist_user_actions';
+
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import theme from '../theme';
+
+const mapStateToProps = state => ({
+  currentUser: state.users[state.session.id]
+  // homes: Object.values(state.entities.homes)
+});
+
+const mapDispatchToProps = dispatch => ({
+  registerWaitlist: (user) => dispatch(registerWaitlist(user))
+});
 
 const styles = theme => ({
   jumboRoot: {
@@ -14,7 +34,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  textColor:{color:'white'},
   jumboImage:{
     maxWidth: '100%'
   },
@@ -28,7 +47,47 @@ const styles = theme => ({
     height: 50,
     marginTop: 30
   },
-  waitlistCTA: {marginTop: 20}
+  waitlistCTA: {
+    marginTop: 20,
+    fontWeight: 300
+  },
+  homeHeader:{
+    marginBottom: -100
+  },
+  wrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+    width: 400,
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  buttonProgress: {
+    color: '#4067B2',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: -12,
+  },
+  paper: {
+    position: 'absolute',
+    width: '40%',
+    height: 300,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing.unit * 4,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center'
+  },
+  logo: {
+    maxWidth: '50%',
+    marginTop: 30
+  },
+  thanksHeader: {
+    marginBottom: 30,
+    fontWeight: 600
+  }
 });
 
 
@@ -37,18 +96,49 @@ class HomePage extends React.Component{
     super(props)
     this.state = {
       email: '',
-      name: ''
+      fname: '',
+      lname: '',
+      loading: false,
+      success: false,
+      open: false
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
-  handleSubmit(e){
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+
+  handleWaitlistSubmit(e){
     e.preventDefault();
+
+    if (!this.state.loading) {
+      this.setState(
+        {
+          success: false,
+          loading: true,
+        },
+        () => {
+          this.timer = setTimeout(() => {
+            this.setState({
+              loading: false,
+              success: true,
+              open: true
+            });
+          }, 1000);
+        },
+      );
+    }
 
     console.log('Register for waitlist');
   }
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   handleChange(field){
     return (e) => {
@@ -60,61 +150,95 @@ class HomePage extends React.Component{
 
   render(){
     let classes = this.props.classes;
+    const { loading, success, open } = this.state;
 
-    // <div className={classes.jumboRoot}>
-    //   <img className='jumboImage' src={JumboImage}/>
-    //   Jumbo
-    // </div>
+    let mui = true;
+    let form = mui ? (
+      <form className='form-container'>
+        <TextField
+          required
+          label="First Name"
+          className={classes.textField}
+          margin="normal"
+          onChange={this.handleChange('fname')}
+          />
+        <TextField
+          required
+          label="Last Name"
+          className={classes.textField}
+          margin="normal"
+          onChange={this.handleChange('lname')}
+          />
+        <TextField
+          required
+          label="Email"
+          className={classes.textField}
+          margin="normal"
+          onChange={this.handleChange('email')}
+          />
+        <div className={classes.wrapper}>
+          <Button variant="contained" color="secondary" className={classes.button}
+            disabled={loading} onClick={this.handleWaitlistSubmit}>
+            Be the first to know
+          </Button>
+          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+        </div>
+      </form>
+    ) : (
+      <div></div>
+    )
 
     return (
-      <div>
-        <div className='jumbotron'>
-          <Typography className={classes.textColor} variant="h2" gutterBottom>
-            Welcome to Bridgekin
-          </Typography>
-          <Typography className={classes.textColor} variant="h4" gutterBottom>
-            Harnessing the power of a warm connection
-          </Typography>
-        </div>
+      <MuiThemeProvider theme={theme} className={classes.root}>
+        <Grid container className={classes.root}
+          justify="center" alignItems="center">
 
-        <Grid container className={classes.root} spacing={16}
-          direction="row" justify="center" alignItems="center">
-          <Grid className={classes.waitlistItem} item xs={12} sm={5}>
-            <Typography className={classes.waitlistCTA} variant="h4" gutterBottom>
-              Register for the Bridgekin network today!
-            </Typography>
-            <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
-              Today, the Bridgekin network is invite-only
-            </Typography>
-            <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
-              Register for the waitlist, you'll be one of the first to be notified when the Bridgekin
-              network goes public!
-            </Typography>
+          <Grid className={classes.homeHeader} container spacing={24} justify="center" alignItems="center">
+            <Grid item xs={10} md={5} >
+              <Typography className={classes.waitlistCTA} variant="h5" gutterBottom>
+                Bridgekin is changing the way people connect
+                with opportunities within their network.
+              </Typography>
+            </Grid>
+            <Grid item xs={0} md={5} />
           </Grid>
 
-          <Grid className={classes.waitlistItem} item xs={12} sm={5}>
-            <form className='form-container' onSubmit={this.handleSubmit}>
-              <TextField
-                required
-                label="Email"
-                className={classes.textField}
-                margin="normal"
-                onChange={this.handleChange('email')}
-                />
-              <TextField
-                required
-                label="Name"
-                className={classes.textField}
-                margin="normal"
-                onChange={this.handleChange('name')}
-                />
-              <Button variant="contained" color="secondary" className={classes.button}>
-                Get Notified
-              </Button>
-            </form>
+          <Grid container spacing={24} justify="center" alignItems="center">
+            <Grid item xs={1} />
+            <Grid item xs={10} md={4}>
+              <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
+                Sign up now to get notified when Bridgekin is open to the public.
+              </Typography>
+              {form}
+            </Grid>
+
+            <Grid item xs={0} md={7}>
+              <img src={HomeImage}/>
+            </Grid>
           </Grid>
+
         </Grid>
-      </div>
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={open}
+          disableAutoFocus={true}
+          onClose={this.handleClose}>
+
+          <div style={{top:'40%', left: '30%'}} className={classes.paper}>
+            <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+              Thanks for signing up!
+            </Typography>
+            <Typography variant="subtitle1" id="simple-modal-description">
+              Today, Bridgekin is invite-only. However, you'll be the first to know when we begin accepting new users!
+            </Typography>
+            <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+              onClick={this.handleClose} color='secondary'>
+              Close
+            </Button>
+          </div>
+        </Modal>
+      </MuiThemeProvider>
     );
   }
 }

@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from './root';
-import './index.css';
 import configureStore from './store/store';
+import * as SessionApiUtil from './util/session_api_util';
+import './index.css';
 
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById('root');
@@ -18,4 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const store = configureStore(preloadedState);
   ReactDOM.render(<Root store={store}/>, root);
+
+  window.signup = SessionApiUtil.signup;
+  window.login = SessionApiUtil.login;
+  window.logout = SessionApiUtil.logout;
 });
