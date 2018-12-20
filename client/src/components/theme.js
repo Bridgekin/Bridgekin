@@ -13,6 +13,7 @@ export default createMuiTheme({
     } // Indigo is probably a good match with pink
   },
   typography:{
-    fontWeight: 300
+    fontWeight: 300,
+    fontFamily: "'Quicksand', sans-serif"
   }
 });

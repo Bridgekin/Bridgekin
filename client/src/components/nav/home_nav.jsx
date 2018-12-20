@@ -52,7 +52,9 @@ const styles = {
     backgroundColor: 'white',
     color: '#4067B2',
     marginBottom: 20,
-    width: '100%'
+    width: '100%',
+    borderBottom: '1px solid #8080804d',
+    boxShadow: 'none'
   },
   textField:{
     marginLeft: 10,

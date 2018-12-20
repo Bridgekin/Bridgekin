@@ -5,7 +5,14 @@ export const signup = user => (
     headers:{
     	'Content-Type': 'application/json'
   	}
-  }).then(res => res.json())
+  }).then(res => {
+    if(res.ok) {
+      return res.json();
+    } else {
+      throw Error(`Request rejected with status ${res.status}`);
+    }
+  })
+  .catch(console.error)
 )
 
 export const login = user => (
@@ -15,11 +22,25 @@ export const login = user => (
     headers:{
     	'Content-Type': 'application/json'
   	}
-  }).then(res => res.json()).catch(error => console.error(error))
+  }).then(res => {
+    if(res.ok) {
+      return res.json();
+    } else {
+      throw Error(`Request rejected with status ${res.status}`);
+    }
+  })
+  .catch(console.error)
 )
 
 export const logout = () => (
   fetch('api/session', {
     method: 'DELETE'
-  }).then(res => res.json())
+  }).then(res => {
+    if(res.ok) {
+      return res.json();
+    } else {
+      throw Error(`Request rejected with status ${res.status}`);
+    }
+  })
+  .catch(console.error)
 )
