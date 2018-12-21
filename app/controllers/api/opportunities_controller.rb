@@ -1,11 +1,13 @@
-class Api::OpportunitiesController < ApplicationController
+class Api::OpportunitiesController < ApiController
   before_action :set_opportunity, only: [:show, :update, :destroy]
 
   # GET /opportunities
   def index
     @opportunities = Opportunity.all
 
-    render json: @opportunities
+    # render json: @opportunities
+    debugger
+    render json: ['itworkss']
   end
 
   # GET /opportunities/1

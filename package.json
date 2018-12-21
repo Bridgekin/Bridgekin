@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/jmlopardo/Bridgekin/issues"
   },
-  "homepage": "https://github.com/jmlopardo/Bridgekin#readme"
+  "homepage": "https://github.com/jmlopardo/Bridgekin#readme",
+  "devDependencies": {
+    "eslint": "^5.10.0"
+  }
 }

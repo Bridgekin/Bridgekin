@@ -35,6 +35,7 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'activeadmin'
 gem 'devise-jwt'
+gem 'simple_token_authentication', '~> 1.0'
 
 #underscore_params
 gem 'underscore_params'

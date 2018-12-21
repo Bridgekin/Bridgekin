@@ -11,7 +11,9 @@ class Api::UsersController < ApiController
     # end
 
     if @user.save!
-      login!(@user)
+      debugger
+      UserMailer.register_email(@user).deliver_now
+      # login!(@user)
       render :show
     else
       render json: @user.errors.full_messages, status: 422
@@ -42,7 +44,7 @@ class Api::UsersController < ApiController
   private
 
   def user_params
-    params.require(:user).permit(:email, :name, :phone, :city, :state,
-      :country, :password, :membership_type)
+    params.permit(:email, :name, :phone, :city, :state,
+      :country, :password, :membership_type, :password_confirmation, :password_digest)
   end
 end

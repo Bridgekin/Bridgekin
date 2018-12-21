@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  acts_as_token_authentication_handler_for User, fallback: :none
   # protect_from_forgery prepend: true, with: :exception
-  helper_method :logged_in, :current_user
+  # helper_method :logged_in, :current_user
 
   # before_action :underscore_params!
   # before_action :configure_permitted_parameters, if: :devise_controller?
@@ -13,9 +14,9 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
-  def current_user
-    @current_user ||= User.find_by(session_token: session[:session_token])
-  end
+  # def current_user
+  #   @current_user ||= User.find_by(session_token: session[:session_token])
+  # end
 
   def login!(user)
     session[:session_token] = user.reset_session_token!

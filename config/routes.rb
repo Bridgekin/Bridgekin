@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resource :session, only: [:create, :destroy]
     resources :opportunities
     resource :waitlist_user, only: [:create]
+    resource :confirmation
 
     # devise_for :users
     # devise_for :users,
@@ -22,7 +23,7 @@ Rails.application.routes.draw do
     #   },
     #   controllers: {
     #     sessions: 'api/sessions',
-    #     registrations: 'api/registrations'
+    #     registrations: 'api/users'
     #   }
     # resource :user, only: [:show, :update]
   end

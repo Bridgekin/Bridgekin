@@ -1,0 +1,6 @@
+<h1>Welcome to the Bridgekin network!</h1>
+<p>Please confirm your email by clicking on the link below</p>
+
+<p>Copy this token: <%= @user.confirmation_token %></p>
+
+<%= link_to "Click to confirm account", new_confirmation_url %>

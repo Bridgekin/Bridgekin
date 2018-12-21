@@ -1,19 +1,20 @@
 class Api::SessionsController < ApiController
-  before_action :require_signed_out!, only: [:create]
-  before_action :require_signed_in!, only: [:destroy]
+  # before_action :require_signed_out!, only: [:create]
+  # before_action :require_signed_in!, only: [:destroy]
+  # before_action :authenticate_user, only: [:destroy]
   # skip_before_action :verify_authenticity_token, :expect => :create
-  def create
-    # @user = User.find_by(email: sign_in_params[:email])
-    @user = User.find_by_credentials(
-      params[:user][:email],
-      params[:user][:password]
-    )
+  # acts_as_token_authentication_handler_for User, only: [:destroy]
 
-    if @user
+  def create
+    @user = User.find_by(email: sign_in_params[:email])
+
+    if @user && @user.valid_password?(sign_in_params[:password]) && @user.confirmed?
       login!(@user)
       render :show
+    elsif !@user.confirmed?
+      render json: { errors: ['You need to confirm your account before logging in.'] }, status: :unprocessable_entity
     else
-      render json: { errors: { 'email or password' => ['is invalid'] } }, status: :unprocessable_entity
+      render json: { errors: ['Email or password is invalid'] }, status: :unprocessable_entity
     end
   end
 
@@ -27,7 +28,7 @@ class Api::SessionsController < ApiController
   private
 
   def sign_in_params
-    params.require(:user).permit(:email, :password)
+    params.permit(:email, :password)
   end
 
   # def respond_with(resource, _opts = {})
