@@ -1,7 +1,7 @@
 class Api::SessionsController < ApiController
   # before_action :require_signed_out!, only: [:create]
   # before_action :require_signed_in!, only: [:destroy]
-  # before_action :authenticate_user, only: [:destroy]
+  before_action :authenticate_api_user, only: [:authorize]
   # skip_before_action :verify_authenticity_token, :expect => :create
   # acts_as_token_authentication_handler_for User, only: [:destroy]
 
@@ -9,13 +9,17 @@ class Api::SessionsController < ApiController
     @user = User.find_by(email: sign_in_params[:email])
 
     if @user && @user.valid_password?(sign_in_params[:password]) && @user.confirmed?
-      login!(@user)
+      @token = get_login_token!(@user)
       render :show
     elsif !@user.confirmed?
-      render json: { errors: ['You need to confirm your account before logging in.'] }, status: :unprocessable_entity
+      render json: { errors: ['You need to confirm your account before logging in.'] }, status: 404
     else
       render json: { errors: ['Email or password is invalid'] }, status: :unprocessable_entity
     end
+  end
+
+  def authorize
+    render :show
   end
 
   def destroy

@@ -44,3 +44,19 @@ export const logout = () => (
   })
   .catch(console.error)
 )
+
+export const getAuthUserId = (token) => (
+  fetch('api/authorization', {
+    headers: {
+        "Authorization":token
+    },
+    method: 'POST'
+  }).then(res => {
+    if(res.ok) {
+      return res.json();
+    } else {
+      throw Error(`Request rejected with status ${res.status}`);
+    }
+  })
+  .catch(console.error)
+)

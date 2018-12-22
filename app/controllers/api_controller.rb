@@ -1,9 +1,11 @@
+require "jwt_service"
+
 class ApiController < ActionController::API
-  # include ActionController::HttpAuthentication::Token::ControllerMethods
+  include ActionController::HttpAuthentication::Token::ControllerMethods
   # acts_as_token_authentication_handler_for User, fallback: :none
 
   # protect_from_forgery prepend: true, with: :exception
-  # helper_method :logged_in?, :current_user
+  helper_method :logged_in?, :current_user
 
   # before_action :underscore_params!
   # before_action :configure_permitted_parameters, if: :devise_controller?
@@ -45,6 +47,27 @@ class ApiController < ActionController::API
   # def configure_permitted_parameters
   #   devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
   # end
+
+  def get_login_token!(user)
+    payload = { 'user_id': user.id}
+    JwtService.encode(payload: payload)
+  end
+
+  def authorize_api_user
+    if request.headers['Authorization']
+      begin
+        @token = request.headers['Authorization']
+        jwt_decoded = JwtService.decode(token: @token)
+        @user = User.find(jwt_decoded['user_id'])
+
+      rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+        head :unauthorized
+      end
+
+    else
+      head :unauthorized
+    end
+  end
 
   # def authenticate_user
   #   debugger

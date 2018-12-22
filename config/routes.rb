@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     resource :waitlist_user, only: [:create]
     resource :confirmation
 
+    get 'authorization', :to => 'sessions#authorize'
+
     # devise_for :users
     # devise_for :users,
     #   path: '',
