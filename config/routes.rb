@@ -12,8 +12,10 @@ Rails.application.routes.draw do
     resources :opportunities
     resource :waitlist_user, only: [:create]
     resource :confirmation
+    resources :referral_links, only: [:create]
 
     get 'authorization', :to => 'sessions#authorize'
+    get 'referral_links/:referral_code', :to => 'referral_links#reveal'
 
     # devise_for :users
     # devise_for :users,

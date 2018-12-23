@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_21_180700) do
+ActiveRecord::Schema.define(version: 2018_12_23_053457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,16 @@ ActiveRecord::Schema.define(version: 2018_12_21_180700) do
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
   end
 
+  create_table "referral_links", force: :cascade do |t|
+    t.string "referral_code", null: false
+    t.integer "member_id", null: false
+    t.integer "network_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id", "network_id"], name: "index_referral_links_on_member_id_and_network_id", unique: true
+    t.index ["referral_code"], name: "index_referral_links_on_referral_code"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -88,6 +98,7 @@ ActiveRecord::Schema.define(version: 2018_12_21_180700) do
     t.string "authentication_token", limit: 30
     t.string "unconfirmed_email"
     t.string "membership_type", default: "full", null: false
+    t.integer "referred_by_id"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

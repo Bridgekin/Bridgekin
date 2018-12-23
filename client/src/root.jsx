@@ -2,13 +2,13 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import { getAuthUserId } from './util/session_api_util';
-import { receiveCurrentUser } from '../../actions/session_actions';
+import { receiveCurrentUser } from './actions/session_actions';
 import { connect } from 'react-redux';
 import App from './App';
 
 class Root extends React.Component{
   componentDidMount(){
-    let token = localStorage.getItem('token');
+    let token = localStorage.getItem('bridgekinToken');
 
     if (token){
       getAuthUserId(token)
@@ -17,6 +17,7 @@ class Root extends React.Component{
       })
     }
   }
+
   render() {
     return (
       <Provider store={this.props.store}>

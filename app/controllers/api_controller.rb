@@ -1,34 +1,24 @@
 require "jwt_service"
 
 class ApiController < ActionController::API
-  include ActionController::HttpAuthentication::Token::ControllerMethods
+  # include ActionController::HttpAuthentication::Token::ControllerMethods
   # acts_as_token_authentication_handler_for User, fallback: :none
 
   # protect_from_forgery prepend: true, with: :exception
   helper_method :logged_in?, :current_user
 
-  # before_action :underscore_params!
-  # before_action :configure_permitted_parameters, if: :devise_controller?
-  # before_action :authenticate_user
 
   respond_to :json
 
   def logged_in?
-    !!current_user
-  end
-
-  def current_user
-    @current_user ||= User.find_by(session_token: session[:session_token])
+    !!@current_user
   end
 
   def login!(user)
-    session[:session_token] = user.reset_session_token!
     @current_user = user
   end
 
   def logout!
-    current_user.reset_session_token!
-    session[:session_token] = nil
     @current_user = nil
   end
 
@@ -40,48 +30,52 @@ class ApiController < ActionController::API
     redirect_to user_url(current_user) if logged_in?
   end
 
-  # def underscore_params!
-  #   params.deep_transform_keys!(&:underscore)
-  # end
-  #
-  # def configure_permitted_parameters
-  #   devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
-  # end
-
   def get_login_token!(user)
-    payload = { 'user_id': user.id}
-    JwtService.encode(payload: payload)
+    payload = {
+      "sub": user.id,
+      "exp": 14.days.from_now.to_i
+    }
+    JwtService.encode(payload)
   end
 
-  def authorize_api_user
+  def authenticate_user
     if request.headers['Authorization']
       begin
-        @token = request.headers['Authorization']
-        jwt_decoded = JwtService.decode(token: @token)
-        @user = User.find(jwt_decoded['user_id'])
+        token = request.headers['Authorization'].split('"').last
+        jwt_decoded = JwtService.decode(token)
+        user_id = jwt_decoded['sub']
+        @user = User.find(user_id)
+
+        #set current_user
+        @current_user = @user
+
+        #create new token
+        @token = get_login_token!(@user)
 
       rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+        logout!
         head :unauthorized
       end
 
     else
+      logout
       head :unauthorized
     end
   end
 
-  # def authenticate_user
-  #   debugger
-  #   if request.headers['Authorization'].present?
-  #     authenticate_or_request_with_http_token do |token|
-  #       begin
-  #         jwt_payload = JWT.decode(token, Rails.application.secrets.secret_key_base).first
-  #
-  #         @current_user_id = jwt_payload['id']
-  #       rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
-  #         head :unauthorized
-  #       end
-  #     end
-  #   end
-  # end
-
 end
+
+# def current_user
+#   @current_user ||= User.find_by(session_token: session[:session_token])
+# end
+
+# def login!(user)
+#   session[:session_token] = user.reset_session_token!
+#   @current_user = user
+# end
+#
+# def logout!
+#   current_user.reset_session_token!
+#   session[:session_token] = nil
+#   @current_user = nil
+# end

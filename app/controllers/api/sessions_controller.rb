@@ -1,7 +1,7 @@
 class Api::SessionsController < ApiController
   # before_action :require_signed_out!, only: [:create]
   # before_action :require_signed_in!, only: [:destroy]
-  before_action :authenticate_api_user, only: [:authorize]
+  before_action :authenticate_user, only: [:authorize]
   # skip_before_action :verify_authenticity_token, :expect => :create
   # acts_as_token_authentication_handler_for User, only: [:destroy]
 
@@ -9,6 +9,7 @@ class Api::SessionsController < ApiController
     @user = User.find_by(email: sign_in_params[:email])
 
     if @user && @user.valid_password?(sign_in_params[:password]) && @user.confirmed?
+      login!(@user)
       @token = get_login_token!(@user)
       render :show
     elsif !@user.confirmed?
@@ -27,20 +28,11 @@ class Api::SessionsController < ApiController
     render json: ["you hit the signout"]
   end
 
-  # respond_to :json
 
   private
 
   def sign_in_params
     params.permit(:email, :password)
   end
-
-  # def respond_with(resource, _opts = {})
-  #   render json: resource
-  # end
-  #
-  # def respond_to_on_destroy
-  #   head :no_content
-  # end
 
 end
