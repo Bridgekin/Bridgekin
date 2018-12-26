@@ -13,7 +13,7 @@ import logo from '../../static/logo_blue.png';
 import './home.css';
 
 import { connect } from 'react-redux';
-import { registerWaitlist } from '../../actions/waitlist_user_actions';
+import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -24,7 +24,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  registerWaitlist: (user) => dispatch(registerWaitlist(user))
+  registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user))
 });
 
 const styles = theme => ({
@@ -52,7 +52,7 @@ const styles = theme => ({
     fontWeight: 300
   },
   homeHeader:{
-    marginBottom: -100
+    marginBottom: 0
   },
   wrapper: {
     margin: theme.spacing.unit,
@@ -115,6 +115,12 @@ class HomePage extends React.Component{
   handleWaitlistSubmit(e){
     e.preventDefault();
 
+    let user = {
+      email: this.state.email,
+      fname: this.state.fname,
+      lname: this.state.lname
+    }
+
     if (!this.state.loading) {
       this.setState(
         {
@@ -122,13 +128,27 @@ class HomePage extends React.Component{
           loading: true,
         },
         () => {
-          this.timer = setTimeout(() => {
-            this.setState({
-              loading: false,
-              success: true,
-              open: true
-            });
-          }, 1000);
+          this.props.registerWaitlistUser(user)
+            .then(res => {
+              if(res.type === 'ok'){
+                this.setState({
+                  loading: false,
+                  success: true,
+                  open: true,
+                  email: '',
+                  fname: '',
+                  lname: ''
+                });
+              } else {
+                alert('There was a problem when we tried to register your information. Please try again later.');
+                this.setState({
+                  loading: false,
+                  email: '',
+                  fname: '',
+                  lname: ''
+                });
+              }
+            })
         },
       );
     }
@@ -142,7 +162,7 @@ class HomePage extends React.Component{
     return (e) => {
       e.preventDefault();
 
-      this.setState({ field: e.target.value});
+      this.setState({ [field]: e.target.value});
     }
   }
 
@@ -158,6 +178,7 @@ class HomePage extends React.Component{
           label="First Name"
           className={classes.textField}
           margin="normal"
+          value={this.state.fname}
           onChange={this.handleChange('fname')}
           />
         <TextField
@@ -165,6 +186,7 @@ class HomePage extends React.Component{
           label="Last Name"
           className={classes.textField}
           margin="normal"
+          value={this.state.lname}
           onChange={this.handleChange('lname')}
           />
         <TextField
@@ -172,6 +194,7 @@ class HomePage extends React.Component{
           label="Email"
           className={classes.textField}
           margin="normal"
+          value={this.state.email}
           onChange={this.handleChange('email')}
           />
         <div className={classes.wrapper}>
@@ -192,16 +215,16 @@ class HomePage extends React.Component{
           justify="center" alignItems="center">
 
           <Grid className={classes.homeHeader} container spacing={24} justify="center" alignItems="center">
-            <Grid item xs={10} md={5} >
+            <Grid item xs={10} md={7} >
               <Typography className={classes.waitlistCTA} variant="h5" gutterBottom>
                 Bridgekin is changing the way people connect
                 with opportunities within their network.
               </Typography>
             </Grid>
-            <Grid item xs={0} md={5} />
+            <Grid item xs={0} md={3} />
           </Grid>
 
-          <Grid container spacing={24} justify="center" alignItems="center">
+          <Grid container spacing={24} justify="center" alignItems="flex-start">
             <Grid item xs={1} />
             <Grid item xs={10} md={4}>
               <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
@@ -241,4 +264,4 @@ class HomePage extends React.Component{
   }
 }
 
-export default withStyles(styles)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(HomePage));

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_23_053457) do
+ActiveRecord::Schema.define(version: 2018_12_25_192521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,7 +84,6 @@ ActiveRecord::Schema.define(version: 2018_12_23_053457) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string "name", null: false
     t.string "phone", default: "", null: false
     t.string "city", default: "", null: false
     t.string "state", default: "", null: false
@@ -94,11 +93,15 @@ ActiveRecord::Schema.define(version: 2018_12_23_053457) do
     t.date "email_confirmed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "session_token", null: false
     t.string "authentication_token", limit: 30
     t.string "unconfirmed_email"
     t.string "membership_type", default: "full", null: false
     t.integer "referred_by_id"
+    t.string "fname", null: false
+    t.string "lname", null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -107,11 +110,12 @@ ActiveRecord::Schema.define(version: 2018_12_23_053457) do
 
   create_table "waitlist_users", force: :cascade do |t|
     t.string "email", null: false
-    t.string "name", null: false
     t.date "email_sent_at"
     t.string "from_referral_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "fname", null: false
+    t.string "lname", null: false
     t.index ["email"], name: "index_waitlist_users_on_email", unique: true
   end
 

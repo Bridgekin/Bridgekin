@@ -7,11 +7,11 @@ class User < ApplicationRecord
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
   # validates :email, uniqueness: { case_sensitive: false }, presence: true
-  validates :email, :name, :session_token, presence: true
+  validates :email, :fname, :lname,  presence: true
   # validates :password_digest, presence: true
-  validates :session_token, :email, uniqueness: true
+  # validates :session_token, :email, uniqueness: true
 
-  after_initialize :ensure_session_token
+  # after_initialize :ensure_session_token
 
   # attr_reader :password
 
@@ -40,18 +40,18 @@ class User < ApplicationRecord
   #   BCrypt::Password.new(self.password_digest).is_password?(pw)
   # end
 
-  def generate_session_token
-    SecureRandom.urlsafe_base64
-  end
-
-  def ensure_session_token
-    self.session_token ||= generate_session_token
-  end
-
-  def reset_session_token!
-    self.session_token = generate_session_token
-    self.save!
-    self.session_token
-  end
+  # def generate_session_token
+  #   SecureRandom.urlsafe_base64
+  # end
+  #
+  # def ensure_session_token
+  #   self.session_token ||= generate_session_token
+  # end
+  #
+  # def reset_session_token!
+  #   self.session_token = generate_session_token
+  #   self.save!
+  #   self.session_token
+  # end
 
 end

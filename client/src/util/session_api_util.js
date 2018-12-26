@@ -5,14 +5,15 @@ export const signup = user => (
     headers:{
     	'Content-Type': 'application/json'
   	}
-  }).then(res => {
-    if(res.ok) {
-      return res.json();
-    } else {
-      throw Error(`Request rejected with status ${res.status}`);
-    }
-  })
-  .catch(console.error)
+  }).then(res => res.json())
+  // }).then(res => {
+  //   if(res.ok) {
+  //     return res.json();
+  //   } else {
+  //     throw Error(`Request rejected with status ${res.status}`);
+  //   }
+  // })
+  // .catch(console.error)
 )
 
 export const login = user => (
@@ -22,14 +23,24 @@ export const login = user => (
     headers:{
     	'Content-Type': 'application/json'
   	}
-  }).then(res => {
-    if(res.ok) {
-      return res.json();
-    } else {
-      throw Error(`Request rejected with status ${res.status}`);
-    }
   })
-  .catch(console.error)
+    // .then(res => {
+    //   debugger
+    //   return res;
+    // })
+    // .catch(errors => {
+    //   debugger
+    //   console.log(errors)
+    // })
+  // }).then(res => {
+  //   debugger
+  //   if(res.ok) {
+  //     return res.json();
+  //   } else {
+  //     return reject(res.status, res.json());
+  //   }
+  // })
+  // .catch(console.error)
 )
 
 export const logout = () => (
@@ -50,7 +61,7 @@ export const getAuthUserId = (token) => (
     headers: {
         "Authorization":token
     },
-    method: 'POST'
+    method: 'GET'
   }).then(res => {
     if(res.ok) {
       return res.json();

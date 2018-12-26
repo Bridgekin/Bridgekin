@@ -4,7 +4,7 @@ class Api::ConfirmationsController < ApiController
 
     @user.confirmed_at = DateTime.now
     if @user.save!
-      # login(@user)
+      login(@user)
       @token = get_login_token!(@user)
       render :show
     else

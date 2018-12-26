@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Root from './root';
 import configureStore from './store/store';
 import * as SessionApiUtil from './util/session_api_util';
+import * as WaitlistApiUtil from './util/waitlist_api_util';
 import './index.css';
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -23,4 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.signup = SessionApiUtil.signup;
   window.login = SessionApiUtil.login;
   window.logout = SessionApiUtil.logout;
+  window.getAuthUserId = SessionApiUtil.getAuthUserId;
+
+  window.joinWaitlist = WaitlistApiUtil.joinWaitlist;
 });

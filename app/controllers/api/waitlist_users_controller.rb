@@ -5,7 +5,8 @@ class Api::WaitlistUsersController < ApiController
     @waitlist_user = WaitlistUser.new(waitlist_user_params)
 
     if @waitlist_user.save!
-      render json: ['Successfully added user to waitlist'], status: 201
+      WaitlistUserMailer.register_email(@waitlist_user).deliver_now
+      render json: { msg: ['Successfully added user to waitlist'] }, status: 201
     else
       render json: @waitlist_user.errors.full_messages, status: 422
     end
@@ -14,6 +15,6 @@ class Api::WaitlistUsersController < ApiController
   private
 
   def waitlist_user_params
-    params.permit(:email, :name);
+    params.require(:user).permit(:email, :fname, :lname);
   end
 end

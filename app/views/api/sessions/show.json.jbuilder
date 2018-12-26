@@ -1,1 +1,1 @@
-json.partial! 'sessions/session', user: @user, token: @token
+json.partial! 'api/sessions/session', variables: { user: @user, token: @token }

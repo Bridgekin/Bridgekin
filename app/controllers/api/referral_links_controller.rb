@@ -24,7 +24,7 @@ class Api::ReferralLinksController < ApiController
     @link = ReferralLink.find_by(referral_code: params[:referral_code])
 
     if @link
-      render :show
+      render :reveal
     else
       ender json: { errors: ['invalid referral link'] }, status: :unprocessable_entity
     end

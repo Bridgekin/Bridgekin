@@ -5,3 +5,7 @@
   align-items: center;
   width: auto;
 }
+
+.button-react-link{
+  text-decoration: none;
+}

@@ -1,10 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -24,37 +24,10 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-  },
-  wrapper: {
-    margin: theme.spacing.unit,
-    position: 'relative',
-    width: 400,
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  buttonProgress: {
-    color: '#4067B2',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginLeft: -12,
-  },
-  paper: {
-    position: 'absolute',
-    width: '40%',
-    height: 300,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
   }
 });
 
-
-class AccountHome extends React.Component {
+class OpportunityCreate extends React.Component {
   constructor(props){
     super(props);
     this.state = {};
@@ -70,7 +43,7 @@ class AccountHome extends React.Component {
           <Grid className={classes.homeHeader} container spacing={24} justify="center" alignItems="center">
             <Grid item xs={10}>
               <Typography variant="h1" gutterBottom>
-                Welcome, {}
+                Create Opportunity
               </Typography>
             </Grid>
           </Grid>
@@ -80,4 +53,4 @@ class AccountHome extends React.Component {
   }
 }
 
-export default withStyles(styles)(AccountHome);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(OpportunityCreate));

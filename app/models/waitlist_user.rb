@@ -1,4 +1,4 @@
 class WaitlistUser < ApplicationRecord
-  validates :email, :name, presence: true
+  validates :email, :fname, :lname, presence: true
 
 end

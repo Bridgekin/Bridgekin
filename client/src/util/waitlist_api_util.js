@@ -5,12 +5,5 @@ export const joinWaitlist = user => (
     headers:{
     	'Content-Type': 'application/json'
   	}
-  }).then(res => {
-    if(res.ok) {
-      return res.json();
-    } else {
-      throw Error(`Request rejected with status ${res.status}`);
-    }
   })
-  .catch(console.error)
 )

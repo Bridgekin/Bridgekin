@@ -15,7 +15,7 @@ class Api::SessionsController < ApiController
     elsif !@user.confirmed?
       render json: { errors: ['You need to confirm your account before logging in.'] }, status: 404
     else
-      render json: { errors: ['Email or password is invalid'] }, status: :unprocessable_entity
+      render json: { errors: ['Email or password is invalid'] }, status: 404
     end
   end
 
@@ -25,14 +25,14 @@ class Api::SessionsController < ApiController
 
   def destroy
     logout!
-    render json: ["you hit the signout"]
+    render json: { msg: ["you hit the signout"] }, status: 200
   end
 
 
   private
 
   def sign_in_params
-    params.permit(:email, :password)
+    params.require(:user).permit(:email, :password)
   end
 
 end

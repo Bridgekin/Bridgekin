@@ -1,6 +1,14 @@
 import * as WaitlistApiUtil from '../util/waitlist_api_util';
+import { handleErrors } from './fetch_error_handler';
 
-export const registerWaitlist = formUser => dispatch =>
+export const registerWaitlistUser = formUser => dispatch =>
   WaitlistApiUtil.joinWaitlist(formUser)
-    .then(user => 'Registered User on Waitlist',
-      (errors) => errors.responseJSON);
+    .then(handleErrors)
+    .then(res => {
+      debugger
+      return {type:'ok', msg:'Registered User on Waitlist'}
+    })
+    .catch(errors => {
+      debugger
+      return {type:'bad', msg:"Couldn't create waitlist user"}
+    })

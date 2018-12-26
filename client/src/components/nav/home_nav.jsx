@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -21,17 +22,22 @@ import theme from '../theme';
 import logo from '../../static/logo_blue.png';
 import './home_nav.css';
 
-import { connect } from 'react-redux';
 import { login, logout } from '../../actions/session_actions';
+import { getAuthUserId } from '../../util/session_api_util';
+import { receiveCurrentUser } from '../../actions/session_actions';
+import { receiveUser } from '../../actions/user_actions';
 
-const mapStateToProps = state => ({
-  currentUser: state.users[state.session.id]
+const mapStateToProps = (state, ownProps) => ({
+  currentUser: state.users[state.session.id],
+  session: state.session.id,
   // homes: Object.values(state.entities.homes)
 });
 
 const mapDispatchToProps = dispatch => ({
   login: (user) => dispatch(login(user)),
-  logout: () => dispatch(logout())
+  logout: () => dispatch(logout()),
+  receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
+  receiveUser: (user) => dispatch(receiveUser(user))
 });
 
 const styles = {
@@ -77,12 +83,27 @@ class HomeNav extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount(){
+    let token = localStorage.getItem('bridgekinToken');
+
+    if (token){
+      getAuthUserId(token)
+      .then(data => {
+        this.props.receiveUser(data.user);
+        this.props.receiveCurrentUser(data.user);
+      })
+    }
+  }
+
   handleSubmit(e){
     e.preventDefault();
 
-    this.props.login(this.state)
-      .then(() => this.props.history.push(`/account`),
-      () => alert('incorrect username and password'));
+    let credentials = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    this.props.login(credentials)
   }
 
   handleChange(field){
@@ -100,16 +121,25 @@ class HomeNav extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  handleNavButtonClick = (field) => {
+    return e => {
+      e.preventDefault();
+      if(field === 'findandconnect'){
+        this.props.history.push('/findandconnect')
+      }
+    }
+  }
+
   handleLinkClose = (field) => {
     return e => {
       e.preventDefault();
       this.setState({ anchorEl: null });
 
       if(field === 'account'){
-        console.log('jumping to account page')
+        this.props.history.push('/account');
       } else if (field === 'logout') {
         this.props.logout()
-          .then(() => this.props.history.push(`/`),
+          .then(() => this.props.history.push('/'),
           () => alert("There was a problem logging out. We're working on it!"));
       }
     }
@@ -121,9 +151,7 @@ class HomeNav extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
-    console.log('cu', this.props.currentUser);
-
-    let navMenu = this.props.currentUser === undefined ? (
+    let navMenu = this.props.session === null ? (
       <form onSubmit={this.handleSubmit}>
         <TextField
           required
@@ -149,8 +177,12 @@ class HomeNav extends React.Component {
       </form>
     ) : (
       <div className='nav-menu-container'>
-        <Button color='inherit'>Find & Connect</Button>
-        <Button color='inherit'>Post Opportunity</Button>
+        <NavLink to='/findandconnect' className='button-react-link'>
+          <Button color='secondary'>Find & Connect</Button>
+        </NavLink>
+        <NavLink to='/postopportunity' className='button-react-link'>
+          <Button color='secondary'>Post Opportunity</Button>
+        </NavLink>
         <div>
           <IconButton
             aria-owns={open ? 'menu-appbar' : undefined}
@@ -160,6 +192,7 @@ class HomeNav extends React.Component {
           >
             <AccountCircle />
           </IconButton>
+
           <Menu
             id="menu-appbar"
             anchorEl={anchorEl}
@@ -185,7 +218,8 @@ class HomeNav extends React.Component {
       <MuiThemeProvider theme={theme} className={classes.root}>
         <AppBar position="static" className={classes.nav}>
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <IconButton className={classes.menuButton} color="inherit"
+              aria-label="Menu" onClick={() => this.props.history.push(`/`)}>
               <img alt='logo' className={classes.logo}src={logo} />
             </IconButton>
             <div className={classes.grow} />
