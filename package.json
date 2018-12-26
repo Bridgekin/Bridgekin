@@ -9,9 +9,9 @@
   },
   "scripts": {
     "start": "webpack --watch --mode=development",
-    "build": "yarn --cwd client install && yarn --cwd client build",
+    "build": "cd client && npm install && npm run build && cd ..",
     "deploy": "cp -a client/build/. public/",
-    "heroku-postbuild": "yarn build && yarn deploy"
+    "heroku-postbuild": "npm run build && npm run deploy && echo 'Client built!'"
   },
   "repository": {
     "type": "git",
