@@ -9,3 +9,13 @@ export const handleErrors = (res) => {
     return res.text().then(err => {throw err;});
   }
 }
+
+export const handleAuthErrors = (res) => {
+  // let json = res.json(); // there's always a body
+  // debugger
+  if (res.ok) {
+    return res.json();
+  } else {
+    return res.text().then(err => {throw err;});
+  }
+}

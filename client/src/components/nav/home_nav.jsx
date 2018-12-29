@@ -26,6 +26,7 @@ import { login, logout } from '../../actions/session_actions';
 import { getAuthUserId } from '../../util/session_api_util';
 import { receiveCurrentUser } from '../../actions/session_actions';
 import { receiveUser } from '../../actions/user_actions';
+import { handleAuthErrors } from '../../actions/fetch_error_handler';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -88,10 +89,12 @@ class HomeNav extends React.Component {
 
     if (token){
       getAuthUserId(token)
+      .then(handleAuthErrors)
       .then(data => {
         this.props.receiveUser(data.user);
         this.props.receiveCurrentUser(data.user);
       })
+      // .catch(() => localStorage.removeItem('bridgekinToken'))
     }
   }
 

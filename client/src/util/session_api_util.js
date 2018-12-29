@@ -5,7 +5,7 @@ export const signup = user => (
     headers:{
     	'Content-Type': 'application/json'
   	}
-  }).then(res => res.json())
+  })
   // }).then(res => {
   //   if(res.ok) {
   //     return res.json();
@@ -46,14 +46,15 @@ export const login = user => (
 export const logout = () => (
   fetch('api/session', {
     method: 'DELETE'
-  }).then(res => {
-    if(res.ok) {
-      return res.json();
-    } else {
-      throw Error(`Request rejected with status ${res.status}`);
-    }
   })
-  .catch(console.error)
+  // }).then(res => {
+  //   if(res.ok) {
+  //     return res.json();
+  //   } else {
+  //     throw Error(`Request rejected with status ${res.status}`);
+  //   }
+  // })
+  // .catch(console.error)
 )
 
 export const getAuthUserId = (token) => (
@@ -62,12 +63,13 @@ export const getAuthUserId = (token) => (
         "Authorization":token
     },
     method: 'GET'
-  }).then(res => {
-    if(res.ok) {
-      return res.json();
-    } else {
-      throw Error(`Request rejected with status ${res.status}`);
-    }
   })
-  .catch(console.error)
+  // }).then(res => {
+  //   if(res.ok) {
+  //     return res.json();
+  //   } else {
+  //     throw Error(`Request rejected with status ${res.status}`);
+  //   }
+  // })
+  // .catch(console.error)
 )
