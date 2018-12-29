@@ -37,6 +37,9 @@ gem 'activeadmin'
 gem 'devise-jwt'
 gem 'simple_token_authentication', '~> 1.0'
 
+#Heroku Sendgrid for emails
+gem 'sendgrid-ruby'
+
 #underscore_params
 gem 'underscore_params'
 

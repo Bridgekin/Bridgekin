@@ -7,7 +7,7 @@ class Api::OpportunitiesController < ApiController
 
     # render json: @opportunities
     debugger
-    render json: ['itworkss']
+    render json: { ['it works'] }
   end
 
   # GET /opportunities/1

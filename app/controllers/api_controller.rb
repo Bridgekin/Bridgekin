@@ -7,28 +7,7 @@ class ApiController < ActionController::API
   # protect_from_forgery prepend: true, with: :exception
   helper_method :logged_in?, :current_user
 
-
   respond_to :json
-
-  def logged_in?
-    !!@current_user
-  end
-
-  def login!(user)
-    @current_user = user
-  end
-
-  def logout!
-    @current_user = nil
-  end
-
-  def require_signed_in!
-    redirect_to new_session_url unless logged_in?
-  end
-
-  def require_signed_out!
-    redirect_to user_url(current_user) if logged_in?
-  end
 
   def get_login_token!(user)
     payload = {
@@ -48,22 +27,40 @@ class ApiController < ActionController::API
 
         #set current_user
         @current_user = @user
-
         #create new token
         @token = get_login_token!(@user)
 
       rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
-        logout!
         head :unauthorized
       end
 
     else
-      logout
       head :unauthorized
     end
   end
 
+
 end
+
+# def logged_in?
+#   !!@current_user
+# end
+
+# def login!(user)
+#   @current_user = user
+# end
+#
+# def logout!
+#   @current_user = nil
+# end
+
+# def require_signed_in!
+#   redirect_to new_session_url unless logged_in?
+# end
+#
+# def require_signed_out!
+#   redirect_to user_url(current_user) if logged_in?
+# end
 
 # def current_user
 #   @current_user ||= User.find_by(session_token: session[:session_token])

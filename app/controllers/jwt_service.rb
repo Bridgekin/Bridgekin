@@ -8,13 +8,13 @@ class JwtService
   end
 
   def self.decode(token)
-    JWT.decode(token, 
+    JWT.decode(token,
       self.secret,
       true,
       { algorithm: ALGORITHM }).first
   end
 
   def self.secret
-    Rails.application.secrets.secret_key_base
+    Rails.application.credentials.DEVISE_JWT_SECRET_KEY
   end
 end

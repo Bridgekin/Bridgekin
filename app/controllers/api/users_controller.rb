@@ -35,7 +35,7 @@ class Api::UsersController < ApiController
 
     if @user.destroy
       logout!
-      render json: ["you deleted your account"]
+      render json: {["you deleted your account"]}
     else
       render json: @user.errors.full_messages, status: 422
     end

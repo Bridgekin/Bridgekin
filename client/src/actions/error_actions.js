@@ -1,8 +1,9 @@
 export const RECEIVE_SESSION_ERRORS = 'RECEIVE_SESSION_ERRORS';
 export const CLEAR_SESSION_ERRORS = 'CLEAR_SESSION_ERRORS';
-
-// export const RECEIVE_HOME_ERRORS = 'RECEIVE_HOME_ERRORS';
-// export const CLEAR_HOME_ERRORS = 'CLEAR_HOME_ERRORS';
+export const RECEIVE_WAITLIST_USER_ERRORS = 'RECEIVE_WAITLIST_USER_ERRORS';
+export const CLEAR_WAITLIST_USER_ERRORS = 'CLEAR_WAITLIST_USER_ERRORS';
+export const RECEIVE_USER_ERRORS = 'RECEIVE_USER_ERRORS';
+export const CLEAR_USER_ERRORS = 'CLEAR_USER_ERRORS';
 //
 // export const RECEIVE_BOOKING_ERRORS = 'RECEIVE_BOOKING_ERRORS';
 // export const CLEAR_BOOKING_ERRORS = 'CLEAR_BOOKING_ERRORS';
@@ -20,6 +21,24 @@ export const receiveSessionErrors = errors => ({
 
 export const clearSessionErrors = () => ({
   type: CLEAR_SESSION_ERRORS,
+});
+
+export const receiveWaitlistUserErrors = errors => ({
+  type: RECEIVE_WAITLIST_USER_ERRORS,
+  errors
+});
+
+export const clearWaitlistUserErrors = () => ({
+  type: CLEAR_WAITLIST_USER_ERRORS,
+});
+
+export const receiveUserErrors = errors => ({
+  type: RECEIVE_USER_ERRORS,
+  errors
+});
+
+export const clearUserErrors = () => ({
+  type: CLEAR_USER_ERRORS,
 });
 
 

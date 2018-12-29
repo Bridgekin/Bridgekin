@@ -6,6 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Modal from '@material-ui/core/Modal';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import JumboImage from '../../static/cogs.jpg';
 import HomeImage from '../../static/home_logo.png';
@@ -17,10 +20,10 @@ import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
+import WaitlistModal from '../waitlist_modal'
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
-  // homes: Object.values(state.entities.homes)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -68,18 +71,6 @@ const styles = theme => ({
     left: '50%',
     marginLeft: -12,
   },
-  paper: {
-    position: 'absolute',
-    width: '40%',
-    height: 300,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
   logo: {
     maxWidth: '50%',
     marginTop: 30
@@ -108,10 +99,6 @@ class HomePage extends React.Component{
     this.handleClose = this.handleClose.bind(this);
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-  }
-
   handleWaitlistSubmit(e){
     e.preventDefault();
 
@@ -122,35 +109,20 @@ class HomePage extends React.Component{
     }
 
     if (!this.state.loading) {
-      this.setState(
-        {
-          success: false,
-          loading: true,
-        },
+      this.setState({ success: false,loading: true },
         () => {
           this.props.registerWaitlistUser(user)
             .then(res => {
-              if(res.type === 'ok'){
-                this.setState({
-                  loading: false,
-                  success: true,
-                  open: true,
-                  email: '',
-                  fname: '',
-                  lname: ''
-                });
-              } else {
-                alert('There was a problem when we tried to register your information. Please try again later.');
-                this.setState({
-                  loading: false,
-                  email: '',
-                  fname: '',
-                  lname: ''
-                });
-              }
+              this.setState({
+                loading: false,
+                success: true,
+                open: true,
+                email: '',
+                fname: '',
+                lname: ''
+              })
             })
-        },
-      );
+      })
     }
   }
 
@@ -161,7 +133,6 @@ class HomePage extends React.Component{
   handleChange(field){
     return (e) => {
       e.preventDefault();
-
       this.setState({ [field]: e.target.value});
     }
   }
@@ -202,7 +173,8 @@ class HomePage extends React.Component{
             disabled={loading} onClick={this.handleWaitlistSubmit}>
             Be the first to know
           </Button>
-          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          {loading && <CircularProgress size={24}
+            className={classes.buttonProgress} />}
         </div>
       </form>
     ) : (
@@ -237,28 +209,9 @@ class HomePage extends React.Component{
               <img src={HomeImage}/>
             </Grid>
           </Grid>
-
         </Grid>
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={open}
-          disableAutoFocus={true}
-          onClose={this.handleClose}>
 
-          <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-            <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
-              Thanks for signing up!
-            </Typography>
-            <Typography variant="subtitle1" id="simple-modal-description">
-              Today, Bridgekin is invite-only. However, you'll be the first to know when we begin accepting new users!
-            </Typography>
-            <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-              onClick={this.handleClose} color='secondary'>
-              Close
-            </Button>
-          </div>
-        </Modal>
+        <WaitlistModal open={open} handleClose={this.handleClose}/>
       </MuiThemeProvider>
     );
   }

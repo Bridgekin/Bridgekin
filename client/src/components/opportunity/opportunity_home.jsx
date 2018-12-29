@@ -1,34 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
+//Import Material Components
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Divider from '@material-ui/core/Divider';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
+//Import CSS and theme
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import './opportunity_home.css'
 
+//Import Local Components
 import OpportunityCard from './opportunity_card';
 import OpportunityReferral from './opportunity_referral';
+import WaitlistModal from '../waitlist_modal'
+
+//Imported Actions
+import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 
 const mapStateToProps = state => ({
-  currentUser: state.users[state.session.id]
-  // homes: Object.values(state.entities.homes)
+  currentUser: state.users[state.session.id],
+  waitlistErrors: state.errors.waitlistUsers
 });
 
 const mapDispatchToProps = dispatch => ({
-  // registerWaitlist: (user) => dispatch(registerWaitlist(user))
+  registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user))
 });
 
 const styles = theme => ({
@@ -92,9 +90,14 @@ class OpportunityHome extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      loaded: false,
       referralLink: '',
-      network: ''
+      network: '',
+      fname: '',
+      lname: '',
+      email: '',
+      loaded: false,
+      success: false,
+      open: false
     };
 
     this.opportunities = [
@@ -116,16 +119,52 @@ class OpportunityHome extends React.Component {
       },
     ];
 
-    this.handleReferralChange = this.handleReferralChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
+    // this.handleReferralChange = this.handleReferralChange.bind(this);
   }
 
-  handleReferralChange(e){
+  handleChange(field){
+    return e => {
+      e.preventDefault();
+      this.setState({ [field]: e.target.value})
+    }
+  }
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleWaitlistSubmit(e){
     e.preventDefault();
-    this.setState({ network: e.target.value})
+
+    let user = {
+      email: this.state.email,
+      fname: this.state.fname,
+      lname: this.state.lname
+    }
+
+    if (!this.state.loading) {
+      this.setState({ success: false,loading: true },
+        () => {
+          this.props.registerWaitlistUser(user)
+            .then(res => {
+              this.setState({
+                loading: false,
+                success: true,
+                open: true,
+                email: '',
+                fname: '',
+                lname: ''
+              })
+            })
+      })
+    }
   }
 
   render (){
     let classes = this.props.classes;
+    const { loading, success, open } = this.state;
 
     let header = (
       <Grid container className={classes.root}
@@ -205,135 +244,20 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let referralGridWaitlist = (
-      <Grid container className={classes.root}
-        justify="center" alignItems="center" spacing={24}>
-
-        <Grid item xs={9} justify="flex-end" alignItems="center">
-          <Typography variant="h4" gutterBottom align='center'
-            color="secondary" className={classes.headerTypography}>
-            Refer a trusted contact that would appreciate joining our community
-            and we'll add them to our waitlist
-          </Typography>
-        </Grid>
-
-        <Grid container className={classes.root} directon='column'
-          justify="center" alignItems="center" spacing={24}>
-          <Grid item xs={10} sm={3} justify="flex-end" alignItems="center">
-            <TextField
-            required
-            id="outlined-required"
-            label="First Name"
-            placeholder="John"
-            className={classes.textField}
-            margin="normal"
-            fullWidth
-            variant="outlined"
-          />
-          </Grid>
-          <Grid item xs={10} sm={4} justify="flex-end" alignItems="center">
-            <TextField
-            required
-            id="outlined-required"
-            label="Last Name"
-            placeholder="Smith"
-            className={classes.textField}
-            margin="normal"
-            fullWidth
-            variant="outlined"
-          />
-          </Grid>
-          <div className={classes.wrapper}>
-            <Button variant="contained" color='secondary' fullWidth
-              className={classes.refButton}>
-              Create Link
-            </Button>
-          </div>
-        </Grid>
-      </Grid>
-    );
-
-    let networks = ([
-      <MenuItem value={10}>Ten</MenuItem>,
-      <MenuItem value={20}>Twenty</MenuItem>,
-      <MenuItem value={30}>Thirty</MenuItem>
-    ])
-
-    let referralGridLink = (
-      <Grid container className={classes.root}
-        justify="center" alignItems="center" spacing={24}>
-
-        <Grid item xs={9} justify="flex-end" alignItems="center">
-          <Typography variant="h4" gutterBottom align='center'
-            color="secondary" className={classes.headerTypography}>
-            Refer a trusted contact that would appreciate joining our community
-            and we'll add them to our waitlist
-          </Typography>
-        </Grid>
-
-        <Grid container className={classes.root}
-          justify="center" alignItems="center" spacing={24}>
-
-          <Grid item xs={10} sm={4} justify="center" alignItems="center">
-            <Typography variant="h6" gutterBottom align='center'
-              color="secondary" className={classes.headerTypography}>
-              Refer a contact to your network
-            </Typography>
-
-            <FormControl className={classes.formControl} fullWidth>
-              <Select
-                value={this.state.age}
-                onChange={this.handleChange}
-                name="age"
-                displayEmpty
-                className={classes.selectEmpty}
-              >
-                <MenuItem value="" disabled>
-                  Placeholder
-                </MenuItem>
-                <MenuItem value=''>Bridgekin</MenuItem>,
-                <MenuItem value='The Battery'>The Battery</MenuItem>,
-              </Select>
-              <FormHelperText>Networks</FormHelperText>
-            </FormControl>
-
-            <div className={classes.wrapper}>
-              <Button variant="contained" color='secondary' fullWidth
-                className={classes.refButton}>
-                Create Link
-              </Button>
-            </div>
-          </Grid>
-
-          <Grid item xs={10} sm={4} justify="center" alignItems="center">
-            <TextField
-            required
-            id="outlined-required"
-            placeholder='Link displays here'
-            className={classes.textField}
-            margin="normal"
-            fullWidth
-            variant="filled"
-            value={this.state.referralLink}
-            />
-          </Grid>
-
-        </Grid>
-
-      </Grid>
-    );
-
     if(this.props.currentUser){
       return (
         <MuiThemeProvider theme={theme} className={classes.root}>
           <Grid container className={classes.root}>
             {header}
             {opportunityGrid}
-            <OpportunityReferral classes={classes}
-              referralLink={this.state.referralLink}
-              handleChange={this.handleReferralChange}
-              network={this.state.network}/>
+            <OpportunityReferral
+              handleChange={this.handleChange}
+              handleSubmit={this.handleWaitlistSubmit}
+              loading={loading}
+            />
           </Grid>
+          <WaitlistModal open={open}
+            handleClose={this.handleClose}/>
         </MuiThemeProvider>
       )
     }

@@ -1,6 +1,6 @@
 import {
   RECEIVE_USER_ERRORS,
-  CLEAR_USER_ERRORS } from '../../actions/errors_actions';
+  CLEAR_USER_ERRORS } from '../../actions/error_actions';
 import merge from 'lodash/merge';
 
 export default (state = [] , action) => {

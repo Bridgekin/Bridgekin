@@ -26,7 +26,7 @@ class Api::ReferralLinksController < ApiController
     if @link
       render :reveal
     else
-      ender json: { errors: ['invalid referral link'] }, status: :unprocessable_entity
+      ender json: { ['invalid referral link'] }, status: :unprocessable_entity
     end
   end
 

@@ -6,23 +6,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
-  # validates :email, uniqueness: { case_sensitive: false }, presence: true
+  validates :email, uniqueness: { case_sensitive: false }, presence: true
   validates :email, :fname, :lname,  presence: true
-  # validates :password_digest, presence: true
-  # validates :session_token, :email, uniqueness: true
-
-  # after_initialize :ensure_session_token
-
-  # attr_reader :password
 
   def confirmed?
     self.confirmed_at.present?
-  end
-
-  def generate_jwt
-    JWT.encode({ id: id,
-      exp: 3.days.from_now.to_i },
-      Rails.application.secret_key_base)
   end
 
   def self.find_by_credentials(email,password)
@@ -30,6 +18,17 @@ class User < ApplicationRecord
     return user if user && user.is_password?(password)
     nil
   end
+  
+  # validates :password_digest, presence: true
+  # validates :session_token, :email, uniqueness: true
+  # after_initialize :ensure_session_token
+  # attr_reader :password
+
+  # def generate_jwt
+  #   JWT.encode({ id: id,
+  #     exp: 3.days.from_now.to_i },
+  #     Rails.application.secret_key_base)
+  # end
 
   # def password=(pw)
   #   @password = pw

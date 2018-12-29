@@ -9,13 +9,12 @@ class Api::SessionsController < ApiController
     @user = User.find_by(email: sign_in_params[:email])
 
     if @user && @user.valid_password?(sign_in_params[:password]) && @user.confirmed?
-      login!(@user)
       @token = get_login_token!(@user)
       render :show
     elsif !@user.confirmed?
-      render json: { errors: ['You need to confirm your account before logging in.'] }, status: 404
+      render json: ['You need to confirm your account before logging in.'], status: 404
     else
-      render json: { errors: ['Email or password is invalid'] }, status: 404
+      render json: ['Email or password is invalid'], status: 404
     end
   end
 
@@ -24,8 +23,7 @@ class Api::SessionsController < ApiController
   end
 
   def destroy
-    logout!
-    render json: { msg: ["you hit the signout"] }, status: 200
+    render json: ["You've successfully signed out"], status: 200
   end
 
 

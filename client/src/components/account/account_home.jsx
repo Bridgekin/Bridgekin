@@ -25,32 +25,9 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  wrapper: {
-    margin: theme.spacing.unit,
-    position: 'relative',
-    width: 400,
-    display: 'flex',
-    justifyContent: 'center'
+  homeHeader:{
+    marginBottom: 0
   },
-  buttonProgress: {
-    color: '#4067B2',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginLeft: -12,
-  },
-  paper: {
-    position: 'absolute',
-    width: '40%',
-    height: 300,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  }
 });
 
 

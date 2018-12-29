@@ -7,27 +7,27 @@ class ApplicationController < ActionController::Base
   # before_action :underscore_params!
   # before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :authenticate_user
-
-  respond_to :json
-
-  def logged_in
-    !!current_user
-  end
+  #
+  # respond_to :json
+  #
+  # def logged_in
+  #   !!current_user
+  # end
 
   # def current_user
   #   @current_user ||= User.find_by(session_token: session[:session_token])
   # end
 
-  def login!(user)
-    session[:session_token] = user.reset_session_token!
-    @current_user = user
-  end
-
-  def logout!
-    current_user.reset_session_token!
-    session[:session_token] = nil
-    @current_user = nil
-  end
+  # def login!(user)
+  #   session[:session_token] = user.reset_session_token!
+  #   @current_user = user
+  # end
+  #
+  # def logout!
+  #   current_user.reset_session_token!
+  #   session[:session_token] = nil
+  #   @current_user = nil
+  # end
 
   private
 
@@ -38,20 +38,20 @@ class ApplicationController < ActionController::Base
   # def configure_permitted_parameters
   #   devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
   # end
-
-  def authenticate_user
-    if request.headers['Authorization'].present?
-      authenticate_or_request_with_http_token do |token|
-        begin
-          jwt_payload = JWT.decode(token, Rails.application.secrets.secret_key_base).first
-
-          @current_user_id = jwt_payload['id']
-        rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
-          head :unauthorized
-        end
-      end
-    end
-  end
+  #
+  # def authenticate_user
+  #   if request.headers['Authorization'].present?
+  #     authenticate_or_request_with_http_token do |token|
+  #       begin
+  #         jwt_payload = JWT.decode(token, Rails.application.secrets.secret_key_base).first
+  #
+  #         @current_user_id = jwt_payload['id']
+  #       rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+  #         head :unauthorized
+  #       end
+  #     end
+  #   end
+  # end
 
   # def current_user
   #   @current_user ||= super || User.find(@current_user_id)
