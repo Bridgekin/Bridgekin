@@ -12,3 +12,4 @@ An invite only platform where business professionals post, view and connect excl
 - Ruby on Rails
 - Material UI.
 - Devise for authentication
+ 
