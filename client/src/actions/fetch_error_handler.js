@@ -1,5 +1,6 @@
 export const handleErrors = (res) => {
   // let json = res.json(); // there's always a body
+  // debugger
   if (res.ok) {
     return res.json();
   } else if (res.status >= 300 && res.status < 500){

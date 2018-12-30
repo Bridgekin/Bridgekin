@@ -8,7 +8,6 @@ export const registerWaitlistUser = formUser => dispatch =>
     .then(handleErrors)
     .then(data => data)
     .catch(errors => {
-      debugger
       if(errors instanceof Array){
         dispatch(receiveWaitlistUserErrors(errors))
       } else {

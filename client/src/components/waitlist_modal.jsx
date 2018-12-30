@@ -33,6 +33,9 @@ const styles = theme => ({
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
+  thanksHeader:{
+    marginBottom: 30
+  }
 });
 
 class WaitlistModal extends React.Component {
@@ -71,7 +74,9 @@ class WaitlistModal extends React.Component {
       )
     })
 
-    let modalText = !this.props.waitlistErrors ? (
+    debugger
+
+    let modalText = this.props.waitlistErrors.length === 0 ? (
       <div style={{top:'25%', left: '30%'}} className={classes.paper}>
         <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks for signing up!

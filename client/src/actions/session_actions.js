@@ -34,6 +34,7 @@ export const login = formUser => dispatch => (
       localStorage.setItem('bridgekinToken', data.token);
     })
     .catch(errors => {
+      debugger
       if (errors instanceof Error){
         dispatch(receiveSessionErrors('Email or password is invalid'));
         alert('Email or password is invalid');
