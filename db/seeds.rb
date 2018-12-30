@@ -17,5 +17,5 @@ User.create!(
   confirmed_at: DateTime.now,
   confirmation_sent_at: DateTime.now,
   fname: 'Joe',
-  lnam: 'Demo'
+  lname: 'Demo'
 )
