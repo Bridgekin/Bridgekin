@@ -3,7 +3,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :confirmable
+         :recoverable, :rememberable, :trackable, :validatable
+         # :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
   validates :email, uniqueness: { case_sensitive: false }, presence: true
@@ -18,7 +19,7 @@ class User < ApplicationRecord
     return user if user && user.is_password?(password)
     nil
   end
-  
+
   # validates :password_digest, presence: true
   # validates :session_token, :email, uniqueness: true
   # after_initialize :ensure_session_token

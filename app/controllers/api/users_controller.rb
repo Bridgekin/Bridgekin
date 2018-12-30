@@ -12,7 +12,7 @@ class Api::UsersController < ApiController
 
     if @user.save!
       # debugger
-      UserMailer.register_email(@user).deliver_now
+      # UserMailer.register_email(@user).deliver_now
       # login!(@user)
       render :show
     else
