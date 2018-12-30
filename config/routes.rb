@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     get 'authorization', :to => 'sessions#authorize'
     get 'referral_links/:referral_code', :to => 'referral_links#reveal'
 
-    # devise_for :users
+    devise_for :users, only: []
     # devise_for :users,
     #   path: '',
     #   path_names: {

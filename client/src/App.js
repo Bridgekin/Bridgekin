@@ -5,7 +5,7 @@ import './App.css';
 
 import HomeNav from './components/nav/home_nav';
 import HomePage from './components/home/home_page';
-import AccountHome from './components/account/account_home';
+import AccountRoute from './components/account/account_route';
 import OpportunityHome from './components/opportunity/opportunity_home';
 import OpportunityCreate from './components/opportunity/opportunity_create';
 
@@ -20,7 +20,7 @@ export default () => (
     <Switch>
       <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
       <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
-      <ProtectedRoute path="/account" component={AccountHome} />
+      <ProtectedRoute path="/account" component={AccountRoute} />
       <Route path="/" component={HomePage} />
     </Switch>
   </div>

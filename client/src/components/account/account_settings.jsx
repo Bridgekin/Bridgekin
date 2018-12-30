@@ -18,7 +18,7 @@ const styles = theme => ({
 });
 
 
-class AccountHome extends React.Component {
+class AccountSettings extends React.Component {
   render(){
     const { classes }= this.props;
 
@@ -28,7 +28,7 @@ class AccountHome extends React.Component {
         <Grid className={classes.accountMain} container spacing={24} justify="center" alignItems="center">
           <Grid item xs={10}>
             <Typography variant="h1" gutterBottom>
-              Home Section
+              Settings Section
             </Typography>
           </Grid>
         </Grid>
@@ -38,4 +38,4 @@ class AccountHome extends React.Component {
   }
 }
 
-export default withStyles(styles)(AccountHome);
+export default withStyles(styles)(AccountSettings);
