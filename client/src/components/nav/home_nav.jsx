@@ -48,9 +48,15 @@ const styles = {
   grow: {
     flexGrow: 1,
   },
-  menuButton: {
+  logoLink: {
     marginLeft: 20,
     marginRight: 20,
+    '&:hover': {
+      backgroundColor: '#fff'
+    },
+    '&:click':{
+      backgroundColor: '#fff'
+    }
   },
   logo: {
     width: 100
@@ -139,7 +145,7 @@ class HomeNav extends React.Component {
       this.setState({ anchorEl: null });
 
       if(field === 'account'){
-        this.props.history.push('/account');
+        this.props.history.push('/account/home');
       } else if (field === 'logout') {
         this.props.logout()
           .then(() => this.props.history.push('/'),
@@ -221,10 +227,9 @@ class HomeNav extends React.Component {
       <MuiThemeProvider theme={theme} className={classes.root}>
         <AppBar position="static" className={classes.nav}>
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit"
-              aria-label="Menu" onClick={() => this.props.history.push(`/`)}>
+            <Link to='/' className={classes.logoLink}>
               <img alt='logo' className={classes.logo}src={logo} />
-            </IconButton>
+            </Link>
             <div className={classes.grow} />
             {navMenu}
           </Toolbar>

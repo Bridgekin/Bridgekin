@@ -51,9 +51,19 @@ class AccountNav extends React.Component {
       'Posted Opportunities', 'Settings'];
 
     let buttons = buttonHeaders.map(header => {
+      let path = this.props.hash.split('/').pop();
+      let dotPath = ROUTEMAPPING[header];
+
+      let dot = (dotPath === path) ? (
+        <i className={["fas fa-circle", classes.dot].join(' ')} />
+      ) : (
+        <i className={["far fa-circle", classes.dot].join(' ')} />
+      )
+
+      // let dot = (<i className={["fas fa-circle", classes.dot].join(' ')} />)
       return (
         <div className={classes.buttonContainer}>
-          <i className={["fas fa-circle", classes.dot].join(' ')}></i>
+          {dot}
           <Link to={`/account/${ROUTEMAPPING[header]}`}
             className={classes.navLink}>
             <Button color="secondary" className={classes.button}>

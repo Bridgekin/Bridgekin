@@ -170,7 +170,7 @@ class OpportunityHome extends React.Component {
       <Grid container className={classes.root}
         justify="center" alignItems="center">
 
-        <Grid item xs={10} justify="center" alignItems="center"
+        <Grid item xs={8} justify="center" alignItems="center"
           className={[classes.homeheader, classes.grid].join(' ')}>
           <Typography variant="h2" gutterBottom align='center'
             color="secondary" className={classes.headerTypography}>
@@ -236,8 +236,11 @@ class OpportunityHome extends React.Component {
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={24}>
 
-        <Grid item xs={10} justify="flex-end" alignItems="center">
-          Opportunities
+        <Grid item xs={8} justify="flex-end" alignItems="center">
+          <Typography variant="p" gutterBottom align='right'
+            color="secondary">
+            All Opportunities
+          </Typography>
         </Grid>
 
         {opportunities}

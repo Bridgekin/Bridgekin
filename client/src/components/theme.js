@@ -14,6 +14,7 @@ export default createMuiTheme({
   },
   typography:{
     fontWeight: 300,
-    fontFamily: "'Quicksand', sans-serif"
+    fontFamily: "'Quicksand', sans-serif",
+    color: 'black'
   }
 });

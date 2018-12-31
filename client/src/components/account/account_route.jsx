@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route , withRouter } from 'react-router-dom';
 import { AuthRoute, ProtectedRoute} from '../../util/route_util';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -49,7 +49,7 @@ class AccountRoute extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <AccountNav />
+        <AccountNav hash={this.props.location.pathname}/>
 
         <Switch>
           <ProtectedRoute path="/account/settings" component={AccountSettings} />
