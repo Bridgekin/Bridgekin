@@ -82,7 +82,7 @@ class WaitlistModal extends React.Component {
           Thanks for signing up!
         </Typography>
         <Typography variant="subtitle1" id="simple-modal-description">
-          Today, Bridgekin is invite-only. However, you'll be the first to know when we begin accepting new users!
+          You've now been added to our waitlist! You'll receive a confirmation email shortly.
         </Typography>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
           onClick={this.handleClose} color='secondary'>

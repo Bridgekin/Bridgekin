@@ -171,7 +171,7 @@ class HomePage extends React.Component{
         <div className={classes.wrapper}>
           <Button variant="contained" color="secondary" className={classes.button}
             disabled={loading} onClick={this.handleWaitlistSubmit}>
-            Be the first to know
+            Join Our Waitlist
           </Button>
           {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
@@ -200,7 +200,7 @@ class HomePage extends React.Component{
             <Grid item xs={1} />
             <Grid item xs={10} md={4}>
               <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
-                Sign up now to get notified when Bridgekin is open to the public.
+                Bridgekin is currently an invite-only community. Sign up now to join our waitlist.
               </Typography>
               {form}
             </Grid>

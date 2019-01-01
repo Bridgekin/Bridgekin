@@ -15,7 +15,8 @@ import './opportunity_home.css'
 //Import Local Components
 import OpportunityCard from './opportunity_card';
 import OpportunityReferral from './opportunity_referral';
-import WaitlistModal from '../waitlist_modal'
+import WaitlistModal from '../waitlist_modal';
+import CardModal from './card_modal';
 
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
@@ -97,7 +98,9 @@ class OpportunityHome extends React.Component {
       email: '',
       loaded: false,
       success: false,
-      open: false
+      waitlistOpen: false,
+      cardOpen: false,
+      focusedOpportunity: {}
     };
 
     this.opportunities = [
@@ -122,6 +125,8 @@ class OpportunityHome extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     // this.handleReferralChange = this.handleReferralChange.bind(this);
+    this.handleCardOpen = this.handleCardOpen.bind(this);
+    this.handleCardClose = this.handleCardClose.bind(this);
   }
 
   handleChange(field){
@@ -131,8 +136,8 @@ class OpportunityHome extends React.Component {
     }
   }
 
-  handleClose = () => {
-    this.setState({ open: false });
+  handleWaitlistClose = () => {
+    this.setState({ waitlistOpen: false });
   };
 
   handleWaitlistSubmit(e){
@@ -145,14 +150,14 @@ class OpportunityHome extends React.Component {
     }
 
     if (!this.state.loading) {
-      this.setState({ success: false,loading: true },
+      this.setState({ success: false, loading: true },
         () => {
           this.props.registerWaitlistUser(user)
             .then(res => {
               this.setState({
                 loading: false,
                 success: true,
-                open: true,
+                waitlistOpen: true,
                 email: '',
                 fname: '',
                 lname: ''
@@ -162,9 +167,18 @@ class OpportunityHome extends React.Component {
     }
   }
 
+  handleCardOpen(focusedOpportunity){
+    this.setState({ cardOpen: true, focusedOpportunity });
+  }
+
+  handleCardClose(){
+    this.setState({ cardOpen: false });
+  }
+
   render (){
     let classes = this.props.classes;
-    const { loading, success, open } = this.state;
+    const { loading, success, waitlistOpen,
+          cardOpen, focusedOpportunity } = this.state;
 
     let header = (
       <Grid container className={classes.root}
@@ -228,7 +242,9 @@ class OpportunityHome extends React.Component {
     let opportunities = this.opportunities.map(opportunity => (
       <Grid item sm={10} md={5} justify="center" alignItems="center"
         className={classes.grid}>
-        <OpportunityCard opportunity={opportunity} classes={classes}/>
+        <OpportunityCard opportunity={opportunity}
+          classes={classes}
+          handleCardOpen={this.handleCardOpen} />
       </Grid>
     ));
 
@@ -259,8 +275,11 @@ class OpportunityHome extends React.Component {
               loading={loading}
             />
           </Grid>
-          <WaitlistModal open={open}
-            handleClose={this.handleClose}/>
+          <WaitlistModal open={waitlistOpen}
+            handleClose={this.handleWaitlistClose}/>
+          <CardModal open={cardOpen}
+            handleClose={this.handleCardClose}
+            opportunity={focusedOpportunity}/>
         </MuiThemeProvider>
       )
     }
