@@ -16,5 +16,9 @@ export default createMuiTheme({
     fontWeight: 300,
     fontFamily: "'Nunito', sans-serif",
     color: 'black'
+  },
+  stepper: {
+    iconColor: '#4067B2' // or logic to change color
+    
   }
 });

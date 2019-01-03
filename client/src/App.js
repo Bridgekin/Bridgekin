@@ -7,7 +7,7 @@ import HomeNav from './components/nav/home_nav';
 import HomePage from './components/home/home_page';
 import AccountRoute from './components/account/account_route';
 import OpportunityHome from './components/opportunity/opportunity_home';
-import OpportunityCreate from './components/opportunity/opportunity_create';
+import OpportunityCreate from './components/post_opportunity/opportunity_create';
 
 import { getAuthUserId } from './util/session_api_util';
 import { receiveCurrentUser } from './actions/session_actions';

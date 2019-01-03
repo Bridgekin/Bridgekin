@@ -10,11 +10,11 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case RECEIVE_OPPORTUNITIES:
-      return merge({}, state, action.homes);
+      return merge({}, state, action.opportunities);
     case RECEIVE_OPPORTUNITY:
-      return merge({}, state, {[action.home.id]: action.home });
+      return merge({}, state, {[action.opportunity.id]: action.opportunity });
     case REMOVE_OPPORTUNITY:
-      delete newState[action.homeId]
+      delete newState[action.opportunityId]
       return newState;
     default:
       return state;

@@ -4,15 +4,15 @@ export const RECEIVE_WAITLIST_USER_ERRORS = 'RECEIVE_WAITLIST_USER_ERRORS';
 export const CLEAR_WAITLIST_USER_ERRORS = 'CLEAR_WAITLIST_USER_ERRORS';
 export const RECEIVE_USER_ERRORS = 'RECEIVE_USER_ERRORS';
 export const CLEAR_USER_ERRORS = 'CLEAR_USER_ERRORS';
-//
-// export const RECEIVE_BOOKING_ERRORS = 'RECEIVE_BOOKING_ERRORS';
-// export const CLEAR_BOOKING_ERRORS = 'CLEAR_BOOKING_ERRORS';
-//
-// export const RECEIVE_REVIEW_ERRORS = 'RECEIVE_REVIEW_ERRORS';
-// export const CLEAR_REVIEW_ERRORS = 'CLEAR_REVIEW_ERRORS';
-//
-// export const RECEIVE_SEARCH_ERRORS = 'RECEIVE_SEARCH_ERRORS';
-// export const CLEAR_SEARCH_ERRORS = 'CLEAR_SEARCH_ERRORS';
+
+export const RECEIVE_OPPORTUNITY_ERRORS = 'RECEIVE_OPPORTUNITY_ERRORS';
+export const CLEAR_OPPORTUNITY_ERRORS = 'CLEAR_OPPORTUNITY_ERRORS';
+export const RECEIVE_CONNECTED_OPPORTUNITY_ERRORS = 'RECEIVE_CONNECTED_OPPORTUNITY_ERRORS';
+export const CLEAR_CONNECTED_OPPORTUNITY_ERRORS = 'CLEAR_CONNECTED_OPPORTUNITY_ERRORS';
+export const RECEIVE_FINALIZED_OPPORTUNITY_ERRORS = 'RECEIVE_FINALIZED_OPPORTUNITY_ERRORS';
+export const CLEAR_FINALIZED_OPPORTUNITY_ERRORS = 'CLEAR_FINALIZED_OPPORTUNITY_ERRORS';
+export const RECEIVE_SAVED_OPPORTUNITY_ERRORS = 'RECEIVE_SAVED_OPPORTUNITY_ERRORS';
+export const CLEAR_SAVED_OPPORTUNITY_ERRORS = 'CLEAR_SAVED_OPPORTUNITY_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -41,6 +41,41 @@ export const clearUserErrors = () => ({
   type: CLEAR_USER_ERRORS,
 });
 
+export const receiveOpportunityErrors = errors => ({
+  type: RECEIVE_OPPORTUNITY_ERRORS,
+  errors
+});
+
+export const clearOpportunityErrors = () => ({
+  type: CLEAR_OPPORTUNITY_ERRORS,
+});
+
+export const receiveConnectedOpportunityErrors = errors => ({
+  type: RECEIVE_CONNECTED_OPPORTUNITY_ERRORS,
+  errors
+});
+
+export const clearConnectedOpportunityErrors = () => ({
+  type: CLEAR_CONNECTED_OPPORTUNITY_ERRORS,
+});
+
+export const receiveFinalizedOpportunityErrors = errors => ({
+  type: RECEIVE_FINALIZED_OPPORTUNITY_ERRORS,
+  errors
+});
+
+export const clearFinalizedOpportunityErrors = () => ({
+  type: CLEAR_FINALIZED_OPPORTUNITY_ERRORS,
+});
+
+export const receiveSavedOpportunityErrors = errors => ({
+  type: RECEIVE_SAVED_OPPORTUNITY_ERRORS,
+  errors
+});
+
+export const clearSavedOpportunityErrors = () => ({
+  type: CLEAR_SAVED_OPPORTUNITY_ERRORS,
+});
 
 // export const receiveHomeErrors = errors => {
 //   return {
