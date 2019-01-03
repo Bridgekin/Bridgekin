@@ -4,6 +4,7 @@ class UserMailer < Devise::Mailer
   # default template_path: 'devise/mailer' # to make sure that your mailer uses the devise views
 
   def register_email(user)
+    debugger
     @user = user
     mail(to: user.email, subject: "Welcome to Bridgekin")
   end

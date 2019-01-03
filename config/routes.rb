@@ -7,28 +7,31 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   namespace :api, default: {format: :json} do
-    resources :users, only: [:create, :update]
-    resource :session, only: [:create, :destroy]
-    resources :opportunities
+    resources :opportunities, only: [:create, :update, :destroy, :show]
+    resources :connected_opportunities, only: [:create, :update, :destroy, :show]
+    resources :finalized_opportunities, only: [:create, :update, :destroy, :show]
+    resources :saved_opportunities, only: [:create, :update, :destroy, :show]
     resource :waitlist_user, only: [:create]
-    resource :confirmation
     resources :referral_links, only: [:create]
 
-    get 'authorization', :to => 'sessions#authorize'
+    # get 'authorization', :to => 'sessions#authorize'
     get 'referral_links/:referral_code', :to => 'referral_links#reveal'
 
-    devise_for :users, only: []
-    # devise_for :users,
-    #   path: '',
-    #   path_names: {
-    #     sign_in: 'login',
-    #     sign_out: 'logout',
-    #     registration: 'signup'
-    #   },
-    #   controllers: {
-    #     sessions: 'api/sessions',
-    #     registrations: 'api/users'
-    #   }
-    # resource :user, only: [:show, :update]
+    # devise_for :users, only: []
+    devise_for :users,
+      # path: '',
+      # path_names: {
+      #   sign_in: 'login',
+      #   sign_out: 'logout',
+      #   registration: 'signup'
+      # },
+      controllers: {
+        registrations: "api/users/registrations",
+        sessions: "api/users/sessions",
+        passwords: "api/users/passwords",
+        confirmations: "api/users/confirmations"
+        # invitations: "api/users/invitations",
+         # password_expired: "api/users/password_expired"
+      }
   end
 end

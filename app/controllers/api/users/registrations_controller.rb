@@ -1,19 +1,20 @@
-class Api::UsersController < ApiController
+require_relative '../../concerns/devise_controller_patch.rb'
+class Api::Users::RegistrationsController < Devise::RegistrationsController
   # before_action :require_signed_out!, only: [:create]
   # before_action :require_signed_in!, only: [:update, :destroy]
+  before_action :configure_permitted_parameters
+  skip_before_action :verify_authenticity_token, only: [:create]
+  # protect_from_forgery prepend: true, with: :exception
+  include DeviseControllerPatch
 
   def create
     @user = User.new(user_params)
-
-    # unless @user.profile_pic.attached?
-    #   # file = EzDownload.open('https://vignette.wikia.nocookie.net/smosh/images/e/e1/025Pikachu_OS_anime_4.png/revision/latest?cb=20140725081329')
-    #   @user.profile_pic.attach(io: File.open('app/assets/images/pikachu.png'), filename: 'demo.png')
-    # end
-
+    # debugger
     if @user.save!
-      # debugger
       # UserMailer.register_email(@user).deliver_now
-      # login!(@user)
+      # sign_in User, @user
+      # current_user.send_confirmation_email
+      @token = get_login_token!(@user)
       render :show
     else
       render json: @user.errors.full_messages, status: 422
@@ -42,6 +43,10 @@ class Api::UsersController < ApiController
   end
 
   private
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:fname,:lname])
+  end
 
   def user_params
     params.permit(:email, :fname, :lname, :phone, :city, :state,

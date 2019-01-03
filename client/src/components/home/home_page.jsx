@@ -151,6 +151,7 @@ class HomePage extends React.Component{
           margin="normal"
           value={this.state.fname}
           onChange={this.handleChange('fname')}
+          onMouseUp={this.handleChange('fname')}
           />
         <TextField
           required
@@ -159,6 +160,7 @@ class HomePage extends React.Component{
           margin="normal"
           value={this.state.lname}
           onChange={this.handleChange('lname')}
+          onMouseUp={this.handleChange('lname')}
           />
         <TextField
           required
@@ -167,6 +169,7 @@ class HomePage extends React.Component{
           margin="normal"
           value={this.state.email}
           onChange={this.handleChange('email')}
+          onMouseUp={this.handleChange('email')}
           />
         <div className={classes.wrapper}>
           <Button variant="contained" color="secondary" className={classes.button}

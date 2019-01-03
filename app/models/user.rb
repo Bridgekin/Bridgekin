@@ -3,12 +3,36 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-         # :confirmable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
   validates :email, uniqueness: { case_sensitive: false }, presence: true
   validates :email, :fname, :lname,  presence: true
+
+  has_many :opportunities,
+    foreign_key: :owner_id,
+    class_name: :Opportunity
+
+  has_many :connected_opportunities,
+    foreign_key: :user_id,
+    class_name: :ConnectedOpportunity
+
+  has_many :finalized_opportunities,
+    foreign_key: :user_id,
+    class_name: :FinalizedOpportunity
+
+  has_many :saved_opportunities,
+    foreign_key: :user_id,
+    class_name: :SavedOpportunity
+
+  has_many :facilitated_opportunities,
+    foreign_key: :facilitator_id,
+    class_name: :ConnectedOpportunity
+
+  has_many :facilitated_deals,
+    foreign_key: :facilitator_id,
+    class_name: :FinalizedOpportunity
 
   def confirmed?
     self.confirmed_at.present?

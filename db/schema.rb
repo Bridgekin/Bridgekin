@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_25_192521) do
+ActiveRecord::Schema.define(version: 2019_01_02_193751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,29 @@ ActiveRecord::Schema.define(version: 2018_12_25_192521) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "connected_opportunities", force: :cascade do |t|
+    t.integer "opportunity_id", null: false
+    t.integer "user_id", null: false
+    t.integer "facilitator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "network_id"
+    t.integer "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
+    t.index ["opportunity_id"], name: "index_connected_opportunities_on_opportunity_id"
+    t.index ["user_id"], name: "index_connected_opportunities_on_user_id"
+  end
+
+  create_table "finalized_opportunities", force: :cascade do |t|
+    t.integer "opportunity_id", null: false
+    t.integer "user_id", null: false
+    t.integer "facilitator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "network_id"
+    t.integer "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
+    t.index ["opportunity_id"], name: "index_finalized_opportunities_on_opportunity_id", unique: true
+  end
+
   create_table "jwt_blacklist", force: :cascade do |t|
     t.string "jti", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
@@ -57,6 +80,7 @@ ActiveRecord::Schema.define(version: 2018_12_25_192521) do
     t.string "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["owner_id", "title"], name: "index_opportunities_on_owner_id_and_title", unique: true
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
   end
 
@@ -68,6 +92,16 @@ ActiveRecord::Schema.define(version: 2018_12_25_192521) do
     t.datetime "updated_at", null: false
     t.index ["member_id", "network_id"], name: "index_referral_links_on_member_id_and_network_id", unique: true
     t.index ["referral_code"], name: "index_referral_links_on_referral_code"
+  end
+
+  create_table "saved_opportunities", force: :cascade do |t|
+    t.integer "opportunity_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "network_id"
+    t.integer "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
+    t.index ["opportunity_id", "user_id"], name: "index_saved_opportunities_on_opportunity_id_and_user_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|

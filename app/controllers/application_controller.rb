@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
-  acts_as_token_authentication_handler_for User, fallback: :none
+  # protect_from_forgery with: :exception
+  # acts_as_token_authentication_handler_for User, fallback: :none
   # protect_from_forgery prepend: true, with: :exception
   # helper_method :logged_in, :current_user
 
@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   # before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :authenticate_user
   #
-  # respond_to :json
+  respond_to :json
   #
   # def logged_in
   #   !!current_user

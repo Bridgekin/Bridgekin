@@ -1,17 +1,18 @@
+require_relative '../concerns/devise_controller_patch.rb'
 class Api::OpportunitiesController < ApiController
+  include DeviseControllerPatch
   before_action :set_opportunity, only: [:show, :update, :destroy]
+  before_action :authenticate_user, only: [:index]
 
-  # GET /opportunities
   def index
-    @opportunities = Opportunity.all
+    @opportunities = @user.opportunities
 
-    # render json: @opportunities
-    render json: ['it works']
+    render :index
   end
 
   # GET /opportunities/1
   def show
-    render json: @opportunity
+    render :show
   end
 
   # POST /opportunities
@@ -19,25 +20,38 @@ class Api::OpportunitiesController < ApiController
     @opportunity = Opportunity.new(opportunity_params)
 
     if @opportunity.save
-      render json: @opportunity, status: :created, location: @opportunity
+      # render json: @opportunity, status: :created, location: @opportunity
+      render :show
     else
-      render json: @opportunity.errors, status: :unprocessable_entity
+      render json: @opportunity.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /opportunities/1
   def update
     if @opportunity.update(opportunity_params)
-      render json: @opportunity
+      # render json: @opportunity
+      render :show
     else
-      render json: @opportunity.errors, status: :unprocessable_entity
+      render json: @opportunity.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   # DELETE /opportunities/1
   def destroy
-    @opportunity.destroy
+    if @opportunity.destroy
+      render json: ['Opportunity was destroyed'], status: :ok
+    else
+      render json: @opportunity.errors.full_messages, status: :unprocessable_entity
+    end
   end
+
+  # def opportunity
+  #   @opporunities = @user.opportunities
+  #   @connected_opporunities = @user.opportunities
+  #   @opporunities = @user.opportunities
+  #   @opporunities = @user.opportunities
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -47,6 +61,7 @@ class Api::OpportunitiesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def opportunity_params
-      params.fetch(:opportunity, {})
+      params.permit(:title, :description, :owner_id, :opportunity_needs,
+      :industries, :geography, :value, :status)
     end
 end

@@ -28,7 +28,7 @@ class ApiController < ActionController::API
         #set current_user
         @current_user = @user
         #create new token
-        @token = get_login_token!(@user)
+        # @token = get_login_token!(@user)
 
       rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
         head :unauthorized

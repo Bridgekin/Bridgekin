@@ -1,4 +1,4 @@
-class Api::SessionsController < ApiController
+class Api::Users::SessionsController < ApiController
   # before_action :require_signed_out!, only: [:create]
   # before_action :require_signed_in!, only: [:destroy]
   before_action :authenticate_user, only: [:authorize]
@@ -19,6 +19,7 @@ class Api::SessionsController < ApiController
   end
 
   def authorize
+    @token = get_login_token!(@user)
     render :show
   end
 
