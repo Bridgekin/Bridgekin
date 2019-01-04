@@ -10,6 +10,9 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import GeoField from './opportunity_geo';
+import NeedsField from './opportunity_needs';
+import IndustryField from './opportunity_industry';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -43,7 +46,7 @@ const styles = theme => ({
   },
   stepperRootMain:{
     flexGrow: 1,
-    marginTop: 75
+    marginTop: 50
   },
   step: {
     "& $completed": {
@@ -66,12 +69,13 @@ const styles = theme => ({
     }
   },
   mainWrapper:{
-    border: '1px solid red'
+    // border: '1px solid red'
   },
   flowNav:{
     display: 'flex',
     justifyContent:'space-between',
-    marginTop: 30
+    marginTop: 30,
+    marginBottom: 30
   },
   flowButton: {
     margin: '0px 20px 0px 20px',
@@ -86,21 +90,33 @@ class OpportunityCreate extends React.Component {
     super(props);
     this.state = {
       activeStep: 0,
+      opportunityNeed: '',
+      geography: [],
+      industry: '',
+      value: ''
     };
+
+    this.handleChange = this.handleChange.bind(this);
   }
 
   getSteps() {
-    return ['Need', 'Industry', 'Geography','Value', 'Description', 'Post'];
+    return ['Need', 'Geography','Industry', 'Value', 'Description', 'Post'];
   }
 
   getStepContent(step) {
     switch (step) {
       case 0:
-        return 'What are your business needs?';
+        return <NeedsField
+          handleChange={this.handleChange('opportunityNeed')}
+          need={this.state.opportunityNeed}/>;
       case 1:
-        return 'In what industries are the product/service you want to find?';
+        return <GeoField
+          handleChange={this.handleChange('geography')}
+          geography={this.state.geography}/>;
       case 2:
-        return 'What is your geographical focus?';
+        return <IndustryField
+          handleChange={this.handleChange('industry')}
+          industry={this.state.industry}/>;
       case 3:
         return "What's the value of your deal?";
       case 4:
@@ -124,10 +140,38 @@ class OpportunityCreate extends React.Component {
     this.setState({ activeStep: 0 });
   };
 
+  handleChange(field) {
+    return (value) => {
+      this.setState({ [field]: value });
+    }
+  }
+
   render (){
     const { classes } = this.props;
     const steps = this.getSteps();
     const { activeStep } = this.state;
+
+    let flowNav = (
+      <div className={classes.flowNav}>
+        <Button
+          disabled={activeStep === 0}
+          variant="contained"
+          color="secondary"
+          onClick={this.handleBack}
+          className={classes.flowButton}
+        >
+          Back
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={this.handleNext}
+          className={classes.flowButton}
+        >
+          {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+        </Button>
+      </div>
+    )
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
@@ -135,8 +179,8 @@ class OpportunityCreate extends React.Component {
           justify='space-around' alignItems='center'>
 
           <Grid item xs={10} sm={2} className={classes.accountNavSection}>
-            <Typography className={classes.waitlistCTA} variant="h4" gutterBottom>
-              <strong>My Profile</strong>
+            <Typography variant="h5" gutterBottom>
+              <strong>Post Opportunity</strong>
             </Typography>
           </Grid>
 
@@ -188,29 +232,7 @@ class OpportunityCreate extends React.Component {
           ) : (
             <Grid item xs={10} sm={7} className={classes.mainWrapper}>
               {this.getStepContent(activeStep)}
-              <Typography className={classes.instructions}>
-                {this.getStepContent(activeStep)}
-              </Typography>
-
-              <div className={classes.flowNav}>
-                <Button
-                  disabled={activeStep === 0}
-                  variant="contained"
-                  color="secondary"
-                  onClick={this.handleBack}
-                  className={classes.flowButton}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={this.handleNext}
-                  className={classes.flowButton}
-                >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              </div>
+              {flowNav}
             </Grid>
           )}
         </Grid>
