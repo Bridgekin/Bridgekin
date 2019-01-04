@@ -27,3 +27,10 @@ export const industryChoices = [
   'Telecommunications',
   'Transporation'
 ];
+
+export const valueChoices = [
+  'Under 1M',
+  '$1 - $5M',
+  '$5 - $25M',
+  'Over $25M'
+];

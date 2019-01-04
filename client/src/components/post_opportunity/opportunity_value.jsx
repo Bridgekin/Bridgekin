@@ -8,7 +8,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import SvgIcon from '@material-ui/core/SvgIcon';
 
-import { industryChoices } from '../../util/choices';
+import money from '../../static/icons/money.png';
+import { valueChoices } from '../../util/choices';
 
 const styles = theme => ({
   root: {
@@ -30,20 +31,27 @@ const styles = theme => ({
   content:{
     padding: 5
   },
-  industryHeader:{
+  valueHeader:{
     fontWeight: 700,
   },
   cardGrid:{
     display: 'flex',
     justifyContent: 'flex-end'
-  }
+  },
+  moneyLogo: {
+    fontSize: 30,
+    fontWeight: 500
+  },
+  icon:{
+    fontSize: 80
+  },
 });
 
-class IndustryField extends React.Component {
+class ValueField extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      choices: industryChoices
+      choices: valueChoices
     }
   }
 
@@ -68,18 +76,16 @@ class IndustryField extends React.Component {
       ) : (classes.actionArea);
 
       return (
-        <Grid item xs={12} sm={6}>
-          <Card className={classes.cardWrapper}>
-            <CardActionArea className={styling}
-              onClick={this.handleClick(industry)}>
-              <CardContent className={classes.content}>
-                <Typography variant="h6" align='center' color='inherit'>
-                  {industry}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
+        <Card className={classes.cardWrapper}>
+          <CardActionArea className={styling}
+            onClick={this.handleClick(industry)}>
+            <CardContent className={classes.content}>
+              <Typography variant="h6" align='center' color='inherit'>
+                {industry}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
       )
     });
 
@@ -87,16 +93,19 @@ class IndustryField extends React.Component {
       <Grid container className={classes.root}
         justify='flex-start' alignItems='center'>
         <Typography variant="h4" gutterBottom align='left'
-          className={classes.industryHeader} color='secondary'>
-          In which industries are the product/service you want to find?
+          className={classes.valueHeader} color='secondary'>
+          What's the value of your deal?
         </Typography>
+
         <Grid container className={classes.root}
           justify='center' alignItems='center'>
-        {cards}
+          <Grid item xs={10} sm={4}>
+            {cards}
+          </Grid>
         </Grid>
       </Grid>
     )
   }
 }
 
-export default withStyles(styles)(IndustryField);
+export default withStyles(styles)(ValueField);

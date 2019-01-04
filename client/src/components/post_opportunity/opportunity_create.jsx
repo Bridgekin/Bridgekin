@@ -9,10 +9,13 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import SvgIcon from '@material-ui/core/SvgIcon';
 
 import GeoField from './opportunity_geo';
 import NeedsField from './opportunity_needs';
 import IndustryField from './opportunity_industry';
+import ValueField from './opportunity_value';
+import DescriptionField from './opportunity_description';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -93,14 +96,22 @@ class OpportunityCreate extends React.Component {
       opportunityNeed: '',
       geography: [],
       industry: '',
-      value: ''
+      value: '',
+      title: '',
+      description: '',
+      networks: ['All Opportunities']
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
+  // componentDidMount(){
+  //   // pull in Networks
+  //   this.setState({ network: ['All Opportunities']})
+  // }
+
   getSteps() {
-    return ['Need', 'Geography','Industry', 'Value', 'Description', 'Post'];
+    return ['Need', 'Industry', 'Geography', 'Value', 'Description', 'Post'];
   }
 
   getStepContent(step) {
@@ -110,17 +121,23 @@ class OpportunityCreate extends React.Component {
           handleChange={this.handleChange('opportunityNeed')}
           need={this.state.opportunityNeed}/>;
       case 1:
-        return <GeoField
-          handleChange={this.handleChange('geography')}
-          geography={this.state.geography}/>;
-      case 2:
         return <IndustryField
           handleChange={this.handleChange('industry')}
           industry={this.state.industry}/>;
+      case 2:
+        return <GeoField
+          handleChange={this.handleChange('geography')}
+          geography={this.state.geography}/>;
       case 3:
-        return "What's the value of your deal?";
+        return <ValueField
+          handleChange={this.handleChange('value')}
+          industry={this.state.value}/>;
       case 4:
-        return 'Description';
+        return <DescriptionField
+          handleChange={this.handleChange}
+          title={this.state.title}
+          description={this.state.description}
+          networks={this.state.networks}/>;
       case 5:
         return 'Submit Opportunity';
       default:
