@@ -13,4 +13,8 @@ class FinalizedOpportunity < ApplicationRecord
   belongs_to :facilitator,
     foreign_key: :facilitator_id,
     class_name: :User
+
+  belongs_to :network,
+    foreign_key: :network_id,
+    class_name: :Network
 end

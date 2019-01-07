@@ -58,7 +58,7 @@ class ValueField extends React.Component {
   handleClick(field){
     return e => {
       e.preventDefault();
-      if(this.props.industry === field){
+      if(this.props.value === field){
         this.props.handleChange('');
       } else {
         this.props.handleChange(field);
@@ -70,18 +70,18 @@ class ValueField extends React.Component {
     let classes = this.props.classes;
     const { choices } = this.state;
 
-    let cards = choices.map(industry => {
-      let styling = this.props.industry === industry ? (
+    let cards = choices.map(value => {
+      let styling = this.props.value === value ? (
         [classes.actionArea, classes.clicked].join(' ')
       ) : (classes.actionArea);
 
       return (
         <Card className={classes.cardWrapper}>
           <CardActionArea className={styling}
-            onClick={this.handleClick(industry)}>
+            onClick={this.handleClick(value)}>
             <CardContent className={classes.content}>
               <Typography variant="h6" align='center' color='inherit'>
-                {industry}
+                {value}
               </Typography>
             </CardContent>
           </CardActionArea>

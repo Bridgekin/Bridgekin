@@ -1,2 +1,3 @@
-json.extract! variables[:user], :id, :fname, :authentication_token, :confirmed_at
-json.token variables[:token]
+json.user do
+  json.extract! user, :id, :fname, :lname, :confirmed_at
+end

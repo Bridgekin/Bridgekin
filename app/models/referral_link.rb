@@ -4,11 +4,23 @@ class ReferralLink< ApplicationRecord
 
   after_initialize :ensure_referral_code
 
+  belongs_to :network,
+    foreign_key: :network_id,
+    class_name: :Network
+
+  belongs_to :owner,
+    foreign_key: :member_id,
+    class_name: :User
+
   def self.find_link_by_params(params)
     ReferralLink.where(
       member_id: params[:member_id],
       network_id: params[:network_id]
     ).first
+  end
+
+  def self.find_link_by_code(code)
+    ReferralLink.where(referral_code: code).first
   end
 
   def ensure_referral_code

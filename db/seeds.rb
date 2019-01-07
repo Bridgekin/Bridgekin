@@ -19,3 +19,29 @@ User.create!(
   fname: 'Joe',
   lname: 'Demo'
 )
+
+Network.create!(
+  title: 'Bridgekin'
+)
+
+Opportunity.create!(
+  owner_id: 1,
+  title: 'Test - Amazing castle opportunity in France',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
+  opportunity_needs: "Raise Capital",
+  industries: ["Education", "Technology", "Internet"],
+  geography: ["Worldwide"],
+  value:  "$1M - $5M",
+  status: "Approved",
+)
+
+Opportunity.create!(
+  owner_id: 2,
+  title: 'Test - Amazing castle opportunity in Czech',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
+  opportunity_needs: "Raise Capital",
+  industries: ["Education", "Technology", "Internet"],
+  geography: ["Worldwide"],
+  value:  "$1M - $5M",
+  status: "Approved"
+)

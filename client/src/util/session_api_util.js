@@ -1,19 +1,11 @@
-export const signup = user => (
+export const refSignup = (user, code) => (
   fetch('api/signup', {
     method: 'POST',
-    body: JSON.stringify({ user }),
+    body: JSON.stringify({ user, code }),
     headers:{
     	'Content-Type': 'application/json'
   	}
   })
-  // }).then(res => {
-  //   if(res.ok) {
-  //     return res.json();
-  //   } else {
-  //     throw Error(`Request rejected with status ${res.status}`);
-  //   }
-  // })
-  // .catch(console.error)
 )
 
 export const login = user => (
@@ -24,37 +16,12 @@ export const login = user => (
     	'Content-Type': 'application/json'
   	}
   })
-    // .then(res => {
-    //   debugger
-    //   return res;
-    // })
-    // .catch(errors => {
-    //   debugger
-    //   console.log(errors)
-    // })
-  // }).then(res => {
-  //   debugger
-  //   if(res.ok) {
-  //     return res.json();
-  //   } else {
-  //     return reject(res.status, res.json());
-  //   }
-  // })
-  // .catch(console.error)
 )
 
 export const logout = () => (
   fetch('api/logout', {
     method: 'DELETE'
   })
-  // }).then(res => {
-  //   if(res.ok) {
-  //     return res.json();
-  //   } else {
-  //     throw Error(`Request rejected with status ${res.status}`);
-  //   }
-  // })
-  // .catch(console.error)
 )
 
 export const getAuthUserId = (token) => (
@@ -64,12 +31,4 @@ export const getAuthUserId = (token) => (
     },
     method: 'GET'
   })
-  // }).then(res => {
-  //   if(res.ok) {
-  //     return res.json();
-  //   } else {
-  //     throw Error(`Request rejected with status ${res.status}`);
-  //   }
-  // })
-  // .catch(console.error)
 )

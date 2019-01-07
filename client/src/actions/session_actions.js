@@ -1,6 +1,6 @@
 import * as SessionApiUtil from '../util/session_api_util';
 import {receiveUser} from './user_actions';
-import {receiveSessionErrors, clearSessionErrors} from './error_actions';
+import {receiveSessionErrors} from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
 export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
@@ -15,14 +15,22 @@ export const logoutCurrentUser = () => ({
   type: LOGOUT_CURRENT_USER,
 });
 
-export const signup = formUser => dispatch => (
-  SessionApiUtil.signup(formUser)
+export const refSignup = (formUser, code) => dispatch => (
+  SessionApiUtil.refSignup(formUser, code)
     .then(handleErrors)
     .then(data => {
       dispatch(receiveUser(data.user));
       dispatch(receiveCurrentUser(data.user));
+      localStorage.setItem('bridgekinToken', data.token);
     })
-    .catch(errors => dispatch(receiveSessionErrors(errors.errors[0])))
+    .catch(errors => {
+      debugger
+      if (errors instanceof Array){
+        dispatch(receiveSessionErrors(errors))
+      } else{
+        dispatch(receiveSessionErrors('Something went wrong. Try again in a bit, or contact us!'));
+      }
+    })
 );
 
 export const login = formUser => dispatch => (
@@ -34,14 +42,10 @@ export const login = formUser => dispatch => (
       localStorage.setItem('bridgekinToken', data.token);
     })
     .catch(errors => {
-      debugger
-      if (errors instanceof Error){
-        dispatch(receiveSessionErrors('Email or password is invalid'));
-        alert('Email or password is invalid');
-      } else {
-        let msg = errors.errors[0];
-        dispatch(receiveSessionErrors(msg))
-        alert(msg);
+      if (errors instanceof Array){
+        dispatch(receiveSessionErrors(errors))
+      } else{
+        dispatch(receiveSessionErrors('Something went wrong. Try again in a bit, or contact us!'));
       }
     })
 );

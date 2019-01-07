@@ -1,21 +1,24 @@
 require_relative '../../concerns/devise_controller_patch.rb'
 class Api::Users::RegistrationsController < Devise::RegistrationsController
+  include DeviseControllerPatch
   # before_action :require_signed_out!, only: [:create]
   # before_action :require_signed_in!, only: [:update, :destroy]
   before_action :configure_permitted_parameters
   skip_before_action :verify_authenticity_token, only: [:create]
   # protect_from_forgery prepend: true, with: :exception
-  include DeviseControllerPatch
 
   def create
+    @referralLink = ReferralLink.find_link_by_code(params[:code])
     @user = User.new(user_params)
     # debugger
-    if @user.save!
+    if @referralLink && @user.save
       # UserMailer.register_email(@user).deliver_now
       # sign_in User, @user
       # current_user.send_confirmation_email
-      @token = get_login_token!(@user)
+      # @token = get_login_token!(@user)
       render :show
+    elsif @referralLink.nil?
+      render json: ["Invalid referral link"], status: 401
     else
       render json: @user.errors.full_messages, status: 422
     end
@@ -49,7 +52,8 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def user_params
-    params.permit(:email, :fname, :lname, :phone, :city, :state,
-      :country, :password, :membership_type, :password_confirmation, :password_digest)
+    params.require(:user).permit(:email, :fname, :lname, :phone, :city,
+      :state, :country, :password, :membership_type,
+      :password_confirmation, :password_digest)
   end
 end

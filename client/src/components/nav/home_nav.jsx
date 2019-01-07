@@ -90,20 +90,6 @@ class HomeNav extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount(){
-    let token = localStorage.getItem('bridgekinToken');
-
-    if (token){
-      getAuthUserId(token)
-      .then(handleAuthErrors)
-      .then(data => {
-        this.props.receiveUser(data.user);
-        this.props.receiveCurrentUser(data.user);
-      })
-      // .catch(() => localStorage.removeItem('bridgekinToken'))
-    }
-  }
-
   handleSubmit(e){
     e.preventDefault();
 

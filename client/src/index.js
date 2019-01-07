@@ -6,22 +6,38 @@ import * as SessionApiUtil from './util/session_api_util';
 import * as WaitlistApiUtil from './util/waitlist_api_util';
 import './index.css';
 
+import { handleAuthErrors } from './actions/fetch_error_handler';
+import { getAuthUserId } from './util/session_api_util';
+import { receiveCurrentUser } from './actions/session_actions';
+import { receiveUser } from './actions/user_actions';
+
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById('root');
   let preloadedState = undefined;
+  let token = localStorage.getItem('bridgekinToken');
 
-  // if (window.currentUser) {
-  //   preloadedState = {
-  //     users: { [window.currentUser.id]: window.currentUser},
-  //     session: { id: window.currentUser.id},
-  //   };
-  //   delete window.currentUser;
-  // }
+  if (token){
+    getAuthUserId(token)
+    .then(handleAuthErrors)
+    .then( ({user}) => {
+      let preloadedState = {
+        users: { [user.id]: user},
+        session: { id: user.id}
+      };
+      let store = configureStore(preloadedState);
+      ReactDOM.render(<Root store={store}/>, root);
+    })
+    .catch(() => {
+      localStorage.removeItem('bridgekinToken');
+      let store = configureStore(preloadedState);
+      ReactDOM.render(<Root store={store}/>, root);
+    })
+  } else {
+    let store = configureStore(preloadedState);
+    ReactDOM.render(<Root store={store}/>, root);
+  }
 
-  const store = configureStore(preloadedState);
-  ReactDOM.render(<Root store={store}/>, root);
-
-  window.signup = SessionApiUtil.signup;
+  // window.signup = SessionApiUtil.signup;
   window.login = SessionApiUtil.login;
   window.logout = SessionApiUtil.logout;
   window.getAuthUserId = SessionApiUtil.getAuthUserId;

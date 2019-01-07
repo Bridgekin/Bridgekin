@@ -9,15 +9,15 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import { connect } from 'react-redux';
-import { clearWaitlistUserErrors } from '../actions/error_actions';
+import { clearSessionErrors } from '../../actions/error_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  waitlistErrors: state.errors.waitlistUsers
+  sessionErrors: state.errors.login
 });
 
 const mapDispatchToProps = dispatch => ({
-  clearWaitlistUserErrors: () => dispatch(clearWaitlistUserErrors())
+  clearSessionErrors: () => dispatch(clearSessionErrors())
 });
 
 const styles = theme => ({
@@ -38,13 +38,10 @@ const styles = theme => ({
   }
 });
 
-class WaitlistModal extends React.Component {
+class SignupModal extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      email: '',
-      fname: '',
-      lname: '',
       loading: false,
       success: false,
       open: false
@@ -54,8 +51,8 @@ class WaitlistModal extends React.Component {
   }
 
   handleClose = () => {
-    if(this.props.waitlistErrors){
-      this.props.clearWaitlistUserErrors();
+    if(this.props.sessionErrors){
+      this.props.clearSessionErrors();
     }
     this.props.handleClose();
   };
@@ -63,7 +60,7 @@ class WaitlistModal extends React.Component {
   render () {
     const { open, classes } = this.props;
 
-    let waitlistErrors = this.props.waitlistErrors.map(error => {
+    let sessionErrors = this.props.sessionErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
         return ex === 'Fname' ? 'First name' : 'Last name';
       });
@@ -74,13 +71,13 @@ class WaitlistModal extends React.Component {
       )
     })
 
-    let modalText = this.props.waitlistErrors.length === 0 ? (
+    let modalText = this.props.sessionErrors.length === 0 ? (
       <div style={{top:'25%', left: '30%'}} className={classes.paper}>
         <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks for signing up!
         </Typography>
         <Typography variant="subtitle1" id="simple-modal-description">
-          You've now been added to our waitlist! You'll receive a confirmation email shortly.
+          We've sent you a confirmation email. Confirm your email to login.
         </Typography>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
           onClick={this.handleClose} color='secondary'>
@@ -96,7 +93,7 @@ class WaitlistModal extends React.Component {
           Apologies, but we weren't able to sign you up because:
         </Typography>
         <List>
-          {waitlistErrors}
+          {sessionErrors}
         </List>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
           onClick={this.handleClose} color='secondary'>
@@ -118,4 +115,4 @@ class WaitlistModal extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(WaitlistModal));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignupModal));

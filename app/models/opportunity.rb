@@ -8,6 +8,14 @@ class Opportunity < ApplicationRecord
     foreign_key: :owner_id,
     class_name: :User
 
+  has_many :opportunity_networks,
+    foreign_key: :opportunity_id,
+    class_name: :OpportunityNetwork
+
+  has_many :networks,
+    through: :opportunity_networks,
+    source: :network
+
   has_many :connected_opportunities,
     foreign_key: :opportunity_id,
     class_name: :ConnectedOpportunity

@@ -20,14 +20,17 @@ import CardModal from './card_modal';
 
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
+import { fetchOpportunities } from '../../actions/opportunity_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  waitlistErrors: state.errors.waitlistUsers
+  waitlistErrors: state.errors.waitlistUsers,
+  opportunities: Object.values(state.entities.opportunities)
 });
 
 const mapDispatchToProps = dispatch => ({
-  registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user))
+  registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user)),
+  fetchOpportunities: () => dispatch(fetchOpportunities())
 });
 
 const styles = theme => ({
@@ -46,6 +49,14 @@ const styles = theme => ({
   },
   grid:{
     borderBottom: "1px solid #D3D3D3",
+    margin: "15px 0px 15px 0px"
+  },
+  gridOpp:{
+    borderBottom: "1px solid #D3D3D3",
+    margin: "15px 0px 15px 0px",
+    display: 'flex'
+  },
+  gridItem:{
     margin: "15px 0px 15px 0px"
   },
   button:{
@@ -91,6 +102,7 @@ class OpportunityHome extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      opportunitiesLoaded: false,
       referralLink: '',
       network: '',
       fname: '',
@@ -105,20 +117,25 @@ class OpportunityHome extends React.Component {
 
     this.opportunities = [
       {
-        pictureURL: '',
-        title: 'Test house',
-        description: 'This is a test house where you can see what a card would look like beforehand',
+        title: `Tuscan Castle surrounded by 30+ acres of vineyards and olive
+        groves seekings buyer`,
+        description: `Historically refurbished 33,000 sq ft castle in the heart
+        of the Tuscan countryside. Off the market property considered
+        the Crown of Ireland!`,
         geography: 'Italy',
         industry: 'Real Estate and Housing',
-        value: 'Over 500k'
+        value: 'Over 25M',
+        need: 'Raise Capital',
+        networks: 'All Bridgekin'
       },
       {
-        pictureURL: '',
         title: 'Test house',
-        description: 'This is a test house where you can see what a card would look like beforehand',
-        geography: 'Italy',
+        description: 'This is a second test house where you can also see blah blah',
+        geography: 'Romania',
         industry: 'Real Estate and Housing',
-        value: 'Over 500k'
+        value: 'Over 500k',
+        need: 'Raise Capital',
+        networks: 'All Bridgekin'
       },
     ];
 
@@ -127,6 +144,13 @@ class OpportunityHome extends React.Component {
     // this.handleReferralChange = this.handleReferralChange.bind(this);
     this.handleCardOpen = this.handleCardOpen.bind(this);
     this.handleCardClose = this.handleCardClose.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.fetchOpportunities()
+      .then(() => {
+        this.setState({ opportunitiesLoaded: true})
+      });
   }
 
   handleChange(field){
@@ -239,9 +263,9 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let opportunities = this.opportunities.map(opportunity => (
-      <Grid item sm={10} md={5} justify="center" alignItems="center"
-        className={classes.grid}>
+    let opportunities = this.props.opportunities.map(opportunity => (
+      <Grid item xs={6} justify="center" alignItems="center"
+        className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
           classes={classes}
           handleCardOpen={this.handleCardOpen} />
@@ -252,14 +276,19 @@ class OpportunityHome extends React.Component {
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={24}>
 
-        <Grid item xs={8} justify="flex-end" alignItems="center">
+        <Grid item xs={10} sm={8}  justify="flex-end" alignItems="center">
           <Typography variant="p" gutterBottom align='right'
             color="secondary">
             All Opportunities
           </Typography>
         </Grid>
 
-        {opportunities}
+        <Grid item xs={10} sm={10} className={classes.gridOpp} >
+          <Grid container className={classes.root}
+            justify="center" alignItems="center" spacing={24}>
+            {opportunities}
+          </Grid>
+        </Grid>
       </Grid>
     )
 
@@ -279,7 +308,8 @@ class OpportunityHome extends React.Component {
             handleClose={this.handleWaitlistClose}/>
           <CardModal open={cardOpen}
             handleClose={this.handleCardClose}
-            opportunity={focusedOpportunity}/>
+            opportunity={focusedOpportunity}
+            demo={false}/>
         </MuiThemeProvider>
       )
     }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -93,26 +94,49 @@ class CardModal extends React.Component {
       sent: false
     }
     this.handleClose = this.handleClose.bind(this);
-    this.handleConnectOpportunity = this.handleConnectOpportunity.bind(this);
+    this.handleConnectMe = this.handleConnectMe.bind(this);
+    this.handleConnectFriend = this.handleConnectFriend.bind(this);
   }
 
-  handleClose(e){
-    e.preventDefault();
+  handleClose(field){
+    return e => {
+      e.preventDefault();
+
+      this.setState({ sent: false },
+        () => {
+          this.props.handleClose();
+          if(field === 'post'){
+            this.props.history.push('/postopportunity');
+          }
+        }
+      );
+    }
     // if(this.props.waitlistErrors){
     //   this.props.clearWaitlistUserErrors();
     // }
-    this.setState({ sent: false }, () => this.props.handleClose());
   };
 
-  handleConnectOpportunity(e){
+  handleConnectMe(e){
     e.preventDefault()
 
-    this.setState({sent: true})
+    if(!this.props.demo){
+      this.setState({sent: true})
+    }
+  }
+
+  handleConnectFriend(e){
+    e.preventDefault()
+
+    if(!this.props.demo){
+      this.setState({sent: true})
+    }
   }
 
   render () {
-    const { open, classes } = this.props;
+    const { open, classes, opportunity } = this.props;
     const { sent } = this.state;
+    const { title, description, industry, need, geography,
+      value, networks } = opportunity;
 
     let modalContent = !sent ? (
       <Card className={classes.card}>
@@ -124,14 +148,11 @@ class CardModal extends React.Component {
         <CardContent className={classes.content}>
           <Typography variant="h5" gutterBottom align='center'
             color="default">
-            Tuscan Castle surrounded by 30+ acres of vineyards and olive
-            groves seekings buyer
+            {title}
           </Typography>
           <Typography variant="subtitle1" gutterBottom align='center'
             color="default">
-            Historically refurbished 33,000 sq ft castle in the heart
-            of the Tuscan countryside. Off the market property considered
-            the Crown of Ireland!
+            {description}
           </Typography>
 
           <div className={classes.cardWrapper}>
@@ -142,7 +163,7 @@ class CardModal extends React.Component {
               </Typography>
               <Typography variant="h2" gutterBottom align='center'
                 color="default" className={classes.cardSubContent}>
-                Italy
+                {geography}
               </Typography>
             </div>
 
@@ -153,7 +174,7 @@ class CardModal extends React.Component {
               </Typography>
               <Typography variant="h2" gutterBottom align='center'
                 color="default" className={classes.cardSubContent}>
-                Real Estate & Housing
+                {industry}
               </Typography>
             </div>
 
@@ -164,7 +185,7 @@ class CardModal extends React.Component {
               </Typography>
               <Typography variant="h2" gutterBottom align='center'
                 color="default" className={classes.cardSubContent}>
-                Over 25M
+                {value}
               </Typography>
             </div>
           </div>
@@ -172,12 +193,13 @@ class CardModal extends React.Component {
           <div className={classes.actionWrapper}>
             <Button variant="contained" color='secondary'
               className={classes.actionButton}
-              onClick={this.handleConnectOpportunity}>
+              onClick={this.handleConnectMe}>
               Connect Me
             </Button>
 
             <Button variant="contained" color='secondary'
-              className={classes.actionButton}>
+              className={classes.actionButton}
+              onClick={this.handleConnectFriend}>
               Refer A Trusted Contact
             </Button>
           </div>
@@ -203,10 +225,11 @@ class CardModal extends React.Component {
         </Typography>
         <div className={classes.postButtons}>
           <Button variant="contained" color='secondary'
-            onClick={this.handleClose}>
+            onClick={this.handleClose('find')}>
             View More Opportunities
           </Button>
-          <Button variant="contained" color='secondary'>
+          <Button variant="contained" color='secondary'
+            onClick={this.handleClose('post')}>
             Post An Opportunity
           </Button>
         </div>
@@ -219,7 +242,7 @@ class CardModal extends React.Component {
         aria-describedby="simple-modal-description"
         open={open}
         disableAutoFocus={true}
-        onClose={this.handleClose}
+        onClose={this.handleClose('find')}
         className={classes.cardModalWrapper}>
 
         {modalContent}
@@ -228,4 +251,4 @@ class CardModal extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CardModal));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CardModal)));

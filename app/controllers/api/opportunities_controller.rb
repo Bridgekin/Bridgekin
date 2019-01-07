@@ -2,24 +2,34 @@ require_relative '../concerns/devise_controller_patch.rb'
 class Api::OpportunitiesController < ApiController
   include DeviseControllerPatch
   before_action :set_opportunity, only: [:show, :update, :destroy]
-  before_action :authenticate_user, only: [:index]
+  before_action :authenticate_user
 
   def index
     @opportunities = @user.opportunities
-
     render :index
   end
 
   # GET /opportunities/1
   def show
+    @networks = @opportunity.networks
     render :show
   end
 
   # POST /opportunities
   def create
     @opportunity = Opportunity.new(opportunity_params)
+    @opportunity.owner_id = @user.id
+    @opportunity.status = 'Pending'
 
     if @opportunity.save
+      networks_params = params[:opportunity][:networks]
+      @networks = []
+      networks_params.each do |id|
+        @networks << OpportunityNetwork.create(
+          opportunity_id: @opportunity.id,
+          network_id: id
+        )
+      end
       # render json: @opportunity, status: :created, location: @opportunity
       render :show
     else
@@ -30,6 +40,7 @@ class Api::OpportunitiesController < ApiController
   # PATCH/PUT /opportunities/1
   def update
     if @opportunity.update(opportunity_params)
+      @networks = @opportunity.networks
       # render json: @opportunity
       render :show
     else
@@ -61,7 +72,7 @@ class Api::OpportunitiesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def opportunity_params
-      params.permit(:title, :description, :owner_id, :opportunity_needs,
-      :industries, :geography, :value, :status)
+      params.require(:opportunity).permit(:title, :description, :owner_id, :opportunity_needs,
+      :industries, :geography, :value, :status, :networks)
     end
 end

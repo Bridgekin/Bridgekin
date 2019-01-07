@@ -11,7 +11,7 @@ class Api::Users::SessionsController < ApiController
     if @user && @user.valid_password?(sign_in_params[:password]) && @user.confirmed?
       @token = get_login_token!(@user)
       render :show
-    elsif !@user.confirmed?
+    elsif @user && !@user.confirmed?
       render json: ['You need to confirm your account before logging in.'], status: 404
     else
       render json: ['Email or password is invalid'], status: 404

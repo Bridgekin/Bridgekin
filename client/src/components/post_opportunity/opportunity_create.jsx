@@ -16,16 +16,21 @@ import NeedsField from './opportunity_needs';
 import IndustryField from './opportunity_industry';
 import ValueField from './opportunity_value';
 import DescriptionField from './opportunity_description';
+import SubmitField from './opportunity_submit';
+import SubmitModal from './submit_modal';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
+
+import {createOpportunity} from '../../actions/opportunity_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
 });
 
 const mapDispatchToProps = dispatch => ({
-  // registerWaitlist: (user) => dispatch(registerWaitlist(user))
+  // registerWaitlist: (user) => dispatch(registerWaitlist(user)),
+  createOpportunity: (opp) => dispatch(createOpportunity(opp))
 });
 
 const styles = theme => ({
@@ -88,21 +93,27 @@ const styles = theme => ({
   }
   });
 
+const DEFAULTSTATE = {
+  activeStep: 0,
+  need: '',
+  geography: [],
+  industry: [],
+  value: '',
+  title: '',
+  description: '',
+  networks: ['General Bridgekin Network'],
+  modalOpen: false
+}
+
 class OpportunityCreate extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      activeStep: 0,
-      opportunityNeed: '',
-      geography: [],
-      industry: '',
-      value: '',
-      title: '',
-      description: '',
-      networks: ['All Opportunities']
-    };
+    this.state = Object.assign({}, DEFAULTSTATE);
 
     this.handleChange = this.handleChange.bind(this);
+    this.checkErrors = this.checkErrors.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   // componentDidMount(){
@@ -118,8 +129,8 @@ class OpportunityCreate extends React.Component {
     switch (step) {
       case 0:
         return <NeedsField
-          handleChange={this.handleChange('opportunityNeed')}
-          need={this.state.opportunityNeed}/>;
+          handleChange={this.handleChange('need')}
+          need={this.state.need}/>;
       case 1:
         return <IndustryField
           handleChange={this.handleChange('industry')}
@@ -131,7 +142,7 @@ class OpportunityCreate extends React.Component {
       case 3:
         return <ValueField
           handleChange={this.handleChange('value')}
-          industry={this.state.value}/>;
+          value={this.state.value}/>;
       case 4:
         return <DescriptionField
           handleChange={this.handleChange}
@@ -139,7 +150,16 @@ class OpportunityCreate extends React.Component {
           description={this.state.description}
           networks={this.state.networks}/>;
       case 5:
-        return 'Submit Opportunity';
+        let errors = this.checkErrors();
+        return <SubmitField
+          title={this.state.title}
+          description={this.state.description}
+          networks={this.state.networks}
+          value={this.state.value}
+          geography={this.state.geography}
+          industry={this.state.industry}
+          opportunityNeeds={this.state.opportunityNeed}
+          errors={errors}/>;
       default:
         return 'Unknown step';
     }
@@ -149,12 +169,30 @@ class OpportunityCreate extends React.Component {
     this.setState({ activeStep: this.state.activeStep + 1 });
   };
 
+  handleSubmit(){
+    let { geography, industry,
+      value, title, description,
+      networks, need} = this.state;
+
+    let opportunity = {geography, value, title, description,
+      industries: industry, opportunity_needs: need, networks}
+
+    this.props.createOpportunity(opportunity)
+    .then(() => {
+      this.setState({ modalOpen: true });
+    })
+  };
+
+  handleModalClose = () => {
+    this.setState({ modalOpen: false });
+  };
+
   handleBack = () => {
     this.setState({ activeStep: this.state.activeStep - 1 });
   };
 
   handleReset = () => {
-    this.setState({ activeStep: 0 });
+    this.setState(Object.assign({}, DEFAULTSTATE));
   };
 
   handleChange(field) {
@@ -163,10 +201,33 @@ class OpportunityCreate extends React.Component {
     }
   }
 
+  capitalize(string){
+    return string[0].toUpperCase() + string.slice(1)
+  }
+
+  checkErrors(){
+    const { title, description, industry, need, geography,
+      value, networks } = this.state;
+    let opp = { title, description, industry, need, value,
+      networks, geography};
+    let keys = Object.keys(opp);
+    let errors = [];
+    debugger;
+    for (let i = 0; i < keys.length; i++){
+      if(opp[keys[i]].length === 0){
+        let formatted = this.capitalize(keys[i]);
+        errors.push(`${formatted} is blank`);
+      }
+    }
+    return errors;
+  }
+
   render (){
     const { classes } = this.props;
     const steps = this.getSteps();
-    const { activeStep } = this.state;
+    const { activeStep, modalOpen } = this.state;
+
+    let errors = this.checkErrors();
 
     let flowNav = (
       <div className={classes.flowNav}>
@@ -182,7 +243,11 @@ class OpportunityCreate extends React.Component {
         <Button
           variant="contained"
           color="secondary"
-          onClick={this.handleNext}
+          disabled={
+            (errors.length > 0) &&
+            (activeStep === steps.length - 1)}
+          onClick={ activeStep === steps.length - 1 ?
+            this.handleSubmit : this.handleNext}
           className={classes.flowButton}
         >
           {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
@@ -253,6 +318,10 @@ class OpportunityCreate extends React.Component {
             </Grid>
           )}
         </Grid>
+
+        <SubmitModal open={modalOpen}
+          handleClose={this.handleModalClose}
+          handleReset={this.handleReset}/>
       </MuiThemeProvider>
     )
   }

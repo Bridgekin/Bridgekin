@@ -42,28 +42,57 @@ const styles = theme => ({
 class IndustryField extends React.Component {
   constructor(props){
     super(props);
+    const options = this.createDefault();
     this.state = {
-      choices: industryChoices
+      options
     }
+    debugger
+  }
+
+  createDefault(){
+    let options = {};
+    for (let i = 0; i < industryChoices.length; i++){
+      options[industryChoices[i]] = false;
+    }
+    return options
+  }
+
+  componentDidMount(){
+    let options = this.state.options;
+    let keys = Object.keys(options);
+    for(let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      // let formattedKey = this.capitalize(key);
+      if(this.props.industry.includes(key)){
+        options[key] = true;
+      } else {
+        options[key] = false;
+      }
+    }
+    this.setState({ options })
   }
 
   handleClick(field){
     return e => {
       e.preventDefault();
-      if(this.props.industry === field){
-        this.props.handleChange('');
-      } else {
-        this.props.handleChange(field);
-      }
+      let { options } = this.state;
+      options[field] = !options[field];
+      this.setState( { options },
+        () => {
+          let chosenOptions = Object.keys(options).filter(k => options[k]);
+          this.props.handleChange(chosenOptions);
+        });
     }
   }
 
   render (){
     let classes = this.props.classes;
-    const { choices } = this.state;
+    const { options } = this.state;
 
-    let cards = choices.map(industry => {
-      let styling = this.props.industry === industry ? (
+    debugger
+
+    let cards = Object.keys(options).map(option => {
+      let styling = options[option] ? (
         [classes.actionArea, classes.clicked].join(' ')
       ) : (classes.actionArea);
 
@@ -71,10 +100,10 @@ class IndustryField extends React.Component {
         <Grid item xs={12} sm={6}>
           <Card className={classes.cardWrapper}>
             <CardActionArea className={styling}
-              onClick={this.handleClick(industry)}>
+              onClick={this.handleClick(option)}>
               <CardContent className={classes.content}>
                 <Typography variant="h6" align='center' color='inherit'>
-                  {industry}
+                  {option}
                 </Typography>
               </CardContent>
             </CardActionArea>

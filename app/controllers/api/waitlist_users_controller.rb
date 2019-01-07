@@ -17,6 +17,6 @@ class Api::WaitlistUsersController < ApiController
   private
 
   def waitlist_user_params
-    params.permit(:email, :fname, :lname, :from_referral_id)
+    params.require(:user).permit(:email, :fname, :lname, :from_referral_id)
   end
 end

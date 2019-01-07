@@ -71,7 +71,6 @@ class GeoField extends React.Component {
       e.preventDefault();
       let { options } = this.state;
       options[field] = !options[field];
-      console.log('changed', options)
       this.setState( { options },
         () => {
           let chosenOptions = Object.keys(options).filter(k => options[k]);

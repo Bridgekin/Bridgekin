@@ -34,6 +34,22 @@ class User < ApplicationRecord
     foreign_key: :facilitator_id,
     class_name: :FinalizedOpportunity
 
+  has_many :user_networks,
+    foreign_key: :member_id,
+    class_name: :UserNetwork
+
+  has_many :member_networks,
+    through: :user_networks,
+    source: :network
+
+  has_many :network_admins,
+    foreign_key: :network_id,
+    class_name: :NetworkAdmin
+
+  has_many :managed_networks,
+    through: :network_admins,
+    source: :network
+
   def confirmed?
     self.confirmed_at.present?
   end

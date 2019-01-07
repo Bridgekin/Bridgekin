@@ -24,7 +24,8 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingBottom: 50
+    paddingBottom: 50,
+    height: 400
   },
   content:{
     padding: 25
@@ -38,7 +39,9 @@ const styles = theme => ({
   cardSubContent:{
     fontSize: 18,
     fontWeight: 700
-  }
+  },
+  title: {fontSize: 26},
+  description: {fontSize: 14}
 });
 
 
@@ -53,7 +56,13 @@ class OpportunityCard extends React.Component {
     this.props.handleCardOpen(this.props.opportunity)
   }
   render(){
-    const { classes }= this.props;
+    const { classes, opportunity }= this.props;
+    let { title, description, industries, opportunityNeeds, geography,
+      value, networks } = opportunity;
+
+    let industry = industries.join(', ');
+    geography = geography.join(', ');
+    let need = opportunityNeeds;
 
     return (
     <Card className={classes.card}>
@@ -64,16 +73,13 @@ class OpportunityCard extends React.Component {
           title="CastlePicture"
         />
         <CardContent className={classes.content}>
-          <Typography variant="h4" gutterBottom align='center'
-            color="default">
-            Tuscan Castle surrounded by 30+ acres of vineyards and olive
-            groves seekings buyer
+          <Typography variant="h2" gutterBottom align='center'
+            color="default" className={classes.title}>
+            {title}
           </Typography>
-          <Typography variant="h6" gutterBottom align='center'
-            color="default">
-            Historically refurbished 33,000 sq ft castle in the heart
-            of the Tuscan countryside. Off the market property considered
-            the Crown of Ireland!
+          <Typography variant="p" gutterBottom align='center'
+            color="default" className={classes.description}>
+            {description}
           </Typography>
 
           <div className={classes.cardWrapper}>
@@ -84,7 +90,7 @@ class OpportunityCard extends React.Component {
               </Typography>
               <Typography variant="h2" gutterBottom align='center'
                 color="default" className={classes.cardSubContent}>
-                Italy
+                {geography}
               </Typography>
             </div>
 
@@ -95,7 +101,7 @@ class OpportunityCard extends React.Component {
               </Typography>
               <Typography variant="h2" gutterBottom align='center'
                 color="default" className={classes.cardSubContent}>
-                Real Estate & Housing
+                {industry}
               </Typography>
             </div>
 
@@ -106,7 +112,7 @@ class OpportunityCard extends React.Component {
               </Typography>
               <Typography variant="h2" gutterBottom align='center'
                 color="default" className={classes.cardSubContent}>
-                Over 25M
+                {value}
               </Typography>
             </div>
           </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_02_193751) do
+ActiveRecord::Schema.define(version: 2019_01_07_001203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,20 @@ ActiveRecord::Schema.define(version: 2019_01_02_193751) do
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
   end
 
+  create_table "network_admins", force: :cascade do |t|
+    t.integer "network_id", null: false
+    t.integer "admin_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["network_id", "admin_id"], name: "index_network_admins_on_network_id_and_admin_id", unique: true
+  end
+
+  create_table "networks", force: :cascade do |t|
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "opportunities", force: :cascade do |t|
     t.integer "owner_id", null: false
     t.string "title", null: false
@@ -82,6 +96,14 @@ ActiveRecord::Schema.define(version: 2019_01_02_193751) do
     t.datetime "updated_at", null: false
     t.index ["owner_id", "title"], name: "index_opportunities_on_owner_id_and_title", unique: true
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
+  end
+
+  create_table "opportunity_networks", force: :cascade do |t|
+    t.integer "network_id", null: false
+    t.integer "opportunity_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["network_id", "opportunity_id"], name: "index_opportunity_networks_on_network_id_and_opportunity_id", unique: true
   end
 
   create_table "referral_links", force: :cascade do |t|
@@ -102,6 +124,14 @@ ActiveRecord::Schema.define(version: 2019_01_02_193751) do
     t.integer "network_id"
     t.integer "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
     t.index ["opportunity_id", "user_id"], name: "index_saved_opportunities_on_opportunity_id_and_user_id", unique: true
+  end
+
+  create_table "user_networks", force: :cascade do |t|
+    t.integer "network_id", null: false
+    t.integer "member_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["network_id", "member_id"], name: "index_user_networks_on_network_id_and_member_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
