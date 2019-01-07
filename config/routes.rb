@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     resources :referral_links, only: [:create]
     # resource :session, only: [:create, :destroy]
 
+    get 'userOpportunities', :to => 'opportunities#userIndex'
     get 'authorization', :to => 'users/sessions#authorize'
     get 'referral_links/:referral_code', :to => 'referral_links#reveal'
 

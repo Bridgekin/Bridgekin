@@ -10,7 +10,8 @@ export default createMuiTheme({
     },
     secondary: {
       main: '#4067B2'
-    } // Indigo is probably a good match with pink
+    },
+    delete: '#f44336',
   },
   typography:{
     fontWeight: 300,
@@ -19,6 +20,6 @@ export default createMuiTheme({
   },
   stepper: {
     iconColor: '#4067B2' // or logic to change color
-    
+
   }
 });

@@ -135,119 +135,130 @@ class CardModal extends React.Component {
   render () {
     const { open, classes, opportunity } = this.props;
     const { sent } = this.state;
-    const { title, description, industry, need, geography,
-      value, networks } = opportunity;
 
-    let modalContent = !sent ? (
-      <Card className={classes.card}>
-        <CardMedia
-          className={classes.cover}
-          image={castlePic}
-          title="CastlePicture"
-        />
-        <CardContent className={classes.content}>
-          <Typography variant="h5" gutterBottom align='center'
-            color="default">
-            {title}
+    if (opportunity.id){
+      let { title, description, industries, opportunityNeeds, geography,
+        value, networks } = opportunity;
+
+      let industry = industries.join(', ');
+      geography = geography.join(', ');
+      let need = opportunityNeeds;
+
+      let modalContent = !sent ? (
+        <Card className={classes.card}>
+          <CardMedia
+            className={classes.cover}
+            image={castlePic}
+            title="CastlePicture"
+          />
+          <CardContent className={classes.content}>
+            <Typography variant="h5" gutterBottom align='center'
+              color="default">
+              {title}
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom align='center'
+              color="default">
+              {description}
+            </Typography>
+
+            <div className={classes.cardWrapper}>
+              <div>
+                <Typography variant="h2" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubContent}>
+                  Geography
+                </Typography>
+                <Typography variant="h2" gutterBottom align='center'
+                  color="default" className={classes.cardSubContent}>
+                  {geography}
+                </Typography>
+              </div>
+
+              <div>
+                <Typography variant="h2" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubContent}>
+                  Industry
+                </Typography>
+                <Typography variant="h2" gutterBottom align='center'
+                  color="default" className={classes.cardSubContent}>
+                  {industry}
+                </Typography>
+              </div>
+
+              <div>
+                <Typography variant="h2" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubContent}>
+                  Value
+                </Typography>
+                <Typography variant="h2" gutterBottom align='center'
+                  color="default" className={classes.cardSubContent}>
+                  {value}
+                </Typography>
+              </div>
+            </div>
+
+            <div className={classes.actionWrapper}>
+              <Button variant="contained" color='secondary'
+                className={classes.actionButton}
+                onClick={this.handleConnectMe}>
+                Connect Me
+              </Button>
+
+              <Button variant="contained" color='secondary'
+                className={classes.actionButton}
+                onClick={this.handleConnectFriend}>
+                Refer A Trusted Contact
+              </Button>
+            </div>
+
+            <Typography variant="body2" align='left'
+              color="default">
+              Once you connect or refer above, we'll send you an email introducing
+              you to the opportunity owner
+            </Typography>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className={classes.paper}>
+          <Typography variant="h4" id="modal-title" color='secondary'
+            className={classes.section}>
+            Time for business!
           </Typography>
-          <Typography variant="subtitle1" gutterBottom align='center'
-            color="default">
-            {description}
+          <Typography variant="subtitle1" id="simple-modal-description"
+            className={classes.section}>
+            {"We're as excited about this opportunity as you are! We just sent "+
+            "an email connecting you to the opportunity owner, so that should " +
+            "hit your inbox shortly. We'll let you take it from here."}
           </Typography>
-
-          <div className={classes.cardWrapper}>
-            <div>
-              <Typography variant="h2" gutterBottom align='center'
-                color="secondary" className={classes.cardSubContent}>
-                Geography
-              </Typography>
-              <Typography variant="h2" gutterBottom align='center'
-                color="default" className={classes.cardSubContent}>
-                {geography}
-              </Typography>
-            </div>
-
-            <div>
-              <Typography variant="h2" gutterBottom align='center'
-                color="secondary" className={classes.cardSubContent}>
-                Industry
-              </Typography>
-              <Typography variant="h2" gutterBottom align='center'
-                color="default" className={classes.cardSubContent}>
-                {industry}
-              </Typography>
-            </div>
-
-            <div>
-              <Typography variant="h2" gutterBottom align='center'
-                color="secondary" className={classes.cardSubContent}>
-                Value
-              </Typography>
-              <Typography variant="h2" gutterBottom align='center'
-                color="default" className={classes.cardSubContent}>
-                {value}
-              </Typography>
-            </div>
-          </div>
-
-          <div className={classes.actionWrapper}>
+          <div className={classes.postButtons}>
             <Button variant="contained" color='secondary'
-              className={classes.actionButton}
-              onClick={this.handleConnectMe}>
-              Connect Me
+              onClick={this.handleClose('find')}>
+              View More Opportunities
             </Button>
-
             <Button variant="contained" color='secondary'
-              className={classes.actionButton}
-              onClick={this.handleConnectFriend}>
-              Refer A Trusted Contact
+              onClick={this.handleClose('post')}>
+              Post An Opportunity
             </Button>
           </div>
-
-          <Typography variant="body2" align='left'
-            color="default">
-            Once you connect or refer above, we'll send you an email introducing
-            you to the opportunity owner
-          </Typography>
-        </CardContent>
-      </Card>
-    ) : (
-      <div className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary'
-          className={classes.section}>
-          Time for business!
-        </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description"
-          className={classes.section}>
-          {"We're as excited about this opportunity as you are! We just sent "+
-          "an email connecting you to the opportunity owner, so that should " +
-          "hit your inbox shortly. We'll let you take it from here."}
-        </Typography>
-        <div className={classes.postButtons}>
-          <Button variant="contained" color='secondary'
-            onClick={this.handleClose('find')}>
-            View More Opportunities
-          </Button>
-          <Button variant="contained" color='secondary'
-            onClick={this.handleClose('post')}>
-            Post An Opportunity
-          </Button>
         </div>
-      </div>
-    )
+      )
 
-    return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={open}
-        disableAutoFocus={true}
-        onClose={this.handleClose('find')}
-        className={classes.cardModalWrapper}>
+      return (
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={open}
+          disableAutoFocus={true}
+          onClose={this.handleClose('find')}
+          className={classes.cardModalWrapper}>
 
-        {modalContent}
-      </Modal>
-    )
+          {modalContent}
+        </Modal>
+      )
+    } else {
+      return (
+        <div></div>
+      )
+    }
   }
 }
 

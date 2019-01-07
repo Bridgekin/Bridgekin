@@ -23,14 +23,17 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 
 import {createOpportunity} from '../../actions/opportunity_actions';
+import {fetchNetworks} from '../../actions/network_actions';
 
 const mapStateToProps = state => ({
-  currentUser: state.users[state.session.id]
+  currentUser: state.users[state.session.id],
+  availNetworks: state.entities.networks
 });
 
 const mapDispatchToProps = dispatch => ({
   // registerWaitlist: (user) => dispatch(registerWaitlist(user)),
-  createOpportunity: (opp) => dispatch(createOpportunity(opp))
+  createOpportunity: (opp) => dispatch(createOpportunity(opp)),
+  fetchNetworks: () => dispatch(fetchNetworks())
 });
 
 const styles = theme => ({
@@ -101,7 +104,7 @@ const DEFAULTSTATE = {
   value: '',
   title: '',
   description: '',
-  networks: ['General Bridgekin Network'],
+  networks: [1],
   modalOpen: false
 }
 
@@ -116,10 +119,9 @@ class OpportunityCreate extends React.Component {
     this.handleReset = this.handleReset.bind(this);
   }
 
-  // componentDidMount(){
-  //   // pull in Networks
-  //   this.setState({ network: ['All Opportunities']})
-  // }
+  componentDidMount(){
+    this.props.fetchNetworks()
+  }
 
   getSteps() {
     return ['Need', 'Industry', 'Geography', 'Value', 'Description', 'Post'];
@@ -148,7 +150,8 @@ class OpportunityCreate extends React.Component {
           handleChange={this.handleChange}
           title={this.state.title}
           description={this.state.description}
-          networks={this.state.networks}/>;
+          networks={this.state.networks}
+          availNetworks={this.props.availNetworks}/>;
       case 5:
         let errors = this.checkErrors();
         return <SubmitField
@@ -212,7 +215,7 @@ class OpportunityCreate extends React.Component {
       networks, geography};
     let keys = Object.keys(opp);
     let errors = [];
-    debugger;
+
     for (let i = 0; i < keys.length; i++){
       if(opp[keys[i]].length === 0){
         let formatted = this.capitalize(keys[i]);
@@ -250,7 +253,7 @@ class OpportunityCreate extends React.Component {
             this.handleSubmit : this.handleNext}
           className={classes.flowButton}
         >
-          {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+          {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
         </Button>
       </div>
     )

@@ -23,7 +23,7 @@ export default () => (
       <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
       <ProtectedRoute path="/account" component={AccountRoute} />
       <Route path="/signup/:code" component={SignupPage} />
-      <Route path="/" component={HomePage} />
+      <AuthRoute path="/" component={HomePage} />
     </Switch>
   </div>
 );

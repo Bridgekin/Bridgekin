@@ -1,17 +1,25 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: "15px 0px 15px 0px"
+    margin: "15px 0px 15px 0px",
+  },
+  container: {
+    borderTop: "1px solid #D3D3D3",
   },
   headerTypography:{
     margin: "25px 0px 25px 0px"
@@ -38,137 +46,87 @@ const styles = theme => ({
 
 class OpportunityReferral extends React.Component{
   render(){
-    const { loading, classes } = this.props;
+    const { loading, classes, networks,
+            referralNetwork, referral } = this.props;
 
+    let options = networks.map(network => (
+      <MenuItem value={network.id}>{network.title}</MenuItem>
+    ));
+
+    let referralLink = referral.referralCode ?
+    (`${window.location.origin}/#/signup/${this.props.referral.referralCode}`) : ('')
+
+    debugger
     return(
-      <Grid container className={classes.root}
+      <Grid container
+        className={classes.root}
         justify="center" alignItems="center" spacing={24}>
 
-        <Grid item xs={10} md={6} justify="flex-end" alignItems="center">
+        <Grid item xs={9} justify="flex-end" alignItems="center"
+          className={classes.container}>
           <Typography variant="h4" gutterBottom align='center'
             color="secondary" className={classes.headerTypography}>
-            Refer a trusted contact that would appreciate joining our community
+            Create a referral link for your network!
           </Typography>
           <Typography variant="h5" gutterBottom align='center'
             color="secondary" className={classes.headerTypography}>
-            We'll add them to our waitlist!
+            When the click this link, they'll be invited to join Bridgekin
           </Typography>
         </Grid>
 
-        <Grid item xs={10} md={4} justify="flex-end" alignItems="center">
-          <TextField
-          required
-          id="outlined-required"
-          label="First Name"
-          placeholder="John"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant="outlined"
-          onChange={this.props.handleChange('fname')}
-          />
-          <TextField
-          required
-          id="outlined-required"
-          label="Last Name"
-          placeholder="Smith"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant="outlined"
-          onChange={this.props.handleChange('lname')}
-          />
-          <TextField
-          required
-          id="outlined-required"
-          label="Email"
-          placeholder="johnsmith@email.com"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant="outlined"
-          onChange={this.props.handleChange('email')}
-          />
-          <div className={classes.wrapper}>
-            <Button variant="contained" color='secondary'
-              className={classes.refButton}
-              onClick={this.props.handleSubmit}
-              disabled={loading}>
-              Sign up
-            </Button>
-            {loading && <CircularProgress size={24}
-              className={classes.buttonProgress} />}
-          </div>
+        <Grid container
+          justify="center" alignItems="center" spacing={24}>
+
+          <Grid item xs={10} sm={4} justify="center" alignItems="center">
+            <Typography variant="h6" gutterBottom align='center'
+              color="secondary" className={classes.headerTypography}>
+              Choose network to refer
+            </Typography>
+
+            <FormControl className={classes.formControl} fullWidth>
+              <Select
+                value={referralNetwork}
+                onChange={this.props.handleChange}
+                name="age"
+                displayEmpty
+                className={classes.selectEmpty}
+              >
+                {options}
+              </Select>
+              <FormHelperText>Networks</FormHelperText>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={10} sm={4}>
+            <div className={classes.wrapper}>
+              <Button variant="contained" color='secondary' fullWidth
+                className={classes.refButton}
+                onClick={this.props.handleSubmit}>
+                Create Link
+              </Button>
+            </div>
+          </Grid>
         </Grid>
+
+        <Grid container
+          justify="center" alignItems="center" spacing={24}>
+          <Grid item xs={10} sm={6} justify="center" alignItems="center">
+            <TextField
+              required
+              id="outlined-required"
+              placeholder='Link displays here'
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              value={referralLink}
+              variant='filled'
+              />
+          </Grid>
+        </Grid>
+
       </Grid>
     )
   }
 };
 
-export default (withStyles(styles)(OpportunityReferral));
-
-//REFERRAL CODE FOR WHEN WE WANT TO CREATE REFERRAL LINKS
-
-// let networks = ([
-//   <MenuItem value={10}>Ten</MenuItem>,
-//   <MenuItem value={20}>Twenty</MenuItem>,
-//   <MenuItem value={30}>Thirty</MenuItem>
-// ])
-
-// <Grid container className={classes.root}
-//   justify="center" alignItems="center" spacing={24}>
-//
-//   <Grid item xs={9} justify="flex-end" alignItems="center">
-//     <Typography variant="h4" gutterBottom align='center'
-//       color="secondary" className={classes.headerTypography}>
-//       Refer a trusted contact that would appreciate joining our community
-//       and we'll add them to our waitlist
-//     </Typography>
-//   </Grid>
-//
-//   <Grid container className={classes.root}
-//     justify="center" alignItems="center" spacing={24}>
-//
-//     <Grid item xs={10} sm={4} justify="center" alignItems="center">
-//       <Typography variant="h6" gutterBottom align='center'
-//         color="secondary" className={classes.headerTypography}>
-//         Choose network to refer
-//       </Typography>
-//
-//       <FormControl className={classes.formControl} fullWidth>
-//         <Select
-//           value={this.props.network}
-//           onChange={this.props.handleChange}
-//           name="age"
-//           displayEmpty
-//           className={classes.selectEmpty}
-//         >
-//           <MenuItem value=''>All Bridgekin</MenuItem>,
-//           <MenuItem value='The Battery'>The Battery</MenuItem>,
-//         </Select>
-//         <FormHelperText>Networks</FormHelperText>
-//       </FormControl>
-//
-//       <div className={classes.wrapper}>
-//         <Button variant="contained" color='secondary' fullWidth
-//           className={classes.refButton}>
-//           Create Link
-//         </Button>
-//       </div>
-//     </Grid>
-//
-//     <Grid item xs={10} sm={4} justify="center" alignItems="center">
-//       <TextField
-//       required
-//       id="outlined-required"
-//       placeholder='Link displays here'
-//       className={classes.textField}
-//       margin="normal"
-//       fullWidth
-//       value={this.props.referralLink}
-//       />
-//     </Grid>
-//
-//   </Grid>
-//
-// </Grid>
+export default withRouter((withStyles(styles)(OpportunityReferral)));

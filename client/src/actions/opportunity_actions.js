@@ -16,12 +16,20 @@ export const receiveOpportunity = opportunity => ({
   opportunity,
 });
 
-export const removeOpportunity = () => ({
+export const removeOpportunity = opportunityId => ({
   type: REMOVE_OPPORTUNITY,
+  opportunityId
 });
 
-export const fetchOpportunities = () => dispatch => (
-  OpportunityApiUtil.fetchOpportunities()
+export const fetchOpportunities = (networkId) => dispatch => (
+  OpportunityApiUtil.fetchOpportunities(networkId)
+    .then(handleErrors)
+    .then(data => dispatch(receiveOpportunities(data)))
+    .catch(errors => dispatch(receiveOpportunityErrors(errors)))
+);
+
+export const fetchUserOpportunities = (networkId) => dispatch => (
+  OpportunityApiUtil.fetchUserOpportunities(networkId)
     .then(handleErrors)
     .then(data => dispatch(receiveOpportunities(data)))
     .catch(errors => dispatch(receiveOpportunityErrors(errors)))
@@ -34,8 +42,8 @@ export const fetchOpportunity = (id) => dispatch => (
     .catch(errors => dispatch(receiveOpportunityErrors(errors)))
 );
 
-export const createOpportunity = (opprtunity) => dispatch => (
-  OpportunityApiUtil.createOpportunity(opprtunity)
+export const createOpportunity = (opportunity) => dispatch => (
+  OpportunityApiUtil.createOpportunity(opportunity)
     .then(handleErrors)
     .then(data => dispatch(receiveOpportunity(data)))
     .catch(errors => dispatch(receiveOpportunityErrors(errors)))

@@ -5,6 +5,16 @@ class Api::OpportunitiesController < ApiController
   before_action :authenticate_user
 
   def index
+    @opportunities = Opportunity.joins(:opportunity_networks)
+      .where("opportunity_networks.network_id = #{params[:network_id]}")
+
+    render :index
+  end
+
+  def userIndex
+    # @opportunities = Opportunity.joins(:opportunity_networks)
+    #   .where(owner_id: @user.id)
+    #   .where("opportunity_networks.network_id = #{params[:network_id]}")
     @opportunities = @user.opportunities
     render :index
   end
@@ -23,13 +33,15 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.save
       networks_params = params[:opportunity][:networks]
-      @networks = []
+      @opportunityNetworks = []
       networks_params.each do |id|
-        @networks << OpportunityNetwork.create(
+        @opportunityNetworks << OpportunityNetwork.create(
           opportunity_id: @opportunity.id,
           network_id: id
         )
       end
+
+      @networks = @opportunity.networks
       # render json: @opportunity, status: :created, location: @opportunity
       render :show
     else
@@ -72,7 +84,8 @@ class Api::OpportunitiesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def opportunity_params
-      params.require(:opportunity).permit(:title, :description, :owner_id, :opportunity_needs,
-      :industries, :geography, :value, :status, :networks)
+      params.require(:opportunity).permit(:title, :description,
+        :owner_id, :opportunity_needs,  :value, :status,
+        :industries => [], :geography => [])
     end
 end

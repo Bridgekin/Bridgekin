@@ -10,51 +10,32 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import blankProfilePic from '../../static/blank_profile_pic.png';
 
+import { fetchOpportunities } from '../../actions/opportunity_actions';
+import { fetchNetworks } from '../../actions/network_actions';
+
+import OpportunityCard from '../opportunity/opportunity_card';
+
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
+  opportunityErrors: state.errors.opportunities,
+  opportunities: Object.values(state.entities.opportunities),
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  fetchOpportunities: (networkId) => dispatch(fetchOpportunities(networkId)),
+  fetchNetworks: () => dispatch(fetchNetworks()),
 });
 
 const styles = theme => ({
-  jumboRoot: {
-    flexGrow: 1
-  },
   root: {
     flexGrow: 1,
     marginTop: 100
   },
-  cover: {
-    width: 325,
-    height: 325
-  },
-  card: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  cardSection:{
-    marginTop: 10
-  },
-  wrapper:{
-    display: 'flex',
-    justifyContent: 'flex-start'
-  },
-  cardEditIcon:{
-    color: "#d3d3d3",
-    fontSize: 20
-  }
 });
 
-
-class AccountHome extends React.Component {
-  capitalize(str){
-    return str[0].toUpperCase() + str.slice(1)
-  }
-
+class AccountPosted extends React.Component {
   render(){
-    const { classes, currentUser }= this.props;
+    const { classes }= this.props;
 
     return (
       <Grid container justify="center" alignItems="center"
@@ -70,7 +51,7 @@ class AccountHome extends React.Component {
               <div className={classes.wrapper}>
                 <Typography variant="h3" gutterBottom color="secondary"
                   align='left'>
-                  {this.capitalize(currentUser.fname)}
+                  Joe Lopardo
                 </Typography>
                 <div>
                   <i className={["far fa-edit", classes.cardEditIcon].join(' ')}/>
@@ -82,7 +63,7 @@ class AccountHome extends React.Component {
               </Typography>
               <Typography variant="h6" gutterBottom align='left'
                 color="default">
-                {this.capitalize(currentUser.title)}
+                CEO & COO
               </Typography>
               <Typography variant="subtitle1" gutterBottom align='left'
                 color="secondary" className={classes.cardSection}>
@@ -90,7 +71,7 @@ class AccountHome extends React.Component {
               </Typography>
               <Typography variant="h6" gutterBottom align='left'
                 color="default">
-                {this.capitalize(currentUser.company)}
+                Bridgekin
               </Typography>
             </CardContent>
           </Card>
@@ -100,4 +81,4 @@ class AccountHome extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountHome));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountPosted));

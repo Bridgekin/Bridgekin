@@ -16,6 +16,8 @@ import theme from '../theme';
 import AccountNav from './account_nav';
 import AccountHome from './account_home';
 import AccountSettings from './account_settings';
+import AccountPosted from './account_posted';
+import AccountConnected from './account_connected';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
@@ -53,6 +55,8 @@ class AccountRoute extends React.Component {
 
         <Switch>
           <ProtectedRoute path="/account/settings" component={AccountSettings} />
+          <ProtectedRoute path="/account/posted" component={AccountPosted} />
+          <ProtectedRoute path="/account/connected" component={AccountConnected} />
           <ProtectedRoute path="/account" component={AccountHome} />
         </Switch>
 

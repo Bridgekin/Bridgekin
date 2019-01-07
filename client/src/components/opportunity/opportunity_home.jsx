@@ -6,6 +6,17 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 
 //Import CSS and theme
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -15,23 +26,32 @@ import './opportunity_home.css'
 //Import Local Components
 import OpportunityCard from './opportunity_card';
 import OpportunityReferral from './opportunity_referral';
+import OpportunityWaitlist from './opportunity_waitlist';
 import WaitlistModal from '../waitlist_modal';
 import CardModal from './card_modal';
 
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 import { fetchOpportunities } from '../../actions/opportunity_actions';
+import { fetchNetworks } from '../../actions/network_actions';
+import { createReferral } from '../../actions/referral_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
-  opportunities: Object.values(state.entities.opportunities)
+  opportunities: Object.values(state.entities.opportunities),
+  networks: Object.values(state.entities.networks),
+  referral: state.entities.referral
 });
 
 const mapDispatchToProps = dispatch => ({
   registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user)),
-  fetchOpportunities: () => dispatch(fetchOpportunities())
+  fetchOpportunities: (networkId) => dispatch(fetchOpportunities(networkId)),
+  fetchNetworks: () => dispatch(fetchNetworks()),
+  createReferral: (referral) => dispatch(createReferral(referral))
 });
+
+const BRIDGEKIN_ID = 1;
 
 const styles = theme => ({
   jumboRoot: {
@@ -94,7 +114,14 @@ const styles = theme => ({
     marginTop: 25,
     height: 55,
     width: 200
-  }
+  },
+  networkPaper: {
+    marginRight: theme.spacing.unit * 2,
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+  },
 });
 
 
@@ -112,7 +139,10 @@ class OpportunityHome extends React.Component {
       success: false,
       waitlistOpen: false,
       cardOpen: false,
-      focusedOpportunity: {}
+      focusedOpportunity: {},
+      networkOpen: false,
+      focusedNetwork: null,
+      referralNetwork: null
     };
 
     this.opportunities = [
@@ -139,21 +169,30 @@ class OpportunityHome extends React.Component {
       },
     ];
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleWaitlistChange = this.handleWaitlistChange.bind(this);
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
+    this.handleReferralChange = this.handleReferralChange.bind(this);
+    this.handleReferralSubmit = this.handleReferralSubmit.bind(this);
     // this.handleReferralChange = this.handleReferralChange.bind(this);
     this.handleCardOpen = this.handleCardOpen.bind(this);
     this.handleCardClose = this.handleCardClose.bind(this);
   }
 
   componentDidMount(){
-    this.props.fetchOpportunities()
-      .then(() => {
-        this.setState({ opportunitiesLoaded: true})
-      });
+    this.props.fetchNetworks()
+    .then(() => {
+      let focusedNetwork = this.props.networks[0].id;
+      this.props.fetchOpportunities(focusedNetwork)
+        .then(() => {
+          this.setState({
+            opportunitiesLoaded: true,
+            focusedNetwork,
+            referralNetwork: focusedNetwork})
+        });
+    })
   }
 
-  handleChange(field){
+  handleWaitlistChange(field){
     return e => {
       e.preventDefault();
       this.setState({ [field]: e.target.value})
@@ -199,10 +238,38 @@ class OpportunityHome extends React.Component {
     this.setState({ cardOpen: false });
   }
 
+  handleNetworkChange = event => {
+    let networkId = event.target.value;
+    this.props.fetchOpportunities(networkId)
+      .then(() => {
+        this.setState({
+          opportunitiesLoaded: true,
+          focusedNetwork: networkId })
+      });
+  };
+
+  handleReferralChange(e){
+    this.setState({ referralNetwork: e.target.value})
+  }
+
+  handleReferralSubmit(){
+    this.props.createReferral({
+      network_id: this.state.referralNetwork
+    })
+  }
+
+  capitalize(str){
+    return str[0].toUpperCase() + str.slice(1)
+  }
+
   render (){
-    let classes = this.props.classes;
+    let { classes, opportunities, networks,
+        referral, currentUser } = this.props;
     const { loading, success, waitlistOpen,
-          cardOpen, focusedOpportunity } = this.state;
+          cardOpen, focusedOpportunity, networkOpen,
+          focusedNetwork, referralNetwork } = this.state;
+
+    opportunities = opportunities.filter(o => o.status === "Approved")
 
     let header = (
       <Grid container className={classes.root}
@@ -212,7 +279,7 @@ class OpportunityHome extends React.Component {
           className={[classes.homeheader, classes.grid].join(' ')}>
           <Typography variant="h2" gutterBottom align='center'
             color="secondary" className={classes.headerTypography}>
-            Welcome, {this.props.currentUser.fname}
+            Welcome, {this.capitalize(currentUser.fname)}
           </Typography>
 
           <Typography variant="h4" gutterBottom align='center'>
@@ -263,7 +330,7 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let opportunities = this.props.opportunities.map(opportunity => (
+    let opportunityCards = opportunities.map(opportunity => (
       <Grid item xs={6} justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
@@ -272,6 +339,26 @@ class OpportunityHome extends React.Component {
       </Grid>
     ));
 
+    let dropdown = (
+      <FormControl className={classes.formControl}>
+        <InputLabel shrink htmlFor="age-label-placeholder">
+          Chosen Network
+        </InputLabel>
+        <Select
+          value={focusedNetwork}
+          onChange={this.handleNetworkChange}
+          input={<Input name="chosen-network" id="age-label-placeholder" />}
+          name="chosen-network"
+        >
+          {networks.map(network => (
+            <MenuItem value={network.id}>
+              {network.title}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    )
+
     let opportunityGrid = (
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={24}>
@@ -279,14 +366,14 @@ class OpportunityHome extends React.Component {
         <Grid item xs={10} sm={8}  justify="flex-end" alignItems="center">
           <Typography variant="p" gutterBottom align='right'
             color="secondary">
-            All Opportunities
+            {dropdown}
           </Typography>
         </Grid>
 
         <Grid item xs={10} sm={10} className={classes.gridOpp} >
           <Grid container className={classes.root}
             justify="center" alignItems="center" spacing={24}>
-            {opportunities}
+            {opportunityCards}
           </Grid>
         </Grid>
       </Grid>
@@ -298,11 +385,20 @@ class OpportunityHome extends React.Component {
           <Grid container className={classes.root}>
             {header}
             {opportunityGrid}
-            <OpportunityReferral
-              handleChange={this.handleChange}
+            <OpportunityWaitlist
+              handleChange={this.handleWaitlistChange}
               handleSubmit={this.handleWaitlistSubmit}
               loading={loading}
             />
+          {this.props.currentUser.isAdmin &&
+              <OpportunityReferral
+                referralNetwork={referralNetwork}
+                networks={networks}
+                referral={referral}
+                handleChange={this.handleReferralChange}
+                handleSubmit={this.handleReferralSubmit}
+              />
+            }
           </Grid>
           <WaitlistModal open={waitlistOpen}
             handleClose={this.handleWaitlistClose}/>

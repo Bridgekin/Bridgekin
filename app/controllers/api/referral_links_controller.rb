@@ -1,18 +1,21 @@
+require_relative '../concerns/devise_controller_patch.rb'
 class Api::ReferralLinksController < ApiController
+  include DeviseControllerPatch
+  before_action :authenticate_user
 
   def create
-    @link = ReferralLink.find_link_by_params(referral_params)
-
+    @link = ReferralLink.where(
+      member_id: @user.id,
+      network_id: params[:referral][:network_id]
+    ).first
     if @link
-      # code = api_referral_links_url + "/" + @link.referral_code
-      # render json: { referral_code: code}, status: 200
       render :show
     else
-      @link = ReferralLink.new(referral_params)
-
+      @link = ReferralLink.new(
+        member_id: @user.id,
+        network_id: params[:referral][:network_id]
+      )
       if @link.save
-        # url = api_referral_links_url + "/" + @link.referral_code
-        # render json: { referral_code: url }, status: 200
         render :show
       else
         render json: @link.errors.full_messages, status: 422

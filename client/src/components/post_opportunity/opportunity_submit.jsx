@@ -52,6 +52,7 @@ class SubmitField extends React.Component {
     let opportunity = { title, description, industries, opportunityNeeds,
       geography, value, networks };
 
+
     let errorItems = errors.map(error => (
       <li className={classes.errors}>
         {error}

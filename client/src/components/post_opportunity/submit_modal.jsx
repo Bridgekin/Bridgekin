@@ -14,7 +14,7 @@ import { clearOpportunityErrors } from '../../actions/error_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  waitlistErrors: state.errors.waitlistUsers
+  opportunityErrors: state.errors.opportunities
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -57,9 +57,9 @@ class SubmitModal extends React.Component {
   }
 
   handleClose(field){
-    // if(this.props.waitlistErrors){
-    //   this.props.clearSubmitUserErrors();
-    // }
+    if(this.props.waitlistErrors){
+      this.props.clearOpportunityErrors();
+    }
     return () => {
       this.props.handleClose();
       if (field === 'post'){
@@ -73,48 +73,18 @@ class SubmitModal extends React.Component {
   render () {
     const { open, classes } = this.props;
 
-    // let waitlistErrors = this.props.waitlistErrors.map(error => {
-    //   error = error.replace(/(Fname|Lname)/g, (ex) => {
-    //     return ex === 'Fname' ? 'First name' : 'Last name';
-    //   });
-    //   return (
-    //     <ListItem >
-    //       <ListItemText primary={error} />
-    //     </ListItem>
-    //   )
-    // })
+    let opportunityErrors = this.props.opportunityErrors.map(error => {
+      error = error.replace(/(Fname|Lname)/g, (ex) => {
+        return ex === 'Fname' ? 'First name' : 'Last name';
+      });
+      return (
+        <ListItem >
+          <ListItemText primary={error} />
+        </ListItem>
+      )
+    })
 
-    // let modalText = this.props.waitlistErrors.length === 0 ? (
-    //   <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-    //     <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
-    //       Thanks for signing up!
-    //     </Typography>
-    //     <Typography variant="subtitle1" id="simple-modal-description">
-    //       You've now been added to our waitlist! You'll receive a confirmation email shortly.
-    //     </Typography>
-    //     <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-    //       onClick={this.handleClose} color='secondary'>
-    //       Close
-    //     </Button>
-    //   </div>
-    // ) : (
-    //   <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-    //     <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
-    //       Thanks for your interest in Bridgekin!
-    //     </Typography>
-    //     <Typography variant="subtitle1" id="simple-modal-description">
-    //       Apologies, but we weren't able to sign you up because:
-    //     </Typography>
-    //     <List>
-    //     </List>
-    //     <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-    //       onClick={this.handleClose} color='secondary'>
-    //       Close
-    //     </Button>
-    //   </div>
-    // )
-
-    let modalText = (
+    let modalText = this.props.opportunityErrors.length === 0 ? (
       <div style={{top:'25%', left: '30%'}} className={classes.paper}>
         <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks For Posting!
@@ -138,7 +108,23 @@ class SubmitModal extends React.Component {
           </Button>
         </div>
       </div>
-    )
+      ) : (
+        <div style={{top:'25%', left: '30%'}} className={classes.paper}>
+          <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+            You're almost there!
+          </Typography>
+          <Typography variant="subtitle1" id="simple-modal-description">
+            You've got a few pieces to correct before submitting your opportunity, listed below:
+          </Typography>
+          <List>
+            {opportunityErrors}
+          </List>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </div>
+      )
 
     return (
       <Modal

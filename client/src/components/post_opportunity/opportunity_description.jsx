@@ -42,20 +42,26 @@ const styles = theme => ({
 class DescriptionField extends React.Component {
   constructor(props){
     super(props);
-    let networks = this.formatNetworks();
+
     this.state = {
-      networks
+      networks: {}
     }
 
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount(){
+    let networks = this.formatNetworks();
+    this.setState({ networks })
+  }
+
   formatNetworks(){
-    const { networks } = this.props;
+    const { availNetworks } = this.props;
+    let networks = Object.values(availNetworks);
     let results = {};
     for(let i = 0; i < networks.length; i++){
-      results[networks[i]] = false;
+      results[networks[i].id] = false;
     }
     return results;
   }
@@ -75,6 +81,7 @@ class DescriptionField extends React.Component {
       this.setState( { networks },
         () => {
           let chosenOptions = Object.keys(networks).filter(k => networks[k]);
+          debugger
           this.props.handleChange(chosenOptions);
         });
     }
@@ -82,18 +89,20 @@ class DescriptionField extends React.Component {
 
   render (){
     let classes = this.props.classes;
-    const { networks } = this.state;
+    let { networks } = this.state;
+    const { availNetworks } = this.props;
     // const error = Object.keys(networks).filter(v => v).length < 1
 
-    let fields = Object.keys(networks).map(network => (
+    debugger
+    let fields = Object.values(availNetworks).map(network => (
         <FormControlLabel
           control={
             <Checkbox
-              checked={networks[network]}
-              onChange={this.handleClick(network)}
-              value={network} />
+              checked={networks[network.id]}
+              onChange={this.handleClick(network.id)}
+              value={network.title} />
           }
-          label={network}
+          label={network.title}
           classes={{ label: classes.descriptionLabel }}
         />
     ));

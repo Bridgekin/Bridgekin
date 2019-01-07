@@ -14,6 +14,11 @@ export const CLEAR_FINALIZED_OPPORTUNITY_ERRORS = 'CLEAR_FINALIZED_OPPORTUNITY_E
 export const RECEIVE_SAVED_OPPORTUNITY_ERRORS = 'RECEIVE_SAVED_OPPORTUNITY_ERRORS';
 export const CLEAR_SAVED_OPPORTUNITY_ERRORS = 'CLEAR_SAVED_OPPORTUNITY_ERRORS';
 
+export const RECEIVE_NETWORK_ERRORS = 'RECEIVE_NETWORK_ERRORS';
+export const CLEAR_NETWORK_ERRORS = 'CLEAR_NETWORK_ERRORS';
+export const RECEIVE_REFERRAL_ERRORS = 'RECEIVE_REFERRAL_ERRORS';
+export const CLEAR_REFERRAL_ERRORS = 'CLEAR_REFERRAL_ERRORS';
+
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
   errors
@@ -39,6 +44,15 @@ export const receiveUserErrors = errors => ({
 
 export const clearUserErrors = () => ({
   type: CLEAR_USER_ERRORS,
+});
+
+export const receiveNetworkErrors = errors => ({
+  type: RECEIVE_NETWORK_ERRORS,
+  errors
+});
+
+export const clearNetworkErrors = () => ({
+  type: CLEAR_NETWORK_ERRORS,
 });
 
 export const receiveOpportunityErrors = errors => ({
@@ -77,41 +91,11 @@ export const clearSavedOpportunityErrors = () => ({
   type: CLEAR_SAVED_OPPORTUNITY_ERRORS,
 });
 
-// export const receiveHomeErrors = errors => {
-//   return {
-//     type: RECEIVE_HOME_ERRORS,
-//     errors
-//   };
-// };
-//
-// export const clearHomeErrors = () => ({
-//   type: CLEAR_HOME_ERRORS,
-// });
-//
-//
-// export const receiveBookingErrors = errors => ({
-//   type: RECEIVE_BOOKING_ERRORS,
-//   errors
-// });
-//
-// export const clearBookingErrors = () => ({
-//   type: CLEAR_BOOKING_ERRORS,
-// });
-//
-// export const receiveReviewErrors = errors => ({
-//   type: RECEIVE_REVIEW_ERRORS,
-//   errors
-// });
-//
-// export const clearReviewErrors = () => ({
-//   type: CLEAR_REVIEW_ERRORS,
-// });
-//
-// export const receiveSearchErrors = errors => ({
-//   type: RECEIVE_REVIEW_ERRORS,
-//   errors
-// });
-//
-// export const clearSearchErrors = () => ({
-//   type: CLEAR_REVIEW_ERRORS,
-// });
+export const receiveReferralErrors = errors => ({
+  type: RECEIVE_REFERRAL_ERRORS,
+  errors
+});
+
+export const clearReferralErrors = () => ({
+  type: CLEAR_REFERRAL_ERRORS,
+});
