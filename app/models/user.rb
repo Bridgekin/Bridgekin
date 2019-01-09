@@ -7,8 +7,9 @@ class User < ApplicationRecord
          :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
-  validates :email, uniqueness: { case_sensitive: false }, presence: true
   validates :email, :fname, :lname,  presence: true
+  validates :email, format: { with: Devise.email_regexp, message: "is not a valid email" }
+  validates :email, uniqueness: { case_sensitive: false }, presence: true
 
   has_many :opportunities,
     foreign_key: :owner_id,
@@ -17,6 +18,10 @@ class User < ApplicationRecord
   has_many :connected_opportunities,
     foreign_key: :user_id,
     class_name: :ConnectedOpportunity
+
+  has_many :opportunity_connections,
+    through: :connected_opportunities,
+    source: :opportunity
 
   has_many :finalized_opportunities,
     foreign_key: :user_id,
@@ -29,6 +34,10 @@ class User < ApplicationRecord
   has_many :facilitated_opportunities,
     foreign_key: :facilitator_id,
     class_name: :ConnectedOpportunity
+
+  has_many :opportunity_connections_facilitated,
+    through: :facilitated_opportunities,
+    source: :opportunity
 
   has_many :facilitated_deals,
     foreign_key: :facilitator_id,

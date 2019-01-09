@@ -56,7 +56,6 @@ class OpportunityReferral extends React.Component{
     let referralLink = referral.referralCode ?
     (`${window.location.origin}/#/signup/${this.props.referral.referralCode}`) : ('')
 
-    debugger
     return(
       <Grid container
         className={classes.root}

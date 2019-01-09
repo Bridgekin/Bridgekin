@@ -16,6 +16,12 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       # sign_in User, @user
       # current_user.send_confirmation_email
       # @token = get_login_token!(@user)
+      @network = @referralLink.network
+
+      UserNetwork.create(network_id: @network.id, member_id: @user.id) if @network.title != 'Bridgekin'
+      #Create Bridgekin Connection
+      UserNetwork.create(network_id: 1, member_id: @user.id)
+
       render :show
     elsif @referralLink.nil?
       render json: ["Invalid referral link"], status: 401

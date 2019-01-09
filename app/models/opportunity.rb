@@ -27,4 +27,16 @@ class Opportunity < ApplicationRecord
   has_many :saved_opportunities,
     foreign_key: :opportunity_id,
     class_name: :SavedOpportunity
+
+  # serialize       :industries, Array
+  # attr_accessor   :industries_raw
+
+  def industries_raw
+    self.industries.join("\n") unless self.industries.nil?
+  end
+
+  def industries_raw=(values)
+    self.industries = []
+    self.industries=values.split("\n")
+  end
 end

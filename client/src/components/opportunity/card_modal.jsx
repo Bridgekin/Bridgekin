@@ -6,11 +6,14 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
+import _ from 'lodash';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import castlePic from '../../static/castle.jpg';
+// import castlePic from '../../static/castle.jpg';
+import { PickImage } from '../../static/opportunity_images/image_util.js';
+import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions'
 
 import Typography from '@material-ui/core/Typography';
 
@@ -23,7 +26,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  // clearWaitlistUserErrors: () => dispatch(clearWaitlistUserErrors())
+  createConnectedOpportunity: (opportunity) => dispatch(createConnectedOpportunity(opportunity))
 });
 
 const styles = theme => ({
@@ -94,8 +97,7 @@ class CardModal extends React.Component {
       sent: false
     }
     this.handleClose = this.handleClose.bind(this);
-    this.handleConnectMe = this.handleConnectMe.bind(this);
-    this.handleConnectFriend = this.handleConnectFriend.bind(this);
+    this.handleConnection = this.handleConnection.bind(this);
   }
 
   handleClose(field){
@@ -116,19 +118,18 @@ class CardModal extends React.Component {
     // }
   };
 
-  handleConnectMe(e){
-    e.preventDefault()
+  handleConnection(connectBool){
+    return e => {
+      e.preventDefault()
 
-    if(!this.props.demo){
-      this.setState({sent: true})
-    }
-  }
-
-  handleConnectFriend(e){
-    e.preventDefault()
-
-    if(!this.props.demo){
-      this.setState({sent: true})
+      if(!this.props.demo){
+        let opportunity = {
+          opportunityId: this.props.opportunity.id,
+          connectBool
+        }
+        this.props.createConnectedOpportunity(opportunity)
+        .then(() => this.setState({sent: true}));
+      }
     }
   }
 
@@ -136,10 +137,10 @@ class CardModal extends React.Component {
     const { open, classes, opportunity } = this.props;
     const { sent } = this.state;
 
-    if (opportunity.id){
+    if (!_.isEmpty(opportunity)){
       let { title, description, industries, opportunityNeeds, geography,
         value, networks } = opportunity;
-
+      debugger
       let industry = industries.join(', ');
       geography = geography.join(', ');
       let need = opportunityNeeds;
@@ -148,8 +149,8 @@ class CardModal extends React.Component {
         <Card className={classes.card}>
           <CardMedia
             className={classes.cover}
-            image={castlePic}
-            title="CastlePicture"
+            image={PickImage(industries[0])}
+            title="OpportunityImage"
           />
           <CardContent className={classes.content}>
             <Typography variant="h5" gutterBottom align='center'
@@ -199,13 +200,13 @@ class CardModal extends React.Component {
             <div className={classes.actionWrapper}>
               <Button variant="contained" color='secondary'
                 className={classes.actionButton}
-                onClick={this.handleConnectMe}>
+                onClick={this.handleConnection(true)}>
                 Connect Me
               </Button>
 
               <Button variant="contained" color='secondary'
                 className={classes.actionButton}
-                onClick={this.handleConnectFriend}>
+                onClick={this.handleConnection(false)}>
                 Refer A Trusted Contact
               </Button>
             </div>

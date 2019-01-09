@@ -38,13 +38,3 @@ export const deleteConnectedOpportunity = id => (
   	}
   })
 )
-
-// export const updateConnectedOpportunity = connectedOpportunity => (
-//   fetch('api/connected_opportunities', {
-//     method: 'PATCH',
-//     body: JSON.stringify({ connectedOpportunity }),
-//     headers:{
-//     	'Content-Type': 'application/json'
-//   	}
-//   })
-// )

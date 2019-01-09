@@ -9,9 +9,9 @@ Rails.application.routes.draw do
   namespace :api, default: {format: :json} do
     resources :opportunities
     resources :networks
-    resources :connected_opportunities, only: [:create, :update, :destroy, :show]
-    resources :finalized_opportunities, only: [:create, :update, :destroy, :show]
-    resources :saved_opportunities, only: [:create, :update, :destroy, :show]
+    resources :connected_opportunities
+    resources :finalized_opportunities
+    resources :saved_opportunities
     resource :waitlist_user, only: [:create]
     resources :referral_links, only: [:create]
     # resource :session, only: [:create, :destroy]
@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     get 'userOpportunities', :to => 'opportunities#userIndex'
     get 'authorization', :to => 'users/sessions#authorize'
     get 'referral_links/:referral_code', :to => 'referral_links#reveal'
+    get 'referred_connection', :to => 'connected_opportunities#referredConnection'
 
     # devise_for :users, only: []
     devise_for :users,

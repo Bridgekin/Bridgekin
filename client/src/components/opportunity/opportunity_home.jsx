@@ -283,7 +283,7 @@ class OpportunityHome extends React.Component {
           </Typography>
 
           <Typography variant="h4" gutterBottom align='center'>
-            There are 1500 opportunities for you to check out
+            There are {opportunities.length} opportunities for you to check out
           </Typography>
 
           <Typography variant="p" gutterBottom align='center'
@@ -300,12 +300,12 @@ class OpportunityHome extends React.Component {
                 className={classes.button}>
                 <p className='fc-header-p'>
                   <span className='fc-header-number'><strong>35</strong></span>
-                    New Opportunities
+                    New Members
                 </p>
               </Button>
             </Grid>
 
-            <Grid item xs={10} sm={3} justify='center'>
+            <Grid item xs={10} sm={4} justify='center'>
               <Button variant="contained" color='primary'
                 className={classes.button}>
                 <p className='fc-header-p'>
@@ -320,7 +320,7 @@ class OpportunityHome extends React.Component {
                 className={classes.button}>
                 <p className='fc-header-p'>
                   <span className='fc-header-number'><strong>35</strong></span>
-                    New Opportunities
+                    New connections
                 </p>
               </Button>
             </Grid>
@@ -402,6 +402,7 @@ class OpportunityHome extends React.Component {
           </Grid>
           <WaitlistModal open={waitlistOpen}
             handleClose={this.handleWaitlistClose}/>
+
           <CardModal open={cardOpen}
             handleClose={this.handleCardClose}
             opportunity={focusedOpportunity}

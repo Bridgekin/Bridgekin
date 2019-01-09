@@ -18,6 +18,14 @@ const styles = theme => ({
   },
   errors: {
     color: 'red'
+  },
+  disclaimer: {
+    marginTop: 40,
+    paddingTop: 10,
+    borderTop: '1px solid #D3D3D3'
+  },
+  disclaimerTypography: {
+    margin: 25
   }
 });
 
@@ -33,6 +41,7 @@ class SubmitField extends React.Component {
   }
 
   handleCardOpen(){
+    console.log('opening card')
     this.setState({ cardOpen: true });
   }
 
@@ -78,7 +87,25 @@ class SubmitField extends React.Component {
         <Grid item xs={10}>
           <OpportunityCard opportunity={opportunity}
             classes={classes}
-            handleCardOpen={this.handleCardOpen} />
+            handleCardOpen={this.handleCardOpen}
+            editable={false}/>
+        </Grid>
+
+        <Grid item xs={12} className={classes.disclaimer}>
+          <Typography variant="p" gutterBottom align='left'
+            color='default' className={classes.disclaimerTypography}>
+            This is the final version of your opportunitity. It will be reviewed
+            and go live within <strong>36 hours</strong>.
+          </Typography>
+          <Typography variant="p" gutterBottom align='left'
+            color='default' className={classes.disclaimerTypography}>
+            When a member connects to your opportunity, you will receive
+            an email introducing you to each other.
+          </Typography>
+          <Typography variant="p" gutterBottom align='left'
+            color='default' className={classes.disclaimerTypography}>
+            If you need to edit this opportunity, click the back button.
+          </Typography>
         </Grid>
 
         <CardModal open={cardOpen}

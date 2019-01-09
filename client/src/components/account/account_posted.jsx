@@ -3,13 +3,6 @@ import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
 
 import OpportunityCard from '../opportunity/opportunity_card';
 
@@ -55,16 +48,12 @@ class AccountPosted extends React.Component {
   }
 
   handleDelete(id){
-    return e => {
-      console.log('delete Opportunity', id)
-      this.props.deleteOpportunity(id)
-    }
+    console.log('delete Opportunity', id)
+    // this.props.deleteOpportunity(id)
   }
 
   render(){
     const { classes, opportunities }= this.props;
-
-    // let filteredOpportunities = opportunities.filter(o => o.status === "Approved")
 
     let opportunityCards = opportunities.map(opportunity => (
       <Grid item xs={6} justify="center" alignItems="center"
@@ -76,33 +65,6 @@ class AccountPosted extends React.Component {
           editable={true}/>
       </Grid>
     ));
-
-    // let dropdown = (
-    //   <FormControl className={classes.formControl}>
-    //     <InputLabel shrink htmlFor="age-label-placeholder">
-    //       Chosen Network
-    //     </InputLabel>
-    //     <Select
-    //       value={focusedNetwork}
-    //       onChange={this.handleNetworkChange}
-    //       input={<Input name="chosen-network" id="age-label-placeholder" />}
-    //       name="chosen-network"
-    //     >
-    //       {networks.map(network => (
-    //         <MenuItem value={network.id}>
-    //           {network.title}
-    //         </MenuItem>
-    //       ))}
-    //     </Select>
-    //   </FormControl>
-    // )
-
-    // <Grid item xs={10} sm={8}  justify="flex-end" alignItems="center">
-    //   <Typography variant="p" gutterBottom align='right'
-    //     color="secondary">
-    //     {dropdown}
-    //   </Typography>
-    // </Grid>
 
     let opportunityGrid = (
       <Grid container justify="center" alignItems="center" spacing={24}>

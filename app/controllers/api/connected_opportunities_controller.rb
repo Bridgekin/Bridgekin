@@ -1,11 +1,13 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::ConnectedOpportunitiesController < ApiController
-  # include DeviseControllerPatch
+  include DeviseControllerPatch
   before_action :set_connected_opportunity, only: [:show, :update, :destroy]
+  before_action :authenticate_user
 
   def index
-    @connected_opportunities = @user.connected_opportunities
-    @facilitated_connected_opportunities = @user.facilitated_opportunities
+    @connected_opportunities = @user.opportunity_connections
+    @facilitated_connected_opportunities = @user.opportunity_connections_facilitated
+
     render :index
   end
 
@@ -16,10 +18,46 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   # POST /opportunities
   def create
-    @connected_opportunity = ConnectedOpportunity.new(connected_opportunity_params)
+
+    newConnectedOpportunity = {
+        opportunity_id: params[:connected_opportunity][:opportunity_id],
+        network_id: params[:connected_opportunity][:network_id]
+    }
+
+    if params[:connected_opportunity][:connect_bool]
+      newConnectedOpportunity[:user_id] = @user.id
+
+      @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
+
+      if @connected_opportunity.save
+        ConnectedOpportunityMailer.make_connection(@connected_opportunity).deliver_now
+        render :show
+      else
+        render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
+      end
+
+    elsif
+      newConnectedOpportunity[:facilitator_id] = @user.id
+
+      @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
+
+      if @connected_opportunity.save
+        ConnectedOpportunityMailer.make_facilitated_connection(@connected_opportunity).deliver_now
+        render :show
+      else
+        render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
+      end
+    end
+
+  end
+
+  def referredConnection
+    if params[:facilitator_id]
+      @connected_opportunity = ConnectedOpportunity.new(connected_opportunity_params)
+    # else params[:]
 
     if @connected_opportunity.save
-      # render json: @connected_opportunity, status: :created, location: @connected_opportunity
+      # Send email
       render :show
     else
       render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
@@ -53,7 +91,9 @@ class Api::ConnectedOpportunitiesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def connected_opportunity_params
-      params.permit(:opportunity_id, :user_id, :facilitator_id,
-        :network_id)
+      params.require(:connected_opportunity).permit(:opportunity_id,
+        :connect_bool, :network_id)
+      # params.permit(:opportunity_id, :connect_bool, :network_id)
     end
+  end
 end

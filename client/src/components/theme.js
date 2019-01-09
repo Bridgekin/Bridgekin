@@ -11,7 +11,11 @@ export default createMuiTheme({
     secondary: {
       main: '#4067B2'
     },
+
     delete: '#f44336',
+    text: {
+      primary: "#000"
+    }
   },
   typography:{
     fontWeight: 300,

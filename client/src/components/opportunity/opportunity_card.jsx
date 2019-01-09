@@ -6,8 +6,15 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
-import castlePic from '../../static/castle.jpg';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+import { PickImage } from '../../static/opportunity_images/image_util.js';
+import _ from 'lodash';
 
 const styles = theme => ({
   jumboRoot: {
@@ -50,28 +57,48 @@ const styles = theme => ({
   button: {
     minWidth: 75,
     margin: 25,
-  }
+  },
 });
 
 
 class OpportunityCard extends React.Component {
   constructor(props){
     super(props)
+    this.state = {
+      deleteOpen: false
+    }
 
-    this.handleOpen = this.handleOpen.bind(this);
+    this.handleCardOpen = this.handleCardOpen.bind(this);
+    this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
+    this.handleDeleteClose = this.handleDeleteClose.bind(this);
   }
 
-  handleOpen(e){
+  handleCardOpen(e){
     e.preventDefault();
     this.props.handleCardOpen(this.props.opportunity)
   }
 
+  handleDeleteOpen = () => {
+    this.setState({ deleteOpen: true });
+  };
+
+  handleDeleteClose(deleteBool){
+    return () => {
+      if (deleteBool){
+        this.props.handleDelete(this.props.opportunity.id);
+      }
+      this.setState({ deleteOpen: false });
+    }
+  };
+
   render(){
     const { classes, opportunity, editable }= this.props;
     let { title, description, industries, opportunityNeeds, geography,
-      value, networks, status } = opportunity;
+      value, status } = opportunity;
 
-    if (opportunity.id){
+    debugger
+
+    if (!_.isEmpty(opportunity)){
       let industry = industries.join(', ');
       geography = geography.join(', ');
 
@@ -107,19 +134,46 @@ class OpportunityCard extends React.Component {
             Edit
           </Button>
           <Button variant="contained" className={classes.button}
-            onClick={this.props.handleDelete(opportunity.id)}>
+            onClick={this.handleDeleteOpen}>
             Delete
           </Button>
         </div>
       ) : (<div></div>)
 
+      let deleteDialog = editable ? (
+        <Dialog
+          open={this.state.deleteOpen}
+          onClose={this.handleDeleteClose(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Delete Your Opportunity"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {`You about to delet your opportunity permanently.
+                You can not undo this action. Do you still want to continue?`}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleDeleteClose(false)}
+              color="secondary" >
+              Cancel
+            </Button>
+            <Button color="secondary" autoFocus
+              onClick={this.handleDeleteClose(true)}>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : (<div></div>)
+
       return (
       <Card className={classes.card}>
-        <CardActionArea onClick={this.handleOpen}>
+        <CardActionArea onClick={this.handleCardOpen}>
           <CardMedia
             className={classes.cover}
-            image={castlePic}
-            title="CastlePicture"
+            image={PickImage(industries[0])}
+            title="OpportunityImage"
           />
           <CardContent className={classes.content}>
             <Typography variant="h2" gutterBottom align='center'
@@ -169,6 +223,7 @@ class OpportunityCard extends React.Component {
           </CardContent>
         </CardActionArea>
         {editable && editOptions}
+        {editable && deleteDialog}
       </Card>
       )
     } else {

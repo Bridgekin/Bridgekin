@@ -130,18 +130,23 @@ class HomeNav extends React.Component {
       e.preventDefault();
       this.setState({ anchorEl: null });
 
-      if(field === 'account'){
-        this.props.history.push('/account/home');
-      } else if (field === 'logout') {
-        this.props.logout()
-          .then(() => this.props.history.push('/'),
-          () => alert("There was a problem logging out. We're working on it!"));
+      switch(field){
+        case 'account':
+          return this.props.history.push('/account/home');
+        case 'admin':
+          return window.location.replace("http://localhost:3000/admin/login");
+        case 'logout':
+          return this.props.logout()
+            .then(() => this.props.history.push('/'),
+            () => alert("There was a problem logging out. We're working on it!"));
+        default:
+          return;
       }
     }
   };
 
   render(){
-    let classes = this.props.classes;
+    let { classes, currentUser } = this.props;
 
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
@@ -203,6 +208,7 @@ class HomeNav extends React.Component {
             onClose={this.handleMenuClose}
           >
             <MenuItem onClick={this.handleLinkClose('account')}>My Account</MenuItem>
+            {currentUser.isAdmin && <MenuItem onClick={this.handleLinkClose('admin')}>Admin</MenuItem>}
             <MenuItem onClick={this.handleLinkClose('logout')}>Logout</MenuItem>
           </Menu>
         </div>
