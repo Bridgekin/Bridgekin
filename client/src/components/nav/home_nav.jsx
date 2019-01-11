@@ -134,7 +134,7 @@ class HomeNav extends React.Component {
         case 'account':
           return this.props.history.push('/account/home');
         case 'admin':
-          return window.location.replace("http://localhost:3000/admin/login");
+          return window.location.replace(`${window.location.origin}/admin/login`);
         case 'logout':
           return this.props.logout()
             .then(() => this.props.history.push('/'),

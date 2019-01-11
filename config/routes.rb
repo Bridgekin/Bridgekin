@@ -43,4 +43,6 @@ Rails.application.routes.draw do
          # password_expired: "api/users/password_expired"
       }
   end
+
+  get '*path' => redirect('/')
 end
