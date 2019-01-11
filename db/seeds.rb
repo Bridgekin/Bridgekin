@@ -27,11 +27,27 @@ User.create!(
   confirmed_at: DateTime.now,
   confirmation_sent_at: DateTime.now,
   fname: 'Joe',
-  lname: 'Demo'
+  lname: 'Demo',
+  title: "Director of Testing",
+  company: "Bridgekin Analytics"
 )
 
 Network.create!(
   title: 'Bridgekin'
+)
+
+Network.create!(
+  title: 'Ideate'
+)
+
+UserNetwork.create!(
+  network_id: 1,
+  user_id: 1,
+)
+
+UserNetwork.create!(
+  network_id: 2,
+  user_id: 1,
 )
 
 Opportunity.create!(
@@ -45,6 +61,16 @@ Opportunity.create!(
   status: "Approved",
 )
 
+OpportunityNetwork.create!(
+  network_id: 1,
+  opportunity_id: 1
+)
+
+OpportunityNetwork.create!(
+  network_id: 2,
+  opportunity_id: 1
+)
+
 Opportunity.create!(
   owner_id: 2,
   title: 'Test - Amazing castle opportunity in Czech',
@@ -54,4 +80,9 @@ Opportunity.create!(
   geography: ["Worldwide"],
   value:  "$1M - $5M",
   status: "Approved"
+)
+
+OpportunityNetwork.create!(
+  network_id: 1,
+  opportunity_id: 2
 )
