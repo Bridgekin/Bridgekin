@@ -5,8 +5,8 @@ import App from './App';
 
 export default ({ store }) => (
   <Provider store={store}>
-    <BrowserRouter>
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </Provider>
 );
