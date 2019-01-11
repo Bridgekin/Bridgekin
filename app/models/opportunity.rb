@@ -1,5 +1,5 @@
 class Opportunity < ApplicationRecord
-  validates :owner_id, :title, :opportunity_needs, :industries,
+  validates :owner_id, :title, :opportunity_need, :industries,
     :geography, :value, :status, presence: true
 
   validates :owner_id, uniqueness: { scope: :title }
@@ -10,7 +10,8 @@ class Opportunity < ApplicationRecord
 
   has_many :opportunity_networks,
     foreign_key: :opportunity_id,
-    class_name: :OpportunityNetwork
+    class_name: :OpportunityNetwork,
+    dependent: :destroy
 
   has_many :networks,
     through: :opportunity_networks,
@@ -32,11 +33,15 @@ class Opportunity < ApplicationRecord
   # attr_accessor   :industries_raw
 
   def industries_raw
-    self.industries.join("\n") unless self.industries.nil?
+    self.industries.join(",") unless self.industries.nil?
   end
 
   def industries_raw=(values)
     self.industries = []
-    self.industries=values.split("\n")
+    self.industries=values.split(",")
+  end
+
+  def geography_raw
+    self.geography.join(",") unless self.geography.nil?
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_08_223740) do
+ActiveRecord::Schema.define(version: 2019_01_10_170017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,14 @@ ActiveRecord::Schema.define(version: 2019_01_08_223740) do
     t.index ["user_id"], name: "index_connected_opportunities_on_user_id"
   end
 
+  create_table "email_notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "notification_setting", default: "Weekly", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_email_notifications_on_user_id", unique: true
+  end
+
   create_table "finalized_opportunities", force: :cascade do |t|
     t.integer "opportunity_id", null: false
     t.integer "user_id", null: false
@@ -87,7 +95,7 @@ ActiveRecord::Schema.define(version: 2019_01_08_223740) do
     t.integer "owner_id", null: false
     t.string "title", null: false
     t.text "description"
-    t.string "opportunity_needs", null: false
+    t.string "opportunity_need", null: false
     t.string "industries", null: false, array: true
     t.string "geography", null: false, array: true
     t.string "value", null: false

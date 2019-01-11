@@ -49,22 +49,20 @@ class AccountConnected extends React.Component {
     const { classes, connectedOpportunities, facilitatedOpportunities }= this.props;
 
     let connectedOpportunityCards = connectedOpportunities.map(opportunity => (
-      <Grid item xs={6} justify="center" alignItems="center"
+      <Grid item xs={10} md={6} lg={5}  justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
           classes={classes}
-          handleCardOpen={this.handleCardOpen}
-          editable={true}/>
+          editable={false}/>
       </Grid>
     ));
 
     let facilitatedOpportunityCards = facilitatedOpportunities.map(opportunity => (
-      <Grid item xs={6} justify="center" alignItems="center"
+      <Grid item xs={10} md={6} lg={5}  justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
           classes={classes}
-          handleCardOpen={this.handleCardOpen}
-          editable={true}/>
+          editable={false}/>
       </Grid>
     ));
 

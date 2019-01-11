@@ -30,7 +30,12 @@ export const fetchConnectedOpportunities = (networkId) => dispatch => (
       dispatch(receiveConnectedOpportunities(data.connectedOpportunities))
       dispatch(receiveFacilitatedOpportunities(data.facilitatedConnectedOpportunities))
     })
-    .catch(errors => dispatch(receiveConnectedOpportunityErrors(errors)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveConnectedOpportunityErrors(errors))
+    })
 );
 
 export const fetchConnectedOpportunity = (id) => dispatch => (
@@ -45,6 +50,9 @@ export const createConnectedOpportunity = (opportunity) => dispatch => (
     .then(handleErrors)
     .then(data => dispatch(receiveConnectedOpportunity(data)))
     .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
       dispatch(receiveConnectedOpportunityErrors(errors))
     })
 );

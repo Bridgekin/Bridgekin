@@ -69,6 +69,7 @@ class ValueField extends React.Component {
   render (){
     let classes = this.props.classes;
     const { choices } = this.state;
+    debugger
 
     let cards = choices.map(value => {
       let styling = this.props.value === value ? (

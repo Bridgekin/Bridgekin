@@ -1,5 +1,5 @@
 export const fetchNetworks = () => (
-  fetch('api/networks', {
+  fetch(`${window.location.origin}/api/networks`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -9,7 +9,7 @@ export const fetchNetworks = () => (
 )
 
 export const fetchNetwork = id => (
-  fetch(`api/networks/${id}`, {
+  fetch(`${window.location.origin}/api/networks/${id}`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const fetchNetwork = id => (
 )
 
 export const createNetwork = opportunity => (
-  fetch('api/networks', {
+  fetch(`${window.location.origin}/api/networks`, {
     method: 'POST',
     body: JSON.stringify({ opportunity }),
     headers:{
@@ -30,7 +30,7 @@ export const createNetwork = opportunity => (
 )
 
 export const updateNetwork = opportunity => (
-  fetch('api/networks', {
+  fetch(`${window.location.origin}/api/networks`, {
     method: 'PATCH',
     body: JSON.stringify({ opportunity }),
     headers:{
@@ -41,7 +41,7 @@ export const updateNetwork = opportunity => (
 )
 
 export const deleteNetwork = id => (
-  fetch(`api/networks/${id}`, {
+  fetch(`${window.location.origin}/api/networks/${id}`, {
     method: 'DELETE',
     headers:{
     	'Content-Type': 'application/json',

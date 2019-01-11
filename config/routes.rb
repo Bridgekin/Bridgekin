@@ -14,6 +14,11 @@ Rails.application.routes.draw do
     resources :saved_opportunities
     resource :waitlist_user, only: [:create]
     resources :referral_links, only: [:create]
+    resources :email_notifications, only: [:index, :create, :show, :destroy, :update]
+    # resource :users, only: [] do
+    #   resource :user, only: [:update, :destroy]
+    # end
+    resource :user, only: [:update, :destroy]
     # resource :session, only: [:create, :destroy]
 
     get 'userOpportunities', :to => 'opportunities#userIndex'

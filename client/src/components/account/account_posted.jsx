@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import OpportunityCard from '../opportunity/opportunity_card';
+// import CardModal from './card_modal';
 
 import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportunity_actions';
 import { fetchNetworks } from '../../actions/network_actions';
@@ -34,13 +35,15 @@ class AccountPosted extends React.Component {
     super(props);
     this.state = {
       opportunitiesLoaded: false,
-      focusedNetwork: null
+      focusedNetwork: null,
+      loaded: false
     }
     this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount(){
     this.props.fetchUserOpportunities()
+    .then(() => this.setState({ loaded: true}))
   }
 
   handleCardOpen(){
@@ -54,34 +57,35 @@ class AccountPosted extends React.Component {
 
   render(){
     const { classes, opportunities }= this.props;
+    if (this.state.loaded){
+      let opportunityCards = opportunities.map(opportunity => (
+        <Grid item xs={10} md={6} lg={5} justify="center" alignItems="center"
+          className={classes.gridItem}>
+          <OpportunityCard opportunity={opportunity}
+            classes={classes}
+            handleDelete={this.handleDelete}
+            editable={true}/>
+        </Grid>
+      ));
 
-    let opportunityCards = opportunities.map(opportunity => (
-      <Grid item xs={6} justify="center" alignItems="center"
-        className={classes.gridItem}>
-        <OpportunityCard opportunity={opportunity}
-          classes={classes}
-          handleCardOpen={this.handleCardOpen}
-          handleDelete={this.handleDelete}
-          editable={true}/>
-      </Grid>
-    ));
-
-    let opportunityGrid = (
-      <Grid container justify="center" alignItems="center" spacing={24}>
-        <Grid item xs={10} sm={10} className={classes.gridOpp} >
-          <Grid container className={classes.root}
-            justify="center" alignItems="center" spacing={24}>
-            {opportunityCards}
+      let opportunityGrid = (
+        <Grid container justify="center" alignItems="center" spacing={24}>
+          <Grid item xs={10} sm={10} className={classes.gridOpp} >
+            <Grid container className={classes.root}
+              justify="center" alignItems="center" spacing={24}>
+              {opportunityCards}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    )
+      )
 
-    return (
-      <Grid container className={classes.root}>
-        {opportunityGrid}
-      </Grid>
-    )
+      return (
+        <Grid container className={classes.root}>
+          {opportunityGrid}
+        </Grid>
+      )
+    }
+    return <div></div>
   }
 }
 

@@ -24,12 +24,10 @@ export const refSignup = (formUser, code) => dispatch => (
       dispatch(receiveCurrentUser(data.user));
     })
     .catch(errors => {
-      debugger
-      if (errors instanceof Array){
-        dispatch(receiveSessionErrors(errors))
-      } else{
-        dispatch(receiveSessionErrors(['Something went wrong. Try again in a bit, or contact us!']));
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
       }
+      dispatch(receiveSessionErrors(errors));
     })
 );
 
@@ -42,13 +40,11 @@ export const login = formUser => dispatch => (
       dispatch(receiveCurrentUser(data.user));
     })
     .catch(errors => {
-      if (errors instanceof Array){
-        dispatch(receiveSessionErrors(errors))
-        alert(errors)
-      } else{
-        dispatch(receiveSessionErrors(['Something went wrong. Try again in a bit, or contact us!']));
-        alert('Something went wrong. Try again in a bit, or contact us!')
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
       }
+      dispatch(receiveSessionErrors(errors));
+      alert('Something went wrong. Try again in a bit, or contact us!')
     })
 );
 
@@ -58,5 +54,4 @@ export const logout = () => dispatch => (
       localStorage.removeItem('bridgekinToken');
       dispatch(logoutCurrentUser());
     })
-    .catch(errors => dispatch(receiveSessionErrors(errors.errors[0])))
 );

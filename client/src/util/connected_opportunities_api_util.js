@@ -1,5 +1,5 @@
 export const fetchConnectedOpportunities = () => (
-  fetch('api/connected_opportunities', {
+  fetch(`${window.location.origin}/api/connected_opportunities`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -9,7 +9,7 @@ export const fetchConnectedOpportunities = () => (
 )
 
 export const fetchConnectedOpportunity = id => (
-  fetch(`api/connected_opportunities/${id}`, {
+  fetch(`${window.location.origin}/api/connected_opportunities/${id}`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const fetchConnectedOpportunity = id => (
 )
 
 export const createConnectedOpportunity = connectedOpportunity => (
-  fetch('api/connected_opportunities', {
+  fetch(`${window.location.origin}/api/connected_opportunities`, {
     method: 'POST',
     body: JSON.stringify({ connectedOpportunity }),
     headers:{
@@ -30,7 +30,7 @@ export const createConnectedOpportunity = connectedOpportunity => (
 )
 
 export const deleteConnectedOpportunity = id => (
-  fetch(`api/connected_opportunities/${id}`, {
+  fetch(`${window.location.origin}/api/connected_opportunities/${id}`, {
     method: 'DELETE',
     headers:{
     	'Content-Type': 'application/json',

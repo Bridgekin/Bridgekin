@@ -1,5 +1,5 @@
 export const createReferral = referral => (
-  fetch('api/referral_links', {
+  fetch(`${window.location.origin}/api/referral_links`, {
     method: 'POST',
     body: JSON.stringify({ referral }),
     headers:{

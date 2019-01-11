@@ -18,11 +18,11 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 80
+    height: 60
   },
   button: {
     margin: "0px 7px",
-    fontSize: 16
+    // fontSize: 16
   },
   buttonContainer:{
     display: 'flex',
@@ -78,7 +78,7 @@ class AccountNav extends React.Component {
       <Grid container className={classes.root}
         justify='space-around' alignItems='center'>
         <Grid item xs={10} sm={2} className={classes.accountNavSection}>
-          <Typography className={classes.waitlistCTA} variant="h4" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             <strong>My Profile</strong>
           </Typography>
         </Grid>

@@ -59,6 +59,11 @@ class User < ApplicationRecord
     through: :network_admins,
     source: :network
 
+  has_one :notification_setting,
+    foreign_key: :user_id,
+    class_name: :EmailNotification,
+    dependent: :destroy
+
   def confirmed?
     self.confirmed_at.present?
   end

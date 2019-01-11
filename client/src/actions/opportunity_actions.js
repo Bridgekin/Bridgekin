@@ -25,40 +25,70 @@ export const fetchOpportunities = (networkId) => dispatch => (
   OpportunityApiUtil.fetchOpportunities(networkId)
     .then(handleErrors)
     .then(data => dispatch(receiveOpportunities(data)))
-    .catch(errors => dispatch(receiveOpportunityErrors(errors)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveOpportunityErrors(errors))
+    })
 );
 
 export const fetchUserOpportunities = (networkId) => dispatch => (
   OpportunityApiUtil.fetchUserOpportunities(networkId)
     .then(handleErrors)
     .then(data => dispatch(receiveOpportunities(data)))
-    .catch(errors => dispatch(receiveOpportunityErrors(errors)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveOpportunityErrors(errors))
+    })
 );
 
 export const fetchOpportunity = (id) => dispatch => (
   OpportunityApiUtil.fetchOpportunity(id)
     .then(handleErrors)
-    .then(data => dispatch(receiveOpportunity(data)))
-    .catch(errors => dispatch(receiveOpportunityErrors(errors)))
+    .then(data => dispatch(receiveOpportunity(data.opportunity)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveOpportunityErrors(errors))
+    })
 );
 
 export const createOpportunity = (opportunity) => dispatch => (
   OpportunityApiUtil.createOpportunity(opportunity)
     .then(handleErrors)
-    .then(data => dispatch(receiveOpportunity(data)))
-    .catch(errors => dispatch(receiveOpportunityErrors(errors)))
+    .then(data => dispatch(receiveOpportunity(data.opportunity)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveOpportunityErrors(errors))
+    })
 );
 
 export const updateOpportunity = (opportunity) => dispatch => (
   OpportunityApiUtil.updateOpportunity(opportunity)
     .then(handleErrors)
     .then(data => dispatch(receiveOpportunity(data)))
-    .catch(errors => dispatch(receiveOpportunityErrors(errors)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveOpportunityErrors(errors))
+    })
 );
 
 export const deleteOpportunity = (id) => dispatch => (
   OpportunityApiUtil.deleteOpportunity(id)
     .then(handleErrors)
     .then(() => dispatch(removeOpportunity(id)))
-    .catch(errors => dispatch(receiveOpportunityErrors(errors)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveOpportunityErrors(errors))
+    })
 );

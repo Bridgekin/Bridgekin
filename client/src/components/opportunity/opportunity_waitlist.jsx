@@ -17,8 +17,8 @@ const styles = theme => ({
     margin: "25px 0px 25px 0px"
   },
   refButton:{
-    fontSize: 20,
-    fontWeight: 700,
+    fontSize: '1rem',
+    fontWeight: 500,
     marginTop: 25,
     height: 55,
     width: 200

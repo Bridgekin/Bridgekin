@@ -39,7 +39,8 @@ const styles = theme => ({
   },
   wrapper:{
     display: 'flex',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   },
   cardEditIcon:{
     color: "#d3d3d3",
@@ -59,7 +60,7 @@ class AccountHome extends React.Component {
     return (
       <Grid container justify="center" alignItems="center"
         spacing={24} className={classes.root}>
-        <Grid item xs={10} sm={5} className={classes.homeContainer}>
+        <Grid item xs={10} sm={6} className={classes.homeContainer}>
           <Card className={classes.card}>
             <CardMedia
               className={classes.cover}
@@ -70,12 +71,14 @@ class AccountHome extends React.Component {
               <div className={classes.wrapper}>
                 <Typography variant="h3" gutterBottom color="secondary"
                   align='left'>
-                  {this.capitalize(currentUser.fname)}
+                  {`${this.capitalize(currentUser.fname)} ${this.capitalize(currentUser.lname)}`}
                 </Typography>
-                <div>
+                <div style={{ marginLeft: 10 }}
+                  onClick={() => this.props.history.push('/account/settings')}>
                   <i className={["far fa-edit", classes.cardEditIcon].join(' ')}/>
                 </div>
               </div>
+
               <Typography variant="subtitle1" gutterBottom align='left'
                 color="secondary" className={classes.cardSection}>
                 Title
@@ -84,6 +87,7 @@ class AccountHome extends React.Component {
                 color="default">
                 {this.capitalize(currentUser.title)}
               </Typography>
+
               <Typography variant="subtitle1" gutterBottom align='left'
                 color="secondary" className={classes.cardSection}>
                 Company
@@ -92,6 +96,19 @@ class AccountHome extends React.Component {
                 color="default">
                 {this.capitalize(currentUser.company)}
               </Typography>
+
+              <Typography variant="subtitle1" gutterBottom align='left'
+                color="secondary" className={classes.cardSection}>
+                Location
+              </Typography>
+              <Typography variant="h6" gutterBottom align='left'
+                color="default">
+                {currentUser.city ?
+                  `${currentUser.city}, ${currentUser.country}` :
+                  "Unknown"
+                }
+              </Typography>
+
             </CardContent>
           </Card>
         </Grid>

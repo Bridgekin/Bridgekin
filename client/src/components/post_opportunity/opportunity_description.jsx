@@ -42,18 +42,13 @@ const styles = theme => ({
 class DescriptionField extends React.Component {
   constructor(props){
     super(props);
-
+    let networks = this.formatNetworks();
     this.state = {
-      networks: {}
+      networks
     }
 
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  componentDidMount(){
-    let networks = this.formatNetworks();
-    this.setState({ networks })
   }
 
   formatNetworks(){
@@ -66,6 +61,15 @@ class DescriptionField extends React.Component {
     return results;
   }
 
+  componentDidMount(){
+    let currentNetworks = this.state.networks;
+    let networks = this.props.networks;
+    for(let i = 0; i < networks.length; i++){
+      currentNetworks[networks[i]] = true;
+    }
+    this.setState({ networks: currentNetworks })
+  }
+
   handleChange(field){
     return e => {
       e.preventDefault();
@@ -73,16 +77,16 @@ class DescriptionField extends React.Component {
     }
   }
 
-  handleClick(field){
+  handleClick(id){
     return e => {
       e.preventDefault();
       let { networks } = this.state;
-      networks[field] = !networks[field];
+      networks[id] = !networks[id];
       this.setState( { networks },
         () => {
           let chosenOptions = Object.keys(networks).filter(k => networks[k]);
           debugger
-          this.props.handleChange(chosenOptions);
+          this.props.handleChange('networks')(chosenOptions);
         });
     }
   }

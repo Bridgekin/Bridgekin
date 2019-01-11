@@ -1,12 +1,12 @@
 <p>Hi <%= @owner.fname.capitalize %>,</p>
 
-<p>We're reaching out because <%= @facilitator.fname.capitalize %> knows someonone
-  who would be perfect for your opportunity, "<%= @opportunity.title%>."</p>
+<p>We’re excited to introduce you to <%= @facilitator.fname.capitalize %> <%= @facilitator.lname.capitalize %>,
+  who has a trusted person in their network that may be a good fit for
+  your opportunity: <%= @opportunity.title%>.</p>
 
-<p>This email serves to introduce you two and allow <%= @facilitator.fname.capitalize %>
-  to put you in contact with whomever they've got in mind.</p>
-
-<p>The next step is up to you two!</p>
+<p>It’s probably best to jump on a quick call to get to know each-other
+  or loop in your contact directly <%= @facilitator.fname.capitalize%> to discuss
+  the opportunity further. We’ll let you both take it from here!</p>
 
 <p>Cheers,<br>
 The Bridgekin Team</p>

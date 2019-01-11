@@ -8,7 +8,9 @@ import HomePage from './components/home/home_page';
 import AccountRoute from './components/account/account_route';
 import OpportunityHome from './components/opportunity/opportunity_home';
 import OpportunityCreate from './components/post_opportunity/opportunity_create';
+import OpportunityEdit from './components/post_opportunity/opportunity_edit';
 import SignupPage from './components/home/signup_page';
+import AccountConfirmed from './components/account/account_confirmed';
 
 import { getAuthUserId } from './util/session_api_util';
 import { receiveCurrentUser } from './actions/session_actions';
@@ -21,8 +23,10 @@ export default () => (
     <Switch>
       <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
       <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
+      <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
       <ProtectedRoute path="/account" component={AccountRoute} />
       <Route path="/signup/:code" component={SignupPage} />
+      <Route path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/" component={HomePage} />
     </Switch>
   </div>

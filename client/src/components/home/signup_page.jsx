@@ -191,6 +191,7 @@ class SignupPage extends React.Component{
           label="Password"
           className={classes.textField}
           margin="normal"
+          type="password"
           value={this.state.password}
           onChange={this.handleChange('password')}
           onMouseUp={this.handleChange('password')}
@@ -200,6 +201,7 @@ class SignupPage extends React.Component{
           label="Password Confirmation"
           className={classes.textField}
           margin="normal"
+          type="password"
           value={this.state.passwordConfirmation}
           onChange={this.handleChange('passwordConfirmation')}
           onMouseUp={this.handleChange('passwordConfirmation')}

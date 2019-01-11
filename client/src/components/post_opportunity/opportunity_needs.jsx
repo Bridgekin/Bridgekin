@@ -61,7 +61,7 @@ class NeedsField extends React.Component {
   handleClick(field){
     return e => {
       e.preventDefault();
-      if(this.props.need === field){
+      if(this.props.opportunityNeed === field){
         this.props.handleChange('');
       } else {
         this.props.handleChange(field);
@@ -93,7 +93,7 @@ class NeedsField extends React.Component {
     let classes = this.props.classes;
     const { choices } = this.state;
 
-    console.log('need', this.props.need)
+    console.log('need', this.props.opportunityNeed)
     // const error = Object.keys(options).filter(v => v).length < 1;
 
     // let fields = Object.keys(options).map(option => {
@@ -129,11 +129,11 @@ class NeedsField extends React.Component {
 
     let cards = choices.map(need => {
 
-      let styling = this.props.need === need ? (
+      let styling = this.props.opportunityNeed === need ? (
         [classes.actionArea, classes.clicked].join(' ')
       ) : (classes.actionArea);
 
-      let iconStyling = this.props.need === need ? (
+      let iconStyling = this.props.opportunityNeed === need ? (
         [classes.icon, classes.clickedIcon].join(' ')
       ) : (classes.icon);
 

@@ -1,32 +1,35 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  # acts_as_token_authentication_handler_for User, fallback: :none
-  # protect_from_forgery prepend: true, with: :exception
-  # helper_method :logged_in, :current_user
 
-  # before_action :underscore_params!
-  # before_action :configure_permitted_parameters, if: :devise_controller?
-  # before_action :authenticate_user
+  # # Overrides Devise
+  # def after_sign_in_path_for(resource)
+  #   return params[:redirect_to] unless params[:redirect_to].blank?
   #
-  # respond_to :json
+  #   if email_confirmation_required?(resource)
+  #     new_user_confirmation_path
+  #   else
+  #     stored_location_for(resource) || signed_in_root_path(resource)
+  #   end
+  # end
+  # 
+  # # Overrides Devise
+  # def signed_in_root_path(resource)
+  #   return params[:redirect_to] unless params[:redirect_to].blank?
   #
-  # def logged_in
-  #   !!current_user
-  # end
-
-  # def current_user
-  #   @current_user ||= User.find_by(session_token: session[:session_token])
-  # end
-
-  # def login!(user)
-  #   session[:session_token] = user.reset_session_token!
-  #   @current_user = user
+  #   if email_confirmation_required?(resource)
+  #     new_user_confirmation_url
+  #   else
+  #     stories_url subdomain: false
+  #   end
   # end
   #
-  # def logout!
-  #   current_user.reset_session_token!
-  #   session[:session_token] = nil
-  #   @current_user = nil
+  # # Overrides Devise
+  # def after_sign_out_path_for(resource_or_scope)
+  #   if params[:redirect_to].present?
+  #     params[:redirect_to]
+  #   else
+  #     new_user_session_path(subdomain: false)
+  #   end
   # end
 
   private

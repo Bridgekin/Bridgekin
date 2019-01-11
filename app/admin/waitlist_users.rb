@@ -1,17 +1,43 @@
 ActiveAdmin.register WaitlistUser do
-  permit_params :email, :name
+  permit_params :email, :fname, :lname, :email_sent_at,
+  :from_referral_id, :created_at, :updated_at
 
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+  index do
+    id_column
+    column :email
+    column :fname
+    column :lname
+    column :email_sent_at
+    column :from_referral_id
+    column :created_at
+    column :updated_at
+    actions
+  end
 
+  show do |waitlist_user|
+    attributes_table do
+      row :email
+      row :fname
+      row :lname
+      row :email_sent_at
+      row :from_referral_id
+      row :created_at
+      row :updated_at
+    end
+
+    active_admin_comments
+  end
+
+  form do |f|
+    f.inputs "Waitlist User" do
+      f.input :email
+      f.input :fname
+      f.input :lname
+      f.input :email_sent_at
+      f.input :from_referral_id
+      f.input :created_at
+      f.input :updated_at
+    end
+    f.actions
+  end
 end

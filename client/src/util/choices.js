@@ -28,9 +28,21 @@ export const industryChoices = [
   'Transporation'
 ];
 
+export const geographyChoices = [
+  'Worldwide',
+  'Africa',
+  'Central America',
+  'Eastern Europe',
+  'Middle East',
+  'North America',
+  'Oceania',
+  'South America',
+  'Western Europe'
+]
+
 export const valueChoices = [
   'Under 1M',
-  '$1 - $5M',
-  '$5 - $25M',
+  '$1M - $5M',
+  '$5M - $25M',
   'Over $25M'
 ];

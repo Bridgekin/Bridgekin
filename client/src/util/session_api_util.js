@@ -1,5 +1,5 @@
 export const refSignup = (user, code) => (
-  fetch('api/signup', {
+  fetch(`${window.location.origin}/api/signup`, {
     method: 'POST',
     body: JSON.stringify({ user, code }),
     headers:{
@@ -9,7 +9,7 @@ export const refSignup = (user, code) => (
 )
 
 export const login = user => (
-  fetch('api/login', {
+  fetch(`${window.location.origin}/api/login`, {
     method: 'POST',
     body: JSON.stringify({ user }),
     headers:{
@@ -19,13 +19,13 @@ export const login = user => (
 )
 
 export const logout = () => (
-  fetch('api/logout', {
+  fetch(`${window.location.origin}/api/logout`, {
     method: 'DELETE'
   })
 )
 
 export const getAuthUserId = (token) => (
-  fetch('api/authorization', {
+  fetch(`${window.location.origin}/api/authorization`, {
     headers: {
         "Authorization":token
     },

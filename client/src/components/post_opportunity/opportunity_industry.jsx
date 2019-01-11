@@ -46,7 +46,6 @@ class IndustryField extends React.Component {
     this.state = {
       options
     }
-    debugger
   }
 
   createDefault(){
@@ -59,15 +58,19 @@ class IndustryField extends React.Component {
 
   componentDidMount(){
     let options = this.state.options;
-    let keys = Object.keys(options);
-    for(let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      // let formattedKey = this.capitalize(key);
-      if(this.props.industry.includes(key)){
-        options[key] = true;
-      } else {
-        options[key] = false;
-      }
+    // let keys = Object.keys(options);
+    // for(let i = 0; i < keys.length; i++) {
+    //   let key = keys[i];
+    //   // let formattedKey = this.capitalize(key);
+    //   if(this.props.industries.includes(key)){
+    //     options[key] = true;
+    //   } else {
+    //     options[key] = false;
+    //   }
+    // }
+    let industries = this.props.industries;
+    for(let i = 0; i < industries.length; i++){
+      options[industries[i]] = true;
     }
     this.setState({ options })
   }
@@ -88,8 +91,6 @@ class IndustryField extends React.Component {
   render (){
     let classes = this.props.classes;
     const { options } = this.state;
-
-    debugger
 
     let cards = Object.keys(options).map(option => {
       let styling = options[option] ? (

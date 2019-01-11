@@ -7,7 +7,6 @@ class Api::ConnectedOpportunitiesController < ApiController
   def index
     @connected_opportunities = @user.opportunity_connections
     @facilitated_connected_opportunities = @user.opportunity_connections_facilitated
-
     render :index
   end
 
@@ -51,18 +50,18 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   end
 
-  def referredConnection
-    if params[:facilitator_id]
-      @connected_opportunity = ConnectedOpportunity.new(connected_opportunity_params)
-    # else params[:]
-
-    if @connected_opportunity.save
-      # Send email
-      render :show
-    else
-      render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
-    end
-  end
+  # def referredConnection
+  #   if params[:facilitator_id]
+  #     @connected_opportunity = ConnectedOpportunity.new(connected_opportunity_params)
+  #   # else params[:]
+  #
+  #   if @connected_opportunity.save
+  #     # Send email
+  #     render :show
+  #   else
+  #     render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
+  #   end
+  # end
 
   # PATCH/PUT /opportunities/1
   def update
@@ -85,7 +84,7 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_finalized_opportunity
+    def set_connected_opportunity
       @connected_opportunity = ConnectedOpportunity.find(params[:id])
     end
 
@@ -95,5 +94,4 @@ class Api::ConnectedOpportunitiesController < ApiController
         :connect_bool, :network_id)
       # params.permit(:opportunity_id, :connect_bool, :network_id)
     end
-  end
 end

@@ -57,13 +57,16 @@ class SubmitModal extends React.Component {
   }
 
   handleClose(field){
-    if(this.props.waitlistErrors){
-      this.props.clearOpportunityErrors();
-    }
     return () => {
+      if(this.props.waitlistErrors){
+        this.props.clearOpportunityErrors();
+      }
+
       this.props.handleClose();
-      if (field === 'post'){
+      if (field === 'post' && this.props.modalType === 'create'){
         this.props.handleReset();
+      } else if (field === 'post' && this.props.modalType !== 'create'){
+        this.props.history.push('/postopportunity')
       } else {
         this.props.history.push('/findandconnect')
       }
@@ -71,7 +74,7 @@ class SubmitModal extends React.Component {
   };
 
   render () {
-    const { open, classes } = this.props;
+    const { open, classes, modalType } = this.props;
 
     let opportunityErrors = this.props.opportunityErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
@@ -84,7 +87,7 @@ class SubmitModal extends React.Component {
       )
     })
 
-    let modalText = this.props.opportunityErrors.length === 0 ? (
+    let successText = modalType === 'create' ? (
       <div style={{top:'25%', left: '30%'}} className={classes.paper}>
         <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks For Posting!
@@ -108,6 +111,34 @@ class SubmitModal extends React.Component {
           </Button>
         </div>
       </div>
+    ) : (
+      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
+        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+          You've Updated Your Post!
+        </Typography>
+        <Typography variant="subtitle1" id="simple-modal-description">
+          You've successfully update your opportunity. Head to your account
+          to see your opportunity.
+        </Typography>
+
+        <div className={classes.actionWrapper}>
+          <Button variant="contained" color='secondary'
+            className={classes.actionButton}
+            onClick={this.handleClose('post')}>
+            Post An Opportunity
+          </Button>
+
+          <Button variant="contained" color='secondary'
+            className={classes.actionButton}
+            onClick={this.handleClose('find')}>
+            View Opportunities
+          </Button>
+        </div>
+      </div>
+    )
+
+    let modalText = this.props.opportunityErrors.length === 0 ? (
+        successText
       ) : (
         <div style={{top:'25%', left: '30%'}} className={classes.paper}>
           <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
@@ -120,7 +151,7 @@ class SubmitModal extends React.Component {
             {opportunityErrors}
           </List>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose('find')} color='secondary'>
             Close
           </Button>
         </div>

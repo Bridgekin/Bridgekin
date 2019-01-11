@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
 import OpportunityCard from '../opportunity/opportunity_card';
-import CardModal from '../opportunity/card_modal';
 
 const styles = theme => ({
   root: {
@@ -30,37 +29,12 @@ const styles = theme => ({
 });
 
 class SubmitField extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      cardOpen: false,
-    }
-
-    this.handleCardOpen = this.handleCardOpen.bind(this);
-    this.handleCardClose = this.handleCardClose.bind(this);
-  }
-
-  handleCardOpen(){
-    console.log('opening card')
-    this.setState({ cardOpen: true });
-  }
-
-  handleCardClose(){
-    this.setState({ cardOpen: false });
-  }
-
   render (){
-    const { classes, errors } = this.props;
-    const { title, description, industry, need, geography,
-      value, networks } = this.props;
-    const { cardOpen } = this.state;
+    const { title, description, industries, opportunityNeed, geography,
+      value, networks, classes, errors, status } = this.props;
 
-    let opportunityNeeds = need;
-    let industries = industry;
-
-    let opportunity = { title, description, industries, opportunityNeeds,
-      geography, value, networks };
-
+    let opportunity = { title, description, industries, opportunityNeed,
+      geography, value, networks, status };
 
     let errorItems = errors.map(error => (
       <li className={classes.errors}>
@@ -87,7 +61,6 @@ class SubmitField extends React.Component {
         <Grid item xs={10}>
           <OpportunityCard opportunity={opportunity}
             classes={classes}
-            handleCardOpen={this.handleCardOpen}
             editable={false}/>
         </Grid>
 
@@ -107,11 +80,6 @@ class SubmitField extends React.Component {
             If you need to edit this opportunity, click the back button.
           </Typography>
         </Grid>
-
-        <CardModal open={cardOpen}
-          handleClose={this.handleCardClose}
-          opportunity={opportunity}
-          demo={true}/>
       </Grid>
     )
   }

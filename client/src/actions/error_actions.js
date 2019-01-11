@@ -19,6 +19,9 @@ export const CLEAR_NETWORK_ERRORS = 'CLEAR_NETWORK_ERRORS';
 export const RECEIVE_REFERRAL_ERRORS = 'RECEIVE_REFERRAL_ERRORS';
 export const CLEAR_REFERRAL_ERRORS = 'CLEAR_REFERRAL_ERRORS';
 
+export const RECEIVE_EMAIL_NOTIFICATION_ERRORS = 'RECEIVE_EMAIL_NOTIFICATION_ERRORS';
+export const CLEAR_EMAIL_NOTIFICATION_ERRORS = 'CLEAR_EMAIL_NOTIFICATION_ERRORS';
+
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
   errors
@@ -98,4 +101,13 @@ export const receiveReferralErrors = errors => ({
 
 export const clearReferralErrors = () => ({
   type: CLEAR_REFERRAL_ERRORS,
+});
+
+export const receiveNotificationErrors = errors => ({
+  type: RECEIVE_EMAIL_NOTIFICATION_ERRORS,
+  errors
+});
+
+export const clearNotificationErrors = () => ({
+  type: CLEAR_EMAIL_NOTIFICATION_ERRORS,
 });

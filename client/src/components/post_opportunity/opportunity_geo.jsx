@@ -9,6 +9,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 
+import { geographyChoices } from '../../util/choices';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -34,35 +36,49 @@ const styles = theme => ({
 class GeoField extends React.Component {
   constructor(props){
     super(props);
+    const options = this.createDefault();
     this.state = {
-      options: {
-        worldwide: true,
-        africa: false,
-        centralAmerica: false,
-        easternEurope: false,
-        middleEast: false,
-        northAmerica: false,
-        oceania: false,
-        southAmerica: false,
-        westernEurope: false,
-      }
+      options
     }
+    // this.state = {
+    //   options: {
+    //     worldwide: false,
+    //     africa: false,
+    //     centralAmerica: false,
+    //     easternEurope: false,
+    //     middleEast: false,
+    //     northAmerica: false,
+    //     oceania: false,
+    //     southAmerica: false,
+    //     westernEurope: false,
+    //   }
+    // }
+  }
+
+  createDefault(){
+    let options = {};
+    for (let i = 0; i < geographyChoices.length; i++){
+      options[geographyChoices[i]] = false;
+    }
+    return options
   }
 
   componentDidMount(){
     let options = this.state.options;
-    let keys = Object.keys(options);
-    for(let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      let formattedKey = this.capitalize(key);
-      if(this.props.geography.includes(formattedKey)){
-        options[key] = true;
-      } else {
-        options[key] = false;
-      }
+    // let keys = Object.keys(options);
+    // for(let i = 0; i < keys.length; i++) {
+    //   let key = keys[i];
+    //   let formattedKey = this.capitalize(key);
+    //   if(this.props.geography.includes(formattedKey)){
+    //     options[key] = true;
+    //   } else {
+    //     options[key] = false;
+    //   }
+    // }
+    let geography = this.props.geography;
+    for(let i = 0; i < geography.length; i++){
+      options[geography[i]] = true;
     }
-    debugger
-    console.log('options on didmount', options);
     this.setState({ options })
   }
 
@@ -74,17 +90,17 @@ class GeoField extends React.Component {
       this.setState( { options },
         () => {
           let chosenOptions = Object.keys(options).filter(k => options[k]);
-          this.props.handleChange(chosenOptions.map(opt => this.capitalize(opt)));
+          this.props.handleChange(chosenOptions);
         });
     }
   }
 
-  capitalize(string) {
-    let oldString = string.repeat(1);
-
-    return oldString.replace(/([A-Z])/g, ' $1')
-      .replace(/^./, str => { return str.toUpperCase(); })
-  }
+  // capitalize(string) {
+  //   let oldString = string.repeat(1);
+  //
+  //   return oldString.replace(/([A-Z])/g, ' $1')
+  //     .replace(/^./, str => { return str.toUpperCase(); })
+  // }
 
   render (){
     let classes = this.props.classes;
@@ -92,7 +108,6 @@ class GeoField extends React.Component {
     const error = Object.keys(options).filter(v => v).length < 1;
 
     let fields = Object.keys(options).map(option => {
-      let formattedOption = this.capitalize(option);
       return (<FormControlLabel
         control={
           <Checkbox
@@ -100,7 +115,7 @@ class GeoField extends React.Component {
             onChange={this.handleChange(option)}
             value={option} />
         }
-        label={formattedOption}
+        label={option}
         classes={{ label: classes.geoLabel }}
       />)
     })

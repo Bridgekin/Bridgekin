@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -12,6 +13,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import CardModal from './card_modal';
 
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 import _ from 'lodash';
@@ -32,32 +35,62 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingBottom: 25,
     minHeight: 400
   },
   content:{
-    padding: 25
+    padding: "25px 25px 0px 25px"
   },
-  cardWrapper:{
+  cardHeaderWrapper:{
+    marginBottom: 10,
+  },
+  cardDescriptionWrapper:{
+    marginBottom: 5,
+  },
+  cardSubWrapper:{
     display: 'flex',
     justifyContent: 'space-around',
-    width: '100%',
-    marginTop: 40
+    margin: "10px 0px 10px 0px"
   },
-  cardSubContent:{
-    fontSize: 18,
+  cardSubHeader:{
+    // fontSize: 18,
     fontWeight: 700
   },
-  title: {fontSize: 26},
-  description: {fontSize: 14},
+  cardSubContent:{
+    fontSize: '0.85rem',
+    fontWeight: 500,
+    height: 52,
+    lineHeight: 1,
+    overflowY: 'hidden'
+  },
+  cardSubContentStatus:{
+    fontSize: '0.85rem',
+    fontWeight: 500,
+    lineHeight: 1,
+    maxHeight: 52,
+    overflowY: 'hidden'
+  },
+  title: {
+    fontSize: '1.5rem',
+    height: 56,
+    overflowX: 'hidden'
+  },
+  description: {
+    // fontSize: '0.9rem',
+    height: 55,
+    overflowY: 'hidden'
+  },
   buttonWrapper:{
     display: 'flex',
     justifyContent: 'space-around'
   },
   button: {
     minWidth: 75,
-    margin: 25,
+    margin: "0px 25px 25px 25px",
   },
+  delete:{
+    backgroundColor: theme.palette.delete,
+    color: theme.palette.primary.main
+  }
 });
 
 
@@ -65,17 +98,26 @@ class OpportunityCard extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      deleteOpen: false
+      deleteOpen: false,
+      cardOpen: false
     }
 
     this.handleCardOpen = this.handleCardOpen.bind(this);
     this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
     this.handleDeleteClose = this.handleDeleteClose.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleCardOpen = this.handleCardOpen.bind(this);
+    this.handleCardClose = this.handleCardClose.bind(this);
   }
 
   handleCardOpen(e){
     e.preventDefault();
-    this.props.handleCardOpen(this.props.opportunity)
+    // this.props.handleCardOpen(this.props.opportunity)
+    this.setState({ cardOpen: true })
+  }
+
+  handleCardClose(e){
+    this.setState({ cardOpen: false })
   }
 
   handleDeleteOpen = () => {
@@ -91,38 +133,42 @@ class OpportunityCard extends React.Component {
     }
   };
 
+  handleEdit(id){
+    return e => {
+      this.props.history.push(`/editopportunity/${id}`)
+    }
+  }
+
   render(){
     const { classes, opportunity, editable }= this.props;
-    let { title, description, industries, opportunityNeeds, geography,
+    const { cardOpen } = this.state;
+    let { title, description, industries, opportunityNeed, geography,
       value, status } = opportunity;
 
-    debugger
-
     if (!_.isEmpty(opportunity)){
-      let industry = industries.join(', ');
-      geography = geography.join(', ');
+      debugger
 
       let additionalInfo = editable ? (
-        <div className={classes.cardWrapper}>
+        <div className={classes.cardSubWrapper}>
           <div>
-            <Typography variant="h2" gutterBottom align='center'
-              color="secondary" className={classes.cardSubContent}>
+            <Typography variant="h6" gutterBottom align='center'
+              color="secondary" className={classes.cardSubHeader}>
               Status
             </Typography>
-            <Typography variant="h2" gutterBottom align='center'
-              color="default" className={classes.cardSubContent}>
+            <Typography variant="h6" gutterBottom align='center'
+              color="default" className={classes.cardSubContentStatus}>
               {status}
             </Typography>
           </div>
 
           <div>
-            <Typography variant="h2" gutterBottom align='center'
-              color="secondary" className={classes.cardSubContent}>
+            <Typography variant="h6" gutterBottom align='center'
+              color="secondary" className={classes.cardSubHeader}>
               Opportunity Need
             </Typography>
-            <Typography variant="h2" gutterBottom align='center'
-              color="default" className={classes.cardSubContent}>
-              {opportunityNeeds}
+            <Typography variant="h6" gutterBottom align='center'
+              color="default" className={classes.cardSubContentStatus}>
+              {opportunityNeed}
             </Typography>
           </div>
         </div>
@@ -130,7 +176,8 @@ class OpportunityCard extends React.Component {
 
       let editOptions = editable ? (
         <div className={classes.buttonWrapper}>
-          <Button variant="contained" className={classes.button}>
+          <Button variant="contained" className={classes.button}
+            onClick={this.handleEdit(opportunity.id)}>
             Edit
           </Button>
           <Button variant="contained" className={classes.button}
@@ -150,7 +197,7 @@ class OpportunityCard extends React.Component {
           <DialogTitle id="alert-dialog-title">{"Delete Your Opportunity"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {`You about to delet your opportunity permanently.
+              {`You about to delete your opportunity permanently.
                 You can not undo this action. Do you still want to continue?`}
             </DialogContentText>
           </DialogContent>
@@ -159,8 +206,8 @@ class OpportunityCard extends React.Component {
               color="secondary" >
               Cancel
             </Button>
-            <Button color="secondary" autoFocus
-              onClick={this.handleDeleteClose(true)}>
+            <Button autoFocus color='error'
+              onClick={this.handleDeleteClose(true)} variant='contained'>
               Delete
             </Button>
           </DialogActions>
@@ -176,54 +223,69 @@ class OpportunityCard extends React.Component {
             title="OpportunityImage"
           />
           <CardContent className={classes.content}>
-            <Typography variant="h2" gutterBottom align='center'
-              color="default" className={classes.title}>
-              {title}
-            </Typography>
-            <Typography variant="p" gutterBottom align='center'
-              color="default" className={classes.description}>
-              {description}
-            </Typography>
+            <div className={classes.cardHeaderWrapper}>
+              <Typography variant="h5" align='center'
+                color="default" className={classes.title} >
+                {title}
+              </Typography>
+            </div>
+            <div className={classes.cardDescriptionWrapper}>
+              <Typography variant="h7" align='center'
+                color="default" className={classes.description}
+                >
+                {description}
+              </Typography>
+            </div>
 
-            <div className={classes.cardWrapper}>
-              <div>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubContent}>
+            <div className={classes.cardSubWrapper}>
+              <div style={{ width:'31%'}} >
+                <Typography variant="h6" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubHeader}
+                  noWrap>
                   Geography
                 </Typography>
-                <Typography variant="h2" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='center'
                   color="default" className={classes.cardSubContent}>
-                  {geography}
+                  {geography.join(", ")}
                 </Typography>
               </div>
 
-              <div>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubContent}>
+              <div style={{ width:'31%'}} >
+                <Typography variant="h6" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubHeader}
+                  noWrap>
                   Industry
                 </Typography>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="default" className={classes.cardSubContent}>
-                  {industry}
+                <Typography variant="body1" gutterBottom align='center'
+                  color="default" className={classes.cardSubContent}
+                  >
+                  {industries.join(", ")}
                 </Typography>
               </div>
 
-              <div>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubContent}>
+              <div style={{ width:'31%'}} >
+                <Typography variant="h6" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubHeader}
+                  noWrap>
                   Value
                 </Typography>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="default" className={classes.cardSubContent}>
+                <Typography variant="body1" gutterBottom align='center'
+                  color="default" className={classes.cardSubContent}
+                  >
                   {value}
                 </Typography>
               </div>
             </div>
+
             {editable && additionalInfo}
           </CardContent>
         </CardActionArea>
         {editable && editOptions}
         {editable && deleteDialog}
+        <CardModal open={cardOpen}
+          handleClose={this.handleCardClose}
+          opportunity={opportunity}
+          demo={false}/>
       </Card>
       )
     } else {
@@ -234,4 +296,4 @@ class OpportunityCard extends React.Component {
   }
 }
 
-export default withStyles(styles)(OpportunityCard);
+export default withRouter(withStyles(styles)(OpportunityCard));

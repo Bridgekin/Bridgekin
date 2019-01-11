@@ -28,7 +28,6 @@ import OpportunityCard from './opportunity_card';
 import OpportunityReferral from './opportunity_referral';
 import OpportunityWaitlist from './opportunity_waitlist';
 import WaitlistModal from '../waitlist_modal';
-import CardModal from './card_modal';
 
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
@@ -51,8 +50,6 @@ const mapDispatchToProps = dispatch => ({
   createReferral: (referral) => dispatch(createReferral(referral))
 });
 
-const BRIDGEKIN_ID = 1;
-
 const styles = theme => ({
   jumboRoot: {
     flexGrow: 1
@@ -62,7 +59,8 @@ const styles = theme => ({
     margin: "15px 0px 15px 0px"
   },
   homeheader:{
-    minHeight: 350
+    // minHeight: 350,
+    paddingBottom: 50
   },
   headerTypography:{
     margin: "25px 0px 25px 0px"
@@ -271,6 +269,43 @@ class OpportunityHome extends React.Component {
 
     opportunities = opportunities.filter(o => o.status === "Approved")
 
+    let headerChips = (
+      <Grid container justify="space-around" alignItems="center"
+        className={[classes.root, classes.chipContainer].join(' ')}>
+
+        <Grid item xs={10} sm={3} justify='center'>
+          <Button variant="contained" color='primary'
+            className={classes.button}>
+            <p className='fc-header-p'>
+              <span className='fc-header-number'><strong>35</strong></span>
+                New Members
+            </p>
+          </Button>
+        </Grid>
+
+        <Grid item xs={10} sm={4} justify='center'>
+          <Button variant="contained" color='primary'
+            className={classes.button}>
+            <p className='fc-header-p'>
+              <span className='fc-header-number'><strong>35</strong></span>
+                New Opportunities
+            </p>
+          </Button>
+        </Grid>
+
+        <Grid item xs={10} sm={3} justify='center'>
+          <Button variant="contained" color='primary'
+            className={classes.button}>
+            <p className='fc-header-p'>
+              <span className='fc-header-number'><strong>35</strong></span>
+                New connections
+            </p>
+          </Button>
+        </Grid>
+
+      </Grid>
+    )
+
     let header = (
       <Grid container className={classes.root}
         justify="center" alignItems="center">
@@ -291,47 +326,12 @@ class OpportunityHome extends React.Component {
             Connect with the opportunities that may be perfect for
             you or a trusted contact in your network
           </Typography>
-
-          <Grid container justify="space-around" alignItems="center"
-            className={[classes.root, classes.chipContainer].join(' ')}>
-
-            <Grid item xs={10} sm={3} justify='center'>
-              <Button variant="contained" color='primary'
-                className={classes.button}>
-                <p className='fc-header-p'>
-                  <span className='fc-header-number'><strong>35</strong></span>
-                    New Members
-                </p>
-              </Button>
-            </Grid>
-
-            <Grid item xs={10} sm={4} justify='center'>
-              <Button variant="contained" color='primary'
-                className={classes.button}>
-                <p className='fc-header-p'>
-                  <span className='fc-header-number'><strong>35</strong></span>
-                    New Opportunities
-                </p>
-              </Button>
-            </Grid>
-
-            <Grid item xs={10} sm={3} justify='center'>
-              <Button variant="contained" color='primary'
-                className={classes.button}>
-                <p className='fc-header-p'>
-                  <span className='fc-header-number'><strong>35</strong></span>
-                    New connections
-                </p>
-              </Button>
-            </Grid>
-
-          </Grid>
         </Grid>
       </Grid>
     )
 
     let opportunityCards = opportunities.map(opportunity => (
-      <Grid item xs={6} justify="center" alignItems="center"
+      <Grid item xs={10} md={6} lg={5} justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
           classes={classes}
@@ -402,11 +402,6 @@ class OpportunityHome extends React.Component {
           </Grid>
           <WaitlistModal open={waitlistOpen}
             handleClose={this.handleWaitlistClose}/>
-
-          <CardModal open={cardOpen}
-            handleClose={this.handleCardClose}
-            opportunity={focusedOpportunity}
-            demo={false}/>
         </MuiThemeProvider>
       )
     }

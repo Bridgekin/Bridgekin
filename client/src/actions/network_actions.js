@@ -24,7 +24,12 @@ export const fetchNetworks = () => dispatch => (
   NetworkApiUtil.fetchNetworks()
     .then(handleErrors)
     .then(data => dispatch(receiveNetworks(data.networks)))
-    .catch(errors => dispatch(receiveNetworkErrors(errors)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveNetworkErrors(errors))
+    })
 );
 
 export const fetchNetwork = (id) => dispatch => (

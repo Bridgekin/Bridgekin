@@ -1,10 +1,8 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import Modal from '@material-ui/core/Modal';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+// import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import _ from 'lodash';
 
@@ -32,7 +30,7 @@ const mapDispatchToProps = dispatch => ({
 const styles = theme => ({
   paper: {
     position: 'absolute',
-    height: 350,
+    // height: 350,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -44,7 +42,7 @@ const styles = theme => ({
   cardModalWrapper:{
     padding: 0,
     width: '40%',
-    top: '15%',
+    top: '10%',
     left: '30%'
   },
   cover: {
@@ -66,7 +64,11 @@ const styles = theme => ({
     marginTop: 40
   },
   cardSubContent:{
-    fontSize: 16,
+    fontSize: '1rem',
+    fontWeight: 500
+  },
+  cardSubHeader:{
+    // fontSize: '0.9rem',
     fontWeight: 700
   },
   actionWrapper: {
@@ -87,6 +89,9 @@ const styles = theme => ({
   },
   section: {
     marginBottom: 25
+  },
+  subContentSection :{
+    width: '30%'
   }
 });
 
@@ -113,9 +118,6 @@ class CardModal extends React.Component {
         }
       );
     }
-    // if(this.props.waitlistErrors){
-    //   this.props.clearWaitlistUserErrors();
-    // }
   };
 
   handleConnection(connectBool){
@@ -138,12 +140,8 @@ class CardModal extends React.Component {
     const { sent } = this.state;
 
     if (!_.isEmpty(opportunity)){
-      let { title, description, industries, opportunityNeeds, geography,
+      let { title, description, industries, opportunityNeed, geography,
         value, networks } = opportunity;
-      debugger
-      let industry = industries.join(', ');
-      geography = geography.join(', ');
-      let need = opportunityNeeds;
 
       let modalContent = !sent ? (
         <Card className={classes.card}>
@@ -157,40 +155,40 @@ class CardModal extends React.Component {
               color="default">
               {title}
             </Typography>
-            <Typography variant="subtitle1" gutterBottom align='center'
+            <Typography variant="body2" gutterBottom align='center'
               color="default">
               {description}
             </Typography>
 
             <div className={classes.cardWrapper}>
-              <div>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubContent}>
+              <div className={classes.subContentSection}>
+                <Typography variant="h6" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubHeader}>
                   Geography
                 </Typography>
-                <Typography variant="h2" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='center'
                   color="default" className={classes.cardSubContent}>
-                  {geography}
+                  {geography.join(", ")}
                 </Typography>
               </div>
 
-              <div>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubContent}>
+              <div className={classes.subContentSection}>
+                <Typography variant="h6" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubHeader}>
                   Industry
                 </Typography>
-                <Typography variant="h2" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='center'
                   color="default" className={classes.cardSubContent}>
-                  {industry}
+                  {industries.join(", ")}
                 </Typography>
               </div>
 
               <div>
-                <Typography variant="h2" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubContent}>
+                <Typography variant="h6" gutterBottom align='center'
+                  color="secondary" className={classes.cardSubHeader}>
                   Value
                 </Typography>
-                <Typography variant="h2" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='center'
                   color="default" className={classes.cardSubContent}>
                   {value}
                 </Typography>
@@ -244,16 +242,15 @@ class CardModal extends React.Component {
       )
 
       return (
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
+        <Dialog
           open={open}
-          disableAutoFocus={true}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
           onClose={this.handleClose('find')}
-          className={classes.cardModalWrapper}>
-
+          className={classes.cardModalWrapper}
+          scroll="body">
           {modalContent}
-        </Modal>
+        </Dialog>
       )
     } else {
       return (

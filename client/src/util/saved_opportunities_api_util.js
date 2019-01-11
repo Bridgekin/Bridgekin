@@ -1,5 +1,5 @@
 export const fetchSavedOpportunities = () => (
-  fetch('api/saved_opportunities', {
+  fetch(`${window.location.origin}/api/saved_opportunities`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -9,7 +9,7 @@ export const fetchSavedOpportunities = () => (
 )
 
 export const createSavedOpportunity = savedOpportunity => (
-  fetch('api/saved_opportunities', {
+  fetch(`${window.location.origin}/api/saved_opportunities`, {
     method: 'POST',
     body: JSON.stringify({ savedOpportunity }),
     headers:{
@@ -20,7 +20,7 @@ export const createSavedOpportunity = savedOpportunity => (
 )
 
 export const deleteSavedOpportunity = id => (
-  fetch(`api/saved_opportunities/${id}`, {
+  fetch(`${window.location.origin}/api/saved_opportunities/${id}`, {
     method: 'DELETE',
     headers:{
     	'Content-Type': 'application/json',

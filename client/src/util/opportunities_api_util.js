@@ -1,5 +1,5 @@
 export const fetchOpportunities = (networkId) => (
-  fetch(`api/opportunities?networkId=${networkId}`, {
+  fetch(`${window.location.origin}/api/opportunities?networkId=${networkId}`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -9,7 +9,7 @@ export const fetchOpportunities = (networkId) => (
 )
 
 export const fetchUserOpportunities = (networkId) => (
-  fetch(`api/userOpportunities?networkId=${networkId}`, {
+  fetch(`${window.location.origin}/api/userOpportunities?networkId=${networkId}`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const fetchUserOpportunities = (networkId) => (
 )
 
 export const fetchOpportunity = id => (
-  fetch(`api/opportunities/${id}`, {
+  fetch(`${window.location.origin}/api/opportunities/${id}`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const fetchOpportunity = id => (
 )
 
 export const createOpportunity = opportunity => (
-  fetch('api/opportunities', {
+  fetch(`${window.location.origin}/api/opportunities`, {
     method: 'POST',
     body: JSON.stringify({ opportunity }),
     headers:{
@@ -40,7 +40,7 @@ export const createOpportunity = opportunity => (
 )
 
 export const updateOpportunity = opportunity => (
-  fetch('api/opportunities', {
+  fetch(`${window.location.origin}/api/opportunities/${opportunity.id}`, {
     method: 'PATCH',
     body: JSON.stringify({ opportunity }),
     headers:{
@@ -51,7 +51,7 @@ export const updateOpportunity = opportunity => (
 )
 
 export const deleteOpportunity = id => (
-  fetch(`api/opportunities/${id}`, {
+  fetch(`${window.location.origin}/api/opportunities/${id}`, {
     method: 'DELETE',
     headers:{
     	'Content-Type': 'application/json',

@@ -1,6 +1,5 @@
 json.user do
-  json.extract! variables[:user], :id, :fname, :lname,
-  :confirmed_at, :is_admin, :title, :company
+  json.partial! 'api/users/user', user: variables[:user]
 end
 
 json.token variables[:token]

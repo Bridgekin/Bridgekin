@@ -52,6 +52,17 @@ class Api::OpportunitiesController < ApiController
   # PATCH/PUT /opportunities/1
   def update
     if @opportunity.update(opportunity_params)
+      @opportunity.opportunity_networks.delete_all
+
+      networks_params = params[:opportunity][:networks]
+      @opportunityNetworks = []
+      networks_params.each do |id|
+        @opportunityNetworks << OpportunityNetwork.create(
+          opportunity_id: @opportunity.id,
+          network_id: id
+        )
+      end
+
       @networks = @opportunity.networks
       # render json: @opportunity
       render :show
@@ -85,7 +96,7 @@ class Api::OpportunitiesController < ApiController
     # Only allow a trusted parameter "white list" through.
     def opportunity_params
       params.require(:opportunity).permit(:title, :description,
-        :owner_id, :opportunity_needs,  :value, :status,
+        :owner_id, :opportunity_need,  :value, :status,
         :industries => [], :geography => [])
     end
 end

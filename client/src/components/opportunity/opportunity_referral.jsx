@@ -25,8 +25,8 @@ const styles = theme => ({
     margin: "25px 0px 25px 0px"
   },
   refButton:{
-    fontSize: 20,
-    fontWeight: 700,
+    fontSize: '1rem',
+    fontWeight: 500,
     marginTop: 25,
     height: 55,
     width: 200
@@ -54,7 +54,7 @@ class OpportunityReferral extends React.Component{
     ));
 
     let referralLink = referral.referralCode ?
-    (`${window.location.origin}/#/signup/${this.props.referral.referralCode}`) : ('')
+    (`${window.location.origin}/signup/${this.props.referral.referralCode}`) : ('')
 
     return(
       <Grid container

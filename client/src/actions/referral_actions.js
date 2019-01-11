@@ -18,5 +18,10 @@ export const createReferral = (referral) => dispatch => (
   ReferralApiUtil.createReferral(referral)
     .then(handleErrors)
     .then(data => dispatch(receiveReferral(data)))
-    .catch(errors => dispatch(receiveReferralErrors(errors)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveReferralErrors(errors))
+    })
 );
