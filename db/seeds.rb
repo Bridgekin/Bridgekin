@@ -20,6 +20,7 @@ AdminUser.create!(
   password: 'bridgekin1!',
   password_confirmation: 'bridgekin1!')
 
+#User
 User.create!(
   email: 'demo@bridgekin.com',
   password: 'bridgekindemo',
@@ -42,16 +43,16 @@ Network.create!(
 
 UserNetwork.create!(
   network_id: 1,
-  user_id: 1,
+  user_id: 2,
 )
 
 UserNetwork.create!(
   network_id: 2,
-  user_id: 1,
+  user_id: 2,
 )
 
 Opportunity.create!(
-  owner_id: 1,
+  owner_id: 2,
   title: 'Test - Amazing castle opportunity in France',
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
   opportunity_needs: "Raise Capital",
