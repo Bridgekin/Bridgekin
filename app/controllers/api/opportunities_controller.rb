@@ -5,8 +5,14 @@ class Api::OpportunitiesController < ApiController
   before_action :authenticate_user
 
   def index
-    @opportunities = Opportunity.joins(:opportunity_networks)
-      .where("opportunity_networks.network_id = #{params[:network_id]}")
+    if params[:network_id].empty?
+      network_ids = @user.member_networks.pluck(:id)
+      @opportunities = Opportunity.joins(:opportunity_networks)
+        .where(opportunity_networks: { network_id: network_ids} )
+    else
+      @opportunities = Opportunity.joins(:opportunity_networks)
+        .where("opportunity_networks.network_id = #{params[:network_id]}")
+    end
 
     render :index
   end

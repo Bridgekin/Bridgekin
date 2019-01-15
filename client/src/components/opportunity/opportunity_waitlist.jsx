@@ -19,13 +19,14 @@ const styles = theme => ({
   refButton:{
     fontSize: '1rem',
     fontWeight: 500,
-    marginTop: 25,
+    // marginTop: 25,
     height: 55,
     width: 200
   },
   wrapper: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   buttonProgress: {
     color: '#4067B2',
@@ -41,55 +42,49 @@ class OpportunityWaitlist extends React.Component{
     const { loading, classes } = this.props;
 
     return(
-      <Grid container className={classes.root}
-        justify="center" alignItems="center" spacing={24}>
+      <div>
+        <Grid container className={classes.root}
+          justify="center" alignItems="center">
 
-        <Grid item xs={10} md={6} justify="flex-end" alignItems="center">
-          <Typography variant="h4" gutterBottom align='center'
-            color="secondary" className={classes.headerTypography}>
-            Refer a trusted contact that would appreciate joining our community
-          </Typography>
-          <Typography variant="h5" gutterBottom align='center'
-            color="secondary" className={classes.headerTypography}>
-            We'll add them to our waitlist!
-          </Typography>
+          <Grid item xs={8} justify="flex-end" alignItems="center">
+            <Typography variant="h4" gutterBottom align='center'
+              color="secondary" className={classes.headerTypography}>
+              {`Refer a trusted contact that would appreciate joining
+                our community and we'll add them to our waitlist.`}
+            </Typography>
+          </Grid>
+
         </Grid>
 
-        <Grid item xs={10} md={4} justify="flex-end" alignItems="center">
-          <TextField
-          required
-          id="outlined-required"
-          label="First Name"
-          placeholder="John"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant="outlined"
-          onChange={this.props.handleChange('fname')}
-          />
-          <TextField
-          required
-          id="outlined-required"
-          label="Last Name"
-          placeholder="Smith"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant="outlined"
-          onChange={this.props.handleChange('lname')}
-          />
-          <TextField
-          required
-          id="outlined-required"
-          label="Email"
-          placeholder="johnsmith@email.com"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant="outlined"
-          onChange={this.props.handleChange('email')}
-          />
-          <div className={classes.wrapper}>
+        <Grid container className={classes.root}
+          justify="center" alignItems="center">
+          <Grid item xs={5} md={2} justify="center" alignItems="center">
+            <TextField
+            required
+            id="outlined-required"
+            label="First Name"
+            placeholder="John"
+            className={classes.textField}
+            fullWidth
+            variant="outlined"
+            onChange={this.props.handleChange('fname')}
+            />
+          </Grid>
+
+          <Grid item xs={5} md={4} justify="flex-end" alignItems="center">
+            <TextField
+            required
+            id="outlined-required"
+            label="Email"
+            placeholder="johnsmith@email.com"
+            className={classes.textField}
+            fullWidth
+            variant="outlined"
+            onChange={this.props.handleChange('email')}
+            />
+          </Grid>
+
+          <Grid item xs={5} md={2} className={classes.wrapper}>
             <Button variant="contained" color='secondary'
               className={classes.refButton}
               onClick={this.props.handleSubmit}
@@ -98,9 +93,9 @@ class OpportunityWaitlist extends React.Component{
             </Button>
             {loading && <CircularProgress size={24}
               className={classes.buttonProgress} />}
-          </div>
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
     )
   }
 };

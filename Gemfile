@@ -31,6 +31,8 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'jquery-rails'
 
+gem "aws-sdk-s3"
+
 # ActiveAdmin
 gem 'devise'
 gem 'activeadmin'

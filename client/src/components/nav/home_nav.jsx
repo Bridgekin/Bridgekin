@@ -19,7 +19,7 @@ import Grid from '@material-ui/core/Grid';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 
-import logo from '../../static/logo_blue.png';
+import logo from '../../static/Bridgekin_Logo.png';
 import './home_nav.css';
 
 import { login, logout } from '../../actions/session_actions';
@@ -59,22 +59,28 @@ const styles = {
     }
   },
   logo: {
-    width: 100
+    width: 237
   },
   nav: {
     backgroundColor: 'white',
     color: '#4067B2',
     marginBottom: 20,
     width: '100%',
-    borderBottom: '1px solid #8080804d',
+    // borderBottom: '0.5px solid',
+    // borderColor: theme.palette.secondary.main
+    borderBottom: `0.5px solid ${theme.palette.grey1}`,
     boxShadow: 'none'
   },
   textField:{
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
+    // height: 40,
+    border: `0.5px solid ${theme.palette.secondary}`,
+    // padding: 8
   },
   button:{
-    marginTop: 20
+    marginTop: 20,
+    height: 25
   }
 };
 
@@ -159,6 +165,7 @@ class HomeNav extends React.Component {
           className={classes.textField}
           margin="normal"
           onChange={this.handleChange('email')}
+          variant="outlined"
           />
         <TextField
           required
@@ -169,6 +176,7 @@ class HomeNav extends React.Component {
           autoComplete="current-password"
           margin="normal"
           onChange={this.handleChange('password')}
+          variant="outlined"
         />
         <Button variant="contained" color="secondary"
           className={classes.button} onClick={this.handleSubmit}>

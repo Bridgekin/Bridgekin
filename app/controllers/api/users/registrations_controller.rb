@@ -11,7 +11,6 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
   def create
     @referralLink = ReferralLink.find_link_by_code(params[:code])
     @user = User.new(user_params)
-    # debugger
     if @referralLink && @user.save
       # UserMailer.register_email(@user).deliver_now
       # sign_in User, @user
@@ -23,7 +22,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       #Create Bridgekin Connection
       UserNetwork.create(network_id: 1, member_id: @user.id)
 
-      render :show
+      render json: ['Successfully created account'], status: 200
     elsif @referralLink.nil?
       render json: ["Invalid referral link"], status: 401
     else

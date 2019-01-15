@@ -12,6 +12,7 @@ import { receiveCurrentUser } from './actions/session_actions';
 import { receiveUser } from './actions/user_actions';
 
 document.addEventListener("DOMContentLoaded", () => {
+
   const root = document.getElementById('root');
   let preloadedState = undefined;
   let token = localStorage.getItem('bridgekinToken');

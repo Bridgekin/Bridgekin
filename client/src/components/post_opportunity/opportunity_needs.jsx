@@ -54,8 +54,6 @@ class NeedsField extends React.Component {
     this.state = {
       choices: needsChoices
     }
-    let example = PickIcons('Find');
-    debugger
   }
 
   handleClick(field){

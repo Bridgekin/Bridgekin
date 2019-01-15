@@ -3,6 +3,11 @@ class Api::UsersController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user
 
+  def show
+    @user = User.find(params[:id])
+    render :show
+  end
+
   def update
     #Check if current password exists and is correct
     if params[:user][:current_password] &&

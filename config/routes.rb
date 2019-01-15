@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
-    resource :user, only: [:update, :destroy]
+    resources :users, only: [:show, :update, :destroy]
     # resource :session, only: [:create, :destroy]
 
     get 'userOpportunities', :to => 'opportunities#userIndex'
@@ -44,5 +44,11 @@ Rails.application.routes.draw do
       }
   end
 
-  get '*path' => redirect('/')
+  # get '*path', :to => ''
+  # get '*path', :to => 'static_pages#root'
+  # get '*path' => redirect('/')
+
+  get '*path', to: "application#fallback_index_html", constraints: ->(request) do
+    !request.xhr? && request.format.html?
+  end
 end

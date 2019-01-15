@@ -27,3 +27,7 @@
 /public
 
 /node_modules
+
+server.key
+server.pass.key
+server.csr

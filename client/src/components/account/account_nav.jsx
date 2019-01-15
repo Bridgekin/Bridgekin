@@ -9,7 +9,8 @@ import Button from '@material-ui/core/Button';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    borderBottom: '1px solid #d3d3d3'
+    borderBottom: '0.5px solid',
+    borderColor: theme.palette.secondary.main
   },
   acccountMain:{
     marginTop: 50

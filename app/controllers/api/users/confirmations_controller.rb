@@ -12,7 +12,7 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
       @token = get_login_token!(@user)
       # render json: ['Account confirmed! Navigate back to the home page to login.'], status: 200
 
-      redirect_to "#{root_url}#/accountconfirmed"
+      redirect_to "#{root_url}accountconfirmed"
     else
       render json: resource.errors.full_messages, status: 422
     end

@@ -9,6 +9,10 @@ import _ from 'lodash';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 // import castlePic from '../../static/castle.jpg';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions'
@@ -16,21 +20,22 @@ import { createConnectedOpportunity } from '../../actions/connected_opportunity_
 import Typography from '@material-ui/core/Typography';
 
 import { connect } from 'react-redux';
-// import { clearWaitlistUserErrors } from '../actions/error_actions';
+import { clearConnectedOpportunityErrors } from '../../actions/error_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  // waitlistErrors: state.errors.waitlistUsers
+  connectedOpportunityErrors: state.errors.connectedOpportunities
 });
 
 const mapDispatchToProps = dispatch => ({
-  createConnectedOpportunity: (opportunity) => dispatch(createConnectedOpportunity(opportunity))
+  createConnectedOpportunity: (opportunity) => dispatch(createConnectedOpportunity(opportunity)),
+  clearConnectedOpportunityErrors: () => dispatch(clearConnectedOpportunityErrors())
 });
 
 const styles = theme => ({
   paper: {
-    position: 'absolute',
-    // height: 350,
+    // position: 'absolute',
+    height: 350,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -41,18 +46,20 @@ const styles = theme => ({
   },
   cardModalWrapper:{
     padding: 0,
-    width: '40%',
-    top: '10%',
-    left: '30%'
+    width: '55%',
+    left: '22.5%',
   },
   cover: {
     height: 150,
-    width: '100%'
+    width: '100%',
+    objectFit: 'cover'
   },
   card: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: '50%',
+    overflow: 'scroll'
   },
   content:{
     padding: 35
@@ -61,10 +68,10 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'space-around',
     width: '100%',
-    marginTop: 40
+    marginTop: 25
   },
   cardSubContent:{
-    fontSize: '1rem',
+    // fontSize: '1rem',
     fontWeight: 500
   },
   cardSubHeader:{
@@ -92,6 +99,9 @@ const styles = theme => ({
   },
   subContentSection :{
     width: '30%'
+  },
+  errorHeader:{
+    marginBottom: 30
   }
 });
 
@@ -108,6 +118,10 @@ class CardModal extends React.Component {
   handleClose(field){
     return e => {
       e.preventDefault();
+
+      if(this.props.connectedOpportunityErrors){
+        this.props.clearConnectedOpportunityErrors();
+      }
 
       this.setState({ sent: false },
         () => {
@@ -130,26 +144,73 @@ class CardModal extends React.Component {
           connectBool
         }
         this.props.createConnectedOpportunity(opportunity)
-        .then(() => this.setState({sent: true}));
+        .then(() => {
+          this.setState({sent: true})
+        });
       }
     }
   }
 
   render () {
-    const { open, classes, opportunity } = this.props;
+    const { open, classes, opportunity, connectedOpportunityErrors } = this.props;
     const { sent } = this.state;
 
     if (!_.isEmpty(opportunity)){
       let { title, description, industries, opportunityNeed, geography,
         value, networks } = opportunity;
 
+      let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
+        <ListItem >
+          <ListItemText primary={error} />
+        </ListItem>
+      ));
+
+      let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
+        <div className={classes.paper}>
+          <Typography variant="h4" id="modal-title" color='secondary'
+            className={classes.section}>
+            Time for business!
+          </Typography>
+          <Typography variant="subtitle1" id="simple-modal-description"
+            className={classes.section}>
+            {"We're as excited about this opportunity as you are! We just sent "+
+            "an email connecting you to the opportunity owner, so that should " +
+            "hit your inbox shortly. We'll let you take it from here."}
+          </Typography>
+          <div className={classes.postButtons}>
+            <Button variant="contained" color='secondary'
+              onClick={this.handleClose('find')}>
+              View More Opportunities
+            </Button>
+            <Button variant="contained" color='secondary'
+              onClick={this.handleClose('post')}>
+              Post An Opportunity
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className={classes.paper}>
+          <Typography variant="h4" id="modal-title" color='secondary'
+            className={classes.errorHeader}>
+            Hold on there hot stuff!
+          </Typography>
+          <Typography variant="subtitle1" id="simple-modal-description">
+            Apologies, but we weren't able to connect you to this opportunity because:
+          </Typography>
+          <List>
+            {connectedOpportunityErrors}
+          </List>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose('find')} color='secondary'>
+            Close
+          </Button>
+        </div>
+      )
+
       let modalContent = !sent ? (
         <Card className={classes.card}>
-          <CardMedia
-            className={classes.cover}
-            image={PickImage(industries[0])}
-            title="OpportunityImage"
-          />
+          <img alt='industry' src={PickImage(industries[0])}
+            className={classes.cover}/>
           <CardContent className={classes.content}>
             <Typography variant="h5" gutterBottom align='center'
               color="default">
@@ -166,7 +227,7 @@ class CardModal extends React.Component {
                   color="secondary" className={classes.cardSubHeader}>
                   Geography
                 </Typography>
-                <Typography variant="h6" gutterBottom align='center'
+                <Typography variant="body1" gutterBottom align='center'
                   color="default" className={classes.cardSubContent}>
                   {geography.join(", ")}
                 </Typography>
@@ -177,7 +238,7 @@ class CardModal extends React.Component {
                   color="secondary" className={classes.cardSubHeader}>
                   Industry
                 </Typography>
-                <Typography variant="h6" gutterBottom align='center'
+                <Typography variant="body1" gutterBottom align='center'
                   color="default" className={classes.cardSubContent}>
                   {industries.join(", ")}
                 </Typography>
@@ -188,7 +249,7 @@ class CardModal extends React.Component {
                   color="secondary" className={classes.cardSubHeader}>
                   Value
                 </Typography>
-                <Typography variant="h6" gutterBottom align='center'
+                <Typography variant="body1" gutterBottom align='center'
                   color="default" className={classes.cardSubContent}>
                   {value}
                 </Typography>
@@ -216,30 +277,15 @@ class CardModal extends React.Component {
             </Typography>
           </CardContent>
         </Card>
-      ) : (
-        <div className={classes.paper}>
-          <Typography variant="h4" id="modal-title" color='secondary'
-            className={classes.section}>
-            Time for business!
-          </Typography>
-          <Typography variant="subtitle1" id="simple-modal-description"
-            className={classes.section}>
-            {"We're as excited about this opportunity as you are! We just sent "+
-            "an email connecting you to the opportunity owner, so that should " +
-            "hit your inbox shortly. We'll let you take it from here."}
-          </Typography>
-          <div className={classes.postButtons}>
-            <Button variant="contained" color='secondary'
-              onClick={this.handleClose('find')}>
-              View More Opportunities
-            </Button>
-            <Button variant="contained" color='secondary'
-              onClick={this.handleClose('post')}>
-              Post An Opportunity
-            </Button>
-          </div>
-        </div>
-      )
+      ) : responseText
+
+      // autoDetectWindowHeight={true}
+      // autoScrollBodyContent={true}
+      // repositionOnUpdate={true}
+      // contentStyle={{
+      //   width:'90%',
+      //   height: '90%'
+      // }}>
 
       return (
         <Dialog
@@ -247,8 +293,7 @@ class CardModal extends React.Component {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           onClose={this.handleClose('find')}
-          className={classes.cardModalWrapper}
-          scroll="body">
+          className={classes.cardModalWrapper}>
           {modalContent}
         </Dialog>
       )

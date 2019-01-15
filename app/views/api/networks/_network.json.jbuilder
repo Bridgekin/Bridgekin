@@ -1,1 +1,1 @@
-json.extract! network, :id, :title
+json.extract! network, :id, :title, :subtitle

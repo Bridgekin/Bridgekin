@@ -209,7 +209,7 @@ class SignupPage extends React.Component{
         <div className={classes.wrapper}>
           <Button variant="contained" color="secondary" className={classes.button}
             disabled={loading} onClick={this.handleSignupSubmit}>
-            SignUp
+            Sign Up Now
           </Button>
           {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
@@ -225,8 +225,7 @@ class SignupPage extends React.Component{
           <Grid container className={classes.homeHeader} spacing={24} justify="center" alignItems="center">
             <Grid item xs={10} md={7} >
               <Typography className={classes.waitlistCTA} variant="h5" gutterBottom>
-                Bridgekin is changing the way people connect
-                with opportunities within their network.
+                {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
             <Grid item xs={0} md={3} />
@@ -236,7 +235,7 @@ class SignupPage extends React.Component{
             <Grid item xs={1} />
             <Grid item xs={10} md={4}>
               <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
-                You've been referred to join Bridgekin. Complete your registration below!
+                {"You’ve received a private invitation to join the Bridgekin network. Complete your registration and sign in below!"}
               </Typography>
 
               {form}

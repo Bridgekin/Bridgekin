@@ -31,31 +31,25 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  jumboRoot: {
-    flexGrow: 1
-  },
   root: {
     flexGrow: 1,
   },
-  jumboImage:{
-    maxWidth: '100%'
-  },
-  jumbo: {
-    height: 200
-  },
-  waitlistItem: {},
-  textField:{ width: '100%'},
+  // jumboImage:{
+  //   maxWidth: '100%'
+  // },
+  // jumbo: {
+  //   height: 200
+  // },
+  // textField:{ width: '100%'},
   button:{
     width: '50%',
     height: 50,
     marginTop: 30
   },
-  waitlistCTA: {
+  homeHeader: {
     marginTop: 20,
-    fontWeight: 300
-  },
-  homeHeader:{
-    marginBottom: 0
+    fontWeight: 600,
+    fontSize: 22
   },
   wrapper: {
     margin: theme.spacing.unit,
@@ -149,6 +143,7 @@ class HomePage extends React.Component{
           label="First Name"
           className={classes.textField}
           margin="normal"
+          fullWidth
           value={this.state.fname}
           onChange={this.handleChange('fname')}
           onMouseUp={this.handleChange('fname')}
@@ -158,6 +153,7 @@ class HomePage extends React.Component{
           label="Last Name"
           className={classes.textField}
           margin="normal"
+          fullWidth
           value={this.state.lname}
           onChange={this.handleChange('lname')}
           onMouseUp={this.handleChange('lname')}
@@ -167,6 +163,7 @@ class HomePage extends React.Component{
           label="Email"
           className={classes.textField}
           margin="normal"
+          fullWidth
           value={this.state.email}
           onChange={this.handleChange('email')}
           onMouseUp={this.handleChange('email')}
@@ -184,34 +181,53 @@ class HomePage extends React.Component{
       <div></div>
     )
 
+
+    // <Grid className={classes.homeHeader} container spacing={24} justify="center" alignItems="center">
+    //   <Grid item xs={10} md={7} >
+    //     <Typography className={classes.waitlistCTA} variant="h5" gutterBottom>
+    //       {"Bridgekin is changing the way people connect to the business opportunities within their network"}
+    //     </Typography>
+    //   </Grid>
+    //   <Grid item xs={0} md={3} />
+    // </Grid>
+    //
+    // <Grid container spacing={24} justify="center" alignItems="flex-start">
+    //   <Grid item xs={1} />
+    //   <Grid item xs={10} md={4}>
+    //     <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
+    //       Bridgekin is currently an invite-only community. Sign up now to join our waitlist.
+    //     </Typography>
+    //     {form}
+    //   </Grid>
+    //
+    //   <Grid item xs={0} md={7}>
+    //     <img src={HomeImage}/>
+    //   </Grid>
+    // </Grid>
+
+
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.root}
-          justify="center" alignItems="center">
-
-          <Grid className={classes.homeHeader} container spacing={24} justify="center" alignItems="center">
-            <Grid item xs={10} md={7} >
-              <Typography className={classes.waitlistCTA} variant="h5" gutterBottom>
-                Bridgekin is changing the way people connect
-                with opportunities within their network.
+          justify="flex-start" alignItems="center">
+          <Grid item xs={5} container justify="flex-start" alignItems="center"
+            style={{ marginLeft: 50, border: '1px solid red'}}>
+            <Grid item xs={12} >
+              <Typography className={classes.waitlistCTA}
+                variant="h5" gutterBottom>
+                {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
-            <Grid item xs={0} md={3} />
-          </Grid>
 
-          <Grid container spacing={24} justify="center" alignItems="flex-start">
-            <Grid item xs={1} />
-            <Grid item xs={10} md={4}>
-              <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
+            <Grid item xs={8} >
+              <Typography className={classes.waitlistCTA}
+                variant="p" gutterBottom>
                 Bridgekin is currently an invite-only community. Sign up now to join our waitlist.
               </Typography>
               {form}
             </Grid>
-
-            <Grid item xs={0} md={7}>
-              <img src={HomeImage}/>
-            </Grid>
           </Grid>
+
         </Grid>
 
         <WaitlistModal open={open} handleClose={this.handleClose}/>

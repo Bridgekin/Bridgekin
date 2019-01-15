@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { AuthRoute, ProtectedRoute} from './util/route_util';
 import './App.css';
@@ -11,10 +11,7 @@ import OpportunityCreate from './components/post_opportunity/opportunity_create'
 import OpportunityEdit from './components/post_opportunity/opportunity_edit';
 import SignupPage from './components/home/signup_page';
 import AccountConfirmed from './components/account/account_confirmed';
-
-import { getAuthUserId } from './util/session_api_util';
-import { receiveCurrentUser } from './actions/session_actions';
-// import { connect } from 'react-redux';
+import NotFound from './components/not_found';
 
 export default () => (
   <div>
@@ -27,7 +24,8 @@ export default () => (
       <ProtectedRoute path="/account" component={AccountRoute} />
       <Route path="/signup/:code" component={SignupPage} />
       <Route path="/accountconfirmed" component={AccountConfirmed} />
-      <AuthRoute path="/" component={HomePage} />
+      <AuthRoute exact path="/" component={HomePage} />
+      <Route component={NotFound} />
     </Switch>
   </div>
 );

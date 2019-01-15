@@ -17,8 +17,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     margin: "15px 0px 15px 0px",
-  },
-  container: {
     borderTop: "1px solid #D3D3D3",
   },
   headerTypography:{
@@ -54,12 +52,12 @@ class OpportunityReferral extends React.Component{
     ));
 
     let referralLink = referral.referralCode ?
-    (`${window.location.origin}/#/signup/${this.props.referral.referralCode}`) : ('')
+    (`${window.location.origin}/signup/${this.props.referral.referralCode}`) : ('')
 
     return(
       <Grid container
         className={classes.root}
-        justify="center" alignItems="center" spacing={24}>
+        justify="center" alignItems="center" >
 
         <Grid item xs={9} justify="flex-end" alignItems="center"
           className={classes.container}>

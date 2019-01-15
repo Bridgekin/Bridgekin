@@ -7,9 +7,8 @@ class User < ApplicationRecord
          :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
-  validates :email, :fname, :lname,  presence: true
-  validates :email, format: { with: Devise.email_regexp, message: "is not a valid email" }
-  validates :email, uniqueness: { case_sensitive: false }, presence: true
+  validates :fname, :lname,  presence: true
+  validates :email, uniqueness: { case_sensitive: false }
 
   has_many :opportunities,
     foreign_key: :owner_id,
@@ -63,6 +62,8 @@ class User < ApplicationRecord
     foreign_key: :user_id,
     class_name: :EmailNotification,
     dependent: :destroy
+
+  has_one_attached :profile_pic
 
   def confirmed?
     self.confirmed_at.present?

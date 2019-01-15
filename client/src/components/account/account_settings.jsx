@@ -146,7 +146,6 @@ class AccountSetting extends React.Component {
 
   handleChangeFill(settingState){
     return () => {
-      debugger
       this.setState({ settingState })
     }
   }
@@ -158,7 +157,6 @@ class AccountSetting extends React.Component {
   }
 
   handleModalClose = () => {
-    // debugger
     if(this.props.userErrors.length > 0){
       this.setState({ modalOpen: false })
     } else {
@@ -206,7 +204,6 @@ class AccountSetting extends React.Component {
   getContent(){
     const { classes, currentUser }= this.props;
     const { settingState, modalOpen } = this.state;
-    // debugger
     switch (settingState) {
       case "Home":
         return (
@@ -433,7 +430,7 @@ class AccountSetting extends React.Component {
   render(){
     const { classes }= this.props;
     const { options }= this.state;
-    debugger
+
     // <Typography variant="h7" align='left'
     //   color="secondary" >
     //   Current Password

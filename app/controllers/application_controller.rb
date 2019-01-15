@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
+  def fallback_index_html
+    render :file => 'public/index.html'
+  end
+
   # # Overrides Devise
   # def after_sign_in_path_for(resource)
   #   return params[:redirect_to] unless params[:redirect_to].blank?
@@ -11,7 +15,7 @@ class ApplicationController < ActionController::Base
   #     stored_location_for(resource) || signed_in_root_path(resource)
   #   end
   # end
-  # 
+  #
   # # Overrides Devise
   # def signed_in_root_path(resource)
   #   return params[:redirect_to] unless params[:redirect_to].blank?

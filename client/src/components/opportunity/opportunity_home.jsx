@@ -10,6 +10,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -39,7 +40,7 @@ const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
   opportunities: Object.values(state.entities.opportunities),
-  networks: Object.values(state.entities.networks),
+  networks: state.entities.networks,
   referral: state.entities.referral
 });
 
@@ -56,22 +57,23 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-    margin: "15px 0px 15px 0px"
+    margin: "15px 0px 15px 0px",
+    borderBottom: "1px solid #D3D3D3",
   },
   homeheader:{
     // minHeight: 350,
-    paddingBottom: 50
+    padding: "20px 0px 50px 0px",
+    // borderBottom: "1px solid #D3D3D3",
   },
   headerTypography:{
     margin: "25px 0px 25px 0px"
   },
-  grid:{
-    borderBottom: "1px solid #D3D3D3",
-    margin: "15px 0px 15px 0px"
-  },
+  // headerItem:{
+  //   // borderBottom: "1px solid #D3D3D3",
+  //   margin: "15px 0px 15px 0px"
+  // },
   gridOpp:{
-    borderBottom: "1px solid #D3D3D3",
-    margin: "15px 0px 15px 0px",
+    marginBottom: 15,
     display: 'flex'
   },
   gridItem:{
@@ -120,6 +122,18 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     minWidth: 120,
   },
+  dropdownButton:{
+    display: 'flex'
+  },
+  dropdownMenuItem: {
+    // width: 150,
+    height: 'auto',
+    paddingTop: 3,
+    paddingBottom: 3,
+    borderBottom: "1px solid #D3D3D3",
+  },
+  dropdownHeader: { fontWeight: 600, fontSize: '0.85rem' },
+  dropdownSubHeader: { fontWeight: 200, fontSize: '0.6rem' }
 });
 
 
@@ -131,16 +145,15 @@ class OpportunityHome extends React.Component {
       referralLink: '',
       network: '',
       fname: '',
-      lname: '',
       email: '',
       loaded: false,
       success: false,
       waitlistOpen: false,
       cardOpen: false,
-      focusedOpportunity: {},
-      networkOpen: false,
-      focusedNetwork: null,
-      referralNetwork: null
+      dropdownOpen: false,
+      dropdownFocus: '',
+      referralNetwork: null,
+      anchorEl: null
     };
 
     this.opportunities = [
@@ -171,21 +184,20 @@ class OpportunityHome extends React.Component {
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     this.handleReferralChange = this.handleReferralChange.bind(this);
     this.handleReferralSubmit = this.handleReferralSubmit.bind(this);
-    // this.handleReferralChange = this.handleReferralChange.bind(this);
-    this.handleCardOpen = this.handleCardOpen.bind(this);
-    this.handleCardClose = this.handleCardClose.bind(this);
+    this.handleDropdownClick = this.handleDropdownClick.bind(this);
+    this.handleDropdownClose = this.handleDropdownClose.bind(this);
+    this.handleDropdownChange = this.handleDropdownChange.bind(this);
   }
 
   componentDidMount(){
     this.props.fetchNetworks()
     .then(() => {
-      let focusedNetwork = this.props.networks[0].id;
-      this.props.fetchOpportunities(focusedNetwork)
+      let referralNetwork = Object.values(this.props.networks)[0].id;
+      this.props.fetchOpportunities(this.state.dropdownFocus)
         .then(() => {
           this.setState({
             opportunitiesLoaded: true,
-            focusedNetwork,
-            referralNetwork: focusedNetwork})
+            referralNetwork})
         });
     })
   }
@@ -206,8 +218,7 @@ class OpportunityHome extends React.Component {
 
     let user = {
       email: this.state.email,
-      fname: this.state.fname,
-      lname: this.state.lname
+      fname: this.state.fname
     }
 
     if (!this.state.loading) {
@@ -221,30 +232,11 @@ class OpportunityHome extends React.Component {
                 waitlistOpen: true,
                 email: '',
                 fname: '',
-                lname: ''
               })
             })
       })
     }
   }
-
-  handleCardOpen(focusedOpportunity){
-    this.setState({ cardOpen: true, focusedOpportunity });
-  }
-
-  handleCardClose(){
-    this.setState({ cardOpen: false });
-  }
-
-  handleNetworkChange = event => {
-    let networkId = event.target.value;
-    this.props.fetchOpportunities(networkId)
-      .then(() => {
-        this.setState({
-          opportunitiesLoaded: true,
-          focusedNetwork: networkId })
-      });
-  };
 
   handleReferralChange(e){
     this.setState({ referralNetwork: e.target.value})
@@ -256,6 +248,31 @@ class OpportunityHome extends React.Component {
     })
   }
 
+  // handleDropdownToggle(){
+  //   this.setState({ dropdownOpen: !this.state.dropdownOpen})
+  // }
+
+  handleDropdownClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleDropdownClose = () => {
+    this.setState({ anchorEl: null });
+ };
+
+ handleDropdownChange(type, id){
+  return e => {
+    debugger
+    if (type === 'Network'){
+      this.props.fetchOpportunities(id)
+      .then(() => this.setState({
+          dropdownFocus: id, anchorEl: null
+        })
+      )
+    }
+  }
+ }
+
   capitalize(str){
     return str[0].toUpperCase() + str.slice(1)
   }
@@ -263,9 +280,11 @@ class OpportunityHome extends React.Component {
   render (){
     let { classes, opportunities, networks,
         referral, currentUser } = this.props;
-    const { loading, success, waitlistOpen,
-          cardOpen, focusedOpportunity, networkOpen,
-          focusedNetwork, referralNetwork } = this.state;
+    const { loading, waitlistOpen,
+          referralNetwork, anchorEl,
+          dropdownFocus } = this.state;
+
+    const networksArray = Object.values(networks)
 
     opportunities = opportunities.filter(o => o.status === "Approved")
 
@@ -307,11 +326,11 @@ class OpportunityHome extends React.Component {
     )
 
     let header = (
-      <Grid container className={classes.root}
+      <Grid container className={[classes.homeheader, classes.root].join(' ')}
         justify="center" alignItems="center">
 
         <Grid item xs={8} justify="center" alignItems="center"
-          className={[classes.homeheader, classes.grid].join(' ')}>
+          className={classes.headerItem}>
           <Typography variant="h2" gutterBottom align='center'
             color="secondary" className={classes.headerTypography}>
             Welcome, {this.capitalize(currentUser.fname)}
@@ -334,44 +353,116 @@ class OpportunityHome extends React.Component {
       <Grid item xs={10} md={6} lg={5} justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
-          classes={classes}
-          handleCardOpen={this.handleCardOpen} />
+          classes={classes} />
       </Grid>
     ));
 
+    let otherDropdownOptions = [
+      {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
+      {header: 'Network Circles' , subHeader: 'Include and exclude specific connections', disabled: true},
+      {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
+    ]
+
     let dropdown = (
-      <FormControl className={classes.formControl}>
-        <InputLabel shrink htmlFor="age-label-placeholder">
-          Chosen Network
-        </InputLabel>
-        <Select
-          value={focusedNetwork}
-          onChange={this.handleNetworkChange}
-          input={<Input name="chosen-network" id="age-label-placeholder" />}
-          name="chosen-network"
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button
+          aria-owns={anchorEl ? 'simple-menu' : undefined}
+          aria-haspopup="true"
+          onClick={this.handleDropdownClick}
+          className={classes.dropdownButton}
+          style={{ display: 'flex'}}
         >
-          {networks.map(network => (
-            <MenuItem value={network.id}>
-              {network.title}
+          <Typography variant="subtitle1" align='left'
+            color="textPrimary" style={{ fontSize:"0.7rem"}}>
+            {"View By:"}
+          </Typography>
+          <Typography variant="subtitle1" align='left'
+            color="textPrimary"
+            style={{ fontWeight: 600, marginLeft: 10, fontSize:"0.7rem"}}>
+            {dropdownFocus === "" ? "All Opportunties" : networks[dropdownFocus].title}
+          </Typography>
+        </Button>
+
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={this.handleDropdownClose}
+          style ={{ padding: 0 }}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem onClick={this.handleDropdownChange('Network', '')}
+            className={classes.dropdownMenuItem}
+            selected={dropdownFocus === ''}>
+            <div>
+              <Typography variant="h6" align='left'
+                color="textPrimary" className={classes.dropdownHeader}>
+                {'All Opportunities'}
+              </Typography>
+              <Typography variant="body2" align='left'
+                color="textPrimary" className={classes.dropdownSubHeader}>
+                {'Everything visible to you and the Bridgekin network'}
+              </Typography>
+            </div>
+          </MenuItem>
+
+          {networksArray.map(network => (
+            <MenuItem value={network.id}
+              className={classes.dropdownMenuItem}
+              onClick={this.handleDropdownChange('Network',network.id)}
+              selected={dropdownFocus === `${network.id}`}>
+              <div>
+                <Typography variant="h6" align='left'
+                  color="textPrimary" className={classes.dropdownHeader}>
+                  {network.title}
+                </Typography>
+                <Typography variant="body2" align='left'
+                  color="textPrimary" className={classes.dropdownSubHeader}>
+                  {network.subtitle}
+                </Typography>
+              </div>
             </MenuItem>
           ))}
-        </Select>
-      </FormControl>
+
+          {otherDropdownOptions.map(other => (
+            <MenuItem onClick={this.handleDropdownClose}
+              className={classes.dropdownMenuItem}
+              disabled={other.disabled}
+              >
+              <div>
+                <Typography variant="h6" align='left'
+                  color="textPrimary" className={classes.dropdownHeader}>
+                  {other.header}
+                </Typography>
+                <Typography variant="body2" align='left'
+                  color="textPrimary" className={classes.dropdownSubHeader}>
+                  {other.subHeader}
+                </Typography>
+              </div>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
     )
 
     let opportunityGrid = (
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={24}>
 
-        <Grid item xs={10} sm={8}  justify="flex-end" alignItems="center">
-          <Typography variant="p" gutterBottom align='right'
-            color="secondary">
-            {dropdown}
-          </Typography>
+        <Grid item xs={10} sm={8}  justify="flex-end"
+          alignItems="center" style={{paddingTop: 0, paddingBottom: 0}}>
+          {dropdown}
         </Grid>
 
         <Grid item xs={10} sm={10} className={classes.gridOpp} >
-          <Grid container className={classes.root}
+          <Grid container
             justify="center" alignItems="center" spacing={24}>
             {opportunityCards}
           </Grid>
@@ -381,8 +472,8 @@ class OpportunityHome extends React.Component {
 
     if(this.props.currentUser){
       return (
-        <MuiThemeProvider theme={theme} className={classes.root}>
-          <Grid container className={classes.root}>
+        <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
+          <Grid container style={{flexGrow: 1}}>
             {header}
             {opportunityGrid}
             <OpportunityWaitlist
@@ -393,7 +484,7 @@ class OpportunityHome extends React.Component {
           {this.props.currentUser.isAdmin &&
               <OpportunityReferral
                 referralNetwork={referralNetwork}
-                networks={networks}
+                networks={networksArray}
                 referral={referral}
                 handleChange={this.handleReferralChange}
                 handleSubmit={this.handleReferralSubmit}

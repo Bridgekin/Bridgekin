@@ -146,27 +146,26 @@ class OpportunityCard extends React.Component {
       value, status } = opportunity;
 
     if (!_.isEmpty(opportunity)){
-      debugger
 
       let additionalInfo = editable ? (
         <div className={classes.cardSubWrapper}>
           <div>
-            <Typography variant="h6" gutterBottom align='center'
+            <Typography variant="h6" gutterBottom align='left'
               color="secondary" className={classes.cardSubHeader}>
               Status
             </Typography>
-            <Typography variant="h6" gutterBottom align='center'
+            <Typography variant="h6" gutterBottom align='left'
               color="default" className={classes.cardSubContentStatus}>
               {status}
             </Typography>
           </div>
 
           <div>
-            <Typography variant="h6" gutterBottom align='center'
+            <Typography variant="h6" gutterBottom align='left'
               color="secondary" className={classes.cardSubHeader}>
               Opportunity Need
             </Typography>
-            <Typography variant="h6" gutterBottom align='center'
+            <Typography variant="h6" gutterBottom align='left'
               color="default" className={classes.cardSubContentStatus}>
               {opportunityNeed}
             </Typography>
@@ -224,13 +223,13 @@ class OpportunityCard extends React.Component {
           />
           <CardContent className={classes.content}>
             <div className={classes.cardHeaderWrapper}>
-              <Typography variant="h5" align='center'
+              <Typography variant="h5" align='left'
                 color="default" className={classes.title} >
                 {title}
               </Typography>
             </div>
             <div className={classes.cardDescriptionWrapper}>
-              <Typography variant="h7" align='center'
+              <Typography variant="h7" align='left'
                 color="default" className={classes.description}
                 >
                 {description}
@@ -239,24 +238,24 @@ class OpportunityCard extends React.Component {
 
             <div className={classes.cardSubWrapper}>
               <div style={{ width:'31%'}} >
-                <Typography variant="h6" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='left'
                   color="secondary" className={classes.cardSubHeader}
                   noWrap>
                   Geography
                 </Typography>
-                <Typography variant="h6" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='left'
                   color="default" className={classes.cardSubContent}>
                   {geography.join(", ")}
                 </Typography>
               </div>
 
               <div style={{ width:'31%'}} >
-                <Typography variant="h6" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='left'
                   color="secondary" className={classes.cardSubHeader}
                   noWrap>
                   Industry
                 </Typography>
-                <Typography variant="body1" gutterBottom align='center'
+                <Typography variant="body1" gutterBottom align='left'
                   color="default" className={classes.cardSubContent}
                   >
                   {industries.join(", ")}
@@ -264,12 +263,12 @@ class OpportunityCard extends React.Component {
               </div>
 
               <div style={{ width:'31%'}} >
-                <Typography variant="h6" gutterBottom align='center'
+                <Typography variant="h6" gutterBottom align='left'
                   color="secondary" className={classes.cardSubHeader}
                   noWrap>
                   Value
                 </Typography>
-                <Typography variant="body1" gutterBottom align='center'
+                <Typography variant="body1" gutterBottom align='left'
                   color="default" className={classes.cardSubContent}
                   >
                   {value}

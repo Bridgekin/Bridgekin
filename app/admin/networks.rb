@@ -1,5 +1,5 @@
 ActiveAdmin.register Network do
-  permit_params :title
+  permit_params :title, :subtitle
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #

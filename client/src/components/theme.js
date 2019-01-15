@@ -6,27 +6,37 @@ import red from '@material-ui/core/colors/red';
 let theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#FFFFFF'
+      main: '#000000'
     },
     secondary: {
-      main: '#4067B2'
+      // main: '#4067B2',
+      main: '#000000'
     },
+    lightGrey: "#E2E2E2",
+    grey1: "#C4C4C4",
+    grey2: "#999999",
+    darkGrey: "#616161",
     error:{
       main: '#f44336'
     },
     delete: '#f44336',
     text: {
-      primary: "#000"
+      primary: "#000000",
     }
   },
   typography:{
     fontWeight: 300,
-    fontFamily: "'Nunito', sans-serif",
+    fontFamily: "'Muli', sans-serif",
     color: 'black',
     htmlFontSize: 18
   },
+  opportunityHeadline:{
+    fontWeight: 'bold',
+    fontSize: '22px'
+  },
   stepper: {
-    iconColor: '#4067B2' // or logic to change color
+    // iconColor: '#4067B2' // or logic to change color
+    iconColor: '#000000'
   },
   // htmlFontSize: 10
   // pxToRem: () => {

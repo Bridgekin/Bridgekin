@@ -85,7 +85,6 @@ class DescriptionField extends React.Component {
       this.setState( { networks },
         () => {
           let chosenOptions = Object.keys(networks).filter(k => networks[k]);
-          debugger
           this.props.handleChange('networks')(chosenOptions);
         });
     }
@@ -97,7 +96,6 @@ class DescriptionField extends React.Component {
     const { availNetworks } = this.props;
     // const error = Object.keys(networks).filter(v => v).length < 1
 
-    debugger
     let fields = Object.values(availNetworks).map(network => (
         <FormControlLabel
           control={
