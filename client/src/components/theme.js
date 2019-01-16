@@ -50,25 +50,25 @@ let theme = createMuiTheme({
     MuiTypography:{
       h1:{
         fontSize: 45,
-        fontWeight: 'bold'
+        fontWeight: 600
       },
       h2: { // Used by modals for errors/confirmation
         // fontSize: 24,
         fontSize: 28,
-        fontWeight: 'bold'
+        fontWeight: 600
       },
       h5: { // Opportunity Header
         fontSize: 22,
-        fontWeight: 'bold'
+        fontWeight: 600
       },
       h6: { // Opportunity Categories
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: 600,
         color: "#999999"
       },
       subtitle1: { // Opportunity Tags
         fontSize: 14,
-        fontWeight: 700
+        fontWeight: 600
       },
       body1: {
         fontSize: 18,
