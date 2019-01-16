@@ -81,7 +81,7 @@ class AccountNav extends React.Component {
         justify='space-around' alignItems='center'>
         <Grid item xs={10} sm={2} className={classes.accountNavSection}>
           <Typography variant="h5" gutterBottom>
-            <strong>Profile</strong>
+            <strong>My Account</strong>
           </Typography>
         </Grid>
         <Grid item xs={0} sm={2}/>

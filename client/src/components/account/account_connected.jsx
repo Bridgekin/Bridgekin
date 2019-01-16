@@ -82,7 +82,7 @@ class AccountConnected extends React.Component {
         <Grid item xs={10} className={classes.gridOpp} >
           <Typography variant="h4" gutterBottom align='left'
             color="secondary">
-            Facilitated Opportunities
+            Referred Opportunities
           </Typography>
           <Grid container className={classes.root}
             justify="center" alignItems="center" spacing={24}>
