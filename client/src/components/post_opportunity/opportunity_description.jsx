@@ -16,8 +16,9 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  valueHeader:{
+  descriptionHeader:{
     fontWeight: 700,
+    color: theme.palette.darkGrey,
   },
   cardGrid:{
     display: 'flex',
@@ -115,8 +116,8 @@ class DescriptionField extends React.Component {
 
         <Grid item xs={10} sm={9}>
           <div className={classes.section}>
-            <Typography variant="h4" gutterBottom align='left'
-              className={classes.valueHeader} color='secondary'>
+            <Typography variant="h5" gutterBottom align='left'
+              className={classes.descriptionHeader} >
               Headline of your Opportunity
             </Typography>
             <TextField
@@ -133,8 +134,8 @@ class DescriptionField extends React.Component {
           </div>
 
           <div className={classes.section}>
-            <Typography variant="h4" gutterBottom align='left'
-              className={classes.valueHeader} color='secondary'>
+            <Typography variant="h5" gutterBottom align='left'
+              className={classes.descriptionHeader} >
               Description of your Opportunity
             </Typography>
             <TextField
@@ -150,8 +151,8 @@ class DescriptionField extends React.Component {
           </div>
 
           <div className={classes.section}>
-            <Typography variant="h4" gutterBottom align='left'
-              className={classes.valueHeader} color='secondary'>
+            <Typography variant="h5" gutterBottom align='left'
+              className={classes.descriptionHeader} >
               Share this opportunity with
             </Typography>
 

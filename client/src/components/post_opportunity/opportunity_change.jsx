@@ -50,16 +50,23 @@ const styles = theme => ({
   stepperRoot:{
     flexGrow: 1
   },
+  paper:{
+    background: 'RGBA(196,196,196,0.1)'
+  },
+  stepper:{
+    background: 'none'
+  },
   stepperRootMain:{
     flexGrow: 1,
-    marginTop: 50
+    marginTop: 50,
+    marginBottom: 50
   },
   step: {
     "& $completed": {
-      color: "#4067B2"
+      color: theme.palette.text.primary
     },
     "& $active": {
-      color: "#ff9800"
+      color: theme.palette.grey2
     },
     "& $disabled": {
       color: "red"
@@ -158,6 +165,7 @@ class OpportunityChange extends React.Component {
           value={this.state.value}
           geography={this.state.geography}
           industries={this.state.industries}
+          availNetworks={this.props.availNetworks}
           opportunityNeed={this.state.opportunityNeed}
           errors={errors}
           status={this.state.status}/>;
@@ -268,6 +276,7 @@ class OpportunityChange extends React.Component {
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.root}
+          style={{ backgroundColor: 'RGBA(196,196,196,0.1)'}}
           justify='space-around' alignItems='center'>
 
           <Grid item xs={10} sm={2} className={classes.accountNavSection}>
@@ -280,7 +289,8 @@ class OpportunityChange extends React.Component {
 
           <Grid item xs={10} sm={8}>
             <Stepper activeStep={activeStep} alternativeLabel
-              classes={{ root: classes.stepperRoot }}>
+              classes={{ root: classes.stepperRoot }}
+              className={classes.stepper}>
               {steps.map((label, index) => (
                 <Step key={label}
                   classes={{
@@ -296,7 +306,8 @@ class OpportunityChange extends React.Component {
                         active: classes.active,
                         disabled: classes.disabled
                       }
-                    }} >
+                    }}
+                    label={{ color: '#000000'}}>
                     {label}
                   </StepLabel>
                 </Step>
@@ -310,7 +321,7 @@ class OpportunityChange extends React.Component {
         <Grid container className={classes.stepperRootMain}
           justify='center' alignItems='center'>
 
-          <Grid item xs={10} sm={7} className={classes.mainWrapper}>
+          <Grid item xs={10} sm={8} className={classes.mainWrapper}>
             {this.getStepContent(activeStep)}
             {flowNav}
           </Grid>

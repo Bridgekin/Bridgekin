@@ -24,7 +24,8 @@ const styles = theme => ({
     alignItems: 'flex-start'
   },
   geoHeader:{
-    fontWeight: 700
+    fontWeight: 700,
+    color: theme.palette.darkGrey,
   },
   geoLabel:{
     fontSize: 22
@@ -40,19 +41,6 @@ class GeoField extends React.Component {
     this.state = {
       options
     }
-    // this.state = {
-    //   options: {
-    //     worldwide: false,
-    //     africa: false,
-    //     centralAmerica: false,
-    //     easternEurope: false,
-    //     middleEast: false,
-    //     northAmerica: false,
-    //     oceania: false,
-    //     southAmerica: false,
-    //     westernEurope: false,
-    //   }
-    // }
   }
 
   createDefault(){
@@ -65,16 +53,6 @@ class GeoField extends React.Component {
 
   componentDidMount(){
     let options = this.state.options;
-    // let keys = Object.keys(options);
-    // for(let i = 0; i < keys.length; i++) {
-    //   let key = keys[i];
-    //   let formattedKey = this.capitalize(key);
-    //   if(this.props.geography.includes(formattedKey)){
-    //     options[key] = true;
-    //   } else {
-    //     options[key] = false;
-    //   }
-    // }
     let geography = this.props.geography;
     for(let i = 0; i < geography.length; i++){
       options[geography[i]] = true;
@@ -95,13 +73,6 @@ class GeoField extends React.Component {
     }
   }
 
-  // capitalize(string) {
-  //   let oldString = string.repeat(1);
-  //
-  //   return oldString.replace(/([A-Z])/g, ' $1')
-  //     .replace(/^./, str => { return str.toUpperCase(); })
-  // }
-
   render (){
     let classes = this.props.classes;
     const { options } = this.state;
@@ -113,7 +84,8 @@ class GeoField extends React.Component {
           <Checkbox
             checked={options[option]}
             onChange={this.handleChange(option)}
-            value={option} />
+            value={option}
+            />
         }
         label={option}
         classes={{ label: classes.geoLabel }}
@@ -122,12 +94,12 @@ class GeoField extends React.Component {
 
     return (
       <div className={classes.geoWrapper}>
-        <Typography variant="h4" gutterBottom align='left'
-          className={classes.geoHeader} color='secondary'>
+        <Typography variant="h5" gutterBottom align='left'
+          className={classes.geoHeader}>
           What is your geographical focus?
         </Typography>
         <Typography variant="p" gutterBottom align='center'>
-          Choose one or more options
+          Choose one or more options:
         </Typography>
 
         <FormControl required error={error}
@@ -137,8 +109,6 @@ class GeoField extends React.Component {
           </FormGroup>
           {error && <FormHelperText>Make sure to pick one</FormHelperText>}
         </FormControl>
-
-
       </div>
     )
   }

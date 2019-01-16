@@ -51,27 +51,31 @@ const mapDispatchToProps = dispatch => ({
   createReferral: (referral) => dispatch(createReferral(referral))
 });
 
-const styles = theme => ({
+const styles = {
   jumboRoot: {
     flexGrow: 1
   },
   root: {
     flexGrow: 1,
-    margin: "15px 0px 15px 0px",
-    borderBottom: "1px solid #D3D3D3",
   },
   homeheader:{
-    // minHeight: 350,
     padding: "20px 0px 50px 0px",
-    // borderBottom: "1px solid #D3D3D3",
+    backgroundColor: 'RGBA(196,196,196,0.1)',
+    borderBottom: `0.5px solid ${theme.palette.grey1}`
   },
   headerTypography:{
     margin: "25px 0px 25px 0px"
   },
-  // headerItem:{
-  //   // borderBottom: "1px solid #D3D3D3",
-  //   margin: "15px 0px 15px 0px"
-  // },
+  subheaderTypography:{
+    color: theme.palette.darkGrey,
+    fontSize: 24,
+    marginBottom: 20
+  },
+  headerDescriptionTypography:{
+    color: theme.palette.grey2,
+    fontSize: 18,
+    fontWeight: 300
+  },
   gridOpp:{
     marginBottom: 15,
     display: 'flex'
@@ -134,7 +138,7 @@ const styles = theme => ({
   },
   dropdownHeader: { fontWeight: 600, fontSize: '0.85rem' },
   dropdownSubHeader: { fontWeight: 200, fontSize: '0.6rem' }
-});
+};
 
 
 class OpportunityHome extends React.Component {
@@ -329,33 +333,26 @@ class OpportunityHome extends React.Component {
       <Grid container className={[classes.homeheader, classes.root].join(' ')}
         justify="center" alignItems="center">
 
-        <Grid item xs={8} justify="center" alignItems="center"
+        <Grid item xs={10} justify="center" alignItems="center"
           className={classes.headerItem}>
-          <Typography variant="h2" gutterBottom align='center'
-            color="secondary" className={classes.headerTypography}>
-            Welcome, {this.capitalize(currentUser.fname)}
+          <Typography variant="h1" gutterBottom align='center'
+            className={classes.headerTypography}>
+            {`Welcome, ${currentUser.fname}`.toUpperCase()}
           </Typography>
 
-          <Typography variant="h4" gutterBottom align='center'>
+          <Typography variant="h4" gutterBottom align='center'
+            className={classes.subheaderTypography}>
             There are {opportunities.length} opportunities for you to check out
           </Typography>
 
           <Typography variant="p" gutterBottom align='center'
-            color="secondary">
+            className={classes.headerDescriptionTypography}>
             Connect with the opportunities that may be perfect for
             you or a trusted contact in your network
           </Typography>
         </Grid>
       </Grid>
     )
-
-    let opportunityCards = opportunities.map(opportunity => (
-      <Grid item xs={10} md={6} lg={5} justify="center" alignItems="center"
-        className={classes.gridItem}>
-        <OpportunityCard opportunity={opportunity}
-          classes={classes} />
-      </Grid>
-    ));
 
     let otherDropdownOptions = [
       {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
@@ -373,12 +370,12 @@ class OpportunityHome extends React.Component {
           style={{ display: 'flex'}}
         >
           <Typography variant="subtitle1" align='left'
-            color="textPrimary" style={{ fontSize:"0.7rem"}}>
+            color="textPrimary" style={{ fontSize: 10}}>
             {"View By:"}
           </Typography>
           <Typography variant="subtitle1" align='left'
             color="textPrimary"
-            style={{ fontWeight: 600, marginLeft: 10, fontSize:"0.7rem"}}>
+            style={{ fontWeight: 600, marginLeft: 10, fontSize: 10}}>
             {dropdownFocus === "" ? "All Opportunties" : networks[dropdownFocus].title}
           </Typography>
         </Button>
@@ -452,8 +449,16 @@ class OpportunityHome extends React.Component {
       </div>
     )
 
+    let opportunityCards = opportunities.map(opportunity => (
+      <Grid item xs={10} md={6} lg={5} justify="center" alignItems="center"
+        className={classes.gridItem}>
+        <OpportunityCard opportunity={opportunity}
+          classes={classes} />
+      </Grid>
+    ));
+
     let opportunityGrid = (
-      <Grid container className={classes.root}
+      <Grid container className={classes.root} style={{padding: "30px 0px"}}
         justify="center" alignItems="center" spacing={24}>
 
         <Grid item xs={10} sm={8}  justify="flex-end"
@@ -461,11 +466,9 @@ class OpportunityHome extends React.Component {
           {dropdown}
         </Grid>
 
-        <Grid item xs={10} sm={10} className={classes.gridOpp} >
-          <Grid container
-            justify="center" alignItems="center" spacing={24}>
-            {opportunityCards}
-          </Grid>
+        <Grid item xs={10} sm={10} className={classes.gridOpp}
+          container justify="center" alignItems="center" spacing={24}>
+          {opportunityCards}
         </Grid>
       </Grid>
     )

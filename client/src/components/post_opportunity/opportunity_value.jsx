@@ -25,14 +25,15 @@ const styles = theme => ({
     justifyContent:'center'
   },
   clicked:{
-    backgroundColor: theme.palette.secondary.main,
-    color: theme.palette.primary.main
+    backgroundColor: theme.palette.grey2,
+    color: theme.palette.text.tertiary
   },
   content:{
     padding: 5
   },
   valueHeader:{
     fontWeight: 700,
+    color: theme.palette.darkGrey,
   },
   cardGrid:{
     display: 'flex',
@@ -92,13 +93,13 @@ class ValueField extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='flex-start' alignItems='center'>
-        <Typography variant="h4" gutterBottom align='left'
+        <Typography variant="h5" gutterBottom align='left'
           className={classes.valueHeader} color='secondary'>
           What's the value of your deal?
         </Typography>
 
         <Grid container className={classes.root}
-          justify='center' alignItems='center'>
+          justify='center' alignItems='center' spacing={16}>
           <Grid item xs={10} sm={4}>
             {cards}
           </Grid>

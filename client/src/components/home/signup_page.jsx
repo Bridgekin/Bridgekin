@@ -5,14 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Modal from '@material-ui/core/Modal';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 
-import JumboImage from '../../static/cogs.jpg';
-import HomeImage from '../../static/home_logo.png';
-import logo from '../../static/logo_blue.png';
+import HomeImage from '../../static/Login_Background_Image.jpg'
 import './home.css';
 
 import { connect } from 'react-redux';
@@ -33,38 +27,36 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  jumboRoot: {
-    flexGrow: 1
-  },
   root: {
     flexGrow: 1,
   },
-  jumboImage:{
-    maxWidth: '100%'
+  homeGrid:{
+    flexGrow: 1,
+    paddingTop: 0,
+    backgroundImage: `url(${HomeImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right',
+    backgroundSize: 'cover',
+    marginBottom: 50
   },
-  jumbo: {
-    height: 200
-  },
-  waitlistItem: {},
-  textField:{ width: '100%'},
   button:{
-    width: '50%',
     height: 50,
-    marginTop: 30
+    marginTop: 30,
+    fontSize: 16
   },
-  waitlistCTA: {
+  homeHeader: {
     marginTop: 20,
-    fontWeight: 300
+    fontWeight: 'bold',
+    fontSize: 20
   },
-  homeHeader:{
-    marginBottom: 0
+  homeSubheader:{
+    marginTop: 20,
+    fontSize: 16
   },
   wrapper: {
-    margin: theme.spacing.unit,
-    position: 'relative',
-    width: 400,
+    width: '100%',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'flex-end'
   },
   buttonProgress: {
     color: '#4067B2',
@@ -72,14 +64,6 @@ const styles = theme => ({
     top: '50%',
     left: '50%',
     marginLeft: -12,
-  },
-  logo: {
-    maxWidth: '50%',
-    marginTop: 30
-  },
-  thanksHeader: {
-    marginBottom: 30,
-    fontWeight: 600
   }
 });
 
@@ -164,6 +148,8 @@ class SignupPage extends React.Component{
           label="First Name"
           className={classes.textField}
           margin="normal"
+          fullWidth
+          variant='outlined'
           value={this.state.fname}
           onChange={this.handleChange('fname')}
           onMouseUp={this.handleChange('fname')}
@@ -173,6 +159,8 @@ class SignupPage extends React.Component{
           label="Last Name"
           className={classes.textField}
           margin="normal"
+          fullWidth
+          variant='outlined'
           value={this.state.lname}
           onChange={this.handleChange('lname')}
           onMouseUp={this.handleChange('lname')}
@@ -182,6 +170,8 @@ class SignupPage extends React.Component{
           label="Email"
           className={classes.textField}
           margin="normal"
+          fullWidth
+          variant='outlined'
           value={this.state.email}
           onChange={this.handleChange('email')}
           onMouseUp={this.handleChange('email')}
@@ -191,6 +181,8 @@ class SignupPage extends React.Component{
           label="Password"
           className={classes.textField}
           margin="normal"
+          fullWidth
+          variant='outlined'
           type="password"
           value={this.state.password}
           onChange={this.handleChange('password')}
@@ -201,6 +193,8 @@ class SignupPage extends React.Component{
           label="Password Confirmation"
           className={classes.textField}
           margin="normal"
+          fullWidth
+          variant='outlined'
           type="password"
           value={this.state.passwordConfirmation}
           onChange={this.handleChange('passwordConfirmation')}
@@ -219,32 +213,26 @@ class SignupPage extends React.Component{
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.root}
-          justify="center" alignItems="center">
-
-          <Grid container className={classes.homeHeader} spacing={24} justify="center" alignItems="center">
-            <Grid item xs={10} md={7} >
-              <Typography className={classes.waitlistCTA} variant="h5" gutterBottom>
+        <Grid container className={classes.homeGrid}
+          justify="flex-start" alignItems="center">
+          <Grid item xs={5} container justify="flex-start" alignItems="center"
+            style={{ marginLeft: 50, marginTop: 20}}>
+            <Grid item xs={12} >
+              <Typography className={classes.homeHeader}
+                variant="h5" gutterBottom>
                 {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
-            <Grid item xs={0} md={3} />
-          </Grid>
 
-          <Grid container spacing={24} justify="center" alignItems="flex-start">
-            <Grid item xs={1} />
-            <Grid item xs={10} md={4}>
-              <Typography className={classes.waitlistCTA} variant="p" gutterBottom>
+            <Grid item xs={8} >
+              <Typography className={classes.homeSubheader}
+                variant="p" gutterBottom>
                 {"You’ve received a private invitation to join the Bridgekin network. Complete your registration and sign in below!"}
               </Typography>
-
               {form}
             </Grid>
-
-            <Grid item xs={0} md={7}>
-              <img src={HomeImage}/>
-            </Grid>
           </Grid>
+
         </Grid>
 
         <SignupModal

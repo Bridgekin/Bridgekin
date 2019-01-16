@@ -9,6 +9,9 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import blankProfilePic from '../../static/blank_profile_pic.png';
+import EditIcon from '@material-ui/icons/EditSharp';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/AddSharp';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -24,23 +27,32 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-    marginTop: 100
+    marginTop: 50
   },
   cover: {
-    width: 325,
-    height: 325
+    width: 190,
+    height: 217
+  },
+  addProfilePicIcon:{
+    width: 190,
+    height: 217,
+    backgroundColor: theme.palette.lightGrey,
+    color: theme.palette.grey1
   },
   card: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 40
   },
   cardSection:{
     marginTop: 10
   },
+  content:{marginLeft: 20},
   wrapper:{
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%'
   },
   cardEditIcon:{
     color: "#d3d3d3",
@@ -57,51 +69,60 @@ class AccountHome extends React.Component {
   render(){
     const { classes, currentUser }= this.props;
 
+    let profilePic = currentUser.profilePic ? (
+      <CardMedia
+        className={classes.pic}
+        image={blankProfilePic}
+        title="Account Profile Picture"
+      />
+    ) : (
+      <AddIcon
+        className={classes.addProfilePicIcon}/>
+    )
+
     return (
       <Grid container justify="center" alignItems="center"
         spacing={24} className={classes.root}>
-        <Grid item xs={10} sm={6} className={classes.homeContainer}>
+        <Grid item xs={10} sm={6}>
           <Card className={classes.card}>
-            <CardMedia
-              className={classes.cover}
-              image={blankProfilePic}
-              title="Account Profile Picture"
-            />
-            <CardContent>
+            {profilePic}
+            <CardContent className={classes.content}>
               <div className={classes.wrapper}>
-                <Typography variant="h3" gutterBottom color="secondary"
+                <Typography variant="h1" gutterBottom color="secondary"
                   align='left'>
-                  {`${this.capitalize(currentUser.fname)} ${this.capitalize(currentUser.lname)}`}
+                  {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
                 </Typography>
                 <div style={{ marginLeft: 10 }}
                   onClick={() => this.props.history.push('/account/settings')}>
-                  <i className={["far fa-edit", classes.cardEditIcon].join(' ')}/>
+                  <IconButton className={classes.button} aria-label="Edit">
+                    <EditIcon />
+                  </IconButton>
                 </div>
               </div>
 
-              <Typography variant="subtitle1" gutterBottom align='left'
+              <Typography variant="h6" gutterBottom align='left'
                 color="secondary" className={classes.cardSection}>
                 Title
               </Typography>
-              <Typography variant="h6" gutterBottom align='left'
+              <Typography variant="body2" gutterBottom align='left'
                 color="default">
                 {this.capitalize(currentUser.title)}
               </Typography>
 
-              <Typography variant="subtitle1" gutterBottom align='left'
+              <Typography variant="h6" gutterBottom align='left'
                 color="secondary" className={classes.cardSection}>
                 Company
               </Typography>
-              <Typography variant="h6" gutterBottom align='left'
+              <Typography variant="body2" gutterBottom align='left'
                 color="default">
                 {this.capitalize(currentUser.company)}
               </Typography>
 
-              <Typography variant="subtitle1" gutterBottom align='left'
+              <Typography variant="h6" gutterBottom align='left'
                 color="secondary" className={classes.cardSection}>
                 Location
               </Typography>
-              <Typography variant="h6" gutterBottom align='left'
+              <Typography variant="body2" gutterBottom align='left'
                 color="default">
                 {currentUser.city ?
                   `${currentUser.city}, ${currentUser.country}` :

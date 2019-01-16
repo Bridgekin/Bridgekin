@@ -16,19 +16,20 @@ let theme = createMuiTheme({
     grey1: "#C4C4C4",
     grey2: "#999999",
     darkGrey: "#616161",
+    white: "#FFFFFF",
     error:{
       main: '#f44336'
     },
-    delete: '#f44336',
     text: {
-      primary: "#000000",
+      primary: "#000000", //black
+      secondary: "#616161", //grey
+      tertiary: '#FFFFFF' //white
     }
   },
   typography:{
     fontWeight: 300,
     fontFamily: "'Muli', sans-serif",
-    color: 'black',
-    htmlFontSize: 18
+    htmlFontSize: 16
   },
   opportunityHeadline:{
     fontWeight: 'bold',
@@ -36,7 +37,56 @@ let theme = createMuiTheme({
   },
   stepper: {
     // iconColor: '#4067B2' // or logic to change color
-    iconColor: '#000000'
+    iconColor: '#000000',
+    // backgroundColor: 'none',
+  },
+  overrides: {
+    MuiButton: { // Name of the component ⚛️ / style sheet
+      text: { // Name of the rule
+        // color: 'white', // Some CSS
+        fontSize: '14px'
+      },
+    },
+    MuiTypography:{
+      h1:{
+        fontSize: 45,
+        fontWeight: 'bold'
+      },
+      h2: { // Used by modals for errors/confirmation
+        // fontSize: 24,
+        fontSize: 28,
+        fontWeight: 'bold'
+      },
+      h5: { // Opportunity Header
+        fontSize: 22,
+        fontWeight: 'bold'
+      },
+      h6: { // Opportunity Categories
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: "#999999"
+      },
+      subtitle1: { // Opportunity Tags
+        fontSize: 14,
+        fontWeight: 700
+      },
+      body1: {
+        fontSize: 18,
+      },
+      body2: { // Opportunity Description
+        fontSize: 15,
+        fontWeight: 300,
+        lineHeight: 1.2
+      }
+    },
+    MuiStepLabel: {
+      label: {
+          color: '#000000',
+      },
+    },
+    MuiCheckbox:{
+      root: 'red'
+    }
   },
   // htmlFontSize: 10
   // pxToRem: () => {

@@ -3,6 +3,11 @@ import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/AddSharp';
 
 import OpportunityCard from '../opportunity/opportunity_card';
 // import CardModal from './card_modal';
@@ -28,6 +33,13 @@ const styles = theme => ({
     flexGrow: 1,
     marginTop: 35
   },
+  addOportunityCard:{
+    height: 440,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
 
 class AccountPosted extends React.Component {
@@ -51,8 +63,8 @@ class AccountPosted extends React.Component {
   }
 
   handleDelete(id){
-    console.log('delete Opportunity', id)
-    // this.props.deleteOpportunity(id)
+    // console.log('delete Opportunity', id)
+    this.props.deleteOpportunity(id)
   }
 
   render(){
@@ -74,6 +86,20 @@ class AccountPosted extends React.Component {
             <Grid container className={classes.root}
               justify="center" alignItems="center" spacing={24}>
               {opportunityCards}
+
+              <Grid item xs={10} md={6} lg={5} justify="center"
+                alignItems="center" className={classes.gridItem}>
+                <Card>
+                  <CardActionArea className={classes.addOportunityCard}
+                    onClick={() => this.props.history.push('/postopportunity')}>
+                    <AddIcon style={{ fontSize: 150 }}/>
+                    <Typography variant="h1" gutterBottom align='center'>
+                      Add Opportunity
+                    </Typography>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+
             </Grid>
           </Grid>
         </Grid>

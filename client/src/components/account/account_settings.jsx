@@ -17,6 +17,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import AddIcon from '@material-ui/icons/AddSharp';
 
 import UpdateUserModal from './update_user_modal';
 // import countryList from 'react-select-country-list';
@@ -47,21 +48,26 @@ const styles = theme => ({
     marginTop: 100
   },
   pic: {
-    width: 325,
-    height: 325
+    width: 190,
+    height: 217,
+  },
+  addProfilePicIcon:{
+    width: 190,
+    height: 217,
+    backgroundColor: theme.palette.lightGrey,
+    color: theme.palette.grey1
   },
   card: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 30
+    padding: "5px 30px 30px 30px"
   },
   cardSection:{
     marginTop: 10
   },
   content:{
-    marginLeft: 20,
-    width: '50%'
+    margin: 20,
   },
   passwordContent:{
     margin: '0 auto',
@@ -95,6 +101,9 @@ const styles = theme => ({
   },
   fieldLabel:{
     marginTop: 15
+  },
+  iconWrapper:{
+    backgroundColor: theme.palette.grey1
   }
 });
 
@@ -204,48 +213,65 @@ class AccountSetting extends React.Component {
   getContent(){
     const { classes, currentUser }= this.props;
     const { settingState, modalOpen } = this.state;
+
+    let profilePic = currentUser.profilePic ? (
+      <CardMedia
+        className={classes.pic}
+        image={blankProfilePic}
+        title="Account Profile Picture"
+      />
+    ) : (
+      <AddIcon
+        className={classes.addProfilePicIcon}/>
+    )
+    // <CardMedia
+    //   className={classes.pic}
+    //   title="Add Profile Picture" >
+    //   <AddIcon />
+    // </CardMedia>
+
+    //Original Edit icon button
+    // <div style={{ marginLeft: 10 }}
+    //   onClick={() => this.props.history.push('/account/settings')}>
+    //   <i className={["far fa-edit", classes.cardEditIcon].join(' ')}/>
+    // </div>
+
     switch (settingState) {
       case "Home":
         return (
           <Card className={classes.card}>
-            <CardMedia
-              className={classes.pic}
-              image={blankProfilePic}
-              title="Account Profile Picture"
-            />
+            {profilePic}
             <CardContent className={classes.content}>
               <div className={classes.wrapper}>
-                <Typography variant="h4" color="secondary"
-                  align='left'>
-                  {`${this.capitalize(currentUser.fname)} ${this.capitalize(currentUser.lname)}`}
+                <Typography variant="h1" align='left'>
+                  {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
                 </Typography>
-                <div style={{ marginLeft: 10 }}
-                  onClick={() => this.props.history.push('/account/settings')}>
-                  <i className={["far fa-edit", classes.cardEditIcon].join(' ')}/>
-                </div>
               </div>
 
-              <Typography variant="h7" align='left'
-                color="secondary" >
+              <Typography variant="h6" align='left' color='textPrimary'>
                 Contact Information
               </Typography>
-              <Typography variant="h6" gutterBottom align='left'
-                color="default">
+              <Typography variant="body1" gutterBottom align='left'
+                color="default" style={{ marginBottom: 15}}>
                 {currentUser.email}
               </Typography>
 
               <Button color="secondary" className={classes.button}
                 onClick={this.handleChangeFill('General Information')}>
-                Change your profile information
+                <Typography variant="subtitle1" align='left' color='textPrimary'>
+                  Change your profile information
+                </Typography>
               </Button>
 
               <Button color="secondary" className={classes.button}
                 onClick={this.handleChangeFill('Reset Password')}>
-                Change your password
+                <Typography variant="subtitle1" align='left' color='textPrimary'>
+                  Change your password
+                </Typography>
               </Button>
 
-              <Typography variant="h7" align='left'
-                color="secondary" >
+              <Typography variant="subtitle1" align='left'
+                color="secondary" style={{ marginTop: 15}}>
                 {`How often would you like to be notified about
                   opportunities by email?`}
               </Typography>

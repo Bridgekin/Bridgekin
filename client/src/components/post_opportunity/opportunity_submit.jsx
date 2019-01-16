@@ -31,7 +31,7 @@ const styles = theme => ({
 class SubmitField extends React.Component {
   render (){
     const { title, description, industries, opportunityNeed, geography,
-      value, networks, classes, errors, status } = this.props;
+      value, networks, classes, errors, status, availNetworks } = this.props;
 
     let opportunity = { title, description, industries, opportunityNeed,
       geography, value, networks, status };
@@ -42,26 +42,45 @@ class SubmitField extends React.Component {
       </li>
     ))
 
+    let networksTitles = networks.map(network => (
+      <li>
+        {availNetworks[network].title}
+      </li>
+    ))
+
     return (
       <Grid container className={classes.root}
-        justify='center' alignItems='center'>
+        justify='center' alignItems='flex-start' spacing={16}>
 
-        {(errors.length > 0) && (
-          <div>
-            <Typography variant="h6" gutterBottom align='left'
-              className={classes.industryHeader} color='secondary'>
-              Seems like you're missing a few fields:
-            </Typography>
-            <ul>
-              {errorItems}
-            </ul>
-          </div>
-        )}
+        <Grid item xs={12} container justify='center'  >
+          {(errors.length > 0) && (
+            <div>
+              <Typography variant="h6" gutterBottom align='left'
+                className={classes.industryHeader} color='secondary'>
+                Seems like you're missing a few fields:
+              </Typography>
+              <ul>
+                {errorItems}
+              </ul>
+            </div>
+          )}
+        </Grid>
 
-        <Grid item xs={10}>
+        <Grid item xs={12} sm={10} md={8}>
           <OpportunityCard opportunity={opportunity}
             classes={classes}
-            editable={false}/>
+            editable={false}
+            demo={true}/>
+        </Grid>
+
+        <Grid item xs={12} md={3}>
+          <Typography variant="h6" gutterBottom align='left'
+            color='secondary'>
+            Networks shared to:
+          </Typography>
+          <ul>
+            {networksTitles}
+          </ul>
         </Grid>
 
         <Grid item xs={12} className={classes.disclaimer}>

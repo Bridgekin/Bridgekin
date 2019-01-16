@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -22,8 +23,8 @@ const mapDispatchToProps = dispatch => ({
 
 const styles = theme => ({
   paper: {
-    position: 'absolute',
-    width: '40%',
+    // position: 'absolute',
+    // width: '40%',
     height: 350,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
@@ -34,8 +35,13 @@ const styles = theme => ({
     justifyContent: 'center'
   },
   thanksHeader:{
-    marginBottom: 30
-  }
+    marginBottom: 30,
+    color: theme.palette.darkGrey
+  },
+  cardModalWrapper:{
+    padding: 0,
+    minWidth: 500,
+  },
 });
 
 class WaitlistModal extends React.Component {
@@ -75,11 +81,11 @@ class WaitlistModal extends React.Component {
     })
 
     let modalText = this.props.waitlistErrors.length === 0 ? (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks for signing up!
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description">
           You've now been added to our waitlist! You'll receive a confirmation email shortly.
         </Typography>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
@@ -88,11 +94,11 @@ class WaitlistModal extends React.Component {
         </Button>
       </div>
     ) : (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks for your interest in Bridgekin!
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description">
           Apologies, but we weren't able to sign you up because:
         </Typography>
         <List>
@@ -106,14 +112,14 @@ class WaitlistModal extends React.Component {
     )
 
     return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+      <Dialog
         open={open}
-        disableAutoFocus={true}
-        onClose={this.handleClose}>
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        onClose={this.handleClose}
+        className={classes.cardModalWrapper}>
         {modalText}
-      </Modal>
+      </Dialog>
     )
   }
 }

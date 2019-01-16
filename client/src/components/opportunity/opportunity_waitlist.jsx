@@ -11,10 +11,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: "15px 0px 15px 0px"
+    padding: "40px 0px",
+    borderTop: `0.5px solid ${theme.palette.grey1}`,
+    backgroundColor: 'RGBA(196,196,196,0.1)'
   },
   headerTypography:{
-    margin: "25px 0px 25px 0px"
+    margin: "25px 0px 40px 0px"
   },
   refButton:{
     fontSize: '1rem',
@@ -42,23 +44,20 @@ class OpportunityWaitlist extends React.Component{
     const { loading, classes } = this.props;
 
     return(
-      <div>
-        <Grid container className={classes.root}
-          justify="center" alignItems="center">
+      <Grid container className={classes.root}
+        justify="center" alignItems="center">
 
-          <Grid item xs={8} justify="flex-end" alignItems="center">
-            <Typography variant="h4" gutterBottom align='center'
-              color="secondary" className={classes.headerTypography}>
-              {`Refer a trusted contact that would appreciate joining
-                our community and we'll add them to our waitlist.`}
-            </Typography>
-          </Grid>
-
+        <Grid item container xs={10} md={8}  justify="flex-start" alignItems="center">
+          <Typography variant="h5" gutterBottom align='left'
+            color="secondary" className={classes.headerTypography}>
+            {`Refer a trusted contact that would appreciate joining
+              our community and we'll add them to our waitlist.`}
+          </Typography>
         </Grid>
 
-        <Grid container className={classes.root}
-          justify="center" alignItems="center">
-          <Grid item xs={5} md={2} justify="center" alignItems="center">
+        <Grid item container xs={10} md={8} justify="center" alignItems="center"
+          spacing={16}>
+          <Grid item xs={3} >
             <TextField
             required
             id="outlined-required"
@@ -71,7 +70,7 @@ class OpportunityWaitlist extends React.Component{
             />
           </Grid>
 
-          <Grid item xs={5} md={4} justify="flex-end" alignItems="center">
+          <Grid item xs={5} justify="flex-end" alignItems="center">
             <TextField
             required
             id="outlined-required"
@@ -84,7 +83,7 @@ class OpportunityWaitlist extends React.Component{
             />
           </Grid>
 
-          <Grid item xs={5} md={2} className={classes.wrapper}>
+          <Grid item xs={4} className={classes.wrapper}>
             <Button variant="contained" color='secondary'
               className={classes.refButton}
               onClick={this.props.handleSubmit}
@@ -95,7 +94,8 @@ class OpportunityWaitlist extends React.Component{
               className={classes.buttonProgress} />}
           </Grid>
         </Grid>
-      </div>
+
+      </Grid>
     )
   }
 };

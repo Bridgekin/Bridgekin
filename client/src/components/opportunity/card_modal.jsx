@@ -46,8 +46,7 @@ const styles = theme => ({
   },
   cardModalWrapper:{
     padding: 0,
-    width: '55%',
-    left: '22.5%',
+    minWidth: 500,
   },
   cover: {
     height: 150,
@@ -58,15 +57,15 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: '50%',
+    minHeight: 440,
     overflow: 'scroll'
   },
   content:{
-    padding: 35
+    padding: "20px 50px 50px 50px"
   },
   cardWrapper:{
     display: 'flex',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     width: '100%',
     marginTop: 25
   },
@@ -76,7 +75,8 @@ const styles = theme => ({
   },
   cardSubHeader:{
     // fontSize: '0.9rem',
-    fontWeight: 700
+    // fontWeight: 700
+
   },
   actionWrapper: {
     display: 'flex',
@@ -86,7 +86,7 @@ const styles = theme => ({
     marginBottom: 25
   },
   actionButton: {
-    margin: '0px 10px 0px 10px'
+    marginRight: 50
   },
   postButtons: {
     display: 'flex',
@@ -98,7 +98,7 @@ const styles = theme => ({
     marginBottom: 25
   },
   subContentSection :{
-    width: '30%'
+    minWidth: 175
   },
   errorHeader:{
     marginBottom: 30
@@ -167,11 +167,11 @@ class CardModal extends React.Component {
 
       let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
         <div className={classes.paper}>
-          <Typography variant="h4" id="modal-title" color='secondary'
+          <Typography variant="h1" id="modal-title"
             className={classes.section}>
             Time for business!
           </Typography>
-          <Typography variant="subtitle1" id="simple-modal-description"
+          <Typography variant="body1" id="simple-modal-description"
             className={classes.section}>
             {"We're as excited about this opportunity as you are! We just sent "+
             "an email connecting you to the opportunity owner, so that should " +
@@ -190,11 +190,11 @@ class CardModal extends React.Component {
         </div>
       ) : (
         <div className={classes.paper}>
-          <Typography variant="h4" id="modal-title" color='secondary'
+          <Typography variant="h1" id="modal-title"
             className={classes.errorHeader}>
-            Hold on there hot stuff!
+            Hold on there!
           </Typography>
-          <Typography variant="subtitle1" id="simple-modal-description">
+          <Typography variant="body1" id="simple-modal-description">
             Apologies, but we weren't able to connect you to this opportunity because:
           </Typography>
           <List>
@@ -212,44 +212,44 @@ class CardModal extends React.Component {
           <img alt='industry' src={PickImage(industries[0])}
             className={classes.cover}/>
           <CardContent className={classes.content}>
-            <Typography variant="h5" gutterBottom align='center'
+            <Typography variant="h5" gutterBottom align='left'
               color="default">
               {title}
             </Typography>
-            <Typography variant="body2" gutterBottom align='center'
+            <Typography variant="body2" gutterBottom align='left'
               color="default">
               {description}
             </Typography>
 
             <div className={classes.cardWrapper}>
               <div className={classes.subContentSection}>
-                <Typography variant="h6" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubHeader}>
+                <Typography variant="h6" gutterBottom align='left'
+                  className={classes.cardSubHeader}>
                   Geography
                 </Typography>
-                <Typography variant="body1" gutterBottom align='center'
+                <Typography variant="subtitle1" gutterBottom align='left'
                   color="default" className={classes.cardSubContent}>
                   {geography.join(", ")}
                 </Typography>
               </div>
 
               <div className={classes.subContentSection}>
-                <Typography variant="h6" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubHeader}>
+                <Typography variant="h6" gutterBottom align='left'
+                  className={classes.cardSubHeader}>
                   Industry
                 </Typography>
-                <Typography variant="body1" gutterBottom align='center'
+                <Typography variant="subtitle1" gutterBottom align='left'
                   color="default" className={classes.cardSubContent}>
                   {industries.join(", ")}
                 </Typography>
               </div>
 
               <div>
-                <Typography variant="h6" gutterBottom align='center'
-                  color="secondary" className={classes.cardSubHeader}>
+                <Typography variant="h6" gutterBottom align='left'
+                  className={classes.cardSubHeader}>
                   Value
                 </Typography>
-                <Typography variant="body1" gutterBottom align='center'
+                <Typography variant="subtitle1" gutterBottom align='left'
                   color="default" className={classes.cardSubContent}>
                   {value}
                 </Typography>
@@ -271,7 +271,7 @@ class CardModal extends React.Component {
             </div>
 
             <Typography variant="body2" align='left'
-              color="default">
+              color="default" style={{ marginBottom: 40 }}>
               Once you connect or refer above, we'll send you an email introducing
               you to the opportunity owner
             </Typography>

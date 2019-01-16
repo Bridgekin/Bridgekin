@@ -9,8 +9,8 @@ import Button from '@material-ui/core/Button';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    borderBottom: '0.5px solid',
-    borderColor: theme.palette.secondary.main
+    borderBottom: `0.5px solid ${theme.palette.grey1}`,
+    backgroundColor: 'RGBA(196,196,196,0.1)'
   },
   acccountMain:{
     marginTop: 50
@@ -19,7 +19,8 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 60
+    height: 100
+
   },
   button: {
     margin: "0px 7px",
@@ -80,7 +81,7 @@ class AccountNav extends React.Component {
         justify='space-around' alignItems='center'>
         <Grid item xs={10} sm={2} className={classes.accountNavSection}>
           <Typography variant="h5" gutterBottom>
-            <strong>My Profile</strong>
+            <strong>Profile</strong>
           </Typography>
         </Grid>
         <Grid item xs={0} sm={2}/>

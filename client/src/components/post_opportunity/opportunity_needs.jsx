@@ -24,12 +24,13 @@ const styles = theme => ({
   actionArea:{
     display: 'flex',
     alignItems:'center',
-    justifyContent:'center',
+    justifyContent:'flex-start',
+    paddingLeft: 10,
     height: 150
   },
   clicked:{
-    backgroundColor: theme.palette.secondary.main,
-    color: theme.palette.primary.main
+    backgroundColor: theme.palette.grey2,
+    color: theme.palette.text.tertiary
   },
   clickedIcon:{
     webkitFilter: 'invert(100%)',
@@ -37,7 +38,7 @@ const styles = theme => ({
   },
   content:{
     width: '55%',
-    padding: '25px 16px 9px 16px'
+    padding: '17px 16px 17px 9px'
   },
   icon:{
     height: 'auto',
@@ -109,17 +110,17 @@ class NeedsField extends React.Component {
     // })
     let subtitles = {
       'Find': (
-      <Typography variant="subtitle2" align='center'
+      <Typography variant="subtitle2" align='left'
         color='inherit'>
         properties, companies, or products
       </Typography>),
       'Sell': (
-      <Typography variant="subtitle2" gutterBottom align='center'
+      <Typography variant="subtitle2" gutterBottom align='left'
         color='inherit'>
         properties, companies, or products
       </Typography>),
       'Discover': (
-      <Typography variant="subtitle2" gutterBottom align='center'
+      <Typography variant="subtitle2" gutterBottom align='left'
         color='inherit'>
         new team members or join a team
       </Typography>)
@@ -141,7 +142,8 @@ class NeedsField extends React.Component {
           <CardActionArea className={styling}
             onClick={this.handleClick(need)}>
             <CardMedia
-              title="OpportunityIcon">
+              title="OpportunityIcon"
+              style={{ marginLeft: 10}}>
               <img
                 src={PickIcons(need)}
                 className={iconStyling}
@@ -149,8 +151,8 @@ class NeedsField extends React.Component {
                 />
             </CardMedia>
             <CardContent className={classes.content}>
-              <Typography variant="h4" align='center' color='inherit'>
-                {need}
+              <Typography variant="h1" align='left' color='inherit'>
+                {need.toUpperCase()}
               </Typography>
               {subtitles[need]}
             </CardContent>

@@ -24,14 +24,16 @@ const styles = theme => ({
     justifyContent:'center'
   },
   clicked:{
-    backgroundColor: theme.palette.secondary.main,
-    color: theme.palette.primary.main
+    backgroundColor: theme.palette.grey2,
+    color: theme.palette.text.tertiary
   },
   content:{
     padding: 5
   },
   industryHeader:{
     fontWeight: 700,
+    color: theme.palette.darkGrey,
+    marginBottom: 20
   },
   cardGrid:{
     display: 'flex',
@@ -116,8 +118,8 @@ class IndustryField extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='flex-start' alignItems='center'>
-        <Typography variant="h4" gutterBottom align='left'
-          className={classes.industryHeader} color='secondary'>
+        <Typography variant="h5" gutterBottom align='left'
+          className={classes.industryHeader} >
           In which industries are the product/service you want to find?
         </Typography>
         <Grid container className={classes.root}

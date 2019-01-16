@@ -6,6 +6,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -23,8 +24,8 @@ const mapDispatchToProps = dispatch => ({
 
 const styles = theme => ({
   paper: {
-    position: 'absolute',
-    width: '40%',
+    // position: 'absolute',
+    // width: '40%',
     height: 350,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
@@ -35,7 +36,8 @@ const styles = theme => ({
     justifyContent: 'center'
   },
   thanksHeader:{
-    marginBottom: 30
+    marginBottom: 30,
+    color: theme.palette.darkGrey
   },
   actionButton: {
     margin: '0px 10px 0px 10px'
@@ -46,6 +48,10 @@ const styles = theme => ({
     width: '100%',
     marginTop: 25,
     marginBottom: 25
+  },
+  modalWrapper:{
+    padding: 0,
+    minWidth: 500,
   },
 });
 
@@ -67,7 +73,7 @@ class SubmitModal extends React.Component {
         this.props.handleReset();
       } else if (field === 'post' && this.props.modalType !== 'create'){
         this.props.history.push('/postopportunity')
-      } else {
+      } else if (field === 'find'){
         this.props.history.push('/findandconnect')
       }
     }
@@ -88,11 +94,11 @@ class SubmitModal extends React.Component {
     })
 
     let successText = modalType === 'create' ? (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks For Posting!
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description">
           Thanks for sharing your opportunity! Our team is doing a quick review
           and your post will go live within 24 hours.
         </Typography>
@@ -112,11 +118,11 @@ class SubmitModal extends React.Component {
         </div>
       </div>
     ) : (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
           You've Updated Your Post!
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description">
           You've successfully update your opportunity. Head to your account
           to see your opportunity.
         </Typography>
@@ -140,32 +146,32 @@ class SubmitModal extends React.Component {
     let modalText = this.props.opportunityErrors.length === 0 ? (
         successText
       ) : (
-        <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-          <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+        <div className={classes.paper}>
+          <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
             You're almost there!
           </Typography>
-          <Typography variant="subtitle1" id="simple-modal-description">
+          <Typography variant="body1" id="simple-modal-description">
             You've got a few pieces to correct before submitting your opportunity, listed below:
           </Typography>
           <List>
             {opportunityErrors}
           </List>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose('find')} color='secondary'>
+            onClick={this.handleClose('')} color='secondary'>
             Close
           </Button>
         </div>
       )
 
     return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+      <Dialog
         open={open}
-        disableAutoFocus={true}
-        onClose={this.handleClose('find')}>
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        onClose={this.handleClose('find')}
+        className={classes.cardModalWrapper}>
         {modalText}
-      </Modal>
+      </Dialog>
     )
   }
 }

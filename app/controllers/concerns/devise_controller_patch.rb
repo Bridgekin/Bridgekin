@@ -17,7 +17,7 @@ module DeviseControllerPatch
         @user = User.find(user_id)
 
         #set current_user
-        @current_user = @user
+        # @current_user = @user
         #create new token
         # @token = get_login_token!(@user)
 
@@ -29,4 +29,9 @@ module DeviseControllerPatch
       head :unauthorized
     end
   end
+
+  def pundit_user
+    @user
+  end
+
 end

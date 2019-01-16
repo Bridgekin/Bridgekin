@@ -64,24 +64,31 @@ const styles = {
   nav: {
     backgroundColor: 'white',
     color: '#4067B2',
-    marginBottom: 20,
     width: '100%',
-    // borderBottom: '0.5px solid',
-    // borderColor: theme.palette.secondary.main
     borderBottom: `0.5px solid ${theme.palette.grey1}`,
     boxShadow: 'none'
   },
   textField:{
     marginLeft: 10,
     marginRight: 10,
-    // height: 40,
+    width: '40%',
     border: `0.5px solid ${theme.palette.secondary}`,
-    // padding: 8
   },
   button:{
     marginTop: 20,
     height: 25
-  }
+  },
+  toolbar:{
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  navMenu:{
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  textfieldResize:{
+    padding: 14
+  },
 };
 
 class HomeNav extends React.Component {
@@ -158,14 +165,20 @@ class HomeNav extends React.Component {
     const open = Boolean(anchorEl);
 
     let navMenu = this.props.session === null ? (
-      <form onSubmit={this.handleSubmit}>
+      <div className={classes.navMenu}>
         <TextField
           required
+          id='email'
           label="Email"
           className={classes.textField}
           margin="normal"
           onChange={this.handleChange('email')}
           variant="outlined"
+          InputProps={{
+            classes: {
+              input: classes.textfieldResize
+            },
+          }}
           />
         <TextField
           required
@@ -177,12 +190,17 @@ class HomeNav extends React.Component {
           margin="normal"
           onChange={this.handleChange('password')}
           variant="outlined"
+          InputProps={{
+            classes: {
+              input: classes.textfieldResize
+            },
+          }}
         />
         <Button variant="contained" color="secondary"
           className={classes.button} onClick={this.handleSubmit}>
           Login
         </Button>
-      </form>
+      </div>
     ) : (
       <div className='nav-menu-container'>
         <NavLink to='/findandconnect' className='button-react-link'>
@@ -196,7 +214,7 @@ class HomeNav extends React.Component {
             aria-owns={open ? 'menu-appbar' : undefined}
             aria-haspopup="true"
             onClick={this.handleMenu}
-            color="inherit"
+            color="secondary"
           >
             <AccountCircle />
           </IconButton>
@@ -226,11 +244,10 @@ class HomeNav extends React.Component {
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <AppBar position="static" className={classes.nav}>
-          <Toolbar>
+          <Toolbar className={classes.toolbar}>
             <Link to='/' className={classes.logoLink}>
               <img alt='logo' className={classes.logo}src={logo} />
             </Link>
-            <div className={classes.grow} />
             {navMenu}
           </Toolbar>
         </AppBar>
