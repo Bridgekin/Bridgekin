@@ -98,7 +98,8 @@ const styles = theme => ({
     marginBottom: 25
   },
   subContentSection :{
-    minWidth: 175
+    minWidth: 175,
+    marginRight: 10
   },
   errorHeader:{
     marginBottom: 30
