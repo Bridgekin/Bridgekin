@@ -106,7 +106,7 @@ class AccountHome extends React.Component {
               </Typography>
               <Typography variant="body2" gutterBottom align='left'
                 color="default">
-                {this.capitalize(currentUser.title)}
+                {currentUser.title ? this.capitalize(currentUser.title) : ''}
               </Typography>
 
               <Typography variant="h6" gutterBottom align='left'
@@ -115,7 +115,7 @@ class AccountHome extends React.Component {
               </Typography>
               <Typography variant="body2" gutterBottom align='left'
                 color="default">
-                {this.capitalize(currentUser.company)}
+                {currentUser.company ? this.capitalize(currentUser.company) : ''}
               </Typography>
 
               <Typography variant="h6" gutterBottom align='left'
