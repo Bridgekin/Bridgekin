@@ -179,7 +179,7 @@ class HomePage extends React.Component{
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.homeGrid}
           justify="flex-start" alignItems="center">
-          <Grid item xs={11} sm={9} md={6} container justify="flex-start" alignItems="center"
+          <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >
               <Typography className={classes.homeHeader}
