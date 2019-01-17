@@ -17,8 +17,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircleSharp';
-import WarningSharpIcon from '@material-ui/icons/WarningSharp';
+import CachedSharpIcon from '@material-ui/icons/CachedSharp';
 import BlockSharpIcon from '@material-ui/icons/BlockSharp';
+import LinesEllipsis from 'react-lines-ellipsis';
 
 import CardModal from './card_modal';
 
@@ -41,11 +42,11 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    minHeight: 440,
+    // minHeight: 450,
     width: '100%'
   },
   content:{
-    padding: "10px 30px 0px 30px"
+    padding: "10px 20px 0px 20px"
   },
   cardHeaderWrapper:{
     marginBottom: 10,
@@ -62,7 +63,7 @@ const styles = theme => ({
     fontWeight: 700
   },
   cardSubContent:{
-    height: 55,
+    height: 58,
     lineHeight: 1,
     overflowY: 'hidden'
   },
@@ -75,14 +76,14 @@ const styles = theme => ({
   },
   title: {
     // fontSize: '1.5rem',
-    maxHeight: 80,
+    maxHeight: 50,
     overflowY: 'hidden',
     margin: "10px 0px"
     // textOverflow: 'ellipse'
   },
   description: {
     // fontSize: '0.9rem',
-    maxHeight: 74,
+    maxHeight: 57,
     overflowY: 'hidden',
     display: '-webkit-box',
     // lineHeight: 0.5,
@@ -168,10 +169,8 @@ class OpportunityCard extends React.Component {
     const { classes } = this.props;
 
     switch(status) {
-      case 'Approved':
-        return <CheckCircleIcon className={classes.icon} />;
       case 'Pending':
-        return <WarningSharpIcon className={classes.icon} />;
+        return <CachedSharpIcon className={classes.icon} />;
       case 'Rejected':
         return <BlockSharpIcon className={classes.icon} />;
       default:
@@ -258,10 +257,11 @@ class OpportunityCard extends React.Component {
       return (
       <div>
         <Badge
-          badgeContent={cardIcon}
+          badgeContent={editable && cardIcon}
           style={{ width: '100%'}}
           >
-          <Card className={classes.card}>
+          <Card className={classes.card}
+            style={editable ? {minHeight: 450} : {minHeight: 390}}>
             <CardActionArea onClick={this.handleCardOpen}>
               <CardMedia
                 className={classes.cover}
@@ -272,14 +272,26 @@ class OpportunityCard extends React.Component {
                 <div className={classes.cardHeaderWrapper}>
                   <Typography variant="h5" align='left'
                     color="default" className={classes.title} >
-                    {title}
+                    <LinesEllipsis
+                      text={title}
+                      maxLine='2'
+                      ellipsis='...'
+                      trimRight
+                      basedOn='letters'
+                    />
                   </Typography>
                 </div>
                 <div className={classes.cardDescriptionWrapper}>
                   <Typography variant="body2" align='left'
                     color="default" className={classes.description}
                     >
-                    {description}
+                    <LinesEllipsis
+                      text={description}
+                      maxLine='3'
+                      ellipsis='...'
+                      trimRight
+                      basedOn='letters'
+                    />
                   </Typography>
                 </div>
 
@@ -291,7 +303,13 @@ class OpportunityCard extends React.Component {
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom align='left'
                       color="default" className={classes.cardSubContent}>
-                      {geography.join(", ")}
+                      <LinesEllipsis
+                        text={geography.join(", ")}
+                        maxLine='3'
+                        ellipsis='...'
+                        trimRight
+                        basedOn='letters'
+                      />
                     </Typography>
                   </div>
 
@@ -304,7 +322,13 @@ class OpportunityCard extends React.Component {
                     <Typography variant="subtitle1" gutterBottom align='left'
                       color="default" className={classes.cardSubContent}
                       >
-                      {industries.join(", ")}
+                      <LinesEllipsis
+                        text={industries.join(", ")}
+                        maxLine='3'
+                        ellipsis='...'
+                        trimRight
+                        basedOn='letters'
+                      />
                     </Typography>
                   </div>
 

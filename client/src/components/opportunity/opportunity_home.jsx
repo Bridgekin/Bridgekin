@@ -12,12 +12,9 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import AddIcon from '@material-ui/icons/AddSharp';
 
 //Import CSS and theme
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -39,7 +36,7 @@ import { createReferral } from '../../actions/referral_actions';
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
-  opportunities: Object.values(state.entities.opportunities),
+  opportunities: Object.values(state.entities.opportunities).reverse(),
   networks: state.entities.networks,
   referral: state.entities.referral
 });
@@ -137,7 +134,14 @@ const styles = {
     borderBottom: "1px solid #D3D3D3",
   },
   dropdownHeader: { fontWeight: 600, fontSize: '0.85rem' },
-  dropdownSubHeader: { fontWeight: 200, fontSize: '0.6rem' }
+  dropdownSubHeader: { fontWeight: 200, fontSize: '0.6rem' },
+  addOportunityCard:{
+    height: 390,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 };
 
 
@@ -222,7 +226,8 @@ class OpportunityHome extends React.Component {
 
     let user = {
       email: this.state.email,
-      fname: this.state.fname
+      fname: this.state.fname,
+      fromReferralId: this.props.currentUser.id
     }
 
     if (!this.state.loading) {
@@ -370,12 +375,12 @@ class OpportunityHome extends React.Component {
           style={{ display: 'flex'}}
         >
           <Typography variant="subtitle1" align='left'
-            color="textPrimary" style={{ fontSize: 10}}>
+            color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
             {"View By:"}
           </Typography>
           <Typography variant="subtitle1" align='left'
             color="textPrimary"
-            style={{ fontWeight: 600, marginLeft: 10, fontSize: 10}}>
+            style={{ fontWeight: 600, marginLeft: 10, fontSize: 12}}>
             {dropdownFocus === "" ? "All Opportunties" : networks[dropdownFocus].title}
           </Typography>
         </Button>
@@ -450,7 +455,7 @@ class OpportunityHome extends React.Component {
     )
 
     let opportunityCards = opportunities.map(opportunity => (
-      <Grid item xs={10} md={6} lg={5} justify="center" alignItems="center"
+      <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
           classes={classes} />
@@ -459,16 +464,30 @@ class OpportunityHome extends React.Component {
 
     let opportunityGrid = (
       <Grid container className={classes.root} style={{padding: "30px 0px"}}
-        justify="center" alignItems="center" spacing={24}>
+        justify="center" alignItems="center">
 
-        <Grid item xs={10} sm={8}  justify="flex-end"
+        <Grid item xs={11}  justify="flex-end"
           alignItems="center" style={{paddingTop: 0, paddingBottom: 0}}>
           {dropdown}
         </Grid>
 
-        <Grid item xs={10} sm={10} className={classes.gridOpp}
-          container justify="center" alignItems="center" spacing={24}>
+        <Grid item xs={11} className={classes.gridOpp}
+          container justify="flex-start" alignItems="center" spacing={24}>
           {opportunityCards}
+
+          <Grid item xs={12} sm={6} md={4} justify="center"
+            alignItems="center" >
+            <Card>
+              <CardActionArea className={classes.addOportunityCard}
+                onClick={() => this.props.history.push('/postopportunity')}>
+                <AddIcon style={{ fontSize: 150 }}/>
+                <Typography variant="h3" gutterBottom align='center'>
+                  Add Opportunity
+                </Typography>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
         </Grid>
       </Grid>
     )

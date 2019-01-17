@@ -123,13 +123,13 @@ class DescriptionField extends React.Component {
             <TextField
               id="outlined-multiline-flexible"
               multiline
-              rowsMax="4"
               fullWidth
               value={this.props.title}
               onChange={this.handleChange('title')}
               className={classes.textField}
               margin="normal"
               variant="outlined"
+              inputProps={{maxLength: 100}}
             />
           </div>
 

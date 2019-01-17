@@ -123,7 +123,7 @@ class SubmitModal extends React.Component {
           You've Updated Your Post!
         </Typography>
         <Typography variant="body1" id="simple-modal-description">
-          You've successfully update your opportunity. Head to your account
+          You've successfully updated your opportunity. Head to your account
           to see your opportunity.
         </Typography>
 

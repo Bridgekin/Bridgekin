@@ -30,11 +30,11 @@ const styles = theme => ({
     marginTop: 50
   },
   cover: {
-    width: 190,
+    width: '100%',
     height: 217
   },
   addProfilePicIcon:{
-    width: 190,
+    width: '100%',
     height: 217,
     backgroundColor: theme.palette.lightGrey,
     color: theme.palette.grey1
@@ -42,7 +42,8 @@ const styles = theme => ({
   card: {
     display: 'flex',
     alignItems: 'center',
-    padding: 40
+    paddingTop: 20,
+    paddingBottom: 20
   },
   cardSection:{
     marginTop: 10
@@ -82,55 +83,62 @@ class AccountHome extends React.Component {
 
     return (
       <Grid container justify="center" alignItems="center"
-        spacing={24} className={classes.root}>
-        <Grid item xs={10} sm={6}>
+        className={classes.root}>
+        <Grid item xs={11} sm={9} md={8} lg={6}>
           <Card className={classes.card}>
-            {profilePic}
-            <CardContent className={classes.content}>
-              <div className={classes.wrapper}>
-                <Typography variant="h1" gutterBottom color="secondary"
-                  align='left'>
-                  {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
-                </Typography>
-                <div style={{ marginLeft: 10 }}
-                  onClick={() => this.props.history.push('/account/settings')}>
-                  <IconButton className={classes.button} aria-label="Edit">
-                    <EditIcon />
-                  </IconButton>
+            <Grid container justify="center" alignItems="center"
+              spacing={16}>
+
+              <Grid item xs={8} md={3}>
+                {profilePic}
+              </Grid>
+
+              <Grid item xs={8} md={6} className={classes.content}>
+                <div className={classes.wrapper}>
+                  <Typography variant="h1" gutterBottom color="secondary"
+                    align='left'>
+                    {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
+                  </Typography>
+                  <div style={{ marginLeft: 10 }}
+                    onClick={() => this.props.history.push('/account/settings')}>
+                    <IconButton className={classes.button} aria-label="Edit">
+                      <EditIcon />
+                    </IconButton>
+                  </div>
                 </div>
-              </div>
 
-              <Typography variant="h6" gutterBottom align='left'
-                color="secondary" className={classes.cardSection}>
-                Title
-              </Typography>
-              <Typography variant="body2" gutterBottom align='left'
-                color="default">
-                {currentUser.title ? this.capitalize(currentUser.title) : ''}
-              </Typography>
+                <Typography variant="h6" gutterBottom align='left'
+                  color="secondary" className={classes.cardSection}>
+                  Title
+                </Typography>
+                <Typography variant="body2" gutterBottom align='left'
+                  color="default">
+                  {currentUser.title ? this.capitalize(currentUser.title) : ''}
+                </Typography>
 
-              <Typography variant="h6" gutterBottom align='left'
-                color="secondary" className={classes.cardSection}>
-                Company
-              </Typography>
-              <Typography variant="body2" gutterBottom align='left'
-                color="default">
-                {currentUser.company ? this.capitalize(currentUser.company) : ''}
-              </Typography>
+                <Typography variant="h6" gutterBottom align='left'
+                  color="secondary" className={classes.cardSection}>
+                  Company
+                </Typography>
+                <Typography variant="body2" gutterBottom align='left'
+                  color="default">
+                  {currentUser.company ? this.capitalize(currentUser.company) : ''}
+                </Typography>
 
-              <Typography variant="h6" gutterBottom align='left'
-                color="secondary" className={classes.cardSection}>
-                Location
-              </Typography>
-              <Typography variant="body2" gutterBottom align='left'
-                color="default">
-                {currentUser.city ?
-                  `${currentUser.city}, ${currentUser.country}` :
-                  "Unknown"
-                }
-              </Typography>
+                <Typography variant="h6" gutterBottom align='left'
+                  color="secondary" className={classes.cardSection}>
+                  Location
+                </Typography>
+                <Typography variant="body2" gutterBottom align='left'
+                  color="default">
+                  {currentUser.city ?
+                    `${currentUser.city}, ${currentUser.country}` :
+                    "Unknown"
+                  }
+                </Typography>
+              </Grid>
+            </Grid>
 
-            </CardContent>
           </Card>
         </Grid>
       </Grid>

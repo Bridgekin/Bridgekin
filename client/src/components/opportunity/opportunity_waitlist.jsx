@@ -48,16 +48,17 @@ class OpportunityWaitlist extends React.Component{
         justify="center" alignItems="center">
 
         <Grid item container xs={10} md={8}  justify="flex-start" alignItems="center">
-          <Typography variant="h5" gutterBottom align='left'
-            color="secondary" className={classes.headerTypography}>
+          <Typography variant="h2" gutterBottom align='left'
+            color="secondary" className={classes.headerTypography}
+            style={{ lineHeight: 1.5}}>
             {`Refer a trusted contact that would appreciate joining
               our community and we'll add them to our waitlist.`}
           </Typography>
         </Grid>
 
-        <Grid item container xs={10} md={8} justify="center" alignItems="center"
-          spacing={16}>
-          <Grid item xs={3} >
+        <Grid item container xs={11} md={8} justify="center" alignItems="center"
+          spacing={8}>
+          <Grid item xs={12} md={3} >
             <TextField
             required
             id="outlined-required"
@@ -70,7 +71,7 @@ class OpportunityWaitlist extends React.Component{
             />
           </Grid>
 
-          <Grid item xs={5} justify="flex-end" alignItems="center">
+          <Grid item xs={12} md={5} justify="flex-end" alignItems="center">
             <TextField
             required
             id="outlined-required"
@@ -83,7 +84,7 @@ class OpportunityWaitlist extends React.Component{
             />
           </Grid>
 
-          <Grid item xs={4} className={classes.wrapper}>
+          <Grid item xs={12} md={4} className={classes.wrapper}>
             <Button variant="contained" color='secondary'
               className={classes.refButton}
               onClick={this.props.handleSubmit}

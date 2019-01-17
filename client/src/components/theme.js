@@ -49,20 +49,29 @@ let theme = createMuiTheme({
     },
     MuiTypography:{
       h1:{
-        fontSize: 45,
+        fontSize: 40,
         fontWeight: 600
       },
       h2: { // Used by modals for errors/confirmation
         // fontSize: 24,
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: 600
       },
+      h3:{ // Post Opportunity Card Headers (Needs)
+        fontSize: 34,
+        fontWeight: 600
+      },
+      h4:{ //nav tabs
+        fontSize: 13,
+        fontWeight: 300,
+        lineHeight: 1.2
+      },
       h5: { // Opportunity Header
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 600
       },
       h6: { // Opportunity Categories
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 600,
         color: "#999999"
       },
@@ -81,7 +90,8 @@ let theme = createMuiTheme({
     },
     MuiStepLabel: {
       label: {
-          color: '#000000',
+        color: '#000000',
+        fontSize: 14
       },
     },
     MuiCheckbox:{

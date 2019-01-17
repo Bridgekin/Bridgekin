@@ -18,7 +18,7 @@ import { fetchNetworks } from '../../actions/network_actions';
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   opportunityErrors: state.errors.opportunities,
-  opportunities: Object.values(state.entities.opportunities),
+  opportunities: Object.values(state.entities.opportunities).reverse(),
   networks: Object.values(state.entities.networks)
 });
 
@@ -34,7 +34,7 @@ const styles = theme => ({
     marginTop: 35
   },
   addOportunityCard:{
-    height: 440,
+    height: 390,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -71,7 +71,7 @@ class AccountPosted extends React.Component {
     const { classes, opportunities }= this.props;
     if (this.state.loaded){
       let opportunityCards = opportunities.map(opportunity => (
-        <Grid item xs={10} md={6} lg={5} justify="center" alignItems="center"
+        <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
           className={classes.gridItem}>
           <OpportunityCard opportunity={opportunity}
             classes={classes}
@@ -82,18 +82,18 @@ class AccountPosted extends React.Component {
 
       let opportunityGrid = (
         <Grid container justify="center" alignItems="center" spacing={24}>
-          <Grid item xs={10} sm={10} className={classes.gridOpp} >
+          <Grid item xs={11} className={classes.gridOpp} >
             <Grid container className={classes.root}
-              justify="center" alignItems="center" spacing={24}>
+              justify="flex-start" alignItems="center" spacing={16}>
               {opportunityCards}
 
-              <Grid item xs={10} md={6} lg={5} justify="center"
-                alignItems="center" className={classes.gridItem}>
+              <Grid item xs={12} sm={6} md={4} justify="center"
+                alignItems="center" >
                 <Card>
                   <CardActionArea className={classes.addOportunityCard}
                     onClick={() => this.props.history.push('/postopportunity')}>
                     <AddIcon style={{ fontSize: 150 }}/>
-                    <Typography variant="h1" gutterBottom align='center'>
+                    <Typography variant="h3" gutterBottom align='center'>
                       Add Opportunity
                     </Typography>
                   </CardActionArea>

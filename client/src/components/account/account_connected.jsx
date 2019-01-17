@@ -12,8 +12,8 @@ import { fetchConnectedOpportunities } from '../../actions/connected_opportunity
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   // opportunityErrors: state.errors.opportunities,
-  connectedOpportunities: Object.values(state.entities.connectedOpportunities),
-  facilitatedOpportunities: Object.values(state.entities.facilitatedOpportunities),
+  connectedOpportunities: Object.values(state.entities.connectedOpportunities).reverse(),
+  facilitatedOpportunities: Object.values(state.entities.facilitatedOpportunities).reverse(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -49,7 +49,7 @@ class AccountConnected extends React.Component {
     const { classes, connectedOpportunities, facilitatedOpportunities }= this.props;
 
     let connectedOpportunityCards = connectedOpportunities.map(opportunity => (
-      <Grid item xs={10} md={6} lg={5}  justify="center" alignItems="center"
+      <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
           classes={classes}
@@ -58,7 +58,7 @@ class AccountConnected extends React.Component {
     ));
 
     let facilitatedOpportunityCards = facilitatedOpportunities.map(opportunity => (
-      <Grid item xs={10} md={6} lg={5}  justify="center" alignItems="center"
+      <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
         className={classes.gridItem}>
         <OpportunityCard opportunity={opportunity}
           classes={classes}
@@ -68,24 +68,25 @@ class AccountConnected extends React.Component {
 
     let opportunityGrid = (
       <Grid container justify="center" alignItems="center" spacing={24}>
-        <Grid item xs={10} className={classes.gridOpp} >
-          <Typography variant="h4" gutterBottom align='left'
+
+        <Grid item xs={11} className={classes.gridOpp} >
+          <Typography variant="h2" gutterBottom align='left'
             color="secondary">
             Connected Opportunities
           </Typography>
           <Grid container className={classes.root}
-            justify="center" alignItems="center" spacing={24}>
+            justify="flex-start" alignItems="center" spacing={24}>
             {connectedOpportunityCards}
           </Grid>
         </Grid>
 
-        <Grid item xs={10} className={classes.gridOpp} >
-          <Typography variant="h4" gutterBottom align='left'
+        <Grid item xs={11} style={{ marginTop: 40 }}>
+          <Typography variant="h2" gutterBottom align='left'
             color="secondary">
             Referred Opportunities
           </Typography>
           <Grid container className={classes.root}
-            justify="center" alignItems="center" spacing={24}>
+            justify="flex-start" alignItems="center" spacing={24}>
             {facilitatedOpportunityCards}
           </Grid>
         </Grid>

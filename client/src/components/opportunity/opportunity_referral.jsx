@@ -81,16 +81,18 @@ class OpportunityReferral extends React.Component{
       <Grid container className={classes.root}
         justify="center" alignItems="center" >
 
-        <Grid item xs={10} md={8} >
-          <Typography variant="h5" gutterBottom align='left'
-            color="secondary" className={classes.headerTypography}>
+        <Grid item xs={11} sm={10} md={6} >
+          <Typography variant="h2" gutterBottom align='left'
+            color="secondary" className={classes.headerTypography}
+            style={{ lineHeight: 1.5}}>
             {`Create a referral link for your network. When the click this link, they'll be invited to join Bridgekin.`}
           </Typography>
         </Grid>
 
-        <Grid item xs={10} md={8} container justify="center" alignItems="center" spacing={24}>
+        <Grid item xs={11} sm={10} md={8}container justify="center"
+          alignItems="center" spacing={8}>
 
-          <Grid item xs={6} justify="center" alignItems="center">
+          <Grid item xs={12} md={6} justify="center" alignItems="center">
             <Typography variant="h6" align='center'
               color="secondary" className={classes.headerTypography}>
               Choose network to refer
@@ -109,7 +111,7 @@ class OpportunityReferral extends React.Component{
             </FormControl>
           </Grid>
 
-          <Grid item xs={3} container justify="center" alignItems="center">
+          <Grid item xs={12} md={3}  container justify="center" alignItems="center">
             <Button variant="contained" color='secondary'
               className={classes.refButton}
               onClick={this.handleSubmit}>
@@ -118,9 +120,9 @@ class OpportunityReferral extends React.Component{
           </Grid>
         </Grid>
 
-        <Grid item xs={10} md={8} container justify="center" alignItems="center"
-          spacing={16} style={{ marginTop: 20}}>
-          <Grid item xs={6}>
+        <Grid item xs={11} sm={10} md={8} container justify="center" alignItems="center"
+          spacing={8} style={{ marginTop: 20}}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="outlined-read-only-input"
               placeholder='Link displays here'
@@ -135,7 +137,7 @@ class OpportunityReferral extends React.Component{
               />
           </Grid>
 
-          <Grid item xs={3} container justify="center" alignItems="center">
+          <Grid item xs={12} md={3} container justify="center" alignItems="center">
             <Button variant="contained"
               onClick={this.handleCopy(referralLink)}
               style={{ backgroundColor: "#616161", color: '#FFF'}}>

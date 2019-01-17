@@ -48,11 +48,11 @@ const styles = theme => ({
     marginTop: 100
   },
   pic: {
-    width: 190,
+    width: '100%',
     height: 217,
   },
   addProfilePicIcon:{
-    width: 190,
+    width: '100%',
     height: 217,
     backgroundColor: theme.palette.lightGrey,
     color: theme.palette.grey1
@@ -60,14 +60,16 @@ const styles = theme => ({
   card: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: "5px 30px 30px 30px"
+    alignItems: 'flex-start',
+    padding: 30
   },
   cardSection:{
     marginTop: 10
   },
   content:{
-    margin: 20,
+    margin: "0px 20px",
+    paddingTop: 0,
+    paddingBottom: 0
   },
   passwordContent:{
     margin: '0 auto',
@@ -104,6 +106,10 @@ const styles = theme => ({
   },
   iconWrapper:{
     backgroundColor: theme.palette.grey1
+  },
+  countryWrapper:{
+    display: 'flex',
+    flexDirection: 'column'
   }
 });
 
@@ -240,105 +246,119 @@ class AccountSetting extends React.Component {
       case "Home":
         return (
           <Card className={classes.card}>
-            {profilePic}
-            <CardContent className={classes.content}>
-              <div className={classes.wrapper}>
-                <Typography variant="h1" align='left'>
-                  {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
+            <Grid container justify="center" alignItems="center"
+              spacing={16}>
+
+              <Grid item xs={8} md={3}>
+                {profilePic}
+              </Grid>
+
+              <Grid item xs={8} md={6} className={classes.content}>
+                <div className={classes.wrapper}>
+                  <Typography variant="h1" align='left'>
+                    {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
+                  </Typography>
+                </div>
+
+                <Typography variant="h6" align='left' color='textPrimary'>
+                  Contact Information
                 </Typography>
-              </div>
-
-              <Typography variant="h6" align='left' color='textPrimary'>
-                Contact Information
-              </Typography>
-              <Typography variant="body1" gutterBottom align='left'
-                color="default" style={{ marginBottom: 15}}>
-                {currentUser.email}
-              </Typography>
-
-              <Button color="secondary" className={classes.button}
-                onClick={this.handleChangeFill('General Information')}>
-                <Typography variant="subtitle1" align='left' color='textPrimary'>
-                  Change your profile information
+                <Typography variant="body1" gutterBottom align='left'
+                  color="default" style={{ marginBottom: 15}}>
+                  {currentUser.email}
                 </Typography>
-              </Button>
 
-              <Button color="secondary" className={classes.button}
-                onClick={this.handleChangeFill('Reset Password')}>
-                <Typography variant="subtitle1" align='left' color='textPrimary'>
-                  Change your password
+                <Button color="secondary" className={classes.button}
+                  onClick={this.handleChangeFill('General Information')}>
+                  <Typography variant="subtitle1" align='left' color='textPrimary'>
+                    Change your profile information
+                  </Typography>
+                </Button>
+
+                <Button color="secondary" className={classes.button}
+                  onClick={this.handleChangeFill('Reset Password')}>
+                  <Typography variant="subtitle1" align='left' color='textPrimary'>
+                    Change your password
+                  </Typography>
+                </Button>
+
+                <Typography variant="subtitle1" align='left'
+                  color="secondary" style={{ marginTop: 15}}>
+                  {`How often would you like to be notified about
+                    opportunities by email?`}
                 </Typography>
-              </Button>
 
-              <Typography variant="subtitle1" align='left'
-                color="secondary" style={{ marginTop: 15}}>
-                {`How often would you like to be notified about
-                  opportunities by email?`}
-              </Typography>
-
-              <FormControl component="fieldset" className={classes.formControl}>
-                <RadioGroup
-                  aria-label="Notifications"
-                  name="notifications"
-                  className={classes.group}
-                  value={this.state.notificationSetting}
-                  onChange={this.handleNotificationChange}
-                >
-                  <FormControlLabel value="Weekly" control={<Radio />} label="Weekly Email Recap" />
-                  <FormControlLabel value="Never" control={<Radio />} label="Never - I am immune to FOMO" />
-                </RadioGroup>
-              </FormControl>
-
-            </CardContent>
+                <FormControl component="fieldset" className={classes.formControl}>
+                  <RadioGroup
+                    aria-label="Notifications"
+                    name="notifications"
+                    className={classes.group}
+                    value={this.state.notificationSetting}
+                    onChange={this.handleNotificationChange}
+                  >
+                    <FormControlLabel value="Weekly" control={<Radio />} label="Weekly Email Recap" />
+                    <FormControlLabel value="Never" control={<Radio />} label="Never - I am immune to FOMO" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+            </Grid>
           </Card>
         );
       case "Reset Password":
         return(
           <Card className={classes.card}>
-            <CardContent className={classes.passwordContent}>
-              <Typography variant="h5" align='left'
-                color="secondary" gutterBottom>
-                Reset Password Below
-              </Typography>
-              <TextField
-                id="standard-password-input"
-                label="Current Password"
-                className={classes.textField}
-                type="password"
-                autoComplete="current-password"
-                margin="normal"
-                onChange={this.handleInfoChange('currentPassword')}
-              />
-              <TextField
-                id="standard-password-input"
-                label="New Password"
-                className={classes.textField}
-                type="password"
-                autoComplete="current-password"
-                margin="normal"
-                onChange={this.handleInfoChange('password')}
-              />
-              <TextField
-                id="standard-password-input"
-                label="Password Confirmation"
-                className={classes.textField}
-                type="password"
-                autoComplete="current-password"
-                margin="normal"
-                onChange={this.handleInfoChange('passwordConfirmation')}
-              />
-              <div className={classes.buttonWrapper}>
-                <Button className={classes.submitButton}
-                  onClick={this.handleChangeFill('Home')} variant='contained'>
-                  Back
-                </Button>
+            <Grid container justify="center" alignItems="center"
+              spacing={16}>
 
-                <Button color="secondary" className={classes.submitButton}
-                  onClick={this.changePassword} variant='contained'>
-                  Change Password
-                </Button>
-              </div>
-            </CardContent>
+              <Grid item xs={8} sm={6} container
+                justify="center" alignItems="center">
+                <Typography variant="h5" align='left'
+                  color="secondary" gutterBottom>
+                  Reset Password Below
+                </Typography>
+                <TextField
+                  id="standard-password-input"
+                  label="Current Password"
+                  className={classes.textField}
+                  type="password"
+                  autoComplete="current-password"
+                  margin="normal"
+                  fullWidth
+                  onChange={this.handleInfoChange('currentPassword')}
+                  />
+                <TextField
+                  id="standard-password-input"
+                  label="New Password"
+                  className={classes.textField}
+                  type="password"
+                  autoComplete="current-password"
+                  margin="normal"
+                  fullWidth
+                  onChange={this.handleInfoChange('password')}
+                  />
+                <TextField
+                  id="standard-password-input"
+                  label="Password Confirmation"
+                  className={classes.textField}
+                  type="password"
+                  autoComplete="current-password"
+                  margin="normal"
+                  fullWidth
+                  onChange={this.handleInfoChange('passwordConfirmation')}
+                  />
+                <div className={classes.buttonWrapper}>
+                  <Button className={classes.submitButton}
+                    onClick={this.handleChangeFill('Home')} variant='contained'>
+                    Back
+                  </Button>
+
+                  <Button color="secondary" className={classes.submitButton}
+                    onClick={this.changePassword} variant='contained'>
+                    Change Password
+                  </Button>
+                </div>
+              </Grid>
+            </Grid>
 
             <UpdateUserModal
               open={modalOpen}
@@ -352,95 +372,120 @@ class AccountSetting extends React.Component {
         ));
         return(
           <Card className={classes.card}>
-            <CardContent className={classes.passwordContent}>
-              <Typography variant="h5" align='left'
-                color="secondary" gutterBottom>
-                Change your profile information
-              </Typography>
-              <Typography variant="h6" align='left'
-                color="secondary" className={classes.fieldLabel}>
-                Name
-              </Typography>
-              <div className={classes.textFieldWrapper}>
-                <TextField
-                  id="standard-name"
-                  label="First Name"
-                  className={classes.textField}
-                  margin="normal"
-                  value={this.state.fname}
-                  onChange={this.handleInfoChange('fname')}
-                  />
-                <TextField
-                  id="standard-name"
-                  label="Last Name"
-                  className={classes.textField}
-                  margin="normal"
-                  value={this.state.lname}
-                  onChange={this.handleInfoChange('lname')}
-                  />
-              </div>
+            <Grid container justify="center" alignItems="center"
+              spacing={16}>
 
-              <Typography variant="h6" align='left'
-                color="secondary" className={classes.fieldLabel}>
-                Position
-              </Typography>
-              <TextField
-                id="standard-name"
-                label="Title"
-                className={classes.textField}
-                margin="normal"
-                value={this.state.title}
-                onChange={this.handleInfoChange('title')}
-              />
-              <TextField
-                id="standard-name"
-                label="Company"
-                className={classes.textField}
-                margin="normal"
-                value={this.state.company}
-                onChange={this.handleInfoChange('company')}
-              />
+              <Grid item xs={10} sm={8}>
+                <Typography variant="h5" align='left'
+                  color="secondary" gutterBottom
+                  style={{marginBottom: 20}}>
+                  Change your profile information
+                </Typography>
+                <Typography variant="h6" align='left'
+                  color="secondary" className={classes.fieldLabel}>
+                  Name
+                </Typography>
+                <Grid container justify="center" alignItems="center"
+                  spacing={16}>
+                  <Grid item xs={10} sm={6}>
+                    <TextField
+                      id="standard-name"
+                      label="First Name"
+                      className={classes.textField}
+                      margin="normal"
+                      value={this.state.fname}
+                      onChange={this.handleInfoChange('fname')}
+                      />
+                  </Grid>
 
-              <Typography variant="h6" align='left'
-                color="secondary" className={classes.fieldLabel}>
-                Location
-              </Typography>
-              <TextField
-                id="standard-name"
-                label="City"
-                className={classes.textField}
-                margin="normal"
-                value={this.state.city}
-                onChange={this.handleInfoChange('city')}
-              />
-              <InputLabel htmlFor="country-simple"
-                className={classes.selectLabel}>Country</InputLabel>
-              <Select
-                value={this.state.country}
-                onChange={this.handleInfoChange('country')}
-                inputProps={{
-                  name: 'country',
-                  id: 'country-simple',
-                }}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {countryOptions}
-              </Select>
+                  <Grid item xs={10} sm={6}>
+                    <TextField
+                      id="standard-name"
+                      label="Last Name"
+                      className={classes.textField}
+                      margin="normal"
+                      value={this.state.lname}
+                      onChange={this.handleInfoChange('lname')}
+                      />
+                  </Grid>
+                </Grid>
 
-              <div className={classes.buttonWrapper}>
-                <Button className={classes.submitButton}
-                  onClick={this.handleChangeFill('Home')} variant='contained'>
-                  Back
-                </Button>
+                <Typography variant="h6" align='left'
+                  color="secondary" className={classes.fieldLabel}>
+                  Position
+                </Typography>
+                <Grid container justify="center" alignItems="center"
+                  spacing={16}>
+                  <Grid item xs={10} sm={6}>
+                    <TextField
+                      id="standard-name"
+                      label="Title"
+                      className={classes.textField}
+                      margin="normal"
+                      value={this.state.title}
+                      onChange={this.handleInfoChange('title')}
+                    />
+                  </Grid>
+                  <Grid item xs={10} sm={6}>
+                    <TextField
+                      id="standard-name"
+                      label="Company"
+                      className={classes.textField}
+                      margin="normal"
+                      value={this.state.company}
+                      onChange={this.handleInfoChange('company')}
+                    />
+                  </Grid>
+                </Grid>
 
-                <Button color="secondary" className={classes.submitButton}
-                  onClick={this.changeGeneralInformation} variant='contained'>
-                  Change Information
-                </Button>
-              </div>
-            </CardContent>
+                <Typography variant="h6" align='left'
+                  color="secondary" className={classes.fieldLabel}>
+                  Location
+                </Typography>
+                <Grid container justify="center" alignItems="center"
+                  spacing={16}>
+                  <Grid item xs={10} sm={6}>
+                    <TextField
+                      id="standard-name"
+                      label="City"
+                      className={classes.textField}
+                      margin="normal"
+                      value={this.state.city}
+                      onChange={this.handleInfoChange('city')}
+                    />
+                  </Grid>
+                  <Grid item xs={10} sm={6} className={classes.countryWrapper}>
+                    <InputLabel htmlFor="country-simple"
+                      className={classes.selectLabel}>Country</InputLabel>
+                    <Select
+                      value={this.state.country}
+                      onChange={this.handleInfoChange('country')}
+                      inputProps={{
+                        name: 'country',
+                        id: 'country-simple',
+                      }}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      {countryOptions}
+                    </Select>
+                  </Grid>
+                </Grid>
+
+                <div className={classes.buttonWrapper}>
+                  <Button className={classes.submitButton}
+                    onClick={this.handleChangeFill('Home')} variant='contained'>
+                    Back
+                  </Button>
+
+                  <Button color="secondary" className={classes.submitButton}
+                    onClick={this.changeGeneralInformation} variant='contained'>
+                    Change Information
+                  </Button>
+                </div>
+              </Grid>
+            </Grid>
 
             <UpdateUserModal
               open={modalOpen}
@@ -455,21 +500,12 @@ class AccountSetting extends React.Component {
 
   render(){
     const { classes }= this.props;
-    const { options }= this.state;
-
-    // <Typography variant="h7" align='left'
-    //   color="secondary" >
-    //   Current Password
-    // </Typography>
-    // <Typography variant="h6" gutterBottom align='left'
-    //   color="default">
-    //   {'*********'}
-    // </Typography>
+    // const { options }= this.state;
 
     return (
       <Grid container justify="center" alignItems="center"
-        spacing={24} className={classes.root}>
-        <Grid item xs={10} md={7} className={classes.homeContainer}>
+        className={classes.root}>
+        <Grid item xs={11} sm={9} md={8} lg={6} >
           {this.getContent()}
         </Grid>
       </Grid>

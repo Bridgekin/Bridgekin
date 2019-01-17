@@ -19,15 +19,17 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 100
-
+    // height: 100
   },
   button: {
     margin: "0px 7px",
     // fontSize: 16
   },
   buttonContainer:{
-    display: 'flex',
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+    },
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
@@ -79,7 +81,8 @@ class AccountNav extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='space-around' alignItems='center'>
-        <Grid item xs={10} sm={2} className={classes.accountNavSection}>
+        <Grid item xs={10} sm={2} className={classes.accountNavSection}
+          style={{ height: 100 }}>
           <Typography variant="h5" gutterBottom>
             <strong>My Account</strong>
           </Typography>

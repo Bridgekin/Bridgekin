@@ -71,7 +71,7 @@ const styles = theme => ({
   },
   cardSubContent:{
     // fontSize: '1rem',
-    fontWeight: 500
+    // fontWeight: 500
   },
   cardSubHeader:{
     // fontSize: '0.9rem',

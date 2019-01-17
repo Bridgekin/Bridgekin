@@ -79,8 +79,8 @@ const styles = {
     height: 25
   },
   toolbar:{
-    display: 'flex',
-    justifyContent: 'space-between'
+    // display: 'flex',
+    // justifyContent: 'space-between'
   },
   navMenu:{
     display: 'flex',
@@ -89,6 +89,19 @@ const styles = {
   textfieldResize:{
     padding: 14
   },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  // menuIcon:{ color: }
 };
 
 class HomeNav extends React.Component {
@@ -101,6 +114,8 @@ class HomeNav extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleProfileMenuOpen = this.handleProfileMenuOpen.bind(this);
+    this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
   }
 
   handleSubmit(e){
@@ -121,12 +136,21 @@ class HomeNav extends React.Component {
     }
   }
 
-  handleMenu = event => {
+  handleProfileMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  handleMenuClose = () => {
+  handleMobileMenuOpen = event => {
+    this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  };
+
+  handleProfileMenuClose = () => {
     this.setState({ anchorEl: null });
+    this.handleMobileMenuClose();
+  };
+
+  handleMobileMenuClose = () => {
+    this.setState({ mobileMoreAnchorEl: null });
   };
 
   handleNavButtonClick = (field) => {
@@ -152,8 +176,14 @@ class HomeNav extends React.Component {
           return this.props.logout()
             .then(() => this.props.history.push('/'),
             () => alert("There was a problem logging out. We're working on it!"));
+        // case 'findandconnect':
+        //   return this.props.history.push(`/${field}`);
+        // case 'postopportunity':
+        //   return this.props.history.push(`/${field}`);
+        // case 'mynetwork':
+        //   return this.props.history.push(`/${field}`);
         default:
-          return;
+          return this.props.history.push(`/${field}`);
       }
     }
   };
@@ -161,8 +191,84 @@ class HomeNav extends React.Component {
   render(){
     let { classes, currentUser } = this.props;
 
-    const { auth, anchorEl } = this.state;
-    const open = Boolean(anchorEl);
+    const { auth, anchorEl, mobileMoreAnchorEl } = this.state;
+    // const open = Boolean(anchorEl);
+
+    const isMenuOpen = Boolean(anchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    debugger
+
+    let renderMenu = (
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={isMenuOpen}
+        onClose={this.handleProfileMenuClose}
+      >
+        <MenuItem onClick={this.handleLinkClose('account')}>
+          My Account
+        </MenuItem>
+        {currentUser && currentUser.isAdmin &&
+          <MenuItem onClick={this.handleLinkClose('admin')}>
+            Admin
+          </MenuItem>
+        }
+        <MenuItem onClick={this.handleLinkClose('logout')}>
+          Logout
+        </MenuItem>
+      </Menu>
+    )
+
+    let renderMobileMenu = (
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMobileMenuOpen}
+        onClose={this.handleMobileMenuClose}
+      >
+        <MenuItem onClick={this.handleLinkClose('findandconnect')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Find & Connect
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={this.handleLinkClose('postopportunity')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Post Opportunity
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={this.handleLinkClose('mynetwork')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            My Trusted Network
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={this.handleLinkClose('account')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            My Account
+          </Typography>
+        </MenuItem>
+        {currentUser && currentUser.isAdmin &&
+          <MenuItem onClick={this.handleLinkClose('admin')}>
+            <Typography variant="body1" align='left' color="textPrimary" >
+              Admin
+            </Typography>
+          </MenuItem>
+        }
+        <MenuItem onClick={this.handleLinkClose('logout')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Logout
+          </Typography>
+        </MenuItem>
+      </Menu>
+    )
 
     let navMenu = this.props.session === null ? (
       <div className={classes.navMenu}>
@@ -203,41 +309,45 @@ class HomeNav extends React.Component {
       </div>
     ) : (
       <div className='nav-menu-container'>
-        <NavLink to='/findandconnect' className='button-react-link'>
-          <Button color='secondary'>Find & Connect</Button>
-        </NavLink>
-        <NavLink to='/postopportunity' className='button-react-link'>
-          <Button color='secondary'>Post Opportunity</Button>
-        </NavLink>
-        <div>
-          <IconButton
-            aria-owns={open ? 'menu-appbar' : undefined}
-            aria-haspopup="true"
-            onClick={this.handleMenu}
-            color="secondary"
-          >
-            <AccountCircle />
-          </IconButton>
 
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={open}
-            onClose={this.handleMenuClose}
-          >
-            <MenuItem onClick={this.handleLinkClose('account')}>My Account</MenuItem>
-            {currentUser.isAdmin && <MenuItem onClick={this.handleLinkClose('admin')}>Admin</MenuItem>}
-            <MenuItem onClick={this.handleLinkClose('logout')}>Logout</MenuItem>
-          </Menu>
+        <div className={classes.sectionDesktop}>
+          <Button color='secondary'
+            onClick={this.handleLinkClose('findandconnect')}>
+            <Typography variant="h4" align='left' color="textPrimary" >
+              Find & Connect
+            </Typography>
+          </Button>
+          <Button color='secondary'
+            onClick={this.handleLinkClose('postopportunity')}>
+            <Typography variant="h4" align='left' color="textPrimary" >
+              Post Opportunitity
+            </Typography>
+          </Button>
+          <Button color='secondary'
+            onClick={this.handleLinkClose('mynetwork')}>
+            <Typography variant="h4" align='left' color="textPrimary" >
+              My Trusted Network
+            </Typography>
+          </Button>
+          <div>
+            <IconButton
+              aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+              aria-haspopup="true"
+              onClick={this.handleProfileMenuOpen}
+              color="secondary"
+            >
+              <AccountCircle />
+            </IconButton>
+          </div>
         </div>
+
+        <div className={classes.sectionMobile}>
+          <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+            <MenuIcon className={classes.menuIcon} color='primary'/>
+          </IconButton>
+        </div>
+        {renderMenu}
+        {renderMobileMenu}
       </div>
     )
 
@@ -248,6 +358,7 @@ class HomeNav extends React.Component {
             <Link to='/' className={classes.logoLink}>
               <img alt='logo' className={classes.logo}src={logo} />
             </Link>
+            <div className={classes.grow} />
             {navMenu}
           </Toolbar>
         </AppBar>

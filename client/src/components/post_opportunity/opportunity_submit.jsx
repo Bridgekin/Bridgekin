@@ -76,7 +76,7 @@ class SubmitField extends React.Component {
         <Grid item xs={12} md={3}>
           <Typography variant="h6" gutterBottom align='left'
             color='secondary'>
-            Networks shared to:
+            {`Networks this opportunity will be shared with:`}
           </Typography>
           <ul>
             {networksTitles}
@@ -87,7 +87,7 @@ class SubmitField extends React.Component {
           <Typography variant="p" gutterBottom align='left'
             color='default' className={classes.disclaimerTypography}>
             This is the final version of your opportunitity. It will be reviewed
-            and go live within <strong>36 hours</strong>.
+            and go live within <strong>24 hours</strong>.
           </Typography>
           <Typography variant="p" gutterBottom align='left'
             color='default' className={classes.disclaimerTypography}>
@@ -96,7 +96,8 @@ class SubmitField extends React.Component {
           </Typography>
           <Typography variant="p" gutterBottom align='left'
             color='default' className={classes.disclaimerTypography}>
-            If you need to edit this opportunity, click the back button.
+            {`If you need to edit this opportunity, click the back button.
+              You can also edit once live on the “My Account” tab.`}
           </Typography>
         </Grid>
       </Grid>

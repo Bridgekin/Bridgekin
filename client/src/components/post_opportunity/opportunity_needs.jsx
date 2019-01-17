@@ -37,8 +37,8 @@ const styles = theme => ({
     filter: 'invert(100%)'
   },
   content:{
-    width: '55%',
-    padding: '17px 16px 17px 9px'
+    width: '80%',
+    padding: '17px 0px 17px 9px'
   },
   icon:{
     height: 'auto',
@@ -137,7 +137,7 @@ class NeedsField extends React.Component {
       ) : (classes.icon);
 
       return (
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={11} sm={6} lg={4}>
         <Card className={classes.cardWrapper}>
           <CardActionArea className={styling}
             onClick={this.handleClick(need)}>
@@ -151,7 +151,8 @@ class NeedsField extends React.Component {
                 />
             </CardMedia>
             <CardContent className={classes.content}>
-              <Typography variant="h1" align='left' color='inherit'>
+              <Typography variant="h3" align='left' color='inherit'
+                style={{ wordWrap: 'break-word' }}>
                 {need.toUpperCase()}
               </Typography>
               {subtitles[need]}
@@ -164,7 +165,7 @@ class NeedsField extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='flex-start' alignItems='center'>
-        <Typography variant="h4" gutterBottom align='left'
+        <Typography variant="h2" gutterBottom align='left'
           className={classes.needsHeader} color='secondary'>
           What are your business needs?
         </Typography>

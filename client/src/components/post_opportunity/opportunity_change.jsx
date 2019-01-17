@@ -16,6 +16,7 @@ import ValueField from './opportunity_value';
 import DescriptionField from './opportunity_description';
 import SubmitField from './opportunity_submit';
 import SubmitModal from './submit_modal';
+import MobileStepper from '@material-ui/core/MobileStepper';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -40,7 +41,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 60
+    height: 40
   },
   labelContainer: {
     "& $alternativeLabel": {
@@ -95,20 +96,27 @@ const styles = theme => ({
     fontSize: 20,
     fontWeight: 500,
     width: 120
+  },
+  stepperDesktop: {
+    background: 'none',
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+    padding: 15
+  },
+  stepperMobile: {
+    flexGrow: 1,
+    background: 'none',
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  stepperLabel:{
+    fontSize: 12
   }
-  });
-
-// const DEFAULTSTATE = {
-//   activeStep: 0,
-//   need: '',
-//   geography: [],
-//   industry: [],
-//   value: '',
-//   title: '',
-//   description: '',
-//   networks: [1],
-//   modalOpen: false
-// }
+});
 
 const DEFAULTSTATE = {
   activeStep: 0,
@@ -279,7 +287,7 @@ class OpportunityChange extends React.Component {
           style={{ backgroundColor: 'RGBA(196,196,196,0.1)'}}
           justify='space-around' alignItems='center'>
 
-          <Grid item xs={10} sm={2} className={classes.accountNavSection}>
+          <Grid item xs={6} md={2} className={classes.accountNavSection}>
             <Typography variant="h5" gutterBottom>
               <strong>
                 {type === 'create' ? 'Post Opportunity' : 'Edit Opportunity'}
@@ -287,10 +295,10 @@ class OpportunityChange extends React.Component {
             </Typography>
           </Grid>
 
-          <Grid item xs={10} sm={8}>
+          <Grid item xs={6} md={8}>
             <Stepper activeStep={activeStep} alternativeLabel
               classes={{ root: classes.stepperRoot }}
-              className={classes.stepper}>
+              className={classes.stepperDesktop}>
               {steps.map((label, index) => (
                 <Step key={label}
                   classes={{
@@ -307,13 +315,21 @@ class OpportunityChange extends React.Component {
                         disabled: classes.disabled
                       }
                     }}
-                    label={{ color: '#000000'}}>
+                    label={{ color: '#000000' }}
+                    classes={{ root: classes.stepperLabel }}
+                    >
                     {label}
                   </StepLabel>
                 </Step>
                 )
               )}
             </Stepper>
+            <MobileStepper
+              variant="dots"
+              steps={6}
+              position="static"
+              activeStep={this.state.activeStep}
+              className={classes.stepperMobile} />
           </Grid>
 
         </Grid>
@@ -321,7 +337,7 @@ class OpportunityChange extends React.Component {
         <Grid container className={classes.stepperRootMain}
           justify='center' alignItems='center'>
 
-          <Grid item xs={10} sm={8} className={classes.mainWrapper}>
+          <Grid item xs={10} md={8} className={classes.mainWrapper}>
             {this.getStepContent(activeStep)}
             {flowNav}
           </Grid>
