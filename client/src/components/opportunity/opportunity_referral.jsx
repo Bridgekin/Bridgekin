@@ -85,7 +85,7 @@ class OpportunityReferral extends React.Component{
           <Typography variant="h2" gutterBottom align='left'
             color="secondary" className={classes.headerTypography}
             style={{ lineHeight: 1.5}}>
-            {`Create a referral link for your network. When the click this link, they'll be invited to join Bridgekin.`}
+            {`Create a referral link for your network. When they click this link, they'll be invited to join Bridgekin.`}
           </Typography>
         </Grid>
 

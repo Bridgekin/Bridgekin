@@ -12,6 +12,7 @@ import OpportunityEdit from './components/post_opportunity/opportunity_edit';
 import SignupPage from './components/home/signup_page';
 import AccountConfirmed from './components/account/account_confirmed';
 // import ConnectionsHome from './components/connections/connections_home';
+import Login from './components/home/login_page';
 import ConnectionsHome from './components/wip';
 import NotFound from './components/not_found';
 
@@ -27,6 +28,7 @@ export default () => (
       <ProtectedRoute path="/mynetwork" component={ConnectionsHome} />
       <Route path="/signup/:code" component={SignupPage} />
       <Route path="/accountconfirmed" component={AccountConfirmed} />
+      <AuthRoute path="/login" component={Login}/>
       <AuthRoute exact path="/" component={HomePage} />
       <Route component={NotFound} />
     </Switch>

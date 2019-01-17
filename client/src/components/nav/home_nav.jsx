@@ -272,40 +272,50 @@ class HomeNav extends React.Component {
 
     let navMenu = this.props.session === null ? (
       <div className={classes.navMenu}>
-        <TextField
-          required
-          id='email'
-          label="Email"
-          className={classes.textField}
-          margin="normal"
-          onChange={this.handleChange('email')}
-          variant="outlined"
-          InputProps={{
-            classes: {
-              input: classes.textfieldResize
-            },
-          }}
+        <div className={classes.sectionDesktop}>
+          <TextField
+            required
+            id='email'
+            label="Email"
+            className={classes.textField}
+            margin="normal"
+            onChange={this.handleChange('email')}
+            variant="outlined"
+            InputProps={{
+              classes: {
+                input: classes.textfieldResize
+              },
+            }}
+            />
+          <TextField
+            required
+            id="standard-password-input"
+            label="Password"
+            className={classes.textField}
+            type="password"
+            autoComplete="current-password"
+            margin="normal"
+            onChange={this.handleChange('password')}
+            variant="outlined"
+            InputProps={{
+              classes: {
+                input: classes.textfieldResize
+              },
+            }}
           />
-        <TextField
-          required
-          id="standard-password-input"
-          label="Password"
-          className={classes.textField}
-          type="password"
-          autoComplete="current-password"
-          margin="normal"
-          onChange={this.handleChange('password')}
-          variant="outlined"
-          InputProps={{
-            classes: {
-              input: classes.textfieldResize
-            },
-          }}
-        />
-        <Button variant="contained" color="secondary"
-          className={classes.button} onClick={this.handleSubmit}>
-          Login
-        </Button>
+          <Button variant="contained" color="secondary"
+            className={classes.button} onClick={this.handleSubmit}>
+            Login
+          </Button>
+        </div>
+
+        <div className={classes.sectionMobile}>
+          <Button variant="contained" color="secondary"
+            onClick={() => this.props.history.push('/login')}>
+            Login
+          </Button>
+        </div>
+
       </div>
     ) : (
       <div className='nav-menu-container'>

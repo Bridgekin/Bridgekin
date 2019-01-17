@@ -174,9 +174,9 @@ class CardModal extends React.Component {
           </Typography>
           <Typography variant="body1" id="simple-modal-description"
             className={classes.section}>
-            {"We're as excited about this opportunity as you are! We just sent "+
-            "an email connecting you to the opportunity owner, so that should " +
-            "hit your inbox shortly. We'll let you take it from here."}
+            {`We're as excited about this opportunity as you are! We just sent
+            an email connecting you to the opportunity owner, so that should
+            hit your inbox shortly. We'll let you take it from here.`}
           </Typography>
           <div className={classes.postButtons}>
             <Button variant="contained" color='secondary'
