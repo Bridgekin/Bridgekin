@@ -215,16 +215,16 @@ class SignupPage extends React.Component{
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.homeGrid}
           justify="flex-start" alignItems="center">
-          <Grid item xs={8} sm={6} container justify="flex-start" alignItems="center"
+          <Grid item xs={11} sm={9} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
-            <Grid item xs={12} >
+            <Grid item xs={10} >
               <Typography className={classes.homeHeader}
                 variant="h5" gutterBottom>
                 {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
 
-            <Grid item xs={8} >
+            <Grid item xs={10} sm={8} >
               <Typography className={classes.homeSubheader}
                 variant="p" gutterBottom>
                 {"You’ve received a private invitation to join the Bridgekin network. Complete your registration and sign in below!"}
