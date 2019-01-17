@@ -40,6 +40,9 @@ let theme = createMuiTheme({
     iconColor: '#000000',
     // backgroundColor: 'none',
   },
+  shape: {
+    borderRadius: 3
+  },
   overrides: {
     MuiButton: { // Name of the component ⚛️ / style sheet
       text: { // Name of the rule
@@ -96,7 +99,7 @@ let theme = createMuiTheme({
     },
     MuiCheckbox:{
       root: 'red'
-    }
+    },
   },
   // htmlFontSize: 10
   // pxToRem: () => {

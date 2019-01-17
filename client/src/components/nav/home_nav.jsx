@@ -195,6 +195,9 @@ class HomeNav extends React.Component {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+    let pathName = this.props.location.pathname.split('/').pop();
+    debugger
+
     let renderMenu = (
       <Menu
         id="menu-appbar"
@@ -320,19 +323,22 @@ class HomeNav extends React.Component {
         <div className={classes.sectionDesktop}>
           <Button color='secondary'
             onClick={this.handleLinkClose('findandconnect')}>
-            <Typography variant="h4" align='left' color="textPrimary" >
+            <Typography variant="h4" align='left' color="textPrimary"
+              style={(pathName === 'findandconnect') ? { fontWeight: 600} : {}}>
               Find & Connect
             </Typography>
           </Button>
           <Button color='secondary'
             onClick={this.handleLinkClose('postopportunity')}>
-            <Typography variant="h4" align='left' color="textPrimary" >
+            <Typography variant="h4" align='left' color="textPrimary"
+              style={(pathName === 'postopportunity') ? { fontWeight: 600} : {}}>
               Post Opportunitity
             </Typography>
           </Button>
           <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}>
-            <Typography variant="h4" align='left' color="textPrimary" >
+            <Typography variant="h4" align='left' color="textPrimary"
+              style={(pathName === 'mynetwork') ? { fontWeight: 600} : {}}>
               My Trusted Network
             </Typography>
           </Button>

@@ -11,9 +11,9 @@ import OpportunityCreate from './components/post_opportunity/opportunity_create'
 import OpportunityEdit from './components/post_opportunity/opportunity_edit';
 import SignupPage from './components/home/signup_page';
 import AccountConfirmed from './components/account/account_confirmed';
-// import ConnectionsHome from './components/connections/connections_home';
+import ConnectionsHome from './components/connections/connections_home';
 import Login from './components/home/login_page';
-import ConnectionsHome from './components/wip';
+// import ConnectionsHome from './components/wip';
 import NotFound from './components/not_found';
 
 export default () => (

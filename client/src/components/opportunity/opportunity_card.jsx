@@ -18,7 +18,7 @@ import Badge from '@material-ui/core/Badge';
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircleSharp';
 import CachedSharpIcon from '@material-ui/icons/CachedSharp';
-import BlockSharpIcon from '@material-ui/icons/BlockSharp';
+import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import LinesEllipsis from 'react-lines-ellipsis';
 
 import CardModal from './card_modal';
@@ -172,7 +172,7 @@ class OpportunityCard extends React.Component {
       case 'Pending':
         return <CachedSharpIcon className={classes.icon} />;
       case 'Rejected':
-        return <BlockSharpIcon className={classes.icon} />;
+        return <ErrorSharpIcon className={classes.icon} />;
       default:
         return '';
     }
