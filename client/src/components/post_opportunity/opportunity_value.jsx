@@ -34,6 +34,7 @@ const styles = theme => ({
   valueHeader:{
     fontWeight: 700,
     color: theme.palette.darkGrey,
+    margin: 20
   },
   cardGrid:{
     display: 'flex',

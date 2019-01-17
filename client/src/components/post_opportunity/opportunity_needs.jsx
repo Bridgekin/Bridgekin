@@ -45,7 +45,8 @@ const styles = theme => ({
     width: 'auto',
   },
   needsHeader:{
-    fontWeight: 700
+    fontWeight: 700,
+    margin: 20
   }
 });
 
@@ -137,26 +138,29 @@ class NeedsField extends React.Component {
       ) : (classes.icon);
 
       return (
-      <Grid item xs={11} sm={6} lg={4}>
+      <Grid item xs={12} sm={6} lg={4}>
         <Card className={classes.cardWrapper}>
           <CardActionArea className={styling}
             onClick={this.handleClick(need)}>
-            <CardMedia
-              title="OpportunityIcon"
-              style={{ marginLeft: 10}}>
-              <img
-                src={PickIcons(need)}
-                className={iconStyling}
-                alt={'icon'}
-                />
-            </CardMedia>
-            <CardContent className={classes.content}>
-              <Typography variant="h3" align='left' color='inherit'
-                style={{ wordWrap: 'break-word' }}>
-                {need.toUpperCase()}
-              </Typography>
-              {subtitles[need]}
-            </CardContent>
+
+            <Grid container justify='center' alignItems='center'>
+              <Grid item xs={4}>
+                <img
+                  src={PickIcons(need)}
+                  className={iconStyling}
+                  alt={'icon'}
+                  />
+              </Grid>
+
+              <Grid item xs={8}>
+                <Typography variant="h3" align='left' color='inherit'
+                  style={{ wordWrap: 'break-word' }}>
+                  {need.toUpperCase()}
+                </Typography>
+                {subtitles[need]}
+              </Grid>
+            </Grid>
+
           </CardActionArea>
         </Card>
       </Grid> )

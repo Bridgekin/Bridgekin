@@ -26,6 +26,7 @@ const styles = theme => ({
   geoHeader:{
     fontWeight: 700,
     color: theme.palette.darkGrey,
+    margin: 20
   },
   geoLabel:{
     fontSize: 22
@@ -98,7 +99,8 @@ class GeoField extends React.Component {
           className={classes.geoHeader}>
           What is your geographical focus?
         </Typography>
-        <Typography variant="p" gutterBottom align='center'>
+        <Typography variant="p" gutterBottom align='center'
+          style={{ margin: 20}}>
           Choose one or more options:
         </Typography>
 

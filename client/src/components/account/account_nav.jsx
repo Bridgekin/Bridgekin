@@ -5,6 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
   root: {
@@ -34,6 +38,12 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  mobileContainer:{
+    display: 'flex',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    }
+  },
   dot:{ fontSize: 10},
   navLink: {
     textDecoration: 'none'
@@ -48,8 +58,38 @@ var ROUTEMAPPING = {
 };
 
 class AccountNav extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      open: false,
+      anchorEl: null
+    }
+
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleClick(){
+
+  }
+
+  handleOpen(e){
+    this.setState({ anchorEl: e.currentTarget})
+  }
+
+  handleClose(field){
+    return e => {
+      if(field){
+        this.props.history.push(`/account/${field}`)
+      }
+      this.setState({ anchorEl: null })
+    }
+  }
+
   render(){
-    const { classes }= this.props;
+    const { classes } = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
 
     let buttonHeaders = ['My Profile', 'Connected Opportunities',
       'Posted Opportunities', 'Settings'];
@@ -81,19 +121,44 @@ class AccountNav extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='space-around' alignItems='center'>
-        <Grid item xs={10} sm={2} className={classes.accountNavSection}
+        <Grid item xs={8} sm={2} className={classes.accountNavSection}
           style={{ height: 100 }}>
           <Typography variant="h5" gutterBottom>
             <strong>My Account</strong>
           </Typography>
         </Grid>
         <Grid item xs={0} sm={2}/>
-        <Grid item xs={10} sm={7} className={classes.accountNavSection}>
+        <Grid item xs={4} sm={7} className={classes.accountNavSection}>
           {buttons}
+          <IconButton
+            aria-label="More"
+            aria-owns={open ? 'long-menu' : undefined}
+            aria-haspopup="true"
+            onClick={this.handleOpen}
+            className={classes.mobileContainer}
+          >
+            <MoreVertIcon />
+          </IconButton>
         </Grid>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={this.handleClose(null)}
+        >
+          {buttonHeaders.map(header => (
+            <MenuItem
+              onClick={this.handleClose(ROUTEMAPPING[header])}>
+              <Typography variant="h6" gutterBottom align='left'
+                color="textPrimary">
+                {header}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
       </Grid>
     )
   }
 }
 
-export default withStyles(styles)(AccountNav);
+export default withRouter(withStyles(styles)(AccountNav));

@@ -41,7 +41,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 40
+    minHeight: 40
   },
   labelContainer: {
     "& $alternativeLabel": {
@@ -287,7 +287,7 @@ class OpportunityChange extends React.Component {
           style={{ backgroundColor: 'RGBA(196,196,196,0.1)'}}
           justify='space-around' alignItems='center'>
 
-          <Grid item xs={6} md={2} className={classes.accountNavSection}>
+          <Grid item xs={10} sm={6} md={2} className={classes.accountNavSection}>
             <Typography variant="h5" gutterBottom>
               <strong>
                 {type === 'create' ? 'Post Opportunity' : 'Edit Opportunity'}
@@ -337,7 +337,7 @@ class OpportunityChange extends React.Component {
         <Grid container className={classes.stepperRootMain}
           justify='center' alignItems='center'>
 
-          <Grid item xs={10} md={8} className={classes.mainWrapper}>
+          <Grid item xs={12} sm={10} md={8} className={classes.mainWrapper}>
             {this.getStepContent(activeStep)}
             {flowNav}
           </Grid>

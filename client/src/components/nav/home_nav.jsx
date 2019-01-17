@@ -49,8 +49,6 @@ const styles = {
     flexGrow: 1,
   },
   logoLink: {
-    marginLeft: 20,
-    marginRight: 20,
     '&:hover': {
       backgroundColor: '#fff'
     },
@@ -59,7 +57,7 @@ const styles = {
     }
   },
   logo: {
-    width: 237
+    height: 26
   },
   nav: {
     backgroundColor: 'white',
@@ -196,7 +194,6 @@ class HomeNav extends React.Component {
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    debugger
 
     let renderMenu = (
       <Menu
@@ -352,7 +349,9 @@ class HomeNav extends React.Component {
         </div>
 
         <div className={classes.sectionMobile}>
-          <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+          <IconButton aria-haspopup="true" color="inherit"
+            onClick={this.handleMobileMenuOpen}
+            style={{ padding: 0 }}>
             <MenuIcon className={classes.menuIcon} color='primary'/>
           </IconButton>
         </div>
@@ -366,7 +365,7 @@ class HomeNav extends React.Component {
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
             <Link to='/' className={classes.logoLink}>
-              <img alt='logo' className={classes.logo}src={logo} />
+              <img alt='logo' className={classes.logo} src={logo} />
             </Link>
             <div className={classes.grow} />
             {navMenu}
