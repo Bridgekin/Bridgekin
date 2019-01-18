@@ -10,15 +10,15 @@ import Typography from '@material-ui/core/Typography';
 import theme from '../theme';
 
 import { connect } from 'react-redux';
-import { clearSessionErrors } from '../../actions/error_actions';
+import { clearUserErrors } from '../../actions/error_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  sessionErrors: state.errors.login
+  userErrors: state.errors.users
 });
 
 const mapDispatchToProps = dispatch => ({
-  clearSessionErrors: () => dispatch(clearSessionErrors())
+  clearUserErrors: () => dispatch(clearUserErrors())
 });
 
 const styles = theme => ({
@@ -54,7 +54,7 @@ class SignupModal extends React.Component {
 
   handleClose = () => {
     if(this.props.sessionErrors){
-      this.props.clearSessionErrors();
+      this.props.clearUserErrors();
     }
     this.props.handleClose();
   };
@@ -62,7 +62,7 @@ class SignupModal extends React.Component {
   render () {
     const { open, classes } = this.props;
 
-    let sessionErrors = this.props.sessionErrors.map(error => {
+    let userErrors = this.props.userErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
         return ex === 'Fname' ? 'First name' : 'Last name';
       });
@@ -73,7 +73,7 @@ class SignupModal extends React.Component {
       )
     })
 
-    let modalText = this.props.sessionErrors.length === 0 ? (
+    let modalText = this.props.userErrors.length === 0 ? (
       <div className={classes.paper}>
         <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
           Thanks for signing up!
@@ -95,7 +95,7 @@ class SignupModal extends React.Component {
           Unfortunately, we weren't able to sign you up because:
         </Typography>
         <List>
-          {sessionErrors}
+          {userErrors}
         </List>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
           onClick={this.handleClose} color='secondary'>

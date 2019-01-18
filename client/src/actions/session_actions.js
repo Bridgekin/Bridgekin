@@ -1,6 +1,6 @@
 import * as SessionApiUtil from '../util/session_api_util';
 import {receiveUser} from './user_actions';
-import {receiveSessionErrors} from './error_actions';
+import {receiveSessionErrors, receiveUserErrors} from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
 export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
@@ -22,7 +22,7 @@ export const refSignup = (formUser, code) => dispatch => (
       if (!(errors instanceof Array)){
         errors = ['Something went wrong. Try again in a bit, or contact us!'];
       }
-      dispatch(receiveSessionErrors(errors));
+      dispatch(receiveUserErrors(errors));
     })
 );
 
