@@ -29,12 +29,17 @@ const styles = theme => ({
 });
 
 class SubmitField extends React.Component {
+  getPictureUrl(){
+
+  }
+
   render (){
-    const { title, description, industries, opportunityNeed, geography,
-      value, networks, classes, errors, status, availNetworks } = this.props;
+    const { title, description, industries, opportunityNeed,
+      geography, value, networks, classes, errors, status,
+      availNetworks, pictureUrl } = this.props;
 
     let opportunity = { title, description, industries, opportunityNeed,
-      geography, value, networks, status };
+      geography, value, networks, status, pictureUrl };
 
     let errorItems = errors.map(error => (
       <li className={classes.errors}>

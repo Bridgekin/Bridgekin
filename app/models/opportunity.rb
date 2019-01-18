@@ -29,6 +29,8 @@ class Opportunity < ApplicationRecord
     foreign_key: :opportunity_id,
     class_name: :SavedOpportunity
 
+  has_one_attached :picture
+
   # serialize       :industries, Array
   # attr_accessor   :industries_raw
 

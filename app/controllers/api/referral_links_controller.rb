@@ -3,18 +3,24 @@ class Api::ReferralLinksController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user
 
+  after_action :verify_authorized, except: :index
+  # after_action :verify_policy_scoped, only: :index
+
   def create
     @link = ReferralLink.where(
       member_id: @user.id,
       network_id: params[:referral][:network_id]
     ).first
+
     if @link
+      authorize @link
       render :show
     else
       @link = ReferralLink.new(
         member_id: @user.id,
         network_id: params[:referral][:network_id]
       )
+      authorize @link
       if @link.save
         render :show
       else

@@ -11,6 +11,9 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+
+import ImageCropModal from '../image_upload_modal';
 
 const styles = theme => ({
   root: {
@@ -38,6 +41,9 @@ const styles = theme => ({
   descriptionLabel:{
     fontSize: 22
   },
+  input: {
+    display: 'none',
+  },
 });
 
 class DescriptionField extends React.Component {
@@ -45,7 +51,10 @@ class DescriptionField extends React.Component {
     super(props);
     let networks = this.formatNetworks();
     this.state = {
-      networks
+      networks,
+      profilePicFile: null,
+      previewUrlForModal: null,
+      imageModalOpen: false,
     }
 
     this.handleClick = this.handleClick.bind(this);
@@ -91,11 +100,49 @@ class DescriptionField extends React.Component {
     }
   }
 
+  handleFile(e){
+    let file = e.currentTarget.files[0];
+    this.handleFileHelper(file, true);
+  }
+
+  handleCloseImageModal(newFile){
+    this.handleFileHelper(newFile, false);
+  }
+
+  handleFileHelper(file, bool){
+    let fileReader = new FileReader();
+
+    if(file){
+      fileReader.readAsDataURL(file)
+    }
+
+    fileReader.onloadend = () => {
+      this.setState({
+        profilePicFile: file,
+        previewUrlForModal: fileReader.result,
+        imageModalOpen: bool
+      }, () => {
+        if(!bool){
+          // send file back to parent component
+          this.props.handleFile(file);
+        }
+      })
+    }
+  }
+
+
   render (){
-    let classes = this.props.classes;
-    let { networks } = this.state;
-    const { availNetworks } = this.props;
+    let { classes, pictureUrl } = this.props;
+    let { networks, imageModalOpen, profilePicFile, previewUrlForModal } = this.state;
+    const { availNetworks, picture } = this.props;
     // const error = Object.keys(networks).filter(v => v).length < 1
+
+    let preview = pictureUrl ? (
+      <img
+        alt="account-pic-preview"
+        src={pictureUrl}
+        style={{ margin: 20, maxWidth: '100%', height: 'auto' }}/>
+    ) : ('')
 
     let fields = Object.values(availNetworks).map(network => (
         <FormControlLabel
@@ -114,7 +161,8 @@ class DescriptionField extends React.Component {
       <Grid container className={classes.root}
         justify='center' alignItems='center'>
 
-        <Grid item xs={10} sm={9}>
+        <Grid item xs={10} sm={9} container justify="flex-start"
+          alignItems='center'>
           <div className={classes.section}>
             <Typography variant="h5" gutterBottom align='left'
               className={classes.descriptionHeader} >
@@ -153,6 +201,31 @@ class DescriptionField extends React.Component {
           <div className={classes.section}>
             <Typography variant="h5" gutterBottom align='left'
               className={classes.descriptionHeader} >
+              Upload image (optional)
+            </Typography>
+            <input
+              accept="image/*"
+              className={classes.input}
+              id="contained-button-file"
+              multiple
+              type="file"
+              onChange={this.handleFile.bind(this)}
+            />
+            <Grid item xs={12} sm={10} md={8} lg={6}>
+              {!imageModalOpen && preview}
+            </Grid>
+            <label htmlFor="contained-button-file">
+              <Button variant="contained" component="span"
+                color='primary'
+                style={{ margin: 30, fontWeight: 600 }}>
+                Upload image here
+              </Button>
+            </label>
+          </div>
+
+          <div className={classes.section}>
+            <Typography variant="h5" gutterBottom align='left'
+              className={classes.descriptionHeader} >
               Share this opportunity with
             </Typography>
 
@@ -164,6 +237,12 @@ class DescriptionField extends React.Component {
             </FormControl>
           </div>
         </Grid>
+
+        <ImageCropModal
+          handleClose={this.handleCloseImageModal.bind(this)}
+          open={imageModalOpen}
+          file={profilePicFile}
+          fileUrl={previewUrlForModal}/>
 
       </Grid>
     )

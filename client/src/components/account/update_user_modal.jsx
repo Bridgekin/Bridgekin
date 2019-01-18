@@ -1,12 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
+import theme from '../theme';
 
 import { connect } from 'react-redux';
 import { clearUserErrors } from '../../actions/error_actions';
@@ -22,8 +23,8 @@ const mapDispatchToProps = dispatch => ({
 
 const styles = theme => ({
   paper: {
-    position: 'absolute',
-    width: '40%',
+    // position: 'absolute',
+    // width: '40%',
     height: 350,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
@@ -34,7 +35,8 @@ const styles = theme => ({
     justifyContent: 'center'
   },
   thanksHeader:{
-    marginBottom: 30
+    marginBottom: 30,
+    color: theme.palette.darkGrey
   }
 });
 
@@ -76,11 +78,12 @@ class UpdateUserModal extends React.Component {
     })
 
     let modalTextPassword = this.props.userErrors.length === 0 ? (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader}>
           Password Changed!
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description">
           You have successfully updated your password.
         </Typography>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
@@ -89,12 +92,13 @@ class UpdateUserModal extends React.Component {
         </Button>
       </div>
     ) : (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader}>
           Password wasn't changed
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
-          Apologies, but we weren't able to change your password because:
+        <Typography variant="body1" id="simple-modal-description">
+          Unfortunately, we weren't able to change your password because:
         </Typography>
         <List>
           {userErrors}
@@ -107,11 +111,12 @@ class UpdateUserModal extends React.Component {
     )
 
     let modalTextGeneral = this.props.userErrors.length === 0 ? (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='secondary'
+          className={classes.thanksHeader}>
           Profile Information Updated
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description">
           You have successfully updated your profile information.
         </Typography>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
@@ -120,12 +125,13 @@ class UpdateUserModal extends React.Component {
         </Button>
       </div>
     ) : (
-      <div style={{top:'25%', left: '30%'}} className={classes.paper}>
-        <Typography variant="h4" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <div className={classes.paper}>
+        <Typography variant="h2" id="modal-title" color='secondary'
+          className={classes.thanksHeader}>
           Profile Information Wasn't Updated
         </Typography>
-        <Typography variant="subtitle1" id="simple-modal-description">
-          Apologies, but we weren't able to update your profile info because:
+        <Typography variant="body1" id="simple-modal-description">
+          Unfortunately, we weren't able to update your profile info because:
         </Typography>
         <List>
           {userErrors}
@@ -140,15 +146,13 @@ class UpdateUserModal extends React.Component {
     // let modalText = {modalType === 'password' ? {modalTextPassword} : {modalTextGeneral}}
 
     return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+      <Dialog
         open={open}
-        disableAutoFocus={true}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
         onClose={this.handleClose}>
         {modalType === 'password' ? modalTextPassword : modalTextGeneral}
-
-      </Modal>
+      </Dialog>
     )
   }
 }

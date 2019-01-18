@@ -61,7 +61,7 @@ let theme = createMuiTheme({
         fontWeight: 600
       },
       h3:{ // Post Opportunity Card Headers (Needs)
-        fontSize: 34,
+        fontSize: 28,
         fontWeight: 600
       },
       h4:{ //nav tabs

@@ -39,7 +39,7 @@ export const login = formUser => dispatch => (
         errors = ['Something went wrong. Try again in a bit, or contact us!'];
       }
       dispatch(receiveSessionErrors(errors));
-      alert('Something went wrong. Try again in a bit, or contact us!')
+      // alert('Something went wrong. Try again in a bit, or contact us!')
     })
 );
 

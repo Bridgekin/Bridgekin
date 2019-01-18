@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { connect } from 'react-redux';
 import { clearWaitlistUserErrors } from '../actions/error_actions';
+import theme from './theme';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -82,7 +83,8 @@ class WaitlistModal extends React.Component {
 
     let modalText = this.props.waitlistErrors.length === 0 ? (
       <div className={classes.paper}>
-        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader}>
           Thanks for signing up!
         </Typography>
         <Typography variant="body1" id="simple-modal-description">
@@ -95,11 +97,12 @@ class WaitlistModal extends React.Component {
       </div>
     ) : (
       <div className={classes.paper}>
-        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader}>
           Thanks for your interest in Bridgekin!
         </Typography>
         <Typography variant="body1" id="simple-modal-description">
-          Apologies, but we weren't able to sign you up because:
+          Unfortunately, we weren't able to sign you up because:
         </Typography>
         <List>
           {waitlistErrors}

@@ -15,12 +15,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 
 import logo from '../../static/Bridgekin_Logo.png';
 import './home_nav.css';
+import LoginModal from './login_modal';
 
 import { login, logout } from '../../actions/session_actions';
 import { getAuthUserId } from '../../util/session_api_util';
@@ -31,6 +33,7 @@ import { handleAuthErrors } from '../../actions/fetch_error_handler';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   session: state.session.id,
+  sessionErrors: state.errors.login
   // homes: Object.values(state.entities.homes)
 });
 
@@ -187,7 +190,7 @@ class HomeNav extends React.Component {
   };
 
   render(){
-    let { classes, currentUser } = this.props;
+    let { classes, currentUser, sessionErrors } = this.props;
 
     const { auth, anchorEl, mobileMoreAnchorEl } = this.state;
     // const open = Boolean(anchorEl);
@@ -196,7 +199,8 @@ class HomeNav extends React.Component {
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
     let pathName = this.props.location.pathname.split('/').pop();
-    debugger
+
+    let loginOpen = Boolean(sessionErrors.length > 0);
 
     let renderMenu = (
       <Menu
@@ -349,7 +353,13 @@ class HomeNav extends React.Component {
               onClick={this.handleProfileMenuOpen}
               color="secondary"
             >
-              <AccountCircle />
+              {currentUser.profilePicUrl ? (
+                <Avatar alt="profile-pic"
+                  src={currentUser.profilePicUrl}
+                  className={classes.avatar} />
+              ) : (
+                <AccountCircle />
+              )}
             </IconButton>
           </div>
         </div>
@@ -377,6 +387,8 @@ class HomeNav extends React.Component {
             {navMenu}
           </Toolbar>
         </AppBar>
+
+        <LoginModal open={loginOpen} />
       </MuiThemeProvider>
     );
   }

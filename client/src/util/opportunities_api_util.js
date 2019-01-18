@@ -28,23 +28,21 @@ export const fetchOpportunity = id => (
   })
 )
 
-export const createOpportunity = opportunity => (
+export const createOpportunity = formData => (
   fetch(`${window.location.origin}/api/opportunities`, {
     method: 'POST',
-    body: JSON.stringify({ opportunity }),
+    body: formData,
     headers:{
-    	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
   	}
   })
 )
 
-export const updateOpportunity = opportunity => (
-  fetch(`${window.location.origin}/api/opportunities/${opportunity.id}`, {
+export const updateOpportunity = formData => (
+  fetch(`${window.location.origin}/api/opportunities/${formData.get('opportunity[id]')}`, {
     method: 'PATCH',
-    body: JSON.stringify({ opportunity }),
+    body: formData,
     headers:{
-    	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
   	}
   })

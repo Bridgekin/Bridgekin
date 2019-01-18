@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +13,7 @@ import blankProfilePic from '../../static/blank_profile_pic.png';
 import EditIcon from '@material-ui/icons/EditSharp';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/AddSharp';
+import Avatar from '@material-ui/core/Avatar';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -58,6 +60,11 @@ const styles = theme => ({
   cardEditIcon:{
     color: "#d3d3d3",
     fontSize: 20
+  },
+  pic:{
+    height: 'auto',
+    width: '100%',
+    // borderRadius: 0
   }
 });
 
@@ -70,15 +77,22 @@ class AccountHome extends React.Component {
   render(){
     const { classes, currentUser }= this.props;
 
-    let profilePic = currentUser.profilePic ? (
-      <CardMedia
+    // <CardMedia
+    //   className={classes.pic}
+    //   src={currentUser.profilePicUrl}
+    //   title="Account Profile Picture"
+    // />
+
+    let profilePic = currentUser.profilePicUrl ? (
+      <Avatar
         className={classes.pic}
-        image={blankProfilePic}
-        title="Account Profile Picture"
+        src={currentUser.profilePicUrl}
+        alt="Account Profile Picture"
       />
     ) : (
       <AddIcon
-        className={classes.addProfilePicIcon}/>
+        className={classes.addProfilePicIcon}
+        onClick={()=> this.props.history.push('/account/settings')}/>
     )
 
     return (
@@ -86,10 +100,10 @@ class AccountHome extends React.Component {
         className={classes.root}>
         <Grid item xs={11} sm={9} md={8} lg={6}>
           <Card className={classes.card}>
-            <Grid container justify="center" alignItems="center"
+            <Grid container justify="center" alignItems="flex-start"
               spacing={16}>
 
-              <Grid item xs={8} md={3}>
+              <Grid item xs={8} md={5}>
                 {profilePic}
               </Grid>
 
@@ -146,4 +160,4 @@ class AccountHome extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountHome));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountHome)));

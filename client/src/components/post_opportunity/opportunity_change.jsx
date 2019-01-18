@@ -163,7 +163,9 @@ class OpportunityChange extends React.Component {
           title={this.state.title}
           description={this.state.description}
           networks={this.state.networks}
-          availNetworks={this.props.availNetworks}/>;
+          availNetworks={this.props.availNetworks}
+          pictureUrl={this.state.previewUrl}
+          handleFile={this.handleFile.bind(this)}/>;
       case 5:
         let errors = this.checkErrors();
         return <SubmitField
@@ -176,9 +178,25 @@ class OpportunityChange extends React.Component {
           availNetworks={this.props.availNetworks}
           opportunityNeed={this.state.opportunityNeed}
           errors={errors}
-          status={this.state.status}/>;
+          status={this.state.status}
+          pictureUrl={this.state.previewUrl}/>;
       default:
         return 'Unknown step';
+    }
+  }
+
+  handleFile(picture){
+    let fileReader = new FileReader();
+
+    fileReader.onloadend = () => {
+      this.setState({
+        picture,
+        previewUrl: fileReader.result,
+      })
+    }
+
+    if(picture){
+      fileReader.readAsDataURL(picture)
     }
   }
 
@@ -187,19 +205,24 @@ class OpportunityChange extends React.Component {
   };
 
   handleSubmit(){
-    let { geography, industries,
-      value, title, description,
-      networks, opportunityNeed} = this.state;
+    let fields = ['geography', 'industries', 'value', 'title',
+      'description','networks', 'opportunityNeed' , 'picture' ];
 
-    let opportunity = { geography, value, title, description,
-      industries, opportunityNeed, networks };
+    const formData = new FormData();
+
+    for (let i = 0; i < fields.length; i++){
+      formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
+    }
+    // formData.append(`opportunity[geography]`, this.state.geography.join(','));
+    // formData.append(`opportunity[industries]`, this.state.industries.join(','));
 
     if(this.props.type === 'create'){
-      this.props.createOpportunity(opportunity)
+      this.props.createOpportunity(formData)
       .then(() => this.setState({ modalOpen: true }) )
     } else {
-      opportunity.id = this.props.opportunity.id
-      this.props.updateOpportunity(opportunity)
+      // opportunity.id = this.props.opportunity.id
+      formData.append(`opportunity[id]`, this.props.opportunity.id);
+      this.props.updateOpportunity(formData)
       .then(() => this.setState({ modalOpen: true }) )
     }
   };

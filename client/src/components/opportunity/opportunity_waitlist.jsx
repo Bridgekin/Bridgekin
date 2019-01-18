@@ -68,6 +68,7 @@ class OpportunityWaitlist extends React.Component{
             fullWidth
             variant="outlined"
             onChange={this.props.handleChange('fname')}
+            value={this.props.fname}
             />
           </Grid>
 
@@ -81,6 +82,7 @@ class OpportunityWaitlist extends React.Component{
             fullWidth
             variant="outlined"
             onChange={this.props.handleChange('email')}
+            value={this.props.email}
             />
           </Grid>
 

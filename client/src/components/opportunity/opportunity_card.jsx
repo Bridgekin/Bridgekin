@@ -182,7 +182,7 @@ class OpportunityCard extends React.Component {
     const { classes, opportunity, editable, demo }= this.props;
     const { cardOpen } = this.state;
     let { title, description, industries, opportunityNeed, geography,
-      value, status } = opportunity;
+      value, status, pictureUrl } = opportunity;
 
     if (!_.isEmpty(opportunity)){
 
@@ -254,6 +254,8 @@ class OpportunityCard extends React.Component {
 
       let cardIcon = this.getCardIcon(status);
 
+      let picture = pictureUrl ? pictureUrl : (PickImage(industries[0]))
+
       return (
       <div>
         <Badge
@@ -265,7 +267,7 @@ class OpportunityCard extends React.Component {
             <CardActionArea onClick={this.handleCardOpen}>
               <CardMedia
                 className={classes.cover}
-                image={PickImage(industries[0])}
+                image={picture}
                 title="OpportunityImage"
                 />
               <CardContent className={classes.content}>

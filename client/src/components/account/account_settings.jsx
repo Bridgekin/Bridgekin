@@ -18,8 +18,10 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import AddIcon from '@material-ui/icons/AddSharp';
+import Avatar from '@material-ui/core/Avatar';
 
 import UpdateUserModal from './update_user_modal';
+import ImageCropModal from '../image_upload_modal';
 // import countryList from 'react-select-country-list';
 import countryList from 'country-list';
 
@@ -49,7 +51,8 @@ const styles = theme => ({
   },
   pic: {
     width: '100%',
-    height: 217,
+    height: 'auto',
+    // borderRadius: 0,
   },
   addProfilePicIcon:{
     width: '100%',
@@ -110,7 +113,10 @@ const styles = theme => ({
   countryWrapper:{
     display: 'flex',
     flexDirection: 'column'
-  }
+  },
+  input: {
+    display: 'none',
+  },
 });
 
 
@@ -130,7 +136,10 @@ class AccountSetting extends React.Component {
       company: this.props.currentUser.company,
       city: this.props.currentUser.city,
       state: this.props.currentUser.state,
-      country: countryList.getName(this.props.currentUser.country) || ''
+      country: countryList.getName(this.props.currentUser.country) || '',
+      profilePicFile: null,
+      previewUrl: null,
+      imageModalOpen: false,
     }
 
     this.options = Object.values(countryList.getNames());
@@ -204,53 +213,88 @@ class AccountSetting extends React.Component {
     .then(()=> this.setState({ modalOpen: true }))
   }
 
-  changeGeneralInformation(){
-    let { fname, lname, city, state, country, title, company} = this.state;
+  changeGeneralInformation(e){
+    e.preventDefault();
+    let { country, profilePicFile, previewUrl } = this.state;
+    const formData = new FormData();
 
-    country = countryList.getCode(country);
-    let user = {
-      id: this.props.currentUser.id,
-      fname, lname, city, state, country, title, company
+    let fields = ['fname', 'lname', 'city', 'state', 'title', 'company'];
+    for (let i = 0; i < fields.length; i++){
+      formData.append(`user[${fields[i]}]`, this.state[fields[i]]);
     }
-    this.props.updateUser(user)
+
+    if (profilePicFile){ formData.append('user[profilePic]', profilePicFile ) }
+    formData.append('user[id]', this.props.currentUser.id)
+    formData.append('user[country]', countryList.getCode(country))
+
+    this.props.updateUser(formData)
     .then(()=> this.setState({ modalOpen: true }))
   }
 
+  //#######################
+
+  handleFile(e){
+    let file = e.currentTarget.files[0];
+    this.handleFileHelper(file, true);
+  }
+
+  handleCloseImageModal(newFile){
+    this.handleFileHelper(newFile, false);
+    let fileReader = new FileReader();
+  }
+
+  handleFileHelper(file, bool){
+    let fileReader = new FileReader();
+
+    fileReader.onloadend = () => {
+      this.setState({
+        profilePicFile: file,
+        previewUrl: fileReader.result,
+        imageModalOpen: bool
+      })
+    }
+
+    if(file){
+      fileReader.readAsDataURL(file)
+    }
+  }
+
+  //#######################
+
   getContent(){
     const { classes, currentUser }= this.props;
-    const { settingState, modalOpen } = this.state;
+    const { settingState, modalOpen, previewUrl,
+      imageModalOpen, profilePicFile } = this.state;
 
-    let profilePic = currentUser.profilePic ? (
-      <CardMedia
+    let profilePicture = currentUser.profilePicUrl ? (
+      <Avatar
         className={classes.pic}
-        image={blankProfilePic}
-        title="Account Profile Picture"
+        src={currentUser.profilePicUrl}
+        alt="Account Profile Picture"
       />
     ) : (
       <AddIcon
-        className={classes.addProfilePicIcon}/>
+        className={classes.addProfilePicIcon}
+        onClick={this.handleChangeFill('General Information')}
+      />
     )
-    // <CardMedia
-    //   className={classes.pic}
-    //   title="Add Profile Picture" >
-    //   <AddIcon />
-    // </CardMedia>
 
-    //Original Edit icon button
-    // <div style={{ marginLeft: 10 }}
-    //   onClick={() => this.props.history.push('/account/settings')}>
-    //   <i className={["far fa-edit", classes.cardEditIcon].join(' ')}/>
-    // </div>
+    let preview = previewUrl ? (
+      <img
+        alt="account-pic-preview"
+        src={previewUrl}
+        style={{ margin: 20, maxWidth: '100%', height: 'auto' }}/>
+    ) : ('')
 
     switch (settingState) {
       case "Home":
         return (
           <Card className={classes.card}>
-            <Grid container justify="center" alignItems="center"
+            <Grid container justify="center" alignItems="flex-start"
               spacing={16}>
 
-              <Grid item xs={8} md={3}>
-                {profilePic}
+              <Grid item xs={8} md={5}>
+                {profilePicture}
               </Grid>
 
               <Grid item xs={8} md={6} className={classes.content}>
@@ -415,7 +459,7 @@ class AccountSetting extends React.Component {
                   Position
                 </Typography>
                 <Grid container justify="center" alignItems="center"
-                  spacing={16}>
+                  spacing={24}>
                   <Grid item xs={10} sm={6}>
                     <TextField
                       id="standard-name"
@@ -443,7 +487,7 @@ class AccountSetting extends React.Component {
                   Location
                 </Typography>
                 <Grid container justify="center" alignItems="center"
-                  spacing={16}>
+                  spacing={24}>
                   <Grid item xs={10} sm={6}>
                     <TextField
                       id="standard-name"
@@ -473,6 +517,30 @@ class AccountSetting extends React.Component {
                   </Grid>
                 </Grid>
 
+                <Typography variant="h6" align='left'
+                  color="secondary" className={classes.fieldLabel}>
+                  Upload Profile Picture
+                </Typography>
+                <Grid container justify="center" alignItems="center"
+                  spacing={16}>
+                  <input
+                    accept="image/*"
+                    className={classes.input}
+                    id="contained-button-file"
+                    multiple
+                    type="file"
+                    onChange={this.handleFile.bind(this)}
+                  />
+                  {!imageModalOpen && preview}
+                  <label htmlFor="contained-button-file">
+                    <Button variant="contained" component="span"
+                      style={{ margin: 30, fontWeight: 600 }}>
+                      Upload
+                    </Button>
+                  </label>
+                </Grid>
+
+
                 <div className={classes.buttonWrapper}>
                   <Button className={classes.submitButton}
                     onClick={this.handleChangeFill('Home')} variant='contained'>
@@ -485,6 +553,12 @@ class AccountSetting extends React.Component {
                   </Button>
                 </div>
               </Grid>
+
+              <ImageCropModal
+                handleClose={this.handleCloseImageModal.bind(this)}
+                open={imageModalOpen}
+                file={profilePicFile}
+                fileUrl={previewUrl}/>
             </Grid>
 
             <UpdateUserModal

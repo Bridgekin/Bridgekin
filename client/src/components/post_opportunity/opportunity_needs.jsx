@@ -144,7 +144,7 @@ class NeedsField extends React.Component {
             onClick={this.handleClick(need)}>
 
             <Grid container justify='center' alignItems='center'>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <img
                   src={PickIcons(need)}
                   className={iconStyling}
@@ -152,7 +152,7 @@ class NeedsField extends React.Component {
                   />
               </Grid>
 
-              <Grid item xs={8}>
+              <Grid item xs={7}>
                 <Typography variant="h3" align='left' color='inherit'
                   style={{ wordWrap: 'break-word' }}>
                   {need.toUpperCase()}

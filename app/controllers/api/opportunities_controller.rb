@@ -4,14 +4,15 @@ class Api::OpportunitiesController < ApiController
   before_action :set_opportunity, only: [:show, :update, :destroy]
   before_action :authenticate_user
 
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
+
   def index
     if params[:network_id].empty?
-      network_ids = @user.member_networks.pluck(:id)
-      @opportunities = Opportunity.joins(:opportunity_networks)
-        .where(opportunity_networks: { network_id: network_ids} )
+      @opportunities = policy_scope(Opportunity)
     else
-      @opportunities = Opportunity.joins(:opportunity_networks)
-        .where("opportunity_networks.network_id = #{params[:network_id]}")
+      @opportunities = policy_scope(Opportunity)
+        .where(opportunity_networks: { network_id: params[:network_id]} )
     end
 
     render :index
@@ -27,6 +28,7 @@ class Api::OpportunitiesController < ApiController
 
   # GET /opportunities/1
   def show
+    authorize @opportunity
     @networks = @opportunity.networks
     render :show
   end
@@ -37,8 +39,10 @@ class Api::OpportunitiesController < ApiController
     @opportunity.owner_id = @user.id
     @opportunity.status = 'Pending'
 
+    authorize @opportunity
+
     if @opportunity.save
-      networks_params = params[:opportunity][:networks]
+      networks_params = params[:opportunity][:networks].split(',')
       @opportunityNetworks = []
       networks_params.each do |id|
         @opportunityNetworks << OpportunityNetwork.create(
@@ -60,7 +64,7 @@ class Api::OpportunitiesController < ApiController
     if @opportunity.update(opportunity_params)
       @opportunity.opportunity_networks.delete_all
 
-      networks_params = params[:opportunity][:networks]
+      networks_params = params[:opportunity][:networks].split(',')
       @opportunityNetworks = []
       networks_params.each do |id|
         @opportunityNetworks << OpportunityNetwork.create(
@@ -86,13 +90,6 @@ class Api::OpportunitiesController < ApiController
     end
   end
 
-  # def opportunity
-  #   @opporunities = @user.opportunities
-  #   @connected_opporunities = @user.opportunities
-  #   @opporunities = @user.opportunities
-  #   @opporunities = @user.opportunities
-  # end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_opportunity
@@ -101,8 +98,13 @@ class Api::OpportunitiesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def opportunity_params
-      params.require(:opportunity).permit(:title, :description,
-        :owner_id, :opportunity_need,  :value, :status,
-        :industries => [], :geography => [])
+      opp_params = params.require(:opportunity).permit(:title, :description,
+        :owner_id, :opportunity_need, :value, :status, :picture,
+        :industries, :geography)
+
+      opp_params[:geography] = opp_params[:geography].split(',')
+      opp_params[:industries] = opp_params[:industries].split(',')
+
+      opp_params
     end
 end

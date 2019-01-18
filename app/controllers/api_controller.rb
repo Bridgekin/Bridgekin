@@ -4,6 +4,9 @@ class ApiController < ActionController::API
   # include ActionController::HttpAuthentication::Token::ControllerMethods
   # acts_as_token_authentication_handler_for User, fallback: :none
 
+  include Pundit
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   # protect_from_forgery prepend: true, with: :exception
   helper_method :logged_in?, :current_user
 
@@ -39,6 +42,11 @@ class ApiController < ActionController::API
     end
   end
 
+  private
+
+  def user_not_authorized
+    render json: ["You are not authorized to perform this action."], status: 401
+  end
 
 end
 

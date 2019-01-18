@@ -51,7 +51,7 @@ const styles = theme => ({
   cover: {
     height: 150,
     width: '100%',
-    objectFit: 'cover'
+    // objectFit: 'cover'
   },
   card: {
     display: 'flex',
@@ -110,7 +110,8 @@ class CardModal extends React.Component {
   constructor(props){
     super(props)
     this.state={
-      sent: false
+      sent: false,
+      connectBool: true,
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleConnection = this.handleConnection.bind(this);
@@ -146,7 +147,10 @@ class CardModal extends React.Component {
         }
         this.props.createConnectedOpportunity(opportunity)
         .then(() => {
-          this.setState({sent: true})
+          this.setState({
+            sent: true,
+            connectBool
+          })
         });
       }
     }
@@ -154,11 +158,11 @@ class CardModal extends React.Component {
 
   render () {
     const { open, classes, opportunity, connectedOpportunityErrors } = this.props;
-    const { sent } = this.state;
+    const { sent, connectBool } = this.state;
 
     if (!_.isEmpty(opportunity)){
       let { title, description, industries, opportunityNeed, geography,
-        value, networks } = opportunity;
+        value, networks, pictureUrl } = opportunity;
 
       let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
         <ListItem >
@@ -166,9 +170,9 @@ class CardModal extends React.Component {
         </ListItem>
       ));
 
-      let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
+      let typeOfSuccess = connectBool ? (
         <div className={classes.paper}>
-          <Typography variant="h1" id="modal-title"
+          <Typography variant="h2" id="modal-title"
             className={classes.section}>
             Time for business!
           </Typography>
@@ -191,6 +195,34 @@ class CardModal extends React.Component {
         </div>
       ) : (
         <div className={classes.paper}>
+          <Typography variant="h2" id="modal-title"
+            className={classes.section}>
+            Time for business!
+          </Typography>
+          <Typography variant="body1" id="simple-modal-description"
+            className={classes.section}>
+            {`We're as excited about this opportunity as you are!
+              We just sent an email connecting you to the opportunity owner
+              and then you can loop in your trusted contact from there.
+              We'll let you take it from here.`}
+          </Typography>
+          <div className={classes.postButtons}>
+            <Button variant="contained" color='secondary'
+              onClick={this.handleClose('find')}>
+              View More Opportunities
+            </Button>
+            <Button variant="contained" color='secondary'
+              onClick={this.handleClose('post')}>
+              Post An Opportunity
+            </Button>
+          </div>
+        </div>
+      )
+
+      let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
+        typeOfSuccess
+      ) : (
+        <div className={classes.paper}>
           <Typography variant="h1" id="modal-title"
             className={classes.errorHeader}>
             Hold on there!
@@ -208,10 +240,15 @@ class CardModal extends React.Component {
         </div>
       )
 
+      let picture = pictureUrl ? pictureUrl : (PickImage(industries[0]))
+
       let modalContent = !sent ? (
         <Card className={classes.card}>
-          <img alt='industry' src={PickImage(industries[0])}
-            className={classes.cover}/>
+          <CardMedia
+            className={classes.cover}
+            image={picture}
+            title="OpportunityImage"
+            />
           <CardContent className={classes.content}>
             <Typography variant="h5" gutterBottom align='left'
               color="default">

@@ -502,6 +502,8 @@ class OpportunityHome extends React.Component {
               handleChange={this.handleWaitlistChange}
               handleSubmit={this.handleWaitlistSubmit}
               loading={loading}
+              email={this.state.email}
+              fname={this.state.fname}
             />
           {this.props.currentUser.isAdmin &&
               <OpportunityReferral

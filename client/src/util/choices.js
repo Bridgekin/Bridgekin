@@ -1,9 +1,9 @@
 export const needsChoices = [
   'Find',
   'Sell',
+  'Discover',
   'Raise Capital',
   'Invest Capital',
-  'Discover',
   'Other'
 ];
 

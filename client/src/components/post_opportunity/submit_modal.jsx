@@ -64,7 +64,7 @@ class SubmitModal extends React.Component {
 
   handleClose(field){
     return () => {
-      if(this.props.waitlistErrors){
+      if(this.props.opportunityErrors){
         this.props.clearOpportunityErrors();
       }
 
@@ -99,8 +99,8 @@ class SubmitModal extends React.Component {
           Thanks For Posting!
         </Typography>
         <Typography variant="body1" id="simple-modal-description">
-          Thanks for sharing your opportunity! Our team is doing a quick review
-          and your post will go live within 24 hours.
+          {`Thanks for sharing your opportunity! Our team is doing a quick review
+            and your post will go live within 24 hours.`}
         </Typography>
 
         <div className={classes.actionWrapper}>
@@ -120,11 +120,11 @@ class SubmitModal extends React.Component {
     ) : (
       <div className={classes.paper}>
         <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
-          You've Updated Your Post!
+          Thanks For Updating Your Opportunity
         </Typography>
         <Typography variant="body1" id="simple-modal-description">
-          You've successfully updated your opportunity. Head to your account
-          to see your opportunity.
+          {`You've successfully updated your opportunity, you can visit
+            your account page to see it live!`}
         </Typography>
 
         <div className={classes.actionWrapper}>
