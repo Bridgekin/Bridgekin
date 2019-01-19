@@ -1,5 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+
+import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -23,17 +25,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  paper: {
-    // position: 'absolute',
-    // width: '40%',
-    height: 350,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
+  grid:{
+    margin: '70px 0px 70px 0px'
   },
   thanksHeader:{
     marginBottom: 30,
@@ -41,8 +34,11 @@ const styles = theme => ({
   },
   cardModalWrapper:{
     padding: 0,
-    minWidth: 500,
+    // minWidth: 500,
   },
+  modalPaper:{
+    margin: 15
+  }
 });
 
 class WaitlistModal extends React.Component {
@@ -82,7 +78,7 @@ class WaitlistModal extends React.Component {
     })
 
     let modalText = this.props.waitlistErrors.length === 0 ? (
-      <div className={classes.paper}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.thanksHeader}>
           Thanks for signing up!
@@ -94,9 +90,9 @@ class WaitlistModal extends React.Component {
           onClick={this.handleClose} color='secondary'>
           Close
         </Button>
-      </div>
+      </Grid>
     ) : (
-      <div className={classes.paper}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.thanksHeader}>
           Thanks for your interest in Bridgekin!
@@ -111,7 +107,7 @@ class WaitlistModal extends React.Component {
           onClick={this.handleClose} color='secondary'>
           Close
         </Button>
-      </div>
+      </Grid>
     )
 
     return (
@@ -120,8 +116,11 @@ class WaitlistModal extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         onClose={this.handleClose}
-        className={classes.cardModalWrapper}>
-        {modalText}
+        className={classes.cardModalWrapper}
+        classes={{ paper: classes.modalPaper}}>
+        <Grid container justify='center' alignItems='center'>
+          {modalText}
+        </Grid>
       </Dialog>
     )
   }

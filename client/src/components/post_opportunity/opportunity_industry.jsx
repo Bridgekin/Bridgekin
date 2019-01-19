@@ -100,10 +100,11 @@ class IndustryField extends React.Component {
       ) : (classes.actionArea);
 
       return (
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card className={classes.cardWrapper}>
             <CardActionArea className={styling}
-              onClick={this.handleClick(option)}>
+              onClick={this.handleClick(option)}
+              disableRipple>
               <CardContent className={classes.content}>
                 <Typography variant="h6" align='center' color='inherit'>
                   {option}

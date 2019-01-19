@@ -42,7 +42,9 @@ const styles = theme => ({
   },
   icon:{
     height: 'auto',
-    width: 'auto',
+    width: '100%',
+    maxHeight: 90,
+    maxWidth: 90
   },
   needsHeader:{
     fontWeight: 700,
@@ -138,12 +140,13 @@ class NeedsField extends React.Component {
       ) : (classes.icon);
 
       return (
-      <Grid item xs={12} sm={6} lg={4}>
+      <Grid item xs={11} sm={6} lg={4}>
         <Card className={classes.cardWrapper}>
           <CardActionArea className={styling}
-            onClick={this.handleClick(need)}>
+            onClick={this.handleClick(need)}
+            disableRipple>
 
-            <Grid container justify='center' alignItems='center'>
+            <Grid container justify='space-around' alignItems='center'>
               <Grid item xs={3}>
                 <img
                   src={PickIcons(need)}

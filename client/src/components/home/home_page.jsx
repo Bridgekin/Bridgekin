@@ -62,7 +62,29 @@ const styles = theme => ({
     top: '50%',
     left: '50%',
     marginLeft: -12,
-  }
+  },
+  homeGridDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+    flexGrow: 1,
+    paddingTop: 0,
+    backgroundImage: `url(${HomeImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right',
+    backgroundSize: 'cover',
+    marginBottom: 50
+  },
+  homeGridMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+    flexGrow: 1,
+    paddingTop: 0,
+    marginBottom: 50
+  },
 });
 
 
@@ -177,7 +199,29 @@ class HomePage extends React.Component{
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.homeGrid}
+        <Grid container className={classes.homeGridDesktop}
+          justify="flex-start" alignItems="center">
+          <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
+            style={{ marginLeft: 50, marginTop: 20}}>
+            <Grid item xs={10} >
+              <Typography className={classes.homeHeader}
+                variant="h5" gutterBottom>
+                {"Bridgekin is changing the way people connect to the business opportunities within their network"}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={10} sm={8}>
+              <Typography className={classes.homeSubheader}
+                variant="p" gutterBottom>
+                Bridgekin is currently an invite-only community. Sign up now to join our waitlist.
+              </Typography>
+              {form}
+            </Grid>
+          </Grid>
+
+        </Grid>
+
+        <Grid container className={classes.homeGridMobile}
           justify="flex-start" alignItems="center">
           <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>

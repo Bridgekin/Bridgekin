@@ -1,6 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+
+import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -23,17 +25,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  paper: {
-    // position: 'absolute',
-    // width: '40%',
-    height: 350,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
+  grid:{
+    margin: '70px 0px 70px 0px'
   },
   thanksHeader:{
     marginBottom: 30,
@@ -43,16 +36,19 @@ const styles = theme => ({
     margin: '0px 10px 0px 10px'
   },
   actionWrapper: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    width: '100%',
+    // display: 'flex',
+    // justifyContent: 'flex-start',
+    // width: '100%',
     marginTop: 25,
     marginBottom: 25
   },
   modalWrapper:{
     padding: 0,
-    minWidth: 500,
+    // minWidth: 500,
   },
+  modalPaper:{
+    margin: 15
+  }
 });
 
 class SubmitModal extends React.Component {
@@ -94,73 +90,90 @@ class SubmitModal extends React.Component {
     })
 
     let successText = modalType === 'create' ? (
-      <div className={classes.paper}>
-        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
-          Thanks For Posting!
-        </Typography>
-        <Typography variant="body1" id="simple-modal-description">
-          {`Thanks for sharing your opportunity! Our team is doing a quick review
-            and your post will go live within 24 hours.`}
-        </Typography>
+      <Grid className={classes.grid}
+        container justify='center'>
+        <Grid item xs={11} sm={10} md={8} container justify='center'
+          spacing={16}>
+          <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+            Thanks For Posting!
+          </Typography>
+          <Typography variant="body1" id="simple-modal-description">
+            {`Thanks for sharing your opportunity! Our team is doing a quick review
+              and your post will go live within 24 hours.`}
+          </Typography>
 
-        <div className={classes.actionWrapper}>
-          <Button variant="contained" color='secondary'
-            className={classes.actionButton}
-            onClick={this.handleClose('post')}>
-            Post Another Opportunity
-          </Button>
-
-          <Button variant="contained" color='secondary'
-            className={classes.actionButton}
-            onClick={this.handleClose('find')}>
-            View Opportunities
-          </Button>
-        </div>
-      </div>
-    ) : (
-      <div className={classes.paper}>
-        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
-          Thanks For Updating Your Opportunity
-        </Typography>
-        <Typography variant="body1" id="simple-modal-description">
-          {`You've successfully updated your opportunity, you can visit
-            your account page to see it live!`}
-        </Typography>
-
-        <div className={classes.actionWrapper}>
+        <Grid item xs={10} md={6} className={classes.actionWrapper}>
           <Button variant="contained" color='secondary'
             className={classes.actionButton}
             onClick={this.handleClose('post')}>
             Post An Opportunity
           </Button>
+        </Grid>
 
+        <Grid item xs={10} md={6} className={classes.actionWrapper}>
           <Button variant="contained" color='secondary'
             className={classes.actionButton}
             onClick={this.handleClose('find')}>
             View Opportunities
           </Button>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
+    </Grid>
+    ) : (
+      <Grid className={classes.grid}
+        container justify='center'>
+        <Grid item xs={11} sm={10} md={8} container justify='center'
+          spacing={16}>
+
+          <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+            Thanks For Updating Your Opportunity
+          </Typography>
+          <Typography variant="body1" id="simple-modal-description">
+            {`You've successfully updated your opportunity, you can visit
+              your account page to see it live!`}
+          </Typography>
+
+          <Grid item xs={10} md={6} className={classes.actionWrapper}>
+            <Button variant="contained" color='secondary'
+              className={classes.actionButton}
+              onClick={this.handleClose('post')}>
+              Post An Opportunity
+            </Button>
+          </Grid>
+
+          <Grid item xs={10} md={6} className={classes.actionWrapper}>
+            <Button variant="contained" color='secondary'
+              className={classes.actionButton}
+              onClick={this.handleClose('find')}>
+              View Opportunities
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
     )
 
     let modalText = this.props.opportunityErrors.length === 0 ? (
         successText
       ) : (
-        <div className={classes.paper}>
-          <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
-            You're almost there!
-          </Typography>
-          <Typography variant="body1" id="simple-modal-description">
-            You've got a few pieces to correct before submitting your opportunity, listed below:
-          </Typography>
-          <List>
-            {opportunityErrors}
-          </List>
-          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose('')} color='secondary'>
-            Close
-          </Button>
-        </div>
+        <Grid className={classes.grid}
+          container justify='center'>
+          <Grid item xs={11} sm={10} md={8} container justify='center'
+            spacing={16}>
+            <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+              You're almost there!
+            </Typography>
+            <Typography variant="body1" id="simple-modal-description">
+              You've got a few pieces to correct before submitting your opportunity, listed below:
+            </Typography>
+            <List>
+              {opportunityErrors}
+            </List>
+            <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+              onClick={this.handleClose('')} color='secondary'>
+              Close
+            </Button>
+          </Grid>
+        </Grid>
       )
 
     return (
@@ -168,9 +181,13 @@ class SubmitModal extends React.Component {
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        onClose={this.handleClose('find')}
-        className={classes.cardModalWrapper}>
-        {modalText}
+        onClose={this.props.opportunityErrors.length === 0 ?
+          (this.handleClose('find')) : (this.handleClose(''))}
+        className={classes.cardModalWrapper}
+        classes={{ paper: classes.modalPaper}}>
+        <Grid container justify='center' alignItems='center'>
+          {modalText}
+        </Grid>
       </Dialog>
     )
   }

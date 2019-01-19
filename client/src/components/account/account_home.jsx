@@ -13,6 +13,7 @@ import blankProfilePic from '../../static/blank_profile_pic.png';
 import EditIcon from '@material-ui/icons/EditSharp';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/AddSharp';
+import PersonIcon from '@material-ui/icons/PersonSharp';
 import Avatar from '@material-ui/core/Avatar';
 
 const mapStateToProps = state => ({
@@ -29,7 +30,8 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-    marginTop: 50
+    marginTop: 75,
+    marginBottom: 75
   },
   cover: {
     width: '100%',
@@ -88,11 +90,12 @@ class AccountHome extends React.Component {
         className={classes.pic}
         src={currentUser.profilePicUrl}
         alt="Account Profile Picture"
+        onClick={()=> this.props.history.push('/account/settings/general')}
       />
     ) : (
-      <AddIcon
+      <PersonIcon
         className={classes.addProfilePicIcon}
-        onClick={()=> this.props.history.push('/account/settings')}/>
+        onClick={()=> this.props.history.push('/account/settings/general')}/>
     )
 
     return (
@@ -114,7 +117,7 @@ class AccountHome extends React.Component {
                     {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
                   </Typography>
                   <div style={{ marginLeft: 10 }}
-                    onClick={() => this.props.history.push('/account/settings')}>
+                    onClick={() => this.props.history.push('/account/settings/general')}>
                     <IconButton className={classes.button} aria-label="Edit">
                       <EditIcon />
                     </IconButton>

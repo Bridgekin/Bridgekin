@@ -91,7 +91,8 @@ class AccountPosted extends React.Component {
                 alignItems="center" >
                 <Card>
                   <CardActionArea className={classes.addOportunityCard}
-                    onClick={() => this.props.history.push('/postopportunity')}>
+                    onClick={() => this.props.history.push('/postopportunity')}
+                    disableRipple>
                     <AddIcon style={{ fontSize: 150 }}/>
                     <Typography variant="h3" gutterBottom align='center'>
                       Add Opportunity

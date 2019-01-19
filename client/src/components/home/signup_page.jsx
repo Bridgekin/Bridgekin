@@ -143,28 +143,34 @@ class SignupPage extends React.Component{
 
     let form = (
       <form className='form-container'>
-        <TextField
-          required
-          label="First Name"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          value={this.state.fname}
-          onChange={this.handleChange('fname')}
-          onMouseUp={this.handleChange('fname')}
-          />
-        <TextField
-          required
-          label="Last Name"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          value={this.state.lname}
-          onChange={this.handleChange('lname')}
-          onMouseUp={this.handleChange('lname')}
-          />
+        <Grid container justify="center" alignItems="center" spacing={8}>
+          <Grid item xs={12} sm={6} >
+            <TextField
+              required
+              label="First Name"
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              variant='outlined'
+              value={this.state.fname}
+              onChange={this.handleChange('fname')}
+              onMouseUp={this.handleChange('fname')}
+              />
+          </Grid>
+          <Grid item xs={12} sm={6} >
+            <TextField
+              required
+              label="Last Name"
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              variant='outlined'
+              value={this.state.lname}
+              onChange={this.handleChange('lname')}
+              onMouseUp={this.handleChange('lname')}
+              />
+          </Grid>
+        </Grid>
         <TextField
           required
           label="Email"

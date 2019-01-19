@@ -6,7 +6,7 @@ class ReferralLinkPolicy < ApplicationPolicy
   end
 
   def create?
-    record.owner == user
+    record.owner == user || user.is_admin
   end
 
   def reveal

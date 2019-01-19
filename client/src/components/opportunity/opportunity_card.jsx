@@ -264,7 +264,8 @@ class OpportunityCard extends React.Component {
           >
           <Card className={classes.card}
             style={editable ? {minHeight: 450} : {minHeight: 390}}>
-            <CardActionArea onClick={this.handleCardOpen}>
+            <CardActionArea onClick={this.handleCardOpen}
+              disableRipple>
               <CardMedia
                 className={classes.cover}
                 image={picture}

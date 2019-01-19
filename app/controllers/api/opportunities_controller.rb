@@ -4,7 +4,7 @@ class Api::OpportunitiesController < ApiController
   before_action :set_opportunity, only: [:show, :update, :destroy]
   before_action :authenticate_user
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: [:index, :userIndex]
   after_action :verify_policy_scoped, only: :index
 
   def index
@@ -61,6 +61,7 @@ class Api::OpportunitiesController < ApiController
 
   # PATCH/PUT /opportunities/1
   def update
+    authorize @opportunity
     if @opportunity.update(opportunity_params)
       @opportunity.opportunity_networks.delete_all
 
@@ -83,6 +84,7 @@ class Api::OpportunitiesController < ApiController
 
   # DELETE /opportunities/1
   def destroy
+    authorize @opportunity
     if @opportunity.destroy
       render json: ['Opportunity was destroyed'], status: :ok
     else

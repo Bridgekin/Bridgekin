@@ -32,7 +32,7 @@ const styles = theme => ({
     flexGrow: 1
   },
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   acccountMain:{
     marginTop: 50

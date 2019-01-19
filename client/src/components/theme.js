@@ -100,6 +100,12 @@ let theme = createMuiTheme({
     MuiCheckbox:{
       root: 'red'
     },
+    MuiFormControlLabel:{
+      label: {
+        fontSize: 15,
+        fontWeight: 300
+      }
+    }
   },
   // htmlFontSize: 10
   // pxToRem: () => {

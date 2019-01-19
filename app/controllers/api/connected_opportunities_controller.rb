@@ -4,6 +4,9 @@ class Api::ConnectedOpportunitiesController < ApiController
   before_action :set_connected_opportunity, only: [:show, :update, :destroy]
   before_action :authenticate_user
 
+  after_action :verify_authorized, except: :index
+  # after_action :verify_policy_scoped, only: :index
+
   def index
     @connected_opportunities = @user.opportunity_connections
     @facilitated_connected_opportunities = @user.opportunity_connections_facilitated
@@ -12,6 +15,7 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   # GET /opportunities/1
   def show
+    authorize @connected_opportunity
     render :show
   end
 
@@ -27,6 +31,7 @@ class Api::ConnectedOpportunitiesController < ApiController
       newConnectedOpportunity[:user_id] = @user.id
 
       @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
+      authorize @connected_opportunity
 
       if @connected_opportunity.save
         ConnectedOpportunityMailer.make_connection(@connected_opportunity).deliver_now
@@ -39,6 +44,7 @@ class Api::ConnectedOpportunitiesController < ApiController
       newConnectedOpportunity[:facilitator_id] = @user.id
 
       @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
+      authorize @connected_opportunity
 
       if @connected_opportunity.save
         ConnectedOpportunityMailer.make_facilitated_connection(@connected_opportunity).deliver_now
@@ -65,6 +71,7 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   # PATCH/PUT /opportunities/1
   def update
+    authorize @connected_opportunity
     if @connected_opportunity.update(connected_opportunity_params)
       # render json: @connected_opportunity
       render :show
@@ -75,6 +82,7 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   # DELETE /opportunities/1
   def destroy
+    authorize @connected_opportunity
     if @connected_opportunity.destroy
       render json: ['Connected opportunity was destroyed'], status: :ok
     else

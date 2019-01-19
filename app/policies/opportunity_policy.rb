@@ -12,14 +12,14 @@ class OpportunityPolicy < ApplicationPolicy
   end
 
   def create?
-    record.owner == user
+    record.owner == user || user.is_admin
   end
 
   def update?
-    record.owner == user
+    record.owner == user || user.is_admin
   end
 
   def destroy?
-    record.owner == user
+    record.owner == user || user.is_admin
   end
 end

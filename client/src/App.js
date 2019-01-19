@@ -26,8 +26,8 @@ export default () => (
       <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
       <ProtectedRoute path="/account" component={AccountRoute} />
       <ProtectedRoute path="/mynetwork" component={ConnectionsHome} />
-      <Route path="/signup/:code" component={SignupPage} />
-      <Route path="/accountconfirmed" component={AccountConfirmed} />
+      <AuthRoute path="/signup/:code" component={SignupPage} />
+      <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/login" component={Login}/>
       <AuthRoute exact path="/" component={HomePage} />
       <Route component={NotFound} />

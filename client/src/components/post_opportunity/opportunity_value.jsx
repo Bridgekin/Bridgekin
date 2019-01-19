@@ -80,7 +80,8 @@ class ValueField extends React.Component {
       return (
         <Card className={classes.cardWrapper}>
           <CardActionArea className={styling}
-            onClick={this.handleClick(value)}>
+            onClick={this.handleClick(value)}
+            disableRipple>
             <CardContent className={classes.content}>
               <Typography variant="h6" align='center' color='inherit'>
                 {value}

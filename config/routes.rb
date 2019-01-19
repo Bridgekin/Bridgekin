@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     resources :saved_opportunities
     resource :waitlist_user, only: [:create]
     resources :referral_links, only: [:create]
-    resources :email_notifications, only: [:index, :create, :show, :destroy, :update]
+    resource :email_notifications, only: [:create, :show]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end

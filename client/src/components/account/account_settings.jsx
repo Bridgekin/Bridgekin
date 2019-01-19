@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -18,7 +19,10 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import AddIcon from '@material-ui/icons/AddSharp';
+import PersonIcon from '@material-ui/icons/PersonSharp';
 import Avatar from '@material-ui/core/Avatar';
+import EditIcon from '@material-ui/icons/EditSharp';
+import IconButton from '@material-ui/core/IconButton';
 
 import UpdateUserModal from './update_user_modal';
 import ImageCropModal from '../image_upload_modal';
@@ -47,7 +51,8 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-    marginTop: 100
+    marginTop: 75,
+    marginBottom: 75
   },
   pic: {
     width: '100%',
@@ -168,9 +173,14 @@ class AccountSetting extends React.Component {
     })
   }
 
-  handleChangeFill(settingState){
+  handleChangeFill(path){
     return () => {
-      this.setState({ settingState })
+      // this.setState({ settingState })
+      if (path){
+        this.props.history.push(`/account/settings/${path}`)
+      } else {
+        this.props.history.push(`/account/settings`)
+      }
     }
   }
 
@@ -271,11 +281,12 @@ class AccountSetting extends React.Component {
         className={classes.pic}
         src={currentUser.profilePicUrl}
         alt="Account Profile Picture"
+        onClick={()=> this.props.history.push('/account/settings/general')}
       />
     ) : (
-      <AddIcon
+      <PersonIcon
         className={classes.addProfilePicIcon}
-        onClick={this.handleChangeFill('General Information')}
+        onClick={this.handleChangeFill('general')}
       />
     )
 
@@ -286,69 +297,10 @@ class AccountSetting extends React.Component {
         style={{ margin: 20, maxWidth: '100%', height: 'auto' }}/>
     ) : ('')
 
-    switch (settingState) {
-      case "Home":
-        return (
-          <Card className={classes.card}>
-            <Grid container justify="center" alignItems="flex-start"
-              spacing={16}>
+    let pathName = this.props.location.pathname.split('/').pop();
 
-              <Grid item xs={8} md={5}>
-                {profilePicture}
-              </Grid>
-
-              <Grid item xs={8} md={6} className={classes.content}>
-                <div className={classes.wrapper}>
-                  <Typography variant="h1" align='left'>
-                    {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
-                  </Typography>
-                </div>
-
-                <Typography variant="h6" align='left' color='textPrimary'>
-                  Contact Information
-                </Typography>
-                <Typography variant="body1" gutterBottom align='left'
-                  color="default" style={{ marginBottom: 15}}>
-                  {currentUser.email}
-                </Typography>
-
-                <Button color="secondary" className={classes.button}
-                  onClick={this.handleChangeFill('General Information')}>
-                  <Typography variant="subtitle1" align='left' color='textPrimary'>
-                    Change your profile information
-                  </Typography>
-                </Button>
-
-                <Button color="secondary" className={classes.button}
-                  onClick={this.handleChangeFill('Reset Password')}>
-                  <Typography variant="subtitle1" align='left' color='textPrimary'>
-                    Change your password
-                  </Typography>
-                </Button>
-
-                <Typography variant="subtitle1" align='left'
-                  color="secondary" style={{ marginTop: 15}}>
-                  {`How often would you like to be notified about
-                    opportunities by email?`}
-                </Typography>
-
-                <FormControl component="fieldset" className={classes.formControl}>
-                  <RadioGroup
-                    aria-label="Notifications"
-                    name="notifications"
-                    className={classes.group}
-                    value={this.state.notificationSetting}
-                    onChange={this.handleNotificationChange}
-                  >
-                    <FormControlLabel value="Weekly" control={<Radio />} label="Weekly Email Recap" />
-                    <FormControlLabel value="Never" control={<Radio />} label="Never - I am immune to FOMO" />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Card>
-        );
-      case "Reset Password":
+    switch (pathName) {
+      case "password":
         return(
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="center"
@@ -392,7 +344,7 @@ class AccountSetting extends React.Component {
                   />
                 <div className={classes.buttonWrapper}>
                   <Button className={classes.submitButton}
-                    onClick={this.handleChangeFill('Home')} variant='contained'>
+                    onClick={this.handleChangeFill('')} variant='contained'>
                     Back
                   </Button>
 
@@ -410,7 +362,7 @@ class AccountSetting extends React.Component {
               handleClose={this.handleModalClose}/>
           </Card>
         );
-      case "General Information":
+      case "general":
         let countryOptions = this.options.map(option =>(
           <MenuItem value={option}>{option}</MenuItem>
         ));
@@ -543,7 +495,7 @@ class AccountSetting extends React.Component {
 
                 <div className={classes.buttonWrapper}>
                   <Button className={classes.submitButton}
-                    onClick={this.handleChangeFill('Home')} variant='contained'>
+                    onClick={this.handleChangeFill('')} variant='contained'>
                     Back
                   </Button>
 
@@ -568,7 +520,82 @@ class AccountSetting extends React.Component {
           </Card>
         );
       default:
-        return (<div></div>)
+        return (
+          <Card className={classes.card}>
+            <Grid container justify="center" alignItems="flex-start"
+              spacing={16}>
+
+              <Grid item xs={8} md={5}>
+                {profilePicture}
+                <div style={{ display: 'flex'}}>
+                  <Button color="textPrimary"
+                    onClick={() => this.props.history.push('/account/settings/general')}>
+                    Update Profile Picture
+                  </Button>
+                </div>
+              </Grid>
+
+              <Grid item xs={8} md={6} className={classes.content}>
+                <div className={classes.wrapper}>
+                  <Typography variant="h1" align='left'>
+                    {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
+                  </Typography>
+                  <div style={{ marginLeft: 10 }}
+                    onClick={() => this.props.history.push('/account/settings/general')}>
+                    <IconButton className={classes.button} aria-label="Edit">
+                      <EditIcon />
+                    </IconButton>
+                  </div>
+                </div>
+
+                <Typography variant="h6" align='left' color='textPrimary'>
+                  Email Address
+                </Typography>
+                <Typography variant="body1" gutterBottom align='left'
+                  color="default" style={{ marginBottom: 15}}>
+                  {currentUser.email}
+                </Typography>
+
+                <div style={{ display: 'flex'}}>
+                  <Typography variant="h6" align='left' color='textPrimary'>
+                    Current Password
+                  </Typography>
+                  <Link to='/account/settings/password'
+                    style={{ marginLeft: 15}}>
+                    <Typography variant="h6" align='left' color='textPrimary'
+                      style={{fontWeight: 300}}>
+                      Change
+                    </Typography>
+                  </Link>
+                </div>
+                <Typography variant="body1" gutterBottom align='left'
+                  color="default" style={{ marginBottom: 15}}>
+                  {"********"}
+                </Typography>
+
+                <Typography variant="subtitle1" align='left'
+                  color="secondary" style={{ marginTop: 15}}>
+                  {`How often would you like to be notified about
+                    opportunities by email?`}
+                </Typography>
+
+                <FormControl component="fieldset" className={classes.formControl}>
+                  <RadioGroup
+                    aria-label="Notifications"
+                    name="notifications"
+                    className={classes.group}
+                    value={this.state.notificationSetting}
+                    onChange={this.handleNotificationChange}
+                  >
+                    <FormControlLabel value="Every Opportunity" control={<Radio />} label="Every New Opportunity" />
+                    <FormControlLabel value="Weekly" control={<Radio />} label="Weekly Email Recap" />
+                    <FormControlLabel value="Never" control={<Radio />} label="Never - I am immune to FOMO" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Card>
+        );
     }
   }
 

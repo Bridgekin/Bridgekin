@@ -121,7 +121,8 @@ const styles = theme => ({
 const DEFAULTSTATE = {
   activeStep: 0,
   modalOpen: false,
-  networks: []
+  networks: [],
+  previewUrl: null
 }
 
 class OpportunityChange extends React.Component {
@@ -165,7 +166,8 @@ class OpportunityChange extends React.Component {
           networks={this.state.networks}
           availNetworks={this.props.availNetworks}
           pictureUrl={this.state.previewUrl}
-          handleFile={this.handleFile.bind(this)}/>;
+          handleFile={this.handleFile.bind(this)}
+          handleRemoveFile={this.handleRemoveFile.bind(this)}/>;
       case 5:
         let errors = this.checkErrors();
         return <SubmitField
@@ -185,19 +187,25 @@ class OpportunityChange extends React.Component {
     }
   }
 
-  handleFile(picture){
-    let fileReader = new FileReader();
+  handleFile(picture, previewUrl){
+    this.setState({ picture , previewUrl})
+    // let fileReader = new FileReader();
+    //
+    // fileReader.onloadend = () => {
+    //   debugger
+    //   this.setState({
+    //     picture,
+    //     previewUrl: fileReader.result,
+    //   })
+    // }
+    //
+    // if(picture){
+    //   fileReader.readAsDataURL(picture)
+    // }
+  }
 
-    fileReader.onloadend = () => {
-      this.setState({
-        picture,
-        previewUrl: fileReader.result,
-      })
-    }
-
-    if(picture){
-      fileReader.readAsDataURL(picture)
-    }
+  handleRemoveFile(){
+    this.setState({ picture: null, previewUrl: null})
   }
 
   handleNext = () => {
@@ -211,7 +219,9 @@ class OpportunityChange extends React.Component {
     const formData = new FormData();
 
     for (let i = 0; i < fields.length; i++){
-      formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
+      if(this.state[fields[i]]){
+        formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
+      }
     }
     // formData.append(`opportunity[geography]`, this.state.geography.join(','));
     // formData.append(`opportunity[industries]`, this.state.industries.join(','));

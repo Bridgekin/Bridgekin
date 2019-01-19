@@ -6,6 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import _ from 'lodash';
 
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -35,7 +36,8 @@ const mapDispatchToProps = dispatch => ({
 const styles = theme => ({
   paper: {
     // position: 'absolute',
-    height: 350,
+    margin: 15,
+    // height: 'auto',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -46,12 +48,12 @@ const styles = theme => ({
   },
   cardModalWrapper:{
     padding: 0,
-    minWidth: 500,
+    // minWidth: 500,
   },
   cover: {
     height: 150,
     width: '100%',
-    // objectFit: 'cover'
+    objectFit: 'cover'
   },
   card: {
     display: 'flex',
@@ -98,11 +100,14 @@ const styles = theme => ({
     marginBottom: 25
   },
   subContentSection :{
-    minWidth: 175,
+    // minWidth: 175,
     marginRight: 10
   },
   errorHeader:{
     marginBottom: 30
+  },
+  modalPaper:{
+    margin: 15
   }
 });
 
@@ -228,7 +233,7 @@ class CardModal extends React.Component {
             Hold on there!
           </Typography>
           <Typography variant="body1" id="simple-modal-description">
-            Apologies, but we weren't able to connect you to this opportunity because:
+            Unfortunately, we weren't able to connect you to this opportunity because:
           </Typography>
           <List>
             {connectedOpportunityErrors}
@@ -242,14 +247,17 @@ class CardModal extends React.Component {
 
       let picture = pictureUrl ? pictureUrl : (PickImage(industries[0]))
 
+      // <CardContent className={classes.content}>
+      // <Card className={classes.card}>
+
       let modalContent = !sent ? (
-        <Card className={classes.card}>
-          <CardMedia
-            className={classes.cover}
-            image={picture}
-            title="OpportunityImage"
-            />
-          <CardContent className={classes.content}>
+        <Grid container justify="center" alignItems='center'
+          >
+          <Grid item xs={12}>
+            <img src={picture} alt="OpportunityImage"
+              className={classes.cover} />
+          </Grid>
+          <Grid item xs={11} sm={10} md={8}>
             <Typography variant="h5" gutterBottom align='left'
               color="default">
               {title}
@@ -313,8 +321,9 @@ class CardModal extends React.Component {
               Once you connect or refer above, we'll send you an email introducing
               you to the opportunity owner
             </Typography>
-          </CardContent>
-        </Card>
+          </Grid>
+        </Grid>
+
       ) : responseText
 
       // autoDetectWindowHeight={true}
@@ -331,7 +340,8 @@ class CardModal extends React.Component {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           onClose={this.handleClose('find')}
-          className={classes.cardModalWrapper}>
+          className={classes.cardModalWrapper}
+          classes={{ paper: classes.modalPaper}}>
           {modalContent}
         </Dialog>
       )

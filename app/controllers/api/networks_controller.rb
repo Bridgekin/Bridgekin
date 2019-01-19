@@ -4,19 +4,24 @@ class Api::NetworksController < ApplicationController
   before_action :set_network, only: [:show, :update, :destroy]
   before_action :authenticate_user
 
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
+
   def index
-    @networks = @user.member_networks
+    @networks = policy_scope(Network)
     render :index
   end
 
-  # GET /opportunities/1
+  # GET /networks/1
   def show
+    authorize @network
     render :show
   end
 
-  # POST /opportunities
+  # POST /networks
   def create
     @network = Network.new(network_params)
+    authorize @network
 
     if @network.save
       render :show
@@ -34,7 +39,6 @@ class Api::NetworksController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def network_params
-      params.require(:network).permit(:title, :description, :owner_id, :opportunity_needs,
-      :industries, :geography, :value, :status, :networks)
+      params.require(:network).permit(:title, :subtitle)
     end
 end

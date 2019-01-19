@@ -57,9 +57,25 @@ class DescriptionField extends React.Component {
       imageModalOpen: false,
     }
 
+    // this.fileReader = new FileReader();
+
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
+
+  // fileReader.onloadend = () => {
+  //   this.setState({
+  //     profilePicFile: file,
+  //     previewUrlForModal: fileReader.result,
+  //     imageModalOpen: bool
+  //   }, () => {
+  //     this.props.handleFile(this.state.profilePicFile);
+  //     // if(!bool){
+  //     //   // send file back to parent component
+  //     //   this.props.handleFile(file);
+  //     // }
+  //   })
+  // }
 
   formatNetworks(){
     const { availNetworks } = this.props;
@@ -101,47 +117,69 @@ class DescriptionField extends React.Component {
   }
 
   handleFile(e){
+    // debugger
     let file = e.currentTarget.files[0];
     this.handleFileHelper(file, true);
   }
 
   handleCloseImageModal(newFile){
-    this.handleFileHelper(newFile, false);
+    // debugger
+    if(newFile !== '' && newFile !== null){
+      this.handleFileHelper(newFile, false);
+    } else {
+      this.setState({ imageModalOpen: false},
+      () => this.props.handleFile(this.state.profilePicFile))
+    }
   }
 
   handleFileHelper(file, bool){
     let fileReader = new FileReader();
-
-    if(file){
-      fileReader.readAsDataURL(file)
-    }
-
-    fileReader.onloadend = () => {
+    let that = this;
+    // debugger
+    fileReader.onloadend = (that) => {
+      // debugger
       this.setState({
         profilePicFile: file,
         previewUrlForModal: fileReader.result,
         imageModalOpen: bool
       }, () => {
-        if(!bool){
-          // send file back to parent component
-          this.props.handleFile(file);
-        }
+        // debugger
+        this.props.handleFile(file, fileReader.result );
+        // if(!bool){
+        //   // send file back to parent component
+        //   this.props.handleFile(file);
+        // }
       })
+    }
+
+    if(file){
+      fileReader.readAsDataURL(file)
     }
   }
 
+  handleRemoveFile(){
+    this.setState({
+      profilePicFile: null,
+      previewUrlForModal: null,
+    }, () => {
+      // this.fileReader = new FileReader();
+      this.props.handleRemoveFile();
+    });
+  }
 
   render (){
     let { classes, pictureUrl } = this.props;
     let { networks, imageModalOpen, profilePicFile, previewUrlForModal } = this.state;
     const { availNetworks, picture } = this.props;
+    const pictureUploaded = Boolean(pictureUrl)
     // const error = Object.keys(networks).filter(v => v).length < 1
 
     let preview = pictureUrl ? (
       <img
         alt="account-pic-preview"
         src={pictureUrl}
-        style={{ margin: 20, maxWidth: '100%', height: 'auto' }}/>
+        style={{ margin: "20px 0px 20px 0px",
+                width: '100%', height: 'auto' }}/>
     ) : ('')
 
     let fields = Object.values(availNetworks).map(network => (
@@ -198,30 +236,46 @@ class DescriptionField extends React.Component {
             />
           </div>
 
-          <div className={classes.section}>
-            <Typography variant="h5" gutterBottom align='left'
-              className={classes.descriptionHeader} >
-              Upload image (optional)
-            </Typography>
+          <Typography variant="h5" gutterBottom align='left'
+            className={classes.descriptionHeader} >
+            Upload image (optional)
+          </Typography>
+          <Grid container justify='center' alignItems='center'
+            style={{ marginBottom: 30}}>
             <input
               accept="image/*"
               className={classes.input}
               id="contained-button-file"
-              multiple
               type="file"
               onChange={this.handleFile.bind(this)}
             />
-            <Grid item xs={12} sm={10} md={8} lg={6}>
+            <Grid item xs={12} sm={10} md={8} lg={7}>
               {!imageModalOpen && preview}
             </Grid>
-            <label htmlFor="contained-button-file">
-              <Button variant="contained" component="span"
-                color='primary'
-                style={{ margin: 30, fontWeight: 600 }}>
-                Upload image here
-              </Button>
-            </label>
-          </div>
+            <Grid container justify='space-between' alignItems='center'
+              style={{ marginTop: 30}}>
+              <Grid item xs={10} sm={8} md={5}
+                container justify='center'>
+                <label htmlFor="contained-button-file">
+                  <Button variant="contained" component="span"
+                    color='primary'
+                    style={{ fontWeight: 600, marginTop: 20 }}>
+                    Upload image here
+                  </Button>
+                </label>
+              </Grid>
+              <Grid item xs={10} sm={8} md={5}
+                container justify='center'>
+                {pictureUploaded &&
+                  <Button variant="contained" component="span"
+                    color='primary'
+                    style={{ fontWeight: 600, marginTop: 20  }}
+                    onClick={this.handleRemoveFile.bind(this)}>
+                    Delete
+                  </Button>}
+              </Grid>
+            </Grid>
+          </Grid>
 
           <div className={classes.section}>
             <Typography variant="h5" gutterBottom align='left'
@@ -241,8 +295,8 @@ class DescriptionField extends React.Component {
         <ImageCropModal
           handleClose={this.handleCloseImageModal.bind(this)}
           open={imageModalOpen}
-          file={profilePicFile}
-          fileUrl={previewUrlForModal}/>
+          fileUrl={previewUrlForModal}
+          ratio={16/7}/>
 
       </Grid>
     )

@@ -69,7 +69,7 @@ const styles = {
     marginBottom: 20
   },
   headerDescriptionTypography:{
-    color: theme.palette.grey2,
+    // color: theme.palette.grey2,
     fontSize: 18,
     fontWeight: 300
   },
@@ -342,7 +342,7 @@ class OpportunityHome extends React.Component {
           className={classes.headerItem}>
           <Typography variant="h1" gutterBottom align='center'
             className={classes.headerTypography}>
-            {`Welcome, ${currentUser.fname}`.toUpperCase()}
+            {`Welcome ${currentUser.fname}`.toUpperCase()}
           </Typography>
 
           <Typography variant="h4" gutterBottom align='center'
@@ -351,7 +351,8 @@ class OpportunityHome extends React.Component {
           </Typography>
 
           <Typography variant="p" gutterBottom align='center'
-            className={classes.headerDescriptionTypography}>
+            className={classes.headerDescriptionTypography}
+            color="textPrimary">
             Connect with the opportunities that may be perfect for
             you or a trusted contact in your network
           </Typography>
@@ -361,7 +362,7 @@ class OpportunityHome extends React.Component {
 
     let otherDropdownOptions = [
       {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
-      {header: 'Network Circles' , subHeader: 'Include and exclude specific connections', disabled: true},
+      {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
       {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
     ]
 
@@ -479,7 +480,8 @@ class OpportunityHome extends React.Component {
             alignItems="center" >
             <Card>
               <CardActionArea className={classes.addOportunityCard}
-                onClick={() => this.props.history.push('/postopportunity')}>
+                onClick={() => this.props.history.push('/postopportunity')}
+                disableRipple>
                 <AddIcon style={{ fontSize: 150 }}/>
                 <Typography variant="h3" gutterBottom align='center'>
                   Add Opportunity

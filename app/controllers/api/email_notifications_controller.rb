@@ -4,7 +4,9 @@ class Api::EmailNotificationsController < ApiController
   before_action :set_email_notification, only: [:show, :destroy]
   before_action :authenticate_user
 
-  def index
+  after_action :verify_authorized
+
+  def show
     @email_notification = @user.notification_setting
     unless @email_notification
       @email_notification = EmailNotification.create(user_id: @user.id)
