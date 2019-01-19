@@ -122,7 +122,7 @@ const DEFAULTSTATE = {
   activeStep: 0,
   modalOpen: false,
   networks: [],
-  previewUrl: null
+  pictureUrl: null
 }
 
 class OpportunityChange extends React.Component {
@@ -165,11 +165,12 @@ class OpportunityChange extends React.Component {
           description={this.state.description}
           networks={this.state.networks}
           availNetworks={this.props.availNetworks}
-          pictureUrl={this.state.previewUrl}
+          pictureUrl={this.state.pictureUrl}
           handleFile={this.handleFile.bind(this)}
           handleRemoveFile={this.handleRemoveFile.bind(this)}/>;
       case 5:
         let errors = this.checkErrors();
+        debugger
         return <SubmitField
           title={this.state.title}
           description={this.state.description}
@@ -181,14 +182,14 @@ class OpportunityChange extends React.Component {
           opportunityNeed={this.state.opportunityNeed}
           errors={errors}
           status={this.state.status}
-          pictureUrl={this.state.previewUrl}/>;
+          pictureUrl={this.state.pictureUrl}/>;
       default:
         return 'Unknown step';
     }
   }
 
-  handleFile(picture, previewUrl){
-    this.setState({ picture , previewUrl})
+  handleFile(picture, pictureUrl){
+    this.setState({ picture , pictureUrl})
     // let fileReader = new FileReader();
     //
     // fileReader.onloadend = () => {
@@ -205,7 +206,7 @@ class OpportunityChange extends React.Component {
   }
 
   handleRemoveFile(){
-    this.setState({ picture: null, previewUrl: null})
+    this.setState({ picture: null, pictureUrl: null})
   }
 
   handleNext = () => {
@@ -252,6 +253,7 @@ class OpportunityChange extends React.Component {
 
   handleChange(field) {
     return (value) => {
+      debugger
       this.setState({ [field]: value });
     }
   }

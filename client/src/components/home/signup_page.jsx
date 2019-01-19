@@ -76,7 +76,7 @@ class SignupPage extends React.Component{
       fname: '',
       lname: '',
       password: '',
-      passwordConfirmation: '',
+      // passwordConfirmation: '',
       loading: false,
       success: false,
       open: false
@@ -112,7 +112,7 @@ class SignupPage extends React.Component{
                   fname: '',
                   lname: '',
                   password: '',
-                  passwordConfirmation: ''
+                  // passwordConfirmation: ''
                 })
               } else {
                 this.setState({
@@ -144,7 +144,7 @@ class SignupPage extends React.Component{
     let form = (
       <form className='form-container'>
         <Grid container justify="center" alignItems="center" spacing={8}>
-          <Grid item xs={12} sm={6} >
+          <Grid item xs={10} sm={5} >
             <TextField
               required
               label="First Name"
@@ -157,7 +157,7 @@ class SignupPage extends React.Component{
               onMouseUp={this.handleChange('fname')}
               />
           </Grid>
-          <Grid item xs={12} sm={6} >
+          <Grid item xs={10} sm={5} >
             <TextField
               required
               label="Last Name"
@@ -170,50 +170,42 @@ class SignupPage extends React.Component{
               onMouseUp={this.handleChange('lname')}
               />
           </Grid>
-        </Grid>
-        <TextField
-          required
-          label="Email"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          value={this.state.email}
-          onChange={this.handleChange('email')}
-          onMouseUp={this.handleChange('email')}
-          />
-        <TextField
-          required
-          label="Password"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          type="password"
-          value={this.state.password}
-          onChange={this.handleChange('password')}
-          onMouseUp={this.handleChange('password')}
-          />
-        <TextField
-          required
-          label="Password Confirmation"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          type="password"
-          value={this.state.passwordConfirmation}
-          onChange={this.handleChange('passwordConfirmation')}
-          onMouseUp={this.handleChange('passwordConfirmation')}
-          />
-        <div className={classes.wrapper}>
-          <Button variant="contained" color="secondary" className={classes.button}
-            disabled={loading} onClick={this.handleSignupSubmit}>
-            Sign Up Now
-          </Button>
-          {loading && <CircularProgress size={24}
+          <Grid item xs={10}>
+            <TextField
+              required
+              label="Email"
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              variant='outlined'
+              value={this.state.email}
+              onChange={this.handleChange('email')}
+              onMouseUp={this.handleChange('email')}
+              />
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              required
+              label="Password"
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              variant='outlined'
+              type="password"
+              value={this.state.password}
+              onChange={this.handleChange('password')}
+              onMouseUp={this.handleChange('password')}
+              />
+          </Grid>
+          <Grid item xs={10} className={classes.wrapper}>
+            <Button variant="contained" color="secondary" className={classes.button}
+              disabled={loading} onClick={this.handleSignupSubmit}>
+              Sign Up Now
+            </Button>
+            {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
-        </div>
+          </Grid>
+        </Grid>
       </form>
     )
 

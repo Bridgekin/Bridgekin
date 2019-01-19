@@ -18,6 +18,11 @@ export const logoutCurrentUser = () => ({
 export const refSignup = (formUser, code) => dispatch => (
   SessionApiUtil.refSignup(formUser, code)
     .then(handleErrors)
+    .then(data => {
+      localStorage.setItem('bridgekinToken', data.token);
+      dispatch(receiveUser(data.user));
+      dispatch(receiveCurrentUser(data.user));
+    })
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = ['Something went wrong. Try again in a bit, or contact us!'];

@@ -30,9 +30,6 @@ const styles = theme => ({
 });
 
 class SubmitField extends React.Component {
-  getPictureUrl(){
-
-  }
 
   render (){
     const { title, description, industries, opportunityNeed,

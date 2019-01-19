@@ -23,7 +23,8 @@ const DEFAULTSTATE = {
   title: '',
   description: '',
   status: 'Pending',
-  picture: null
+  picture: null,
+  pictureUrl: null
 }
 
 class OpportunityCreate extends React.Component {

@@ -12,6 +12,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Chip from '@material-ui/core/Chip';
 
 import ImageCropModal from '../image_upload_modal';
 
@@ -44,23 +50,50 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  formControl: {
+    margin: theme.spacing.unit,
+    // minWidth: 120,
+    // maxWidth: 300,
+    width: '100%'
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: theme.spacing.unit / 4,
+  },
 });
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 class DescriptionField extends React.Component {
   constructor(props){
     super(props);
-    let networks = this.formatNetworks();
+    // let networks = this.formatNetworks();
     this.state = {
-      networks,
+      networks: [],
       profilePicFile: null,
       previewUrlForModal: null,
       imageModalOpen: false,
+      selectAll: false
     }
 
     // this.fileReader = new FileReader();
 
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this);
+    this.handleToggleSelectAll = this.handleToggleSelectAll.bind(this);
   }
 
   // fileReader.onloadend = () => {
@@ -100,6 +133,39 @@ class DescriptionField extends React.Component {
     return e => {
       e.preventDefault();
       this.props.handleChange(field)(e.target.value);
+    }
+  }
+
+  handleMultiSelectChange(field){
+    return e => {
+      let networks = e.target.value;
+      this.setState({ [field]: networks},
+      () => {
+        debugger
+        this.props.handleChange('networks')(networks)
+      });
+    }
+  };
+
+  handleToggleSelectAll(){
+    const { selectAll } = this.state;
+    const { availNetworks } = this.props;
+    if(selectAll){
+      this.setState({
+        networks: [],
+        selectAll: false
+      })
+    } else {
+      let allNetworks = Object.values(availNetworks).map(network => (
+        network.id
+      ));
+      this.setState({
+        networks: allNetworks,
+        selectAll: true
+      },
+      () => {
+        this.props.handleChange('networks')(allNetworks)
+      })
     }
   }
 
@@ -277,19 +343,81 @@ class DescriptionField extends React.Component {
             </Grid>
           </Grid>
 
-          <div className={classes.section}>
-            <Typography variant="h5" gutterBottom align='left'
-              className={classes.descriptionHeader} >
-              Share this opportunity with
-            </Typography>
+          <Typography variant="h5" gutterBottom align='left'
+            className={classes.descriptionHeader} >
+            Share this opportunity with
+          </Typography>
+          <Grid container justify='space-around' alignItems='center'
+            style={{ marginBottom: 30}} spacing={16}>
+            <Grid item xs={11} container justify='flex-start'>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.selectAll}
+                    onChange={this.handleToggleSelectAll}
+                    value="select-all"
+                  />
+                }
+                label="Select All"
+              />
+            </Grid>
 
-            <FormControl required
-              component="fieldset" className={classes.formControl}>
-              <FormGroup>
-                {fields}
-              </FormGroup>
-            </FormControl>
-          </div>
+            <Grid item xs={10} sm={8} md={4} lg={4}>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="select-multiple-chip">Networks</InputLabel>
+                <Select
+                  multiple
+                  value={this.state.networks}
+                  onChange={this.handleMultiSelectChange('networks')}
+                  input={<Input id="select-multiple-chip" />}
+                  renderValue={selected => (
+                    <div className={classes.chips}>
+                      {selected.map(value => (
+                        <Chip key={value} label={availNetworks[value].title}
+                          eclassName={classes.chip} />
+                      ))}
+                    </div>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {Object.values(availNetworks).map(network => (
+                    <MenuItem key={network.id} value={network.id}>
+                      {network.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={10} sm={8} md={4} lg={4}>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="select-multiple-chip">Connections</InputLabel>
+                <Select
+                  multiple
+                  value={this.state.connections}
+                  onChange={this.handleMultiSelectChange('connections')}
+                  input={<Input id="select-multiple-chip" />}
+                  disabled
+                  MenuProps={MenuProps}
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={10} sm={8} md={4} lg={4}>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="select-multiple-chip">Network Circles</InputLabel>
+                <Select
+                  multiple
+                  value={this.state.circles}
+                  onChange={this.handleMultiSelectChange('circles')}
+                  input={<Input id="select-multiple-chip" />}
+                  disabled
+                  MenuProps={MenuProps}
+                />
+              </FormControl>
+            </Grid>
+
+          </Grid>
         </Grid>
 
         <ImageCropModal
