@@ -22,6 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import Img from 'react-image'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Switch from '@material-ui/core/Switch';
 
 import PersonIcon from '@material-ui/icons/Person';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -149,7 +150,21 @@ const styles = {
     height:'auto',
     width: "100%",
     background: theme.palette.lightGrey
-  }
+  },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+    backgroundColor: 'RGBA(196,196,196,0.1)'
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+    backgroundColor: 'RGBA(196,196,196,0.1)'
+  },
 };
 
 const people = [
@@ -174,6 +189,12 @@ const randomImages = {
 }
 
 class ConnectionsHome extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      toggle: true
+    }
+  }
   capitalize(str){
     let strArray = str.split(' ');
     for (let i = 0; i < strArray.length; i++) {
@@ -182,13 +203,25 @@ class ConnectionsHome extends React.Component{
     return strArray.join(' ')
   }
 
+  handleChange(e){
+    this.setState({ toggle: e.target.checked });
+  };
+
   render(){
     const { classes } = this.props;
+    const { toggle } = this.state;
 
     let subHeader = (
       <Grid item xs={11} container justify="center"
         alignItems="center" className={classes.subtitleWrapper}>
-        <Grid item md={4} xs={0}/>
+        <Grid item xs={8} md={4}  container justify='center'
+          className={classes.subtitleDropdown} alignItems="center">
+          <Button color="primary" className={classes.button}>
+            Connection Requests
+          </Button>
+          <KeyboardArrowDownIcon />
+        </Grid>
+
         <Grid item xs={8} md={4}>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -204,7 +237,21 @@ class ConnectionsHome extends React.Component{
           </div>
         </Grid>
 
-        <Grid item xs={10} sm={6} md={2} container justify='center'
+        <Grid item xs={8} md={4} container justify='center'
+          className={classes.subtitleDropdown} alignItems="center">
+          <Button color="primary" className={classes.button}>
+            Add Trusted Contacts
+          </Button>
+          <KeyboardArrowDownIcon />
+        </Grid>
+      </Grid>
+    )
+
+    let subHeaderMobile= (
+      <Grid item xs={12} container justify="flex-start"
+        alignItems="center" className={classes.subtitleWrapper}
+        spacing={8} style={{ marginTop: 0}}>
+        <Grid item xs={6}  container justify='center'
           className={classes.subtitleDropdown} alignItems="center">
           <Button color="primary" className={classes.button}>
             Connection Requests
@@ -212,7 +259,7 @@ class ConnectionsHome extends React.Component{
           <KeyboardArrowDownIcon />
         </Grid>
 
-        <Grid item xs={10} sm={6} md={2} container justify='center'
+        <Grid item xs={6} container justify='center'
           className={classes.subtitleDropdown} alignItems="center">
           <Button color="primary" className={classes.button}>
             Add Trusted Contacts
@@ -229,7 +276,6 @@ class ConnectionsHome extends React.Component{
       </Grid>
     )
 
-
     let myTrustedNetwork = (
       <Grid item xs={12} md={6}>
         <Card className={classes.card}>
@@ -243,7 +289,7 @@ class ConnectionsHome extends React.Component{
               </Typography>
             </Grid>
 
-            <Grid item xs={5}
+            <Grid item xs={10} sm={7} md={6} lg={5}
               style={{ display: 'flex', alignItems:'center'}}>
               <Typography variant="body2" align="center"
                 className={classes.networkFilter}>
@@ -255,7 +301,7 @@ class ConnectionsHome extends React.Component{
               <KeyboardArrowDownIcon />
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={10} sm={5} md={5} lg={4}>
               <Typography variant="body2" align="center"
                 style={{}}>
                 120 Connections
@@ -308,8 +354,7 @@ class ConnectionsHome extends React.Component{
               </Typography>
             </Grid>
 
-            <Grid item xs={5}
-              style={{ display: 'flex', alignItems:'center'}}>
+            <Grid item xs={5} container alignItems='center'>
               <Typography variant="body2" align="center"
                 className={classes.networkFilter}>
                 {"Sort By: "}
@@ -378,8 +423,9 @@ class ConnectionsHome extends React.Component{
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.homeGrid}
+        <Grid container className={classes.sectionDesktop}
           justify="center" alignItems="center">
+
           <Grid item xs={10} container justify="center"
             alignItems="center" >
             <Typography variant="h1" className={classes.header}
@@ -390,13 +436,56 @@ class ConnectionsHome extends React.Component{
 
           {subHeader}
 
-          <Grid item xs={11} md={10} container justify="center"
+          <Grid item xs={11} container justify="center"
             alignItems="center" spacing={16}
             className={classes.connectionsContainer}>
 
             {myTrustedNetwork}
             {networkCircles}
           </Grid>
+        </Grid>
+
+        <Grid container className={classes.sectionMobile}
+          justify="center" alignItems="center">
+
+          <Grid item xs={12} container justify="center"
+            alignItems="center" >
+            <Typography variant="h1" className={classes.header}
+              gutterBottom align="left">
+              Coming Soon
+            </Typography>
+          </Grid>
+
+          <Grid container justify='flex-end'>
+            <Grid item container justify="space-around" xs={5} sm={4} md={3}>
+              <Grid container justify='center' style={{ width: '100%'}}>
+                <Switch
+                  checked={this.state.toggle}
+                  onChange={this.handleChange.bind(this)}
+                  value="toggle"
+                  style={{ width:'100%' }}
+                  />
+              </Grid>
+              <Typography variant="body2" className={classes.header}
+                 align="center"
+                style={{ width: '40%', fontSize: 10, margin: 0}}>
+                Network Circles
+              </Typography>
+              <Typography variant="body2" className={classes.header}
+                align="center"
+                style={{ width: '40%', fontSize: 10, margin: 0}}>
+                My Trusted Network
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12} container justify="center"
+            alignItems="center" spacing={16}>
+
+            {toggle ? myTrustedNetwork : networkCircles}
+          </Grid>
+
+          {subHeaderMobile}
         </Grid>
       </MuiThemeProvider>
     )

@@ -24,7 +24,8 @@ const DEFAULTSTATE = {
   description: '',
   status: 'Pending',
   picture: null,
-  pictureUrl: null
+  pictureUrl: null,
+  networks: [],
 }
 
 class OpportunityCreate extends React.Component {

@@ -81,10 +81,13 @@ class IndustryField extends React.Component {
     return e => {
       e.preventDefault();
       let { options } = this.state;
-      options[field] = !options[field];
+      let chosenOptions = Object.keys(options).filter(k => options[k])
+      if (options[field] || (!options[field] && chosenOptions.length < 3)){
+        options[field] = !options[field];
+      }
       this.setState( { options },
         () => {
-          let chosenOptions = Object.keys(options).filter(k => options[k]);
+          chosenOptions = Object.keys(options).filter(k => options[k]);
           this.props.handleChange(chosenOptions);
         });
     }
@@ -119,10 +122,18 @@ class IndustryField extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='flex-start' alignItems='center'>
-        <Typography variant="h5" gutterBottom align='left'
-          className={classes.industryHeader} >
-          In which industries are the product/service you want to find?
-        </Typography>
+        <Grid item xs={10} sm={11}>
+          <Typography variant="h5" gutterBottom align='left'
+            className={classes.industryHeader} >
+            In which industries are the product/service you want to find?
+          </Typography>
+        </Grid>
+        <Grid item xs={10} sm={11}>
+          <Typography variant="body2" gutterBottom align='left'
+            style={{ margin: 20}}>
+            Choose up to three:
+          </Typography>
+        </Grid>
         <Grid container className={classes.root}
           justify='center' alignItems='center'>
         {cards}

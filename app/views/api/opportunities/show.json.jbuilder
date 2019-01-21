@@ -1,11 +1,5 @@
 json.opportunity do |json|
   json.partial! 'api/opportunities/opportunity', opportunity: @opportunity
-end
 
-json.networks do |json|
-  @networks.each do |network|
-    json.set! network.id do
-      json.partial! 'api/networks/network', network: network
-    end
-  end
+  json.networks @networks
 end

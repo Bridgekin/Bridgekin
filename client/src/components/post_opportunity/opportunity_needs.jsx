@@ -26,7 +26,7 @@ const styles = theme => ({
     alignItems:'center',
     justifyContent:'flex-start',
     paddingLeft: 10,
-    height: 150
+    height: 100
   },
   clicked:{
     backgroundColor: theme.palette.grey2,
@@ -139,6 +139,14 @@ class NeedsField extends React.Component {
         [classes.icon, classes.clickedIcon].join(' ')
       ) : (classes.icon);
 
+      // <Grid item xs={3}>
+      //   <img
+      //     src={PickIcons(need)}
+      //     className={iconStyling}
+      //     alt={'icon'}
+      //     />
+      // </Grid>
+
       return (
       <Grid item xs={11} sm={6} lg={4}>
         <Card className={classes.cardWrapper}>
@@ -146,16 +154,8 @@ class NeedsField extends React.Component {
             onClick={this.handleClick(need)}
             disableRipple>
 
-            <Grid container justify='space-around' alignItems='center'>
-              <Grid item xs={3}>
-                <img
-                  src={PickIcons(need)}
-                  className={iconStyling}
-                  alt={'icon'}
-                  />
-              </Grid>
-
-              <Grid item xs={7}>
+            <Grid container justify='center' alignItems='center'>
+              <Grid item xs={10}>
                 <Typography variant="h3" align='left' color='inherit'
                   style={{ wordWrap: 'break-word' }}>
                   {need.toUpperCase()}

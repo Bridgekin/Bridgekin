@@ -121,7 +121,6 @@ const styles = theme => ({
 const DEFAULTSTATE = {
   activeStep: 0,
   modalOpen: false,
-  networks: [],
   pictureUrl: null
 }
 

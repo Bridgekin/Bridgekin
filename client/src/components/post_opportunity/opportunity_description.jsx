@@ -123,14 +123,15 @@ class DescriptionField extends React.Component {
     return results;
   }
 
-  componentDidMount(){
-    let currentNetworks = this.state.networks;
-    let networks = this.props.networks;
-    for(let i = 0; i < networks.length; i++){
-      currentNetworks[networks[i]] = true;
-    }
-    this.setState({ networks: currentNetworks })
-  }
+  // componentDidMount(){
+  //   let currentNetworks = this.state.networks;
+  //   let networks = this.props.networks;
+  //   debugger
+  //   for(let i = 0; i < networks.length; i++){
+  //     currentNetworks[networks[i]] = true;
+  //   }
+  //   this.setState({ networks: currentNetworks })
+  // }
 
   handleChange(field){
     return e => {
@@ -376,15 +377,17 @@ class DescriptionField extends React.Component {
                 <InputLabel htmlFor="select-multiple-chip">Networks</InputLabel>
                 <Select
                   multiple
-                  value={this.state.networks}
+                  value={this.props.networks}
                   onChange={this.handleMultiSelectChange('networks')}
                   input={<Input id="select-multiple-chip" />}
                   renderValue={selected => (
                     <div className={classes.chips}>
-                      {selected.map(value => (
-                        <Chip key={value} label={availNetworks[value].title}
+                      {selected.map(value => {
+                        console.log('value', value);
+                        console.log('network', availNetworks[value]);
+                        return <Chip key={value} label={availNetworks[`${value}`].title}
                           className={classes.chip} />
-                      ))}
+                      })}
                     </div>
                   )}
                   MenuProps={MenuProps}
@@ -395,7 +398,7 @@ class DescriptionField extends React.Component {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={this.state.networks.includes(network.id)}
+                            checked={this.props.networks.includes(network.id)}
                             value={network.id}
                             classes={{ root: classes.selectCheckBox}}
                           />

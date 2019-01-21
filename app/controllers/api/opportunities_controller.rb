@@ -29,7 +29,7 @@ class Api::OpportunitiesController < ApiController
   # GET /opportunities/1
   def show
     authorize @opportunity
-    @networks = @opportunity.networks
+    @networks = @opportunity.networks.pluck(:id)
     render :show
   end
 
@@ -51,7 +51,7 @@ class Api::OpportunitiesController < ApiController
         )
       end
 
-      @networks = @opportunity.networks
+      @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity, status: :created, location: @opportunity
       render :show
     else
@@ -79,7 +79,7 @@ class Api::OpportunitiesController < ApiController
         )
       end
 
-      @networks = @opportunity.networks
+      @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity
       render :show
     else

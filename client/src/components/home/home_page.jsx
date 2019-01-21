@@ -161,7 +161,7 @@ class HomePage extends React.Component{
     let form = mui ? (
       <form className='form-container'>
         <Grid container justify="flex-start" alignItems="center" spacing={8}>
-          <Grid item xs={10} sm={5} >
+          <Grid item xs={10} md={5} >
             <TextField
               required
               label="First Name"
@@ -174,7 +174,7 @@ class HomePage extends React.Component{
               onMouseUp={this.handleChange('fname')}
               />
           </Grid>
-          <Grid item xs={10} sm={5} >
+          <Grid item xs={10} md={5} >
             <TextField
               required
               label="Last Name"

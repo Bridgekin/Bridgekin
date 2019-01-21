@@ -76,7 +76,7 @@ class SubmitField extends React.Component {
           )}
         </Grid>
 
-        <Grid item xs={11} sm={10} md={8}>
+        <Grid item xs={12} sm={9} md={6}>
           <OpportunityCard opportunity={opportunity}
             classes={classes}
             editable={false}

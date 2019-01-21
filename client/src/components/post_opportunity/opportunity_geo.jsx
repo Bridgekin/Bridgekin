@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import Grid from '@material-ui/core/Grid';
 
 import { geographyChoices } from '../../util/choices';
 
@@ -26,7 +27,7 @@ const styles = theme => ({
   geoHeader:{
     fontWeight: 700,
     color: theme.palette.darkGrey,
-    margin: 20
+    margin: "20px 0px"
   },
   geoLabel:{
     fontSize: 22
@@ -94,15 +95,20 @@ class GeoField extends React.Component {
     })
 
     return (
-      <div className={classes.geoWrapper}>
-        <Typography variant="h5" gutterBottom align='left'
-          className={classes.geoHeader}>
-          What is your geographical focus?
-        </Typography>
-        <Typography variant="p" gutterBottom align='center'
-          style={{ margin: 20}}>
-          Choose one or more options:
-        </Typography>
+      <Grid container className={classes.root}
+        justify='flex-start' alignItems='center'>
+        <Grid item xs={10} sm={11}>
+          <Typography variant="h5" gutterBottom align='left'
+            className={classes.geoHeader}>
+            What is your geographical focus?
+          </Typography>
+        </Grid>
+        <Grid item xs={10} sm={11}>
+          <Typography variant="body2" gutterBottom align='left'
+            style={{ marginTop: 20}}>
+            Choose one or more options:
+          </Typography>
+        </Grid>
 
         <FormControl required error={error}
           component="fieldset" className={classes.formControl}>
@@ -111,7 +117,7 @@ class GeoField extends React.Component {
           </FormGroup>
           {error && <FormHelperText>Make sure to pick one</FormHelperText>}
         </FormControl>
-      </div>
+      </Grid>
     )
   }
 }

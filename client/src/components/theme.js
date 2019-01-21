@@ -121,6 +121,7 @@ let theme = createMuiTheme({
       secondary:{
         fontSize: 15,
         fontWeight: 600,
+
       }
     }
   },
