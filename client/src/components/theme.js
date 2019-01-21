@@ -43,6 +43,13 @@ let theme = createMuiTheme({
   shape: {
     borderRadius: 3
   },
+  props: {
+    // Name of the component ⚛️
+    MuiButtonBase: {
+      // The properties to apply
+      disableRipple: true, // No more ripple, on the whole application 💣!
+    },
+  },
   overrides: {
     MuiButton: { // Name of the component ⚛️ / style sheet
       text: { // Name of the rule
@@ -104,6 +111,16 @@ let theme = createMuiTheme({
       label: {
         fontSize: 15,
         fontWeight: 300
+      }
+    },
+    MuiListItemText:{
+      primary:{
+        fontSize: 15,
+        fontWeight: 600,
+      },
+      secondary:{
+        fontSize: 15,
+        fontWeight: 600,
       }
     }
   },

@@ -13,6 +13,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Img from 'react-image'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // import castlePic from '../../static/castle.jpg';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
@@ -51,7 +53,7 @@ const styles = theme => ({
     // minWidth: 500,
   },
   cover: {
-    height: 150,
+    height: 'auto',
     width: '100%',
     objectFit: 'cover'
   },
@@ -80,20 +82,10 @@ const styles = theme => ({
     // fontWeight: 700
 
   },
-  actionWrapper: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginTop: 25,
-    marginBottom: 25
-  },
   actionButton: {
-    marginRight: 50
+    margin: "10px 0px"
   },
   postButtons: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    width: '100%',
     marginBottom: 25
   },
   section: {
@@ -108,6 +100,20 @@ const styles = theme => ({
   },
   modalPaper:{
     margin: 15
+  },
+  cardContent:{
+    margin: "25px 0px"
+  },
+  grid:{
+    margin: '70px 0px'
+  },
+  button:{
+    margin: "10px 0px"
+  },
+  loader:{
+    height:150,
+    width: "100%",
+    background: theme.palette.lightGrey
   }
 });
 
@@ -176,99 +182,139 @@ class CardModal extends React.Component {
       ));
 
       let typeOfSuccess = connectBool ? (
-        <div className={classes.paper}>
-          <Typography variant="h2" id="modal-title"
-            className={classes.section}>
-            Time for business!
-          </Typography>
-          <Typography variant="body1" id="simple-modal-description"
-            className={classes.section}>
-            {`We're as excited about this opportunity as you are! We just sent
-            an email connecting you to the opportunity owner, so that should
-            hit your inbox shortly. We'll let you take it from here.`}
-          </Typography>
-          <div className={classes.postButtons}>
-            <Button variant="contained" color='secondary'
-              onClick={this.handleClose('find')}>
-              View More Opportunities
-            </Button>
-            <Button variant="contained" color='secondary'
-              onClick={this.handleClose('post')}>
-              Post An Opportunity
-            </Button>
-          </div>
-        </div>
+        <Grid container justify='center' alignItems='center'
+          className={classes.grid}>
+          <Grid item xs={11} sm={10} md={8}
+            container justify='flex-start' alignItems='center'>
+            <Typography variant="h2" id="modal-title"
+              className={classes.section}>
+              Time for business!
+            </Typography>
+            <Typography variant="body2" id="simple-modal-description"
+              className={classes.section}>
+              {`We're as excited about this opportunity as you are! We just sent
+                an email connecting you to the opportunity owner, so that should
+                hit your inbox shortly. We'll let you take it from here.`}
+            </Typography>
+            <Grid item xs={12}  className={classes.postButtons}
+              style={{ marginBottom: 25 }}>
+              <Button variant="contained" color='secondary'
+                onClick={this.handleClose('find')}
+                className={classes.button}
+                style={{ marginRight: 20}}>
+                View More Opportunities
+              </Button>
+              <Button variant="contained" color='secondary'
+                onClick={this.handleClose('post')}
+                className={classes.button}>
+                Post An Opportunity
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
       ) : (
-        <div className={classes.paper}>
-          <Typography variant="h2" id="modal-title"
-            className={classes.section}>
-            Time for business!
-          </Typography>
-          <Typography variant="body1" id="simple-modal-description"
-            className={classes.section}>
-            {`We're as excited about this opportunity as you are!
-              We just sent an email connecting you to the opportunity owner
-              and then you can loop in your trusted contact from there.
-              We'll let you take it from here.`}
-          </Typography>
-          <div className={classes.postButtons}>
-            <Button variant="contained" color='secondary'
-              onClick={this.handleClose('find')}>
-              View More Opportunities
-            </Button>
-            <Button variant="contained" color='secondary'
-              onClick={this.handleClose('post')}>
-              Post An Opportunity
-            </Button>
-          </div>
-        </div>
+        <Grid container justify='center' alignItems='center'
+          className={classes.grid}>
+          <Grid item xs={11} sm={10} md={8}
+            container justify='flex-start' alignItems='center'>
+            <Typography variant="h2" id="modal-title"
+              className={classes.section}>
+              Time for business!
+            </Typography>
+            <Typography variant="body2" id="simple-modal-description"
+              className={classes.section}>
+              {`We're as excited about this opportunity as you are!
+                We just sent an email connecting you to the opportunity owner
+                and then you can loop in your trusted contact from there.
+                We'll let you take it from here.`}
+            </Typography>
+            <Grid item xs={12} className={classes.postButtons}>
+              <Button variant="contained" color='secondary'
+                onClick={this.handleClose('find')}
+                className={classes.button}
+                style={{ marginRight: 20}}>
+                View More Opportunities
+              </Button>
+              <Button variant="contained" color='secondary'
+                onClick={this.handleClose('post')}
+                className={classes.button}>
+                Post An Opportunity
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
       )
 
       let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
         typeOfSuccess
       ) : (
-        <div className={classes.paper}>
-          <Typography variant="h1" id="modal-title"
-            className={classes.errorHeader}>
-            Hold on there!
-          </Typography>
-          <Typography variant="body1" id="simple-modal-description">
-            Unfortunately, we weren't able to connect you to this opportunity because:
-          </Typography>
-          <List>
-            {connectedOpportunityErrors}
-          </List>
-          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose('find')} color='secondary'>
-            Close
-          </Button>
-        </div>
+        <Grid container justify='center' alignItems='center'
+          className={classes.grid}>
+          <Grid item xs={11} sm={10} md={8}
+            container justify='flex-start' alignItems='center'>
+            <Typography variant="h1" id="modal-title"
+              className={classes.errorHeader}>
+              Hold on there!
+            </Typography>
+            <Typography variant="body2" id="simple-modal-description">
+              Unfortunately, we weren't able to connect you to this opportunity because:
+            </Typography>
+            <Grid item xs={12}>
+              <List>
+                {connectedOpportunityErrors}
+              </List>
+            </Grid>
+            <Grid item xs={12} container justify='flex-start'>
+              <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+                onClick={this.handleClose('find')} color='secondary'>
+                Close
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
       )
 
-      let picture = pictureUrl ? pictureUrl : (PickImage(industries[0]))
+      let loader = (
+        <Grid container justify='center' alignItems='center'
+          className={classes.loader}>
+          <CircularProgress className={classes.progress} />
+        </Grid>
+      )
 
-      // <CardContent className={classes.content}>
-      // <Card className={classes.card}>
+      let picture = pictureUrl ? (
+        <Img src={pictureUrl}
+          className={classes.cover}
+          loader={loader}
+          />
+      ) : (
+        <Img src={PickImage(industries[0])}
+          className={classes.cover}
+          style={{ height: 150}}
+          loader={loader}
+          />
+      )
 
       let modalContent = !sent ? (
-        <Grid container justify="center" alignItems='center'
-          >
+        <Grid container justify="center" alignItems='center'>
           <Grid item xs={12}>
-            <img src={picture} alt="OpportunityImage"
-              className={classes.cover} />
+            {picture}
           </Grid>
-          <Grid item xs={11} sm={10} md={8}>
-            <Typography variant="h5" gutterBottom align='left'
-              color="default">
-              {title}
-            </Typography>
-            <Typography variant="body2" gutterBottom align='left'
-              color="default">
-              {description}
-            </Typography>
+          <Grid item xs={11} sm={10} md={8} className={classes.cardContent}
+            container justify='center' spacing={16}>
+            <Grid item xs={12}>
+              <Typography variant="h5" gutterBottom align='left'
+                color="default">
+                {title}
+              </Typography>
+              <Typography variant="body2" gutterBottom align='left'
+                color="default">
+                {description}
+              </Typography>
+            </Grid>
 
-            <div className={classes.cardWrapper}>
-              <div className={classes.subContentSection}>
+            <Grid container justify='flex-start'
+              style={{ marginTop: 25 }} >
+              <Grid item xs={4}>
                 <Typography variant="h6" gutterBottom align='left'
                   className={classes.cardSubHeader}>
                   Geography
@@ -277,9 +323,9 @@ class CardModal extends React.Component {
                   color="default" className={classes.cardSubContent}>
                   {geography.join(", ")}
                 </Typography>
-              </div>
+              </Grid>
 
-              <div className={classes.subContentSection}>
+              <Grid item xs={5}>
                 <Typography variant="h6" gutterBottom align='left'
                   className={classes.cardSubHeader}>
                   Industry
@@ -288,9 +334,9 @@ class CardModal extends React.Component {
                   color="default" className={classes.cardSubContent}>
                   {industries.join(", ")}
                 </Typography>
-              </div>
+              </Grid>
 
-              <div>
+              <Grid item xs={3}>
                 <Typography variant="h6" gutterBottom align='left'
                   className={classes.cardSubHeader}>
                   Value
@@ -299,25 +345,26 @@ class CardModal extends React.Component {
                   color="default" className={classes.cardSubContent}>
                   {value}
                 </Typography>
-              </div>
-            </div>
+              </Grid>
+            </Grid>
 
-            <div className={classes.actionWrapper}>
+            <Grid item xs={12}>
               <Button variant="contained" color='secondary'
+                onClick={this.handleConnection(true)}
                 className={classes.actionButton}
-                onClick={this.handleConnection(true)}>
+                style={{marginRight: 20}}>
                 Connect Me
               </Button>
 
               <Button variant="contained" color='secondary'
-                className={classes.actionButton}
-                onClick={this.handleConnection(false)}>
+                onClick={this.handleConnection(false)}
+                className={classes.actionButton}>
                 Refer A Trusted Contact
               </Button>
-            </div>
+            </Grid>
 
             <Typography variant="body2" align='left'
-              color="default" style={{ marginBottom: 40 }}>
+              color="default" style={{ marginBottom: 40, marginTop: 20 }}>
               Once you connect or refer above, we'll send you an email introducing
               you to the opportunity owner
             </Typography>

@@ -8,7 +8,8 @@ import Button from '@material-ui/core/Button';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 
-import HomeImage from '../static/Login_Background_Image.jpg'
+import HomeImage from '../static/Login_Background_Image.jpg';
+import BottomFade from '../static/bottom-fade.png';
 
 const styles = theme => ({
   root: {
@@ -31,6 +32,15 @@ const styles = theme => ({
   label: {
     textTransform: 'lowercase',
   },
+  bottomFade:{
+    zIndex: 2,
+  	position: 'relative',
+  	bottom: '0%',
+  	backgroundImage: `url(${BottomFade})`,
+    backgroundSize:'cover',
+    height: '250px',
+    width: '100%',
+  }
 });
 
 class NotFound extends Component {
@@ -61,6 +71,7 @@ class NotFound extends Component {
               </Button>
             </div>
           </Grid>
+          <div className={classes.bottomFade} />
         </Grid>
       </MuiThemeProvider>
     )

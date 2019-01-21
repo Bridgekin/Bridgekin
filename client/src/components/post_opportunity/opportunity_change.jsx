@@ -206,7 +206,7 @@ class OpportunityChange extends React.Component {
   }
 
   handleRemoveFile(){
-    this.setState({ picture: null, pictureUrl: null})
+    this.setState({ picture: 'delete', pictureUrl: null})
   }
 
   handleNext = () => {

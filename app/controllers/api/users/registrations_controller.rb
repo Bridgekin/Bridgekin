@@ -10,11 +10,8 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
   def create
     @referralLink = ReferralLink.find_link_by_code(params[:code])
-    received_params = user_params
-    received_params[:password_confirmation] = received_params[:password]
-    received_params[:email].downcase!
 
-    @user = User.new(received_params)
+    @user = User.new(user_params)
     if @referralLink && @user.save
       # UserMailer.register_email(@user).deliver_now
       # sign_in User, @user
@@ -25,6 +22,11 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       UserNetwork.create(network_id: @network.id, member_id: @user.id) if @network.title != 'Bridgekin'
       #Create Bridgekin Connection
       UserNetwork.create(network_id: 1, member_id: @user.id)
+
+      #Remove waitlist user from waitlist by changing status
+      waitlist_user = WaitlistUser.find_by(email: @user.email)
+      waitlist_user.status = 'Full' if waitlist_user
+
 
       render :create
     elsif @referralLink.nil?
@@ -66,5 +68,9 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     params.require(:user).permit(:email, :fname, :lname, :phone, :city,
       :state, :country, :password, :membership_type,
       :password_confirmation, :password_digest)
+
+    received_params[:password_confirmation] = received_params[:password]
+    received_params[:email].downcase!
+    received_params
   end
 end

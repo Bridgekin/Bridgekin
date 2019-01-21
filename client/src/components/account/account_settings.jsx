@@ -192,11 +192,12 @@ class AccountSetting extends React.Component {
 
   handleModalClose = () => {
     if(this.props.userErrors.length > 0){
-      this.setState({ modalOpen: false })
+      this.setState({
+        modalOpen: false
+      })
     } else {
       this.setState({
         modalOpen: false,
-        settingState: "Home",
         currentPassword: '',
         password: '',
         passwordConfirmation: '',
@@ -207,19 +208,22 @@ class AccountSetting extends React.Component {
         city: this.props.currentUser.city,
         state: this.props.currentUser.state,
         country: countryList.getName(this.props.currentUser.country) || ''
+      },
+      ()=> {
+        this.props.history.push('/account/settings')
       })
     }
   };
 
   changePassword(){
-    const { password, passwordConfirmation, currentPassword} = this.state;
-    let user = {
-      id: this.props.currentUser.id,
-      password,
-      passwordConfirmation,
-      currentPassword
+    const passwords = ['password', 'passwordConfirmation', 'currentPassword'];
+    const formData = new FormData();
+    for (let i = 0; i < passwords.length; i++){
+      formData.append(`user[${passwords[i]}]`, this.state[passwords[i]]);
     }
-    this.props.updateUser(user)
+    formData.append('user[id]', this.props.currentUser.id)
+
+    this.props.updateUser(formData)
     .then(()=> this.setState({ modalOpen: true }))
   }
 
@@ -297,6 +301,8 @@ class AccountSetting extends React.Component {
         style={{ margin: 20, maxWidth: '100%', height: 'auto' }}/>
     ) : ('')
 
+    debugger
+
     let pathName = this.props.location.pathname.split('/').pop();
 
     switch (pathName) {
@@ -363,9 +369,23 @@ class AccountSetting extends React.Component {
           </Card>
         );
       case "general":
-        let countryOptions = this.options.map(option =>(
-          <MenuItem value={option}>{option}</MenuItem>
-        ));
+        let countryOptions = this.options.reduce((result, option) =>{
+          if (option !== "United States"){
+            result.push(<MenuItem value={option}>{option}</MenuItem>)
+          }
+          return result;
+        }, []);
+
+        countryOptions.unshift(
+          <MenuItem value={'United States'}>
+            {'United States'}
+          </MenuItem>
+        )
+        //
+        // let countryOptions = this.options.map(option => (
+        //   <MenuItem value={option}>{option}</MenuItem>
+        // ));
+
         return(
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="center"
@@ -501,7 +521,7 @@ class AccountSetting extends React.Component {
 
                   <Button color="secondary" className={classes.submitButton}
                     onClick={this.changeGeneralInformation} variant='contained'>
-                    Change Information
+                    Update Information
                   </Button>
                 </div>
               </Grid>
@@ -525,7 +545,7 @@ class AccountSetting extends React.Component {
             <Grid container justify="center" alignItems="flex-start"
               spacing={16}>
 
-              <Grid item xs={8} md={5}>
+              <Grid item xs={8} md={5} container justify='center'>
                 {profilePicture}
                 <div style={{ display: 'flex'}}>
                   <Button color="textPrimary"
@@ -587,7 +607,6 @@ class AccountSetting extends React.Component {
                     value={this.state.notificationSetting}
                     onChange={this.handleNotificationChange}
                   >
-                    <FormControlLabel value="Every Opportunity" control={<Radio />} label="Every New Opportunity" />
                     <FormControlLabel value="Weekly" control={<Radio />} label="Weekly Email Recap" />
                     <FormControlLabel value="Never" control={<Radio />} label="Never - I am immune to FOMO" />
                   </RadioGroup>

@@ -63,6 +63,8 @@ class NotFound extends Component {
 
   render () {
     const {classes, open, fileUrl, ratio} = this.props;
+    // let height = this.cropper.width/4;
+    // debugger
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
@@ -85,6 +87,8 @@ class NotFound extends Component {
                 src={fileUrl}
                 ratio={ratio || 1}
                 ref={ ref => { this.cropper = ref }}
+                width={200}
+                height={50}
                 />
 
               <Grid item xs={11} container justify='center'

@@ -62,7 +62,12 @@ class Api::OpportunitiesController < ApiController
   # PATCH/PUT /opportunities/1
   def update
     authorize @opportunity
+
+    # debugger
+
     if @opportunity.update(opportunity_params)
+      @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
+
       @opportunity.opportunity_networks.delete_all
 
       networks_params = params[:opportunity][:networks].split(',')
@@ -100,9 +105,17 @@ class Api::OpportunitiesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def opportunity_params
-      opp_params = params.require(:opportunity).permit(:title, :description,
-        :owner_id, :opportunity_need, :value, :status, :picture,
-        :industries, :geography)
+      # debugger
+      if params[:opportunity][:picture] == "delete"
+        opp_params = params.require(:opportunity).permit(:title, :description,
+          :owner_id, :opportunity_need, :value, :status,
+          :industries, :geography)
+
+      else
+        opp_params = params.require(:opportunity).permit(:title, :description,
+          :owner_id, :opportunity_need, :value, :status, :picture,
+          :industries, :geography)
+      end
 
       opp_params[:geography] = opp_params[:geography].split(',')
       opp_params[:industries] = opp_params[:industries].split(',')

@@ -15,6 +15,7 @@ import ConnectionsHome from './components/connections/connections_home';
 import Login from './components/home/login_page';
 // import ConnectionsHome from './components/wip';
 import NotFound from './components/not_found';
+import ConfirmationError from './components/confirmation_error';
 
 export default () => (
   <div>
@@ -30,6 +31,7 @@ export default () => (
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/login" component={Login}/>
       <AuthRoute exact path="/" component={HomePage} />
+      <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
       <Route component={NotFound} />
     </Switch>
   </div>

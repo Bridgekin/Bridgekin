@@ -33,6 +33,8 @@ import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
+
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
@@ -381,9 +383,10 @@ class OpportunityHome extends React.Component {
           </Typography>
           <Typography variant="subtitle1" align='left'
             color="textPrimary"
-            style={{ fontWeight: 600, marginLeft: 10, fontSize: 12}}>
+            style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
             {dropdownFocus === "" ? "All Opportunties" : networks[dropdownFocus].title}
           </Typography>
+          <KeyboardArrowDownIcon />
         </Button>
 
         <Menu
@@ -463,6 +466,20 @@ class OpportunityHome extends React.Component {
       </Grid>
     ));
 
+    // <Grid item xs={12} sm={6} md={4} justify="center"
+    //   alignItems="center" >
+    //   <Card>
+    //     <CardActionArea className={classes.addOportunityCard}
+    //       onClick={() => this.props.history.push('/postopportunity')}
+    //       disableRipple>
+    //       <AddIcon style={{ fontSize: 150 }}/>
+    //       <Typography variant="h3" gutterBottom align='center'>
+    //         Add Opportunity
+    //       </Typography>
+    //     </CardActionArea>
+    //   </Card>
+    // </Grid>
+
     let opportunityGrid = (
       <Grid container className={classes.root} style={{padding: "30px 0px"}}
         justify="center" alignItems="center">
@@ -475,20 +492,6 @@ class OpportunityHome extends React.Component {
         <Grid item xs={11} className={classes.gridOpp}
           container justify="flex-start" alignItems="center" spacing={24}>
           {opportunityCards}
-
-          <Grid item xs={12} sm={6} md={4} justify="center"
-            alignItems="center" >
-            <Card>
-              <CardActionArea className={classes.addOportunityCard}
-                onClick={() => this.props.history.push('/postopportunity')}
-                disableRipple>
-                <AddIcon style={{ fontSize: 150 }}/>
-                <Typography variant="h3" gutterBottom align='center'>
-                  Add Opportunity
-                </Typography>
-              </CardActionArea>
-            </Card>
-          </Grid>
 
         </Grid>
       </Grid>
@@ -518,7 +521,8 @@ class OpportunityHome extends React.Component {
             }
           </Grid>
           <WaitlistModal open={waitlistOpen}
-            handleClose={this.handleWaitlistClose}/>
+            handleClose={this.handleWaitlistClose}
+            referred={true}/>
         </MuiThemeProvider>
       )
     }

@@ -285,6 +285,7 @@ class HomeNav extends React.Component {
             margin="normal"
             onChange={this.handleChange('email')}
             variant="outlined"
+            InputLabelProps={{ shrink: true }}
             InputProps={{
               classes: {
                 input: classes.textfieldResize
@@ -301,6 +302,7 @@ class HomeNav extends React.Component {
             margin="normal"
             onChange={this.handleChange('password')}
             variant="outlined"
+            InputLabelProps={{ shrink: true }}
             InputProps={{
               classes: {
                 input: classes.textfieldResize
@@ -315,7 +317,8 @@ class HomeNav extends React.Component {
 
         <div className={classes.sectionMobile}>
           <Button variant="contained" color="secondary"
-            onClick={() => this.props.history.push('/login')}>
+            onClick={() => this.props.history.push('/login')}
+            disableRipple>
             Login
           </Button>
         </div>

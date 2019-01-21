@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_15_020603) do
+ActiveRecord::Schema.define(version: 2019_01_20_235127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -196,8 +196,8 @@ ActiveRecord::Schema.define(version: 2019_01_15_020603) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
-    t.string "title"
-    t.string "company"
+    t.string "title", default: "", null: false
+    t.string "company", default: "", null: false
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -212,6 +212,7 @@ ActiveRecord::Schema.define(version: 2019_01_15_020603) do
     t.datetime "updated_at", null: false
     t.string "fname", null: false
     t.string "lname"
+    t.string "status", default: "Waitlist", null: false
     t.index ["email"], name: "index_waitlist_users_on_email", unique: true
   end
 

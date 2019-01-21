@@ -91,7 +91,7 @@ class OpportunityWaitlist extends React.Component{
               className={classes.refButton}
               onClick={this.props.handleSubmit}
               disabled={loading}>
-              Sign up
+              Refer Them Now
             </Button>
             {loading && <CircularProgress size={24}
               className={classes.buttonProgress} />}

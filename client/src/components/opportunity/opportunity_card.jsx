@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -20,6 +21,8 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircleSharp';
 import CachedSharpIcon from '@material-ui/icons/CachedSharp';
 import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import LinesEllipsis from 'react-lines-ellipsis';
+import Img from 'react-image'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import CardModal from './card_modal';
 
@@ -35,8 +38,9 @@ const styles = theme => ({
     marginTop: 100
   },
   cover: {
-    height: 140,
-    width: '100%'
+    height: 'auto',
+    width: '100%',
+    objectFit: 'cover'
   },
   card: {
     display: 'flex',
@@ -115,6 +119,14 @@ const styles = theme => ({
     border: `2px solid ${theme.palette.grey2}`,
     borderRadius: '50%',
     backgroundColor: theme.palette.white
+  },
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
+  loader:{
+    height:150,
+    width: "100%",
+    background: theme.palette.lightGrey
   }
 });
 
@@ -254,7 +266,25 @@ class OpportunityCard extends React.Component {
 
       let cardIcon = this.getCardIcon(status);
 
-      let picture = pictureUrl ? pictureUrl : (PickImage(industries[0]))
+      let loader = (
+        <Grid container justify='center' alignItems='center'
+          className={classes.loader}>
+          <CircularProgress className={classes.progress} />
+        </Grid>
+      )
+
+      let picture = pictureUrl ? (
+        <Img src={pictureUrl}
+          className={classes.cover}
+          loader={loader}
+          />
+      ) : (
+        <Img src={PickImage(industries[0])}
+          className={classes.cover}
+          style={{ height: 150}}
+          loader={loader}
+          />
+      )
 
       return (
       <div>
@@ -263,51 +293,32 @@ class OpportunityCard extends React.Component {
           style={{ width: '100%'}}
           >
           <Card className={classes.card}
-            style={editable ? {minHeight: 450} : {minHeight: 390}}>
-            <CardActionArea onClick={this.handleCardOpen}
-              disableRipple>
-              <CardMedia
-                className={classes.cover}
-                image={picture}
-                title="OpportunityImage"
-                />
-              <CardContent className={classes.content}>
-                <div className={classes.cardHeaderWrapper}>
-                  <Typography variant="h5" align='left'
-                    color="default" className={classes.title} >
-                    <LinesEllipsis
-                      text={title}
-                      maxLine='2'
-                      ellipsis='...'
-                      trimRight
-                      basedOn='letters'
-                    />
-                  </Typography>
-                </div>
-                <div className={classes.cardDescriptionWrapper}>
-                  <Typography variant="body2" align='left'
-                    color="default" className={classes.description}
-                    >
-                    <LinesEllipsis
-                      text={description}
-                      maxLine='3'
-                      ellipsis='...'
-                      trimRight
-                      basedOn='letters'
-                    />
-                  </Typography>
-                </div>
+            style={editable ? {minHeight: 450} : {minHeight: 390}}
+            onClick={this.handleCardOpen}>
 
-                <div className={classes.cardSubWrapper}>
-                  <div style={{ width:'31%'}} >
-                    <Typography variant="h6" gutterBottom align='left'
-                      className={classes.cardSubHeader} noWrap>
-                      Geography
-                    </Typography>
-                    <Typography variant="subtitle1" gutterBottom align='left'
-                      color="default" className={classes.cardSubContent}>
+            <Grid container justify="center" alignItems='center'>
+              <Grid item xs={12}>
+                {picture}
+              </Grid>
+              <Grid item xs={10} className={classes.cardContent}>
+                  <div className={classes.cardHeaderWrapper}>
+                    <Typography variant="h5" align='left'
+                      color="default" className={classes.title} >
                       <LinesEllipsis
-                        text={geography.join(", ")}
+                        text={title}
+                        maxLine='2'
+                        ellipsis='...'
+                        trimRight
+                        basedOn='letters'
+                      />
+                    </Typography>
+                  </div>
+                  <div className={classes.cardDescriptionWrapper}>
+                    <Typography variant="body2" align='left'
+                      color="default" className={classes.description}
+                      >
+                      <LinesEllipsis
+                        text={description}
                         maxLine='3'
                         ellipsis='...'
                         trimRight
@@ -316,42 +327,61 @@ class OpportunityCard extends React.Component {
                     </Typography>
                   </div>
 
-                  <div style={{ width:'31%'}} >
-                    <Typography variant="h6" gutterBottom align='left'
-                      className={classes.cardSubHeader}
-                      noWrap>
-                      Industry
-                    </Typography>
-                    <Typography variant="subtitle1" gutterBottom align='left'
-                      color="default" className={classes.cardSubContent}
-                      >
-                      <LinesEllipsis
-                        text={industries.join(", ")}
-                        maxLine='3'
-                        ellipsis='...'
-                        trimRight
-                        basedOn='letters'
-                      />
-                    </Typography>
-                  </div>
+                  <Grid container justify='flex-start' spacing={16}
+                    style={{ margin: "10px 0px 10px 0px" }}>
+                    <Grid item xs={4} md={4}>
+                      <Typography variant="h6" gutterBottom align='left'
+                        className={classes.cardSubHeader} noWrap>
+                        Geography
+                      </Typography>
+                      <Typography variant="subtitle1" gutterBottom align='left'
+                        color="default" className={classes.cardSubContent}>
+                        <LinesEllipsis
+                          text={geography.join(", ")}
+                          maxLine='3'
+                          ellipsis='...'
+                          trimRight
+                          basedOn='letters'
+                          />
+                      </Typography>
+                    </Grid>
 
-                  <div style={{ width:'31%'}} >
-                    <Typography variant="h6" gutterBottom align='left'
-                      className={classes.cardSubHeader}
-                      noWrap>
-                      Value
-                    </Typography>
-                    <Typography variant="subtitle1" gutterBottom align='left'
-                      color="default" className={classes.cardSubContent}
-                      >
-                      {value}
-                    </Typography>
-                  </div>
-                </div>
-              </CardContent>
-            </CardActionArea>
-            {editable && editOptions}
-            {editable && deleteDialog}
+                    <Grid item xs={4} md={4}>
+                      <Typography variant="h6" gutterBottom align='left'
+                        className={classes.cardSubHeader}
+                        noWrap>
+                        Industry
+                      </Typography>
+                      <Typography variant="subtitle1" gutterBottom align='left'
+                        color="default" className={classes.cardSubContent}
+                        >
+                        <LinesEllipsis
+                          text={industries.join(", ")}
+                          maxLine='3'
+                          ellipsis='...'
+                          trimRight
+                          basedOn='letters'
+                          />
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                      <Typography variant="h6" gutterBottom align='left'
+                        className={classes.cardSubHeader}
+                        noWrap>
+                        Value
+                      </Typography>
+                      <Typography variant="subtitle1" gutterBottom align='left'
+                        color="default" className={classes.cardSubContent}
+                        >
+                        {value}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+              </Grid>
+              {editable && editOptions}
+              {editable && deleteDialog}
+            </Grid>
           </Card>
         </Badge>
         <CardModal open={cardOpen}

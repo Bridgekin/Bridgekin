@@ -15,6 +15,7 @@ import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import WaitlistModal from '../waitlist_modal'
+import BottomFade from '../../static/bottom-fade.png';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
@@ -85,6 +86,15 @@ const styles = theme => ({
     paddingTop: 0,
     marginBottom: 50
   },
+  bottomFade:{
+    zIndex: 2,
+  	position: 'relative',
+  	bottom: '0%',
+  	backgroundImage: `url(${BottomFade})`,
+    backgroundSize:'cover',
+    height: '250px',
+    width: '100%',
+  }
 });
 
 
@@ -150,48 +160,56 @@ class HomePage extends React.Component{
     let mui = true;
     let form = mui ? (
       <form className='form-container'>
-        <TextField
-          required
-          label="First Name"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          value={this.state.fname}
-          onChange={this.handleChange('fname')}
-          onMouseUp={this.handleChange('fname')}
-          />
-        <TextField
-          required
-          label="Last Name"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          value={this.state.lname}
-          onChange={this.handleChange('lname')}
-          onMouseUp={this.handleChange('lname')}
-          />
-        <TextField
-          required
-          label="Email"
-          className={classes.textField}
-          margin="normal"
-          fullWidth
-          variant='outlined'
-          value={this.state.email}
-          onChange={this.handleChange('email')}
-          onMouseUp={this.handleChange('email')}
-          />
-        <div className={classes.wrapper}>
-          <Button variant="contained" color="secondary"
-            className={classes.button} disabled={loading}
-            onClick={this.handleWaitlistSubmit}>
-            Join Our Waitlist
-          </Button>
-          {loading && <CircularProgress size={24}
-            className={classes.buttonProgress} />}
-        </div>
+        <Grid container justify="flex-start" alignItems="center" spacing={8}>
+          <Grid item xs={10} sm={5} >
+            <TextField
+              required
+              label="First Name"
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              variant='outlined'
+              value={this.state.fname}
+              onChange={this.handleChange('fname')}
+              onMouseUp={this.handleChange('fname')}
+              />
+          </Grid>
+          <Grid item xs={10} sm={5} >
+            <TextField
+              required
+              label="Last Name"
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              variant='outlined'
+              value={this.state.lname}
+              onChange={this.handleChange('lname')}
+              onMouseUp={this.handleChange('lname')}
+              />
+          </Grid>
+          <Grid item xs={10} sm={10}>
+            <TextField
+              required
+              label="Email"
+              className={classes.textField}
+              margin="normal"
+              fullWidth
+              variant='outlined'
+              value={this.state.email}
+              onChange={this.handleChange('email')}
+              onMouseUp={this.handleChange('email')}
+              />
+          </Grid>
+          <Grid item xs={10} className={classes.wrapper}>
+            <Button variant="contained" color="secondary"
+              className={classes.button} disabled={loading}
+              onClick={this.handleWaitlistSubmit}>
+              Join Our Waitlist
+            </Button>
+            {loading && <CircularProgress size={24}
+              className={classes.buttonProgress} />}
+          </Grid>
+        </Grid>
       </form>
     ) : (
       <div></div>
@@ -218,6 +236,7 @@ class HomePage extends React.Component{
               {form}
             </Grid>
           </Grid>
+          <div className={classes.bottomFade} />
 
         </Grid>
 
@@ -232,7 +251,7 @@ class HomePage extends React.Component{
               </Typography>
             </Grid>
 
-            <Grid item xs={10} sm={8}>
+            <Grid item xs={10} sm={7}>
               <Typography className={classes.homeSubheader}
                 variant="p" gutterBottom>
                 Bridgekin is currently an invite-only community. Sign up now to join our waitlist.
@@ -240,10 +259,12 @@ class HomePage extends React.Component{
               {form}
             </Grid>
           </Grid>
-
+          <div className={classes.bottomFade} />
         </Grid>
 
-        <WaitlistModal open={open} handleClose={this.handleClose}/>
+        <WaitlistModal open={open}
+          handleClose={this.handleClose}
+          referred={false}/>
       </MuiThemeProvider>
     );
   }

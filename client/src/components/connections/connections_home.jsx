@@ -20,12 +20,34 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 
+import Img from 'react-image'
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import PersonIcon from '@material-ui/icons/Person';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import { connect } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
+
+import Joe from '../../static/my_trusted_network_images/Joe_Lopardo.png';
+import Eric from '../../static/my_trusted_network_images/Eric_Conway.png';
+import Jesse from '../../static/my_trusted_network_images/Jesse_Goodall.png';
+import Lili from '../../static/my_trusted_network_images/Lili_Tawil.png';
+import Tung from '../../static/my_trusted_network_images/Tung_Chan.png';
+
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
+
+import Random1 from '../../static/my_trusted_network_images/Random_Headshots/Random_1.jpg';
+import Random2 from '../../static/my_trusted_network_images/Random_Headshots/Random_2.jpg';
+import Random3 from '../../static/my_trusted_network_images/Random_Headshots/Random_3.jpg';
+import Random4 from '../../static/my_trusted_network_images/Random_Headshots/Random_4.jpg';
+import Random5 from '../../static/my_trusted_network_images/Random_Headshots/Random_5.jpg';
+import Random6 from '../../static/my_trusted_network_images/Random_Headshots/Random_6.jpg';
+import Random7 from '../../static/my_trusted_network_images/Random_Headshots/Random_7.jpg';
+import Random8 from '../../static/my_trusted_network_images/Random_Headshots/Random_8.jpg';
+import Random9 from '../../static/my_trusted_network_images/Random_Headshots/Random_9.jpg';
+import Random10 from '../../static/my_trusted_network_images/Random_Headshots/Random_10.jpg';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
@@ -110,13 +132,58 @@ const styles = {
   },
   connectionsContainer:{
     marginBottom: 50
+  },
+  trustedCover: {
+    height: 'auto',
+    width: '100%',
+    objectFit: 'cover'
+  },
+  circleCover: {
+    height: '20px',
+    width: '50%',
+    objectFit: 'cover',
+    borderRadius: '50%',
+    // margin: 0
+  },
+  loader:{
+    height:'auto',
+    width: "100%",
+    background: theme.palette.lightGrey
   }
 };
 
+const people = [
+  { title: 'CEO', company: 'Bridgekin', fname: 'joe', lname: 'lopardo', picture: Joe},
+  { title: 'General Counsel', company: 'Bridgekin', fname: 'tung', lname: 'chan', picture: Tung},
+  { title: 'Software Developer', company: 'Bridgekin', fname: 'eric', lname: 'conway', picture: Eric},
+  { title: 'Graphic Designer', company: 'Bridgekin', fname: 'lili', lname: 'tawil', picture: Lili},
+  { title: 'Technical Advisor', company: 'Bridgekin', fname: 'jesse', lname: 'goodall', picture: Jesse}
+];
+
+const circles = [
+  { id: 0, title: 'Close VC Contacts', subtitle: '24 Members'},
+  { id: 1, title: 'Portfolio Company CEOs', subtitle: '17 Members'},
+  { id: 2, title: 'Fund 1 & 2 LPs', subtitle: '30 Members'},
+  { id: 3, title: 'Inner Deal Circle', subtitle: '6 Members'},
+  { id: 4, title: 'Al Investors', subtitle: '9 Members'}
+]
+
+const randomImages = {
+  1: Random1, 2: Random2, 3: Random3, 4: Random4, 5: Random5,
+  6: Random6, 7: Random7, 8: Random8, 9: Random9, 0: Random10,
+}
+
 class ConnectionsHome extends React.Component{
+  capitalize(str){
+    let strArray = str.split(' ');
+    for (let i = 0; i < strArray.length; i++) {
+      strArray[i] = strArray[i][0].toUpperCase() + strArray[i].slice(1)
+    }
+    return strArray.join(' ')
+  }
+
   render(){
     const { classes } = this.props;
-    const people = [1,2,3,4,5];
 
     let subHeader = (
       <Grid item xs={11} container justify="center"
@@ -138,23 +205,33 @@ class ConnectionsHome extends React.Component{
         </Grid>
 
         <Grid item xs={10} sm={6} md={2} container justify='center'
-          className={classes.subtitleDropdown}>
+          className={classes.subtitleDropdown} alignItems="center">
           <Button color="primary" className={classes.button}>
             Connection Requests
           </Button>
+          <KeyboardArrowDownIcon />
         </Grid>
 
         <Grid item xs={10} sm={6} md={2} container justify='center'
-          className={classes.subtitleDropdown}>
+          className={classes.subtitleDropdown} alignItems="center">
           <Button color="primary" className={classes.button}>
             Add Trusted Contacts
           </Button>
+          <KeyboardArrowDownIcon />
         </Grid>
       </Grid>
     )
 
+    let loader = (
+      <Grid container justify='center' alignItems='center'
+        className={classes.loader}>
+        <CircularProgress className={classes.progress} />
+      </Grid>
+    )
+
+
     let myTrustedNetwork = (
-      <Grid item xs={10} md={6}>
+      <Grid item xs={12} md={6}>
         <Card className={classes.card}>
           <Grid container justify="space-around" alignItems="center"
             spacing={16}>
@@ -175,6 +252,7 @@ class ConnectionsHome extends React.Component{
               <Button color="primary" classes={{ label: classes.label}}>
                 Recently Added
               </Button>
+              <KeyboardArrowDownIcon />
             </Grid>
 
             <Grid item xs={4}>
@@ -190,17 +268,21 @@ class ConnectionsHome extends React.Component{
                   <ListItem button divider>
                     <ListItemAvatar>
                       <Avatar>
-                        <PersonIcon />
+                        {person.picture ? (
+                          <Img src={person.picture}
+                            className={classes.trustedCover}
+                            />
+                        ):<PersonIcon />}
                       </Avatar>
                     </ListItemAvatar>
 
                     <ListItemText
-                      primary="Example Contact"
-                      secondary="Title, Position, Company"
+                      primary={`${this.capitalize(person.fname)} ${this.capitalize(person.lname)}`}
+                      secondary={`${this.capitalize(person.title)} @ ${this.capitalize(person.company)}`}
                     />
 
                     <ListItemSecondaryAction>
-                      <IconButton aria-label="Delete">
+                      <IconButton aria-label="More">
                         <MoreHorizIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -214,7 +296,7 @@ class ConnectionsHome extends React.Component{
     )
 
     let networkCircles = (
-      <Grid item xs={10} md={6}>
+      <Grid item xs={12} md={6}>
         <Card className={classes.card}>
           <Grid container justify="space-around" alignItems="center"
             spacing={16}>
@@ -235,6 +317,7 @@ class ConnectionsHome extends React.Component{
               <Button color="primary" classes={{ label: classes.label}}>
                 Recently Added
               </Button>
+              <KeyboardArrowDownIcon />
             </Grid>
 
             <Grid item xs={4}>
@@ -246,28 +329,37 @@ class ConnectionsHome extends React.Component{
 
             <Grid item xs={11}>
               <List className={classes.root}>
-                { people.map(person => (
+                { circles.map(circle => (
                   <ListItem button divider>
                     <ListItemAvatar>
                       <Avatar
                         style={{display:'flex', flexDirection:'column'}}
                         >
                         <div style={{display:'flex'}}>
-                          <PersonIcon style={{fontSize:16}}/>
-                          <PersonIcon style={{fontSize:16}}/>
+                          <img src={randomImages[`${((circle.id*4) + 1) % 10}`]}
+                            className={classes.circleCover} alt='1'
+                            />
+                          <img src={randomImages[`${((circle.id*4) + 2) % 10}`]}
+                            className={classes.circleCover} alt='2'
+                            />
                         </div>
 
                         <div style={{display:'flex'}}>
-                          <PersonIcon style={{fontSize:16}}/>
-                          <PersonIcon style={{fontSize:16}}/>
+                          <img src={randomImages[`${((circle.id*4) + 3) % 10}`]}
+                            className={classes.circleCover} alt='3'
+                            />
+                          <img src={randomImages[`${((circle.id*4) + 4) % 10}`]}
+                            className={classes.circleCover}
+                            alt='4'
+                            />
                         </div>
 
                       </Avatar>
                     </ListItemAvatar>
 
                     <ListItemText
-                      primary="Example Network Circle"
-                      secondary="XX Members"
+                      primary={`${this.capitalize(circle.title)}`}
+                      secondary={`${this.capitalize(circle.subtitle)}`}
                     />
 
                     <ListItemSecondaryAction>

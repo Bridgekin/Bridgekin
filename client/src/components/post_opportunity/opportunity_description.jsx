@@ -63,6 +63,9 @@ const styles = theme => ({
   chip: {
     margin: theme.spacing.unit / 4,
   },
+  selectCheckBox:{
+    fontSize: 12
+  }
 });
 
 const ITEM_HEIGHT = 48;
@@ -302,7 +305,7 @@ class DescriptionField extends React.Component {
             />
           </div>
 
-          <Typography variant="h5" gutterBottom align='left'
+          <Typography variant="h5" align='left'
             className={classes.descriptionHeader} >
             Upload image (optional)
           </Typography>
@@ -314,13 +317,18 @@ class DescriptionField extends React.Component {
               id="contained-button-file"
               type="file"
               onChange={this.handleFile.bind(this)}
+              onClick={(event)=> {
+                event.target.value = null
+              }}
             />
-            <Grid item xs={12} sm={10} md={8} lg={7}>
-              {!imageModalOpen && preview}
+            <Grid container justify="flex-start">
+              <Grid item xs={12} sm={10} md={8} sm={6}>
+                {!imageModalOpen && preview}
+              </Grid>
             </Grid>
-            <Grid container justify='space-between' alignItems='center'
-              style={{ marginTop: 30}}>
-              <Grid item xs={10} sm={8} md={5}
+            <Grid container justify='flex-start' alignItems='center'
+              spacing={16}>
+              <Grid item xs={10} sm={7} md={5}
                 container justify='center'>
                 <label htmlFor="contained-button-file">
                   <Button variant="contained" component="span"
@@ -330,7 +338,7 @@ class DescriptionField extends React.Component {
                   </Button>
                 </label>
               </Grid>
-              <Grid item xs={10} sm={8} md={5}
+              <Grid item xs={10} sm={4} md={3}
                 container justify='center'>
                 {pictureUploaded &&
                   <Button variant="contained" component="span"
@@ -348,21 +356,22 @@ class DescriptionField extends React.Component {
             Share this opportunity with
           </Typography>
           <Grid container justify='space-around' alignItems='center'
-            style={{ marginBottom: 30}} spacing={16}>
-            <Grid item xs={11} container justify='flex-start'>
+            style={{ marginBottom: 30}} spacing={8}>
+            <Grid item xs={10} sm={6} md={3} lg={2}>
               <FormControlLabel
                 control={
                   <Checkbox
                     checked={this.state.selectAll}
                     onChange={this.handleToggleSelectAll}
                     value="select-all"
+                    classes={{ root: classes.selectCheckBox}}
                   />
                 }
                 label="Select All"
               />
             </Grid>
 
-            <Grid item xs={10} sm={8} md={4} lg={4}>
+            <Grid item xs={10} sm={8} md={5} lg={4}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Networks</InputLabel>
                 <Select
@@ -374,46 +383,56 @@ class DescriptionField extends React.Component {
                     <div className={classes.chips}>
                       {selected.map(value => (
                         <Chip key={value} label={availNetworks[value].title}
-                          eclassName={classes.chip} />
+                          className={classes.chip} />
                       ))}
                     </div>
                   )}
                   MenuProps={MenuProps}
                 >
                   {Object.values(availNetworks).map(network => (
-                    <MenuItem key={network.id} value={network.id}>
-                      {network.title}
+                    <MenuItem key={network.id} value={network.id}
+                      disableRipple>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={this.state.networks.includes(network.id)}
+                            value={network.id}
+                            classes={{ root: classes.selectCheckBox}}
+                          />
+                        }
+                        label={network.title}
+                      />
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            <Grid item xs={10} sm={8} md={4} lg={4}>
+            <Grid item xs={10} sm={8} md={4} lg={3}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Connections</InputLabel>
                 <Select
-                  multiple
-                  value={this.state.connections}
-                  onChange={this.handleMultiSelectChange('connections')}
                   input={<Input id="select-multiple-chip" />}
-                  disabled
                   MenuProps={MenuProps}
-                />
+                >
+                  <MenuItem key={0} value={''} disabled>
+                    Coming Soon
+                  </MenuItem>
+                </Select>
               </FormControl>
             </Grid>
 
-            <Grid item xs={10} sm={8} md={4} lg={4}>
+            <Grid item xs={10} sm={8} md={5} lg={3}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Network Circles</InputLabel>
                 <Select
-                  multiple
-                  value={this.state.circles}
-                  onChange={this.handleMultiSelectChange('circles')}
                   input={<Input id="select-multiple-chip" />}
-                  disabled
                   MenuProps={MenuProps}
-                />
+                >
+                  <MenuItem key={0} value={''} disabled>
+                    Coming Soon
+                  </MenuItem>
+                </Select>
               </FormControl>
             </Grid>
 
@@ -424,7 +443,7 @@ class DescriptionField extends React.Component {
           handleClose={this.handleCloseImageModal.bind(this)}
           open={imageModalOpen}
           fileUrl={previewUrlForModal}
-          ratio={16/7}/>
+          ratio={4/1}/>
 
       </Grid>
     )

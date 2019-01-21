@@ -14,7 +14,8 @@ import { refSignup } from '../../actions/session_actions';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
-import SignupModal from './signup_modal'
+import SignupModal from './signup_modal';
+import BottomFade from '../../static/bottom-fade.png';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -64,6 +65,15 @@ const styles = theme => ({
     top: '50%',
     left: '50%',
     marginLeft: -12,
+  },
+  bottomFade:{
+    zIndex: 2,
+  	position: 'relative',
+  	bottom: '0%',
+  	backgroundImage: `url(${BottomFade})`,
+    backgroundSize:'cover',
+    height: '250px',
+    width: '100%',
   }
 });
 
@@ -157,6 +167,7 @@ class SignupPage extends React.Component{
               onMouseUp={this.handleChange('fname')}
               />
           </Grid>
+          <Grid item xs={10} sm={5} />
           <Grid item xs={10} sm={5} >
             <TextField
               required
@@ -200,7 +211,7 @@ class SignupPage extends React.Component{
           <Grid item xs={10} className={classes.wrapper}>
             <Button variant="contained" color="secondary" className={classes.button}
               disabled={loading} onClick={this.handleSignupSubmit}>
-              Sign Up Now
+              Sign In Now
             </Button>
             {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
@@ -230,6 +241,7 @@ class SignupPage extends React.Component{
               {form}
             </Grid>
           </Grid>
+          <div className={classes.bottomFade} />
 
         </Grid>
 

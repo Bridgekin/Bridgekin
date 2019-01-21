@@ -64,12 +64,13 @@ class WaitlistModal extends React.Component {
   };
 
   render () {
-    const { open, classes } = this.props;
+    const { open, classes, referred } = this.props;
 
     let waitlistErrors = this.props.waitlistErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
         return ex === 'Fname' ? 'First name' : 'Last name';
       });
+
       return (
         <ListItem >
           <ListItemText primary={error} />
@@ -77,7 +78,21 @@ class WaitlistModal extends React.Component {
       )
     })
 
-    let modalText = this.props.waitlistErrors.length === 0 ? (
+    let modalSuccessText = referred ? (
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader}>
+          Thanks for referring your trusted contact!
+        </Typography>
+        <Typography variant="body1" id="simple-modal-description">
+          We’ve sent them an email letting them know you referred them and they’ve been added to our waitlist.
+        </Typography>
+        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+          onClick={this.handleClose} color='secondary'>
+          Close
+        </Button>
+      </Grid>
+    ) : (
       <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.thanksHeader}>
@@ -86,6 +101,25 @@ class WaitlistModal extends React.Component {
         <Typography variant="body1" id="simple-modal-description">
           You've now been added to our waitlist! You'll receive a confirmation email shortly.
         </Typography>
+        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+          onClick={this.handleClose} color='secondary'>
+          Close
+        </Button>
+      </Grid>
+    )
+
+    let modalErrorText = referred ? (
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader}>
+          Thanks for referring your trusted contact!
+        </Typography>
+        <Typography variant="body1" id="simple-modal-description">
+          It looks like we were unable to add them to the waitlist because:
+        </Typography>
+        <List>
+          {waitlistErrors}
+        </List>
         <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
           onClick={this.handleClose} color='secondary'>
           Close
@@ -108,6 +142,13 @@ class WaitlistModal extends React.Component {
           Close
         </Button>
       </Grid>
+    )
+
+
+    let modalText = this.props.waitlistErrors.length === 0 ? (
+      modalSuccessText
+    ) : (
+      modalErrorText
     )
 
     return (

@@ -1,10 +1,10 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::EmailNotificationsController < ApiController
   include DeviseControllerPatch
-  before_action :set_email_notification, only: [:show, :destroy]
+  # before_action :set_email_notification, only:  [:show, :destroy]
   before_action :authenticate_user
 
-  after_action :verify_authorized
+  after_action :verify_authorized, except: :show
 
   def show
     @email_notification = @user.notification_setting

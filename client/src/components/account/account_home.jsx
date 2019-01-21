@@ -106,7 +106,7 @@ class AccountHome extends React.Component {
             <Grid container justify="center" alignItems="flex-start"
               spacing={16}>
 
-              <Grid item xs={8} md={5}>
+              <Grid item xs={8} md={5} container justify='center'>
                 {profilePic}
               </Grid>
 

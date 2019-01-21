@@ -14,7 +14,7 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
 
       redirect_to "#{root_url}accountconfirmed"
     else
-      render json: resource.errors.full_messages, status: 422
+      redirect_to "#{root_url}confirmationerror"
     end
   end
 

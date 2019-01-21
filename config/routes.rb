@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
     get 'userOpportunities', :to => 'opportunities#userIndex'
     get 'authorization', :to => 'users/sessions#authorize'
+    get 'show', :to => 'users/sessions#show'
     get 'referral_links/:referral_code', :to => 'referral_links#reveal'
     get 'referred_connection', :to => 'connected_opportunities#referredConnection'
 
