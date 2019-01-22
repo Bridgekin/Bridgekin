@@ -450,7 +450,7 @@ class DescriptionField extends React.Component {
           handleClose={this.handleCloseImageModal.bind(this)}
           open={imageModalOpen}
           fileUrl={previewUrlForModal}
-          ratio={4/1}/>
+          ratio={2.3/1}/>
 
       </Grid>
     )
