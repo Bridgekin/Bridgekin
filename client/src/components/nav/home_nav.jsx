@@ -382,13 +382,18 @@ class HomeNav extends React.Component {
       </div>
     )
 
+    // <Link to='/' className={classes.logoLink}>
+    //   <img alt='logo' className={classes.logo} src={logo} />
+    // </Link>
+
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
-            <Link to='/' className={classes.logoLink}>
+            <IconButton aria-label="logo-link" className={classes.logoLink}
+              onClick={() => this.props.history.push('/')}>
               <img alt='logo' className={classes.logo} src={logo} />
-            </Link>
+            </IconButton>
             <div className={classes.grow} />
             {navMenu}
           </Toolbar>

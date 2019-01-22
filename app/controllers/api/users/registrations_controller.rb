@@ -12,11 +12,11 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     @referralLink = ReferralLink.find_link_by_code(params[:code])
 
     @user = User.new(user_params)
-    if @referralLink && @referralLink.status == 'Active' && @user.save
+    if @referralLink && @referralLink[:status] == 'Active' && @user.save
       #Check for a single use code
-      if @referralLink.usage_type == "Single"
-        @referralLink.status = "Consumed"
-        @referralLink.recipient_id = @user.id
+      if @referralLink[:usage_type] == "Single"
+        @referralLink[:status] = "Consumed"
+        @referralLink[:recipient_id] = @user.id
         @referralLink.save
       end
       # UserMailer.register_email(@user).deliver_now
@@ -32,14 +32,14 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       #Remove waitlist user from waitlist by changing status
       waitlist_user = WaitlistUser.find_by(email: @user.email)
       if waitlist_user
-        waitlist_user.status = 'Full'
+        waitlist_user[:status] = 'Full'
         waitlist_user.save
       end
 
       render :create
     elsif @referralLink.nil?
       render json: ["Invalid referral link"], status: 401
-    elsif @referralLink.status != "Active"
+    elsif @referralLink[:status] != "Active"
       render json: ["Referral code has already been claimed"], status: 401
     else
       render json: @user.errors.full_messages, status: 422

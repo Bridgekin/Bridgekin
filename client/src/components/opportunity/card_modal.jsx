@@ -360,7 +360,8 @@ class CardModal extends React.Component {
               </Grid>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid container justify='flex-start'
+              style={{ margin: "10px 0px"}}>
               <Button variant="contained" color='secondary'
                 onClick={this.handleConnection(true)}
                 className={classes.actionButton}
