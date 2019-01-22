@@ -55,8 +55,7 @@ const styles = theme => ({
     marginBottom: 75,
     position: 'relative',
     top: 164,
-    padding: 50,
-    zIndex: -1
+    padding: 50
   },
   pic: {
     width: '100%',
@@ -546,37 +545,47 @@ class AccountSetting extends React.Component {
           </Card>
         );
       default:
+
+      // <Grid item xs={8} md={5} container justify='center'>
+      //   {profilePicture}
+      //   <div style={{ display: 'flex'}}>
+      //     <Button color="textPrimary"
+      //       onClick={() => this.props.history.push('/account/settings/general')}>
+      //       Update Profile Picture
+      //     </Button>
+      //   </div>
+      // </Grid>
+      // <Grid item xs={8} md={6} className={classes.content}>
         return (
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="flex-start"
               spacing={16}>
 
-              <Grid item xs={8} md={5} container justify='center'>
-                {profilePicture}
-                <div style={{ display: 'flex'}}>
-                  <Button color="textPrimary"
-                    onClick={() => this.props.history.push('/account/settings/general')}>
-                    Update Profile Picture
-                  </Button>
-                </div>
-              </Grid>
-
-              <Grid item xs={8} md={6} className={classes.content}>
+              <Grid item xs={10} md={8} className={classes.content}>
                 <div className={classes.wrapper}>
                   <Typography variant="h3" align='left'>
                     {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
                   </Typography>
                 </div>
 
-                <Typography variant="h6" align='left' color='textPrimary'>
-                  Email Address
-                </Typography>
+                <Grid container>
+                  <Typography variant="h6" align='left' color='textPrimary'>
+                    Email Address
+                  </Typography>
+                  <Link to='/account/settings/general'
+                    style={{ marginLeft: 15}}>
+                    <Typography variant="h6" align='left' color='textPrimary'
+                      style={{fontWeight: 300}}>
+                      Change
+                    </Typography>
+                  </Link>
+                </Grid>
                 <Typography variant="body1" gutterBottom align='left'
                   color="default" style={{ marginBottom: 15}}>
                   {currentUser.email}
                 </Typography>
 
-                <div style={{ display: 'flex'}}>
+                <Grid container>
                   <Typography variant="h6" align='left' color='textPrimary'>
                     Current Password
                   </Typography>
@@ -587,7 +596,8 @@ class AccountSetting extends React.Component {
                       Change
                     </Typography>
                   </Link>
-                </div>
+                </Grid>
+
                 <Typography variant="body1" gutterBottom align='left'
                   color="default" style={{ marginBottom: 15}}>
                   {"********"}

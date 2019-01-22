@@ -54,7 +54,8 @@ const styles = theme => ({
     border: `1px solid`,
     color: theme.palette.white,
     backgroundColor: theme.palette.primary.main,
-    padding: 5
+    padding: 5,
+    cursor: 'pointer'
   },
 });
 

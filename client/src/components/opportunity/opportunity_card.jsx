@@ -21,8 +21,10 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircleSharp';
 import CachedSharpIcon from '@material-ui/icons/CachedSharp';
 import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
 import LinesEllipsis from 'react-lines-ellipsis';
+
 import Img from 'react-image'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import VisibilitySensor from 'react-visibility-sensor';
 
 import CardModal from './card_modal';
 
@@ -48,6 +50,9 @@ const styles = theme => ({
     alignItems: 'center',
     // minHeight: 450,
     width: '100%'
+  },
+  cardActionArea:{
+    height: '100%'
   },
   content:{
     padding: "10px 20px 0px 20px"
@@ -269,21 +274,25 @@ class OpportunityCard extends React.Component {
       let loader = (
         <Grid container justify='center' alignItems='center'
           className={classes.loader}>
-          <CircularProgress className={classes.progress} />
         </Grid>
       )
+      // <CircularProgress className={classes.progress} />
 
       let picture = pictureUrl ? (
-        <Img src={pictureUrl}
-          className={classes.cover}
-          loader={loader}
-          />
+        <VisibilitySensor>
+          <Img src={pictureUrl}
+            className={classes.cover}
+            loader={loader}
+            />
+        </VisibilitySensor>
       ) : (
-        <Img src={PickImage(industries[0])}
-          className={classes.cover}
-          style={{ height: 150}}
-          loader={loader}
-          />
+        <VisibilitySensor>
+          <Img src={PickImage(industries[0])}
+            className={classes.cover}
+            style={{ height: 150}}
+            loader={loader}
+            />
+        </VisibilitySensor>
       )
 
       return (
@@ -295,12 +304,13 @@ class OpportunityCard extends React.Component {
           <Card className={classes.card}
             style={editable ? {minHeight: 450} : {minHeight: 390}}
             onClick={this.handleCardOpen}>
-
-            <Grid container justify="center" alignItems='center'>
-              <Grid item xs={12}>
-                {picture}
-              </Grid>
-              <Grid item xs={10} className={classes.cardContent}>
+            <CardActionArea className={classes.cardActionArea}>
+              <Grid container justify="center" alignItems='flex-start'
+                style={{ height: '100%'}}>
+                <Grid item xs={12}>
+                  {picture}
+                </Grid>
+                <Grid item xs={10} className={classes.cardContent}>
                   <div className={classes.cardHeaderWrapper}>
                     <Typography variant="h5" align='left'
                       color="default" className={classes.title} >
@@ -310,7 +320,7 @@ class OpportunityCard extends React.Component {
                         ellipsis='...'
                         trimRight
                         basedOn='letters'
-                      />
+                        />
                     </Typography>
                   </div>
                   <div className={classes.cardDescriptionWrapper}>
@@ -323,7 +333,7 @@ class OpportunityCard extends React.Component {
                         ellipsis='...'
                         trimRight
                         basedOn='letters'
-                      />
+                        />
                     </Typography>
                   </div>
 
@@ -378,10 +388,12 @@ class OpportunityCard extends React.Component {
                       </Typography>
                     </Grid>
                   </Grid>
+                </Grid>
+                {editable && editOptions}
+                {editable && deleteDialog}
               </Grid>
-              {editable && editOptions}
-              {editable && deleteDialog}
-            </Grid>
+            </CardActionArea>
+
           </Card>
         </Badge>
         <CardModal open={cardOpen}

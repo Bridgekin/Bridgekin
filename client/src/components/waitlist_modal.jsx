@@ -48,11 +48,8 @@ const styles = theme => ({
     border: `1px solid`,
     color: theme.palette.white,
     backgroundColor: theme.palette.primary.main,
-    padding: 5
-    // The border color match the background color.
-    // border: `2px solid ${
-    //   theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[900]
-    // }`,
+    padding: 5,
+    cursor: 'pointer'
   },
 });
 

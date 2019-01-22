@@ -68,7 +68,8 @@ const styles = {
     width: '100%',
     borderBottom: `0.5px solid ${theme.palette.grey1}`,
     boxShadow: 'none',
-    position: 'fixed'
+    position: 'fixed',
+    top: 0
   },
   textField:{
     marginLeft: 10,

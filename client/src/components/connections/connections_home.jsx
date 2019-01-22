@@ -23,6 +23,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Img from 'react-image'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Switch from '@material-ui/core/Switch';
+import VisibilitySensor from 'react-visibility-sensor';
 
 import PersonIcon from '@material-ui/icons/Person';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -169,6 +170,9 @@ const styles = {
     position:'relative',
     top: 64
   },
+  circleAvatar:{
+    backgroundColor: theme.palette.grey2,
+  }
 };
 
 const people = [
@@ -319,9 +323,11 @@ class ConnectionsHome extends React.Component{
                     <ListItemAvatar>
                       <Avatar>
                         {person.picture ? (
-                          <Img src={person.picture}
-                            className={classes.trustedCover}
-                            />
+                          <VisibilitySensor>
+                            <Img src={person.picture}
+                              className={classes.trustedCover}
+                              />
+                          </VisibilitySensor>
                         ):<PersonIcon />}
                       </Avatar>
                     </ListItemAvatar>
@@ -344,6 +350,29 @@ class ConnectionsHome extends React.Component{
         </Card>
       </Grid>
     )
+
+    // <Avatar
+    //   style={{display:'flex', flexDirection:'column'}}
+    //   >
+    //   <div style={{display:'flex'}}>
+    //     <img src={randomImages[`${((circle.id*4) + 1) % 10}`]}
+    //       className={classes.circleCover} alt='1'
+    //       />
+    //     <img src={randomImages[`${((circle.id*4) + 2) % 10}`]}
+    //       className={classes.circleCover} alt='2'
+    //       />
+    //   </div>
+    //
+    //   <div style={{display:'flex'}}>
+    //     <img src={randomImages[`${((circle.id*4) + 3) % 10}`]}
+    //       className={classes.circleCover} alt='3'
+    //       />
+    //     <img src={randomImages[`${((circle.id*4) + 4) % 10}`]}
+    //       className={classes.circleCover}
+    //       alt='4'
+    //       />
+    //   </div>
+    // </Avatar>
 
     let networkCircles = (
       <Grid item xs={12} md={6}>
@@ -381,28 +410,11 @@ class ConnectionsHome extends React.Component{
                 { circles.map(circle => (
                   <ListItem button divider>
                     <ListItemAvatar>
-                      <Avatar
-                        style={{display:'flex', flexDirection:'column'}}
-                        >
-                        <div style={{display:'flex'}}>
-                          <img src={randomImages[`${((circle.id*4) + 1) % 10}`]}
-                            className={classes.circleCover} alt='1'
-                            />
-                          <img src={randomImages[`${((circle.id*4) + 2) % 10}`]}
-                            className={classes.circleCover} alt='2'
-                            />
-                        </div>
-
-                        <div style={{display:'flex'}}>
-                          <img src={randomImages[`${((circle.id*4) + 3) % 10}`]}
-                            className={classes.circleCover} alt='3'
-                            />
-                          <img src={randomImages[`${((circle.id*4) + 4) % 10}`]}
-                            className={classes.circleCover}
-                            alt='4'
-                            />
-                        </div>
-
+                      <Avatar className={classes.circleAvatar}>
+                        <Typography variant="h6" align="center"
+                          style={{ color: 'white' }}>
+                          {circle.title[0].toUpperCase()}
+                        </Typography>
                       </Avatar>
                     </ListItemAvatar>
 

@@ -385,13 +385,10 @@ class DescriptionField extends React.Component {
                   multiple
                   value={this.props.networks}
                   onChange={this.handleMultiSelectChange('networks')}
-                  classes={{ root: classes.selectInput}}
                   input={<Input id="select-multiple-chip" />}
                   renderValue={selected => (
                     <div className={classes.chips}>
                       {selected.map(value => {
-                        console.log('value', value);
-                        console.log('network', availNetworks[value]);
                         return <Chip key={value} label={availNetworks[`${value}`].title}
                           className={classes.chip} />
                       })}

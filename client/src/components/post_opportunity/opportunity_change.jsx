@@ -44,7 +44,8 @@ const styles = {
     borderBottom: '1px solid #d3d3d3',
     height: 100,
     position:'fixed',
-    top: 64
+    top: 64,
+    zIndex: 10
   },
   accountNavSection:{
     display: 'flex',
@@ -70,8 +71,7 @@ const styles = {
     // marginTop: 50,
     marginBottom: 50,
     position: 'relative',
-    top:164,
-    zIndex: -1
+    top:164
   },
   step: {
     "& $completed": {

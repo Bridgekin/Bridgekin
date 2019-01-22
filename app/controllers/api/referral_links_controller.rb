@@ -7,26 +7,26 @@ class Api::ReferralLinksController < ApiController
   # after_action :verify_policy_scoped, only: :index
 
   def create
-    @link = ReferralLink.where(
+    # @link = ReferralLink.where(
+    #   member_id: @user.id,
+    #   network_id: params[:referral][:network_id]
+    # ).first
+
+    # if @link
+    #   authorize @link
+    #   render :show
+    # else
+    @link = ReferralLink.new(
       member_id: @user.id,
       network_id: params[:referral][:network_id]
-    ).first
-
-    if @link
-      authorize @link
+    )
+    authorize @link
+    if @link.save
       render :show
     else
-      @link = ReferralLink.new(
-        member_id: @user.id,
-        network_id: params[:referral][:network_id]
-      )
-      authorize @link
-      if @link.save
-        render :show
-      else
-        render json: @link.errors.full_messages, status: 422
-      end
+      render json: @link.errors.full_messages, status: 422
     end
+    # end
   end
 
   def reveal

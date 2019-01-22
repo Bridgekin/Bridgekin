@@ -123,11 +123,12 @@ let theme = createMuiTheme({
       primary:{
         fontSize: 15,
         fontWeight: 600,
+        color: "#000000"
       },
       secondary:{
         fontSize: 15,
-        fontWeight: 600,
-
+        fontWeight: 300,
+        color: "#000000"
       }
     },
   },

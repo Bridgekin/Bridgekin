@@ -57,6 +57,11 @@ const styles = {
   root: {
     flexGrow: 1,
   },
+  grid:{
+    top: 64,
+    position: 'relative',
+    flexGrow: 1
+  },
   homeheader:{
     padding: "20px 0px 50px 0px",
     backgroundColor: 'RGBA(196,196,196,0.1)',
@@ -500,7 +505,7 @@ class OpportunityHome extends React.Component {
     if(this.props.currentUser){
       return (
         <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
-          <Grid container style={{ top: 56, position: 'relative', flexGrow: 1 }}>
+          <Grid container className={classes.grid}>
             {header}
             {opportunityGrid}
             <OpportunityWaitlist

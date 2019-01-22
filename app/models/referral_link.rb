@@ -1,5 +1,6 @@
 class ReferralLink< ApplicationRecord
-  validates :member_id, :network_id, :referral_code, presence: true
+  validates :member_id, :network_id, :referral_code, :status, :usage_type,
+    presence: true
   validates :referral_code, uniqueness: true
 
   after_initialize :ensure_referral_code
@@ -11,6 +12,11 @@ class ReferralLink< ApplicationRecord
   belongs_to :owner,
     foreign_key: :member_id,
     class_name: :User
+
+  belongs_to :recipient,
+    foreign_key: :recipient_id,
+    class_name: :User,
+    optional: true
 
   def self.find_link_by_params(params)
     ReferralLink.where(

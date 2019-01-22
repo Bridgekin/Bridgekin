@@ -58,10 +58,18 @@ class User < ApplicationRecord
     through: :network_admins,
     source: :network
 
+  has_many :referral_links,
+    foreign_key: :member_id,
+    class_name: :ReferralLink
+
+  has_one :recieved_referral,
+    foreign_key: :recipient_id,
+    class_name: :ReferralLink
+
   has_one :notification_setting,
     foreign_key: :user_id,
-    class_name: :EmailNotification,
-    dependent: :destroy
+    class_name: :EmailNotification
+    # dependent: :destroy
 
   has_one_attached :profile_pic
 
