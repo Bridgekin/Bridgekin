@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import HomeImage from '../../static/Login_Background_Image.jpg'
 import './home.css';
@@ -86,6 +88,7 @@ class SignupPage extends React.Component{
       fname: '',
       lname: '',
       password: '',
+      termsAgreement: false,
       // passwordConfirmation: '',
       loading: false,
       success: false,
@@ -105,7 +108,8 @@ class SignupPage extends React.Component{
       fname: this.state.fname,
       lname: this.state.lname,
       password: this.state.password,
-      password_confirmation: this.state.passwordConfirmation
+      password_confirmation: this.state.passwordConfirmation,
+      termsAgreement: this.state.termsAgreement
     }
 
     if (!this.state.loading) {
@@ -122,6 +126,7 @@ class SignupPage extends React.Component{
                   fname: '',
                   lname: '',
                   password: '',
+                  termsAgreement: false,
                   // passwordConfirmation: ''
                 })
               } else {
@@ -143,18 +148,30 @@ class SignupPage extends React.Component{
   handleChange(field){
     return (e) => {
       e.preventDefault();
-      this.setState({ [field]: e.target.value});
+      if(field === 'termsAgreement'){
+        this.setState({ [field]: e.target.checked});
+      }
+      else {
+        this.setState({ [field]: e.target.value});
+      }
     }
   }
 
   render(){
     let classes = this.props.classes;
-    const { loading, success, open } = this.state;
+    const { loading, success, open, termsAgreement } = this.state;
+
+    const termsLink = <a href='/'>User Agreement, Privacy Policy and Cookies Policy</a>
+    let termsMessage = (
+      <Typography variant="subtitle2" gutterBottom>
+        {`By registering I acknowledge and agree to the `} {termsLink}
+      </Typography>
+    )
 
     let form = (
       <form className='form-container'>
         <Grid container justify="center" alignItems="center" spacing={8}>
-          <Grid item xs={10} sm={5} >
+          <Grid item xs={12} sm={6} >
             <TextField
               required
               label="First Name"
@@ -167,8 +184,7 @@ class SignupPage extends React.Component{
               onMouseUp={this.handleChange('fname')}
               />
           </Grid>
-          <Grid item xs={10} sm={5} />
-          <Grid item xs={10} sm={5} >
+          <Grid item xs={12} sm={6} >
             <TextField
               required
               label="Last Name"
@@ -181,7 +197,7 @@ class SignupPage extends React.Component{
               onMouseUp={this.handleChange('lname')}
               />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={12}>
             <TextField
               required
               label="Email"
@@ -194,7 +210,7 @@ class SignupPage extends React.Component{
               onMouseUp={this.handleChange('email')}
               />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={12}>
             <TextField
               required
               label="Password"
@@ -208,9 +224,21 @@ class SignupPage extends React.Component{
               onMouseUp={this.handleChange('password')}
               />
           </Grid>
-          <Grid item xs={10} className={classes.wrapper}>
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.termsAgreement}
+                  onChange={this.handleChange('termsAgreement')}
+                  value="termsAgreement"
+                />
+              }
+              label={termsMessage}
+            />
+          </Grid>
+          <Grid item xs={12} className={classes.wrapper}>
             <Button variant="contained" color="secondary" className={classes.button}
-              disabled={loading} onClick={this.handleSignupSubmit}>
+              disabled={loading || !termsAgreement } onClick={this.handleSignupSubmit}>
               Sign In Now
             </Button>
             {loading && <CircularProgress size={24}
@@ -223,7 +251,8 @@ class SignupPage extends React.Component{
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.homeGrid}
-          justify="flex-start" alignItems="center">
+          justify="flex-start" alignItems="center"
+          style={{ top: 56, position: 'relative'}}>
           <Grid item xs={11} sm={9} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >

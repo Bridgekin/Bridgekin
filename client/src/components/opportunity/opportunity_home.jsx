@@ -500,7 +500,7 @@ class OpportunityHome extends React.Component {
     if(this.props.currentUser){
       return (
         <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
-          <Grid container style={{flexGrow: 1}}>
+          <Grid container style={{ top: 56, position: 'relative', flexGrow: 1 }}>
             {header}
             {opportunityGrid}
             <OpportunityWaitlist

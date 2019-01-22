@@ -8,6 +8,10 @@ import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 import theme from '../theme';
+import Grid from '@material-ui/core/Grid';
+
+import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
 import { clearUserErrors } from '../../actions/error_actions';
@@ -37,7 +41,21 @@ const styles = theme => ({
   thanksHeader:{
     marginBottom: 30,
     color: theme.palette.darkGrey
-  }
+  },
+  grid:{
+    margin: '70px 0px 70px 0px'
+  },
+  modalPaper:{
+    margin: 15
+  },
+  badge: {
+    top: 4,
+    right: 4,
+    border: `1px solid`,
+    color: theme.palette.white,
+    backgroundColor: theme.palette.primary.main,
+    padding: 5
+  },
 });
 
 class UpdateUserModal extends React.Component {
@@ -78,69 +96,81 @@ class UpdateUserModal extends React.Component {
     })
 
     let modalTextPassword = this.props.userErrors.length === 0 ? (
-      <div className={classes.paper}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='textPrimary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Password Changed!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           You have successfully updated your password.
         </Typography>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
     ) : (
-      <div className={classes.paper}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='textPrimary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Password wasn't changed
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           Unfortunately, we weren't able to change your password because:
         </Typography>
         <List>
           {userErrors}
         </List>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
     )
 
     let modalTextGeneral = this.props.userErrors.length === 0 ? (
-      <div className={classes.paper}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='secondary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Profile Information Updated
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           You have successfully updated your profile information.
         </Typography>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
     ) : (
-      <div className={classes.paper}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='secondary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Profile Information Wasn't Updated
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           Unfortunately, we weren't able to update your profile info because:
         </Typography>
         <List>
           {userErrors}
         </List>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
     )
 
     // let modalText = {modalType === 'password' ? {modalTextPassword} : {modalTextGeneral}}
@@ -150,8 +180,17 @@ class UpdateUserModal extends React.Component {
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        onClose={this.handleClose}>
-        {modalType === 'password' ? modalTextPassword : modalTextGeneral}
+        onClose={this.handleClose}
+        classes={{ paper: classes.modalPaper}}>
+        <Badge
+          badgeContent={<CloseIcon onClick={this.handleClose}/>}
+          classes={{ badge: classes.badge }}
+          style={{ width: '100%'}}
+          >
+          <Grid container justify='center' alignItems='center'>
+            {modalType === 'password' ? modalTextPassword : modalTextGeneral}
+          </Grid>
+        </Badge>
       </Dialog>
     )
   }

@@ -218,7 +218,8 @@ class HomePage extends React.Component{
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.homeGridDesktop}
-          justify="flex-start" alignItems="center">
+          justify="flex-start" alignItems="center"
+          style={{ top: 56, position: 'relative'}}>
           <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >

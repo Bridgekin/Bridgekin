@@ -18,7 +18,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 // import castlePic from '../../static/castle.jpg';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
-import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions'
+import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions';
+
+import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -114,7 +117,15 @@ const styles = theme => ({
     height:150,
     width: "100%",
     background: theme.palette.lightGrey
-  }
+  },
+  badge: {
+    top: 4,
+    right: 4,
+    border: `1px solid`,
+    color: theme.palette.white,
+    backgroundColor: theme.palette.primary.main,
+    padding: 5
+  },
 });
 
 class CardModal extends React.Component {
@@ -389,7 +400,13 @@ class CardModal extends React.Component {
           onClose={this.handleClose('find')}
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}>
-          {modalContent}
+          <Badge
+            badgeContent={<CloseIcon onClick={this.handleClose('find')}/>}
+            classes={{ badge: classes.badge }}
+            style={{ width: '100%'}}
+            >
+            {modalContent}
+          </Badge>
         </Dialog>
       )
     } else {

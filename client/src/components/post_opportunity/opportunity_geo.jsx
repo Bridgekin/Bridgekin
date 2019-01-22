@@ -15,6 +15,7 @@ import { geographyChoices } from '../../util/choices';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    marginTop: 20
   },
   formControl: {
     margin: theme.spacing.unit * 3,
@@ -27,10 +28,11 @@ const styles = theme => ({
   geoHeader:{
     fontWeight: 700,
     color: theme.palette.darkGrey,
-    margin: "20px 0px"
+    // margin: "20px 0px"
   },
   geoLabel:{
-    fontSize: 22
+    fontSize: 18,
+    fontWeight: 600
   },
   geoCheckbox: {
   }
@@ -97,13 +99,15 @@ class GeoField extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='flex-start' alignItems='center'>
-        <Grid item xs={10} sm={11}>
+        <Grid item xs={10} sm={11}
+          style={{ paddingLeft: 20 }}>
           <Typography variant="h5" gutterBottom align='left'
             className={classes.geoHeader}>
             What is your geographical focus?
           </Typography>
         </Grid>
-        <Grid item xs={10} sm={11}>
+        <Grid item xs={10} sm={11}
+          style={{ paddingLeft: 20 }}>
           <Typography variant="body2" gutterBottom align='left'
             style={{ marginTop: 20}}>
             Choose one or more options:

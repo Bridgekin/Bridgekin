@@ -8,6 +8,10 @@ import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 import theme from '../theme';
+import Grid from '@material-ui/core/Grid';
+
+import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
 import { clearUserErrors } from '../../actions/error_actions';
@@ -37,7 +41,21 @@ const styles = theme => ({
   thanksHeader:{
     marginBottom: 30,
     color: theme.palette.darkGrey
-  }
+  },
+  grid:{
+    margin: '70px 0px 70px 0px'
+  },
+  modalPaper:{
+    margin: 15
+  },
+  badge: {
+    top: 4,
+    right: 4,
+    border: `1px solid`,
+    color: theme.palette.white,
+    backgroundColor: theme.palette.primary.main,
+    padding: 5
+  },
 });
 
 class SignupModal extends React.Component {
@@ -74,34 +92,42 @@ class SignupModal extends React.Component {
     })
 
     let modalText = this.props.userErrors.length === 0 ? (
-      <div className={classes.paper}>
-        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+        <Typography variant="h2" id="modal-title" color='secondary'
+          className={classes.thanksHeader} align='left'>
           Thanks for signing up!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           We've sent you a confirmation email. Please confirm within your email to login.
         </Typography>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
     ) : (
-      <div className={classes.paper}>
-        <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+        <Typography variant="h2" id="modal-title" color='secondary'
+          className={classes.thanksHeader} align='left'>
           Thanks for your interest in Bridgekin!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           Unfortunately, we weren't able to sign you up because:
         </Typography>
         <List>
           {userErrors}
         </List>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
     )
 
     return (
@@ -109,8 +135,17 @@ class SignupModal extends React.Component {
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        onClose={this.handleClose}>
-        {modalText}
+        onClose={this.handleClose}
+        classes={{ paper: classes.modalPaper}}>
+        <Badge
+          badgeContent={<CloseIcon onClick={this.handleClose}/>}
+          classes={{ badge: classes.badge }}
+          style={{ width: '100%'}}
+          >
+          <Grid container justify='center' alignItems='center'>
+            {modalText}
+          </Grid>
+        </Badge>
       </Dialog>
     )
   }

@@ -11,6 +11,9 @@ import Dialog from '@material-ui/core/Dialog';
 
 import Typography from '@material-ui/core/Typography';
 
+import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/CloseSharp';
+
 import { connect } from 'react-redux';
 import { clearWaitlistUserErrors } from '../actions/error_actions';
 import theme from './theme';
@@ -38,7 +41,19 @@ const styles = theme => ({
   },
   modalPaper:{
     margin: 15
-  }
+  },
+  badge: {
+    top: 4,
+    right: 4,
+    border: `1px solid`,
+    color: theme.palette.white,
+    backgroundColor: theme.palette.primary.main,
+    padding: 5
+    // The border color match the background color.
+    // border: `2px solid ${
+    //   theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[900]
+    // }`,
+  },
 });
 
 class WaitlistModal extends React.Component {
@@ -79,68 +94,84 @@ class WaitlistModal extends React.Component {
     })
 
     let modalSuccessText = referred ? (
-      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}
+        container justify='flex-start'>
         <Typography variant="h2" id="modal-title" color='textPrimary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Thanks for referring your trusted contact!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           We’ve sent them an email letting them know you referred them and they’ve been added to our waitlist.
         </Typography>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
       </Grid>
     ) : (
-      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}
+        container justify='flex-start'>
         <Typography variant="h2" id="modal-title" color='textPrimary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Thanks for signing up!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           You've now been added to our waitlist! You'll receive a confirmation email shortly.
         </Typography>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
       </Grid>
     )
 
     let modalErrorText = referred ? (
-      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}
+        container justify='flex-start'>
         <Typography variant="h2" id="modal-title" color='textPrimary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Thanks for referring your trusted contact!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           It looks like we were unable to add them to the waitlist because:
         </Typography>
         <List>
           {waitlistErrors}
         </List>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
       </Grid>
     ) : (
-      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}
+        container justify='flex-start'>
         <Typography variant="h2" id="modal-title" color='textPrimary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           Thanks for your interest in Bridgekin!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           Unfortunately, we weren't able to sign you up because:
         </Typography>
         <List>
           {waitlistErrors}
         </List>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
       </Grid>
     )
 
@@ -159,9 +190,15 @@ class WaitlistModal extends React.Component {
         onClose={this.handleClose}
         className={classes.cardModalWrapper}
         classes={{ paper: classes.modalPaper}}>
-        <Grid container justify='center' alignItems='center'>
-          {modalText}
-        </Grid>
+        <Badge
+          badgeContent={<CloseIcon onClick={this.handleClose}/>}
+          classes={{ badge: classes.badge }}
+          style={{ width: '100%'}}
+          >
+          <Grid container justify='center' alignItems='center'>
+            {modalText}
+          </Grid>
+        </Badge>
       </Dialog>
     )
   }

@@ -23,7 +23,10 @@ const mapDispatchToProps = dispatch => ({
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 35
+    // marginTop: 35,
+    position: 'relative',
+    top: 164,
+    padding: 50
   },
 });
 
@@ -74,7 +77,7 @@ class AccountConnected extends React.Component {
             color="secondary">
             Connected Opportunities
           </Typography>
-          <Grid container className={classes.root}
+          <Grid container style={{ flexGrow: 1 }}
             justify="flex-start" alignItems="center" spacing={24}>
             {connectedOpportunityCards}
           </Grid>
@@ -85,7 +88,7 @@ class AccountConnected extends React.Component {
             color="secondary">
             Referred Opportunities
           </Typography>
-          <Grid container className={classes.root}
+          <Grid container style={{ flexGrow: 1 }}
             justify="flex-start" alignItems="center" spacing={24}>
             {facilitatedOpportunityCards}
           </Grid>

@@ -156,14 +156,18 @@ const styles = {
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
-    backgroundColor: 'RGBA(196,196,196,0.1)'
+    backgroundColor: theme.palette.backgroundGrey,
+    position:'relative',
+    top: 64
   },
   sectionMobile: {
     display: 'flex',
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
-    backgroundColor: 'RGBA(196,196,196,0.1)'
+    backgroundColor: theme.palette.backgroundGrey,
+    position:'relative',
+    top: 64
   },
 };
 

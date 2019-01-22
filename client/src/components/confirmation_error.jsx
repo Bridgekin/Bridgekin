@@ -58,12 +58,12 @@ class ConfirmationError extends Component {
               {"Try going back to our homepage"}
             </Typography>
 
-            <div style={{ display:'flex', justifyContent:'center'}}>
+            <Grid container justify='flex-start' alignItems='center'>
               <Button variant="contained" color="secondary"
                 href='/'>
                 Homepage
               </Button>
-            </div>
+            </Grid>
           </Grid>
         </Grid>
       </MuiThemeProvider>

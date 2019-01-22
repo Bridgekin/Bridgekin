@@ -13,27 +13,29 @@ import { industryChoices } from '../../util/choices';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    marginTop: 20
   },
   cardWrapper:{
     margin: '10px 20px 10px 20px',
-    width: '80%'
+    width: '80%',
   },
   actionArea:{
     display: 'flex',
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'center',
   },
   clicked:{
     backgroundColor: theme.palette.grey2,
     color: theme.palette.text.tertiary
   },
   content:{
-    padding: 5
+    padding: 5,
+    height: 52
   },
   industryHeader:{
     fontWeight: 700,
     color: theme.palette.darkGrey,
-    marginBottom: 20
+    // marginBottom:
   },
   cardGrid:{
     display: 'flex',
@@ -103,16 +105,17 @@ class IndustryField extends React.Component {
       ) : (classes.actionArea);
 
       return (
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6}>
           <Card className={classes.cardWrapper}>
             <CardActionArea className={styling}
               onClick={this.handleClick(option)}
               disableRipple>
-              <CardContent className={classes.content}>
+              <Grid container justify='center' alignItems='center'
+                className={classes.content}>
                 <Typography variant="h6" align='center' color='inherit'>
                   {option}
                 </Typography>
-              </CardContent>
+              </Grid>
             </CardActionArea>
           </Card>
         </Grid>
@@ -122,15 +125,17 @@ class IndustryField extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='flex-start' alignItems='center'>
-        <Grid item xs={10} sm={11}>
-          <Typography variant="h5" gutterBottom align='left'
+        <Grid item xs={10} sm={11}
+          style={{ paddingLeft: 20 }}>
+          <Typography variant="h5" align='left'
             className={classes.industryHeader} >
             In which industries are the product/service you want to find?
           </Typography>
         </Grid>
-        <Grid item xs={10} sm={11}>
+        <Grid item xs={10} sm={11}
+          style={{ paddingLeft: 20 }}>
           <Typography variant="body2" gutterBottom align='left'
-            style={{ margin: 20}}>
+            style={{ margin: "20px 0px"}}>
             Choose up to three:
           </Typography>
         </Grid>

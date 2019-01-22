@@ -15,6 +15,7 @@ import { PickIcons } from '../../static/opportunity_images/image_util';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    marginTop: 20
   },
   cardWrapper:{
     margin: 15,

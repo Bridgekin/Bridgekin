@@ -30,8 +30,11 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-    marginTop: 75,
-    marginBottom: 75
+    // marginTop: 75,
+    marginBottom: 75,
+    position: 'relative',
+    top: 164,
+    padding: 50
   },
   cover: {
     width: '100%',
@@ -112,7 +115,7 @@ class AccountHome extends React.Component {
 
               <Grid item xs={8} md={6} className={classes.content}>
                 <div className={classes.wrapper}>
-                  <Typography variant="h1" gutterBottom color="secondary"
+                  <Typography variant="h3" gutterBottom color="secondary"
                     align='left'>
                     {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
                   </Typography>

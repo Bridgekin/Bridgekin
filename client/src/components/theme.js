@@ -17,6 +17,7 @@ let theme = createMuiTheme({
     grey2: "#999999",
     darkGrey: "#616161",
     white: "#FFFFFF",
+    backgroundGrey: '#f5f5f5', //Opportunity Change
     error:{
       main: '#f44336'
     },
@@ -52,9 +53,10 @@ let theme = createMuiTheme({
   },
   overrides: {
     MuiButton: { // Name of the component ⚛️ / style sheet
-      text: { // Name of the rule
+      root: { // Name of the rule
         // color: 'white', // Some CSS
-        fontSize: '14px'
+        fontSize: '14px',
+        fontWeight: 600
       },
     },
     MuiTypography:{
@@ -68,7 +70,7 @@ let theme = createMuiTheme({
         fontWeight: 600
       },
       h3:{ // Post Opportunity Card Headers (Needs)
-        fontSize: 28,
+        fontSize: 34,
         fontWeight: 600
       },
       h4:{ //nav tabs
@@ -77,17 +79,21 @@ let theme = createMuiTheme({
         lineHeight: 1.2
       },
       h5: { // Opportunity Header
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 600
       },
       h6: { // Opportunity Categories
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 600,
         color: "#999999"
       },
       subtitle1: { // Opportunity Tags
         fontSize: 14,
         fontWeight: 600
+      },
+      subtitle2: { // Terms and conditions
+        fontSize: 12,
+        fontWeight: 300
       },
       body1: {
         fontSize: 18,
@@ -123,7 +129,7 @@ let theme = createMuiTheme({
         fontWeight: 600,
 
       }
-    }
+    },
   },
   // htmlFontSize: 10
   // pxToRem: () => {

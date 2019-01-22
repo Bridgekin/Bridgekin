@@ -23,7 +23,10 @@ const mapDispatchToProps = dispatch => ({
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 50
+  },
+  grid:{
+    flexGrow: 1,
+    paddingTop: 50
   },
   cover: {
     width: '100%',
@@ -84,7 +87,8 @@ class AccountHome extends React.Component {
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container justify="center" alignItems="center"
-          className={classes.root}>
+          className={classes.grid}
+          style={{ top: 56, position: 'relative' }}>
 
           <Grid item xs={10} sm={8} md={6}>
             <Card className={classes.card}>

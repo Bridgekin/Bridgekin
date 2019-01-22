@@ -14,7 +14,11 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     borderBottom: `0.5px solid ${theme.palette.grey1}`,
-    backgroundColor: 'RGBA(196,196,196,0.1)'
+    backgroundColor: theme.palette.backgroundGrey,
+    // height: 0,
+    position: 'fixed',
+    top: 64,
+    zIndex: 10
   },
   acccountMain:{
     marginTop: 50
@@ -27,6 +31,7 @@ const styles = theme => ({
   },
   button: {
     margin: "0px 7px",
+    fontWeight: 500
     // fontSize: 16
   },
   buttonContainer:{

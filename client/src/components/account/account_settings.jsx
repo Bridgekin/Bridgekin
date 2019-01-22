@@ -51,8 +51,12 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-    marginTop: 75,
-    marginBottom: 75
+    // marginTop: 75,
+    marginBottom: 75,
+    position: 'relative',
+    top: 164,
+    padding: 50,
+    zIndex: -1
   },
   pic: {
     width: '100%',
@@ -96,10 +100,9 @@ const styles = theme => ({
     fontSize: 20
   },
   button: { margin: "5px 0px 5px 0px" },
-  submitButton: { margin: "20px 20px 0px 20px" },
+  submitButton: { margin: "20px 20px 20px 0px" },
   buttonWrapper:{
-    display: 'flex',
-    justifyContent: 'center'
+    // width:'100%'
   },
   textFieldWrapper:{
     display: 'flex',
@@ -122,6 +125,9 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  textField:{
+    marginLeft: 0
+  }
 });
 
 
@@ -179,7 +185,7 @@ class AccountSetting extends React.Component {
       if (path){
         this.props.history.push(`/account/settings/${path}`)
       } else {
-        this.props.history.push(`/account/settings`)
+        this.props.history.push(`/account/home`)
       }
     }
   }
@@ -210,7 +216,7 @@ class AccountSetting extends React.Component {
         country: countryList.getName(this.props.currentUser.country) || ''
       },
       ()=> {
-        this.props.history.push('/account/settings')
+        this.props.history.push('/account/home')
       })
     }
   };
@@ -348,7 +354,7 @@ class AccountSetting extends React.Component {
                   fullWidth
                   onChange={this.handleInfoChange('passwordConfirmation')}
                   />
-                <div className={classes.buttonWrapper}>
+                <Grid container justify='flex-start'>
                   <Button className={classes.submitButton}
                     onClick={this.handleChangeFill('')} variant='contained'>
                     Back
@@ -358,7 +364,7 @@ class AccountSetting extends React.Component {
                     onClick={this.changePassword} variant='contained'>
                     Change Password
                   </Button>
-                </div>
+                </Grid>
               </Grid>
             </Grid>
 
@@ -493,8 +499,8 @@ class AccountSetting extends React.Component {
                   color="secondary" className={classes.fieldLabel}>
                   Upload Profile Picture
                 </Typography>
-                <Grid container justify="center" alignItems="center"
-                  spacing={16}>
+                <Grid container justify="flex-start" alignItems="center"
+                  spacing={8}>
                   <input
                     accept="image/*"
                     className={classes.input}
@@ -506,7 +512,7 @@ class AccountSetting extends React.Component {
                   {!imageModalOpen && preview}
                   <label htmlFor="contained-button-file">
                     <Button variant="contained" component="span"
-                      style={{ margin: 30, fontWeight: 600 }}>
+                      style={{ margin: "30px 0px", fontWeight: 600 }}>
                       Upload
                     </Button>
                   </label>
@@ -557,15 +563,9 @@ class AccountSetting extends React.Component {
 
               <Grid item xs={8} md={6} className={classes.content}>
                 <div className={classes.wrapper}>
-                  <Typography variant="h1" align='left'>
+                  <Typography variant="h3" align='left'>
                     {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
                   </Typography>
-                  <div style={{ marginLeft: 10 }}
-                    onClick={() => this.props.history.push('/account/settings/general')}>
-                    <IconButton className={classes.button} aria-label="Edit">
-                      <EditIcon />
-                    </IconButton>
-                  </div>
                 </div>
 
                 <Typography variant="h6" align='left' color='textPrimary'>

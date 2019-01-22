@@ -10,6 +10,7 @@ import OpportunityCard from '../opportunity/opportunity_card';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    marginTop: 20
   },
   cardGrid:{
     display: 'flex',
@@ -55,7 +56,7 @@ class SubmitField extends React.Component {
       <Grid container className={classes.root}
         justify='center' alignItems='flex-start' spacing={16}>
 
-        <Grid item xs={11} sm={10} md={8}>
+        <Grid item xs={11}>
           <Typography variant="h1" gutterBottom align='left'
             color='textPrimary' className={classes.header}>
             {`Opportunity Preview`}
@@ -83,7 +84,7 @@ class SubmitField extends React.Component {
             demo={true}/>
         </Grid>
 
-        <Grid item xs={9} className={classes.disclaimer}>
+        <Grid item xs={11} className={classes.disclaimer}>
           <Typography variant="h6" gutterBottom align='left'
             color='textPrimary'>
             {`Networks this opportunity will be shared with:`}
@@ -92,18 +93,18 @@ class SubmitField extends React.Component {
             {networksTitles}
           </ul>
 
-          <Typography variant="p" gutterBottom align='left'
+          <Typography variant="body1" gutterBottom align='left'
             style={{ marginTop: 30}}
             color='default' className={classes.disclaimerTypography}>
             This is the final version of your opportunitity. It will be reviewed
             and go live within <strong>24 hours</strong>.
           </Typography>
-          <Typography variant="p" gutterBottom align='left'
+          <Typography variant="body1" gutterBottom align='left'
             color='default' className={classes.disclaimerTypography}>
             When a member connects to your opportunity, you will receive
             an email introducing you to each other.
           </Typography>
-          <Typography variant="p" gutterBottom align='left'
+          <Typography variant="body1" gutterBottom align='left'
             color='default' className={classes.disclaimerTypography}>
             {`If you need to edit this opportunity, click the back button.
               You can also edit once live on the “My Account” tab.`}

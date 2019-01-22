@@ -12,6 +12,9 @@ import Dialog from '@material-ui/core/Dialog';
 
 import Typography from '@material-ui/core/Typography';
 
+import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/CloseSharp';
+
 import { connect } from 'react-redux';
 import { clearOpportunityErrors } from '../../actions/error_actions';
 
@@ -33,7 +36,7 @@ const styles = theme => ({
     color: theme.palette.darkGrey
   },
   actionButton: {
-    margin: '0px 10px 0px 10px'
+    margin: 10
   },
   actionWrapper: {
     // display: 'flex',
@@ -48,7 +51,15 @@ const styles = theme => ({
   },
   modalPaper:{
     margin: 15
-  }
+  },
+  badge: {
+    top: 4,
+    right: 4,
+    border: `1px solid`,
+    color: theme.palette.white,
+    backgroundColor: theme.palette.primary.main,
+    padding: 5
+  },
 });
 
 class SubmitModal extends React.Component {
@@ -102,15 +113,13 @@ class SubmitModal extends React.Component {
               and your post will go live within 24 hours.`}
           </Typography>
 
-        <Grid item xs={10} md={6} className={classes.actionWrapper}>
+        <Grid container justify='flex-start' className={classes.actionWrapper}>
           <Button variant="contained" color='secondary'
             className={classes.actionButton}
             onClick={this.handleClose('post')}>
             Post An Opportunity
           </Button>
-        </Grid>
 
-        <Grid item xs={10} md={6} className={classes.actionWrapper}>
           <Button variant="contained" color='secondary'
             className={classes.actionButton}
             onClick={this.handleClose('find')}>
@@ -122,7 +131,7 @@ class SubmitModal extends React.Component {
     ) : (
       <Grid className={classes.grid}
         container justify='center'>
-        <Grid item xs={11} sm={10} md={8} container justify='center'
+        <Grid item xs={9} sm={10} md={9} container justify='center'
           spacing={16}>
 
           <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
@@ -133,15 +142,13 @@ class SubmitModal extends React.Component {
               your account page to see it live!`}
           </Typography>
 
-          <Grid item xs={10} md={6} className={classes.actionWrapper}>
+          <Grid container justify='flex-start' className={classes.actionWrapper}>
             <Button variant="contained" color='secondary'
               className={classes.actionButton}
               onClick={this.handleClose('post')}>
               Post An Opportunity
             </Button>
-          </Grid>
 
-          <Grid item xs={10} md={6} className={classes.actionWrapper}>
             <Button variant="contained" color='secondary'
               className={classes.actionButton}
               onClick={this.handleClose('find')}>
@@ -185,9 +192,19 @@ class SubmitModal extends React.Component {
           (this.handleClose('find')) : (this.handleClose(''))}
         className={classes.cardModalWrapper}
         classes={{ paper: classes.modalPaper}}>
-        <Grid container justify='center' alignItems='center'>
-          {modalText}
-        </Grid>
+        <Badge
+          badgeContent={
+            <CloseIcon
+              onClick={this.props.opportunityErrors.length === 0 ?
+                (this.handleClose('find')) : (this.handleClose(''))}/>
+          }
+          classes={{ badge: classes.badge }}
+          style={{ width: '100%'}}
+          >
+          <Grid container justify='center' alignItems='center'>
+            {modalText}
+          </Grid>
+        </Badge>
       </Dialog>
     )
   }

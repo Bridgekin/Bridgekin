@@ -67,7 +67,8 @@ const styles = {
     color: '#4067B2',
     width: '100%',
     borderBottom: `0.5px solid ${theme.palette.grey1}`,
-    boxShadow: 'none'
+    boxShadow: 'none',
+    position: 'fixed'
   },
   textField:{
     marginLeft: 10,
@@ -81,7 +82,8 @@ const styles = {
   },
   toolbar:{
     // display: 'flex',
-    // justifyContent: 'space-between'
+    // justifyContent: 'space-between',
+    height: 64
   },
   navMenu:{
     display: 'flex',

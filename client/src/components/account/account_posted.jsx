@@ -31,7 +31,10 @@ const mapDispatchToProps = dispatch => ({
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 35
+    // marginTop: 35,
+    position: 'relative',
+    top: 164,
+    padding: 50,
   },
   addOportunityCard:{
     height: 390,
@@ -83,7 +86,7 @@ class AccountPosted extends React.Component {
       let opportunityGrid = (
         <Grid container justify="center" alignItems="center" spacing={24}>
           <Grid item xs={11} className={classes.gridOpp} >
-            <Grid container className={classes.root}
+            <Grid container style={{ flexGrow: 1, zIndex:-1}}
               justify="flex-start" alignItems="center" spacing={16}>
               {opportunityCards}
 

@@ -13,6 +13,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 
+import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/CloseSharp';
+
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -36,7 +39,15 @@ const styles = theme => ({
     margin: 0,
     minWidth: 290,
     width: '50%'
-  }
+  },
+  badge: {
+    top: 4,
+    right: 4,
+    border: `1px solid`,
+    color: theme.palette.white,
+    backgroundColor: theme.palette.primary.main,
+    padding: 5
+  },
 });
 
 class NotFound extends Component {
@@ -76,30 +87,36 @@ class NotFound extends Component {
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}
           >
-          <Grid container justify='center' alignItems='center'
-            className={classes.grid}>
-            <Grid item xs={11} sm={10} md={8}>
-              <Typography variant="h2" align='left' color='textPrimary'
-                style={{ margin:'30px 0px'}}>
-                {"Crop your image"}
-              </Typography>
-              <Cropper
-                src={fileUrl}
-                ratio={ratio || 1}
-                ref={ ref => { this.cropper = ref }}
-                width={200}
-                height={50}
-                />
+          <Badge
+            badgeContent={<CloseIcon onClick={this.handleClose}/>}
+            classes={{ badge: classes.badge }}
+            style={{ width: '100%'}}
+            >
+            <Grid container justify='center' alignItems='center'
+              className={classes.grid}>
+              <Grid item xs={11} sm={10} md={8}>
+                <Typography variant="h2" align='left' color='textPrimary'
+                  style={{ margin:'30px 0px'}}>
+                  {"Crop your image"}
+                </Typography>
+                <Cropper
+                  src={fileUrl}
+                  ratio={ratio || 1}
+                  ref={ ref => { this.cropper = ref }}
+                  width={200}
+                  height={50}
+                  />
 
-              <Grid item xs={11} container justify='center'
-                style={{ marginTop: 20, marginBottom: 40 }}>
-                <Button color="primary" variant='contained'
-                  onClick={this.handleClose.bind(this)} >
-                  Crop
-                </Button>
+                <Grid item xs={11} container justify='center'
+                  style={{ marginTop: 20, marginBottom: 40 }}>
+                  <Button color="primary" variant='contained'
+                    onClick={this.handleClose.bind(this)} >
+                    Crop
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Badge>
         </Dialog>
       </MuiThemeProvider>
     )

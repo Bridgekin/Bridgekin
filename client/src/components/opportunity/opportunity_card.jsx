@@ -80,7 +80,7 @@ const styles = theme => ({
   },
   title: {
     // fontSize: '1.5rem',
-    maxHeight: 50,
+    maxHeight: 57,
     overflowY: 'hidden',
     margin: "10px 0px"
     // textOverflow: 'ellipse'

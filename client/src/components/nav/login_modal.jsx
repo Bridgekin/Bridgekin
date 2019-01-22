@@ -7,6 +7,10 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+
+import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
 import { clearSessionErrors } from '../../actions/error_actions';
@@ -41,6 +45,20 @@ const styles = theme => ({
   cardModalWrapper:{
     padding: 0,
     minWidth: 500,
+  },
+  grid:{
+    margin: '70px 0px 70px 0px'
+  },
+  modalPaper:{
+    margin: 15
+  },
+  badge: {
+    top: 4,
+    right: 4,
+    border: `1px solid`,
+    color: theme.palette.white,
+    backgroundColor: theme.palette.primary.main,
+    padding: 5
   },
 });
 
@@ -81,22 +99,25 @@ class LoginModal extends React.Component {
     })
 
     let modalText = (
-      <div className={classes.paper}>
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='textPrimary'
-          className={classes.thanksHeader}>
+          className={classes.thanksHeader} align='left'>
           You’re almost back in!
         </Typography>
-        <Typography variant="body1" id="simple-modal-description">
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
           We weren’t able to log you in because:
         </Typography>
         <List>
           {sessionErrors}
         </List>
-        <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-          onClick={this.handleClose} color='secondary'>
-          Close
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
     )
 
     return (
@@ -105,8 +126,16 @@ class LoginModal extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         onClose={this.handleClose}
-        className={classes.cardModalWrapper}>
-        {modalText}
+        classes={{ paper: classes.modalPaper}}>
+        <Badge
+          badgeContent={<CloseIcon onClick={this.handleClose}/>}
+          classes={{ badge: classes.badge }}
+          style={{ width: '100%'}}
+          >
+          <Grid container justify='center' alignItems='center'>
+            {modalText}
+          </Grid>
+        </Badge>
       </Dialog>
     )
   }

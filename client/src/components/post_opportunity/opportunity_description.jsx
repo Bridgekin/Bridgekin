@@ -24,6 +24,7 @@ import ImageCropModal from '../image_upload_modal';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    marginTop: 20
   },
   descriptionHeader:{
     fontWeight: 700,
@@ -65,6 +66,9 @@ const styles = theme => ({
   },
   selectCheckBox:{
     fontSize: 12
+  },
+  selectInput:{
+    height: 49
   }
 });
 
@@ -158,6 +162,8 @@ class DescriptionField extends React.Component {
       this.setState({
         networks: [],
         selectAll: false
+      }, () => {
+        this.props.handleChange('networks')([])
       })
     } else {
       let allNetworks = Object.values(availNetworks).map(network => (
@@ -269,7 +275,7 @@ class DescriptionField extends React.Component {
       <Grid container className={classes.root}
         justify='center' alignItems='center'>
 
-        <Grid item xs={10} sm={9} container justify="flex-start"
+        <Grid item xs={10}  container justify="flex-start"
           alignItems='center'>
           <div className={classes.section}>
             <Typography variant="h5" gutterBottom align='left'
@@ -310,7 +316,7 @@ class DescriptionField extends React.Component {
             className={classes.descriptionHeader} >
             Upload image (optional)
           </Typography>
-          <Grid container justify='center' alignItems='center'
+          <Grid container justify='flex-start' alignItems='center'
             style={{ marginBottom: 30}}>
             <input
               accept="image/*"
@@ -328,9 +334,9 @@ class DescriptionField extends React.Component {
               </Grid>
             </Grid>
             <Grid container justify='flex-start' alignItems='center'
-              spacing={16}>
+              spacing={8}>
               <Grid item xs={10} sm={7} md={5}
-                container justify='center'>
+                container justify='flex-start' >
                 <label htmlFor="contained-button-file">
                   <Button variant="contained" component="span"
                     color='primary'
@@ -358,7 +364,7 @@ class DescriptionField extends React.Component {
           </Typography>
           <Grid container justify='space-around' alignItems='center'
             style={{ marginBottom: 30}} spacing={8}>
-            <Grid item xs={10} sm={6} md={3} lg={2}>
+            <Grid item xs={10} sm={6} md={4} lg={3}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -379,6 +385,7 @@ class DescriptionField extends React.Component {
                   multiple
                   value={this.props.networks}
                   onChange={this.handleMultiSelectChange('networks')}
+                  classes={{ root: classes.selectInput}}
                   input={<Input id="select-multiple-chip" />}
                   renderValue={selected => (
                     <div className={classes.chips}>
@@ -411,7 +418,7 @@ class DescriptionField extends React.Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={10} sm={8} md={4} lg={3}>
+            <Grid item xs={10} sm={8} md={3} lg={2}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Connections</InputLabel>
                 <Select
@@ -425,7 +432,7 @@ class DescriptionField extends React.Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={10} sm={8} md={5} lg={3}>
+            <Grid item xs={10} sm={8} md={4} lg={3}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Network Circles</InputLabel>
                 <Select

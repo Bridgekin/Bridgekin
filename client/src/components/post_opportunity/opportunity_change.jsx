@@ -32,16 +32,24 @@ const mapDispatchToProps = dispatch => ({
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
 });
 
-const styles = theme => ({
+const styles = {
   root: {
     flexGrow: 1,
     borderBottom: '1px solid #d3d3d3'
+  },
+  grid:{
+    flexGrow: 1,
+    // backgroundColor: 'RGBA(196,196,196,0.1)',
+    backgroundColor: theme.palette.backgroundGrey,
+    borderBottom: '1px solid #d3d3d3',
+    height: 100,
+    position:'fixed',
+    top: 64
   },
   accountNavSection:{
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: 40
   },
   labelContainer: {
     "& $alternativeLabel": {
@@ -59,8 +67,11 @@ const styles = theme => ({
   },
   stepperRootMain:{
     flexGrow: 1,
-    marginTop: 50,
-    marginBottom: 50
+    // marginTop: 50,
+    marginBottom: 50,
+    position: 'relative',
+    top:164,
+    zIndex: -1
   },
   step: {
     "& $completed": {
@@ -86,15 +97,15 @@ const styles = theme => ({
     // border: '1px solid red'
   },
   flowNav:{
-    display: 'flex',
-    justifyContent:'space-between',
+    // display: 'flex',
+    // justifyContent:'space-between',
     marginTop: 30,
     marginBottom: 30
   },
   flowButton: {
     margin: '0px 20px 0px 20px',
-    fontSize: 20,
-    fontWeight: 500,
+    // fontSize: 20,
+    // fontWeight: 500,
     width: 120
   },
   stepperDesktop: {
@@ -116,7 +127,7 @@ const styles = theme => ({
   stepperLabel:{
     fontSize: 12
   }
-});
+};
 
 const DEFAULTSTATE = {
   activeStep: 0,
@@ -288,37 +299,42 @@ class OpportunityChange extends React.Component {
     let errors = this.checkErrors();
 
     let flowNav = (
-      <div className={classes.flowNav}>
-        <Button
-          disabled={activeStep === 0}
-          variant="contained"
-          color="secondary"
-          onClick={this.handleBack}
-          className={classes.flowButton}
-        >
-          Back
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          disabled={
-            (errors.length > 0) &&
-            (activeStep === steps.length - 1)}
-          onClick={ activeStep === steps.length - 1 ?
-            this.handleSubmit : this.handleNext}
-          className={classes.flowButton}
-        >
-          {activeStep === steps.length - 1 ? (
-            type === 'create' ? 'Submit' : 'Update'
-          ) : 'Next'}
-        </Button>
-      </div>
+      <Grid item xs={12} container justify='space-between'
+        className={classes.flowNav}>
+        <Grid item xs={5} sm={4} md={3}>
+          <Button
+            disabled={activeStep === 0}
+            variant="contained"
+            color="secondary"
+            onClick={this.handleBack}
+            className={classes.flowButton}
+            >
+            Back
+          </Button>
+        </Grid>
+
+        <Grid item xs={5} sm={4} md={3}>
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={
+              (errors.length > 0) &&
+              (activeStep === steps.length - 1)}
+            onClick={ activeStep === steps.length - 1 ?
+              this.handleSubmit : this.handleNext}
+            className={classes.flowButton}
+          >
+            {activeStep === steps.length - 1 ? (
+              type === 'create' ? 'Submit' : 'Update'
+            ) : 'Next'}
+          </Button>
+        </Grid>
+      </Grid>
     )
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.root}
-          style={{ backgroundColor: 'RGBA(196,196,196,0.1)'}}
+        <Grid container className={classes.grid}
           justify='space-around' alignItems='center'>
 
           <Grid item xs={10} sm={6} md={2} className={classes.accountNavSection}>
@@ -365,7 +381,6 @@ class OpportunityChange extends React.Component {
               activeStep={this.state.activeStep}
               className={classes.stepperMobile} />
           </Grid>
-
         </Grid>
 
         <Grid container className={classes.stepperRootMain}
