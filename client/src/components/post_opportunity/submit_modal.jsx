@@ -58,7 +58,8 @@ const styles = theme => ({
     border: `1px solid`,
     color: theme.palette.white,
     backgroundColor: theme.palette.primary.main,
-    padding: 5
+    padding: 5,
+    cursor: 'pointer'
   },
 });
 
@@ -103,9 +104,10 @@ class SubmitModal extends React.Component {
     let successText = modalType === 'create' ? (
       <Grid className={classes.grid}
         container justify='center'>
-        <Grid item xs={11} sm={10} md={8} container justify='center'
+        <Grid item xs={11} sm={10} md={8} container justify='flex-start'
           spacing={16}>
-          <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+          <Typography variant="h2" id="modal-title" color='secondary'
+            className={classes.thanksHeader}>
             Thanks For Posting!
           </Typography>
           <Typography variant="body1" id="simple-modal-description">
@@ -113,25 +115,25 @@ class SubmitModal extends React.Component {
               and your post will go live within 24 hours.`}
           </Typography>
 
-        <Grid container justify='flex-start' className={classes.actionWrapper}>
-          <Button variant="contained" color='secondary'
-            className={classes.actionButton}
-            onClick={this.handleClose('post')}>
-            Post An Opportunity
-          </Button>
+          <Grid container justify='flex-start' className={classes.actionWrapper}>
+            <Button variant="contained" color='secondary'
+              className={classes.actionButton}
+              onClick={this.handleClose('post')}>
+              Post An Opportunity
+            </Button>
 
-          <Button variant="contained" color='secondary'
-            className={classes.actionButton}
-            onClick={this.handleClose('find')}>
-            View Opportunities
-          </Button>
+            <Button variant="contained" color='secondary'
+              className={classes.actionButton}
+              onClick={this.handleClose('find')}>
+              View Opportunities
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
     ) : (
       <Grid className={classes.grid}
         container justify='center'>
-        <Grid item xs={9} sm={10} md={9} container justify='center'
+        <Grid item xs={9} sm={10} md={9} container justify='flex-start'
           spacing={16}>
 
           <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
@@ -164,7 +166,7 @@ class SubmitModal extends React.Component {
       ) : (
         <Grid className={classes.grid}
           container justify='center'>
-          <Grid item xs={11} sm={10} md={8} container justify='center'
+          <Grid item xs={11} sm={10} md={8} container justify='flex-start'
             spacing={16}>
             <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
               You're almost there!

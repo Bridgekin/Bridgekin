@@ -282,7 +282,7 @@ class OpportunityChange extends React.Component {
 
     for (let i = 0; i < keys.length; i++){
       if(opp[keys[i]] === undefined || opp[keys[i]].length === 0){
-        let formatted = this.capitalize(keys[i]);
+        let formatted = this.capitalize(keys[i].replace(/([A-Z])/g, ' $1'));
         errors.push(`${formatted} is blank`);
       }
     }
