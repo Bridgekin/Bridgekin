@@ -1,5 +1,6 @@
-ActiveAdmin.register Network do
-  permit_params :title, :subtitle, :created_at, :updated_at
+ActiveAdmin.register ConnectedOpportunity do
+  permit_params :opportunity_id, :user_id, :facilitator_id, :network_id,
+    :created_at, :updated_at
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #

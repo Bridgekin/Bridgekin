@@ -12,7 +12,9 @@ import HomeImage from '../static/Login_Background_Image.jpg'
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    position: 'fixed',
+    top: 64
   },
   homeGrid:{
     flexGrow: 1,
@@ -36,6 +38,9 @@ const styles = theme => ({
 class ConfirmationError extends Component {
   render () {
     const {classes} = this.props;
+
+    const homeLink = <a href='/'>our homepage.</a>
+
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container justify="center" alignItems="center"
@@ -45,25 +50,18 @@ class ConfirmationError extends Component {
               gutterBottom className={classes.header}>
               Sorry
             </Typography>
-            <Typography variant="body1" align='center' color='inherit'
+            <Typography variant="h6" align='center' color='inherit'
               gutterBottom style={{ marginBottom: 15}}>
               We're usually much better at connecting the dots :)
             </Typography>
-            <Typography variant="body1" align='center' color='inherit'
+            <Typography variant="h6" align='center' color='inherit'
               gutterBottom style={{ marginBottom: 30}}>
               However, your confirmation token is expired or invalid.
             </Typography>
-            <Typography variant="body1" align='center' color='inherit'
+            <Typography variant="h6" align='center' color='inherit'
               style={{ marginBottom: 30}}>
-              {"Try going back to our homepage"}
+              {"Try going back to "} {homeLink}
             </Typography>
-
-            <Grid container justify='flex-start' alignItems='center'>
-              <Button variant="contained" color="secondary"
-                href='/'>
-                Homepage
-              </Button>
-            </Grid>
           </Grid>
         </Grid>
       </MuiThemeProvider>

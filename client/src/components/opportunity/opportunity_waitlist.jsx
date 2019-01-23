@@ -8,6 +8,16 @@ import Button from '@material-ui/core/Button';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+// const mapStateToProps = state => ({
+//   currentUser: state.users[state.session.id],
+//   waitlistErrors: state.errors.waitlistUsers
+// });
+//
+// const mapDispatchToProps = dispatch => ({
+//   registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user))
+// });
+
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -40,6 +50,36 @@ const styles = theme => ({
 });
 
 class OpportunityWaitlist extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+      email: '',
+      fname: '',
+    }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(field){
+    return e => {
+      e.preventDefault();
+      this.setState({ [field]: e.target.value})
+    }
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+
+    let user = {
+      email: this.state.email,
+      fname: this.state.fname,
+      fromReferralId: this.props.currentUser.id
+    }
+
+    this.props.handleSubmit(user)
+  }
+
   render(){
     const { loading, classes } = this.props;
 
@@ -67,8 +107,8 @@ class OpportunityWaitlist extends React.Component{
             className={classes.textField}
             fullWidth
             variant="outlined"
-            onChange={this.props.handleChange('fname')}
-            value={this.props.fname}
+            onChange={this.handleChange('fname')}
+            value={this.state.fname}
             InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -82,8 +122,8 @@ class OpportunityWaitlist extends React.Component{
             className={classes.textField}
             fullWidth
             variant="outlined"
-            onChange={this.props.handleChange('email')}
-            value={this.props.email}
+            onChange={this.handleChange('email')}
+            value={this.state.email}
             InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -91,7 +131,7 @@ class OpportunityWaitlist extends React.Component{
           <Grid item xs={12} md={4} className={classes.wrapper}>
             <Button variant="contained" color='secondary'
               className={classes.refButton}
-              onClick={this.props.handleSubmit}
+              onClick={this.handleSubmit}
               disabled={loading}>
               Refer Them Now
             </Button>

@@ -1,6 +1,6 @@
 ActiveAdmin.register ReferralLink do
   permit_params :referral_code, :member_id, :network_id, :status,
-  :usage_type, :created_at, :updated_at
+  :usage_type, :recipient_id, :created_at, :updated_at, 
 
   index do
     id_column

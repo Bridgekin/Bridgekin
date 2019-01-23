@@ -159,8 +159,8 @@ class OpportunityHome extends React.Component {
       opportunitiesLoaded: false,
       referralLink: '',
       network: '',
-      fname: '',
-      email: '',
+      // fname: '',
+      // email: '',
       loaded: false,
       success: false,
       waitlistOpen: false,
@@ -228,14 +228,7 @@ class OpportunityHome extends React.Component {
     this.setState({ waitlistOpen: false });
   };
 
-  handleWaitlistSubmit(e){
-    e.preventDefault();
-
-    let user = {
-      email: this.state.email,
-      fname: this.state.fname,
-      fromReferralId: this.props.currentUser.id
-    }
+  handleWaitlistSubmit(user){
 
     if (!this.state.loading) {
       this.setState({ success: false, loading: true },
@@ -246,8 +239,6 @@ class OpportunityHome extends React.Component {
                 loading: false,
                 success: true,
                 waitlistOpen: true,
-                email: '',
-                fname: '',
               })
             })
       })
@@ -509,11 +500,9 @@ class OpportunityHome extends React.Component {
             {header}
             {opportunityGrid}
             <OpportunityWaitlist
-              handleChange={this.handleWaitlistChange}
               handleSubmit={this.handleWaitlistSubmit}
               loading={loading}
-              email={this.state.email}
-              fname={this.state.fname}
+              currentUser={this.props.currentUser}
             />
           {this.props.currentUser.isAdmin &&
               <OpportunityReferral

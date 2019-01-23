@@ -9,10 +9,11 @@ class Api::OpportunitiesController < ApiController
 
   def index
     if params[:network_id].empty?
-      @opportunities = policy_scope(Opportunity)
+      @opportunities = policy_scope(Opportunity).where.not(status: 'Deleted')
     else
       @opportunities = policy_scope(Opportunity)
         .where(opportunity_networks: { network_id: params[:network_id]} )
+        .where.not(status: 'Deleted')
     end
 
     render :index
@@ -22,7 +23,7 @@ class Api::OpportunitiesController < ApiController
     # @opportunities = Opportunity.joins(:opportunity_networks)
     #   .where(owner_id: @user.id)
     #   .where("opportunity_networks.network_id = #{params[:network_id]}")
-    @opportunities = @user.opportunities
+    @opportunities = @user.opportunities.where.not(status: 'Deleted')
     render :index
   end
 
@@ -36,8 +37,8 @@ class Api::OpportunitiesController < ApiController
   # POST /opportunities
   def create
     @opportunity = Opportunity.new(opportunity_params)
-    @opportunity.owner_id = @user.id
-    @opportunity.status = 'Pending'
+    @opportunity[:owner_id] = @user.id
+    @opportunity[:status] = 'Pending'
 
     authorize @opportunity
 
@@ -93,8 +94,9 @@ class Api::OpportunitiesController < ApiController
 
   # DELETE /opportunities/1
   def destroy
+    @opportunity[:status] = "Deleted"
     authorize @opportunity
-    if @opportunity.destroy
+    if @opportunity.save
       render json: ['Opportunity was destroyed'], status: :ok
     else
       render json: @opportunity.errors.full_messages, status: :unprocessable_entity

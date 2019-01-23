@@ -58,11 +58,11 @@ class NotFound extends Component {
               gutterBottom className={classes.header}>
               Sorry
             </Typography>
-            <Typography variant="h2" align='center' color='inherit'
+            <Typography variant="h6" align='center' color='inherit'
               gutterBottom style={{ marginBottom: 30}}>
               We're usually much better at connecting the dots :)
             </Typography>
-            <Typography variant="h2" align='center' color='inherit'
+            <Typography variant="h6" align='center' color='inherit'
               style={{ marginBottom: 30}}>
               {"Try going back to "} {homeLink}
             </Typography>

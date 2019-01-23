@@ -24,7 +24,9 @@ const mapDispatchToProps = dispatch => ({
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 50
+    // marginTop: 50
+    position: 'fixed',
+    top: 64
   },
   button: {
     marginTop: 30
@@ -91,7 +93,8 @@ class AccountConfirmed extends React.Component  {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.root} justify="center">
+        <Grid container className={classes.root} justify="center"
+          style={{ paddingTop: 50}}>
           <Grid item xs={10} sm={8} md={6}>
             <Typography variant="h2" gutterBottom align='left'
               color="secondary">
