@@ -69,6 +69,7 @@ class OpportunityWaitlist extends React.Component{
             variant="outlined"
             onChange={this.props.handleChange('fname')}
             value={this.props.fname}
+            InputLabelProps={{ shrink: true }}
             />
           </Grid>
 
@@ -83,6 +84,7 @@ class OpportunityWaitlist extends React.Component{
             variant="outlined"
             onChange={this.props.handleChange('email')}
             value={this.props.email}
+            InputLabelProps={{ shrink: true }}
             />
           </Grid>
 

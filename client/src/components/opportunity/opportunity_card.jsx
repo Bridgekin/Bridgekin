@@ -162,13 +162,14 @@ class OpportunityCard extends React.Component {
     this.setState({ cardOpen: false })
   }
 
-  handleDeleteOpen = () => {
+  handleDeleteOpen = (e) => {
+    e.stopPropagation();
     this.setState({ deleteOpen: true });
   };
 
   handleDeleteClose(deleteBool){
-    return () => {
-      debugger
+    return (e) => {
+      e.stopPropagation();
       if (deleteBool){
         this.props.handleDelete(this.props.opportunity.id);
       }
@@ -178,6 +179,7 @@ class OpportunityCard extends React.Component {
 
   handleEdit(id){
     return e => {
+      e.stopPropagation();
       this.props.history.push(`/editopportunity/${id}`)
     }
   }

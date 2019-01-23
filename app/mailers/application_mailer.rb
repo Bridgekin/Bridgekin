@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'membership@bridgekin.com'
+  default from: 'superconnector@bridgekin.com'
   layout 'mailer'
 end

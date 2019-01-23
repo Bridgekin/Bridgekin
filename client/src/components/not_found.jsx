@@ -46,6 +46,9 @@ const styles = theme => ({
 class NotFound extends Component {
   render () {
     const {classes} = this.props;
+
+    const homeLink = <a href='/'>our homepage.</a>
+
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container justify="center" alignItems="center"
@@ -61,15 +64,8 @@ class NotFound extends Component {
             </Typography>
             <Typography variant="h2" align='center' color='inherit'
               style={{ marginBottom: 30}}>
-              {"Try going back to our homepage"}
+              {"Try going back to "} {homeLink}
             </Typography>
-
-            <div style={{ display:'flex', justifyContent:'center'}}>
-              <Button variant="contained" color="secondary"
-                href='/'>
-                Homepage
-              </Button>
-            </div>
           </Grid>
           <div className={classes.bottomFade} />
         </Grid>

@@ -63,6 +63,8 @@ class NotFound extends Component {
         y: 0,
       },
     }
+
+    this.handleClose = this.handleClose.bind(this);
   }
 
   handleClose(){
@@ -111,7 +113,7 @@ class NotFound extends Component {
                 <Grid item xs={11} container justify='center'
                   style={{ marginTop: 20, marginBottom: 40 }}>
                   <Button color="primary" variant='contained'
-                    onClick={this.handleClose.bind(this)} >
+                    onClick={this.handleClose} >
                     Crop
                   </Button>
                 </Grid>

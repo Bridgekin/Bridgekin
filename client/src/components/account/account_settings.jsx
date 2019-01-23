@@ -572,13 +572,6 @@ class AccountSetting extends React.Component {
                   <Typography variant="h6" align='left' color='textPrimary'>
                     Email Address
                   </Typography>
-                  <Link to='/account/settings/general'
-                    style={{ marginLeft: 15}}>
-                    <Typography variant="h6" align='left' color='textPrimary'
-                      style={{fontWeight: 300}}>
-                      Change
-                    </Typography>
-                  </Link>
                 </Grid>
                 <Typography variant="body1" gutterBottom align='left'
                   color="default" style={{ marginBottom: 15}}>

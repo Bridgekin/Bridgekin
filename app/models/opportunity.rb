@@ -2,7 +2,7 @@ class Opportunity < ApplicationRecord
   validates :owner_id, :title, :opportunity_need, :industries,
     :geography, :value, :status, presence: true
 
-  validates :owner_id, uniqueness: { scope: :title }
+  validates :title, uniqueness: { scope: :owner_id }
 
   belongs_to :owner,
     foreign_key: :owner_id,

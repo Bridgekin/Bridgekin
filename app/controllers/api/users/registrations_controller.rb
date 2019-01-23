@@ -12,6 +12,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     @referralLink = ReferralLink.find_link_by_code(params[:code])
 
     @user = User.new(user_params)
+
     if @referralLink && @referralLink[:status] == 'Active' && @user.save
       #Check for a single use code
       if @referralLink[:usage_type] == "Single"
@@ -36,11 +37,13 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
         waitlist_user.save
       end
 
+      @user[:referred_by_id] = referralLink[:member_id]
+
       render :create
     elsif @referralLink.nil?
       render json: ["Invalid referral link"], status: 401
     elsif @referralLink[:status] != "Active"
-      render json: ["Referral code has already been claimed"], status: 401
+      render json: ["Referral link has already been claimed"], status: 401
     else
       render json: @user.errors.full_messages, status: 422
     end
@@ -75,8 +78,8 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def user_params
-    received_params = params.require(:user).permit(:email, :fname, :lname, :phone, :city,
-      :state, :country, :password, :membership_type,
+    received_params = params.require(:user).permit(:email, :fname, :lname,
+      :phone, :city, :state, :country, :password, :membership_type,
       :password_confirmation, :password_digest)
 
     received_params[:password_confirmation] = received_params[:password]

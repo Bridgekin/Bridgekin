@@ -56,7 +56,7 @@ const styles = theme => ({
     // minWidth: 500,
   },
   cover: {
-    height: 'auto',
+    height: 150,
     width: '100%',
     objectFit: 'cover'
   },
@@ -301,7 +301,6 @@ class CardModal extends React.Component {
       ) : (
         <Img src={PickImage(industries[0])}
           className={classes.cover}
-          style={{ height: 150}}
           loader={loader}
           />
       )
@@ -324,7 +323,7 @@ class CardModal extends React.Component {
               </Typography>
             </Grid>
 
-            <Grid container justify='flex-start'
+            <Grid container justify='flex-start' spacing={24}
               style={{ marginTop: 25 }} >
               <Grid item xs={4}>
                 <Typography variant="h6" gutterBottom align='left'

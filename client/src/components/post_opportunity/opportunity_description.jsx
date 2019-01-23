@@ -335,26 +335,20 @@ class DescriptionField extends React.Component {
             </Grid>
             <Grid container justify='flex-start' alignItems='center'
               spacing={8}>
-              <Grid item xs={10} sm={7} md={5}
-                container justify='flex-start' >
-                <label htmlFor="contained-button-file">
-                  <Button variant="contained" component="span"
-                    color='primary'
-                    style={{ fontWeight: 600, marginTop: 20 }}>
-                    Upload image here
-                  </Button>
-                </label>
-              </Grid>
-              <Grid item xs={10} sm={4} md={3}
-                container justify='center'>
-                {pictureUploaded &&
-                  <Button variant="contained" component="span"
-                    color='primary'
-                    style={{ fontWeight: 600, marginTop: 20  }}
-                    onClick={this.handleRemoveFile.bind(this)}>
-                    Delete
-                  </Button>}
-              </Grid>
+              <label htmlFor="contained-button-file">
+                <Button variant="contained" component="span"
+                  color='primary'
+                  style={{ fontWeight: 600, margin: "20px 10px 0px 0px" }}>
+                  Upload image here
+                </Button>
+              </label>
+              {pictureUploaded &&
+                <Button variant="contained" component="span"
+                  color='primary'
+                  style={{ fontWeight: 600, marginTop: 20  }}
+                  onClick={this.handleRemoveFile.bind(this)}>
+                  Delete
+                </Button>}
             </Grid>
           </Grid>
 
@@ -364,7 +358,7 @@ class DescriptionField extends React.Component {
           </Typography>
           <Grid container justify='space-around' alignItems='center'
             style={{ marginBottom: 30}} spacing={8}>
-            <Grid item xs={10} sm={6} md={4} lg={3}>
+            <Grid item xs={10} sm={6} md={3} lg={3}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -378,7 +372,7 @@ class DescriptionField extends React.Component {
               />
             </Grid>
 
-            <Grid item xs={10} sm={8} md={5} lg={4}>
+            <Grid item xs={10} sm={8} md={3} lg={3}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Networks</InputLabel>
                 <Select
@@ -415,7 +409,7 @@ class DescriptionField extends React.Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={10} sm={8} md={3} lg={2}>
+            <Grid item xs={10} sm={8} md={3} lg={3}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Connections</InputLabel>
                 <Select
@@ -429,7 +423,7 @@ class DescriptionField extends React.Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={10} sm={8} md={4} lg={3}>
+            <Grid item xs={10} sm={8} md={3} lg={3}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-chip">Network Circles</InputLabel>
                 <Select

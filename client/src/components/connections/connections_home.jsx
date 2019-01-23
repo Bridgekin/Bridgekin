@@ -473,13 +473,13 @@ class ConnectionsHome extends React.Component{
           </Grid>
 
           <Grid container justify='flex-end'>
-            <Grid item container justify="space-around" xs={5} sm={4} md={3}>
+            <Grid item container justify="space-around" xs={5} sm={4} md={3}
+              style={{ marginBottom: 10 }}>
               <Grid container justify='center' style={{ width: '100%'}}>
                 <Switch
                   checked={this.state.toggle}
                   onChange={this.handleChange.bind(this)}
                   value="toggle"
-                  style={{ width:'100%' }}
                   />
               </Grid>
               <Typography variant="body2" className={classes.header}
