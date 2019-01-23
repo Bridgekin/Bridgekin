@@ -37,7 +37,7 @@ const styles = theme => ({
     padding: "50px 20px",
   },
   addOportunityCard:{
-    height: 390,
+    height: 475,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

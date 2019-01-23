@@ -26,18 +26,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  paper: {
-    // position: 'absolute',
-    // width: '40%',
-    height: 350,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
   thanksHeader:{
     marginBottom: 30,
     color: theme.palette.darkGrey
@@ -100,7 +88,7 @@ class LoginModal extends React.Component {
     })
 
     let modalText = (
-      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+      <Grid item xs={11} sm={10} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.thanksHeader} align='left'>
           You’re almost back in!
@@ -134,7 +122,8 @@ class LoginModal extends React.Component {
           classes={{ badge: classes.badge }}
           style={{ width: '100%'}}
           >
-          <Grid container justify='center' alignItems='center'>
+          <Grid container justify='center' alignItems='center'
+            style={{}}>
             {modalText}
           </Grid>
         </Badge>

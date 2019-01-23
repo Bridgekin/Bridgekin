@@ -29,7 +29,6 @@ class Api::WaitlistUsersController < ApiController
 
         render json: ['Successfully added user to waitlist'], status: 201
       else
-        debugger
         render json: @waitlist_user.errors.full_messages, status: 422
       end
     end
