@@ -37,7 +37,9 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
         waitlist_user.save
       end
 
-      @user[:referred_by_id] = referralLink[:member_id]
+      @user[:referred_by_id] = @referralLink[:member_id]
+      @user[:current_sign_in_at] = DateTime.now
+      @user.save
 
       render :create
     elsif @referralLink.nil?

@@ -44,7 +44,7 @@ const styles = theme => ({
   },
   cardModalWrapper:{
     padding: 0,
-    minWidth: 500,
+    // minWidth: 500,
   },
   grid:{
     margin: '70px 0px 70px 0px'
@@ -127,6 +127,7 @@ class LoginModal extends React.Component {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         onClose={this.handleClose}
+        className={classes.cardModalWrapper}
         classes={{ paper: classes.modalPaper}}>
         <Badge
           badgeContent={<CloseIcon onClick={this.handleClose}/>}

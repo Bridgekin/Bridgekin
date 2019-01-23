@@ -84,7 +84,8 @@ const styles = {
   toolbar:{
     // display: 'flex',
     // justifyContent: 'space-between',
-    height: 64
+    height: 64,
+    padding: 0
   },
   navMenu:{
     display: 'flex',
@@ -119,7 +120,9 @@ class HomeNav extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleProfileMenuOpen = this.handleProfileMenuOpen.bind(this);
+    this.handleProfileMenuClose = this.handleProfileMenuClose.bind(this);
     this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
+    this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
   }
 
   handleSubmit(e){
@@ -150,7 +153,6 @@ class HomeNav extends React.Component {
 
   handleProfileMenuClose = () => {
     this.setState({ anchorEl: null });
-    this.handleMobileMenuClose();
   };
 
   handleMobileMenuClose = () => {
@@ -169,7 +171,7 @@ class HomeNav extends React.Component {
   handleLinkClose = (field) => {
     return e => {
       e.preventDefault();
-      this.setState({ anchorEl: null });
+      this.setState({ anchorEl: null, mobileMoreAnchorEl: null });
 
       switch(field){
         case 'account':
@@ -342,11 +344,12 @@ class HomeNav extends React.Component {
             onClick={this.handleLinkClose('postopportunity')}>
             <Typography variant="h4" align='left' color="textPrimary"
               style={(pathName === 'postopportunity') ? { fontWeight: 600} : {}}>
-              Post Opportunitity
+              Post Opportunity
             </Typography>
           </Button>
           <Button color='secondary'
-            onClick={this.handleLinkClose('mynetwork')}>
+            onClick={this.handleLinkClose('mynetwork')}
+            style={{ marginRight: 10}}>
             <Typography variant="h4" align='left' color="textPrimary"
               style={(pathName === 'mynetwork') ? { fontWeight: 600} : {}}>
               My Trusted Network

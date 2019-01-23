@@ -34,7 +34,7 @@ const styles = theme => ({
     marginBottom: 75,
     position: 'relative',
     top: 164,
-    padding: 50
+    padding: "50px 20px"
   },
   cover: {
     width: '100%',

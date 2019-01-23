@@ -66,7 +66,7 @@ const styles = theme => ({
   },
   homeGridDesktop: {
     display: 'none',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'flex',
     },
     flexGrow: 1,
@@ -79,7 +79,7 @@ const styles = theme => ({
   },
   homeGridMobile: {
     display: 'flex',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
     flexGrow: 1,
@@ -219,7 +219,7 @@ class HomePage extends React.Component{
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.homeGridDesktop}
           justify="flex-start" alignItems="center"
-          style={{ top: 56, position: 'relative'}}>
+          style={{ top: 64, position: 'relative'}}>
           <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >
@@ -232,7 +232,7 @@ class HomePage extends React.Component{
             <Grid item xs={10} sm={8}>
               <Typography className={classes.homeSubheader}
                 variant="p" gutterBottom>
-                Bridgekin is currently an invite-only community. Sign up now to join our waitlist.
+                {"Bridgekin is currently an invite-only community that has connected over $68M in opportunities. Sign up now to join our waitlist."}
               </Typography>
               {form}
             </Grid>
@@ -242,7 +242,8 @@ class HomePage extends React.Component{
         </Grid>
 
         <Grid container className={classes.homeGridMobile}
-          justify="flex-start" alignItems="center">
+          justify="flex-start" alignItems="center"
+          style={{ top: 64, position: 'relative'}}>
           <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >
@@ -255,7 +256,7 @@ class HomePage extends React.Component{
             <Grid item xs={10} sm={7}>
               <Typography className={classes.homeSubheader}
                 variant="p" gutterBottom>
-                Bridgekin is currently an invite-only community. Sign up now to join our waitlist.
+                {"Bridgekin is currently an invite-only community that has connected over $68M in opportunities. Sign up now to join our waitlist."}
               </Typography>
               {form}
             </Grid>

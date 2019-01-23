@@ -117,9 +117,15 @@ const styles = {
   subtitleWrapper: {
     margin: 30
   },
+  subtitleWrapperMobile: {
+    margin: "0px 10px 30px 10px"
+  },
   button: {
     fontSize: 12,
     fontWeight: 600
+  },
+  buttonMobileLabel:{
+    fontSize: 9
   },
   card: {
     borderRadius: theme.shape.borderRadius,
@@ -172,6 +178,9 @@ const styles = {
   },
   circleAvatar:{
     backgroundColor: theme.palette.grey2,
+  },
+  carrot:{
+    width: 20
   }
 };
 
@@ -257,22 +266,23 @@ class ConnectionsHome extends React.Component{
 
     let subHeaderMobile= (
       <Grid item xs={12} container justify="flex-start"
-        alignItems="center" className={classes.subtitleWrapper}
-        spacing={8} style={{ marginTop: 0}}>
+        alignItems="center" className={classes.subtitleWrapperMobile}>
         <Grid item xs={6}  container justify='center'
           className={classes.subtitleDropdown} alignItems="center">
-          <Button color="primary" className={classes.button}>
+          <Button color="primary" className={classes.button}
+            classes={{ root: classes.buttonMobileLabel }}>
             Connection Requests
           </Button>
-          <KeyboardArrowDownIcon />
+          <KeyboardArrowDownIcon style={{fontSize: 16}}/>
         </Grid>
 
         <Grid item xs={6} container justify='center'
           className={classes.subtitleDropdown} alignItems="center">
-          <Button color="primary" className={classes.button}>
+          <Button color="primary" className={classes.button}
+            classes={{ root: classes.buttonMobileLabel }}>
             Add Trusted Contacts
           </Button>
-          <KeyboardArrowDownIcon />
+          <KeyboardArrowDownIcon style={{fontSize: 16}}/>
         </Grid>
       </Grid>
     )
@@ -306,7 +316,7 @@ class ConnectionsHome extends React.Component{
               <Button color="primary" classes={{ label: classes.label}}>
                 Recently Added
               </Button>
-              <KeyboardArrowDownIcon />
+              <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
             </Grid>
 
             <Grid item xs={10} sm={5} md={5} lg={4}>
@@ -395,7 +405,7 @@ class ConnectionsHome extends React.Component{
               <Button color="primary" classes={{ label: classes.label}}>
                 Recently Added
               </Button>
-              <KeyboardArrowDownIcon />
+              <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
             </Grid>
 
             <Grid item xs={4}>

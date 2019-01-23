@@ -131,6 +131,23 @@ let theme = createMuiTheme({
         color: "#000000"
       }
     },
+    MuiMenuItem: {
+      root: {
+        '&$selected':{
+          backgroundColor: 'white',
+        },
+        '&:hover': {
+          backgroundColor: 'white'
+        },
+      },
+    },
+    MuiSelect: {
+      select: {
+        "&:focus": {
+          backgroundColor: 'white'
+        }
+      }
+    }
   },
   // htmlFontSize: 10
   // pxToRem: () => {

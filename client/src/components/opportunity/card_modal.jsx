@@ -323,8 +323,7 @@ class CardModal extends React.Component {
               </Typography>
             </Grid>
 
-            <Grid container justify='flex-start' spacing={24}
-              style={{ marginTop: 25 }} >
+            <Grid container justify='flex-start' spacing={24}>
               <Grid item xs={4}>
                 <Typography variant="h6" gutterBottom align='left'
                   className={classes.cardSubHeader}>
@@ -376,7 +375,7 @@ class CardModal extends React.Component {
             </Grid>
 
             <Typography variant="body2" align='left'
-              color="default" style={{ marginBottom: 40, marginTop: 20 }}>
+              color="default" style={{ marginBottom: 30 }}>
               Once you connect or refer above, we'll send you an email introducing
               you to the opportunity owner
             </Typography>

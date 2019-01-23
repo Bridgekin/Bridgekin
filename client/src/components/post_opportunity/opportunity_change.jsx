@@ -103,7 +103,7 @@ const styles = {
     marginBottom: 30
   },
   flowButton: {
-    margin: '0px 20px 0px 20px',
+    // margin: '0px 20px 0px 20px',
     // fontSize: 20,
     // fontWeight: 500,
     width: 120
@@ -301,7 +301,7 @@ class OpportunityChange extends React.Component {
     let flowNav = (
       <Grid item xs={12} container justify='space-between'
         className={classes.flowNav}>
-        <Grid item xs={5} sm={4} md={3}>
+        <Grid item xs={5} sm={4} md={3} container justify='center'>
           <Button
             disabled={activeStep === 0}
             variant="contained"
@@ -313,7 +313,7 @@ class OpportunityChange extends React.Component {
           </Button>
         </Grid>
 
-        <Grid item xs={5} sm={4} md={3}>
+        <Grid item xs={5} sm={4} md={3} container justify='center'>
           <Button
             variant="contained"
             color="secondary"

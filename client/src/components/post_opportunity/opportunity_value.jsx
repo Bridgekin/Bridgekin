@@ -101,7 +101,7 @@ class ValueField extends React.Component {
         </Typography>
 
         <Grid container className={classes.root}
-          justify='center' alignItems='center' spacing={16}>
+          justify='center' alignItems='center'>
           <Grid item xs={10} sm={4}>
             {cards}
           </Grid>

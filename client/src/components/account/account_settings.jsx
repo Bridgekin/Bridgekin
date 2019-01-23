@@ -55,7 +55,7 @@ const styles = theme => ({
     marginBottom: 75,
     position: 'relative',
     top: 164,
-    padding: 50
+    padding: "50px 20px"
   },
   pic: {
     width: '100%',
@@ -396,7 +396,7 @@ class AccountSetting extends React.Component {
             <Grid container justify="center" alignItems="center"
               spacing={16}>
 
-              <Grid item xs={10} sm={8}>
+              <Grid item xs={12} sm={8}>
                 <Typography variant="h5" align='left'
                   color="secondary" gutterBottom
                   style={{marginBottom: 20}}>
@@ -525,7 +525,8 @@ class AccountSetting extends React.Component {
                   </Button>
 
                   <Button color="secondary" className={classes.submitButton}
-                    onClick={this.changeGeneralInformation} variant='contained'>
+                    onClick={this.changeGeneralInformation}
+                    variant='contained'>
                     Update Information
                   </Button>
                 </div>
@@ -561,7 +562,7 @@ class AccountSetting extends React.Component {
             <Grid container justify="center" alignItems="flex-start"
               spacing={16}>
 
-              <Grid item xs={10} md={8} className={classes.content}>
+              <Grid item xs={12} md={8} className={classes.content}>
                 <div className={classes.wrapper}>
                   <Typography variant="h3" align='left'>
                     {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
@@ -628,7 +629,7 @@ class AccountSetting extends React.Component {
     return (
       <Grid container justify="center" alignItems="center"
         className={classes.root}>
-        <Grid item xs={11} sm={9} md={8} lg={6} >
+        <Grid item xs={12} sm={9} md={8} lg={6} >
           {this.getContent()}
         </Grid>
       </Grid>

@@ -49,6 +49,7 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     // minHeight: 450,
+    // height: 420,
     width: '100%'
   },
   cardActionArea:{
@@ -304,7 +305,6 @@ class OpportunityCard extends React.Component {
           style={{ width: '100%'}}
           >
           <Card className={classes.card}
-            style={editable ? {minHeight: 450} : {minHeight: 390}}
             onClick={this.handleCardOpen}>
             <CardActionArea className={classes.cardActionArea}>
               <Grid container justify="center" alignItems='flex-start'
@@ -312,7 +312,8 @@ class OpportunityCard extends React.Component {
                 <Grid item xs={12}>
                   {picture}
                 </Grid>
-                <Grid item xs={10} className={classes.cardContent}>
+                <Grid item xs={10} className={classes.cardContent}
+                  style={{ height: 265}}>
                   <div className={classes.cardHeaderWrapper}>
                     <Typography variant="h5" align='left'
                       color="default" className={classes.title} >

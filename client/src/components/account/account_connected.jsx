@@ -26,7 +26,7 @@ const styles = theme => ({
     // marginTop: 35,
     position: 'relative',
     top: 164,
-    padding: 50
+    padding: "50px 20px"
   },
 });
 

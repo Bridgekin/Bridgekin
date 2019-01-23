@@ -65,6 +65,7 @@ class NotFound extends Component {
     }
 
     this.handleClose = this.handleClose.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleClose(){
@@ -73,6 +74,11 @@ class NotFound extends Component {
     let newFile = new File([blob], "my-image.png");
 
     this.props.handleClose(newFile);
+  }
+
+  handleDelete(){
+    this.props.handleDelete();
+    this.props.handleClose('');
   }
 
   render () {
@@ -91,7 +97,7 @@ class NotFound extends Component {
           classes={{ paper: classes.modalPaper}}
           >
           <Badge
-            badgeContent={<CloseIcon onClick={this.handleClose}/>}
+            badgeContent={<CloseIcon onClick={this.handleDelete}/>}
             classes={{ badge: classes.badge }}
             style={{ width: '100%'}}
             >

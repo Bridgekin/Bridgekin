@@ -69,6 +69,20 @@ const styles = theme => ({
   },
   selectInput:{
     height: 49
+  },
+  menuSelected:{
+    backgroundColor: 'white',
+    '&:hover': {
+      backgroundColor: 'white'
+    },
+    '&:click':{
+      backgroundColor: 'white'
+    },
+  },
+  menuSelectedRoot:{
+    '&$selected':{
+      backgroundColor: 'white'
+    }
   }
 });
 
@@ -389,16 +403,19 @@ class DescriptionField extends React.Component {
                     </div>
                   )}
                   MenuProps={MenuProps}
+                  classes={{ select: {"&:focus": {background: 'none'} }}}
                 >
                   {Object.values(availNetworks).map(network => (
                     <MenuItem key={network.id} value={network.id}
+                      className={classes.menuSelected }
+                      classes={{ root: classes.menuSelectedRoot }}
                       disableRipple>
                       <FormControlLabel
                         control={
                           <Checkbox
                             checked={this.props.networks.includes(network.id)}
                             value={network.id}
-                            classes={{ root: classes.selectCheckBox}}
+                            classes={{ root: classes.selectCheckBox }}
                           />
                         }
                         label={network.title}
@@ -443,6 +460,7 @@ class DescriptionField extends React.Component {
         <ImageCropModal
           handleClose={this.handleCloseImageModal.bind(this)}
           open={imageModalOpen}
+          handleDelete={this.handleRemoveFile.bind(this)}
           fileUrl={previewUrlForModal}
           ratio={2.3/1}/>
 

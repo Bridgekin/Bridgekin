@@ -2,14 +2,22 @@ class Api::WaitlistUsersController < ApiController
   # before_action :require_signed_out!, only: [:create]
 
   def create
-    if User.find_by(email: waitlist_user_params[:email])
-      render json: ["They're already a part of Bridgekin"], status: 422
+    existing_user = User.find_by(email: waitlist_user_params[:email])
+    waitlist_user = WaitlistUser.find_by(email: waitlist_user_params[:email])
+    @user = User.find(waitlist_user_params[:from_referral_id]) if waitlist_user_params[:from_referral_id]
+
+    if existing_user
+      render json: ["That email is already associated with an existing Bridgekin member"], status: 422
+    elsif waitlist_user && @user
+      waitlist_user[:from_referral_id] = @user.id
+      waitlist_user.save
+
+      WaitlistUserMailer.register_referred_email_existing(waitlist_user, @user).deliver_now
+      render json: ['User has already been a waitlist user'], status: 201
     else
       @waitlist_user = WaitlistUser.new(waitlist_user_params)
 
       if @waitlist_user.save
-        @user = User.find(waitlist_user_params[:from_referral_id]) if waitlist_user_params[:from_referral_id]
-
         if @user
           WaitlistUserMailer.register_referred_email(@waitlist_user, @user).deliver_now
         else
@@ -21,6 +29,7 @@ class Api::WaitlistUsersController < ApiController
 
         render json: ['Successfully added user to waitlist'], status: 201
       else
+        debugger
         render json: @waitlist_user.errors.full_messages, status: 422
       end
     end

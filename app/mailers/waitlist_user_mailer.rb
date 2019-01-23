@@ -9,4 +9,10 @@ class WaitlistUserMailer < ApplicationMailer
     @user = user
     mail(to: waitlist_user.email, subject: "#{@user.fname} #{@user.lname} has referred you to The Bridgekin Network")
   end
+
+  def register_referred_email_existing(waitlist_user, user)
+    @waitlist_user = waitlist_user
+    @user = user
+    mail(to: waitlist_user.email, subject: "#{@user.fname} #{@user.lname} has referred you to The Bridgekin Network")
+  end
 end

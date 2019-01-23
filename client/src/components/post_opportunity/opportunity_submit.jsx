@@ -54,7 +54,7 @@ class SubmitField extends React.Component {
 
     return (
       <Grid container className={classes.root}
-        justify='center' alignItems='flex-start' spacing={16}>
+        justify='center' alignItems='flex-start'>
 
         <Grid item xs={11}>
           <Typography variant="h1" gutterBottom align='left'
@@ -77,7 +77,7 @@ class SubmitField extends React.Component {
           )}
         </Grid>
 
-        <Grid item xs={12} sm={9} md={6}>
+        <Grid item xs={11} sm={9} md={6}>
           <OpportunityCard opportunity={opportunity}
             classes={classes}
             editable={false}
@@ -107,7 +107,7 @@ class SubmitField extends React.Component {
           <Typography variant="body1" gutterBottom align='left'
             color='default' className={classes.disclaimerTypography}>
             {`If you need to edit this opportunity, click the back button.
-              You can also edit once live on the “My Account” tab.`}
+              You can also edit once live on the “My Account” page.`}
           </Typography>
         </Grid>
       </Grid>

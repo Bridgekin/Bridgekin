@@ -34,7 +34,7 @@ const styles = theme => ({
     // marginTop: 35,
     position: 'relative',
     top: 164,
-    padding: 50,
+    padding: "50px 20px",
   },
   addOportunityCard:{
     height: 390,
@@ -85,7 +85,7 @@ class AccountPosted extends React.Component {
 
       let opportunityGrid = (
         <Grid container justify="center" alignItems="center" spacing={24}>
-          <Grid item xs={11} className={classes.gridOpp} >
+          <Grid item xs={12} className={classes.gridOpp} >
             <Grid container style={{ flexGrow: 1, zIndex:-1}}
               justify="flex-start" alignItems="center" spacing={16}>
               {opportunityCards}

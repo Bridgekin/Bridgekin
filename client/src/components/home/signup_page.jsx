@@ -161,10 +161,10 @@ class SignupPage extends React.Component{
     let classes = this.props.classes;
     const { loading, success, open, termsAgreement } = this.state;
 
-    const termsLink = <a href='/'>User Agreement, Privacy Policy and Cookies Policy</a>
+    const termsLink = <a href='/termsandconditions'>User Agreement</a>
     let termsMessage = (
       <Typography variant="subtitle2" gutterBottom>
-        {`By registering I acknowledge and agree to the `} {termsLink}
+        {`By registering, I acknowledge and agree to the `} {termsLink} {` and Privacy Policy.`}
       </Typography>
     )
 

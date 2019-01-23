@@ -287,6 +287,7 @@ class OpportunityHome extends React.Component {
   render (){
     let { classes, opportunities, networks,
         referral, currentUser } = this.props;
+
     const { loading, waitlistOpen,
           referralNetwork, anchorEl,
           dropdownFocus } = this.state;
@@ -336,16 +337,18 @@ class OpportunityHome extends React.Component {
       <Grid container className={[classes.homeheader, classes.root].join(' ')}
         justify="center" alignItems="center">
 
-        <Grid item xs={10} justify="center" alignItems="center"
+        <Grid item xs={10} md={9} justify="center" alignItems="center"
           className={classes.headerItem}>
-          <Typography variant="h1" gutterBottom align='center'
-            className={classes.headerTypography}>
-            {`Welcome ${currentUser.fname}`.toUpperCase()}
-          </Typography>
+          {!currentUser.lastSignInAt &&
+            <Typography variant="h1" gutterBottom align='center'
+              className={classes.headerTypography}>
+              {`Welcome ${currentUser.fname}`.toUpperCase()}
+            </Typography>
+          }
 
           <Typography variant="h4" gutterBottom align='center'
             className={classes.subheaderTypography}>
-            There are {opportunities.length} opportunities for you to check out
+            There are {opportunities.length} opportunities for you to check out with over $68M in opportunities connected thus far.
           </Typography>
 
           <Typography variant="p" gutterBottom align='center'
