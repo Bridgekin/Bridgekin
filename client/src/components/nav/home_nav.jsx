@@ -57,7 +57,8 @@ const styles = {
     },
     '&:click':{
       backgroundColor: '#fff'
-    }
+    },
+    padding: "12px 0px"
   },
   logo: {
     height: 26
@@ -85,7 +86,8 @@ const styles = {
     // display: 'flex',
     // justifyContent: 'space-between',
     height: 64,
-    padding: 0
+    paddingRight: 5,
+    paddingLeft: 5
   },
   navMenu:{
     display: 'flex',

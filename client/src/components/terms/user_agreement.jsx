@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+
 // import { Container, Button } from 'semantic-ui-react'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -12,7 +14,7 @@ import theme from '../theme';
 import HomeImage from '../../static/Login_Background_Image.jpg';
 import BottomFade from '../../static/bottom-fade.png';
 
-import TermsText from './terms_text';
+import UserAgreementText from './legal_text';
 
 const styles = theme => ({
   root: {
@@ -46,11 +48,12 @@ const styles = theme => ({
   }
 });
 
-class TermsAndConditions extends Component {
+class UserAgreement extends Component {
   render () {
     const {classes} = this.props;
 
-    const homeLink = <a href='/'>our homepage.</a>
+    const homeLink = <Link to='/'>our homepage.</Link>
+    const privacyPolicyLink = <Link to='/privacypolicy'>Privacy Policy</Link>
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
@@ -62,15 +65,19 @@ class TermsAndConditions extends Component {
                 <Grid item sm={11} md={9}>
                   <Typography variant="h1" align='center' color='inherit'
                     gutterBottom className={classes.header}>
-                    Terms and Conditions
+                    User Agreement
                   </Typography>
                   <Typography variant="body2" align='center' color='inherit'
                     gutterBottom style={{ marginBottom: 30}}>
-                    {TermsText}
+                    {UserAgreementText}
                   </Typography>
                   <Typography variant="h6" align='center' color='inherit'
                     style={{ marginBottom: 30}}>
                     {"Back to "} {homeLink}
+                  </Typography>
+                  <Typography variant="h6" align='center' color='inherit'
+                    style={{ marginBottom: 30}}>
+                    {"To "} {privacyPolicyLink}
                   </Typography>
                 </Grid>
               </Grid>
@@ -83,4 +90,4 @@ class TermsAndConditions extends Component {
   }
 }
 
-export default withStyles(styles)(TermsAndConditions);
+export default withStyles(styles)(UserAgreement);

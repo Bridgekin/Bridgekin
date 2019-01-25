@@ -4,6 +4,8 @@ import { AuthRoute, ProtectedRoute} from './util/route_util';
 import './App.css';
 
 import HomeNav from './components/nav/home_nav';
+import Footer from './components/nav/footer';
+
 import HomePage from './components/home/home_page';
 import AccountRoute from './components/account/account_route';
 import OpportunityHome from './components/opportunity/opportunity_home';
@@ -15,30 +17,48 @@ import ConnectionsHome from './components/connections/connections_home';
 import Login from './components/home/login_page';
 // import ConnectionsHome from './components/wip';
 import NotFound from './components/not_found';
-import TermsAndConditions from './components/terms/terms_and_conditions';
+import UserAgreement from './components/terms/user_agreement';
+import PrivacyPolicy from './components/terms/privacy_policy';
 import ConfirmationError from './components/confirmation_error';
 
-export default () => (
-  <div>
-    <Route path="/" component={HomeNav} />
+// export default () => (
+class App extends React.Component {
+  shouldComponentUpdate(nextProps, nextState){
+    window.scrollTo(0, 0);
+    return false
+  }
 
-    <Switch>
-      <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
-      <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
-      <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
-      <ProtectedRoute path="/account" component={AccountRoute} />
-      <ProtectedRoute path="/mynetwork" component={ConnectionsHome} />
-      <AuthRoute path="/signup/:code" component={SignupPage} />
-      <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
-      <AuthRoute path="/login" component={Login}/>
-      <AuthRoute exact path="/" component={HomePage} />
-      <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
-      <Route path="/termsandconditions" component={TermsAndConditions} />
-      <Route component={NotFound} />
-    </Switch>
-  </div>
-);
+  // componendDidUpdate(){
+  //   debugger
+  // }
+  render(){
+    return (
+      <div>
+        <Route path="/" component={HomeNav} />
 
+        <Switch>
+          <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
+          <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
+          <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
+          <ProtectedRoute path="/account" component={AccountRoute} />
+          <ProtectedRoute path="/mynetwork" component={ConnectionsHome} />
+          <AuthRoute path="/signup/:code" component={SignupPage} />
+          <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
+          <AuthRoute path="/login" component={Login}/>
+          <AuthRoute exact path="/" component={HomePage} />
+          <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
+          <Route path="/useragreement" component={UserAgreement} />
+          <Route path="/privacypolicy" component={PrivacyPolicy} />
+          <Route component={NotFound} />
+        </Switch>
+
+        <Route path="/" component={Footer} />
+      </div>
+    )
+  }
+};
+
+export default App;
 // class App extends Component {
 //   componentDidMount(){
 //     let token = localStorage.getItem('bridgekinToken');

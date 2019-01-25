@@ -1,0 +1,65 @@
+version: '3'
+
+volumes:
+  postgres_data: {}
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/DockerFile
+    depends_on:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/web/DockerFile
+    depends_on:
+      - app
+    ports:
+      - 80:80
+
+#
+# version: '3'
+#
+# services:
+#   web:
+#     build: .
+#     ports:
+#       - "5000:5000"
+#     env_file: .env
+#     depends_on:
+#       - db
+#     volumes:
+#       - ./webapp:/opt/webapp
+#   db:
+#     image: postgres:latest
+#     ports:
+#       - "5432:5432"
+#   redis:
+#     image: redis:alpine
+#     ports:
+#       - "6379:6379"
+#
+#
+# version: '3.6'
+#
+# services:
+#   web:
+#     build: .
+#     volumes:
+#       - ./:/bridgekin
+#     working_dir: /bridgekin
+#     command: puma
+#     ports:
+#       - 3000:3000
+#     depends_on:
+#       - db
+#     environment:
+#       DATABASE_URL: postgres://postgres@db
+#   db:
+#     image: postgres:10.3-alpine

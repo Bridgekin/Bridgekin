@@ -18,8 +18,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
+import withWidth from '@material-ui/core/withWidth';
 
 import ImageCropModal from '../image_upload_modal';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   root: {
@@ -106,8 +108,11 @@ class DescriptionField extends React.Component {
       profilePicFile: null,
       previewUrlForModal: null,
       imageModalOpen: false,
-      selectAll: false
+      selectAll: false,
+      mobileImageCropPending: false
     }
+
+    this.cropperModal = React.createRef();
 
     // this.fileReader = new FileReader();
 
@@ -209,20 +214,30 @@ class DescriptionField extends React.Component {
   handleFile(e){
     // debugger
     let file = e.currentTarget.files[0];
-    this.handleFileHelper(file, true);
+    if (this.props.width !== 'xs'){
+      this.handleFileHelper(file, true, false);
+      // this.setState({ mobileImageCropPending: true})
+    } else {
+      this.handleFileHelper(file, false, true);
+    }
   }
 
   handleCloseImageModal(newFile){
     // debugger
-    if(newFile !== '' && newFile !== null){
-      this.handleFileHelper(newFile, false);
+    if(newFile && this.props.width !== 'xs'){
+      // normal screens
+      this.handleFileHelper(newFile, false, false)
+    } else if (newFile && this.props.width === 'xs'){
+      //mobile screens
+      this.handleFileHelper(newFile, false, false)
+      // this.setState({ mobileImageCropPending: false })
     } else {
       this.setState({ imageModalOpen: false},
       () => this.props.handleFile(this.state.profilePicFile))
     }
   }
 
-  handleFileHelper(file, bool){
+  handleFileHelper(file, bool, mobilePendingBool){
     let fileReader = new FileReader();
     let that = this;
     // debugger
@@ -231,15 +246,31 @@ class DescriptionField extends React.Component {
       this.setState({
         profilePicFile: file,
         previewUrlForModal: fileReader.result,
-        imageModalOpen: bool
+        imageModalOpen: bool,
+        mobileImageCropPending: mobilePendingBool
       }, () => {
-        // debugger
         this.props.handleFile(file, fileReader.result );
-        // if(!bool){
-        //   // send file back to parent component
-        //   this.props.handleFile(file);
-        // }
       })
+      // }
+      // } else {
+      //   this.setState({
+      //     profilePicFile: file,
+      //     previewUrlForModal: fileReader.result,
+      //   })
+        // }), () => {
+          // debugger
+          // this.cropperModal.current.handleClose();
+          // this.cropperModal.handleClose()
+        // })
+      //
+      // } else if(this.props.width === 'xs' && cropped){
+      //   this.setState({
+      //     profilePicFile: file,
+      //     previewUrlForModal: fileReader.result,
+      //   }, () => {
+      //     this.props.handleFile(file, fileReader.result );
+      //   })
+      // }
     }
 
     if(file){
@@ -259,7 +290,8 @@ class DescriptionField extends React.Component {
 
   render (){
     let { classes, pictureUrl } = this.props;
-    let { networks, imageModalOpen, profilePicFile, previewUrlForModal } = this.state;
+    let { networks, imageModalOpen, profilePicFile,
+       previewUrlForModal, mobileImageCropPending } = this.state;
     const { availNetworks, picture } = this.props;
     const pictureUploaded = Boolean(pictureUrl)
     // const error = Object.keys(networks).filter(v => v).length < 1
@@ -271,6 +303,16 @@ class DescriptionField extends React.Component {
         style={{ margin: "20px 0px 20px 0px",
                 width: '100%', height: 'auto' }}/>
     ) : ('')
+
+    // !imageModalOpen &&
+    let stuff = mobileImageCropPending ? (
+      <Grid container justify='center' alignItems='center'
+        style={{ height: 100}}>
+        <CircularProgress />
+      </Grid>
+    ) : (
+      preview
+    )
 
     let fields = Object.values(availNetworks).map(network => (
         <FormControlLabel
@@ -344,7 +386,7 @@ class DescriptionField extends React.Component {
             />
             <Grid container justify="flex-start">
               <Grid item xs={12} sm={10} md={8} sm={6}>
-                {!imageModalOpen && preview}
+                {stuff}
               </Grid>
             </Grid>
             <Grid container justify='flex-start' alignItems='center'
@@ -462,11 +504,13 @@ class DescriptionField extends React.Component {
           open={imageModalOpen}
           handleDelete={this.handleRemoveFile.bind(this)}
           fileUrl={previewUrlForModal}
-          ratio={2.3/1}/>
+          file={profilePicFile}
+          ratio={2.3/1}
+          innerRef={(ref) => this.cropperModal = ref} />
 
       </Grid>
     )
   }
 }
 
-export default withStyles(styles)(DescriptionField);
+export default withStyles(styles)(withWidth()(DescriptionField));

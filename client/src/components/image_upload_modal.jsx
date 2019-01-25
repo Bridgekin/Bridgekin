@@ -16,6 +16,8 @@ import theme from './theme';
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
 
+import withWidth from '@material-ui/core/withWidth';
+
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -27,6 +29,9 @@ import {Cropper} from 'react-image-cropper'
 // import base64ToFile from 'base64-to-file'
 import base64 from 'file-base64';
 import { dataURLToBlob } from 'blob-util'
+
+// import sharp from 'sharp';
+import Jimp from 'jimp';
 
 const styles = theme => ({
   root: {
@@ -64,13 +69,64 @@ class NotFound extends Component {
       },
     }
 
+    this.cropper = React.createRef();
+
     this.handleClose = this.handleClose.bind(this);
+    this.handleCloseMobile = this.handleCloseMobile.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  // shouldComponentUpdate(nextProps, nextState){
+  //   debugger
+  //   if(this.props.width !== 'xs'){
+  //     return true;
+  //   } else if (this.props.width === 'xs' &&
+  //             nextProps.fileUrl !== this.props.fileUrl){
+  //     this.handleClose()
+  //   }
+  //   if(nextProps.fileUrl != )
+  //
+  //   return true
+  // }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.width === 'xs' &&
+        prevProps.fileUrl !== this.props.fileUrl){
+          // debugger
+      this.handleCloseMobile();
+    }
+  }
+
+  handleCloseMobile(){
+    // sharp(this.props.fileUrl)
+    //   .resize(300,130)
+    //   .toFile('output.png')
+    //   .then(file => {
+    //     debugger
+    //   });
+    // debugger
+    Jimp.read(this.props.fileUrl)
+    // .then(image => image.getBase64Async(Jimp.MIME_PNG))
+    .then(image => {
+      // debugger
+      return image
+        .cover(800, 346)
+        .getBase64Async(Jimp.MIME_PNG);
+    })
+    .then(image => {
+      let blob = dataURLToBlob(image);
+      let newFile = new File([blob], "my-image.png");
+      // debugger
+      this.props.handleClose(newFile);
+    })
+    .catch(err=>{
+      console.log(err)
+    })
   }
 
   handleClose(){
     let file = this.cropper.crop();
-    var blob = dataURLToBlob(file);
+    let blob = dataURLToBlob(file);
     let newFile = new File([blob], "my-image.png");
 
     this.props.handleClose(newFile);
@@ -84,7 +140,6 @@ class NotFound extends Component {
   render () {
     const {classes, open, fileUrl, ratio} = this.props;
     // let height = this.cropper.width/4;
-    // debugger
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
@@ -131,7 +186,6 @@ class NotFound extends Component {
     )
   }
 
-
   // handleClose(){
   //   // debugger
   //   if(this.state.croppedImageFile){
@@ -142,7 +196,7 @@ class NotFound extends Component {
   //   this.imageRef = null;
   //   this.setState({ croppedImageFile: null })
   // };
-  //
+
   // onImageLoaded = (image, pixelCrop) => {
   //   this.imageRef = image;
   // };
@@ -157,13 +211,12 @@ class NotFound extends Component {
   //
   // makeClientCrop(crop, pixelCrop) {
   //   if (this.imageRef && crop.width && crop.height) {
-  //     // debugger
   //     const croppedImageBlob = this.getCroppedImg(
   //       this.imageRef,
   //       pixelCrop,
   //       'newFile.jpeg',
   //     );
-  //     debugger
+  //
   //     let croppedImageFile = new File([croppedImageBlob], "newFile.jpeg");
   //     // let croppedImageFile = saveSync(croppedImageBlob, 'example2.mp3')
   //     this.setState({ croppedImageFile });
@@ -220,33 +273,42 @@ class NotFound extends Component {
   //         onClose={this.handleClose.bind(this)}
   //         className={classes.cardModalWrapper}
   //         >
+  //         <Badge
+  //           badgeContent={<CloseIcon onClick={this.handleDelete}/>}
+  //           classes={{ badge: classes.badge }}
+  //           style={{ width: '100%'}}
+  //           >
+  //           <Grid container justify='center' alignItems='center'
+  //             className={classes.grid}>
+  //             <Grid item xs={11} sm={10} md={8}>
+  //               <Typography variant="h2" align='left' color='textPrimary'
+  //                 style={{ margin:'30px 0px'}}>
+  //                 {"Crop your image"}
+  //               </Typography>
   //
-  //         <DialogTitle id="alert-dialog-title">
-  //           <Typography variant="h2" align='left' color='textPrimary'>
-  //             {"Crop your image"}
-  //           </Typography>
-  //         </DialogTitle>
-  //         <div >
-  //           <ReactCrop
-  //             src={fileUrl}
-  //             crop={crop}
-  //             onImageLoaded={this.onImageLoaded}
-  //             onComplete={this.onCropComplete}
-  //             onChange={this.onCropChange}
-  //             />
-  //         </div>
+  //               <ReactCrop
+  //                 src={fileUrl}
+  //                 crop={crop}
+  //                 onImageLoaded={this.onImageLoaded}
+  //                 onComplete={this.onCropComplete}
+  //                 onChange={this.onCropChange}
+  //                 />
   //
-  //         <Grid container justify='center'
-  //           style={{ marginTop: 20, marginBottom: 40 }}>
-  //           <Button color="primary" variant='contained'
-  //             onClick={this.handleClose.bind(this)} >
-  //             Crop
-  //           </Button>
-  //         </Grid>
+  //               <Grid item xs={11} container justify='center'
+  //                 style={{ marginTop: 20, marginBottom: 40 }}>
+  //                 <Button color="primary" variant='contained'
+  //                   onClick={this.handleClose} >
+  //                   Crop
+  //                 </Button>
+  //               </Grid>
+  //
+  //             </Grid>
+  //           </Grid>
+  //         </Badge>
   //       </Dialog>
   //     </MuiThemeProvider>
   //   )
   // }
 }
 
-export default withStyles(styles)(NotFound);
+export default withStyles(styles)(withWidth()(NotFound));

@@ -88,7 +88,7 @@ class AccountHome extends React.Component {
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container justify="center" alignItems="center"
           className={classes.grid}
-          style={{ top: 56, position: 'relative' }}>
+          style={{ top: 64, position: 'relative' }}>
 
           <Grid item xs={10} sm={8} md={6}>
             <Card className={classes.card}>

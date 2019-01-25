@@ -161,10 +161,14 @@ class SignupPage extends React.Component{
     let classes = this.props.classes;
     const { loading, success, open, termsAgreement } = this.state;
 
-    const termsLink = <a href='/termsandconditions'>User Agreement</a>
+    const userAgreementLink = <a href='/useragreement'>User Agreement</a>
+    const privacyPolicyLink = <a href='/privacypolicy'>Privacy Policy</a>
     let termsMessage = (
       <Typography variant="subtitle2" gutterBottom>
-        {`By registering, I acknowledge and agree to the `} {termsLink} {` and Privacy Policy.`}
+        {`By registering, I acknowledge and agree to the `}
+        {userAgreementLink}
+        {` and `}
+        {privacyPolicyLink}
       </Typography>
     )
 
@@ -252,7 +256,7 @@ class SignupPage extends React.Component{
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.homeGrid}
           justify="flex-start" alignItems="center"
-          style={{ top: 56, position: 'relative'}}>
+          style={{ top: 64, position: 'relative'}}>
           <Grid item xs={11} sm={9} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >

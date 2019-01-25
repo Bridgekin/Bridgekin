@@ -244,16 +244,16 @@ class HomePage extends React.Component{
         <Grid container className={classes.homeGridMobile}
           justify="flex-start" alignItems="center"
           style={{ top: 64, position: 'relative'}}>
-          <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
+          <Grid item xs={11} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
-            <Grid item xs={10} >
+            <Grid item xs={11} >
               <Typography className={classes.homeHeader}
                 variant="h5" gutterBottom>
                 {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
 
-            <Grid item xs={10} sm={7}>
+            <Grid item xs={11} sm={7}>
               <Typography className={classes.homeSubheader}
                 variant="p" gutterBottom>
                 {"Bridgekin is currently an invite-only community that has connected over $68M in opportunities. Sign up now to join our waitlist."}
