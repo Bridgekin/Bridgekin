@@ -289,7 +289,7 @@ class DescriptionField extends React.Component {
   }
 
   render (){
-    let { classes, pictureUrl } = this.props;
+    let { classes, pictureUrl, width } = this.props;
     let { networks, imageModalOpen, profilePicFile,
        previewUrlForModal, mobileImageCropPending } = this.state;
     const { availNetworks, picture } = this.props;
@@ -305,7 +305,7 @@ class DescriptionField extends React.Component {
     ) : ('')
 
     // !imageModalOpen &&
-    let stuff = mobileImageCropPending ? (
+    let pictureSection = mobileImageCropPending ? (
       <Grid container justify='center' alignItems='center'
         style={{ height: 100}}>
         <CircularProgress />
@@ -386,7 +386,7 @@ class DescriptionField extends React.Component {
             />
             <Grid container justify="flex-start">
               <Grid item xs={12} sm={10} md={8} sm={6}>
-                {stuff}
+                {pictureSection}
               </Grid>
             </Grid>
             <Grid container justify='flex-start' alignItems='center'
@@ -406,6 +406,12 @@ class DescriptionField extends React.Component {
                   Delete
                 </Button>}
             </Grid>
+            {width === 'xs' && <Grid container justify='flex-start' alignItems='center'>
+              <Typography variant="body2" align='left'
+                style={{ fontSize: 8, marginTop: 20 }}>
+                {`Note* Image cropping is disabled on mobile.`}
+              </Typography>
+            </Grid>}
           </Grid>
 
           <Typography variant="h5" gutterBottom align='left'

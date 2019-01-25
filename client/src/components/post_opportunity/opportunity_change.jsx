@@ -146,6 +146,10 @@ class OpportunityChange extends React.Component {
     this.handleReset = this.handleReset.bind(this);
   }
 
+  componentDidUpdate(prevProps){
+    window.scrollTo(0, 0);
+  }
+
   getSteps() {
     return ['Need', 'Industry', 'Geography', 'Value', 'Description', 'Post'];
   }
