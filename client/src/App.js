@@ -23,10 +23,10 @@ import ConfirmationError from './components/confirmation_error';
 
 // export default () => (
 class App extends React.Component {
-  shouldComponentUpdate(nextProps, nextState){
-    window.scrollTo(0, 0);
-    return false
-  }
+  // shouldComponentUpdate(nextProps, nextState){
+  //   window.scrollTo(0, 0);
+  //   return false
+  // }
 
   // componendDidUpdate(){
   //   debugger
