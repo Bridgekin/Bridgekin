@@ -34,4 +34,4 @@ server.csr
 server.cst
 
 /docker
-.docker-compose.yml
+docker-compose.yml
