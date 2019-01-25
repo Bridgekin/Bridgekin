@@ -16,10 +16,12 @@ import AccountConfirmed from './components/account/account_confirmed';
 import ConnectionsHome from './components/connections/connections_home';
 import Login from './components/home/login_page';
 // import ConnectionsHome from './components/wip';
-import NotFound from './components/not_found';
 import UserAgreement from './components/terms/user_agreement';
 import PrivacyPolicy from './components/terms/privacy_policy';
+
+import NotFound from './components/not_found';
 import ConfirmationError from './components/confirmation_error';
+import ScrollToTop from './components/scroll_to_top';
 
 // export default () => (
 class App extends React.Component {
@@ -34,6 +36,7 @@ class App extends React.Component {
   render(){
     return (
       <div>
+        <ScrollToTop />
         <Route path="/" component={HomeNav} />
 
         <Switch>

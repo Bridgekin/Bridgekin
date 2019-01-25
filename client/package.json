@@ -31,8 +31,7 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "save-file": "^2.2.1",
-    "sharp": "^0.21.3"
+    "save-file": "^2.2.1"
   },
   "scripts": {
     "start": "PORT=5000 react-scripts start",
