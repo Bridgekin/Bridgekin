@@ -19,9 +19,15 @@ WORKDIR $RAILS_ROOT
 # Adding gems
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
+
+# if ( ENV RAILS_ENV= 'development')
+#  RUN bundle install --jobs 20 --retry 5
+# else:
+#  RUN bundle install --jobs 20 --retry 5 --without development test
+
 RUN bundle install --jobs 20 --retry 5 --without development test
 
-RUN echo '{ "allow_root": true }' > /root/.bowerrc
+# RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
 # Adding project files
 COPY . .
