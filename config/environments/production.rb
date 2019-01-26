@@ -18,12 +18,36 @@ Rails.application.configure do
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
 
+  # Heroku Cedar automatically injects this into your configuration so you might
+  # as well be honest about it
+  config.serve_static_assets = true
+
+  # You definitely want to set cache-control headers; you can override them with
+  # Cloudfront, but best to do it right at the origin (and other CDNs might not
+  # be so helpful
+  config.static_cache_control = "public, max-age=31536000"
+
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "d1jtzofhvaqxb0.cloudfront.net"
+
+  # Add the cloudfront hostname (including the `http(s)://` that you have
+  # configured to serve these assets
+  config.action_controller.asset_host = ENV['CDN_HOSTNAME'] # e.g. `http://gobbledy.cloudfront.net`
+
+  # Compress JavaScripts and CSS
+  config.assets.compress = true
+
+  # Don't fallback to assets pipeline if a precompiled asset is missed
+  # (remember, your server will throw an exception if an expected
+  # asset isn't precompiled, so test your assets in staging)
+  config.assets.compile = false
+
+  # Generate digests for assets URLs
+  config.assets.digest = true
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
