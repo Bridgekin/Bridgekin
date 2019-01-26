@@ -422,7 +422,7 @@ class OpportunityHome extends React.Component {
             <MenuItem value={network.id}
               className={classes.dropdownMenuItem}
               onClick={this.handleDropdownChange('Network',network.id)}
-              selected={dropdownFocus === `${network.id}`}>
+              selected={dropdownFocus === network.id}>
               <div>
                 <Typography variant="h6" align='left'
                   color="textPrimary" className={classes.dropdownHeader}>

@@ -408,8 +408,8 @@ class DescriptionField extends React.Component {
             </Grid>
             {width === 'xs' && <Grid container justify='flex-start' alignItems='center'>
               <Typography variant="body2" align='left'
-                style={{ fontSize: 8, marginTop: 20 }}>
-                {`Note* Image cropping is disabled on mobile.`}
+                style={{ fontSize: 11, marginTop: 20 }}>
+                {`*In platform image cropping currently only available on desktop`}
               </Typography>
             </Grid>}
           </Grid>

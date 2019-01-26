@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -46,7 +47,8 @@ const styles = theme => ({
   },
   buttonWrapper:{
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginTop: 20
   }
 });
 
@@ -120,6 +122,9 @@ class AccountHome extends React.Component {
                     value={this.state.password}
                     onChange={this.handleChange('password')}
                     />
+                  <Link to="/passwordreset">
+                    {`Forgot your password?`}
+                  </Link>
                   <div className={classes.buttonWrapper}>
                     <Button variant="contained" color="secondary"
                       className={classes.button} onClick={this.handleSubmit}>

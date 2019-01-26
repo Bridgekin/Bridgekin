@@ -82,8 +82,8 @@ class UpdateUserModal extends React.Component {
     }
   };
 
-  render () {
-    const { open, classes, modalType } = this.props;
+  getText(){
+    const { classes, modalType } = this.props;
 
     let userErrors = this.props.userErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
@@ -95,6 +95,45 @@ class UpdateUserModal extends React.Component {
         </ListItem>
       )
     })
+
+    let modalTextEmail = this.props.userErrors.length === 0 ? (
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader} align='left'>
+          Email Confirmation Sent!
+        </Typography>
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
+          We've sent you an email confirmation at your new email address. Confirm your email to finalize this change.
+        </Typography>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
+    ) : (
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader} align='left'>
+          Email Confirmation Error
+        </Typography>
+        <Typography variant="body1" id="simple-modal-description"
+          align='left'>
+          Unfortunately, we weren't able to change your email because:
+        </Typography>
+        <List>
+          {userErrors}
+        </List>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='secondary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
+    )
 
     let modalTextPassword = this.props.userErrors.length === 0 ? (
       <Grid item xs={11} sm={10} md={8} className={classes.grid}>
@@ -174,6 +213,19 @@ class UpdateUserModal extends React.Component {
       </Grid>
     )
 
+    switch(modalType){
+      case 'email':
+        return modalTextEmail;
+      case 'password':
+        return modalTextPassword;
+      default:
+        return modalTextGeneral;
+    }
+  }
+
+  render () {
+    const { open, classes } = this.props;
+
     // let modalText = {modalType === 'password' ? {modalTextPassword} : {modalTextGeneral}}
 
     return (
@@ -189,7 +241,7 @@ class UpdateUserModal extends React.Component {
           style={{ width: '100%'}}
           >
           <Grid container justify='center' alignItems='center'>
-            {modalType === 'password' ? modalTextPassword : modalTextGeneral}
+            {this.getText()}
           </Grid>
         </Badge>
       </Dialog>

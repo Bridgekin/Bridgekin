@@ -136,9 +136,9 @@ let theme = createMuiTheme({
         '&$selected':{
           backgroundColor: 'white',
         },
-        '&:hover': {
-          backgroundColor: 'white'
-        },
+        // '&:hover': {
+        //   backgroundColor: 'white'
+        // },
       },
     },
     MuiSelect: {

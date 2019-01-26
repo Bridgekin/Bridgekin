@@ -68,7 +68,7 @@ class Api::OpportunitiesController < ApiController
   def update
     authorize @opportunity
 
-    # debugger
+    debugger
 
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"

@@ -72,7 +72,7 @@ class SignupModal extends React.Component {
   }
 
   handleClose = () => {
-    if(this.props.sessionErrors){
+    if(this.props.userErrors){
       this.props.clearUserErrors();
     }
     this.props.handleClose();

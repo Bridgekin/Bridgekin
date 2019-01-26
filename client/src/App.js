@@ -15,7 +15,10 @@ import SignupPage from './components/home/signup_page';
 import AccountConfirmed from './components/account/account_confirmed';
 import ConnectionsHome from './components/connections/connections_home';
 import Login from './components/home/login_page';
+import PasswordReset from './components/home/password_reset';
+import PasswordUpdate from './components/home/password_update';
 // import ConnectionsHome from './components/wip';
+
 import UserAgreement from './components/terms/user_agreement';
 import PrivacyPolicy from './components/terms/privacy_policy';
 
@@ -48,6 +51,8 @@ class App extends React.Component {
           <AuthRoute path="/signup/:code" component={SignupPage} />
           <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
           <AuthRoute path="/login" component={Login}/>
+          <AuthRoute path="/passwordreset" component={PasswordReset}/>
+          <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>
           <AuthRoute exact path="/" component={HomePage} />
           <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
           <Route path="/useragreement" component={UserAgreement} />

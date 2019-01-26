@@ -44,3 +44,25 @@ export const deleteUser = (id) => dispatch => (
       dispatch(receiveUserErrors(errors))
     })
 );
+
+export const resetPassword = (email) => dispatch => (
+  UserApiUtil.resetPassword(email)
+    .then(handleErrors)
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveUserErrors(errors))
+    })
+);
+
+export const passwordUpdate = (payload) => dispatch => (
+  UserApiUtil.passwordUpdate(payload)
+    .then(handleErrors)
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+      }
+      dispatch(receiveUserErrors(errors))
+    })
+);

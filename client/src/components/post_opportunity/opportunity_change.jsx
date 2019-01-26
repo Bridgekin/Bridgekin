@@ -8,6 +8,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import GeoField from './opportunity_geo';
 import NeedsField from './opportunity_needs';
@@ -126,13 +127,21 @@ const styles = {
   },
   stepperLabel:{
     fontSize: 12
-  }
+  },
+  buttonProgress: {
+    color: '#4067B2',
+    position: 'absolute',
+    top: '20%',
+    left: '50%',
+    marginLeft: -12,
+  },
 };
 
 const DEFAULTSTATE = {
   activeStep: 0,
   modalOpen: false,
-  pictureUrl: null
+  pictureUrl: null,
+  sendingProgress: false
 }
 
 class OpportunityChange extends React.Component {
@@ -146,8 +155,10 @@ class OpportunityChange extends React.Component {
     this.handleReset = this.handleReset.bind(this);
   }
 
-  componentDidUpdate(prevProps){
-    window.scrollTo(0, 0);
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.activeStep !== this.state.activeStep){
+      window.scrollTo(0, 0);
+    }
   }
 
   getSteps() {
@@ -228,28 +239,31 @@ class OpportunityChange extends React.Component {
   };
 
   handleSubmit(){
-    let fields = ['geography', 'industries', 'value', 'title',
-      'description','networks', 'opportunityNeed' , 'picture' ];
+    this.setState({ sendingProgress: true },
+    () => {
+      let fields = ['geography', 'industries', 'value', 'title',
+        'description','networks', 'opportunityNeed' , 'picture' ];
 
-    const formData = new FormData();
+      const formData = new FormData();
 
-    for (let i = 0; i < fields.length; i++){
-      if(this.state[fields[i]]){
-        formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
+      for (let i = 0; i < fields.length; i++){
+        if(this.state[fields[i]]){
+          formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
+        }
       }
-    }
-    // formData.append(`opportunity[geography]`, this.state.geography.join(','));
-    // formData.append(`opportunity[industries]`, this.state.industries.join(','));
+      // formData.append(`opportunity[geography]`, this.state.geography.join(','));
+      // formData.append(`opportunity[industries]`, this.state.industries.join(','));
 
-    if(this.props.type === 'create'){
-      this.props.createOpportunity(formData)
-      .then(() => this.setState({ modalOpen: true }) )
-    } else {
-      // opportunity.id = this.props.opportunity.id
-      formData.append(`opportunity[id]`, this.props.opportunity.id);
-      this.props.updateOpportunity(formData)
-      .then(() => this.setState({ modalOpen: true }) )
-    }
+      if(this.props.type === 'create'){
+        this.props.createOpportunity(formData)
+        .then(() => this.setState({ modalOpen: true, sendingProgress: false }) )
+      } else {
+        // opportunity.id = this.props.opportunity.id
+        formData.append(`opportunity[id]`, this.props.opportunity.id);
+        this.props.updateOpportunity(formData)
+        .then(() => this.setState({ modalOpen: true, sendingProgress: false }) )
+      }
+    });
   };
 
   handleModalClose = () => {
@@ -296,7 +310,7 @@ class OpportunityChange extends React.Component {
   render (){
     const { classes, type } = this.props;
     const steps = this.getSteps();
-    const { activeStep, modalOpen } = this.state;
+    const { activeStep, modalOpen, sendingProgress } = this.state;
 
     console.log(this.state)
 
@@ -317,13 +331,15 @@ class OpportunityChange extends React.Component {
           </Button>
         </Grid>
 
-        <Grid item xs={5} sm={4} md={3} container justify='center'>
+        <Grid item xs={5} sm={4} md={3} container justify='center'
+          style={{ position: 'relative' }}>
           <Button
             variant="contained"
             color="secondary"
             disabled={
-              (errors.length > 0) &&
-              (activeStep === steps.length - 1)}
+              sendingProgress ||
+              ((errors.length > 0) &&
+              (activeStep === steps.length - 1))}
             onClick={ activeStep === steps.length - 1 ?
               this.handleSubmit : this.handleNext}
             className={classes.flowButton}
@@ -332,6 +348,8 @@ class OpportunityChange extends React.Component {
               type === 'create' ? 'Submit' : 'Update'
             ) : 'Next'}
           </Button>
+          {sendingProgress && <CircularProgress size={24}
+            className={classes.buttonProgress} />}
         </Grid>
       </Grid>
     )

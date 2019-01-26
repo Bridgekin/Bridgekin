@@ -1,5 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { Link, withRouter } from 'react-router-dom';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -100,6 +102,9 @@ class LoginModal extends React.Component {
         <List>
           {sessionErrors}
         </List>
+        <Link to='/passwordreset'>
+          {`Forgot your password?`}
+        </Link>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
             onClick={this.handleClose} color='secondary'>

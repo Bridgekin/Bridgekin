@@ -140,6 +140,7 @@ class AccountSetting extends React.Component {
       password: '',
       passwordConfirmation: '',
       modalOpen: false,
+      email: this.props.currentUser.email,
       fname: this.props.currentUser.fname,
       lname: this.props.currentUser.lname,
       title: this.props.currentUser.title,
@@ -156,6 +157,7 @@ class AccountSetting extends React.Component {
     // this.options = countryList().getData()
 
     this.changePassword = this.changePassword.bind(this);
+    this.changeEmail = this.changeEmail.bind(this);
     this.changeGeneralInformation = this.changeGeneralInformation.bind(this);
   }
 
@@ -206,6 +208,7 @@ class AccountSetting extends React.Component {
         currentPassword: '',
         password: '',
         passwordConfirmation: '',
+        email: this.props.currentUser.email,
         fname: this.props.currentUser.fname,
         lname: this.props.currentUser.lname,
         title: this.props.currentUser.title,
@@ -226,6 +229,15 @@ class AccountSetting extends React.Component {
     for (let i = 0; i < passwords.length; i++){
       formData.append(`user[${passwords[i]}]`, this.state[passwords[i]]);
     }
+    formData.append('user[id]', this.props.currentUser.id)
+
+    this.props.updateUser(formData)
+    .then(()=> this.setState({ modalOpen: true }))
+  }
+
+  changeEmail(){
+    const formData = new FormData();
+    formData.append('user[email]', this.state.email)
     formData.append('user[id]', this.props.currentUser.id)
 
     this.props.updateUser(formData)
@@ -311,6 +323,47 @@ class AccountSetting extends React.Component {
     let pathName = this.props.location.pathname.split('/').pop();
 
     switch (pathName) {
+      case "email":
+        return(
+          <Card className={classes.card}>
+            <Grid container justify="center" alignItems="center"
+              spacing={16}>
+
+              <Grid item xs={8} sm={6} container
+                justify="center" alignItems="center">
+                <Typography variant="h5" align='left'
+                  color="secondary" gutterBottom>
+                  Reset Email Below
+                </Typography>
+                <TextField
+                  id="standard-email"
+                  label="Email"
+                  className={classes.textField}
+                  margin="normal"
+                  fullWidth
+                  value={this.state.email}
+                  onChange={this.handleInfoChange('email')}
+                />
+                <Grid container justify='flex-start'>
+                  <Button className={classes.submitButton}
+                    onClick={this.handleChangeFill('')} variant='contained'>
+                    Back
+                  </Button>
+
+                  <Button color="secondary" className={classes.submitButton}
+                    onClick={this.changeEmail} variant='contained'>
+                    Change Email
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <UpdateUserModal
+              open={modalOpen}
+              modalType={'email'}
+              handleClose={this.handleModalClose}/>
+          </Card>
+        );
       case "password":
         return(
           <Card className={classes.card}>
@@ -386,10 +439,6 @@ class AccountSetting extends React.Component {
             {'United States'}
           </MenuItem>
         )
-        //
-        // let countryOptions = this.options.map(option => (
-        //   <MenuItem value={option}>{option}</MenuItem>
-        // ));
 
         return(
           <Card className={classes.card}>
@@ -573,6 +622,13 @@ class AccountSetting extends React.Component {
                   <Typography variant="h6" align='left' color='textPrimary'>
                     Email Address
                   </Typography>
+                  <Link to='/account/settings/email'
+                    style={{ marginLeft: 15}}>
+                    <Typography variant="h6" align='left' color='textPrimary'
+                      style={{fontWeight: 300}}>
+                      Change
+                    </Typography>
+                  </Link>
                 </Grid>
                 <Typography variant="body1" gutterBottom align='left'
                   color="default" style={{ marginBottom: 15}}>
