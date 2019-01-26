@@ -74,10 +74,6 @@ class TermsAndConditions extends Component {
                     style={{ marginBottom: 30}}>
                     {"Back to "} {homeLink}
                   </Typography>
-                  <Typography variant="h6" align='center' color='inherit'
-                    style={{ marginBottom: 30}}>
-                    {"To "} {userAgreementLink}
-                  </Typography>
                 </Grid>
               </Grid>
             </Card>

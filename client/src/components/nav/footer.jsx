@@ -45,11 +45,12 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
     },
-    position: 'fixed',
-    bottom: 10,
-    right: 10,
-    width: 250,
-    height: 35
+    // position: 'relative',
+    // bottom: 10,
+    // right: 10,
+    width: 100,
+    // height: 35
+    margin: 20
   },
   footerCardMobile: {
     display: 'flex',
@@ -93,15 +94,28 @@ class Footer extends Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Card className={classes.footerCardDesktop}>
-          <CardActionArea onClick={()=> this.props.history.push('/useragreement')}>
-            <Typography variant="body2" align='center' color='inherit'
-              style={{ fontSize: 12}}
-              gutterBottom>
-              Terms, User Agreement, and Privacy Policy
-            </Typography>
-          </CardActionArea>
-        </Card>
+        <Grid container justify='flex-end' alignItems="center"
+          style={{ position: 'relative', top:70}}>
+          <Card className={classes.footerCardDesktop}>
+            <CardActionArea onClick={()=> this.props.history.push('/useragreement')}>
+              <Typography variant="body2" align='center' color='inherit'
+                style={{ fontSize: 10}}
+                gutterBottom>
+                User Agreement
+              </Typography>
+            </CardActionArea>
+          </Card>
+
+          <Card className={classes.footerCardDesktop}>
+            <CardActionArea onClick={()=> this.props.history.push('/privacypolicy')}>
+              <Typography variant="body2" align='center' color='inherit'
+                style={{ fontSize: 10}}
+                gutterBottom>
+                Privacy Policy
+              </Typography>
+            </CardActionArea>
+          </Card>
+        </Grid>
 
       </MuiThemeProvider>
     )
