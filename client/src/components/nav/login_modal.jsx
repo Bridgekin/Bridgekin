@@ -102,7 +102,7 @@ class LoginModal extends React.Component {
         <List>
           {sessionErrors}
         </List>
-        <Link to='/passwordreset'>
+        <Link to='/passwordreset' onClick={this.handleClose}>
           {`Forgot your password?`}
         </Link>
         <Grid item xs={12}>
