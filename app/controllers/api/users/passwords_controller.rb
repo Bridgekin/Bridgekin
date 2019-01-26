@@ -4,7 +4,7 @@ class Api::Users::PasswordsController < Devise::PasswordsController
   include DeviseControllerPatch
 
   def create
-    user = User.find_by(email: params[:email])
+    user = User.find_by(email: params[:email].downcase)
 
     # if (password_params =~ Devise.email_regexp).present?
     if user
@@ -20,8 +20,6 @@ class Api::Users::PasswordsController < Devise::PasswordsController
     user = User.find_by(reset_password_token: params[:payload][:reset_token])
 
     if user && user.update(password_params)
-      user[:reset_password_token] = Devise.token_generator.digest(self, :reset_password_token, user[:reset_password_token])
-      user.save
       render json: ["Updated password"], status: 200
     else user.nil?
       render json: ["Recovery link has expired or is invalid"], status: 401
