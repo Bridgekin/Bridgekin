@@ -104,7 +104,7 @@ class SubmitModal extends React.Component {
     let successText = modalType === 'create' ? (
       <Grid className={classes.grid}
         container justify='center'>
-        <Grid item xs={11} sm={10} md={8} container justify='flex-start'
+        <Grid item xs={9} sm={10} md={9} container justify='flex-start'
           spacing={16}>
           <Typography variant="h2" id="modal-title" color='secondary'
             className={classes.thanksHeader}>

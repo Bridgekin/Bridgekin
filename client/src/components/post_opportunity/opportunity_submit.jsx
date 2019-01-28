@@ -63,7 +63,8 @@ class SubmitField extends React.Component {
           </Typography>
         </Grid>
 
-        <Grid item xs={11} container justify='center'  >
+        <Grid item xs={11} container justify='flex-start'
+          style={{ margin: "20px 0px 20px 0px"}}>
           {(errors.length > 0) && (
             <div>
               <Typography variant="h6" gutterBottom align='left'
@@ -77,11 +78,14 @@ class SubmitField extends React.Component {
           )}
         </Grid>
 
-        <Grid item xs={11} sm={9} md={6}>
-          <OpportunityCard opportunity={opportunity}
-            classes={classes}
-            editable={false}
-            demo={true}/>
+        <Grid item xs={11} container justify='flex-start'
+          style={{ margin: "20px 0px 20px 0px"}}>
+          <Grid item xs={12} sm={10} md={8} lg={6}>
+            <OpportunityCard opportunity={opportunity}
+              classes={classes}
+              editable={false}
+              demo={true}/>
+          </Grid>
         </Grid>
 
         <Grid item xs={11} className={classes.disclaimer}>

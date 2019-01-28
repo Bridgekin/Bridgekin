@@ -22,14 +22,15 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({})
 
-const styles = theme => ({
+const styles = {
   root: {
     flexGrow: 1
   },
   grid:{
     position:"relative",
-    top:64,
-    height: 150
+    top:120,
+    // height: 50,
+    borderTop: `1px solid ${theme.palette.grey1}`
   },
   homeGrid:{
     flexGrow: 1,
@@ -63,8 +64,13 @@ const styles = theme => ({
     alignItems: 'center',
     height: 20,
     padding: 5
+  },
+  button: {
+    textTransform: 'capitalize',
+    fontSize: 12,
+    margin: 10
   }
-});
+};
 
 class Footer extends Component {
   render () {
@@ -98,30 +104,46 @@ class Footer extends Component {
     //   </Grid>
     // </Grid> }
 
+    // <Card className={classes.footerCard}>
+    //   <CardActionArea onClick={()=> this.props.history.push('/useragreement')}
+    //     className={ classes.actionArea }>
+    //     <Typography variant="body2" align='center' color='inherit'
+    //       style={{ fontSize: 10}}>
+    //       User Agreement
+    //     </Typography>
+    //   </CardActionArea>
+    // </Card>
+    //
+    // <Card className={classes.footerCard}>
+    //   <CardActionArea onClick={()=> this.props.history.push('/privacypolicy')}
+    //     className={ classes.actionArea }>
+    //     <Typography variant="body2" align='center' color='inherit'
+    //       style={{ fontSize: 10}}>
+    //       Privacy Policy
+    //     </Typography>
+    //   </CardActionArea>
+    // </Card>
+
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         {currentUser &&
         <Grid container justify='flex-end' alignItems="center"
           className={classes.grid}>
-          <Card className={classes.footerCard}>
-            <CardActionArea onClick={()=> this.props.history.push('/useragreement')}
-              className={ classes.actionArea }>
-              <Typography variant="body2" align='center' color='inherit'
-                style={{ fontSize: 10}}>
-                User Agreement
-              </Typography>
-            </CardActionArea>
-          </Card>
 
-          <Card className={classes.footerCard}>
-            <CardActionArea onClick={()=> this.props.history.push('/privacypolicy')}
-              className={ classes.actionArea }>
-              <Typography variant="body2" align='center' color='inherit'
-                style={{ fontSize: 10}}>
-                Privacy Policy
-              </Typography>
-            </CardActionArea>
-          </Card>
+          <Button onClick={()=> this.props.history.push('/useragreement')}>
+            <Typography variant="body2" align='center' color='inherit'
+              className={ classes.button}>
+              User Agreement
+            </Typography>
+          </Button>
+
+          <Button onClick={()=> this.props.history.push('/privacypolicy')}>
+            <Typography variant="body2" align='center' color='inherit'
+              className={ classes.button}>
+              Privacy Policy
+            </Typography>
+          </Button>
+
         </Grid>}
         <div></div>
 

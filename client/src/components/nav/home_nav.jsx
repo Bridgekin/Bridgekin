@@ -51,7 +51,25 @@ const styles = {
   grow: {
     flexGrow: 1,
   },
-  logoLink: {
+  logoLinkDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+    },
+    marginLeft: 25,
+    '&:hover': {
+      backgroundColor: '#fff'
+    },
+    '&:click':{
+      backgroundColor: '#fff'
+    },
+    padding: "12px 0px"
+  },
+  logoLinkMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
     '&:hover': {
       backgroundColor: '#fff'
     },
@@ -395,7 +413,11 @@ class HomeNav extends React.Component {
       <MuiThemeProvider theme={theme} className={classes.root}>
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
-            <IconButton aria-label="logo-link" className={classes.logoLink}
+            <IconButton aria-label="logo-link" className={classes.logoLinkDesktop}
+              onClick={() => this.props.history.push('/')}>
+              <img alt='logo' className={classes.logo} src={logo} />
+            </IconButton>
+            <IconButton aria-label="logo-link" className={classes.logoLinkMobile}
               onClick={() => this.props.history.push('/')}>
               <img alt='logo' className={classes.logo} src={logo} />
             </IconButton>

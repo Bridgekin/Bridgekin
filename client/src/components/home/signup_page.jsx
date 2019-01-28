@@ -282,11 +282,7 @@ class SignupPage extends React.Component{
             <Grid item xs={10} sm={8} >
               <Typography className={classes.homeSubheader}
                 variant="body1" gutterBottom>
-                {"Bridgekin is currently an invite-only community that has connected over $68M in opportunities."}
-              </Typography>
-              <Typography className={classes.homeSubheader}
-                variant="body1" gutterBottom>
-                {"You’ve received a private invitation to join the Bridgekin network. Complete your registration and sign in below!"}
+                {"You’ve received a private invitation to join the Bridgekin network, an invite-only community that has connected over $68M in opportunities. Complete your registration and sign in below!"}
               </Typography>
               {form}
             </Grid>

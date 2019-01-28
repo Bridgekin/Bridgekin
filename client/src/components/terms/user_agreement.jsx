@@ -14,7 +14,7 @@ import theme from '../theme';
 import HomeImage from '../../static/Login_Background_Image.jpg';
 import BottomFade from '../../static/bottom-fade.png';
 
-import UserAgreementText from './legal_text';
+import UserAgreementText from './user_agreement_text.jsx';
 
 const styles = theme => ({
   root: {
@@ -65,11 +65,11 @@ class UserAgreement extends Component {
                 <Grid item sm={11} md={9}>
                   <Typography variant="h1" align='center' color='inherit'
                     gutterBottom className={classes.header}>
-                    User Agreement
+                    Bridgekin User Agreement
                   </Typography>
                   <Typography variant="body2" align='center' color='inherit'
                     gutterBottom style={{ marginBottom: 30}}>
-                    {UserAgreementText}
+                    <UserAgreementText />
                   </Typography>
                   <Typography variant="h6" align='center' color='inherit'
                     style={{ marginBottom: 30}}>

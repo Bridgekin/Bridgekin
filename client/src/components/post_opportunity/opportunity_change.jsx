@@ -336,9 +336,8 @@ class OpportunityChange extends React.Component {
     let errors = this.checkErrors();
 
     let flowNav = (
-      <Grid item xs={12} container justify='space-between'
-        className={classes.flowNav}>
-        <Grid item xs={5} sm={4} md={3} container justify='center'>
+      <Grid container justify='space-between' className={classes.flowNav}>
+        <Grid item xs={4} sm={3} md={2} container justify='center'>
           <Button
             disabled={activeStep === 0}
             variant="contained"
@@ -350,8 +349,7 @@ class OpportunityChange extends React.Component {
           </Button>
         </Grid>
 
-        <Grid item xs={5} sm={4} md={3} container justify='center'
-          style={{ position: 'relative' }}>
+        <Grid item xs={4} sm={3} md={2} container justify='center'>
           <Button
             variant="contained"
             color="secondary"
@@ -444,7 +442,7 @@ class OpportunityChange extends React.Component {
         <Grid container className={classes.stepperRootMain}
           justify='center' alignItems='center'>
 
-          <Grid item xs={12} sm={10} md={8} className={classes.mainWrapper}>
+          <Grid item xs={12} sm={10} md={8} container justify='center'>
             {this.getStepContent(activeStep)}
             {flowNav}
           </Grid>
