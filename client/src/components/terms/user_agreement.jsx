@@ -23,10 +23,10 @@ const styles = theme => ({
   homeGrid:{
     flexGrow: 1,
     paddingTop: 0,
-    backgroundImage: `url(${HomeImage})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right',
-    backgroundSize: 'cover',
+    // backgroundImage: `url(${HomeImage})`,
+    // backgroundRepeat: 'no-repeat',
+    // backgroundPosition: 'right',
+    // backgroundSize: 'cover',
     marginBottom: 50
   },
   header: { margin: "30px 0px"},
