@@ -10,6 +10,8 @@ services:
       dockerfile: ./docker/app/DockerFile
     depends_on:
       - db
+    env_file:
+      - ./docker/app/.env
   db:
     image: postgres
     volumes:
@@ -21,8 +23,9 @@ services:
     depends_on:
       - app
     ports:
-      - 80:443
-
+      - 80:80
+    env_file:
+      - ./docker/web/.env
 #
 # version: '3'
 #
