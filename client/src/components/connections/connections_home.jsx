@@ -133,7 +133,8 @@ const styles = {
   },
   label:{
     textTransform: 'capitalize',
-    fontWeight: 600
+    fontWeight: 600,
+    fontSize: 13
   },
   subtitleDropdown:{
     margin: "20px 0px 20px 0px"
@@ -181,6 +182,9 @@ const styles = {
   },
   carrot:{
     width: 20
+  },
+  networkFilter:{
+    fontSize: 13
   }
 };
 
@@ -228,18 +232,10 @@ class ConnectionsHome extends React.Component{
     const { classes } = this.props;
     const { toggle } = this.state;
 
-    let subHeader = (
+    let subHeaderDesktop = (
       <Grid item xs={11} container justify="center"
         alignItems="center" className={classes.subtitleWrapper}>
-        <Grid item xs={8} md={4}  container justify='center'
-          className={classes.subtitleDropdown} alignItems="center">
-          <Button color="primary" className={classes.button}>
-            Connection Requests
-          </Button>
-          <KeyboardArrowDownIcon />
-        </Grid>
-
-        <Grid item xs={8} md={4}>
+        <Grid item xs={8} md={6} container justify='flex-start'>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -250,16 +246,25 @@ class ConnectionsHome extends React.Component{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
-            />
+              />
           </div>
         </Grid>
 
-        <Grid item xs={8} md={4} container justify='center'
+        <Grid item xs={8} md={6} container justify='flex-start'
           className={classes.subtitleDropdown} alignItems="center">
-          <Button color="primary" className={classes.button}>
-            Add Trusted Contacts
-          </Button>
-          <KeyboardArrowDownIcon />
+          <Grid item md={5} lg={4} container justify='center' alignItems='center'>
+            <Button color="primary" className={classes.button}>
+              Connection Requests
+            </Button>
+            <KeyboardArrowDownIcon />
+          </Grid>
+
+          <Grid item md={5} lg={4}  container justify='center' alignItems='center'>
+            <Button color="primary" className={classes.button}>
+              Add Trusted Contacts
+            </Button>
+            <KeyboardArrowDownIcon />
+          </Grid>
         </Grid>
       </Grid>
     )
@@ -307,21 +312,24 @@ class ConnectionsHome extends React.Component{
               </Typography>
             </Grid>
 
-            <Grid item xs={10} sm={7} md={6} lg={5}
-              style={{ display: 'flex', alignItems:'center'}}>
-              <Typography variant="body2" align="center"
+            <Grid item xs={6} sm={7} md={6} lg={5} alignItems='flex-start'
+              container direction='column' justify='flex-start'>
+              <Typography variant="body2" align="left"
                 className={classes.networkFilter}>
                 {"Sort By: "}
               </Typography>
-              <Button color="primary" classes={{ label: classes.label}}>
-                Recently Added
-              </Button>
-              <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
+              <Grid container justify='flex-start' alignItems='center'>
+                <Button color="primary" classes={{ label: classes.label}}
+                  style={{ paddingLeft: 0}}>
+                  Recently Added
+                </Button>
+                <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
+              </Grid>
             </Grid>
 
-            <Grid item xs={10} sm={5} md={5} lg={4}>
+            <Grid item xs={6} sm={5} md={5} lg={4}>
               <Typography variant="body2" align="center"
-                style={{}}>
+                style={{ fontSize: 14}}>
                 120 Connections
               </Typography>
             </Grid>
@@ -397,20 +405,24 @@ class ConnectionsHome extends React.Component{
               </Typography>
             </Grid>
 
-            <Grid item xs={5} container alignItems='center'>
-              <Typography variant="body2" align="center"
+            <Grid item xs={6} sm={7} md={6} lg={5} alignItems='flex-start'
+              container direction='column' justify='flex-start'>
+              <Typography variant="body2" align="left"
                 className={classes.networkFilter}>
                 {"Sort By: "}
               </Typography>
-              <Button color="primary" classes={{ label: classes.label}}>
-                Recently Added
-              </Button>
-              <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
+              <Grid container justify='flex-start' alignItems='center'>
+                <Button color="primary" classes={{ label: classes.label}}
+                  style={{ paddingLeft: 0}}>
+                  Recently Added
+                </Button>
+                <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
+              </Grid>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={6} sm={5} md={5} lg={4}>
               <Typography variant="body2" align="center"
-                style={{}}>
+                style={{ fontSize: 14}}>
                 7 Network Circles
               </Typography>
             </Grid>
@@ -460,7 +472,7 @@ class ConnectionsHome extends React.Component{
             </Typography>
           </Grid>
 
-          {subHeader}
+          {subHeaderDesktop}
 
           <Grid item xs={11} container justify="center"
             alignItems="center" spacing={16}

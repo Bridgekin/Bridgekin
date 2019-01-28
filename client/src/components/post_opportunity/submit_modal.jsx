@@ -136,10 +136,12 @@ class SubmitModal extends React.Component {
         <Grid item xs={9} sm={10} md={9} container justify='flex-start'
           spacing={16}>
 
-          <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+          <Typography variant="h2" id="modal-title" color='secondary'
+            className={classes.thanksHeader} align='left'>
             Thanks For Updating Your Opportunity
           </Typography>
-          <Typography variant="body1" id="simple-modal-description">
+          <Typography variant="body1" id="simple-modal-description"
+            align='left'>
             {`You've successfully updated your opportunity, you can visit
               your account page to see it live!`}
           </Typography>
@@ -168,10 +170,12 @@ class SubmitModal extends React.Component {
           container justify='center'>
           <Grid item xs={11} sm={10} md={8} container justify='flex-start'
             spacing={16}>
-            <Typography variant="h2" id="modal-title" color='secondary' className={classes.thanksHeader}>
+            <Typography variant="h2" id="modal-title" color='secondary'
+              className={classes.thanksHeader} align='left'>
               You're almost there!
             </Typography>
-            <Typography variant="body1" id="simple-modal-description">
+            <Typography variant="body1" id="simple-modal-description"
+              align='left'>
               You've got a few pieces to correct before submitting your opportunity, listed below:
             </Typography>
             <List>

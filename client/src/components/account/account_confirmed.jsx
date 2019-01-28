@@ -94,16 +94,11 @@ class AccountConfirmed extends React.Component  {
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container className={classes.root} justify="center"
-          style={{ paddingTop: 50}}>
+          style={{ paddingTop: 50, position:'relative', top: 64}}>
           <Grid item xs={10} sm={8} md={6}>
             <Typography variant="h2" gutterBottom align='left'
               color="secondary">
               Thanks for confirming your email!
-            </Typography>
-            <Typography variant="body1" gutterBottom align='left'
-              color="textPrimary">
-              You are now able to login to Bridgekin and start sharing
-              your opportunities with the world!
             </Typography>
 
             <Card className={classes.card}>

@@ -25,7 +25,7 @@ export const industryChoices = [
   'Real Estate',
   'Technology & Internet',
   'Telecommunications',
-  'Transporation'
+  'Transportation'
 ];
 
 export const geographyChoices = [

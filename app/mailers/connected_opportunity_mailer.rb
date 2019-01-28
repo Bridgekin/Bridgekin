@@ -7,7 +7,7 @@ class ConnectedOpportunityMailer < ApplicationMailer
     @recipients = [@owner, @user]
     mail(
       to: @recipients.map(&:email).uniq,
-      subject: "You've got a new connection coming your way!"
+      subject: "Intro #{@owner.fname.capitalize} <> #{@user.fname.capitalize}"
     )
   end
 
@@ -19,7 +19,7 @@ class ConnectedOpportunityMailer < ApplicationMailer
     @recipients = [@owner, @facilitator]
     mail(
       to: @recipients.map(&:email).uniq,
-      subject: "You've got a new connection coming your way!"
+      subject: "Intro #{@owner.fname.capitalize} <> #{@facilitator.fname.capitalize}"
     )
   end
 end

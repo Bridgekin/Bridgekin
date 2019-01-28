@@ -4,6 +4,8 @@ import { receiveFacilitatedOpportunities,
   receiveFacilitatedOpportunity } from './facilitated_opportunity_actions';
 import { receiveConnectedOpportunityErrors } from './error_actions';
 
+const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+
 export const RECEIVE_CONNECTED_OPPORTUNITIES = 'RECEIVE_CONNECTED_OPPORTUNITIES';
 export const RECEIVE_CONNECTED_OPPORTUNITY = 'RECEIVE_CONNECTED_OPPORTUNITY';
 export const REMOVE_CONNECTED_OPPORTUNITY = "REMOVE_CONNECTED_OPPORTUNITY";
@@ -32,7 +34,7 @@ export const fetchConnectedOpportunities = (networkId) => dispatch => (
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveConnectedOpportunityErrors(errors))
     })
@@ -51,7 +53,7 @@ export const createConnectedOpportunity = (opportunity) => dispatch => (
     .then(data => dispatch(receiveConnectedOpportunity(data)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveConnectedOpportunityErrors(errors))
     })

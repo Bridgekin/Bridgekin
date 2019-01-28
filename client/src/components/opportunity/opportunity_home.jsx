@@ -171,29 +171,29 @@ class OpportunityHome extends React.Component {
       anchorEl: null
     };
 
-    this.opportunities = [
-      {
-        title: `Tuscan Castle surrounded by 30+ acres of vineyards and olive
-        groves seekings buyer`,
-        description: `Historically refurbished 33,000 sq ft castle in the heart
-        of the Tuscan countryside. Off the market property considered
-        the Crown of Ireland!`,
-        geography: 'Italy',
-        industry: 'Real Estate and Housing',
-        value: 'Over 25M',
-        need: 'Raise Capital',
-        networks: 'All Bridgekin'
-      },
-      {
-        title: 'Test house',
-        description: 'This is a second test house where you can also see blah blah',
-        geography: 'Romania',
-        industry: 'Real Estate and Housing',
-        value: 'Over 500k',
-        need: 'Raise Capital',
-        networks: 'All Bridgekin'
-      },
-    ];
+    // this.opportunities = [
+    //   {
+    //     title: `Tuscan Castle surrounded by 30+ acres of vineyards and olive
+    //     groves seekings buyer`,
+    //     description: `Historically refurbished 33,000 sq ft castle in the heart
+    //     of the Tuscan countryside. Off the market property considered
+    //     the Crown of Ireland!`,
+    //     geography: 'Italy',
+    //     industry: 'Real Estate and Housing',
+    //     value: 'Over 25M',
+    //     need: 'Raise Capital',
+    //     networks: 'All Bridgekin'
+    //   },
+    //   {
+    //     title: 'Test house',
+    //     description: 'This is a second test house where you can also see blah blah',
+    //     geography: 'Romania',
+    //     industry: 'Real Estate and Housing',
+    //     value: 'Over 500k',
+    //     need: 'Raise Capital',
+    //     networks: 'All Bridgekin'
+    //   },
+    // ];
 
     this.handleWaitlistChange = this.handleWaitlistChange.bind(this);
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
@@ -337,7 +337,7 @@ class OpportunityHome extends React.Component {
       <Grid container className={[classes.homeheader, classes.root].join(' ')}
         justify="center" alignItems="center">
 
-        <Grid item xs={10} md={9} justify="center" alignItems="center"
+        <Grid item xs={10} md={9} container justify="center" alignItems="center"
           className={classes.headerItem}>
           {!currentUser.lastSignInAt &&
             <Typography variant="h1" gutterBottom align='center'
@@ -348,7 +348,7 @@ class OpportunityHome extends React.Component {
 
           <Typography variant="h4" gutterBottom align='center'
             className={classes.subheaderTypography}>
-            There are {opportunities.length} opportunities for you to check out with over $68M in opportunities connected thus far.
+            There are {opportunities.length} opportunities for you to check out.
           </Typography>
 
           <Typography variant="p" gutterBottom align='center'
@@ -357,6 +357,16 @@ class OpportunityHome extends React.Component {
             Connect with the opportunities that may be perfect for
             you or a trusted contact in your network
           </Typography>
+
+            <Card style={{ marginTop: 10}}>
+              <Grid container justify='center' alignItems='center'
+                style={{ padding: 10}}>
+                <Typography variant="h6" align='center'
+                  color='textPrimary'>
+                  Over $68M in opportunities connected thus far.
+                </Typography>
+              </Grid>
+            </Card>
         </Grid>
       </Grid>
     )

@@ -3,6 +3,8 @@ import {receiveUser} from './user_actions';
 import {receiveSessionErrors, receiveUserErrors} from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
+const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+
 export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 export const LOGOUT_CURRENT_USER = "LOGOUT_CURRENT_USER";
 
@@ -25,7 +27,7 @@ export const refSignup = (formUser, code) => dispatch => (
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveUserErrors(errors));
     })
@@ -41,7 +43,7 @@ export const login = formUser => dispatch => (
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveSessionErrors(errors));
       // alert('Something went wrong. Try again in a bit, or contact us!')

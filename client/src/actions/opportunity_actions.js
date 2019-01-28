@@ -2,6 +2,8 @@ import * as OpportunityApiUtil from '../util/opportunities_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveOpportunityErrors } from './error_actions';
 
+const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+
 export const RECEIVE_OPPORTUNITIES = 'RECEIVE_OPPORTUNITIES';
 export const RECEIVE_OPPORTUNITY = 'RECEIVE_OPPORTUNITY';
 export const REMOVE_OPPORTUNITY = "REMOVE_OPPORTUNITY";
@@ -27,7 +29,7 @@ export const fetchOpportunities = (networkId) => dispatch => (
     .then(data => dispatch(receiveOpportunities(data)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveOpportunityErrors(errors))
     })
@@ -39,7 +41,7 @@ export const fetchUserOpportunities = (networkId) => dispatch => (
     .then(data => dispatch(receiveOpportunities(data)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveOpportunityErrors(errors))
     })
@@ -51,7 +53,7 @@ export const fetchOpportunity = (id) => dispatch => (
     .then(data => dispatch(receiveOpportunity(data.opportunity)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveOpportunityErrors(errors))
     })
@@ -63,7 +65,7 @@ export const createOpportunity = (opportunity) => dispatch => (
     .then(data => dispatch(receiveOpportunity(data.opportunity)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveOpportunityErrors(errors))
     })
@@ -75,7 +77,7 @@ export const updateOpportunity = (opportunity) => dispatch => (
     .then(data => dispatch(receiveOpportunity(data)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveOpportunityErrors(errors))
     })
@@ -87,7 +89,7 @@ export const deleteOpportunity = (id) => dispatch => (
     .then(() => dispatch(removeOpportunity(id)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveOpportunityErrors(errors))
     })

@@ -35,17 +35,15 @@ const styles = theme => ({
     height: 55,
     width: 200
   },
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   buttonProgress: {
     color: '#4067B2',
     position: 'absolute',
     top: '50%',
     left: '50%',
     marginLeft: -12,
+  },
+  textField:{
+    margin: "10px 0px 10px 0px"
   }
 });
 
@@ -98,7 +96,7 @@ class OpportunityWaitlist extends React.Component{
 
         <Grid item container xs={11} md={8} justify="center" alignItems="center"
           spacing={8}>
-          <Grid item xs={12} md={3} >
+          <Grid item xs={12} md={3}>
             <TextField
             required
             id="outlined-required"
@@ -128,7 +126,7 @@ class OpportunityWaitlist extends React.Component{
             />
           </Grid>
 
-          <Grid item xs={12} md={4} className={classes.wrapper}>
+          <Grid item xs={12} md={4} container justify='flex-start'>
             <Button variant="contained" color='secondary'
               className={classes.refButton}
               onClick={this.handleSubmit}

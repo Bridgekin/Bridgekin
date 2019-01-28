@@ -198,17 +198,17 @@ class CardModal extends React.Component {
           className={classes.grid}>
           <Grid item xs={11} sm={10} md={8}
             container justify='flex-start' alignItems='center'>
-            <Typography variant="h2" id="modal-title"
+            <Typography variant="h2" id="modal-title" align='left'
               className={classes.section}>
               Time for business!
             </Typography>
             <Typography variant="body2" id="simple-modal-description"
-              className={classes.section}>
+              className={classes.section} align='left'>
               {`We're as excited about this opportunity as you are! We just sent
                 an email connecting you to the opportunity owner, so that should
                 hit your inbox shortly. We'll let you take it from here.`}
             </Typography>
-            <Grid item xs={12}  className={classes.postButtons}
+            <Grid item xs={12} className={classes.postButtons}
               style={{ marginBottom: 25 }}>
               <Button variant="contained" color='secondary'
                 onClick={this.handleClose('find')}
@@ -229,12 +229,12 @@ class CardModal extends React.Component {
           className={classes.grid}>
           <Grid item xs={11} sm={10} md={8}
             container justify='flex-start' alignItems='center'>
-            <Typography variant="h2" id="modal-title"
+            <Typography variant="h2" id="modal-title" align='left'
               className={classes.section}>
               Time for business!
             </Typography>
             <Typography variant="body2" id="simple-modal-description"
-              className={classes.section}>
+              className={classes.section} align='left'>
               {`We're as excited about this opportunity as you are!
                 We just sent an email connecting you to the opportunity owner
                 and then you can loop in your trusted contact from there.
@@ -264,11 +264,11 @@ class CardModal extends React.Component {
           className={classes.grid}>
           <Grid item xs={11} sm={10} md={8}
             container justify='flex-start' alignItems='center'>
-            <Typography variant="h1" id="modal-title"
+            <Typography variant="h1" id="modal-title" align='left'
               className={classes.errorHeader}>
               Hold on there!
             </Typography>
-            <Typography variant="body2" id="simple-modal-description">
+            <Typography variant="body2" id="simple-modal-description" align='left'>
               Unfortunately, we weren't able to connect you to this opportunity because:
             </Typography>
             <Grid item xs={12}>

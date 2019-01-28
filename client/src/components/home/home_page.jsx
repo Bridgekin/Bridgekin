@@ -231,7 +231,7 @@ class HomePage extends React.Component{
 
             <Grid item xs={10} sm={8}>
               <Typography className={classes.homeSubheader}
-                variant="p" gutterBottom>
+                variant="body1" gutterBottom>
                 {"Bridgekin is currently an invite-only community that has connected over $68M in opportunities. Sign up now to join our waitlist."}
               </Typography>
               {form}

@@ -105,7 +105,7 @@ class LoginModal extends React.Component {
         <Link to='/passwordreset' onClick={this.handleClose}>
           {`Forgot your password?`}
         </Link>
-        <Grid item xs={12}>
+        <Grid item xs={12} container justify='flex-start'>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
             onClick={this.handleClose} color='secondary'>
             Close

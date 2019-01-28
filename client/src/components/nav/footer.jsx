@@ -26,6 +26,11 @@ const styles = theme => ({
   root: {
     flexGrow: 1
   },
+  grid:{
+    position:"relative",
+    top:64,
+    height: 150
+  },
   homeGrid:{
     flexGrow: 1,
     paddingTop: 0,
@@ -40,24 +45,25 @@ const styles = theme => ({
   label: {
     textTransform: 'lowercase',
   },
-  footerCardDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'flex',
-    },
+  footerCard: {
+    // display: 'none',
+    // [theme.breakpoints.up('sm')]: {
+    //   display: 'flex',
+    // },
     // position: 'relative',
     // bottom: 10,
     // right: 10,
     width: 100,
     // height: 35
-    margin: 20
+    margin: 15
   },
-  footerCardMobile: {
+  actionArea:{
     display: 'flex',
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 20,
+    padding: 5
+  }
 });
 
 class Footer extends Component {
@@ -94,28 +100,30 @@ class Footer extends Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
+        {currentUser &&
         <Grid container justify='flex-end' alignItems="center"
-          style={{ position: 'relative', top:70}}>
-          <Card className={classes.footerCardDesktop}>
-            <CardActionArea onClick={()=> this.props.history.push('/useragreement')}>
+          className={classes.grid}>
+          <Card className={classes.footerCard}>
+            <CardActionArea onClick={()=> this.props.history.push('/useragreement')}
+              className={ classes.actionArea }>
               <Typography variant="body2" align='center' color='inherit'
-                style={{ fontSize: 10}}
-                gutterBottom>
+                style={{ fontSize: 10}}>
                 User Agreement
               </Typography>
             </CardActionArea>
           </Card>
 
-          <Card className={classes.footerCardDesktop}>
-            <CardActionArea onClick={()=> this.props.history.push('/privacypolicy')}>
+          <Card className={classes.footerCard}>
+            <CardActionArea onClick={()=> this.props.history.push('/privacypolicy')}
+              className={ classes.actionArea }>
               <Typography variant="body2" align='center' color='inherit'
-                style={{ fontSize: 10}}
-                gutterBottom>
+                style={{ fontSize: 10}}>
                 Privacy Policy
               </Typography>
             </CardActionArea>
           </Card>
-        </Grid>
+        </Grid>}
+        <div></div>
 
       </MuiThemeProvider>
     )

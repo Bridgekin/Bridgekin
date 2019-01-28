@@ -2,6 +2,8 @@ import * as UserApiUtil from '../util/user_api_util';
 import { receiveUserErrors } from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
+const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_USER = 'RECEIVE_USER';
 export const REMOVE_USER = "REMOVE_USER";
@@ -27,7 +29,7 @@ export const updateUser = (user) => dispatch => (
     .then(data => dispatch(receiveUser(data)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveUserErrors(errors))
     })
@@ -39,7 +41,7 @@ export const deleteUser = (id) => dispatch => (
     .then(() => dispatch(removeUser(id)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveUserErrors(errors))
     })
@@ -50,7 +52,7 @@ export const resetPassword = (email) => dispatch => (
     .then(handleErrors)
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveUserErrors(errors))
     })
@@ -61,7 +63,7 @@ export const passwordUpdate = (payload) => dispatch => (
     .then(handleErrors)
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveUserErrors(errors))
     })

@@ -2,6 +2,8 @@ import * as NetworkApiUtil from '../util/networks_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveNetworkErrors } from './error_actions';
 
+const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+
 export const RECEIVE_NETWORKS = 'RECEIVE_NETWORKS';
 export const RECEIVE_NETWORK = 'RECEIVE_NETWORK';
 export const REMOVE_NETWORK = "REMOVE_NETWORK";
@@ -26,7 +28,7 @@ export const fetchNetworks = () => dispatch => (
     .then(data => dispatch(receiveNetworks(data.networks)))
     .catch(errors => {
       if (!(errors instanceof Array)){
-        errors = ['Something went wrong. Try again in a bit, or contact us!'];
+        errors = [genericError];
       }
       dispatch(receiveNetworkErrors(errors))
     })

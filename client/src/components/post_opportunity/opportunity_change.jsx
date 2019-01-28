@@ -38,7 +38,11 @@ const styles = {
     flexGrow: 1,
     borderBottom: '1px solid #d3d3d3'
   },
-  grid:{
+  gridDesktop:{
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
     flexGrow: 1,
     // backgroundColor: 'RGBA(196,196,196,0.1)',
     backgroundColor: theme.palette.backgroundGrey,
@@ -48,11 +52,25 @@ const styles = {
     top: 64,
     zIndex: 10
   },
-  accountNavSection:{
+  gridMobile:{
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+    flexGrow: 1,
+    // backgroundColor: 'RGBA(196,196,196,0.1)',
+    backgroundColor: theme.palette.backgroundGrey,
+    borderBottom: '1px solid #d3d3d3',
+    height: 100,
+    position:'fixed',
+    top: 64,
+    zIndex: 10
   },
+  // accountNavSection:{
+  //   display: 'flex',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   labelContainer: {
     "& $alternativeLabel": {
       marginTop: 0
@@ -111,15 +129,16 @@ const styles = {
   },
   stepperDesktop: {
     background: 'none',
+    padding: 15,
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
-    padding: 15
   },
   stepperMobile: {
     flexGrow: 1,
     background: 'none',
+    paddingLeft: 0,
     display: 'flex',
     [theme.breakpoints.up('md')]: {
       display: 'none',
@@ -356,10 +375,11 @@ class OpportunityChange extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.grid}
+        <Grid container className={classes.gridDesktop}
           justify='space-around' alignItems='center'>
 
-          <Grid item xs={10} sm={6} md={2} className={classes.accountNavSection}>
+          <Grid item xs={10} sm={6} md={2}
+            container justify='center' alignItems='center'>
             <Typography variant="h5" gutterBottom>
               <strong>
                 {type === 'create' ? 'Post Opportunity' : 'Edit Opportunity'}
@@ -396,6 +416,22 @@ class OpportunityChange extends React.Component {
                 )
               )}
             </Stepper>
+          </Grid>
+        </Grid>
+
+        <Grid container className={classes.gridMobile}
+          justify='center' alignItems='center'>
+
+          <Grid item xs={8} sm={8} md={2}
+            container justify='flex-start' alignItems='center'>
+            <Typography variant="h5" gutterBottom align='left'>
+              <strong>
+                {type === 'create' ? 'Post Opportunity' : 'Edit Opportunity'}
+              </strong>
+            </Typography>
+          </Grid>
+
+          <Grid item xs={8} sm={8} md={8}>
             <MobileStepper
               variant="dots"
               steps={6}

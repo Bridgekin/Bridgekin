@@ -1,8 +1,12 @@
 <p>Hi <%= @waitlist_user.fname.capitalize %>,</p>
 
-<p><%= @user.fname.capitalize %> is a member of our private Bridgekin network and referred you to be a part of our community. You’ve been added to our waitlist and we’ll let you know once we begin accepting referred users.</p>
-<p>If you have an interest in learning more about investing in Bridgekin, please reach out to Joe Lopardo at joe@bridgekin.com and he’ll follow up with you accordingly.</p>
+<p><%= @user.fname.capitalize %> is a member of our private Bridgekin network
+  and referred you to be a part of our community. We saw that you had signed up
+  for our waitlist, but since we’re currently invite-only, <%= @user.fname.capitalize %>
+  referring you is a good thing! We’ll let you know once we begin accepting referred users.
+</p>
 
-<p>Have a great day!<br>
-Cheers,<br>
+<p>Have a great day!</p>
+
+<p>Cheers,<br>
 The Bridgekin Team</p>
