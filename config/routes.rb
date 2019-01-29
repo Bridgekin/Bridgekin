@@ -43,6 +43,10 @@ Rails.application.routes.draw do
         # invitations: "api/users/invitations",
          # password_expired: "api/users/password_expired"
       }
+
+    devise_scope :api_user do
+      get 'reconfirm', :to => 'users/confirmations#reconfirm', :as => 'reconfirm'
+    end
   end
 
   # get '*path', :to => ''

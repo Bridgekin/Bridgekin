@@ -1,0 +1,10 @@
+<p>Hi <%= @resource.fname.capitalize %>!</p>
+
+<p>You've recently requested to update your email!</p>
+
+<p>Please be sure to confirm this change by clicking the link below:</p>
+
+<p><%= link_to 'Update my email', api_reconfirm_url(@resource, confirmation_token: @token) %></p>
+
+<p>Cheers,<br>
+The Bridgekin Team</p>

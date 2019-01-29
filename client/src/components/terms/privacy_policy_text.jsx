@@ -5,7 +5,7 @@ export default () => {
   return (
     <div>
       <Typography variant="body2" align='left' gutterBottom>
-        {`Last modified: January 27, 2019`}
+        {`Last modified: January 29, 2019`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -201,7 +201,7 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`Please note that even if your account is deleted, once a connection between you and another user is made, your email, name and interests would have already been transmitted and viewed by the other user.  The purpose of the Website is to provide the connection between users and by registering with the Website, you consent to the transmission of your personal information including email address, name and interest or association with a posted listing to other users. If you do not consent, you should not use or register with this Website.  The information provided to another user as part of the connection service of this Website is information that has been transmitted to third-party users.  Once transmitted by us, we would have no control over the collection, storage or use of that information by the third-party user.   Moreover, if you delete your User Contributions from the Website, copies of your User Contributions may remain viewable in cached and archived pages, or might have been copied or stored by other Website users. California residents may have additional personal information rights and choices. Please see `}<u>Your California Privacy Rights</u>{` for more information.`}
+        {`Please note that even if your account is deleted, once a connection between you and another user is made, your email, name and interests would have already been transmitted and viewed by the other user.  The purpose of the Website is to provide the connection between users and by registering with the Website, you consent to the transmission of your personal information including email address, name and interest or association with a posted listing to other users. If you do not consent, you should not use or register with this Website.  The information provided to another user as part of the connection service of this Website is information that has been transmitted to third-party users.  Once transmitted by us, we would have no control over the collection, storage or use of that information by the third-party user.   Moreover, if you delete your User Contributions from the Website, copies of your User Contributions may remain viewable in cached and archived pages, or might have been copied or stored by other Website users.`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>

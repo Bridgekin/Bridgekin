@@ -31,6 +31,8 @@ export const industryChoices = [
 export const geographyChoices = [
   'Worldwide',
   'Africa',
+  'Asia',
+  'Caribbean',
   'Central America',
   'Eastern Europe',
   'Middle East',

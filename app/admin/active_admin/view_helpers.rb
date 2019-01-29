@@ -30,8 +30,10 @@ module ActiveAdmin::ViewHelpers
   end
 
   def geography_choices
-    [  'Worldwide',
+    [ 'Worldwide',
       'Africa',
+      'Asia',
+      'Caribbean',
       'Central America',
       'Eastern Europe',
       'Middle East',

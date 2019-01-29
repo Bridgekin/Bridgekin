@@ -21,6 +21,7 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   # POST /opportunities
   def create
+    opportunity = Opportunity.find(params[:connected_opportunity][:opportunity_id])
 
     newConnectedOpportunity = {
         opportunity_id: params[:connected_opportunity][:opportunity_id],
@@ -33,11 +34,14 @@ class Api::ConnectedOpportunitiesController < ApiController
       @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
       authorize @connected_opportunity
 
-      if @connected_opportunity.save
+      if opportunity.owner == @user
+        render json: ["You can't connect to your own opportunity"], status: 422
+      elsif @connected_opportunity.save
         ConnectedOpportunityMailer.make_connection(@connected_opportunity).deliver_now
         render :show
       else
-        render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
+        # render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
+        render json: ["You've already connected to this opportunity"], status: :unprocessable_entity
       end
 
     elsif
@@ -46,7 +50,9 @@ class Api::ConnectedOpportunitiesController < ApiController
       @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
       authorize @connected_opportunity
 
-      if @connected_opportunity.save
+      if opportunity.owner == @user
+        render json: ["You can't connect to your own opportunity"], status: 422
+      elsif @connected_opportunity.save
         ConnectedOpportunityMailer.make_facilitated_connection(@connected_opportunity).deliver_now
         render :show
       else

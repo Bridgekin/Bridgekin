@@ -1,6 +1,6 @@
 class ConnectedOpportunity < ApplicationRecord
   validates :opportunity_id, presence: true
-  validates :opportunity_id, uniqueness: { scope: :user_id }
+  validates :user_id, uniqueness: { scope: :opportunity_id, allow_nil: true }
 
   belongs_to :opportunity,
     foreign_key: :opportunity_id,

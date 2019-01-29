@@ -20,6 +20,7 @@ class Api::UsersController < ApiController
       !@user.valid_password?(params[:user][:current_password])
       render json: ["Current password is incorrect"], status: 422
     elsif @user.update(user_params)
+      AuthMailer.email_changed(@user).deliver_now if params[:user][:email]
       render :show
     else
       render json: @user.errors.full_messages, status: 422

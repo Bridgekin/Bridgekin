@@ -6,12 +6,17 @@ class AuthMailer < Devise::Mailer
   def confirmation_instructions(record, token, options={})
     # Use different e-mail templates for signup e-mail confirmation and for when a user changes e-mail address.
     if record.pending_reconfirmation?
-      options[:template_name] = 'email_changed'
-      options[:subject] = "Bridgekin email change"
+      options[:template_name] = 'reconfirmation_instructions'
+      options[:subject] = "Bridgekin email reconfirmation"
      else
       options[:template_name] = 'confirmation_instructions'
     end
 
+    super
+  end
+
+  def email_changed(record, options={})
+    options[:template_name] = 'email_changed'
     super
   end
 end

@@ -6,8 +6,22 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
     # yield resource if block_given?
-
     if resource.errors.empty?
+      @user = resource
+      @token = get_login_token!(@user)
+      # render json: ['Account confirmed! Navigate back to the home page to login.'], status: 200
+
+      redirect_to "#{root_url}accountconfirmed"
+    else
+      redirect_to "#{root_url}confirmationerror"
+    end
+  end
+
+  def reconfirm
+    self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+    # yield resource if block_given?
+    if resource.errors.empty?
+      AuthMailer.email_changed(resource).deliver_now
       @user = resource
       @token = get_login_token!(@user)
       # render json: ['Account confirmed! Navigate back to the home page to login.'], status: 200

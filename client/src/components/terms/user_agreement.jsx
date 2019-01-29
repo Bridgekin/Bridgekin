@@ -22,12 +22,12 @@ const styles = theme => ({
   },
   homeGrid:{
     flexGrow: 1,
-    paddingTop: 0,
+    padding: "100px 0px",
     // backgroundImage: `url(${HomeImage})`,
     // backgroundRepeat: 'no-repeat',
     // backgroundPosition: 'right',
     // backgroundSize: 'cover',
-    marginBottom: 50
+    // marginBottom: 50
   },
   header: { margin: "30px 0px"},
   buttonWrapper:{
@@ -59,7 +59,7 @@ class UserAgreement extends Component {
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container justify="center" alignItems="center"
           className={classes.homeGrid}>
-          <Grid item xs={12} sm={10} md={8} style={{ marginTop: 100}}>
+          <Grid item xs={12} sm={10} md={8}>
             <Card>
               <Grid container justify='center' alignItems='center'>
                 <Grid item sm={11} md={9}>
@@ -79,7 +79,6 @@ class UserAgreement extends Component {
               </Grid>
             </Card>
           </Grid>
-          <div className={classes.bottomFade} />
         </Grid>
       </MuiThemeProvider>
     )

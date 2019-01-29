@@ -137,10 +137,12 @@ class NotFound extends Component {
   }
 
   urlToFile(fileUrl){
+    let width = 346*this.props.ratio;
+
     Jimp.read(fileUrl)
     .then(image => {
       return image
-        .cover(800, 346)
+        .cover(width , 346)
         .getBase64Async(Jimp.MIME_PNG);
     })
     .then(image => {

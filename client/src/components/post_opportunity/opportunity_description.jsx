@@ -216,21 +216,18 @@ class DescriptionField extends React.Component {
     let file = e.currentTarget.files[0];
     if (this.props.width !== 'xs'){
       this.handleFileHelper(file, true, false);
-      // this.setState({ mobileImageCropPending: true})
     } else {
       this.handleFileHelper(file, false, true);
     }
   }
 
   handleCloseImageModal(newFile){
-    // debugger
     if(newFile && this.props.width !== 'xs'){
       // normal screens
       this.handleFileHelper(newFile, false, false)
     } else if (newFile && this.props.width === 'xs'){
       //mobile screens
       this.handleFileHelper(newFile, false, false)
-      // this.setState({ mobileImageCropPending: false })
     } else {
       this.setState({ imageModalOpen: false},
       () => this.props.handleFile(this.state.profilePicFile))
@@ -239,10 +236,8 @@ class DescriptionField extends React.Component {
 
   handleFileHelper(file, bool, mobilePendingBool){
     let fileReader = new FileReader();
-    let that = this;
-    // debugger
+
     fileReader.onloadend = (that) => {
-      // debugger
       this.setState({
         profilePicFile: file,
         previewUrlForModal: fileReader.result,
@@ -251,26 +246,6 @@ class DescriptionField extends React.Component {
       }, () => {
         this.props.handleFile(file, fileReader.result );
       })
-      // }
-      // } else {
-      //   this.setState({
-      //     profilePicFile: file,
-      //     previewUrlForModal: fileReader.result,
-      //   })
-        // }), () => {
-          // debugger
-          // this.cropperModal.current.handleClose();
-          // this.cropperModal.handleClose()
-        // })
-      //
-      // } else if(this.props.width === 'xs' && cropped){
-      //   this.setState({
-      //     profilePicFile: file,
-      //     previewUrlForModal: fileReader.result,
-      //   }, () => {
-      //     this.props.handleFile(file, fileReader.result );
-      //   })
-      // }
     }
 
     if(file){
@@ -385,7 +360,7 @@ class DescriptionField extends React.Component {
               }}
             />
             <Grid container justify="flex-start">
-              <Grid item xs={12} sm={10} md={8} sm={6}>
+              <Grid item xs={12} sm={10} md={8}>
                 {pictureSection}
               </Grid>
             </Grid>

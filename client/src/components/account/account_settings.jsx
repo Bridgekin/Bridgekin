@@ -24,8 +24,12 @@ import Avatar from '@material-ui/core/Avatar';
 import EditIcon from '@material-ui/icons/EditSharp';
 import IconButton from '@material-ui/core/IconButton';
 
+import withWidth from '@material-ui/core/withWidth';
+
 import UpdateUserModal from './update_user_modal';
 import ImageCropModal from '../image_upload_modal';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 // import countryList from 'react-select-country-list';
 import countryList from 'country-list';
 
@@ -151,6 +155,7 @@ class AccountSetting extends React.Component {
       profilePicFile: null,
       previewUrl: null,
       imageModalOpen: false,
+      mobileImageCropPending: false
     }
 
     this.options = Object.values(countryList.getNames());
@@ -215,7 +220,8 @@ class AccountSetting extends React.Component {
         company: this.props.currentUser.company,
         city: this.props.currentUser.city,
         state: this.props.currentUser.state,
-        country: countryList.getName(this.props.currentUser.country) || ''
+        country: countryList.getName(this.props.currentUser.country) || '',
+        mobileImageCropPending: false
       },
       ()=> {
         this.props.history.push('/account/home')
@@ -246,6 +252,8 @@ class AccountSetting extends React.Component {
 
   changeGeneralInformation(e){
     e.preventDefault();
+
+    debugger
     let { country, profilePicFile, previewUrl } = this.state;
     const formData = new FormData();
 
@@ -266,22 +274,38 @@ class AccountSetting extends React.Component {
 
   handleFile(e){
     let file = e.currentTarget.files[0];
-    this.handleFileHelper(file, true);
+    if (this.props.width !== 'xs'){
+      this.handleFileHelper(file, true, false);
+    } else {
+      this.handleFileHelper(file, false, true);
+    }
   }
 
   handleCloseImageModal(newFile){
-    this.handleFileHelper(newFile, false);
-    let fileReader = new FileReader();
+    if(newFile && this.props.width !== 'xs'){
+      // normal screens
+      this.handleFileHelper(newFile, false, false)
+    } else if (newFile && this.props.width === 'xs'){
+      //mobile screens
+      this.handleFileHelper(newFile, false, false)
+    } else {
+      this.setState({
+        imageModalOpen: false,
+        profilePicFile: null,
+        previewUrl: null,
+      })
+    }
   }
 
-  handleFileHelper(file, bool){
+  handleFileHelper(file, bool, mobilePendingBool){
     let fileReader = new FileReader();
 
     fileReader.onloadend = () => {
       this.setState({
         profilePicFile: file,
         previewUrl: fileReader.result,
-        imageModalOpen: bool
+        imageModalOpen: bool,
+        mobileImageCropPending: mobilePendingBool
       })
     }
 
@@ -290,12 +314,21 @@ class AccountSetting extends React.Component {
     }
   }
 
+  handleRemoveFile(){
+    this.setState({
+      profilePicFile: null,
+      previewUrl: null,
+    })
+  }
+
   //#######################
 
   getContent(){
-    const { classes, currentUser }= this.props;
+    const { classes, currentUser, width }= this.props;
     const { settingState, modalOpen, previewUrl,
-      imageModalOpen, profilePicFile } = this.state;
+      imageModalOpen, profilePicFile, mobileImageCropPending } = this.state;
+
+    const pictureUploaded = Boolean(previewUrl)
 
     let profilePicture = currentUser.profilePicUrl ? (
       <Avatar
@@ -315,10 +348,17 @@ class AccountSetting extends React.Component {
       <img
         alt="account-pic-preview"
         src={previewUrl}
-        style={{ margin: 20, maxWidth: '100%', height: 'auto' }}/>
+        style={{ margin: "20px 0px", maxWidth: '100%', height: 'auto' }}/>
     ) : ('')
 
-    debugger
+    let pictureSection = mobileImageCropPending ? (
+      <Grid container justify='center' alignItems='center'
+        style={{ height: 100}}>
+        <CircularProgress />
+      </Grid>
+    ) : (
+      preview
+    )
 
     let pathName = this.props.location.pathname.split('/').pop();
 
@@ -548,22 +588,50 @@ class AccountSetting extends React.Component {
                   Upload Profile Picture
                 </Typography>
                 <Grid container justify="flex-start" alignItems="center"
-                  spacing={8}>
+                  style={{ marginBottom: 30}}>
                   <input
                     accept="image/*"
                     className={classes.input}
                     id="contained-button-file"
-                    multiple
                     type="file"
                     onChange={this.handleFile.bind(this)}
+                    onClick={(event)=> {
+                      event.target.value = null
+                    }}
                   />
-                  {!imageModalOpen && preview}
-                  <label htmlFor="contained-button-file">
-                    <Button variant="contained" component="span"
-                      style={{ margin: "30px 0px", fontWeight: 600 }}>
-                      Upload
-                    </Button>
-                  </label>
+                  <Grid container justify="flex-start">
+                    <Grid item xs={12} sm={10} md={8}>
+                      {pictureSection}
+                    </Grid>
+                  </Grid>
+                  <Grid container justify='flex-start' alignItems='center'
+                    spacing={8}>
+                    <label htmlFor="contained-button-file">
+                      <Button variant="contained" component="span"
+                        style={{ margin: "20px 10px 0px 0px", fontWeight: 600 }}>
+                        Upload image here
+                      </Button>
+                    </label>
+                    {pictureUploaded &&
+                      <Button variant="contained" component="span"
+                        color='primary'
+                        style={{ fontWeight: 600, marginTop: 20  }}
+                        onClick={this.handleRemoveFile.bind(this)}>
+                        Delete
+                      </Button>}
+                  </Grid>
+                  <Grid container justify='flex-start' alignItems='center'>
+                  {width === 'xs' &&
+                    <Typography variant="body2" align='left'
+                      style={{ fontSize: 11, marginTop: 20 }}>
+                      {`*Image cropping currently only available on desktop`}
+                    </Typography>
+                  }
+                  <Typography variant="body2" align='left'
+                    style={{ fontSize: 11, marginTop: 20 }}>
+                    {`*We recommend uploading images with a width at least 600px`}
+                  </Typography>
+                  </Grid>
                 </Grid>
 
 
@@ -583,9 +651,11 @@ class AccountSetting extends React.Component {
 
               <ImageCropModal
                 handleClose={this.handleCloseImageModal.bind(this)}
+                handleDelete={this.handleRemoveFile.bind(this)}
                 open={imageModalOpen}
                 file={profilePicFile}
-                fileUrl={previewUrl}/>
+                fileUrl={previewUrl}
+                ratio={1}/>
             </Grid>
 
             <UpdateUserModal
@@ -693,4 +763,4 @@ class AccountSetting extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withWidth()(AccountSetting)));

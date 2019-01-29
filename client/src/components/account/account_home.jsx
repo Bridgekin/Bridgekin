@@ -34,7 +34,7 @@ const styles = theme => ({
     // marginBottom: 75,
     // position: 'relative',
     // top: 64,
-    padding: "214px 20px 50px"
+    padding: "214px 10px 50px"
   },
   cover: {
     width: '100%',
@@ -104,7 +104,7 @@ class AccountHome extends React.Component {
     return (
       <Grid container justify="center" alignItems="center"
         className={classes.root}>
-        <Grid item xs={11} sm={9} md={8} lg={6}>
+        <Grid item xs={12} sm={9} md={8} lg={6}>
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="flex-start"
               spacing={16}>
@@ -113,7 +113,7 @@ class AccountHome extends React.Component {
                 {profilePic}
               </Grid>
 
-              <Grid item xs={8} md={6} className={classes.content}>
+              <Grid item xs={10} md={6} className={classes.content}>
                 <div className={classes.wrapper}>
                   <Typography variant="h3" gutterBottom color="secondary"
                     align='left'>
