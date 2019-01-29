@@ -12,6 +12,11 @@ class Api::WaitlistUsersController < ApiController
       waitlist_user[:from_referral_id] = @user.id
       waitlist_user.save
 
+      WaitlistUserReferral.create(
+        waitlist_user_id: waitlist_user.id,
+        from_referral_id: @user.id
+      )
+
       WaitlistUserMailer.register_referred_email_existing(waitlist_user, @user).deliver_now
       render json: ['User has already been a waitlist user'], status: 201
     else
@@ -19,6 +24,11 @@ class Api::WaitlistUsersController < ApiController
 
       if @waitlist_user.save
         if @user
+          WaitlistUserReferral.create(
+            waitlist_user_id: @waitlist_user.id,
+            from_referral_id: @user.id
+          )
+
           WaitlistUserMailer.register_referred_email(@waitlist_user, @user).deliver_now
         else
           WaitlistUserMailer.register_email(@waitlist_user).deliver_now
