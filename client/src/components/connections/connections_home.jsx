@@ -165,8 +165,9 @@ const styles = {
       display: 'flex',
     },
     backgroundColor: theme.palette.backgroundGrey,
-    position:'relative',
-    top: 64
+    // position:'relative',
+    // top: 64
+    paddingTop: 64
   },
   sectionMobile: {
     display: 'flex',
@@ -174,8 +175,9 @@ const styles = {
       display: 'none',
     },
     backgroundColor: theme.palette.backgroundGrey,
-    position:'relative',
-    top: 64
+    // position:'relative',
+    // top: 64
+    paddingTop: 164
   },
   circleAvatar:{
     backgroundColor: theme.palette.grey2,

@@ -51,14 +51,16 @@ class AccountRoute extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <AccountNav hash={this.props.location.pathname}/>
+        <div >
+          <AccountNav hash={this.props.location.pathname}/>
 
-        <Switch>
-          <ProtectedRoute path="/account/settings" component={AccountSettings} />
-          <ProtectedRoute path="/account/posted" component={AccountPosted} />
-          <ProtectedRoute path="/account/connected" component={AccountConnected} />
-          <ProtectedRoute path="/account" component={AccountHome} />
-        </Switch>
+          <Switch>
+            <ProtectedRoute path="/account/settings" component={AccountSettings} />
+            <ProtectedRoute path="/account/posted" component={AccountPosted} />
+            <ProtectedRoute path="/account/connected" component={AccountConnected} />
+            <ProtectedRoute path="/account" component={AccountHome} />
+          </Switch>
+        </div>
 
       </MuiThemeProvider>
     )

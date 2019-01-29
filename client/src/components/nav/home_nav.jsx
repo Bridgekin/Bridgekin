@@ -126,6 +126,9 @@ const styles = {
       display: 'none',
     },
   },
+  textFieldLabel:{
+    fontSize: 14
+  }
   // menuIcon:{ color: }
 };
 
@@ -310,7 +313,12 @@ class HomeNav extends React.Component {
             margin="normal"
             onChange={this.handleChange('email')}
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
+            InputLabelProps={{
+              shrink: true,
+              classes: {
+                shrink: classes.textFieldLabel
+              }
+            }}
             InputProps={{
               classes: {
                 input: classes.textfieldResize
@@ -327,7 +335,12 @@ class HomeNav extends React.Component {
             margin="normal"
             onChange={this.handleChange('password')}
             variant="outlined"
-            InputLabelProps={{ shrink: true }}
+            InputLabelProps={{
+              shrink: true,
+              classes: {
+                shrink: classes.textFieldLabel
+              }
+            }}
             InputProps={{
               classes: {
                 input: classes.textfieldResize

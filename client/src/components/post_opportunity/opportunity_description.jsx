@@ -406,12 +406,18 @@ class DescriptionField extends React.Component {
                   Delete
                 </Button>}
             </Grid>
-            {width === 'xs' && <Grid container justify='flex-start' alignItems='center'>
+            <Grid container justify='flex-start' alignItems='center'>
+            {width === 'xs' &&
               <Typography variant="body2" align='left'
                 style={{ fontSize: 11, marginTop: 20 }}>
                 {`*Image cropping currently only available on desktop`}
               </Typography>
-            </Grid>}
+            }
+            <Typography variant="body2" align='left'
+              style={{ fontSize: 11, marginTop: 20 }}>
+              {`*We recommend uploading images with a width at least 600px`}
+            </Typography>
+            </Grid>
           </Grid>
 
           <Typography variant="h5" gutterBottom align='left'

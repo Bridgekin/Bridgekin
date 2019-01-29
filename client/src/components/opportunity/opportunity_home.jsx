@@ -58,8 +58,9 @@ const styles = {
     flexGrow: 1,
   },
   grid:{
-    top: 64,
-    position: 'relative',
+    // top: 64,
+    // position: 'relative',
+    paddingTop: 64,
     flexGrow: 1
   },
   homeheader:{
@@ -333,18 +334,19 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
+    // {!currentUser.lastSignInAt &&
+    //   <Typography variant="h1" gutterBottom align='center'
+    //     className={classes.headerTypography}>
+    //     {`Welcome ${currentUser.fname}`.toUpperCase()}
+    //   </Typography>
+    // }
+
     let header = (
       <Grid container className={[classes.homeheader, classes.root].join(' ')}
         justify="center" alignItems="center">
 
         <Grid item xs={10} md={9} container justify="center"
           alignItems="center" direction='column'>
-          {!currentUser.lastSignInAt &&
-            <Typography variant="h1" gutterBottom align='center'
-              className={classes.headerTypography}>
-              {`Welcome ${currentUser.fname}`.toUpperCase()}
-            </Typography>
-          }
 
           <Typography variant="h4" gutterBottom align='center'
             className={classes.subheaderTypography}>

@@ -29,9 +29,9 @@ const styles = {
     // top: 64
   },
   grid:{
-    position:"sticky",
+    // position:"absolute",
     // top:64,
-    bottom: 0,
+    // bottom: 0,
     // height: 50,
     borderTop: `1px solid ${theme.palette.grey1}`
   },
@@ -129,7 +129,7 @@ class Footer extends Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <div style={{ position: 'relative', top: 64}}>
+        <div style={{ position: 'absolute', bottom: 0, width: '100%'}}>
           {currentUser &&
           <Grid container justify='flex-end' alignItems="center"
             className={classes.grid}>

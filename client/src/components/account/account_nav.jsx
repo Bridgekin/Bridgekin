@@ -30,7 +30,7 @@ const styles = theme => ({
     // height: 100
   },
   button: {
-    margin: "0px 7px",
+    // margin: "0px 7px",
     fontWeight: 500
     // fontSize: 16
   },
@@ -126,14 +126,15 @@ class AccountNav extends React.Component {
     return (
       <Grid container className={classes.root}
         justify='space-around' alignItems='center'>
-        <Grid item xs={8} sm={2} className={classes.accountNavSection}
-          style={{ height: 100 }}>
+        <Grid item xs={8} sm={2} container justify='center'
+          alignItems='center' style={{ height: 100 }}>
           <Typography variant="h5" gutterBottom>
             <strong>My Account</strong>
           </Typography>
         </Grid>
-        <Grid item xs={0} sm={2}/>
-        <Grid item xs={4} sm={7} className={classes.accountNavSection}>
+        <Grid item xs={0} md={2}/>
+        <Grid item xs={4} sm={10} md={8} container justify='center'
+          alignItems='center'>
           {buttons}
           <IconButton
             aria-label="More"

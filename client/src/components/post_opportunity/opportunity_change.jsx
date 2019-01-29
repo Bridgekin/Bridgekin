@@ -49,7 +49,7 @@ const styles = {
     borderBottom: '1px solid #d3d3d3',
     height: 100,
     position:'fixed',
-    // top: 64,
+    top: 64,
     zIndex: 10
   },
   gridMobile:{
@@ -63,7 +63,7 @@ const styles = {
     borderBottom: '1px solid #d3d3d3',
     height: 100,
     position:'fixed',
-    // top: 64,
+    top: 64,
     zIndex: 10
   },
   // accountNavSection:{
@@ -88,8 +88,9 @@ const styles = {
   stepperRootMain:{
     flexGrow: 1,
     // marginTop: 50,
-    marginBottom: 50,
-    position: 'relative',
+    paddingBottom: 50,
+    // position: 'relative',
+    paddingTop: 164
     // top:100
     // marginTop: 100
   },
@@ -374,7 +375,7 @@ class OpportunityChange extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <div style={{ position: 'relative', top:64}}>
+        <div >
           <Grid container className={classes.gridDesktop}
             justify='space-around' alignItems='center'>
 

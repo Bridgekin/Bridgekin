@@ -52,10 +52,10 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     // marginTop: 75,
-    marginBottom: 75,
-    position: 'relative',
-    top: 164,
-    padding: "50px 20px"
+    // marginBottom: 75,
+    // position: 'relative',
+    // top: 164,
+    padding: "214px 20px 50px"
   },
   pic: {
     width: '100%',

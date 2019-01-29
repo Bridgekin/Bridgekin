@@ -32,9 +32,9 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     // marginTop: 35,
-    position: 'relative',
-    top: 164,
-    padding: "50px 20px",
+    // position: 'relative',
+    // top: 164,
+    padding: "214px 20px 50px"
   },
   addOportunityCard:{
     height: 475,

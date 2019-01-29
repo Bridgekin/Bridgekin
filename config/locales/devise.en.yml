@@ -18,15 +18,15 @@ en:
       unconfirmed: "You have to confirm your email address before continuing."
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        subject: "Welcome to Bridgekin!"
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "Bridgekin password reset"
       unlock_instructions:
-        subject: "Unlock instructions"
+        subject: "Bridgekin account locked"
       email_changed:
-        subject: "Email Changed"
+        subject: "Bridgekin email change"
       password_change:
-        subject: "Password Changed"
+        subject: "Bridgekin password change"
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."

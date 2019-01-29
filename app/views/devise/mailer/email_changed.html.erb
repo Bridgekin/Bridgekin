@@ -1,4 +1,4 @@
-<p>Hello <%= @email %>!</p>
+<p>Hi <%= @resource.fname.capitalize %>!</p>
 
 <% if @resource.try(:unconfirmed_email?) %>
   <p>We’re contacting you to let you know your email on file is being changed to <%= @resource.unconfirmed_email %>.</p>

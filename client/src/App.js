@@ -38,9 +38,10 @@ class App extends React.Component {
   // }
 
   // style={{ width: `${window.height}`}}
+  // style={{ height: window.innerHeight }}
   render(){
     return (
-      <div>
+      <div style={{ position: 'relative', minHeight: window.innerHeight}}>
         <ScrollToTop />
         <Route path="/" component={HomeNav} />
 

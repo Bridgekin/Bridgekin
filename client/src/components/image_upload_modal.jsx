@@ -74,6 +74,7 @@ class NotFound extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleCloseMobile = this.handleCloseMobile.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.urlToFile = this.urlToFile.bind(this);
   }
 
   // shouldComponentUpdate(nextProps, nextState){
@@ -105,10 +106,39 @@ class NotFound extends Component {
     //     debugger
     //   });
     // debugger
-    Jimp.read(this.props.fileUrl)
-    // .then(image => image.getBase64Async(Jimp.MIME_PNG))
+    // Jimp.read(this.props.fileUrl)
+    // // .then(image => image.getBase64Async(Jimp.MIME_PNG))
+    // .then(image => {
+    //   // debugger
+    //   return image
+    //     .cover(800, 346)
+    //     .getBase64Async(Jimp.MIME_PNG);
+    // })
+    // .then(image => {
+    //   let blob = dataURLToBlob(image);
+    //   let newFile = new File([blob], "my-image.png");
+    //   // debugger
+    //   this.props.handleClose(newFile);
+    // })
+    // .catch(err=>{
+    //   console.log(err)
+    // })
+    this.urlToFile(this.props.fileUrl)
+  }
+
+  handleClose(){
+    let fileUrl = this.cropper.crop();
+
+    this.urlToFile(fileUrl)
+    // let blob = dataURLToBlob(file);
+    // let newFile = new File([blob], "my-image.png");
+    //
+    // this.props.handleClose(newFile);
+  }
+
+  urlToFile(fileUrl){
+    Jimp.read(fileUrl)
     .then(image => {
-      // debugger
       return image
         .cover(800, 346)
         .getBase64Async(Jimp.MIME_PNG);
@@ -116,20 +146,11 @@ class NotFound extends Component {
     .then(image => {
       let blob = dataURLToBlob(image);
       let newFile = new File([blob], "my-image.png");
-      // debugger
       this.props.handleClose(newFile);
     })
     .catch(err=>{
       console.log(err)
     })
-  }
-
-  handleClose(){
-    let file = this.cropper.crop();
-    let blob = dataURLToBlob(file);
-    let newFile = new File([blob], "my-image.png");
-
-    this.props.handleClose(newFile);
   }
 
   handleDelete(){
