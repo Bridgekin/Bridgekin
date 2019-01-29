@@ -64,7 +64,7 @@ const styles = {
     flexGrow: 1
   },
   homeheader:{
-    padding: "20px 0px 50px 0px",
+    padding: "20px 0px 20px 0px",
     backgroundColor: 'RGBA(196,196,196,0.1)',
     borderBottom: `0.5px solid ${theme.palette.grey1}`
   },
@@ -362,10 +362,10 @@ class OpportunityHome extends React.Component {
 
           <Card style={{ marginTop: 10}}>
             <Grid container justify='center' alignItems='center'
-              style={{ padding: 10}}>
+              style={{ padding: "5px 10px 5px 10px"}}>
               <Typography variant="h6" align='center'
                 color='textPrimary'>
-                Over $68M in opportunities connected thus far.
+                Over $68M in opportunities connected
               </Typography>
             </Grid>
           </Card>

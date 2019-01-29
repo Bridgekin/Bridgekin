@@ -61,7 +61,8 @@ class UserAgreement extends Component {
           className={classes.homeGrid}>
           <Grid item xs={12} sm={10} md={8}>
             <Card>
-              <Grid container justify='center' alignItems='center'>
+              <Grid container justify='center' alignItems='center'
+                style={{ padding: 10}}>
                 <Grid item sm={11} md={9}>
                   <Typography variant="h1" align='center' color='inherit'
                     gutterBottom className={classes.header}>
