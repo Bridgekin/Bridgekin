@@ -20,7 +20,7 @@ Rails.application.configure do
 
   # Heroku Cedar automatically injects this into your configuration so you might
   # as well be honest about it
-  config.serve_static_assets = true
+  # config.serve_static_assets = true
 
   # You definitely want to set cache-control headers; you can override them with
   # Cloudfront, but best to do it right at the origin (and other CDNs might not
@@ -36,7 +36,7 @@ Rails.application.configure do
 
   # Add the cloudfront hostname (including the `http(s)://` that you have
   # configured to serve these assets
-  config.action_controller.asset_host = ENV['CDN_HOSTNAME'] # e.g. `http://gobbledy.cloudfront.net`
+  # config.action_controller.asset_host = ENV['CDN_HOSTNAME'] # e.g. `http://gobbledy.cloudfront.net`
 
   # Compress JavaScripts and CSS
   config.assets.compress = true

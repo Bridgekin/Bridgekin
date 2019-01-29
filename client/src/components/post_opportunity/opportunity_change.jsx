@@ -423,7 +423,7 @@ class OpportunityChange extends React.Component {
         <Grid container className={classes.gridMobile}
           justify='center' alignItems='center'>
 
-          <Grid item xs={8} sm={8} md={2}
+          <Grid item xs={10} sm={8} md={2}
             container justify='flex-start' alignItems='center'>
             <Typography variant="h5" gutterBottom align='left'>
               <strong>
@@ -432,7 +432,7 @@ class OpportunityChange extends React.Component {
             </Typography>
           </Grid>
 
-          <Grid item xs={8} sm={8} md={8}>
+          <Grid item xs={10} sm={8} md={8}>
             <MobileStepper
               variant="dots"
               steps={6}
