@@ -24,11 +24,14 @@ const mapDispatchToProps = dispatch => ({})
 
 const styles = {
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    // position: 'relative',
+    // top: 64
   },
   grid:{
-    position:"relative",
-    top:120,
+    position:"sticky",
+    // top:64,
+    bottom: 0,
     // height: 50,
     borderTop: `1px solid ${theme.palette.grey1}`
   },
@@ -68,7 +71,7 @@ const styles = {
   button: {
     textTransform: 'capitalize',
     fontSize: 12,
-    margin: 10
+    // margin: 2
   }
 };
 
@@ -126,26 +129,29 @@ class Footer extends Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        {currentUser &&
-        <Grid container justify='flex-end' alignItems="center"
-          className={classes.grid}>
+        <div style={{ position: 'relative', top: 64}}>
+          {currentUser &&
+          <Grid container justify='flex-end' alignItems="center"
+            className={classes.grid}>
 
-          <Button onClick={()=> this.props.history.push('/useragreement')}>
-            <Typography variant="body2" align='center' color='inherit'
-              className={ classes.button}>
-              User Agreement
-            </Typography>
-          </Button>
+            <Button onClick={()=> this.props.history.push('/useragreement')}
+              style={{ padding: "4px 8px 4px 8px", minHeight: 30}}>
+              <Typography variant="body2" align='center' color='inherit'
+                className={ classes.button}>
+                User Agreement
+              </Typography>
+            </Button>
 
-          <Button onClick={()=> this.props.history.push('/privacypolicy')}>
-            <Typography variant="body2" align='center' color='inherit'
-              className={ classes.button}>
-              Privacy Policy
-            </Typography>
-          </Button>
+            <Button onClick={()=> this.props.history.push('/privacypolicy')}
+              style={{ padding: "4px 8px 4px 8px", minHeight: 30, marginRight: 20}}>
+              <Typography variant="body2" align='center' color='inherit'
+                className={ classes.button}>
+                Privacy Policy
+              </Typography>
+            </Button>
 
-        </Grid>}
-        <div></div>
+          </Grid>}
+        </div>
 
       </MuiThemeProvider>
     )

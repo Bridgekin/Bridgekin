@@ -9,7 +9,7 @@ export default () => {
       </Typography>
       <br />
       <Typography variant="body2" align='left' gutterBottom>
-        {`The entity you are contracting with is Bridgekin Inc., 2694 Sacramento St. Apt. 6, San Francisco CA 94115 which is referred to as “Bridgekin,” “we,” or “us.”`}
+        {`The entity you are contracting with is Bridgekin Inc., 2694 Sacramento St. Apt. 6, San Francisco CA 94115 which is referred to as “`}<strong>Bridgekin</strong>{`,” “`}<strong>we</strong>{`,” or “`}<strong>us</strong>{`.”`}
       </Typography>
       <br />
       <Typography variant="body2" align='left' gutterBottom>
@@ -242,7 +242,8 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`If you have a dispute with one or more users, you release us (and our affiliates , and our and their respective officers, directors, employees and agents) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. In entering into this release, you expressly waive any protections (whether statutory or otherwise) that would otherwise limit the coverage of this release to include only those claims which you may know or suspect to exist in your favor at the time of agreeing to this release.`}
+        {`If you have a dispute with one or more users, you release us (and our affiliates , and our and their respective officers, directors, employees and agents) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. `}
+        <strong>{`In entering into this release, you expressly waive any protections (whether statutory or otherwise) that would otherwise limit the coverage of this release to include only those claims which you may know or suspect to exist in your favor at the time of agreeing to this release.`}</strong>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -258,11 +259,11 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`PLEASE READ THIS SECTION CAREFULLY. IT AFFECTS YOUR RIGHTS AND WILL HAVE A SUBSTANTIAL IMPACT ON HOW CLAIMS YOU AND BRIDGEKIN HAVE AGAINST EACH OTHER ARE RESOLVED.`}
+        <strong>{`PLEASE READ THIS SECTION CAREFULLY. IT AFFECTS YOUR RIGHTS AND WILL HAVE A SUBSTANTIAL IMPACT ON HOW CLAIMS YOU AND BRIDGEKIN HAVE AGAINST EACH OTHER ARE RESOLVED.`}</strong>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`You and Bridgekin agree that any claim or dispute at law or equity that has arisen, or may arise, between you and Bridgekin that relates in any way to or arises out of this or previous versions of this User Agreement, your use of or access to the Services, the actions of Bridgekin or its agents, or any products or services sold or purchased through the Services, will be resolved in accordance with the provisions set forth in this Legal Disputes Section.`}
+        <strong>{`You and Bridgekin agree that any claim or dispute at law or equity that has arisen, or may arise, between you and Bridgekin that relates in any way to or arises out of this or previous versions of this User Agreement, your use of or access to the Services, the actions of Bridgekin or its agents, or any products or services sold or purchased through the Services, will be resolved in accordance with the provisions set forth in this Legal Disputes Section.`}</strong>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -300,7 +301,9 @@ export default () => {
             <br/><br/>
             {`Arbitration is more informal than a lawsuit in court. Arbitration uses a neutral arbitrator instead of a judge or jury, and court review of an arbitration award is very limited. However, an arbitrator can award the same damages and relief on an individual basis that a court can award to an individual. An arbitrator should apply the terms of the User Agreement as a court would. All issues are for the arbitrator to decide, except that issues relating to arbitrability, the scope or enforceability of this Agreement to Arbitrate, or the interpretation of Section 1 of this Agreement to Arbitrate (“Prohibition of Class and Representative Actions and Non-Individualized Relief”), shall be for a court of competent jurisdiction to decide.`}
             <br/><br/>
-            {`The arbitration will be conducted by the American Arbitration Association (“AAA”) under its rules and procedures, including the AAA's Consumer Arbitration Rules (as applicable), as modified by this Agreement to Arbitrate. The AAA’s rules are available at www.adr.org or by calling the AAA at 1-800-778-7879. The use of the word “arbitrator” in this provision shall not be construed to prohibit more than one arbitrator from presiding over an arbitration; rather, the AAA’s rules will govern the number of arbitrators that may preside over an arbitration conducted under this Agreement to Arbitrate.`}
+            {`The arbitration will be conducted by the American Arbitration Association (“AAA”) under its rules and procedures, including the AAA's Consumer Arbitration Rules (as applicable), as modified by this Agreement to Arbitrate. The AAA’s rules are available at `}
+            <a href='https://www.adr.org'>www.adr.org</a>
+            {` or by calling the AAA at 1-800-778-7879. The use of the word “arbitrator” in this provision shall not be construed to prohibit more than one arbitrator from presiding over an arbitration; rather, the AAA’s rules will govern the number of arbitrators that may preside over an arbitration conducted under this Agreement to Arbitrate.`}
             <br/><br/>
             {`A party who intends to seek arbitration must first send to the other, by certified mail, a Notice of Dispute (“Notice”). The Notice to Bridgekin should be sent to Bridgekin Inc., Attn: Litigation Department, Re: Notice of Dispute, 2694 Sacramento St. Apt. 6 San Francisco, CA 94115. Bridgekin will send any Notice to you to the physical address we have on file associated with your Bridgekin account; it is your responsibility to keep your physical address up to date. The Notice must provide a description of the nature and basis of the claims the party is asserting and the relief sought.`}
             <br/><br/>

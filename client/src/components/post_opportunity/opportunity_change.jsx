@@ -49,7 +49,7 @@ const styles = {
     borderBottom: '1px solid #d3d3d3',
     height: 100,
     position:'fixed',
-    top: 64,
+    // top: 64,
     zIndex: 10
   },
   gridMobile:{
@@ -63,7 +63,7 @@ const styles = {
     borderBottom: '1px solid #d3d3d3',
     height: 100,
     position:'fixed',
-    top: 64,
+    // top: 64,
     zIndex: 10
   },
   // accountNavSection:{
@@ -90,7 +90,8 @@ const styles = {
     // marginTop: 50,
     marginBottom: 50,
     position: 'relative',
-    top:164
+    // top:100
+    // marginTop: 100
   },
   step: {
     "& $completed": {
@@ -373,44 +374,45 @@ class OpportunityChange extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.gridDesktop}
-          justify='space-around' alignItems='center'>
+        <div style={{ position: 'relative', top:64}}>
+          <Grid container className={classes.gridDesktop}
+            justify='space-around' alignItems='center'>
 
-          <Grid item xs={10} sm={6} md={2}
-            container justify='center' alignItems='center'>
-            <Typography variant="h5" gutterBottom>
-              <strong>
-                {type === 'create' ? 'Post Opportunity' : 'Edit Opportunity'}
-              </strong>
-            </Typography>
-          </Grid>
+            <Grid item xs={10} sm={6} md={2}
+              container justify='center' alignItems='center'>
+              <Typography variant="h5" gutterBottom>
+                <strong>
+                  {type === 'create' ? 'Post Opportunity' : 'Edit Opportunity'}
+                </strong>
+              </Typography>
+            </Grid>
 
-          <Grid item xs={6} md={8}>
-            <Stepper activeStep={activeStep} alternativeLabel
-              classes={{ root: classes.stepperRoot }}
-              className={classes.stepperDesktop}>
-              {steps.map((label, index) => (
-                <Step key={label}
-                  classes={{
-                    root: classes.step,
-                    completed: classes.completed,
-                    active: classes.active
-                  }}>
-                  <StepLabel
-                    StepIconProps={{
-                      classes: {
-                        root: classes.step,
-                        completed: classes.completed,
-                        active: classes.active,
-                        disabled: classes.disabled
-                      }
-                    }}
-                    label={{ color: '#000000' }}
-                    classes={{ root: classes.stepperLabel }}
-                    >
-                    {label}
-                  </StepLabel>
-                </Step>
+            <Grid item xs={6} md={8}>
+              <Stepper activeStep={activeStep} alternativeLabel
+                classes={{ root: classes.stepperRoot }}
+                className={classes.stepperDesktop}>
+                {steps.map((label, index) => (
+                  <Step key={label}
+                    classes={{
+                      root: classes.step,
+                      completed: classes.completed,
+                      active: classes.active
+                    }}>
+                    <StepLabel
+                      StepIconProps={{
+                        classes: {
+                          root: classes.step,
+                          completed: classes.completed,
+                          active: classes.active,
+                          disabled: classes.disabled
+                        }
+                      }}
+                      label={{ color: '#000000' }}
+                      classes={{ root: classes.stepperLabel }}
+                      >
+                      {label}
+                    </StepLabel>
+                  </Step>
                 )
               )}
             </Stepper>
@@ -454,6 +456,7 @@ class OpportunityChange extends React.Component {
           modalType={type}
           handleClose={this.handleModalClose}
           handleReset={this.handleReset}/>
+        </div>
 
       </MuiThemeProvider>
     )

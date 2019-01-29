@@ -337,8 +337,8 @@ class OpportunityHome extends React.Component {
       <Grid container className={[classes.homeheader, classes.root].join(' ')}
         justify="center" alignItems="center">
 
-        <Grid item xs={10} md={9} container justify="center" alignItems="center"
-          className={classes.headerItem}>
+        <Grid item xs={10} md={9} container justify="center"
+          alignItems="center" direction='column'>
           {!currentUser.lastSignInAt &&
             <Typography variant="h1" gutterBottom align='center'
               className={classes.headerTypography}>
@@ -358,15 +358,15 @@ class OpportunityHome extends React.Component {
             you or a trusted contact in your network
           </Typography>
 
-            <Card style={{ marginTop: 10}}>
-              <Grid container justify='center' alignItems='center'
-                style={{ padding: 10}}>
-                <Typography variant="h6" align='center'
-                  color='textPrimary'>
-                  Over $68M in opportunities connected thus far.
-                </Typography>
-              </Grid>
-            </Card>
+          <Card style={{ marginTop: 10}}>
+            <Grid container justify='center' alignItems='center'
+              style={{ padding: 10}}>
+              <Typography variant="h6" align='center'
+                color='textPrimary'>
+                Over $68M in opportunities connected thus far.
+              </Typography>
+            </Grid>
+          </Card>
         </Grid>
       </Grid>
     )

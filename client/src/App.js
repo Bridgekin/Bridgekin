@@ -36,6 +36,8 @@ class App extends React.Component {
   // componendDidUpdate(){
   //   debugger
   // }
+
+  // style={{ width: `${window.height}`}}
   render(){
     return (
       <div>

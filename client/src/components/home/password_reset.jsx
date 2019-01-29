@@ -118,7 +118,7 @@ class PasswordReset extends React.Component {
           Password Reset Sent
         </Typography>
         <Typography variant="body2" align='left'>
-          We've sent you a email with a link to change your password.
+          We've sent you an email with a link to change your password.
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}

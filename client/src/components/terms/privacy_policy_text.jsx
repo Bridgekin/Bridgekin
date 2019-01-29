@@ -9,15 +9,15 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Introduction`}</strong>
+        <b>{`Introduction`}</b>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`Bridgekin Inc. (“Bridgekin”, “Company” or “We”) respect your privacy and are committed to protecting it through our compliance with this policy.`}
+        {`Bridgekin Inc. (“`}<b>Bridgekin</b>{`”, “`}<b>Company</b>{`” or “`}<b>We</b>{`”) respect your privacy and are committed to protecting it through our compliance with this policy.`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`This policy describes the types of information we may collect from you or that you may provide when you visit the website Bridgekin.com (our “Website”) and our practices for collecting, using, maintaining, protecting, and disclosing that information.  The purpose of the Website is to provide the connection between users and by registering with the Website, you consent to the transmission of your personal information including email address, name, and interest and/or association with a posted listing to other users.  If you do not consent, you should not use or register with this Website.`}
+        {`This policy describes the types of information we may collect from you or that you may provide when you visit the website Bridgekin.com (our “`}<b>Website</b>{`”) and our practices for collecting, using, maintaining, protecting, and disclosing that information.  The purpose of the Website is to provide the connection between users and by registering with the Website, you consent to the transmission of your personal information including email address, name, and interest and/or association with a posted listing to other users.  If you do not consent, you should not use or register with this Website.`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -26,7 +26,7 @@ export default () => {
         <ul>
           <li>{`On this Website.`}</li>
           <li>{`In email, text, and other electronic messages between you and this Website.`}</li>
-          <li>{`Through mobile and desktop applications you download from this Website, which provide dedicated non-browser-based interaction between you and this Website.`}</li>
+          <li>{`Through mobile and desktop applications you download from this `}<b>Website</b>{`, which provide dedicated non-browser-based interaction between you and this `}<b>Website.</b></li>
         </ul>
       </Typography>
       <br></br>
@@ -42,29 +42,25 @@ export default () => {
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
         {`Please read this policy carefully to understand our policies and practices regarding your information and how we will treat it.`}
-        <strong>{`If you do not agree with our policies and practices, your choice is not to use our Website. By accessing or using this Website, you agree to this privacy policy.`}</strong>
+        <b>{` If you do not agree with our policies and practices, your choice is not to use our Website. By accessing or using this Website, you agree to this privacy policy. `}</b>
         {`This policy may change from time to time (see Changes to Our Privacy Policy). Your continued use of this Website after we make changes is deemed to be acceptance of those changes, so please check the policy periodically for updates.`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Children Under the Age of 16`}</strong>
+        <u><b>{`Children Under the Age of 16`}</b></u>
         <br></br>
         {`Our Website is not intended for children under 16 years of age. No one under age 16 may provide any information to or on the Website. We do not knowingly collect personal information from children under 16. If you are under 16, do not use or provide any information on this Website or on or through any of its features/register on the Website, make any purchases through the Website, use any of the interactive or public comment features of this Website or provide any information about yourself to us, including your name, address, telephone number, email address, or any screen name or user name you may use. If we learn we have collected or received personal information from a child under 16 without verification of parental consent, we will delete that information. If you believe we might have any information from or about a child under 16, please contact us at admin@bridgekin.`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`California residents under 16 years of age may have additional rights regarding the collection and sale of their personal information. Please see Your California Privacy Rights for more information.`}
-      </Typography>
-      <br></br>
-      <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Information We Collect About You and How We Collect It`}</strong>
+        <u><b>{`Information We Collect About You and How We Collect It`}</b></u>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
         {`We collect several types of information from and about users of our Website, including information:`}
         <br></br>
         <ul>
-          <li>{`by which you may be personally identified, such as name, e-mail address, title, company, a unique personal identifier, online identifier, account name, or Website use and browsing history (“personal information”);`}</li>
+          <li>{`by which you may be personally identified, such as name, e-mail address, title, company, a unique personal identifier, online identifier, account name, or Website use and browsing history (“`}<b>personal information</b>{`”);`}</li>
           <li>{`that is about you but individually does not identify you, such as geographic area (city, state, region) or business industry; and`}</li>
           <li>{`about your internet connection, the equipment you use to access our Website and usage details.`}</li>
         </ul>
@@ -80,7 +76,7 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`Information You Provide to Us`}
+        <i>{`Information You Provide to Us`}</i>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -90,18 +86,18 @@ export default () => {
           <li>{`Information that you provide by filling in forms or selecting criteria on our Website. This includes information provided at the time of registering to use our Website, subscribing to our service, completing your profile, inputting specific criteria or interests, posting on our Website, or responding to requests for further information. We may ask you for information when reviewing or otherwise handling your registration, subscription, or posts on our Website, or when you report a problem with our Website.`}</li>
           <li>{`Records and copies of your correspondence (including email addresses), if you contact us.`}</li>
           <li>{`Your responses to surveys that we might ask you to complete for research purposes.`}</li>
-          <li>{`Details of transactions you carry out through our Website, of the fulfillment of your orders and of selections you make on the Website regarding listings of interest. You may be required to provide financial information before placing an order through our Website.`}</li>
+          <li>{`Details of transactions you carry out through our `}<b>Website</b>{`, of the fulfillment of your orders and of selections you make on the Website regarding listings of interest. You may be required to provide financial information before placing an order through our `}<b>Website.</b></li>
           <li>{`Your search queries on the Website.`}</li>
           <li>{`Any content you upload to the Website and any communications arising out of your uploaded content.`}</li>
         </ul>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`You may provide information to be published or displayed (hereinafter, “posted”) on public areas of the Website, or transmitted to other users of the Website or third parties (collectively, “User Contributions”). Your User Contributions are posted on and transmitted to others at your own risk. Although we limit access to certain pages, please be aware that no security measures are perfect or impenetrable. Additionally, we cannot control the actions of other users of the Website who can view your User Contributions. Therefore, we cannot and do not guarantee that your User Contributions will not be viewed by unauthorized persons.`}
+        {`You may provide information to be published or displayed (hereinafter, “`}<b>posted</b>{`”) on public areas of the Website, or transmitted to other users of the Website or third parties (collectively, “`}<b>User Contributions</b>{`”). Your User Contributions are posted on and transmitted to others at your own risk. Although we limit access to certain pages, please be aware that no security measures are perfect or impenetrable. Additionally, we cannot control the actions of other users of the Website who can view your User Contributions. Therefore, we cannot and do not guarantee that your User Contributions will not be viewed by unauthorized persons.`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`Information We Collect Through Automatic Data Collection Technologies`}
+        <i>{`Information We Collect Through Automatic Data Collection Technologies`}</i>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -128,12 +124,12 @@ export default () => {
         {`The technologies we use for this automatic data collection may include`}
         <br></br>
         <ul>
-          <li>{`Web Beacons. Pages of our Website and our e-mails may contain small electronic files known as web beacons (also referred to as clear gifs, pixel tags, and single-pixel gifs) that permit the Company, for example, to count users who have visited those pages or opened an email and for other related website statistics (for example, recording the popularity of certain website content and verifying system and server integrity).`}</li>
+          <li><b>Web Beacons.</b> { `Pages of our Website and our e-mails may contain small electronic files known as web beacons (also referred to as clear gifs, pixel tags, and single-pixel gifs) that permit the Company, for example, to count users who have visited those pages or opened an email and for other related website statistics (for example, recording the popularity of certain website content and verifying system and server integrity).`}</li>
         </ul>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`How We Use Your Information`}</strong>
+        <i><b>{`How We Use Your Information`}</b></i>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -155,11 +151,11 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        {`We may also use your information to contact you about our new or different services that may be of interest to you. If you do not want us to use your information in this way, please contact us and let us know at admin@bridgekin.com.  For more information, see Choices About How We Use and Disclose Your Information.`}
+        {`We may also use your information to contact you about our new or different services that may be of interest to you. If you do not want us to use your information in this way, please contact us and let us know at admin@bridgekin.com.  For more information, see `}<u>Choices About How We Use and Disclose Your Information.</u>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Disclosure of Your Information`}</strong>
+        <b>{`Disclosure of Your Information`}</b>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -185,29 +181,31 @@ export default () => {
         <br></br>
         <ul>
           <li>{`To comply with any court order, law, or legal process, including to respond to any government or regulatory request.`}</li>
-          <li>{`To enforce or apply our terms of use, user agreement and other agreements, including for billing and collection purposes.`}</li>
+          <li>{`To enforce or apply our terms of use, `}<a href='/useragreement'>user agreement</a>{` and other agreements, including for billing and collection purposes.`}</li>
           <li>{`If we believe disclosure is necessary or appropriate to protect the rights, property, or safety of Bridgekin, our users, our customers, or others. This includes exchanging information with other companies and organizations for the purposes of fraud protection and credit risk reduction.`}</li>
         </ul>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Choices About How We Use and Disclose Your Information`}</strong>
+        <u><b>{`Choices About How We Use and Disclose Your Information`}</b></u>
         <br></br>
         {`We strive to provide you with choices regarding the personal information you provide to us. We have created mechanisms to provide you with the following control over your information:`}
         <br></br>
         <ul>
-          <li>{`Promotional Offers from the Company. If you do not wish to have your email address used by the Company to promote our own services, you can opt-out by sending us an email stating your request to admin@bridgekin.com. If we have sent you a promotional email, you may send us a return email asking to be omitted from future email distributions. This opt out does not apply to information provided to the Company as a result of registration onto the Website, service experience or other transactions.`}</li>
+          <li><b>Promotional Offers from the Company.</b>{` If you do not wish to have your email address used by the Company to promote our own services, you can opt-out by sending us an email stating your request to admin@bridgekin.com. If we have sent you a promotional email, you may send us a return email asking to be omitted from future email distributions. This opt out does not apply to information provided to the Company as a result of registration onto the Website, service experience or other transactions.`}</li>
         </ul>
 
-        <strong>{`Accessing and Correcting Your Information`}</strong>
+        <u><b>{`Accessing and Correcting Your Information`}</b></u>
         <br></br>
         {`You can review and change your personal information by logging into the Website and visiting your account profile page.`}
-        <br></br>
-        {`Please note that even if your account is deleted, once a connection between you and another user is made, your email, name and interests would have already been transmitted and viewed by the other user.  The purpose of the Website is to provide the connection between users and by registering with the Website, you consent to the transmission of your personal information including email address, name and interest or association with a posted listing to other users.  If you do not consent, you should not use or register with this Website.  The information provided to another user as part of the connection service of this Website is information that has been transmitted to third-party users.  Once transmitted by us, we would have no control over the collection, storage or use of that information by the third-party user.   Moreover, if you delete your User Contributions from the Website, copies of your User Contributions may remain viewable in cached and archived pages, or might have been copied or stored by other Website users. California residents may have additional personal information rights and choices. Please see Your California Privacy Rights for more information.`}
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Data Security`}</strong>
+        {`Please note that even if your account is deleted, once a connection between you and another user is made, your email, name and interests would have already been transmitted and viewed by the other user.  The purpose of the Website is to provide the connection between users and by registering with the Website, you consent to the transmission of your personal information including email address, name and interest or association with a posted listing to other users. If you do not consent, you should not use or register with this Website.  The information provided to another user as part of the connection service of this Website is information that has been transmitted to third-party users.  Once transmitted by us, we would have no control over the collection, storage or use of that information by the third-party user.   Moreover, if you delete your User Contributions from the Website, copies of your User Contributions may remain viewable in cached and archived pages, or might have been copied or stored by other Website users. California residents may have additional personal information rights and choices. Please see `}<u>Your California Privacy Rights</u>{` for more information.`}
+      </Typography>
+      <br></br>
+      <Typography variant="body2" align='left' gutterBottom>
+        <u><b>{`Data Security`}</b></u>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -223,7 +221,7 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Changes to Our Privacy Policy`}</strong>
+        <u><b>{`Changes to Our Privacy Policy`}</b></u>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
@@ -231,7 +229,7 @@ export default () => {
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
-        <strong>{`Contact Information`}</strong>
+        <u><b>{`Contact Information`}</b></u>
       </Typography>
       <br></br>
       <Typography variant="body2" align='left' gutterBottom>
