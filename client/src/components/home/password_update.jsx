@@ -122,7 +122,7 @@ class PasswordReset extends React.Component {
     ))
 
     let response = this.props.userErrors.length === 0 ? (
-      <Grid item xs={8} sm={7} md={6} className={classes.grid}>
+      <Grid item xs={8} sm={7} md={7} className={classes.grid}>
         <Typography variant="h2" id="modal-title" color='secondary'
           className={classes.responseHeader} align='left' gutterBottom>
           Password Updated
@@ -138,7 +138,7 @@ class PasswordReset extends React.Component {
         </Grid>
       </Grid>
     ) : (
-      <Grid item xs={8} sm={7} md={6} className={classes.grid}>
+      <Grid item xs={8} sm={7} md={7} className={classes.grid}>
         <Typography variant="h2" color='secondary' align='left'
           className={classes.responseHeader} >
           Password Update Error
@@ -160,7 +160,7 @@ class PasswordReset extends React.Component {
     )
 
     let form = (
-      <Grid item xs={8} sm={7} md={6} className={classes.grid}>
+      <Grid item xs={8} sm={7} md={7} className={classes.grid}>
         <Typography variant="h2" align='center' color="textPrimary"
           className={classes.signinHeader}>
           Update your password

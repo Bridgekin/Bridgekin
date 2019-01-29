@@ -737,8 +737,8 @@ class AccountSetting extends React.Component {
                     value={this.state.notificationSetting}
                     onChange={this.handleNotificationChange}
                   >
-                    <FormControlLabel value="Weekly" control={<Radio />} label="Weekly Email Recap" />
-                    <FormControlLabel value="Never" control={<Radio />} label="Never - I am immune to FOMO" />
+                    <FormControlLabel value="Weekly" control={<Radio />} label="Weekly email recap" />
+                    <FormControlLabel value="Never" control={<Radio />} label="Never, I am immune to FOMO" />
                   </RadioGroup>
                 </FormControl>
               </Grid>
