@@ -61,7 +61,7 @@ const styles = {
     // backgroundColor: 'RGBA(196,196,196,0.1)',
     backgroundColor: theme.palette.backgroundGrey,
     borderBottom: '1px solid #d3d3d3',
-    height: 100,
+    height: 60,
     position:'fixed',
     top: 64,
     zIndex: 10
@@ -85,12 +85,29 @@ const styles = {
   stepper:{
     background: 'none'
   },
-  stepperRootMain:{
+  stepperRootMainDesktop:{
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
     flexGrow: 1,
     // marginTop: 50,
     paddingBottom: 50,
     // position: 'relative',
     paddingTop: 164
+    // top:100
+    // marginTop: 100
+  },
+  stepperRootMainMobile:{
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+    flexGrow: 1,
+    // marginTop: 50,
+    paddingBottom: 50,
+    // position: 'relative',
+    paddingTop: 124
     // top:100
     // marginTop: 100
   },
@@ -373,6 +390,15 @@ class OpportunityChange extends React.Component {
       </Grid>
     )
 
+    // <Grid item xs={10} sm={8} md={8}>
+    //   <MobileStepper
+    //     variant="dots"
+    //     steps={6}
+    //     position="static"
+    //     activeStep={this.state.activeStep}
+    //     className={classes.stepperMobile} />
+    // </Grid>
+
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <div >
@@ -425,31 +451,30 @@ class OpportunityChange extends React.Component {
 
           <Grid item xs={10} sm={8} md={2}
             container justify='flex-start' alignItems='center'>
-            <Typography variant="h5" gutterBottom align='left'>
+            <Typography variant="h5" align='left'>
               <strong>
                 {type === 'create' ? 'Post Opportunity' : 'Edit Opportunity'}
               </strong>
             </Typography>
           </Grid>
 
-          <Grid item xs={10} sm={8} md={8}>
-            <MobileStepper
-              variant="dots"
-              steps={6}
-              position="static"
-              activeStep={this.state.activeStep}
-              className={classes.stepperMobile} />
-          </Grid>
+
         </Grid>
 
-        <Grid container className={classes.stepperRootMain}
+        <Grid container className={classes.stepperRootMainDesktop}
           justify='center' alignItems='center'>
-
           <Grid item xs={12} sm={10} md={8} container justify='center'>
             {this.getStepContent(activeStep)}
             {flowNav}
           </Grid>
+        </Grid>
 
+        <Grid container className={classes.stepperRootMainMobile}
+          justify='center' alignItems='center'>
+          <Grid item xs={12} sm={10} md={8} container justify='center'>
+            {this.getStepContent(activeStep)}
+            {flowNav}
+          </Grid>
         </Grid>
 
         <SubmitModal
