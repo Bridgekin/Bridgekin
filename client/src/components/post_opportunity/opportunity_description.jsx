@@ -19,6 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import withWidth from '@material-ui/core/withWidth';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import ImageCropModal from '../image_upload_modal';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -85,7 +86,10 @@ const styles = theme => ({
     '&$selected':{
       backgroundColor: 'white'
     }
-  }
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
 });
 
 const ITEM_HEIGHT = 48;
@@ -371,6 +375,7 @@ class DescriptionField extends React.Component {
                   color='primary'
                   style={{ fontWeight: 600, margin: "20px 10px 0px 0px" }}>
                   Upload image here
+                  <CloudUploadIcon className={classes.rightIcon} />
                 </Button>
               </label>
               {pictureUploaded &&
