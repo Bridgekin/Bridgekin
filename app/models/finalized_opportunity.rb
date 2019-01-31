@@ -8,13 +8,16 @@ class FinalizedOpportunity < ApplicationRecord
 
   belongs_to :user,
     foreign_key: :user_id,
-    class_name: :User
+    class_name: :User,
+    optional: true
 
   belongs_to :facilitator,
     foreign_key: :facilitator_id,
-    class_name: :User
+    class_name: :User,
+    optional: true
 
   belongs_to :network,
     foreign_key: :network_id,
-    class_name: :Network
+    class_name: :Network,
+    optional: true
 end

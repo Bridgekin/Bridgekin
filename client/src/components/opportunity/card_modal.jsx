@@ -22,6 +22,7 @@ import { createConnectedOpportunity } from '../../actions/connected_opportunity_
 
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
+import SendIcon from '@material-ui/icons/SendSharp';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -127,16 +128,23 @@ const styles = theme => ({
     padding: 5,
     cursor: 'pointer'
   },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
 });
 
 class CardModal extends React.Component {
   constructor(props){
     super(props)
     this.state={
-      sent: false,
       connectBool: true,
+      connectType: 'connect',
+      page: 'opportunity'
     }
     this.handleClose = this.handleClose.bind(this);
+    this.handleConnection = this.handleConnection.bind(this);
+    this.handleConfirm = this.handleConfirm.bind(this);
+    this.getContent = this.getContent.bind(this);
     this.handleConnection = this.handleConnection.bind(this);
   }
 
@@ -148,7 +156,7 @@ class CardModal extends React.Component {
         this.props.clearConnectedOpportunityErrors();
       }
 
-      this.setState({ sent: false },
+      this.setState({ page: 'opportunity' },
         () => {
           this.props.handleClose();
           if(field === 'post'){
@@ -159,9 +167,11 @@ class CardModal extends React.Component {
     }
   };
 
-  handleConnection(connectBool){
+  handleConnection(){
     return e => {
       e.preventDefault()
+
+      const { connectBool } = this.state;
 
       if(!this.props.demo){
         let opportunity = {
@@ -172,6 +182,7 @@ class CardModal extends React.Component {
         .then(() => {
           this.setState({
             sent: true,
+            page: 'sent',
             connectBool
           })
         });
@@ -179,219 +190,268 @@ class CardModal extends React.Component {
     }
   }
 
+  handleConfirm(connectBool){
+    return e => {
+      this.setState({ connectBool, page: 'confirm'})
+    }
+  }
+
+  getContent(){
+    const { classes, opportunity } = this.props;
+    const { connectBool, page } = this.state;
+
+    let { title, description, industries, opportunityNeed, geography,
+      value, networks, pictureUrl } = opportunity;
+
+    let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
+      <ListItem >
+        <ListItemText primary={error} />
+      </ListItem>
+    ));
+
+    let loader = (
+      <Grid container justify='center' alignItems='center'
+        className={classes.loader}>
+        <CircularProgress className={classes.progress} />
+      </Grid>
+    )
+
+    let picture = pictureUrl ? (
+      <Img src={pictureUrl}
+        className={classes.cover}
+        loader={loader}
+        />
+    ) : (
+      <Img src={PickImage(industries[0])}
+        className={classes.cover}
+        loader={loader}
+        />
+    )
+
+    switch(page) {
+      case "sent":
+        let typeOfSuccess = connectBool ? (
+          <Grid container justify='center' alignItems='center'
+            className={classes.grid}>
+            <Grid item xs={11} sm={10} md={8}
+              container justify='flex-start' alignItems='center'>
+              <Typography variant="h2" id="modal-title" align='left'
+                className={classes.section}>
+                Time for business!
+              </Typography>
+              <Typography variant="body2" id="simple-modal-description"
+                className={classes.section} align='left'>
+                {`We're as excited about this opportunity as you are! We just sent
+                  an email connecting you to the opportunity owner, so that should
+                  hit your inbox shortly. We'll let you take it from here.`}
+              </Typography>
+              <Grid item xs={12} className={classes.postButtons}
+                style={{ marginBottom: 25 }}>
+                <Button variant="contained" color='secondary'
+                  onClick={this.handleClose('find')}
+                  className={classes.button}
+                  style={{ marginRight: 20}}>
+                  View More Opportunities
+                </Button>
+                <Button variant="contained" color='secondary'
+                  onClick={this.handleClose('post')}
+                  className={classes.button}>
+                  Post An Opportunity
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        ) : (
+          <Grid container justify='center' alignItems='center'
+            className={classes.grid}>
+            <Grid item xs={11} sm={10} md={8}
+              container justify='flex-start' alignItems='center'>
+              <Typography variant="h2" id="modal-title" align='left'
+                className={classes.section}>
+                Time for business!
+              </Typography>
+              <Typography variant="body2" id="simple-modal-description"
+                className={classes.section} align='left'>
+                {`We're as excited about this opportunity as you are!
+                  We just sent an email connecting you to the opportunity owner
+                  and then you can loop in your trusted contact from there.
+                  We'll let you take it from here.`}
+              </Typography>
+              <Grid item xs={12} className={classes.postButtons}>
+                <Button variant="contained" color='secondary'
+                  onClick={this.handleClose('find')}
+                  className={classes.button}
+                  style={{ marginRight: 20}}>
+                  View More Opportunities
+                </Button>
+                <Button variant="contained" color='secondary'
+                  onClick={this.handleClose('post')}
+                  className={classes.button}>
+                  Post An Opportunity
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        )
+
+        let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
+          typeOfSuccess
+        ) : (
+          <Grid container justify='center' alignItems='center'
+            className={classes.grid}>
+            <Grid item xs={11} sm={10} md={8}
+              container justify='flex-start' alignItems='center'>
+              <Typography variant="h1" id="modal-title" align='left'
+                className={classes.errorHeader}>
+                Hold on there!
+              </Typography>
+              <Typography variant="body2" id="simple-modal-description" align='left'>
+                Unfortunately, we weren't able to connect you to this opportunity because:
+              </Typography>
+              <Grid item xs={12}>
+                <List>
+                  {connectedOpportunityErrors}
+                </List>
+              </Grid>
+              <Grid item xs={12} container justify='flex-start'>
+                <Button onClick={() => this.setState({page: 'opportunity'})}
+                  color="textPrimary" variant='contained'>
+                  Back
+                </Button>
+                <Button variant="contained"
+                  onClick={this.handleClose('find')} color='secondary'
+                  style={{ marginLeft: 20}}>
+                  Close
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        )
+        return responseText;
+      case "confirm":
+        return (
+          <Grid container justify="center" alignItems='center'>
+            <Grid item xs={10} container justify='flex-start'
+              style={{ margin: "40px 0px 25px"}}>
+              <Typography variant="h5" gutterBottom align='left'
+                color="default" style={{ marginBottom: 20}}>
+                {connectBool ?
+                  `Connect to this opportunity` :
+                  `Refer a trusted contact to this opportunity`}
+              </Typography>
+              <Typography variant="body1" gutterBottom align='left'
+                color="default">
+                {connectBool ?
+                  `Once you press the send button below you'll receive an
+                  email introducing you to the opportunity owner. We'll
+                  let you work your magic from there.` :
+                  `Once you press the send button below you'll receive an
+                  email introducing you to the opportunity owner. We'll
+                  let you take it from there and loop in your contact.`
+                }
+              </Typography>
+
+              <Grid container justify='space-between'
+                style={{ margin: "25px 0px"}}>
+                <Button onClick={() => this.setState({page: 'opportunity'})}
+                  color="textPrimary" variant='contained'>
+                  Back
+                </Button>
+                <Button onClick={this.handleConnection()}
+                  variant='contained' color='primary'
+                  style={{ marginLeft: 20}}>
+                  Send
+                  <SendIcon className={classes.rightIcon} />
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        );
+      default:
+        return (
+          <Grid container justify="center" alignItems='center'>
+            <Grid item xs={12}>
+              {picture}
+            </Grid>
+            <Grid item xs={11} sm={10} md={8} className={classes.cardContent}
+              container justify='center' spacing={16}>
+              <Grid item xs={12}>
+                <Typography variant="h5" gutterBottom align='left'
+                  color="default">
+                  {title}
+                </Typography>
+                <Typography variant="body2" gutterBottom align='left'
+                  color="default">
+                  {description}
+                </Typography>
+              </Grid>
+
+              <Grid container justify='flex-start' spacing={24}>
+                <Grid item xs={4}>
+                  <Typography variant="h6" gutterBottom align='left'
+                    className={classes.cardSubHeader}>
+                    Geography
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom align='left'
+                    color="default" className={classes.cardSubContent}>
+                    {geography.join(", ")}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={5}>
+                  <Typography variant="h6" gutterBottom align='left'
+                    className={classes.cardSubHeader}>
+                    Industry
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom align='left'
+                    color="default" className={classes.cardSubContent}>
+                    {industries.join(", ")}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={3}>
+                  <Typography variant="h6" gutterBottom align='left'
+                    className={classes.cardSubHeader}>
+                    Value
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom align='left'
+                    color="default" className={classes.cardSubContent}>
+                    {value}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container justify='flex-start'
+                style={{ margin: "10px 0px"}}>
+                <Button variant="contained" color='secondary'
+                  onClick={this.handleConfirm(true)}
+                  className={classes.actionButton}
+                  style={{marginRight: 20}}>
+                  Connect Me
+                </Button>
+
+                <Button variant="contained" color='secondary'
+                  onClick={this.handleConfirm(false)}
+                  className={classes.actionButton}>
+                  Refer A Trusted Contact
+                </Button>
+              </Grid>
+
+              <Typography variant="body2" align='left'
+                color="default" style={{ marginBottom: 30 }}>
+                Once you connect or refer above, we'll send you an email introducing
+                you to the opportunity owner
+              </Typography>
+            </Grid>
+          </Grid>
+        )
+    }
+  }
+
   render () {
-    const { open, classes, opportunity, connectedOpportunityErrors } = this.props;
-    const { sent, connectBool } = this.state;
+    const { open, classes, opportunity } = this.props;
 
     if (!_.isEmpty(opportunity)){
-      let { title, description, industries, opportunityNeed, geography,
-        value, networks, pictureUrl } = opportunity;
-
-      let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
-        <ListItem >
-          <ListItemText primary={error} />
-        </ListItem>
-      ));
-
-      let typeOfSuccess = connectBool ? (
-        <Grid container justify='center' alignItems='center'
-          className={classes.grid}>
-          <Grid item xs={11} sm={10} md={8}
-            container justify='flex-start' alignItems='center'>
-            <Typography variant="h2" id="modal-title" align='left'
-              className={classes.section}>
-              Time for business!
-            </Typography>
-            <Typography variant="body2" id="simple-modal-description"
-              className={classes.section} align='left'>
-              {`We're as excited about this opportunity as you are! We just sent
-                an email connecting you to the opportunity owner, so that should
-                hit your inbox shortly. We'll let you take it from here.`}
-            </Typography>
-            <Grid item xs={12} className={classes.postButtons}
-              style={{ marginBottom: 25 }}>
-              <Button variant="contained" color='secondary'
-                onClick={this.handleClose('find')}
-                className={classes.button}
-                style={{ marginRight: 20}}>
-                View More Opportunities
-              </Button>
-              <Button variant="contained" color='secondary'
-                onClick={this.handleClose('post')}
-                className={classes.button}>
-                Post An Opportunity
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid container justify='center' alignItems='center'
-          className={classes.grid}>
-          <Grid item xs={11} sm={10} md={8}
-            container justify='flex-start' alignItems='center'>
-            <Typography variant="h2" id="modal-title" align='left'
-              className={classes.section}>
-              Time for business!
-            </Typography>
-            <Typography variant="body2" id="simple-modal-description"
-              className={classes.section} align='left'>
-              {`We're as excited about this opportunity as you are!
-                We just sent an email connecting you to the opportunity owner
-                and then you can loop in your trusted contact from there.
-                We'll let you take it from here.`}
-            </Typography>
-            <Grid item xs={12} className={classes.postButtons}>
-              <Button variant="contained" color='secondary'
-                onClick={this.handleClose('find')}
-                className={classes.button}
-                style={{ marginRight: 20}}>
-                View More Opportunities
-              </Button>
-              <Button variant="contained" color='secondary'
-                onClick={this.handleClose('post')}
-                className={classes.button}>
-                Post An Opportunity
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      )
-
-      let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
-        typeOfSuccess
-      ) : (
-        <Grid container justify='center' alignItems='center'
-          className={classes.grid}>
-          <Grid item xs={11} sm={10} md={8}
-            container justify='flex-start' alignItems='center'>
-            <Typography variant="h1" id="modal-title" align='left'
-              className={classes.errorHeader}>
-              Hold on there!
-            </Typography>
-            <Typography variant="body2" id="simple-modal-description" align='left'>
-              Unfortunately, we weren't able to connect you to this opportunity because:
-            </Typography>
-            <Grid item xs={12}>
-              <List>
-                {connectedOpportunityErrors}
-              </List>
-            </Grid>
-            <Grid item xs={12} container justify='flex-start'>
-              <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-                onClick={this.handleClose('find')} color='secondary'>
-                Close
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      )
-
-      let loader = (
-        <Grid container justify='center' alignItems='center'
-          className={classes.loader}>
-          <CircularProgress className={classes.progress} />
-        </Grid>
-      )
-
-      let picture = pictureUrl ? (
-        <Img src={pictureUrl}
-          className={classes.cover}
-          loader={loader}
-          />
-      ) : (
-        <Img src={PickImage(industries[0])}
-          className={classes.cover}
-          loader={loader}
-          />
-      )
-
-      let modalContent = !sent ? (
-        <Grid container justify="center" alignItems='center'>
-          <Grid item xs={12}>
-            {picture}
-          </Grid>
-          <Grid item xs={11} sm={10} md={8} className={classes.cardContent}
-            container justify='center' spacing={16}>
-            <Grid item xs={12}>
-              <Typography variant="h5" gutterBottom align='left'
-                color="default">
-                {title}
-              </Typography>
-              <Typography variant="body2" gutterBottom align='left'
-                color="default">
-                {description}
-              </Typography>
-            </Grid>
-
-            <Grid container justify='flex-start' spacing={24}>
-              <Grid item xs={4}>
-                <Typography variant="h6" gutterBottom align='left'
-                  className={classes.cardSubHeader}>
-                  Geography
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom align='left'
-                  color="default" className={classes.cardSubContent}>
-                  {geography.join(", ")}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={5}>
-                <Typography variant="h6" gutterBottom align='left'
-                  className={classes.cardSubHeader}>
-                  Industry
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom align='left'
-                  color="default" className={classes.cardSubContent}>
-                  {industries.join(", ")}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={3}>
-                <Typography variant="h6" gutterBottom align='left'
-                  className={classes.cardSubHeader}>
-                  Value
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom align='left'
-                  color="default" className={classes.cardSubContent}>
-                  {value}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Grid container justify='flex-start'
-              style={{ margin: "10px 0px"}}>
-              <Button variant="contained" color='secondary'
-                onClick={this.handleConnection(true)}
-                className={classes.actionButton}
-                style={{marginRight: 20}}>
-                Connect Me
-              </Button>
-
-              <Button variant="contained" color='secondary'
-                onClick={this.handleConnection(false)}
-                className={classes.actionButton}>
-                Refer A Trusted Contact
-              </Button>
-            </Grid>
-
-            <Typography variant="body2" align='left'
-              color="default" style={{ marginBottom: 30 }}>
-              Once you connect or refer above, we'll send you an email introducing
-              you to the opportunity owner
-            </Typography>
-          </Grid>
-        </Grid>
-
-      ) : responseText
-
-      // autoDetectWindowHeight={true}
-      // autoScrollBodyContent={true}
-      // repositionOnUpdate={true}
-      // contentStyle={{
-      //   width:'90%',
-      //   height: '90%'
-      // }}>
-
       return (
         <Dialog
           open={open}
@@ -405,7 +465,7 @@ class CardModal extends React.Component {
             classes={{ badge: classes.badge }}
             style={{ width: '100%'}}
             >
-            {modalContent}
+            {this.getContent()}
           </Badge>
         </Dialog>
       )
