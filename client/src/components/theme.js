@@ -154,7 +154,6 @@ let theme = createMuiTheme({
   //
   // }
 });
-
 //
 // const { breakpoints, typography: { pxToRem } } = theme
 //
