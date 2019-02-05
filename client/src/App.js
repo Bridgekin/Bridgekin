@@ -28,17 +28,7 @@ import ScrollToTop from './components/scroll_to_top';
 
 // export default () => (
 class App extends React.Component {
-  // shouldComponentUpdate(nextProps, nextState){
-  //   window.scrollTo(0, 0);
-  //   return false
-  // }
 
-  // componendDidUpdate(){
-  //   debugger
-  // }
-
-  // style={{ width: `${window.height}`}}
-  // style={{ height: window.innerHeight }}
   render(){
     return (
       <div style={{ position: 'relative', minHeight: window.innerHeight}}>
@@ -70,6 +60,20 @@ class App extends React.Component {
 };
 
 export default App;
+
+// shouldComponentUpdate(nextProps, nextState){
+//   window.scrollTo(0, 0);
+//   return false
+// }
+
+// componendDidUpdate(){
+//   debugger
+// }
+
+// style={{ width: `${window.height}`}}
+// style={{ height: window.innerHeight }}
+
+
 // class App extends Component {
 //   componentDidMount(){
 //     let token = localStorage.getItem('bridgekinToken');
