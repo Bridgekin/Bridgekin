@@ -230,6 +230,8 @@ class HomeNav extends React.Component {
 
     let loginOpen = Boolean(sessionErrors.length > 0);
 
+    debugger
+
     let renderMenu = (
       <Menu
         id="menu-appbar"

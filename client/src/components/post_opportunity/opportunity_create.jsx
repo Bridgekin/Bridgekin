@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import OpportunityChange from './opportunity_change';
 
 import {fetchNetworks} from '../../actions/network_actions';
+import Loading from '../loading';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -52,8 +53,13 @@ class OpportunityCreate extends React.Component {
           type={'create'}
           />
       )
+    } else {
+      return (
+        <div style={{ padding: "214px 20px 50px", width:'100%'}}>
+          <Loading />
+        </div>
+      )
     }
-    return <div></div>
   }
 }
 

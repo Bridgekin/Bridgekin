@@ -74,10 +74,6 @@ class AccountNav extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClick(){
-
-  }
-
   handleOpen(e){
     this.setState({ anchorEl: e.currentTarget})
   }

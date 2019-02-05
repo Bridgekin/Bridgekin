@@ -253,7 +253,6 @@ class AccountSetting extends React.Component {
   changeGeneralInformation(e){
     e.preventDefault();
 
-    debugger
     let { country, profilePicFile, previewUrl } = this.state;
     const formData = new FormData();
 

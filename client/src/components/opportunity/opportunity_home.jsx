@@ -26,6 +26,7 @@ import OpportunityCard from './opportunity_card';
 import OpportunityReferral from './opportunity_referral';
 import OpportunityWaitlist from './opportunity_waitlist';
 import WaitlistModal from '../waitlist_modal';
+import Loading from '../loading';
 
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
@@ -208,13 +209,15 @@ class OpportunityHome extends React.Component {
   componentDidMount(){
     this.props.fetchNetworks()
     .then(() => {
-      let referralNetwork = Object.values(this.props.networks)[0].id;
-      this.props.fetchOpportunities(this.state.dropdownFocus)
+      if(Object.values(this.props.networks).length > 0){
+        let referralNetwork = Object.values(this.props.networks)[0].id;
+        this.props.fetchOpportunities(this.state.dropdownFocus)
         .then(() => {
           this.setState({
             opportunitiesLoaded: true,
             referralNetwork})
-        });
+          });
+      }
     })
   }
 
@@ -270,7 +273,6 @@ class OpportunityHome extends React.Component {
 
  handleDropdownChange(type, id){
   return e => {
-    debugger
     if (type === 'Network'){
       this.props.fetchOpportunities(id)
       .then(() => this.setState({
@@ -291,7 +293,7 @@ class OpportunityHome extends React.Component {
 
     const { loading, waitlistOpen,
           referralNetwork, anchorEl,
-          dropdownFocus } = this.state;
+          dropdownFocus, opportunitiesLoaded } = this.state;
 
     const networksArray = Object.values(networks)
 
@@ -306,7 +308,7 @@ class OpportunityHome extends React.Component {
             className={classes.button}>
             <p className='fc-header-p'>
               <span className='fc-header-number'><strong>35</strong></span>
-                New Members
+              New Members
             </p>
           </Button>
         </Grid>
@@ -316,7 +318,7 @@ class OpportunityHome extends React.Component {
             className={classes.button}>
             <p className='fc-header-p'>
               <span className='fc-header-number'><strong>35</strong></span>
-                New Opportunities
+              New Opportunities
             </p>
           </Button>
         </Grid>
@@ -326,7 +328,7 @@ class OpportunityHome extends React.Component {
             className={classes.button}>
             <p className='fc-header-p'>
               <span className='fc-header-number'><strong>35</strong></span>
-                New connections
+              New connections
             </p>
           </Button>
         </Grid>
@@ -365,7 +367,7 @@ class OpportunityHome extends React.Component {
               style={{ padding: "5px 10px 5px 10px"}}>
               <Typography variant="h6" align='center'
                 color='textPrimary'>
-                Over $68M in opportunities connected
+                Over $71M in opportunities connected
               </Typography>
             </Grid>
           </Card>
@@ -387,7 +389,7 @@ class OpportunityHome extends React.Component {
           onClick={this.handleDropdownClick}
           className={classes.dropdownButton}
           style={{ display: 'flex'}}
-        >
+          >
           <Typography variant="subtitle1" align='left'
             color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
             {"View By:"}
@@ -414,7 +416,7 @@ class OpportunityHome extends React.Component {
             vertical: 'top',
             horizontal: 'right',
           }}
-        >
+          >
           <MenuItem onClick={this.handleDropdownChange('Network', '')}
             className={classes.dropdownMenuItem}
             selected={dropdownFocus === ''}>
@@ -508,34 +510,35 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    if(this.props.currentUser){
-      return (
-        <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
-          <Grid container className={classes.grid}>
-            {header}
-            {opportunityGrid}
-            <OpportunityWaitlist
-              handleSubmit={this.handleWaitlistSubmit}
-              loading={loading}
-              currentUser={this.props.currentUser}
+    return (
+      <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
+        <Grid container className={classes.grid}>
+          {header}
+          {opportunitiesLoaded ? opportunityGrid : (
+            <div style={{ padding: "114px 20px 50px", width: '100%' }}>
+              <Loading />
+            </div>
+          )}
+          <OpportunityWaitlist
+            handleSubmit={this.handleWaitlistSubmit}
+            loading={loading}
+            currentUser={this.props.currentUser}
             />
           {this.props.currentUser.isAdmin &&
-              <OpportunityReferral
-                referralNetwork={referralNetwork}
-                networks={networksArray}
-                referral={referral}
-                handleChange={this.handleReferralChange}
-                handleSubmit={this.handleReferralSubmit}
+            <OpportunityReferral
+              referralNetwork={referralNetwork}
+              networks={networksArray}
+              referral={referral}
+              handleChange={this.handleReferralChange}
+              handleSubmit={this.handleReferralSubmit}
               />
-            }
-          </Grid>
-          <WaitlistModal open={waitlistOpen}
-            handleClose={this.handleWaitlistClose}
-            referred={true}/>
-        </MuiThemeProvider>
-      )
-    }
-    return <div></div>
+          }
+        </Grid>
+        <WaitlistModal open={waitlistOpen}
+          handleClose={this.handleWaitlistClose}
+          referred={true}/>
+      </MuiThemeProvider>
+    )
   }
 }
 

@@ -232,7 +232,7 @@ class HomePage extends React.Component{
             <Grid item xs={10} sm={8}>
               <Typography className={classes.homeSubheader}
                 variant="body1" gutterBottom>
-                {"Bridgekin is currently an invite-only community that has connected over $68M in opportunities. Sign up now to join our waitlist."}
+                {"Bridgekin is currently an invite-only community that has connected over $71M in opportunities. Sign up now to join our waitlist."}
               </Typography>
               {form}
             </Grid>
@@ -256,7 +256,7 @@ class HomePage extends React.Component{
             <Grid item xs={11} sm={7}>
               <Typography className={classes.homeSubheader}
                 variant="p" gutterBottom>
-                {"Bridgekin is currently an invite-only community that has connected over $68M in opportunities. Sign up now to join our waitlist."}
+                {"Bridgekin is currently an invite-only community that has connected over $71M in opportunities. Sign up now to join our waitlist."}
               </Typography>
               {form}
             </Grid>

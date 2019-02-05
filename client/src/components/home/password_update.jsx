@@ -83,8 +83,6 @@ class PasswordReset extends React.Component {
       resetToken: this.props.resetToken
     }
 
-    debugger
-
     this.props.passwordUpdate(payload)
     .then(() => this.setState({ sent: true }))
   }

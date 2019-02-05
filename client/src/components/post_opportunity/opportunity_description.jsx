@@ -172,7 +172,6 @@ class DescriptionField extends React.Component {
       let networks = e.target.value;
       this.setState({ [field]: networks},
       () => {
-        debugger
         this.props.handleChange('networks')(networks)
       });
     }

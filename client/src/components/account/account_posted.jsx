@@ -11,6 +11,7 @@ import AddIcon from '@material-ui/icons/AddSharp';
 
 import OpportunityCard from '../opportunity/opportunity_card';
 // import CardModal from './card_modal';
+import Loading from '../loading';
 
 import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportunity_actions';
 import { fetchNetworks } from '../../actions/network_actions';
@@ -72,6 +73,7 @@ class AccountPosted extends React.Component {
 
   render(){
     const { classes, opportunities }= this.props;
+
     if (this.state.loaded){
       let opportunityCards = opportunities.map(opportunity => (
         <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
@@ -114,8 +116,13 @@ class AccountPosted extends React.Component {
           {opportunityGrid}
         </Grid>
       )
+    } else {
+      return (
+        <div style={{ padding: "214px 20px 50px" }}>
+          <Loading />
+        </div>
+      )
     }
-    return <div></div>
   }
 }
 

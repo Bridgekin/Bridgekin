@@ -233,7 +233,6 @@ class OpportunityChange extends React.Component {
           handleRemoveFile={this.handleRemoveFile.bind(this)}/>;
       case 5:
         let errors = this.checkErrors();
-        debugger
         return <SubmitField
           title={this.state.title}
           description={this.state.description}
@@ -319,7 +318,6 @@ class OpportunityChange extends React.Component {
 
   handleChange(field) {
     return (value) => {
-      debugger
       this.setState({ [field]: value });
     }
   }

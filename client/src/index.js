@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         session: { id: user.id}
       };
       let store = configureStore(preloadedState);
+      console.log('Rendering site');
       ReactDOM.render(<Root store={store}/>, root);
     })
     .catch(() => {

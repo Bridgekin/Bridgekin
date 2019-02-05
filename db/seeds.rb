@@ -43,16 +43,16 @@ Network.create!(
 
 UserNetwork.create!(
   network_id: 1,
-  member_id: 2,
+  member_id: 1,
 )
 
 UserNetwork.create!(
   network_id: 2,
-  member_id: 2,
+  member_id: 1,
 )
 
 Opportunity.create!(
-  owner_id: 2,
+  owner_id: 1,
   title: 'Test - Amazing castle opportunity in France',
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
   opportunity_need: "Raise Capital",
@@ -73,7 +73,7 @@ OpportunityNetwork.create!(
 )
 
 Opportunity.create!(
-  owner_id: 2,
+  owner_id: 1,
   title: 'Test - Amazing castle opportunity in Czech',
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
   opportunity_need: "Raise Capital",

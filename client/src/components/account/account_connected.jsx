@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import OpportunityCard from '../opportunity/opportunity_card';
+import Loading from '../loading';
 
 import { fetchConnectedOpportunities } from '../../actions/connected_opportunity_actions';
 
@@ -42,6 +43,7 @@ class AccountConnected extends React.Component {
 
   componentDidMount(){
     this.props.fetchConnectedOpportunities()
+    .then(() => this.setState({ opportunitiesLoaded: true }))
   }
 
   handleCardOpen(){
@@ -49,58 +51,71 @@ class AccountConnected extends React.Component {
   }
 
   render(){
-    const { classes, connectedOpportunities, facilitatedOpportunities }= this.props;
+    const { classes, connectedOpportunities,
+       facilitatedOpportunities } = this.props;
 
-    let connectedOpportunityCards = connectedOpportunities.map(opportunity => (
-      <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
-        className={classes.gridItem}>
-        <OpportunityCard opportunity={opportunity}
-          classes={classes}
-          editable={false}/>
-      </Grid>
-    ));
+    const { opportunitiesLoaded } = this.state;
 
-    let facilitatedOpportunityCards = facilitatedOpportunities.map(opportunity => (
-      <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
-        className={classes.gridItem}>
-        <OpportunityCard opportunity={opportunity}
-          classes={classes}
-          editable={false}/>
-      </Grid>
-    ));
+    if(opportunitiesLoaded){
+      // let breaker = connectedOpportunities.first.industries[0];
+      let connectedOpportunityCards = connectedOpportunities.map(opportunity => (
+        <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
+          className={classes.gridItem}>
+          <OpportunityCard opportunity={opportunity}
+            classes={classes}
+            editable={false}/>
+        </Grid>
+      ));
 
-    let opportunityGrid = (
-      <Grid container justify="center" alignItems="center" spacing={24}>
+      let facilitatedOpportunityCards = facilitatedOpportunities.map(opportunity => (
+        <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
+          className={classes.gridItem}>
+          <OpportunityCard opportunity={opportunity}
+            classes={classes}
+            editable={false}/>
+        </Grid>
+      ));
 
-        <Grid item xs={11} className={classes.gridOpp} >
-          <Typography variant="h2" gutterBottom align='left'
-            color="secondary">
-            Connected Opportunities
-          </Typography>
-          <Grid container style={{ flexGrow: 1 }}
-            justify="flex-start" alignItems="center" spacing={24}>
-            {connectedOpportunityCards}
+      let opportunityGrid = (
+        <Grid container justify="center" alignItems="center" spacing={24}>
+
+          <Grid item xs={11} className={classes.gridOpp} >
+            <Typography variant="h2" gutterBottom align='left'
+              color="secondary">
+              Connected Opportunities
+            </Typography>
+            <Grid container style={{ flexGrow: 1 }}
+              justify="flex-start" alignItems="center" spacing={24}>
+              {connectedOpportunityCards}
+            </Grid>
+          </Grid>
+
+          <Grid item xs={11} style={{ marginTop: 40 }}>
+            <Typography variant="h2" gutterBottom align='left'
+              color="secondary">
+              Referred Opportunities
+            </Typography>
+            <Grid container style={{ flexGrow: 1 }}
+              justify="flex-start" alignItems="center" spacing={24}>
+              {facilitatedOpportunityCards}
+            </Grid>
           </Grid>
         </Grid>
+      )
 
-        <Grid item xs={11} style={{ marginTop: 40 }}>
-          <Typography variant="h2" gutterBottom align='left'
-            color="secondary">
-            Referred Opportunities
-          </Typography>
-          <Grid container style={{ flexGrow: 1 }}
-            justify="flex-start" alignItems="center" spacing={24}>
-            {facilitatedOpportunityCards}
-          </Grid>
+      return (
+        <Grid container className={classes.root}>
+          {opportunityGrid}
         </Grid>
-      </Grid>
-    )
+      )
+    } else {
+      return (
+        <div style={{ padding: "214px 20px 50px" }}>
+          <Loading />
+        </div>
+      )
+    }
 
-    return (
-      <Grid container className={classes.root}>
-        {opportunityGrid}
-      </Grid>
-    )
   }
 }
 

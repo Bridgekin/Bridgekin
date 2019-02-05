@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import OpportunityChange from './opportunity_change';
+import Loading from '../loading';
 
 import { fetchNetworks } from '../../actions/network_actions';
 import { fetchOpportunity } from '../../actions/opportunity_actions';
@@ -45,8 +46,13 @@ class OpportunityEdit extends React.Component {
           type={'update'}
           />
       )
+    } else {
+      return (
+        <div style={{ padding: "214px 20px 50px", width:'100%'}}>
+          <Loading />
+        </div>
+      )
     }
-    return <div></div>
   }
 }
 
