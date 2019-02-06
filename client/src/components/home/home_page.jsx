@@ -17,8 +17,6 @@ import theme from '../theme';
 import WaitlistModal from '../waitlist_modal'
 import BottomFade from '../../static/bottom-fade.png';
 
-import ReactGA from 'react-ga';
-
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
 });
@@ -115,10 +113,6 @@ class HomePage extends React.Component{
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClose = this.handleClose.bind(this);
-
-    ReactGA.initialize('UA-133818078-1');
-    ReactGA.pageview('/homepage');
-
   }
 
   handleWaitlistSubmit(e){

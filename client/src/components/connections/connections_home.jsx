@@ -177,7 +177,7 @@ const styles = {
     backgroundColor: theme.palette.backgroundGrey,
     // position:'relative',
     // top: 64
-    paddingTop: 164
+    paddingTop: 64
   },
   circleAvatar:{
     backgroundColor: theme.palette.grey2,

@@ -35,7 +35,6 @@ import { fetchNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
-import ReactGA from 'react-ga';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -205,10 +204,6 @@ class OpportunityHome extends React.Component {
     this.handleDropdownClick = this.handleDropdownClick.bind(this);
     this.handleDropdownClose = this.handleDropdownClose.bind(this);
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
-
-    ReactGA.initialize('UA-133818078-1');
-    // ReactGA.pageview('/findandconnect');
-    ReactGA.pageview(this.props.location.pathname);
   }
 
   componentDidMount(){
