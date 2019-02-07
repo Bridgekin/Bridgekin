@@ -32,7 +32,7 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = "d1jtzofhvaqxb0.cloudfront.net"
+  config.action_controller.asset_host = "d3l1lzvrluzkzs.cloudfront.net"
 
   # Add the cloudfront hostname (including the `http(s)://` that you have
   # configured to serve these assets
