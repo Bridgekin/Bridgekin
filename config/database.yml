@@ -83,3 +83,9 @@ production:
   database: bridgekin_production
   username: bridgekin
   password: <%= ENV['BRIDGEKIN_DATABASE_PASSWORD'] %>
+
+staging:
+  <<: *default
+  database: bridgekin_staging
+  username: bridgekin
+  password: <%= ENV['BRIDGEKIN_DATABASE_PASSWORD'] %>
