@@ -36,9 +36,10 @@ class Api::OpportunitiesController < ApiController
 
   # POST /opportunities
   def create
-    @opportunity = Opportunity.new(opportunity_params)
-    @opportunity[:owner_id] = @user.id
-    @opportunity[:status] = 'Pending'
+    @opportunity = Opportunity.new(opportunity_params
+      .merge({owner_id: @user.id, status: "Pending"}))
+    # @opportunity[:owner_id] = @user.id
+    # @opportunity[:status] = 'Pending'
 
     authorize @opportunity
 
