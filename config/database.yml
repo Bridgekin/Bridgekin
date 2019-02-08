@@ -29,15 +29,15 @@ test:
   <<: *default
   database: bridgekin_test
 
-production:
-  <<: *default
-  database: bridgekin_production
-  username: bridgekin
-  password: <%= ENV['BRIDGEKIN_DATABASE_PASSWORD'] %>
+# production:
+#   <<: *default
+#   database: bridgekin_production
+#   username: bridgekin
+#   password: <%= ENV['BRIDGEKIN_DATABASE_PASSWORD'] %>
 
-staging:
-  <<: *default
-  database: bridgekin_development
-  # adapter: postgresql
-  # username: bridgekin
-  # password: <%= ENV['BRIDGEKIN_DATABASE_PASSWORD'] %>
+# staging:
+#   <<: *default
+#   database: bridgekin_development
+#   # adapter: postgresql
+#   # username: bridgekin
+#   # password: <%= ENV['BRIDGEKIN_DATABASE_PASSWORD'] %>

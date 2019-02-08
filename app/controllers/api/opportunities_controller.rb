@@ -9,10 +9,11 @@ class Api::OpportunitiesController < ApiController
 
   def index
     if params[:network_id].empty?
-      @opportunities = policy_scope(Opportunity).where.not(status: 'Deleted')
+      @opportunities = policy_scope(Opportunity)
+        .where.not(status: 'Deleted')
     else
       @opportunities = policy_scope(Opportunity)
-        .where(opportunity_networks: { network_id: params[:network_id]} )
+        .where(opportunity_networks: { network_id: params[:network_id]})
         .where.not(status: 'Deleted')
     end
 
