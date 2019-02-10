@@ -173,30 +173,6 @@ class OpportunityHome extends React.Component {
       anchorEl: null
     };
 
-    // this.opportunities = [
-    //   {
-    //     title: `Tuscan Castle surrounded by 30+ acres of vineyards and olive
-    //     groves seekings buyer`,
-    //     description: `Historically refurbished 33,000 sq ft castle in the heart
-    //     of the Tuscan countryside. Off the market property considered
-    //     the Crown of Ireland!`,
-    //     geography: 'Italy',
-    //     industry: 'Real Estate and Housing',
-    //     value: 'Over 25M',
-    //     need: 'Raise Capital',
-    //     networks: 'All Bridgekin'
-    //   },
-    //   {
-    //     title: 'Test house',
-    //     description: 'This is a second test house where you can also see blah blah',
-    //     geography: 'Romania',
-    //     industry: 'Real Estate and Housing',
-    //     value: 'Over 500k',
-    //     need: 'Raise Capital',
-    //     networks: 'All Bridgekin'
-    //   },
-    // ];
-
     this.handleWaitlistChange = this.handleWaitlistChange.bind(this);
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     this.handleReferralChange = this.handleReferralChange.bind(this);

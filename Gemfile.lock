@@ -308,6 +308,10 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.5)
       tilt (~> 2.0)
+    skylight (3.1.4)
+      skylight-core (= 3.1.4)
+    skylight-core (3.1.4)
+      activesupport (>= 4.2.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -375,6 +379,7 @@ DEPENDENCIES
   sendgrid-ruby
   shoulda-matchers!
   simple_token_authentication (~> 1.0)
+  skylight
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data

@@ -30,4 +30,21 @@ RSpec.describe Opportunity, type: :model do
       expect(subject.picture).to be_attached
     end
   end
+
+  describe 'Reset Networks function' do
+    before do
+      @network = Network.create(title: 'a')
+      @network_2 = Network.create(title: 'b')
+      OpportunityNetwork.create(network_id: @network.id,
+        opportunity_id: subject.id )
+    end
+
+    context 'when passed a string representing an array of networks' do
+      it 'should update with new network connections' do
+        subject.reset_networks('#{@network.id},#{@network_2.id}')
+        expect(subject.networks).to eq([@network, @network_2])
+        expect(subject.networks).not_to eq([@network])
+      end
+    end
+  end
 end

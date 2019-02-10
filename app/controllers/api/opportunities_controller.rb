@@ -21,44 +21,26 @@ class Api::OpportunitiesController < ApiController
   end
 
   def userIndex
-    # @opportunities = Opportunity.joins(:opportunity_networks)
-    #   .where(owner_id: @user.id)
-    #   .where("opportunity_networks.network_id = #{params[:network_id]}")
     @opportunities = @user.opportunities.where.not(status: 'Deleted')
     render :index
   end
 
-  # GET /opportunities/1
   def show
     authorize @opportunity
     @networks = @opportunity.networks.pluck(:id)
     render :show
   end
 
-  # POST /opportunities
   def create
     @opportunity = Opportunity.new(opportunity_params
       .merge({owner_id: @user.id, status: "Pending"}))
-    # @opportunity[:owner_id] = @user.id
-    # @opportunity[:status] = 'Pending'
-
     authorize @opportunity
 
     if @opportunity.save
-      networks_params = params[:opportunity][:networks].split(',')
-      @opportunityNetworks = []
-      networks_params.each do |id|
-        @opportunityNetworks << OpportunityNetwork.create(
-          opportunity_id: @opportunity.id,
-          network_id: id
-        )
-      end
-
+      @opportunity.reset_networks(params[:opportunity][:networks])
       @networks = @opportunity.networks.pluck(:id)
-
       # Send email to joe
       OpportunityMailer.flag_opportunity_creation(@opportunity, @user).deliver_now
-
       # render json: @opportunity, status: :created, location: @opportunity
       render :show
     else
@@ -72,18 +54,7 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
-
-      @opportunity.opportunity_networks.delete_all
-
-      networks_params = params[:opportunity][:networks].split(',')
-      @opportunityNetworks = []
-      networks_params.each do |id|
-        @opportunityNetworks << OpportunityNetwork.create(
-          opportunity_id: @opportunity.id,
-          network_id: id
-        )
-      end
-
+      @opportunity.reset_networks(params[:opportunity][:networks])
       @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity
       render :show
@@ -116,15 +87,15 @@ class Api::OpportunitiesController < ApiController
         opp_params = params.require(:opportunity).permit(:title, :description,
           :owner_id, :opportunity_need, :value, :status,
           :industries, :geography)
-
       else
         opp_params = params.require(:opportunity).permit(:title, :description,
           :owner_id, :opportunity_need, :value, :status, :picture,
           :industries, :geography)
       end
 
-      opp_params[:geography] = opp_params[:geography].split(',')
-      opp_params[:industries] = opp_params[:industries].split(',')
+      [:geography, :industries].each do |field|
+        opp_params[field] = opp_params[field].split(',')
+      end
 
       opp_params
     end
