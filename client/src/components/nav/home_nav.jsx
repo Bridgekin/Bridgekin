@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink, withRouter } from 'react-router-dom';
+import withWidth from '@material-ui/core/withWidth';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,9 +17,12 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import logo from '../../static/Bridgekin_Logo.png';
 import './home_nav.css';
@@ -128,7 +132,53 @@ const styles = {
   },
   textFieldLabel:{
     fontSize: 14
-  }
+  },
+  // navSectionContainer:{
+  //   display: 'flex',
+  //   justifyContent: 'space-between'
+  // },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.grey1}`,
+    // marginRight: theme.spacing.unit * 2,
+    // marginLeft: 0,
+    width: '100%',
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex'
+      // marginLeft: theme.spacing.unit * 3,
+      // width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.darkGrey,
+    top: 0, right: 0
+  },
+  inputRoot: {
+    color: theme.palette.darkGrey,
+    width: '100%',
+    fontSize: 15,
+    fontWeight: 500,
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit,
+    paddingRight: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 200,
+    },
+  },
   // menuIcon:{ color: }
 };
 
@@ -218,7 +268,7 @@ class HomeNav extends React.Component {
   };
 
   render(){
-    let { classes, currentUser, sessionErrors } = this.props;
+    let { classes, currentUser, sessionErrors, width } = this.props;
 
     const { auth, anchorEl, mobileMoreAnchorEl } = this.state;
     // const open = Boolean(anchorEl);
@@ -272,11 +322,6 @@ class HomeNav extends React.Component {
         <MenuItem onClick={this.handleLinkClose('findandconnect')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             Find & Connect
-          </Typography>
-        </MenuItem>
-        <MenuItem onClick={this.handleLinkClose('postopportunity')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
-            Post Opportunity
           </Typography>
         </MenuItem>
         <MenuItem onClick={this.handleLinkClose('mynetwork')}>
@@ -365,7 +410,9 @@ class HomeNav extends React.Component {
 
       </div>
     ) : (
-      <div className='nav-menu-container'>
+      <Grid className={classes.navSectionContainer}
+        item xs={2} sm={1} md={4} lg={5}
+        container justify='flex-end' alignItems='center'>
 
         <div className={classes.sectionDesktop}>
           <Button color='secondary'
@@ -373,13 +420,6 @@ class HomeNav extends React.Component {
             <Typography variant="h4" align='left' color="textPrimary"
               style={(pathName === 'findandconnect') ? { fontWeight: 600} : {}}>
               Find & Connect
-            </Typography>
-          </Button>
-          <Button color='secondary'
-            onClick={this.handleLinkClose('postopportunity')}>
-            <Typography variant="h4" align='left' color="textPrimary"
-              style={(pathName === 'postopportunity') ? { fontWeight: 600} : {}}>
-              Post Opportunity
             </Typography>
           </Button>
           <Button color='secondary'
@@ -417,27 +457,45 @@ class HomeNav extends React.Component {
         </div>
         {renderMenu}
         {renderMobileMenu}
-      </div>
+      </Grid>
+    )
+
+    let searchBar = (
+      <Grid item xs={0} sm={5} md={3} lg={3}
+        className={classes.search}>
+        <InputBase
+          placeholder="Search…"
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput,
+          }}
+        />
+        <div className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
+      </Grid>
     )
 
     // <Link to='/' className={classes.logoLink}>
     //   <img alt='logo' className={classes.logo} src={logo} />
     // </Link>
-
+    // <div className={classes.grow} />
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
-            <IconButton aria-label="logo-link" className={classes.logoLinkDesktop}
-              onClick={() => this.props.history.push('/')}>
-              <img alt='logo' className={classes.logo} src={logo} />
-            </IconButton>
-            <IconButton aria-label="logo-link" className={classes.logoLinkMobile}
-              onClick={() => this.props.history.push('/')}>
-              <img alt='logo' className={classes.logo} src={logo} />
-            </IconButton>
-            <div className={classes.grow} />
-            {navMenu}
+            <Grid container alignItems='center'>
+              <Grid item xs={9} sm={5} md={5} lg={4}>
+                <IconButton aria-label="logo-link"
+                  className={width === 'xs' ? classes.logoLinkMobile : classes.logoLinkDesktop}
+                  onClick={() => this.props.history.push('/')}>
+                  <img alt='logo' className={classes.logo} src={logo} />
+                </IconButton>
+              </Grid>
+
+              {searchBar}
+              {navMenu}
+            </Grid>
           </Toolbar>
         </AppBar>
 
@@ -447,4 +505,4 @@ class HomeNav extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(HomeNav));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withWidth()(HomeNav)));

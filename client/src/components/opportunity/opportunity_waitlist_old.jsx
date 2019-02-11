@@ -21,19 +21,19 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    // padding: "40px 0px",
-    // borderTop: `0.5px solid ${theme.palette.grey1}`,
-    // backgroundColor: 'RGBA(196,196,196,0.1)'
+    padding: "40px 0px",
+    borderTop: `0.5px solid ${theme.palette.grey1}`,
+    backgroundColor: 'RGBA(196,196,196,0.1)'
   },
   headerTypography:{
     margin: "25px 0px 40px 0px"
   },
   refButton:{
-    fontSize: 14,
+    fontSize: '1rem',
     fontWeight: 500,
     // marginTop: 25,
-    height: 26,
-    // width: 180
+    height: 55,
+    width: 200
   },
   buttonProgress: {
     color: '#4067B2',
@@ -43,11 +43,7 @@ const styles = theme => ({
     marginLeft: -12,
   },
   textField:{
-    margin: "10px 0px 10px 0px",
-    // padding: "10px 14px"
-  },
-  textfieldInput:{
-    padding: "10px 14px"
+    margin: "10px 0px 10px 0px"
   }
 });
 
@@ -87,60 +83,61 @@ class OpportunityWaitlist extends React.Component{
 
     return(
       <Grid container className={classes.root}
-        justify="center" alignItems="center" spacing={8}>
+        justify="center" alignItems="center">
 
-        <Grid item xs={5} container flexDirection='column'>
-          <Typography align='Left'
-            className={classes.fieldLabel}>
-            First Name
+        <Grid item container xs={10} md={8}  justify="flex-start" alignItems="center">
+          <Typography variant="h2" gutterBottom align='left'
+            color="secondary" className={classes.headerTypography}
+            style={{ lineHeight: 1.5}}>
+            {`Refer a trusted contact that would appreciate joining
+              our community and we'll add them to our waitlist.`}
           </Typography>
-          <TextField
-          required
-          id="outlined-required"
-          placeholder="John"
-          className={classes.textField}
-          fullWidth
-          variant="outlined"
-          onChange={this.handleChange('fname')}
-          value={this.state.fname}
-          InputProps={{
-            classes:{
-              input: classes.textfieldInput
-            }
-          }}
-          />
         </Grid>
-        <Grid item xs={7} container flexDirection='column'>
-          <Typography align='Left'
-            className={classes.fieldLabel}>
-            Email
-          </Typography>
-          <TextField
-          required
-          id="outlined-required"
-          placeholder="johnsmith@email.com"
-          className={classes.textField}
-          fullWidth
-          variant="outlined"
-          onChange={this.handleChange('email')}
-          value={this.state.email}
-          InputProps={{
-            classes:{
-              input: classes.textfieldInput
-            }
-          }}
-          />
+
+        <Grid item container xs={11} md={8} justify="center" alignItems="center"
+          spacing={8}>
+          <Grid item xs={12} md={3}>
+            <TextField
+            required
+            id="outlined-required"
+            label="First Name"
+            placeholder="John"
+            className={classes.textField}
+            fullWidth
+            variant="outlined"
+            onChange={this.handleChange('fname')}
+            value={this.state.fname}
+            InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={5} justify="flex-end" alignItems="center">
+            <TextField
+            required
+            id="outlined-required"
+            label="Email"
+            placeholder="johnsmith@email.com"
+            className={classes.textField}
+            fullWidth
+            variant="outlined"
+            onChange={this.handleChange('email')}
+            value={this.state.email}
+            InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4} container justify='flex-start'>
+            <Button variant="contained" color='secondary'
+              className={classes.refButton}
+              onClick={this.handleSubmit}
+              disabled={loading}>
+              Refer Them Now
+            </Button>
+            {loading && <CircularProgress size={24}
+              className={classes.buttonProgress} />}
+          </Grid>
         </Grid>
-        <Grid item xs={12} container justify='flex-end'>
-          <Button variant="contained" color='secondary'
-            className={classes.refButton}
-            onClick={this.handleSubmit}
-            disabled={loading}>
-            Invite Now
-          </Button>
-          {loading && <CircularProgress size={24}
-            className={classes.buttonProgress} />}
-        </Grid>
+
       </Grid>
     )
   }
