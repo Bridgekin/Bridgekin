@@ -115,15 +115,15 @@ ActiveRecord::Schema.define(version: 2019_02_06_205549) do
 
   create_table "opportunities", force: :cascade do |t|
     t.integer "owner_id", null: false
-    t.string "title", default: "", null: false
+    t.string "title", null: false
     t.text "description"
-    t.string "opportunity_need", default: "", null: false
-    t.string "value", default: "", null: false
+    t.string "opportunity_need", null: false
+    t.string "value", null: false
     t.string "status", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "industries", default: [], null: false, array: true
-    t.string "geography", default: [], null: false, array: true
+    t.string "industries", null: false, array: true
+    t.string "geography", null: false, array: true
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
     t.index ["status"], name: "index_opportunities_on_status"
   end
