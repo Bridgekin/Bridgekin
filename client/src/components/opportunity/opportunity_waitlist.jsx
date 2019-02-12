@@ -48,6 +48,10 @@ const styles = theme => ({
   },
   textfieldInput:{
     padding: "10px 14px"
+  },
+  fieldLabel:{
+    fontSize: 14,
+    fontWeight: 600
   }
 });
 

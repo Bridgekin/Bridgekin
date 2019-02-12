@@ -450,7 +450,8 @@ class OpportunityHome extends React.Component {
     let opportunityCards = opportunities.map(opportunity => (
       <Grid item xs={12} sm={6} md={4} justify="center" alignItems="center"
         className={classes.gridItem}>
-        <OpportunityCard opportunity={opportunity}
+        <OpportunityCard
+          opportunity={opportunity}
           classes={classes} />
       </Grid>
     ));

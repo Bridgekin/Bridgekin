@@ -16,17 +16,33 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import AddIcon from '@material-ui/icons/AddSharp';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import IconButton from '@material-ui/core/IconButton';
+import Avatar from '@material-ui/core/Avatar';
+
 //Import CSS and theme
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import './opportunity_home.css'
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 //Import Local Components
 import OpportunityCard from './opportunity_card';
+import OpportunityCardFeed from './opportunity_card_feed';
 import OpportunityReferral from './opportunity_referral';
 import OpportunityWaitlist from './opportunity_waitlist';
 import WaitlistModal from '../waitlist_modal';
 import Loading from '../loading';
+
+import Img from 'react-image'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import VisibilitySensor from 'react-visibility-sensor';
+import LinesEllipsis from 'react-lines-ellipsis';
 
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
@@ -35,6 +51,7 @@ import { fetchNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
+import { PickImage } from '../../static/opportunity_images/image_util.js';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -59,10 +76,11 @@ const styles = {
     flexGrow: 1,
   },
   grid:{
-    padding: "64px 35px 0px 35px",
+    position: 'relative',
+    padding: "64px 35px 30px 35px",
     paddingTop: 64 + 34,
     flexGrow: 1,
-    backgroundColor: `${theme.palette.lightGrey}`,
+    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
     minHeight: window.innerHeight
   },
   column:{
@@ -71,41 +89,78 @@ const styles = {
     paddingRight: 17,
     // margin: "20px 17px"
   },
-  insightCard:{
+  feedCard:{
     // height: 118,
     padding: "9px 17px 20px",
-    backgroundColor: 'white',
-    margin: "18px 0px"
+    backgroundColor: `${theme.palette.white}`,
+    marginTop: 18,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`
   },
   oppNotification:{
-    borderRadius: 10,
+    borderRadius: 5,
     padding: "8px 10px",
-    backgroundColor: `${theme.palette.lightGrey}`
+    backgroundColor: `${fade(theme.palette.common.black,0.05)}`
   },
-  waitlistCard:{
-    padding: "9px 17px 20px",
-    backgroundColor: 'white'
+  filterCard:{
+    marginTop: 18,
+    backgroundColor: `${theme.palette.white}`,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`
   },
-  typography:{
-    cardHeader: {
-      fontSize: 14,
-      fontWeight: 500
-    },
-    cardHeader2: {
-      fontSize: 13,
-      fontWeight: 500
-    },
-    filterHeader:{
-      fontSize: 14,
-      fontWeight: 600
-    },
-    filterSubtext:{
-      fontSize: 10,
-      fontWeight: 300
-    },
-    fieldLabel:{
-      fontSize: 12
-    }
+  opportunityCard:{
+    marginTop: 18,
+    backgroundColor: `${theme.palette.white}`,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`
+  },
+  oppStatus:{
+    height: 29,
+    width: 89,
+    textTransform: 'uppercase',
+    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  cover:{
+    height: 140,
+    width: '100%',
+    objectFit: 'cover'
+  },
+  filterItem:{
+    borderTop: `1px solid ${theme.palette.grey1}`,
+  },
+  avatar:{
+    height: 55,
+    width: 55
+  },
+  createFilterButton:{
+    textTransform: 'none',
+    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    marginRight: 10,
+  },
+  cardHeader: {
+    fontSize: 14,
+    fontWeight: 600
+  },
+  cardHeader2: {
+    fontSize: 13,
+    fontWeight: 600
+  },
+  filterHeader:{
+    fontSize: 13,
+    fontWeight: 600
+  },
+  filterSubtext:{
+    fontSize: 10,
+    fontWeight: 300
+  },
+  fieldLabel:{
+    fontSize: 12
   }
   // homeheader:{
   //   padding: "20px 0px 20px 0px",
@@ -312,30 +367,32 @@ class OpportunityHome extends React.Component {
 
     const networksArray = Object.values(networks)
 
-    opportunities = opportunities.filter(o => o.status === "Approved")
+    // opportunities = opportunities.filter(o => o.status === "Approved")
 
     let column1 = (
       <Grid container justify='center' alignItems='center'
-        style={{ padding: 0}}>
-        <div className={classes.insightCard}>
+        style={{ padding: 0, position: 'relative'}}>
+        <div className={classes.feedCard}
+          style={{ position: 'fixed', top: 98, width: '20%'}}>
           <Typography gutterBottom align='Left'
-            className={classes.typography.cardHeader}
+            className={classes.cardHeader}
             style={{ marginBottom: 20}}>
             Over $71M in opportunities connected
           </Typography>
 
           <div className={classes.oppNotification}>
             <Typography align='Left'
-              className={classes.typography.cardHeader}
+              className={classes.cardHeader}
               style={{ color: theme.palette.darkGrey}}>
               There are 10 opportunities for you to checkout
             </Typography>
           </div>
         </div>
 
-        <div className={classes.waitlistCard}>
+        <div className={classes.feedCard}
+          style={{ position: 'fixed', top: (98+127+18), width: '20%'}}>
           <Typography gutterBottom align='Left'
-            className={classes.typography.cardHeader}
+            className={classes.cardHeader}
             style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
             Invite your trusted business contacts
           </Typography>
@@ -349,10 +406,141 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let feed = <div></div>
+    let loader = (
+      <Grid container justify='center' alignItems='center'
+        className={classes.loader}>
+      </Grid>
+    )
+
+    let opportunityCards = opportunities.map(opportunity => (
+      <OpportunityCardFeed
+        currentUser={currentUser}
+        opportunity={opportunity}
+        classes={classes} />
+    ));
+
+    let feed = (
+      <Grid container justify='center' alignItems='center'
+        style={{ padding: 0}}>
+
+        <div className={classes.feedCard}>
+          <Typography align='Left'
+            className={classes.cardHeader}>
+            Create Opportunity
+          </Typography>
+
+          <Grid container style={{ borderBottom: `1px solid ${theme.palette.grey1}`}}>
+            <IconButton
+              onClick={() => this.props.history.push('/')}
+              color="secondary"
+            >
+              {currentUser.profilePicUrl ? (
+                <Avatar alt="profile-pic"
+                  src={currentUser.profilePicUrl}
+                  className={classes.avatar} />
+              ) : (
+                <AccountCircle />
+              )}
+            </IconButton>
+
+            <Grid container style={{ flexGrow: 1, width: 'auto'}}
+              alignItems='center'>
+              <Typography align='Left' color="textSecondary"
+                className={classes.cardHeader}
+                style={{ padding: "15px 0px"}}
+                onClick={() => console.log('open modal')}>
+                What's your most pressing business need or opportunity
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid container style={{ paddingTop: 17}}>
+            <Button className={classes.createFilterButton}>
+              Image
+            </Button>
+            <Button className={classes.createFilterButton}>
+              Privacy
+            </Button>
+            <Button className={classes.createFilterButton}>
+              {`Share with: Connections`}
+            </Button>
+          </Grid>
+        </div>
+
+        {opportunityCards}
+      </Grid>
+    )
+
+    let otherDropdownOptions = [
+      {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
+      {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
+      {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
+    ]
+
     let filter = (
       <Grid container justify='center' alignItems='center'
         style={{ padding: 0}}>
+        <div className={classes.filterCard}
+          style={{ position: 'fixed', top: 98, width: '20%'}}>
+          <Typography align='Left'
+            className={classes.cardHeader}
+            style={{ margin: "10px 20px 0px"}}>
+            What opportunities do you want to see?
+          </Typography>
+
+          <List component="nav">
+            <ListItem button className={classes.filterItem}
+              onClick={this.handleDropdownChange('Network','')}
+              selected={dropdownFocus === ''}>
+              <div>
+                <Typography variant="h6" align='left'
+                  color="textPrimary" className={classes.filterHeader}>
+                  {'All Opportunities'}
+                </Typography>
+                <Typography variant="body2" align='left'
+                  color="textPrimary" className={classes.filterSubtext}>
+                  {'Everything visible to you and the Bridgekin network'}
+                </Typography>
+              </div>
+            </ListItem>
+
+            {networksArray.map(network => (
+              <ListItem button value={network.id}
+                className={classes.filterItem}
+                onClick={this.handleDropdownChange('Network',network.id)}
+                selected={dropdownFocus === network.id}>
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textPrimary" className={classes.filterHeader}>
+                    {network.title}
+                  </Typography>
+                  <Typography variant="body2" align='left'
+                    color="textPrimary" className={classes.filterSubtext}>
+                    {network.subtitle}
+                  </Typography>
+                </div>
+              </ListItem>
+            ))}
+
+            {otherDropdownOptions.map(other => (
+              <ListItem button
+                className={classes.filterItem}
+                disabled={other.disabled}
+                >
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textPrimary" className={classes.filterHeader}>
+                    {other.header}
+                  </Typography>
+                  <Typography variant="body2" align='left'
+                    color="textPrimary" className={classes.filterSubtext}>
+                    {other.subHeader}
+                  </Typography>
+                </div>
+              </ListItem>
+            ))}
+          </List>
+        </div>
       </Grid>
     )
 

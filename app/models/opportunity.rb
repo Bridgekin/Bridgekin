@@ -1,10 +1,12 @@
 class Opportunity < ApplicationRecord
-  validates :owner_id, :title, :opportunity_need, :industries,
-    :geography, :value, :status, presence: true
+  validates :owner_id, :status, presence: true
+  # validates :owner_id, :title, :opportunity_need, :industries,
+  #   :geography, :value, :status, presence: true
 
   validates :title, uniqueness: {
     scope: :owner_id,
-    message: "is already taken across your authored opportunities" }
+    allow_blank: true,
+    message: "is already taken across your  authored opportunities" }
 
   belongs_to :owner,
     foreign_key: :owner_id,
