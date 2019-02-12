@@ -224,7 +224,7 @@ class OpportunityCard extends React.Component {
               <div className={classes.oppStatus}>
                 <div className={classes.statusIndicator}
                   style={{ backgroundColor: this.getStatusColor(dealStatus) }}/>
-                  {opportunity.status}
+                  {status}
               </div>
             </Grid>
           </Grid>
@@ -237,7 +237,7 @@ class OpportunityCard extends React.Component {
                 <Typography variant="h5" align='left'
                   color="default" className={classes.title} >
                   <LinesEllipsis
-                    text={opportunity.title}
+                    text={title}
                     maxLine='2'
                     ellipsis='...'
                     trimRight
@@ -250,7 +250,7 @@ class OpportunityCard extends React.Component {
                   color="default" className={classes.description}
                   >
                   <LinesEllipsis
-                    text={opportunity.description}
+                    text={description}
                     maxLine='3'
                     ellipsis='...'
                     trimRight
@@ -269,7 +269,7 @@ class OpportunityCard extends React.Component {
                   <Typography variant="subtitle1" gutterBottom align='left'
                     color="default" className={classes.cardSubContent}>
                     <LinesEllipsis
-                      text={opportunity.geography.join(", ")}
+                      text={geography.join(", ")}
                       maxLine='3'
                       ellipsis='...'
                       trimRight
