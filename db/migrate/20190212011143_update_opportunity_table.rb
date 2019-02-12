@@ -5,6 +5,7 @@ class UpdateOpportunityTable < ActiveRecord::Migration[5.2]
     change_column :opportunities, :industries, :string, array: true, null: false, default: []
     change_column :opportunities, :geography, :string, array: true, null: false, default: []
     change_column :opportunities, :value, :string, null: false, default:''
+    change_column :opportunities, :status, :string, null: false, default:''
 
     add_column :opportunities, :deal_status, :string, null: false, default:''
   end
@@ -15,6 +16,7 @@ class UpdateOpportunityTable < ActiveRecord::Migration[5.2]
     change_column :opportunities, :industries, :string, array:true, null: false, default: nil
     change_column :opportunities, :geography, :string, array:true, null: false, default: nil
     change_column :opportunities, :value, :string, null: false, default: nil
+    change_column :opportunities, :status, :string, null: false, default: nil
 
     remove_column :opportunities, :deal_status, :string, null: false, default:''
   end

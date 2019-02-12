@@ -39,6 +39,11 @@ const styles = theme => ({
     margin: "10px 0px 20px 0px",
     borderTop: `1px solid ${theme.palette.lightGrey}`,
     padding: 10
+  },
+  statusIndicator:{
+    width: 8, height: 8,
+    borderRadius: '50%',
+    marginRight: 6
   }
 });
 
@@ -48,7 +53,9 @@ class OpportunityCard extends React.Component {
     super(props)
     this.state = {
       deleteOpen: false,
-      cardOpen: false
+      cardOpen: false,
+      connectBool: null,
+      cardModalPage: 'sent'
     }
 
     this.handleCardOpen = this.handleCardOpen.bind(this);
@@ -59,10 +66,13 @@ class OpportunityCard extends React.Component {
     this.handleCardClose = this.handleCardClose.bind(this);
   }
 
-  handleCardOpen(e){
-    e.preventDefault();
-    // this.props.handleCardOpen(this.props.opportunity)
-    this.setState({ cardOpen: true })
+  handleCardOpen(cardModalPage, connectBool){
+    return e => {
+      e.preventDefault();
+      e.stopPropagation();
+      // this.props.handleCardOpen(this.props.opportunity)
+      this.setState({ cardOpen: true, cardModalPage, connectBool })
+    }
   }
 
   handleCardClose(e){
@@ -106,7 +116,7 @@ class OpportunityCard extends React.Component {
 
   render(){
     const { classes, opportunity, editable, demo, currentUser }= this.props;
-    const { cardOpen } = this.state;
+    const { cardOpen, cardModalPage, connectBool } = this.state;
     let { title, description, industries, opportunityNeed, geography,
       value, status, pictureUrl, dealStatus } = opportunity;
 
@@ -198,7 +208,7 @@ class OpportunityCard extends React.Component {
 
       return (
         <CardActionArea className={classes.opportunityCard}
-          onClick={this.handleCardOpen}>
+          onClick={this.handleCardOpen('none', undefined)}>
           <Grid container style={{ padding: "0px 17px"}}>
             <Grid item xs={6} container alignItems='center'>
               <IconButton
@@ -223,8 +233,8 @@ class OpportunityCard extends React.Component {
             <Grid item xs={6} container alignItems='center' justify='flex-end'>
               <div className={classes.oppStatus}>
                 <div className={classes.statusIndicator}
-                  style={{ backgroundColor: this.getStatusColor(dealStatus) }}/>
-                  {status}
+                  style={{ backgroundColor: `${this.getStatusColor(dealStatus)}` }}/>
+                {dealStatus}
               </div>
             </Grid>
           </Grid>
@@ -314,17 +324,22 @@ class OpportunityCard extends React.Component {
               <Grid container justify='flex-start' spacing={16}
                 className={classes.feedCardActionContainer}>
                 <Button color='primary' variant='contained'
-                  style={{ marginRight: 31}}>
+                  style={{ marginRight: 31}}
+                  onClick={this.handleCardOpen('confirm', true)}>
                   Connect
                 </Button>
 
-                <Button color='primary' variant='contained'>
+                <Button color='primary' variant='contained'
+                  onClick={this.handleCardOpen('confirm', false)}>
                   Refer
                 </Button>
               </Grid>
             </Grid>
           </Grid>
-          <CardModal open={cardOpen}
+          <CardModal
+            open={cardOpen}
+            page={cardModalPage}
+            type={connectBool}
             handleClose={this.handleCardClose}
             opportunity={opportunity}
             demo={demo}/>

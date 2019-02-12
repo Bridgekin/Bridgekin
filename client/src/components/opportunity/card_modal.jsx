@@ -138,7 +138,6 @@ class CardModal extends React.Component {
     super(props)
     this.state={
       connectBool: true,
-      connectType: 'connect',
       page: 'opportunity'
     }
     this.handleClose = this.handleClose.bind(this);
@@ -147,6 +146,13 @@ class CardModal extends React.Component {
     this.getContent = this.getContent.bind(this);
     this.handleConnection = this.handleConnection.bind(this);
   }
+
+  // componentDidUpdate(prevProps){
+  //   if(this.state.page !== this.props.page ||
+  //     prevProps.connectBool !== this.props.connectBool) {
+  //       this.setState({ page: this.props.page, connectBool:})
+  //     }
+  // }
 
   handleClose(field){
     return e => {
