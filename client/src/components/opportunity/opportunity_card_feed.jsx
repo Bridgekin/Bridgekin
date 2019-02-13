@@ -339,7 +339,7 @@ class OpportunityCard extends React.Component {
           <CardModal
             open={cardOpen}
             page={cardModalPage}
-            type={connectBool}
+            connectBool={connectBool}
             handleClose={this.handleCardClose}
             opportunity={opportunity}
             demo={demo}/>

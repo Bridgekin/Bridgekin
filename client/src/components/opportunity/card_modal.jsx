@@ -136,7 +136,7 @@ const styles = theme => ({
 class CardModal extends React.Component {
   constructor(props){
     super(props)
-    this.state={
+    this.state = {
       connectBool: true,
       page: 'opportunity'
     }
@@ -147,12 +147,18 @@ class CardModal extends React.Component {
     this.handleConnection = this.handleConnection.bind(this);
   }
 
-  // componentDidUpdate(prevProps){
-  //   if(this.state.page !== this.props.page ||
-  //     prevProps.connectBool !== this.props.connectBool) {
-  //       this.setState({ page: this.props.page, connectBool:})
-  //     }
-  // }
+  componentDidUpdate(prevProps, prevState){
+    if((prevProps.page !== this.props.page ||
+      prevProps.connectBool !== this.props.connectBool) &&
+      (this.state.page !== this.props.page ||
+      prevProps.connectBool !== this.props.connectBool)) {
+        debugger
+        this.setState({
+          page: this.props.page,
+          connectBool: this.props.connectBool
+        })
+      }
+  }
 
   handleClose(field){
     return e => {

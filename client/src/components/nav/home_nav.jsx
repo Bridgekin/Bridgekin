@@ -409,7 +409,7 @@ class HomeNav extends React.Component {
       </div>
     ) : (
       <Grid className={classes.navSectionContainer}
-        item xs={2} sm={1} md={4} lg={5}
+        item xs={2} sm={2} md={5} lg={5}
         container justify='flex-end' alignItems='center'>
 
         <div className={classes.sectionDesktop}>
@@ -459,7 +459,7 @@ class HomeNav extends React.Component {
     )
 
     let searchBar = (
-      <Grid item xs={0} sm={5} md={3} lg={3}
+      <Grid item xs={0} sm={4} md={3} lg={3}
         className={classes.search}>
         <InputBase
           placeholder="Search…"
@@ -483,7 +483,7 @@ class HomeNav extends React.Component {
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
-              <Grid item xs={9} sm={5} md={5} lg={4}>
+              <Grid item xs={9} sm={6} md={4} lg={4}>
                 <IconButton aria-label="logo-link"
                   className={width === 'xs' ? classes.logoLinkMobile : classes.logoLinkDesktop}
                   onClick={() => this.props.history.push('/')}>

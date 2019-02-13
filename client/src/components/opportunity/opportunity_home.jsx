@@ -49,6 +49,7 @@ import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
+import OpportunityChangeModal from './opportunity_change_modal';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
@@ -77,7 +78,7 @@ const styles = {
   },
   grid:{
     position: 'relative',
-    padding: "64px 35px 30px 35px",
+    padding: "64px 35px 50px 35px",
     paddingTop: 64 + 34,
     flexGrow: 1,
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
@@ -85,8 +86,8 @@ const styles = {
   },
   column:{
     // border: "1px solid black",
-    paddingLeft: 17,
-    paddingRight: 17,
+    paddingLeft: 0,
+    paddingRight: 0,
     // margin: "20px 17px"
   },
   feedCard:{
@@ -137,6 +138,9 @@ const styles = {
   avatar:{
     height: 55,
     width: 55
+  },
+  loader:{
+    marginTop: 50
   },
   createFilterButton:{
     textTransform: 'none',
@@ -251,6 +255,19 @@ const styles = {
   // }
 };
 
+const DEFAULTSTATE = {
+  opportunityNeed: '',
+  geography: [],
+  industries: [],
+  value: '',
+  title: '',
+  description: '',
+  status: 'Pending',
+  picture: null,
+  pictureUrl: null,
+  networks: [],
+  anonymous: false
+}
 
 class OpportunityHome extends React.Component {
   constructor(props){
@@ -264,6 +281,7 @@ class OpportunityHome extends React.Component {
       loaded: false,
       success: false,
       waitlistOpen: false,
+      changeModalOpen: false,
       cardOpen: false,
       dropdownOpen: false,
       dropdownFocus: '',
@@ -271,13 +289,15 @@ class OpportunityHome extends React.Component {
       anchorEl: null
     };
 
-    this.handleWaitlistChange = this.handleWaitlistChange.bind(this);
+    // this.handleWaitlistChange = this.handleWaitlistChange.bind(this);
+    this.handleModalClose = this.handleModalClose.bind(this);
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     this.handleReferralChange = this.handleReferralChange.bind(this);
     this.handleReferralSubmit = this.handleReferralSubmit.bind(this);
     this.handleDropdownClick = this.handleDropdownClick.bind(this);
     this.handleDropdownClose = this.handleDropdownClose.bind(this);
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
+    this.handleOpportunityChangeModalOpen = this.handleOpportunityChangeModalOpen.bind(this);
   }
 
   componentDidMount(){
@@ -295,16 +315,23 @@ class OpportunityHome extends React.Component {
     })
   }
 
-  handleWaitlistChange(field){
+  // handleWaitlistChange(field){
+  //   return e => {
+  //     e.preventDefault();
+  //     this.setState({ [field]: e.target.value})
+  //   }
+  // }
+
+  handleModalClose(modal){
     return e => {
-      e.preventDefault();
-      this.setState({ [field]: e.target.value})
+      this.setState({ [modal]: false });
     }
   }
 
-  handleWaitlistClose = () => {
-    this.setState({ waitlistOpen: false });
-  };
+  handleOpportunityChangeModalOpen(e){
+    e.preventDefault();
+    this.setState({ changeModalOpen: true });
+  }
 
   handleWaitlistSubmit(user){
 
@@ -361,7 +388,7 @@ class OpportunityHome extends React.Component {
     let { classes, opportunities, networks,
         referral, currentUser } = this.props;
 
-    const { loading, waitlistOpen,
+    const { loading, waitlistOpen, changeModalOpen,
           referralNetwork, anchorEl,
           dropdownFocus, opportunitiesLoaded } = this.state;
 
@@ -371,9 +398,9 @@ class OpportunityHome extends React.Component {
 
     let column1 = (
       <Grid container justify='center' alignItems='center'
-        style={{ padding: 0, position: 'relative'}}>
+        style={{ padding: 0, width: '100%'}}>
         <div className={classes.feedCard}
-          style={{ position: 'fixed', top: 98, width: '20%'}}>
+          >
           <Typography gutterBottom align='Left'
             className={classes.cardHeader}
             style={{ marginBottom: 20}}>
@@ -389,8 +416,7 @@ class OpportunityHome extends React.Component {
           </div>
         </div>
 
-        <div className={classes.feedCard}
-          style={{ position: 'fixed', top: (98+127+18), width: '20%'}}>
+        <div className={classes.feedCard}>
           <Typography gutterBottom align='Left'
             className={classes.cardHeader}
             style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
@@ -400,7 +426,7 @@ class OpportunityHome extends React.Component {
           <OpportunityWaitlist
             handleSubmit={this.handleWaitlistSubmit}
             loading={loading}
-            currentUser={this.props.currentUser}
+            currentUser={currentUser}
             />
         </div>
       </Grid>
@@ -409,6 +435,7 @@ class OpportunityHome extends React.Component {
     let loader = (
       <Grid container justify='center' alignItems='center'
         className={classes.loader}>
+        <CircularProgress className={classes.progress} />
       </Grid>
     )
 
@@ -421,15 +448,17 @@ class OpportunityHome extends React.Component {
 
     let feed = (
       <Grid container justify='center' alignItems='center'
-        style={{ padding: 0}}>
+        style={{ padding: "0px 0px 150px 0px",  overflow: 'auto'}}>
 
-        <div className={classes.feedCard}>
+        <CardActionArea className={classes.feedCard}
+          onClick={this.handleOpportunityChangeModalOpen}>
           <Typography align='Left'
             className={classes.cardHeader}>
             Create Opportunity
           </Typography>
 
-          <Grid container style={{ borderBottom: `1px solid ${theme.palette.grey1}`}}>
+          <Grid container
+            style={{ borderBottom: `1px solid ${theme.palette.grey1}`}}>
             <IconButton
               onClick={() => this.props.history.push('/')}
               color="secondary"
@@ -465,9 +494,9 @@ class OpportunityHome extends React.Component {
               {`Share with: Connections`}
             </Button>
           </Grid>
-        </div>
+        </CardActionArea>
 
-        {opportunityCards}
+        {(opportunitiesLoaded) ? opportunityCards : loader}
       </Grid>
     )
 
@@ -479,9 +508,9 @@ class OpportunityHome extends React.Component {
 
     let filter = (
       <Grid container justify='center' alignItems='center'
-        style={{ padding: 0}}>
+        style={{ padding: 0, width: '100%'}}>
         <div className={classes.filterCard}
-          style={{ position: 'fixed', top: 98, width: '20%'}}>
+          >
           <Typography align='Left'
             className={classes.cardHeader}
             style={{ margin: "10px 20px 0px"}}>
@@ -547,23 +576,37 @@ class OpportunityHome extends React.Component {
     return (
       <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
         <Grid container justify='center' className={classes.grid}>
-          <Grid item lg={12} md={12}
-            container justify='space-between'>
-            <Grid item sm={3} className={classes.column}>
+          <Grid item lg={9} md={10} sm={11}
+            container justify='center' spacing={16}
+            style={{ position: 'fixed', top: 64 }}>
+            <Grid item sm={3} className={classes.column}
+              style={{ position: 'absolute', left: 0}}>
               {column1}
             </Grid>
-            <Grid item sm={6} className={classes.column}>
+            <Grid item sm={6} className={classes.column}
+              style={{ overflow: 'scroll', maxHeight: window.innerHeight }}>
               {feed}
             </Grid>
-            <Grid item sm={3} className={classes.column}>
+            <Grid item sm={3} className={classes.column}
+              style={{ position: 'absolute', right: 0}}>
               {filter}
             </Grid>
           </Grid>
         </Grid>
 
-        <WaitlistModal open={waitlistOpen}
-          handleClose={this.handleWaitlistClose}
+        <WaitlistModal
+          open={waitlistOpen}
+          handleClose={this.handleModalClose('waitlistOpen')}
           referred={true}/>
+
+        <OpportunityChangeModal
+          open={changeModalOpen}
+          handleClose={this.handleModalClose('changeModalOpen')}
+          currentUser={currentUser}
+          opportunity={DEFAULTSTATE}
+          availNetworks={networks}
+          type={'create'}
+          />
       </MuiThemeProvider>
     )
   }
