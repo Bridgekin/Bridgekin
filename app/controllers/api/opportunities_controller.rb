@@ -39,8 +39,13 @@ class Api::OpportunitiesController < ApiController
     authorize @opportunity
 
     if @opportunity.save
-      @opportunity.reset_networks(params[:opportunity][:networks])
+      @opportunity.reset_sharing(
+        params[:opportunity][:networks],
+        params[:opportunity][:connections],
+        params[:opportunity][:circles]
+      )
       @networks = @opportunity.networks.pluck(:id)
+
       # Send email to joe
       OpportunityMailer.flag_opportunity_creation(@opportunity, @user).deliver_now
       # render json: @opportunity, status: :created, location: @opportunity
@@ -56,7 +61,12 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
-      @opportunity.reset_networks(params[:opportunity][:networks])
+      @opportunity.reset_sharing(
+        params[:opportunity][:networks],
+        params[:opportunity][:connections],
+        params[:opportunity][:circles]
+      )
+
       @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity
       render :show
@@ -87,17 +97,18 @@ class Api::OpportunitiesController < ApiController
       # debugger
       if params[:opportunity][:picture] == "delete"
         opp_params = params.require(:opportunity).permit(:title, :description,
-          :owner_id, :opportunity_need, :value, :status,
-          :industries, :geography, :deal_status)
+          :owner_id, :opportunity_need, :value, :anonymous,
+          :industries, :geography )
       else
         opp_params = params.require(:opportunity).permit(:title, :description,
-          :owner_id, :opportunity_need, :value, :status, :picture,
-          :industries, :geography, :deal_status)
+          :owner_id, :opportunity_need, :value, :picture, :anonymous,
+          :industries, :geography)
       end
 
       [:geography, :industries].each do |field|
         opp_params[field] = opp_params[field].split(',')
       end
+      opp_params[:anonymous] = params[:opportunity][:anonymous] == 'true'
 
       opp_params
     end

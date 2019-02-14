@@ -51,11 +51,12 @@ class Opportunity < ApplicationRecord
     self.geography.join(",") unless self.geography.nil?
   end
 
-  def reset_networks(networks_string)
+  def reset_sharing(networks, connections, circles)
     #delete existing connections
     self.opportunity_networks.delete_all
-    #create new connections
-    network_params = networks_string.split(',')
+
+    #create new network connections
+    network_params = networks.split(',')
     network_params.reduce([]) do |arr, network_id|
       arr << OpportunityNetwork.create(
         opportunity_id: self.id,

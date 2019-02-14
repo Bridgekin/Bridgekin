@@ -54,6 +54,10 @@ import OpportunityChangeModal from './opportunity_change_modal';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 
+import PictureIconSVG from '../../static/opp_feed_icons/picture.svg'
+import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
+import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
+
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
@@ -88,6 +92,7 @@ const styles = {
     // border: "1px solid black",
     paddingLeft: 0,
     paddingRight: 0,
+    display: 'inline-block'
     // margin: "20px 17px"
   },
   feedCard:{
@@ -146,6 +151,10 @@ const styles = {
     textTransform: 'none',
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
     marginRight: 10,
+  },
+  filterButtonIcon:{
+    width: 14,
+    marginRight: 3
   },
   cardHeader: {
     fontSize: 14,
@@ -262,11 +271,12 @@ const DEFAULTSTATE = {
   value: '',
   title: '',
   description: '',
-  status: 'Pending',
+  // status: 'Pending',
   picture: null,
   pictureUrl: null,
-  networks: [],
-  anonymous: false
+  // networks: [],
+  anonymous: false,
+  share: []
 }
 
 class OpportunityHome extends React.Component {
@@ -392,9 +402,12 @@ class OpportunityHome extends React.Component {
           referralNetwork, anchorEl,
           dropdownFocus, opportunitiesLoaded } = this.state;
 
-    const networksArray = Object.values(networks)
+    const networksArray = Object.values(networks);
+    const formattedNetworks = networksArray.map(network => (
+      Object.assign({}, network, {type: 'network'})
+    ))
 
-    // opportunities = opportunities.filter(o => o.status === "Approved")
+    opportunities = opportunities.filter(o => o.status === "Approved")
 
     let column1 = (
       <Grid container justify='center' alignItems='center'
@@ -447,56 +460,63 @@ class OpportunityHome extends React.Component {
     ));
 
     let feed = (
-      <Grid container justify='center' alignItems='center'
-        style={{ padding: "0px 0px 150px 0px",  overflow: 'auto'}}>
+      <Grid container justify='center' alignItems='center'>
+        <div style={{ overflow: 'scroll', maxHeight: window.innerHeight, padding: "0px 0px 150px 0px"}}>
+          <CardActionArea className={classes.feedCard}
+            onClick={this.handleOpportunityChangeModalOpen}>
+            <Typography align='Left'
+              className={classes.cardHeader}>
+              Create Opportunity
+            </Typography>
 
-        <CardActionArea className={classes.feedCard}
-          onClick={this.handleOpportunityChangeModalOpen}>
-          <Typography align='Left'
-            className={classes.cardHeader}>
-            Create Opportunity
-          </Typography>
+            <Grid container
+              style={{ borderBottom: `1px solid ${theme.palette.grey1}`}}>
+              <IconButton
+                onClick={() => this.props.history.push('/')}
+                color="secondary"
+                >
+                {currentUser.profilePicUrl ? (
+                  <Avatar alt="profile-pic"
+                    src={currentUser.profilePicUrl}
+                    className={classes.avatar} />
+                ) : (
+                  <AccountCircle />
+                )}
+              </IconButton>
 
-          <Grid container
-            style={{ borderBottom: `1px solid ${theme.palette.grey1}`}}>
-            <IconButton
-              onClick={() => this.props.history.push('/')}
-              color="secondary"
-            >
-              {currentUser.profilePicUrl ? (
-                <Avatar alt="profile-pic"
-                  src={currentUser.profilePicUrl}
-                  className={classes.avatar} />
-              ) : (
-                <AccountCircle />
-              )}
-            </IconButton>
-
-            <Grid container style={{ flexGrow: 1, width: 'auto'}}
-              alignItems='center'>
-              <Typography align='Left' color="textSecondary"
-                className={classes.cardHeader}
-                style={{ padding: "15px 0px"}}
-                onClick={() => console.log('open modal')}>
-                What's your most pressing business need or opportunity
-              </Typography>
+              <Grid container style={{ flexGrow: 1, width: 'auto'}}
+                alignItems='center'>
+                <Typography align='Left' color="textSecondary"
+                  className={classes.cardHeader}
+                  style={{ padding: "15px 0px"}}
+                  onClick={() => console.log('open modal')}>
+                  {`What's your most pressing business need or opportunity`}
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
 
-          <Grid container style={{ paddingTop: 17}}>
-            <Button className={classes.createFilterButton}>
-              Image
-            </Button>
-            <Button className={classes.createFilterButton}>
-              Privacy
-            </Button>
-            <Button className={classes.createFilterButton}>
-              {`Share with: Connections`}
-            </Button>
-          </Grid>
-        </CardActionArea>
+            <Grid container style={{ paddingTop: 17}}>
+              <Button className={classes.createFilterButton}>
+                <img src={PictureIconSVG} alt='pic-icon'
+                  className={classes.filterButtonIcon}/>
+                Image
+              </Button>
+              <Button className={classes.createFilterButton}>
+                <img src={PrivacyIconSVG} alt='privacy-icon'
+                  className={classes.filterButtonIcon}/>
+                Privacy
+              </Button>
+              <Button className={classes.createFilterButton}>
+                <img src={ShareIconSVG} alt='share-icon'
+                  className={classes.filterButtonIcon}/>
+                {`Share with: Connections`}
+              </Button>
+            </Grid>
+          </CardActionArea>
 
-        {(opportunitiesLoaded) ? opportunityCards : loader}
+          {(opportunitiesLoaded) ? opportunityCards : loader}
+          <div style={{height: 150}} />
+        </div>
       </Grid>
     )
 
@@ -576,22 +596,20 @@ class OpportunityHome extends React.Component {
     return (
       <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
         <Grid container justify='center' className={classes.grid}>
-          <Grid item lg={9} md={10} sm={11}
-            container justify='center' spacing={16}
-            style={{ position: 'fixed', top: 64 }}>
-            <Grid item sm={3} className={classes.column}
-              style={{ position: 'absolute', left: 0}}>
+          <div style={{ position: 'fixed', top: 64, width:1100 }}>
+            <div className={classes.column}
+              style={{ position: 'static', marginRight: 20, width: 250}}>
               {column1}
-            </Grid>
-            <Grid item sm={6} className={classes.column}
-              style={{ overflow: 'scroll', maxHeight: window.innerHeight }}>
+            </div>
+            <div className={classes.column}
+              style={{ position: 'static', maxHeight: window.innerHeight, width: 500 }}>
               {feed}
-            </Grid>
-            <Grid item sm={3} className={classes.column}
-              style={{ position: 'absolute', right: 0}}>
+            </div>
+            <div className={classes.column}
+              style={{ position: 'static', marginLeft: 20, width: 250}}>
               {filter}
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </Grid>
 
         <WaitlistModal
@@ -604,7 +622,7 @@ class OpportunityHome extends React.Component {
           handleClose={this.handleModalClose('changeModalOpen')}
           currentUser={currentUser}
           opportunity={DEFAULTSTATE}
-          availNetworks={networks}
+          availNetworks={formattedNetworks}
           type={'create'}
           />
       </MuiThemeProvider>

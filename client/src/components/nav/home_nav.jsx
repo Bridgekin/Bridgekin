@@ -348,7 +348,9 @@ class HomeNav extends React.Component {
     )
 
     let navMenu = this.props.session === null ? (
-      <div className={classes.navMenu}>
+      <Grid className={classes.navSectionContainer}
+        item xs={2} md={6}
+        container justify='flex-end' alignItems='center'>
         <div className={classes.sectionDesktop}>
           <TextField
             required
@@ -406,7 +408,7 @@ class HomeNav extends React.Component {
           </Button>
         </div>
 
-      </div>
+      </Grid>
     ) : (
       <Grid className={classes.navSectionContainer}
         item xs={2} sm={2} md={5} lg={5}
@@ -458,7 +460,7 @@ class HomeNav extends React.Component {
       </Grid>
     )
 
-    let searchBar = (
+    let searchBar = (currentUser) ? (
       <Grid item xs={0} sm={4} md={3} lg={3}
         className={classes.search}>
         <InputBase
@@ -472,7 +474,7 @@ class HomeNav extends React.Component {
           <SearchIcon />
         </div>
       </Grid>
-    )
+    ) : <div style={{ flexGrow: 1 }} />
 
     // <Link to='/' className={classes.logoLink}>
     //   <img alt='logo' className={classes.logo} src={logo} />

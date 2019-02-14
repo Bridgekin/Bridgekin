@@ -32,9 +32,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import Input from '@material-ui/core/Input';
+import Menu from '@material-ui/core/Menu';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
+import withWidth from '@material-ui/core/withWidth';
 
 // import castlePic from '../../static/castle.jpg';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
@@ -46,13 +48,24 @@ import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
 import InfoIcon from '@material-ui/icons/InfoSharp';
 import SendIcon from '@material-ui/icons/SendSharp';
+import PersonIcon from '@material-ui/icons/PersonSharp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 import Checkbox from '@material-ui/core/Checkbox';
+
+import SvgIcon from '@material-ui/core/SvgIcon';
+import PictureIconSVG from '../../static/opp_feed_icons/picture.svg'
+import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
+import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
+
+import ImageCropModal from '../image_upload_modal';
 
 import { needsChoices } from '../../util/choices';
 import { industryChoices } from '../../util/choices';
 import { geographyChoices } from '../../util/choices';
 import { valueChoices } from '../../util/choices';
+
+import SubmitModal from '../post_opportunity/submit_modal';
+import merge from 'lodash/merge';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -97,16 +110,32 @@ const styles = theme => ({
     height: 33, minWidth: 400,
     padding: "0px 10px"
   },
+  avatar:{
+    width: 51,
+    height: 51,
+    marginRight: 12
+  },
   createFilterButton:{
     textTransform: 'none',
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    marginRight: 10,
+    margin: "5px 10px 5px 0px",
+    borderRadius: 10,
+  },
+  createFilterSelectedButton:{
+    textTransform: 'none',
+    margin: "5px 10px 5px 0px",
+    borderRadius: 10,
   },
   postButton:{
     textTransform: 'none',
   },
   infoButton:{
-    marginLeft: 3
+    marginLeft: 0,
+    position: 'absolute',
+    top: 0, right: '-13%'
+  },
+  infoIconButton:{
+    padding: 0
   },
   popoverPaper:{
     padding: 3,
@@ -126,7 +155,21 @@ const styles = theme => ({
     textTransform: 'capitalize'
   },
   fieldSelectNeed:{ width: 150 },
-  fieldSelectIndustry:{ width: 100 }
+  fieldSelectIndustry:{ width: 130 },
+  modalPaper:{
+    margin: 0,
+    position: 'fixed',
+    top: 84
+  },
+  postErrorText:{
+    fontSize: 10,
+    color: '#E88262',
+    width: 150
+  },
+  filterButtonIcon:{
+    width: 14,
+    marginRight: 3
+  }
 });
 
 const DEFAULTSTATE = {
@@ -136,75 +179,148 @@ const DEFAULTSTATE = {
   sendingProgress: false,
   oppType: 'post',
   infoAnchorEl: null,
+  privacyAnchorEl: null,
+  shareAnchorEl: null,
   needsChoices,
   industryChoices,
   geographyChoices,
-  valueChoices
+  valueChoices,
+  mobileImageCropPending: false,
+  imageModalOpen: false
 }
 
 class OpportunityChangeModal extends React.Component {
   constructor(props){
     super(props)
-    this.state = Object.assign({}, DEFAULTSTATE, this.props.opportunity);
+    this.state = merge({}, DEFAULTSTATE, this.props.opportunity);
 
     this.toggleOpp = this.toggleOpp.bind(this);
-    this.handleInfoClick = this.handleInfoClick.bind(this);
-    this.handleInfoClose = this.handleInfoClose.bind(this);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleMenuClose = this.handleMenuClose.bind(this);
+    this.handlePrivacyClose = this.handlePrivacyClose.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.checkErrors = this.checkErrors.bind(this);
+    this.clearFields = this.clearFields.bind(this);
+    this.handleSubmitModalClose = this.handleSubmitModalClose.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevProps.open !== this.props.open){
-      this.setState(Object.assign({}, DEFAULTSTATE, this.props.opportunity))
-    }
+    // if(prevProps.opportunity !== this.props.opportunity){
+    //   this.setState(Object.assign({}, DEFAULTSTATE, this.props.opportunity))
+    // }
   }
 
   handleSubmit(){
     this.setState({ sendingProgress: true },
     () => {
-      // let fields = ['geography', 'industries', 'value', 'title',
-      //   'description','networks', 'opportunityNeed' , 'picture' ];
-      // const formData = new FormData();
-      //
-      // for (let i = 0; i < fields.length; i++){
-      //   if(this.state[fields[i]]){
-      //     formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
-      //   }
-      // }
-      //
-      // if(this.props.type === 'create'){
-      //   this.props.createOpportunity(formData)
-      //   .then(() => {
-      //     this.setState({ modalOpen: true, sendingProgress: false });
-      //     this.props.handleClose();
-      //   })
-      // } else {
-      //   formData.append(`opportunity[id]`, this.props.opportunity.id);
-      //   this.props.updateOpportunity(formData)
-      //   .then(() => {
-      //     this.setState({ modalOpen: true, sendingProgress: false });
-      //     this.props.handleClose();
-      //   })
-      // }
-      this.props.handleClose();
+      let fields = ['geography', 'industries', 'value', 'title',
+        'description', 'opportunityNeed', 'picture', 'anonymous'];
+      const { share }= this.state;
+      const formData = new FormData();
+
+      for (let i = 0; i < fields.length; i++){
+        if(this.state[fields[i]] || fields[i] === 'anonymous'){
+          formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
+        }
+      }
+
+      let networks = [];
+      let connections = [];
+      let circles = [];
+      for(let i = 0; i < share.length; i++){
+        let option = share[i];
+        if(option.type === 'network'){ networks.push(option.id)}
+      }
+
+      formData.append(`opportunity[networks]`, networks);
+      formData.append(`opportunity[connections]`, connections);
+      formData.append(`opportunity[circles]`, circles);
+
+      if(this.props.type === 'create'){
+        this.props.createOpportunity(formData)
+        .then(() => {
+          this.setState({
+            sendingProgress: false,
+            submitModalOpen: true
+          });
+          // this.clearFields();
+          // this.handleClose();
+        })
+      } else {
+        formData.append(`opportunity[id]`, this.props.opportunity.id);
+        this.props.updateOpportunity(formData)
+        .then(() => {
+          this.setState({
+            sendingProgress: false,
+            submitModalOpen: true
+          });
+          // this.clearFields();
+          // this.handleClose();
+        })
+      }
     });
   };
+
+  handleClose(){
+    // e.preventDefault();
+    this.props.handleClose();
+    this.setState({ share: [] });
+  }
+
+  handleSubmitModalClose(){
+    this.setState({ submitModalOpen: false },
+    () => this.handleClose());
+  }
+
+  clearFields(){
+    this.setState(merge({}, DEFAULTSTATE, this.props.opportunity))
+  }
 
   handleChange(field){
     return e => {
       e.preventDefault();
       let clickedOption = e.target.value;
-      this.setState({ [field]: clickedOption})
+      if ((['industries', 'geography'].includes(field) &&
+        clickedOption.length <= 3) ||
+        !['industries', 'geography'].includes(field)){
+          this.setState({ [field]: clickedOption})
+      }
     }
   }
 
-  handleInfoClick = event => {
-    this.setState({ infoAnchorEl: event.currentTarget });
+  handleMenuClick(anchor){
+    return e => {
+      this.setState({ [anchor]: e.currentTarget });
+    }
   };
 
-  handleInfoClose = () => {
-    this.setState({ infoAnchorEl: null });
+  handleMenuClose(anchor){
+    return e => {
+      this.setState({ [anchor]: null });
+    }
   };
+
+  handlePrivacyClose(bool){
+    return e => {
+      e.preventDefault();
+      this.setState({ anonymous: bool})
+    }
+  }
+
+  handleShareClose(choice){
+    return e => {
+      e.preventDefault();
+      let { share } = this.state;
+      let indexOfChoice = share.indexOf(choice)
+      if (indexOfChoice > -1){
+        share.splice(indexOfChoice, 1)
+      } else {
+        share.push(choice);
+      }
+      this.setState({ share })
+    }
+  }
 
   toggleOpp(e){
     e.preventDefault();
@@ -212,28 +328,127 @@ class OpportunityChangeModal extends React.Component {
     this.setState({ oppType: (oppType === 'post' ? 'card' : 'post') })
   }
 
+  getSecondaryText(choice){
+    switch(choice){
+      case 'Find':
+        return `properties, companies, or products`;
+      case 'Sell':
+        return `properties, companies, or products`;
+      case 'Discover':
+        return `new team members or join a team`;
+      default:
+        return ``;
+    }
+  }
+
+  handleFile(e){
+    // debugger
+    let file = e.currentTarget.files[0];
+    if (this.props.width !== 'xs'){
+      this.handleFileHelper(file, true, false);
+    } else {
+      this.handleFileHelper(file, false, true);
+    }
+  }
+
+  handleCloseImageModal(newFile){
+    if(newFile && this.props.width !== 'xs'){
+      // normal screens
+      this.handleFileHelper(newFile, false, false)
+    } else if (newFile && this.props.width === 'xs'){
+      //mobile screens
+      this.handleFileHelper(newFile, false, false)
+    } else {
+      this.setState({ imageModalOpen: false})
+    }
+  }
+
+  handleFileHelper(file, bool, mobilePendingBool){
+    let fileReader = new FileReader();
+
+    fileReader.onloadend = () => {
+      this.setState({
+        picture: file,
+        pictureUrl: fileReader.result,
+        imageModalOpen: bool,
+        mobileImageCropPending: mobilePendingBool
+      })
+    }
+
+    if(file){
+      fileReader.readAsDataURL(file)
+    }
+  }
+
+  handleRemoveFile(e){
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      picture: null,
+      pictureUrl: null,
+    })
+  }
+
+  checkErrors(){
+    const { title, description, industries, opportunityNeed, geography,
+      value, share, type } = this.state;
+
+    if (type === 'card'){
+      let opp = { title, description, industries, opportunityNeed, value,
+        geography, share};
+        let keys = Object.keys(opp);
+        let errors = [];
+
+        for (let i = 0; i < keys.length; i++){
+          if(opp[keys[i]] === '' || opp[keys[i]].length === 0){
+            let formatted = this.capitalize(keys[i].replace(/([A-Z])/g, ' $1'));
+            errors.push(`${formatted} is blank`);
+          }
+        }
+        return errors.length > 0;
+    } else {
+      return share.length === 0 || title === ''
+    }
+  }
+
+  capitalize(str){
+    return str[0].toUpperCase() + str.slice(1)
+  }
+
   render () {
-    const { open, classes,
+    const { open, classes, type,
       availNetworks, flow, currentUser } = this.props;
+
     const { oppType, infoAnchorEl, needsChoices,
-      industryChoices, geographyChoices, valueChoices } = this.state;
+      industryChoices, geographyChoices, valueChoices,
+      privacyAnchorEl, shareAnchorEl, share,
+      mobileImageCropPending, imageModalOpen, picture,
+      pictureUrl, title, submitModalOpen} = this.state;
+
     const infoOpen = Boolean(infoAnchorEl);
+    const shareSelected = share.map(choice => choice.title).join(', ');
+
+    const otherConnectionOptions = [
+      {title: 'Connections', type: 'connection'},
+      {title: 'Network Circles', type: 'circle'},
+      {title: 'Custom', type: 'other'}]
+
+    const isError = this.checkErrors();
 
     return (
       <Dialog
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        onClose={this.props.handleClose}
+        onClose={this.handleClose}
         className={classes.cardModalWrapper}
-        classes={{ paper: classes.modalPaper}}
-        style={{ top: '10%' }}>
+        classes={{ paper: classes.modalPaper}}>
 
         <Grid container justify='space-between' alignItems='center'
           className={classes.closeBar}>
-          {`Create Opportunity`}
+          {type === 'create' ? `Create Opportunity` : `Update Opportunity`}
           <CloseIcon
-            onClick={this.props.handleClose}
+            onClick={this.handleClose}
             style={{ cursor: 'pointer'}}/>
         </Grid>
 
@@ -244,6 +459,7 @@ class OpportunityChangeModal extends React.Component {
             <IconButton
               onClick={() => this.props.history.push('/')}
               color="secondary"
+              classes={{ root: classes.infoIconButton}}
               >
               {currentUser.profilePicUrl ? (
                 <Avatar alt="profile-pic"
@@ -261,7 +477,10 @@ class OpportunityChangeModal extends React.Component {
                 multiline
                 rowsMax="3"
                 fullWidth
-                placeholder={"What's your most pressing business need or opportunity"}
+                placeholder={
+                  oppType === 'card' ? "Opportunity title" :
+                  `What's your most pressing business need or opportunity`
+                }
                 value={this.state.title}
                 onChange={this.handleChange('title')}
                 className={classes.descriptionTextField}
@@ -278,7 +497,7 @@ class OpportunityChangeModal extends React.Component {
                 rows="4"
                 rowsMax="8"
                 fullWidth
-                placeholder={"Tell us a bit more about your opportunity..."}
+                placeholder={"Describe your most pressing business need or opportunity..."}
                 value={this.state.description}
                 onChange={this.handleChange('description')}
                 className={classes.descriptionTextField}
@@ -286,9 +505,9 @@ class OpportunityChangeModal extends React.Component {
             </Grid>}
 
           {oppType === 'card' &&
-            <Grid container justify='space-around' alignItems='center'>
+            <Grid container justify='space-between' alignItems='center'>
 
-              <FormControl required className={classes.formControl}>
+              <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="age-required">Business Need</InputLabel>
                 <Select
                   value={this.state.opportunityNeed}
@@ -298,18 +517,21 @@ class OpportunityChangeModal extends React.Component {
                     id: 'opportunityNeed-required',
                     name: 'opportunityNeed'
                   }}
+                  renderValue={selected => selected}
                   className={classes.fieldSelectNeed}
                 >
                   {needsChoices.map(choice => (
                     <MenuItem value={choice} key={choice}
                       style={{ textTransform: 'capitalize'}}>
-                      {choice}
+                      <ListItemText
+                        primary={choice}
+                        secondary={this.getSecondaryText(choice)}/>
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
 
-              <FormControl required className={classes.formControl}>
+              <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="age-required">Industry</InputLabel>
                 <Select
                   multiple
@@ -331,7 +553,7 @@ class OpportunityChangeModal extends React.Component {
               </FormControl>
 
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="age-required">Geographical Focus</InputLabel>
+                <InputLabel htmlFor="age-required">Geography</InputLabel>
                 <Select
                   multiple
                   value={this.state.geography}
@@ -339,7 +561,7 @@ class OpportunityChangeModal extends React.Component {
                   name="geography"
                   input={<Input id="select-multiple-chip" />}
                   renderValue={selected => selected.join(', ')}
-                  className={classes.fieldSelectNeed}
+                  className={classes.fieldSelectIndustry}
                 >
                   {geographyChoices.map(choice => (
                     <MenuItem value={choice} key={choice}
@@ -351,7 +573,7 @@ class OpportunityChangeModal extends React.Component {
                 </Select>
               </FormControl>
 
-              <FormControl required className={classes.formControl}>
+              <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="age-required">Deal Value</InputLabel>
                 <Select
                   value={this.state.value}
@@ -374,75 +596,186 @@ class OpportunityChangeModal extends React.Component {
             </Grid>}
 
           <Grid container justify='space-between' alignItems='center'
-            style={{ paddingTop: 17, margin: "0px 10px"}}>
-            <Grid item>
-              <Button className={classes.createFilterButton}>
-                Image
-              </Button>
-              <Button className={classes.createFilterButton}>
+            style={{ paddingTop: 17, margin: 0}}>
+            <Grid item xs={9}>
+              <input
+                accept="image/*"
+                style={{ display: 'none'}}
+                id="contained-button-file"
+                type="file"
+                onChange={this.handleFile.bind(this)}
+                onClick={(event)=> {
+                  event.target.value = null
+                }}
+              />
+              <label htmlFor="contained-button-file">
+                <Button
+                  color='primary'
+                  variant={picture ? 'contained' : undefined }
+                  className={ picture ?
+                    classes.createFilterSelectedButton :
+                    classes.createFilterButton}
+                  component="span">
+                  { !picture && <img src={PictureIconSVG} alt='pic-icon'
+                    className={classes.filterButtonIcon}/>}
+                  Image
+                  { picture &&
+                    <IconButton
+                      onClick={this.handleRemoveFile.bind(this)}
+                      classes={{ root: classes.infoIconButton}}>
+                      <CloseIcon style={{ color: 'white', fontSize: 20}}/>
+                    </IconButton>
+                  }
+                </Button>
+              </label>
+              <Button
+                className={classes.createFilterButton }
+                style={{ padding: "6px 8px"}}
+                onClick={this.handleMenuClick('privacyAnchorEl')}>
+                {this.state.anonymous ?
+                  <img src={PrivacyIconSVG} alt='privacy-icon'
+                  className={classes.filterButtonIcon}/> :
+                  <PersonIcon className={classes.filterButtonIcon}/>
+                }
                 Privacy
               </Button>
-              <Button className={classes.createFilterButton}>
-                {`Share with: Connections`}
+              <Menu
+                id="simple-menu"
+                anchorEl={privacyAnchorEl}
+                open={Boolean(privacyAnchorEl)}
+                onClose={this.handleMenuClose('privacyAnchorEl')}
+              >
+                <MenuItem onClick={this.handlePrivacyClose(false)}>
+                  <Checkbox checked={!this.state.anonymous} />
+                  <ListItemText primary={`Post with Name & Picture`} />
+                </MenuItem>
+                <MenuItem onClick={this.handlePrivacyClose(true)}>
+                  <Checkbox checked={this.state.anonymous} />
+                  <ListItemText primary={`Post anonymously`} />
+                </MenuItem>
+              </Menu>
+
+              <Button
+                className={classes.createFilterButton }
+                onClick={this.handleMenuClick('shareAnchorEl')}>
+                <img src={ShareIconSVG} alt='share-icon'
+                  className={classes.filterButtonIcon}/>
+                {`Share with: ${shareSelected}`}
               </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={shareAnchorEl}
+                open={Boolean(shareAnchorEl)}
+                onClose={this.handleMenuClose('shareAnchorEl')}
+              >
+                {Object.values(availNetworks).map(network => (
+                  <MenuItem
+                    value={network}
+                    key={network.id}
+                    style={{ textTransform: 'capitalize'}}
+                    onClick={this.handleShareClose(network)}>
+                    <Checkbox checked={this.state.share.indexOf(network) > -1} />
+                    <ListItemText primary={network.title} />
+                  </MenuItem>
+                ))}
+
+                {otherConnectionOptions.map(choice => (
+                  <MenuItem value={choice} key={choice.title}
+                    style={{ textTransform: 'capitalize'}}
+                    onClick={this.handleShareClose(choice)}
+                    disabled>
+                    <Checkbox checked={this.state.share.indexOf(choice) > -1} />
+                    <ListItemText primary={choice.title} />
+                  </MenuItem>
+                ))}
+              </Menu>
             </Grid>
 
             <Grid item xs={3} container justify='center' alignItems='center'>
               <Button className={classes.postButton}
                 color='primary' variant='contained'
-                onClick={this.handleSubmit}>
+                onClick={this.handleSubmit}
+                disabled={
+                  (oppType === 'card' && isError) ||
+                  (oppType === 'post' && isError)}>
                 Post
               </Button>
             </Grid>
           </Grid>
 
-          <Grid container justify='flex-start' alignItems='center'
+          <Grid container justify='space-between' alignItems='center'
             style={{ paddingTop: 41}}>
-            <Button onClick={this.toggleOpp}>
+            <Button onClick={this.toggleOpp}
+              style={{ position: 'relative'}}>
               <Typography align='Left' color="textSecondary"
                 variant='subtitle1'>
                 {oppType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
               </Typography>
+
+              <IconButton className={classes.infoButton}
+                aria-owns={open ? 'simple-popper' : undefined}
+                aria-haspopup="true"
+                onClick={this.handleMenuClick('infoAnchorEl')}
+                classes={{ root: classes.infoIconButton}}>
+                <InfoIcon/>
+              </IconButton>
+
+              <Popover
+                id="simple-popper"
+                open={infoOpen}
+                anchorEl={infoAnchorEl}
+                onClose={this.handleMenuClose('infoAnchorEl')}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'center',
+                  horizontal: 'left',
+                }}
+                classes={{ paper: classes.popoverPaper}}
+                >
+                <Typography align='Left' color="textSecondary"
+                  variant='body2' style={{ fontSize: 10 }}>
+                  {oppType === 'post' ?
+                    `An opportunity card allows you to add more details and tags` :
+                    `An opportunity post allows you to share a quick business need or opportunity`}
+                  </Typography>
+                </Popover>
             </Button>
 
-            <IconButton className={classes.infoButton}
-              aria-owns={open ? 'simple-popper' : undefined}
-              aria-haspopup="true"
-              onClick={this.handleInfoClick}>
-              <InfoIcon/>
-            </IconButton>
-
-            <Popover
-              id="simple-popper"
-              open={infoOpen}
-              anchorEl={infoAnchorEl}
-              onClose={this.handleInfoClose}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
-              }}
-              classes={{ paper: classes.popoverPaper}}
-            >
-            <Typography align='Left' color="textSecondary"
-              variant='body2' style={{ fontSize: 10 }}>
-              {oppType === 'post' ?
-                `An opportunity card allows you to add more details and tags` :
-                `An opportunity post allows you to share a quick business need or opportunity`}
-            </Typography>
-            </Popover>
+            {oppType === 'card' && isError &&
+              <Typography align='center' color="textSecondary"
+                variant='body2'
+                className={classes.postErrorText}>
+                {oppType === 'card' ?
+                  `Fill in all fields before submitting` :
+                  `Fill in title and share settings before submitting`}
+              </Typography>
+            }
           </Grid>
         </Grid>
 
+        <ImageCropModal
+          handleClose={this.handleCloseImageModal.bind(this)}
+          open={imageModalOpen}
+          handleDelete={this.handleRemoveFile.bind(this)}
+          fileUrl={pictureUrl}
+          file={picture}
+          ratio={2.3/1}
+          innerRef={(ref) => this.cropperModal = ref} />
+
+        <SubmitModal
+          open={submitModalOpen}
+          modalType={type}
+          handleClose={this.handleSubmitModalClose}
+          clearFields={this.clearFields}/>
       </Dialog>
     )
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(OpportunityChangeModal)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withWidth()(OpportunityChangeModal))));
 
 // <Badge
 //   badgeContent={<CloseIcon onClick={this.props.handleClose}/>}
