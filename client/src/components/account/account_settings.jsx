@@ -59,7 +59,7 @@ const styles = theme => ({
     // marginBottom: 75,
     // position: 'relative',
     // top: 164,
-    padding: "214px 20px 50px"
+    // padding: "214px 20px 50px"
   },
   pic: {
     width: '100%',
@@ -72,11 +72,17 @@ const styles = theme => ({
     backgroundColor: theme.palette.lightGrey,
     color: theme.palette.grey1
   },
-  card: {
+  card:{
+    // height: 118,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    padding: 30
+    padding: '30px 0px',
+    backgroundColor: `${theme.palette.white}`,
+    marginTop: 18,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`
   },
   cardSection:{
     marginTop: 10
@@ -130,7 +136,7 @@ const styles = theme => ({
   },
   textField:{
     marginLeft: 0
-  }
+  },
 });
 
 
@@ -752,14 +758,20 @@ class AccountSetting extends React.Component {
     // const { options }= this.state;
 
     return (
-      <Grid container justify="center" alignItems="center"
-        className={classes.root}>
-        <Grid item xs={12} sm={9} md={8} lg={6} >
+      <Grid container justify='center' alignItems='center'>
+        <div style={{ overflow: 'scroll', maxHeight: window.innerHeight-150, padding: "0px 0px 150px 0px"}}>
           {this.getContent()}
-        </Grid>
+        </div>
       </Grid>
     )
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withWidth()(AccountSetting)));
+
+// <Grid container justify="center" alignItems="center"
+//   className={classes.root}>
+//   <Grid item xs={12} sm={9} md={8} lg={6} >
+//     {this.getContent()}
+//   </Grid>
+// </Grid>

@@ -4,9 +4,7 @@ RSpec.describe User, type: :model do
   # pending "add some examples to (or delete) #{__FILE__}"
 
   describe "user" do
-    subject { User.new(confirmed_at: DateTime.now,
-      email: '123@email.com', password: '12345678',
-      password_confirmation: '12345678', fname:'sd', lname: 'sdf') }
+    subject { create(:user) }
 
     it { should validate_presence_of(:fname) }
     it { should validate_presence_of(:lname) }

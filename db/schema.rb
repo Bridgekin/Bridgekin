@@ -119,12 +119,12 @@ ActiveRecord::Schema.define(version: 2019_02_13_205327) do
     t.text "description"
     t.string "opportunity_need", default: "", null: false
     t.string "value", default: "", null: false
-    t.string "status", default: "", null: false
+    t.string "status", default: "Pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "industries", default: [], null: false, array: true
     t.string "geography", default: [], null: false, array: true
-    t.string "deal_status", default: "", null: false
+    t.string "deal_status", default: "Active", null: false
     t.boolean "anonymous", default: false
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
     t.index ["status"], name: "index_opportunities_on_status"

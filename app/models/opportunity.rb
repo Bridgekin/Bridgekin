@@ -6,7 +6,7 @@ class Opportunity < ApplicationRecord
   validates :title, uniqueness: {
     scope: :owner_id,
     allow_blank: true,
-    message: "is already taken across your  authored opportunities" }
+    message: "is already taken across your authored opportunities" }
 
   belongs_to :owner,
     foreign_key: :owner_id,

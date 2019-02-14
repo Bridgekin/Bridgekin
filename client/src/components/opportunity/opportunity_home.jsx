@@ -89,11 +89,9 @@ const styles = {
     minHeight: window.innerHeight
   },
   column:{
-    // border: "1px solid black",
     paddingLeft: 0,
     paddingRight: 0,
     display: 'inline-block'
-    // margin: "20px 17px"
   },
   feedCard:{
     // height: 118,
@@ -529,8 +527,7 @@ class OpportunityHome extends React.Component {
     let filter = (
       <Grid container justify='center' alignItems='center'
         style={{ padding: 0, width: '100%'}}>
-        <div className={classes.filterCard}
-          >
+        <div className={classes.filterCard}>
           <Typography align='Left'
             className={classes.cardHeader}
             style={{ margin: "10px 20px 0px"}}>

@@ -13,9 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 
-import AccountMain from './account_main';
-import AccountOpportunities from './account_opportunities'
-
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
 });
@@ -27,23 +24,41 @@ const styles = theme => ({
   root: {
     flexGrow: 1
   },
+  filterCard:{
+    marginTop: 18,
+    backgroundColor: `${theme.palette.white}`,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`
+  },
+  filterItem:{
+    borderTop: `1px solid ${theme.palette.grey1}`,
+  },
 });
 
 
-class AccountRoute extends React.Component {
+class AccountOpportunities extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {};
+  }
+
   render (){
     let classes = this.props.classes;
+    let opp_cards = (
+      <div>Example</div>
+    )
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Switch>
-          <ProtectedRoute path="/account/opportunities" component={AccountOpportunities} />
-          <ProtectedRoute path="/account" component={AccountMain} />
-        </Switch>
-
+        <Grid container justify='center' alignItems='center'>
+          <div style={{ overflow: 'scroll', maxHeight: window.innerHeight-150, padding: "0px 0px 150px 0px"}}>
+            {opp_cards}
+          </div>
+        </Grid>
       </MuiThemeProvider>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountRoute));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountOpportunities));
