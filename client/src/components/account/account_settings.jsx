@@ -759,8 +759,9 @@ class AccountSetting extends React.Component {
 
     return (
       <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', maxHeight: window.innerHeight-150, padding: "0px 0px 150px 0px"}}>
+        <div style={{ overflow: 'scroll', maxHeight: window.innerHeight, padding: "0px 0px 150px 0px"}}>
           {this.getContent()}
+          <div style={{height: 150}} />
         </div>
       </Grid>
     )

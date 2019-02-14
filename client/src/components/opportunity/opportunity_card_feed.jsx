@@ -33,17 +33,41 @@ import CardModal from './card_modal';
 
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 import _ from 'lodash';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const styles = theme => ({
   feedCardActionContainer:{
-    margin: "10px 0px 20px 0px",
+    marginTop: 10,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
-    padding: 10
+    padding: "10px 0px"
   },
   statusIndicator:{
     width: 8, height: 8,
     borderRadius: '50%',
     marginRight: 6
+  },
+  opportunityCard:{
+    // marginTop: 18,
+    marginBottom: 18,
+    backgroundColor: `${theme.palette.white}`,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`,
+    paddingBottom: 20
+  },
+  oppStatus:{
+    height: 29,
+    width: 89,
+    textTransform: 'uppercase',
+    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  pictureCover:{
+    height: 140,
+    width: '100%',
+    objectFit: 'cover'
   }
 });
 
@@ -59,9 +83,9 @@ class OpportunityCard extends React.Component {
     }
 
     this.handleCardOpen = this.handleCardOpen.bind(this);
-    // this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
-    // this.handleDeleteClose = this.handleDeleteClose.bind(this);
-    // this.handleEdit = this.handleEdit.bind(this);
+    this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
+    this.handleDeleteClose = this.handleDeleteClose.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
     this.handleCardOpen = this.handleCardOpen.bind(this);
     this.handleCardClose = this.handleCardClose.bind(this);
   }
@@ -79,27 +103,27 @@ class OpportunityCard extends React.Component {
     this.setState({ cardOpen: false })
   }
 
-  // handleDeleteOpen = (e) => {
-  //   e.stopPropagation();
-  //   this.setState({ deleteOpen: true });
-  // };
-  //
-  // handleDeleteClose(deleteBool){
-  //   return (e) => {
-  //     e.stopPropagation();
-  //     if (deleteBool){
-  //       this.props.handleDelete(this.props.opportunity.id);
-  //     }
-  //     this.setState({ deleteOpen: false });
-  //   }
-  // };
+  handleDeleteOpen = (e) => {
+    e.stopPropagation();
+    this.setState({ deleteOpen: true });
+  };
 
-  // handleEdit(id){
-  //   return e => {
-  //     e.stopPropagation();
-  //     this.props.history.push(`/editopportunity/${id}`)
-  //   }
-  // }
+  handleDeleteClose(deleteBool){
+    return (e) => {
+      e.stopPropagation();
+      if (deleteBool){
+        this.props.handleDelete(this.props.opportunity.id);
+      }
+      this.setState({ deleteOpen: false });
+    }
+  };
+
+  handleEdit(id){
+    return e => {
+      e.stopPropagation();
+      // this.props.history.push(`/editopportunity/${id}`)
+    }
+  }
 
   getStatusColor(status){
     switch(status) {
@@ -147,46 +171,48 @@ class OpportunityCard extends React.Component {
       //     </div>
       //   </div>
       // ): (<div></div>)
-      //
-      // let editOptions = editable ? (
-      //   <div className={classes.buttonWrapper}>
-      //     <Button variant="contained" className={classes.button}
-      //       onClick={this.handleEdit(opportunity.id)}>
-      //       Edit
-      //     </Button>
-      //     <Button variant="contained" className={classes.button}
-      //       onClick={this.handleDeleteOpen}>
-      //       Delete
-      //     </Button>
-      //   </div>
-      // ) : (<div></div>)
-      //
-      // let deleteDialog = editable ? (
-      //   <Dialog
-      //     open={this.state.deleteOpen}
-      //     onClose={this.handleDeleteClose(false)}
-      //     aria-labelledby="alert-dialog-title"
-      //     aria-describedby="alert-dialog-description"
-      //   >
-      //     <DialogTitle id="alert-dialog-title">{"Delete Your Opportunity"}</DialogTitle>
-      //     <DialogContent>
-      //       <DialogContentText id="alert-dialog-description">
-      //         {`You about to delete your opportunity permanently.
-      //           You can not undo this action. Do you still want to continue?`}
-      //       </DialogContentText>
-      //     </DialogContent>
-      //     <DialogActions>
-      //       <Button onClick={this.handleDeleteClose(false)}
-      //         color="secondary" >
-      //         Cancel
-      //       </Button>
-      //       <Button autoFocus color='error' variant='contained'
-      //         onClick={this.handleDeleteClose(true)}>
-      //         Delete
-      //       </Button>
-      //     </DialogActions>
-      //   </Dialog>
-      // ) : (<div></div>)
+
+      let editOptions = editable ? (
+        <Grid container justify='flex-start' alignItems='center'
+          style={{ margin: 10}}>
+          <Button variant="contained" className={classes.button}
+            onClick={this.handleEdit(opportunity.id)}
+            style={{ marginRight: 31}}>
+            Edit
+          </Button>
+          <Button variant="contained" className={classes.button}
+            onClick={this.handleDeleteOpen}>
+            Delete
+          </Button>
+        </Grid>
+      ) : (<div></div>)
+
+      let deleteDialog = editable ? (
+        <Dialog
+          open={this.state.deleteOpen}
+          onClose={this.handleDeleteClose(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Delete Your Opportunity"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {`You about to delete your opportunity permanently.
+                You can not undo this action. Do you still want to continue?`}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleDeleteClose(false)}
+              color="secondary" >
+              Cancel
+            </Button>
+            <Button autoFocus color='error' variant='contained'
+              onClick={this.handleDeleteClose(true)}>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : (<div></div>)
 
       // let cardIcon = this.getCardIcon(status);
 
@@ -200,7 +226,7 @@ class OpportunityCard extends React.Component {
       let picture = opportunity.pictureUrl ? (
         <VisibilitySensor>
           <Img src={opportunity.pictureUrl}
-            className={classes.cover}
+            className={classes.pictureCover}
             loader={loader}
             />
         </VisibilitySensor>
@@ -321,7 +347,7 @@ class OpportunityCard extends React.Component {
                 </Grid>}
               </Grid>
 
-              <Grid container justify='flex-start' spacing={16}
+              <Grid container justify='flex-start'
                 className={classes.feedCardActionContainer}>
                 <Button color='primary' variant='contained'
                   style={{ marginRight: 31}}
@@ -334,6 +360,7 @@ class OpportunityCard extends React.Component {
                   Refer
                 </Button>
               </Grid>
+              {editOptions}
             </Grid>
           </Grid>
           <CardModal

@@ -50,7 +50,6 @@ class AccountPosted extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      opportunitiesLoaded: false,
       focusedNetwork: null,
       loaded: false
     }

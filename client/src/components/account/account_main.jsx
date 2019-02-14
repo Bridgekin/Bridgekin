@@ -33,8 +33,8 @@ const styles = {
   },
   grid:{
     position: 'relative',
-    padding: "64px 35px 50px 35px",
-    paddingTop: 64 + 34,
+    // padding: "64px 35px 50px 35px",
+    // paddingTop: 64 + 34,
     flexGrow: 1,
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
     minHeight: window.innerHeight
@@ -151,10 +151,13 @@ class AccountMain extends React.Component {
               {pathName === '/account/opportunities' && opp_filters}
             </div>
             <div className={classes.column}
-              style={{ position: 'static', maxHeight: window.innerHeight, width: 500 }}>
+              style={{ position: 'static', maxHeight: window.innerHeight, width: 500, paddingTop: 18 }}>
               <Switch>
                 <ProtectedRoute path="/account/settings" component={AccountSettings} />
-                <ProtectedRoute path="/account/opportunities" component={AccountOpportunities} />
+                <ProtectedRoute
+                    path="/account/opportunities"
+                    component={AccountOpportunities}
+                    passedProps={{ opp_filter: opp_filter }} />
                 <ProtectedRoute path="/account/home" component={AccountHome} />
               </Switch>
             </div>
