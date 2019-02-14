@@ -18,7 +18,7 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
-# 
+#
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
@@ -31,7 +31,7 @@ Rails.application.configure do
   # You definitely want to set cache-control headers; you can override them with
   # Cloudfront, but best to do it right at the origin (and other CDNs might not
   # be so helpful
-  
+
 config.serve_static_assets = true
 config.static_cache_control = "public, max-age=31536000"
 
@@ -40,9 +40,9 @@ config.static_cache_control = "public, max-age=31536000"
   #config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.assets.paths << Rails.root.join("app", "assets", "javascripts", "active_admin","js") 
-  config.assets.paths << Rails.root.join("app", "assets", "stylesheets", "active_admin","scss") 
-  
+  config.assets.paths << Rails.root.join("app", "assets", "javascripts", "active_admin","js")
+  config.assets.paths << Rails.root.join("app", "assets", "stylesheets", "active_admin","scss")
+
   # config.assets.paths << Rails.root.join("app", "assets", "plugins", "bootstrap","js")
 
   # Add the cloudfront hostname (including the `http(s)://` that you have
@@ -51,7 +51,7 @@ config.static_cache_control = "public, max-age=31536000"
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
-  config.assets.enabled = true 
+  config.assets.enabled = true
 
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
@@ -61,7 +61,8 @@ config.static_cache_control = "public, max-age=31536000"
 
   # Generate digests for assets URLs
   config.assets.digest = true
-  config.action_controller.asset_host = "d3l1lzvrluzkzs.cloudfront.net"
+  # config.action_controller.asset_host = "d3l1lzvrluzkzs.cloudfront.net"
+  
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
