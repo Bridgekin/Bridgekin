@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_13_205327) do
+ActiveRecord::Schema.define(version: 2019_02_15_010112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(version: 2019_02_13_205327) do
     t.string "geography", default: [], null: false, array: true
     t.string "deal_status", default: "Active", null: false
     t.boolean "anonymous", default: false
+    t.string "view_type", default: "card", null: false
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
     t.index ["status"], name: "index_opportunities_on_status"
   end

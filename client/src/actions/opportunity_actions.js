@@ -74,7 +74,7 @@ export const createOpportunity = (opportunity) => dispatch => (
 export const updateOpportunity = (opportunity) => dispatch => (
   OpportunityApiUtil.updateOpportunity(opportunity)
     .then(handleErrors)
-    .then(data => dispatch(receiveOpportunity(data)))
+    .then(data => dispatch(receiveOpportunity(data.opportunity)))
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];

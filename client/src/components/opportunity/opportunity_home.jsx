@@ -274,7 +274,7 @@ const DEFAULTSTATE = {
   pictureUrl: null,
   // networks: [],
   anonymous: false,
-  share: []
+  viewType: 'post'
 }
 
 class OpportunityHome extends React.Component {

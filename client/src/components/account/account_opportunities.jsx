@@ -12,22 +12,26 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportunity_actions';
 import { fetchNetworks } from '../../actions/network_actions';
+import { fetchConnectedOpportunities } from '../../actions/connected_opportunity_actions';
 import OpportunityCardFeed from '../opportunity/opportunity_card_feed';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   opportunities: Object.values(state.entities.opportunities).reverse(),
   connectedOpportunities: Object.values(state.entities.connectedOpportunities).reverse(),
   facilitatedOpportunities: Object.values(state.entities.facilitatedOpportunities).reverse(),
+  networks: Object.values(state.entities.networks),
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchUserOpportunities: (networkId) => dispatch(fetchUserOpportunities(networkId)),
   fetchNetworks: () => dispatch(fetchNetworks()),
+  fetchConnectedOpportunities: () => dispatch(fetchConnectedOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id))
 });
 
@@ -45,6 +49,7 @@ const styles = {
   filterItem:{
     borderTop: `1px solid ${theme.palette.grey1}`,
   },
+  loader:{ height: 200}
   // opportunityCard:{
   //   marginTop: 18,
   //   backgroundColor: `${theme.palette.white}`,
@@ -68,13 +73,20 @@ class AccountOpportunities extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      loaded: false
+      loaded: false,
+      changModalOpen: false,
+      focusedOpportunity: null
     };
+
+    this.handleEditOpen = this.handleEditOpen.bind(this);
+    this.handleEditClose = this.handleEditClose.bind(this);
   }
 
   componentDidMount(){
     this.props.fetchUserOpportunities()
     .then(() => this.setState({ loaded: true}))
+
+    this.props.fetchNetworks()
   }
 
   componentDidUpdate(prevProps){
@@ -85,6 +97,16 @@ class AccountOpportunities extends React.Component {
       prevProps.opp_filter !== this.props.opp_filter){
       this.props.fetchUserOpportunities();
     }
+  }
+
+  handleEditOpen(opportunity){
+    return () => {
+      this.setState({ changeModalOpen: true, focusedOpportunity: opportunity })
+    }
+  }
+
+  handleEditClose(){
+    this.setState({ changeModalOpen: false })
   }
 
   getOpportunities(){
@@ -103,18 +125,23 @@ class AccountOpportunities extends React.Component {
   }
 
   render (){
-    const { classes, currentUser } = this.props;
-    const { loaded } = this.state;
-    
+    const { classes, currentUser, networks, opp_filter } = this.props;
+    const { loaded, focusedOpportunity, changeModalOpen } = this.state;
+
+    const formattedNetworks = networks.map(network => (
+      Object.assign({}, network, {type: 'network'})
+    ))
+
     let filteredOpportunities = this.getOpportunities();
-    debugger
 
     let opportunityCards = filteredOpportunities.map(opportunity => (
       <OpportunityCardFeed
         currentUser={currentUser}
         opportunity={opportunity}
         classes={classes}
-        editable={ true }/>
+        editable={opp_filter === 'posted'}
+        formattedNetworks={formattedNetworks}
+        handleEditOpen={this.handleEditOpen(opportunity)}/>
     ));
 
     if (loaded){
@@ -122,10 +149,20 @@ class AccountOpportunities extends React.Component {
         <MuiThemeProvider theme={theme} className={classes.root}>
           <Grid container justify='center' alignItems='center'>
             <div style={{ overflow: 'scroll',
-              maxHeight: window.innerHeight, padding: "0px 0px 150px 0px"}}>
-              {opportunityCards}
+              maxHeight: window.innerHeight, padding: "0px 0px 150px 0px",
+              width: '100%'}}>
+              {filteredOpportunities.length > 0 && opportunityCards }
               <div style={{height: 150}} />
             </div>
+
+            <OpportunityChangeModal
+              open={changeModalOpen}
+              handleClose={this.handleEditClose}
+              currentUser={currentUser}
+              opportunity={focusedOpportunity}
+              availNetworks={formattedNetworks}
+              type={'update'}
+              />
           </Grid>
         </MuiThemeProvider>
       )

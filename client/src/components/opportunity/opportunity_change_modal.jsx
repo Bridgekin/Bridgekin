@@ -177,7 +177,6 @@ const DEFAULTSTATE = {
   // modalOpen: false,
   // pictureUrl: null,
   sendingProgress: false,
-  oppType: 'post',
   infoAnchorEl: null,
   privacyAnchorEl: null,
   shareAnchorEl: null,
@@ -186,7 +185,8 @@ const DEFAULTSTATE = {
   geographyChoices,
   valueChoices,
   mobileImageCropPending: false,
-  imageModalOpen: false
+  imageModalOpen: false,
+  share: []
 }
 
 class OpportunityChangeModal extends React.Component {
@@ -205,17 +205,19 @@ class OpportunityChangeModal extends React.Component {
     this.handleSubmitModalClose = this.handleSubmitModalClose.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // if(prevProps.opportunity !== this.props.opportunity){
-    //   this.setState(Object.assign({}, DEFAULTSTATE, this.props.opportunity))
-    // }
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.opportunity !== this.props.opportunity){
+      this.setState(merge({}, DEFAULTSTATE, nextProps.opportunity))
+    }
+    return true;
   }
 
   handleSubmit(){
     this.setState({ sendingProgress: true },
     () => {
+      // Base Fields
       let fields = ['geography', 'industries', 'value', 'title',
-        'description', 'opportunityNeed', 'picture', 'anonymous'];
+        'description', 'opportunityNeed', 'picture', 'anonymous', 'viewType'];
       const { share }= this.state;
       const formData = new FormData();
 
@@ -225,6 +227,7 @@ class OpportunityChangeModal extends React.Component {
         }
       }
 
+      // Add Sharing settings
       let networks = [];
       let connections = [];
       let circles = [];
@@ -324,8 +327,8 @@ class OpportunityChangeModal extends React.Component {
 
   toggleOpp(e){
     e.preventDefault();
-    const { oppType } = this.state;
-    this.setState({ oppType: (oppType === 'post' ? 'card' : 'post') })
+    const { viewType } = this.state;
+    this.setState({ viewType: (viewType === 'post' ? 'card' : 'post') })
   }
 
   getSecondaryText(choice){
@@ -391,21 +394,24 @@ class OpportunityChangeModal extends React.Component {
 
   checkErrors(){
     const { title, description, industries, opportunityNeed, geography,
-      value, share, type } = this.state;
+      value, share, viewType } = this.state;
 
-    if (type === 'card'){
+    if (viewType === 'card'){
       let opp = { title, description, industries, opportunityNeed, value,
-        geography, share};
-        let keys = Object.keys(opp);
-        let errors = [];
+        geography, share };
+      let keys = Object.keys(opp);
+      let errors = [];
 
-        for (let i = 0; i < keys.length; i++){
-          if(opp[keys[i]] === '' || opp[keys[i]].length === 0){
-            let formatted = this.capitalize(keys[i].replace(/([A-Z])/g, ' $1'));
-            errors.push(`${formatted} is blank`);
-          }
+      for (let i = 0; i < keys.length; i++){
+        console.log(keys[i]);
+        if(opp[keys[i]] === null ||
+          opp[keys[i]] === '' ||
+          opp[keys[i]].length === 0){
+          let formatted = this.capitalize(keys[i].replace(/([A-Z])/g, ' $1'));
+          errors.push(`${formatted} is blank`);
         }
-        return errors.length > 0;
+      }
+      return errors.length > 0;
     } else {
       return share.length === 0 || title === ''
     }
@@ -419,7 +425,7 @@ class OpportunityChangeModal extends React.Component {
     const { open, classes, type,
       availNetworks, flow, currentUser } = this.props;
 
-    const { oppType, infoAnchorEl, needsChoices,
+    const { viewType, infoAnchorEl, needsChoices,
       industryChoices, geographyChoices, valueChoices,
       privacyAnchorEl, shareAnchorEl, share,
       mobileImageCropPending, imageModalOpen, picture,
@@ -478,7 +484,7 @@ class OpportunityChangeModal extends React.Component {
                 rowsMax="3"
                 fullWidth
                 placeholder={
-                  oppType === 'card' ? "Opportunity title" :
+                  viewType === 'card' ? "Opportunity title" :
                   `What's your most pressing business need or opportunity`
                 }
                 value={this.state.title}
@@ -488,7 +494,7 @@ class OpportunityChangeModal extends React.Component {
             </Grid>
           </Grid>
 
-          {oppType === 'card' &&
+          {viewType === 'card' &&
             <Grid container justify='flex-start' alignItems='flex-start'
               className={ classes.descriptionField}>
               <TextField
@@ -504,7 +510,7 @@ class OpportunityChangeModal extends React.Component {
                 />
             </Grid>}
 
-          {oppType === 'card' &&
+          {viewType === 'card' &&
             <Grid container justify='space-between' alignItems='center'>
 
               <FormControl className={classes.formControl}>
@@ -611,15 +617,15 @@ class OpportunityChangeModal extends React.Component {
               <label htmlFor="contained-button-file">
                 <Button
                   color='primary'
-                  variant={picture ? 'contained' : undefined }
-                  className={ picture ?
+                  variant={pictureUrl ? 'contained' : undefined }
+                  className={ pictureUrl ?
                     classes.createFilterSelectedButton :
                     classes.createFilterButton}
                   component="span">
-                  { !picture && <img src={PictureIconSVG} alt='pic-icon'
+                  { !pictureUrl && <img src={PictureIconSVG} alt='pic-icon'
                     className={classes.filterButtonIcon}/>}
                   Image
-                  { picture &&
+                  { pictureUrl &&
                     <IconButton
                       onClick={this.handleRemoveFile.bind(this)}
                       classes={{ root: classes.infoIconButton}}>
@@ -696,8 +702,8 @@ class OpportunityChangeModal extends React.Component {
                 color='primary' variant='contained'
                 onClick={this.handleSubmit}
                 disabled={
-                  (oppType === 'card' && isError) ||
-                  (oppType === 'post' && isError)}>
+                  (viewType === 'card' && isError) ||
+                  (viewType === 'post' && isError)}>
                 Post
               </Button>
             </Grid>
@@ -709,7 +715,7 @@ class OpportunityChangeModal extends React.Component {
               style={{ position: 'relative'}}>
               <Typography align='Left' color="textSecondary"
                 variant='subtitle1'>
-                {oppType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
+                {viewType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
               </Typography>
 
               <IconButton className={classes.infoButton}
@@ -737,18 +743,18 @@ class OpportunityChangeModal extends React.Component {
                 >
                 <Typography align='Left' color="textSecondary"
                   variant='body2' style={{ fontSize: 10 }}>
-                  {oppType === 'post' ?
+                  {viewType === 'post' ?
                     `An opportunity card allows you to add more details and tags` :
                     `An opportunity post allows you to share a quick business need or opportunity`}
                   </Typography>
                 </Popover>
             </Button>
 
-            {oppType === 'card' && isError &&
+            {viewType === 'card' && isError &&
               <Typography align='center' color="textSecondary"
                 variant='body2'
                 className={classes.postErrorText}>
-                {oppType === 'card' ?
+                {viewType === 'card' ?
                   `Fill in all fields before submitting` :
                   `Fill in title and share settings before submitting`}
               </Typography>

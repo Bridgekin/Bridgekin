@@ -48,7 +48,7 @@ const styles = theme => ({
     alignItems: 'flex-start',
     // padding: 30,
     backgroundColor: `${theme.palette.white}`,
-    marginTop: 18,
+    // marginTop: 18,
     width: '100%',
     borderRadius: 5,
     border: `1px solid ${theme.palette.lightGrey}`

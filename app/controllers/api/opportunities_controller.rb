@@ -97,11 +97,11 @@ class Api::OpportunitiesController < ApiController
       # debugger
       if params[:opportunity][:picture] == "delete"
         opp_params = params.require(:opportunity).permit(:title, :description,
-          :owner_id, :opportunity_need, :value, :anonymous,
+          :owner_id, :opportunity_need, :value, :anonymous, :view_type,
           :industries, :geography )
       else
         opp_params = params.require(:opportunity).permit(:title, :description,
-          :owner_id, :opportunity_need, :value, :picture, :anonymous,
+          :owner_id, :opportunity_need, :value, :picture, :anonymous, :view_type,
           :industries, :geography)
       end
 

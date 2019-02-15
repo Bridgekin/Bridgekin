@@ -147,11 +147,11 @@ class AccountMain extends React.Component {
         <Grid container justify='center' className={classes.grid}>
           <div style={{ position: 'fixed', top: 64, width:1100 }}>
             <div className={classes.column}
-              style={{ position: 'static', marginRight: 20, width: 250}}>
+              style={{ position: 'fixed', marginRight: 20, width: 250}}>
               {pathName === '/account/opportunities' && opp_filters}
             </div>
             <div className={classes.column}
-              style={{ position: 'static', maxHeight: window.innerHeight, width: 500, paddingTop: 18 }}>
+              style={{ position: 'static', maxHeight: window.innerHeight, width: 500, paddingTop: 18, marginLeft: 270 }}>
               <Switch>
                 <ProtectedRoute path="/account/settings" component={AccountSettings} />
                 <ProtectedRoute
@@ -162,7 +162,7 @@ class AccountMain extends React.Component {
               </Switch>
             </div>
             <div className={classes.column}
-              style={{ position: 'fixed', marginLeft: 20, width: 250, top: 64}}>
+              style={{ position: 'fixed', marginLeft: 20, width: 250}}>
               {navigation}
             </div>
           </div>

@@ -460,7 +460,7 @@ class HomeNav extends React.Component {
       </Grid>
     )
 
-    let searchBar = (currentUser) ? (
+    let searchBar = (false && currentUser) ? (
       <Grid item xs={0} sm={4} md={3} lg={3}
         className={classes.search}>
         <InputBase

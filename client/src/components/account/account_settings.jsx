@@ -79,7 +79,7 @@ const styles = theme => ({
     alignItems: 'flex-start',
     padding: '30px 0px',
     backgroundColor: `${theme.palette.white}`,
-    marginTop: 18,
+    // marginTop: 18,
     width: '100%',
     borderRadius: 5,
     border: `1px solid ${theme.palette.lightGrey}`
