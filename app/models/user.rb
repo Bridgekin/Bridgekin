@@ -76,4 +76,12 @@ class User < ApplicationRecord
   def confirmed?
     self.confirmed_at.present?
   end
+
+  def send_weekly_email
+    seven_days_ago = DateTime.now - 7
+    new_opportunities = Opportunity.joins(:opportunity_networks)
+      .where(opportunity_networks: { network_id: self.member_networks.pluck(:id)})
+      .where("opportunities.created_at >= ?", seven_days_ago )
+    NotificationMailer.weekly_update(self, new_opportunities.count).deliver_now
+  end
 end

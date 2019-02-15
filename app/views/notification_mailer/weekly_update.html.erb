@@ -1,0 +1,18 @@
+<p>Hi <%= @user.fname.capitalize %>,</p>
+
+<p>We hope you had a fantastic week, furthering your own ambitions while
+  connecting with others each and every day.</p>
+
+<% if @new_opportunities_count > 0 %>
+  <p>This past week, your trusted networks have posted
+    <%= @new_opportunities_count %> new opportunities.</p>
+<% else %>
+  <p>This past week, your trusted networks didn't see much activity, probably
+    a result of folks' digging into their opportunities.</p>
+<% end %>
+
+<p>As you look into the upcoming week, make sure to spend time investing
+  in the close relationships in your life. Onto the next week!</p>
+
+<p>Cheers,<br>
+The Bridgekin Team</p>
