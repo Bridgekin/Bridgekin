@@ -169,6 +169,9 @@ const styles = theme => ({
   filterButtonIcon:{
     width: 14,
     marginRight: 3
+  },
+  textListSecondary:{
+    fontSize: 10
   }
 });
 
@@ -472,7 +475,7 @@ class OpportunityChangeModal extends React.Component {
                   src={currentUser.profilePicUrl}
                   className={classes.avatar} />
               ) : (
-                <AccountCircle />
+                <AccountCircle className={classes.avatar}/>
               )}
             </IconButton>
 
@@ -531,7 +534,11 @@ class OpportunityChangeModal extends React.Component {
                       style={{ textTransform: 'capitalize'}}>
                       <ListItemText
                         primary={choice}
-                        secondary={this.getSecondaryText(choice)}/>
+                        secondary={this.getSecondaryText(choice)}
+                        classes={{
+                          primary: classes.textListPrimary,
+                          secondary: classes.textListSecondary
+                        }}/>
                     </MenuItem>
                   ))}
                 </Select>

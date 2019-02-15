@@ -478,7 +478,7 @@ class OpportunityHome extends React.Component {
                     src={currentUser.profilePicUrl}
                     className={classes.avatar} />
                 ) : (
-                  <AccountCircle />
+                  <AccountCircle className={classes.avatar}/>
                 )}
               </IconButton>
 
@@ -593,7 +593,7 @@ class OpportunityHome extends React.Component {
     return (
       <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
         <Grid container justify='center' className={classes.grid}>
-          <div style={{ position: 'fixed', top: 64, width:1100 }}>
+          <div style={{ position: 'fixed', top: 64, width:1040 }}>
             <div className={classes.column}
               style={{ position: 'static', marginRight: 20, width: 250}}>
               {column1}
