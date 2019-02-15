@@ -7,7 +7,8 @@ import HomeNav from './components/nav/home_nav';
 import Footer from './components/nav/footer';
 
 import HomePage from './components/home/home_page';
-import AccountRoute from './components/account/account_route';
+// import AccountRoute from './components/account/account_route';
+import AccountMain from './components/account/account_main';
 import OpportunityHome from './components/opportunity/opportunity_home';
 import OpportunityCreate from './components/post_opportunity/opportunity_create';
 import OpportunityEdit from './components/post_opportunity/opportunity_edit';
@@ -39,7 +40,7 @@ class App extends React.Component {
           <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
           <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
           <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
-          <ProtectedRoute path="/account" component={AccountRoute} />
+          <ProtectedRoute path="/account" component={AccountMain} />
           <ProtectedRoute path="/mynetwork" component={ConnectionsHome} />
           <AuthRoute path="/signup/:code" component={SignupPage} />
           <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />

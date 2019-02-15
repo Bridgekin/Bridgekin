@@ -61,6 +61,7 @@ group :development, :test do
   #since we need to use optional
   gem 'database_cleaner'
   gem 'rails-controller-testing'
+  gem 'factory_bot_rails'
 end
 
 group :development do

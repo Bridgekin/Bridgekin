@@ -70,21 +70,21 @@ class SubmitModal extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClose(field){
-    return () => {
-      if(this.props.opportunityErrors){
-        this.props.clearOpportunityErrors();
-      }
-
-      this.props.handleClose();
-      if (field === 'post' && this.props.modalType === 'create'){
-        this.props.handleReset();
-      } else if (field === 'post' && this.props.modalType !== 'create'){
-        this.props.history.push('/postopportunity')
-      } else if (field === 'find'){
-        this.props.history.push('/findandconnect')
-      }
+  handleClose(){
+    if(this.props.opportunityErrors){
+      this.props.clearOpportunityErrors();
     }
+
+    this.props.handleClose();
+    // if (field === 'post' && this.props.modalType === 'create'){
+    if (this.props.modalType === 'create'){
+      this.props.clearFields();
+    }
+    // } else if (field === 'post' && this.props.modalType !== 'create'){
+    //   this.props.history.push('/postopportunity')
+    // } else if (field === 'find'){
+    //   this.props.history.push('/findandconnect')
+    // }
   };
 
   render () {
@@ -100,6 +100,18 @@ class SubmitModal extends React.Component {
         </ListItem>
       )
     })
+
+    // <Button variant="contained" color='secondary'
+    //   className={classes.actionButton}
+    //   onClick={this.handleClose}>
+    //   Post An Opportunity
+    // </Button>
+    //
+    // <Button variant="contained" color='secondary'
+    //   className={classes.actionButton}
+    //   onClick={this.handleClose}>
+    //   View Opportunities
+    // </Button>
 
     let successText = modalType === 'create' ? (
       <Grid className={classes.grid}
@@ -118,14 +130,8 @@ class SubmitModal extends React.Component {
           <Grid container justify='flex-start' className={classes.actionWrapper}>
             <Button variant="contained" color='secondary'
               className={classes.actionButton}
-              onClick={this.handleClose('post')}>
-              Post An Opportunity
-            </Button>
-
-            <Button variant="contained" color='secondary'
-              className={classes.actionButton}
-              onClick={this.handleClose('find')}>
-              View Opportunities
+              onClick={this.handleClose}>
+              Close
             </Button>
           </Grid>
         </Grid>
@@ -149,14 +155,8 @@ class SubmitModal extends React.Component {
           <Grid container justify='flex-start' className={classes.actionWrapper}>
             <Button variant="contained" color='secondary'
               className={classes.actionButton}
-              onClick={this.handleClose('post')}>
-              Post An Opportunity
-            </Button>
-
-            <Button variant="contained" color='secondary'
-              className={classes.actionButton}
-              onClick={this.handleClose('find')}>
-              View Opportunities
+              onClick={this.handleClose}>
+              Close
             </Button>
           </Grid>
         </Grid>
@@ -182,7 +182,7 @@ class SubmitModal extends React.Component {
               {opportunityErrors}
             </List>
             <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-              onClick={this.handleClose('')} color='secondary'>
+              onClick={this.handleClose} color='secondary'>
               Close
             </Button>
           </Grid>
@@ -194,15 +194,13 @@ class SubmitModal extends React.Component {
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        onClose={this.props.opportunityErrors.length === 0 ?
-          (this.handleClose('find')) : (this.handleClose(''))}
+        onClose={this.handleClose}
         className={classes.cardModalWrapper}
         classes={{ paper: classes.modalPaper}}>
         <Badge
           badgeContent={
             <CloseIcon
-              onClick={this.props.opportunityErrors.length === 0 ?
-                (this.handleClose('find')) : (this.handleClose(''))}/>
+              onClick={this.handleClose}/>
           }
           classes={{ badge: classes.badge }}
           style={{ width: '100%'}}

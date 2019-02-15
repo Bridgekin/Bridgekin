@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ReferralLink, type: :model do
   describe "referral link" do
-    subject { ReferralLink.new(:network_id => 1, :member_id => 1,
-      status: 'Active', usage_type: "Single") }
+    subject { create(:referral_link) }
 
     it { should validate_presence_of(:network_id) }
     it { should validate_presence_of(:member_id) }
@@ -15,20 +14,23 @@ RSpec.describe ReferralLink, type: :model do
 
     it { should belong_to(:network) }
     it { should belong_to(:owner) }
-    it { should belong_to(:recipient) }
+    it { should belong_to(:recipient).optional }
 
     describe "#find_link_by_params" do
-      it "should find link"
-      #   subject.save!
-      #   expect(ReferralLink.find_link_by_params({
-      #     member_id: 1,
-      #     network_id: 1
-      #     })).to be_truthy
-      # end
+      it "should find link" do
+        expect(ReferralLink.find_link_by_params({
+          member_id: subject.member_id,
+          network_id: subject.network_id
+          })).to be_truthy
+      end
     end
 
     describe "#find_link_by_code" do
-      it "should find link"
+      it "should find link" do
+        expect(ReferralLink.find_link_by_code(
+          subject.referral_code
+          )).to be_truthy
+      end
     end
     #
     # it "should ensure referral code exists" do

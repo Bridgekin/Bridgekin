@@ -10,18 +10,20 @@ class Api::OpportunitiesController < ApiController
   def index
     if params[:network_id].empty?
       @opportunities = policy_scope(Opportunity)
-        .where.not(status: 'Deleted')
+        .where(status: 'Approved')
+        .where.not(deal_status: 'Deleted')
     else
       @opportunities = policy_scope(Opportunity)
         .where(opportunity_networks: { network_id: params[:network_id]})
-        .where.not(status: 'Deleted')
+        .where(status: 'Approved')
+        .where.not(deal_status: 'Deleted')
     end
 
     render :index
   end
 
   def userIndex
-    @opportunities = @user.opportunities.where.not(status: 'Deleted')
+    @opportunities = @user.opportunities.where.not(deal_status: 'Deleted')
     render :index
   end
 
@@ -33,12 +35,17 @@ class Api::OpportunitiesController < ApiController
 
   def create
     @opportunity = Opportunity.new(opportunity_params
-      .merge({owner_id: @user.id, status: "Pending"}))
+      .merge({owner_id: @user.id, status: "Pending", deal_status:'Active'}))
     authorize @opportunity
 
     if @opportunity.save
-      @opportunity.reset_networks(params[:opportunity][:networks])
+      @opportunity.reset_sharing(
+        params[:opportunity][:networks],
+        params[:opportunity][:connections],
+        params[:opportunity][:circles]
+      )
       @networks = @opportunity.networks.pluck(:id)
+
       # Send email to joe
       OpportunityMailer.flag_opportunity_creation(@opportunity, @user).deliver_now
       # render json: @opportunity, status: :created, location: @opportunity
@@ -54,7 +61,12 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
-      @opportunity.reset_networks(params[:opportunity][:networks])
+      @opportunity.reset_sharing(
+        params[:opportunity][:networks],
+        params[:opportunity][:connections],
+        params[:opportunity][:circles]
+      )
+
       @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity
       render :show
@@ -65,7 +77,7 @@ class Api::OpportunitiesController < ApiController
 
   # DELETE /opportunities/1
   def destroy
-    @opportunity[:status] = "Deleted"
+    @opportunity[:deal_status] = "Deleted"
     authorize @opportunity
     if @opportunity.save
       render json: ['Opportunity was destroyed'], status: :ok
@@ -85,17 +97,18 @@ class Api::OpportunitiesController < ApiController
       # debugger
       if params[:opportunity][:picture] == "delete"
         opp_params = params.require(:opportunity).permit(:title, :description,
-          :owner_id, :opportunity_need, :value, :status,
-          :industries, :geography)
+          :owner_id, :opportunity_need, :value, :anonymous, :view_type,
+          :industries, :geography )
       else
         opp_params = params.require(:opportunity).permit(:title, :description,
-          :owner_id, :opportunity_need, :value, :status, :picture,
+          :owner_id, :opportunity_need, :value, :picture, :anonymous, :view_type,
           :industries, :geography)
       end
 
       [:geography, :industries].each do |field|
         opp_params[field] = opp_params[field].split(',')
       end
+      opp_params[:anonymous] = params[:opportunity][:anonymous] == 'true'
 
       opp_params
     end

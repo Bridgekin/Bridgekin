@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_29_220042) do
+ActiveRecord::Schema.define(version: 2019_02_15_010112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,17 +115,20 @@ ActiveRecord::Schema.define(version: 2019_01_29_220042) do
 
   create_table "opportunities", force: :cascade do |t|
     t.integer "owner_id", null: false
-    t.string "title", null: false
+    t.string "title", default: "", null: false
     t.text "description"
-    t.string "opportunity_need", null: false
-    t.string "industries", null: false, array: true
-    t.string "geography", null: false, array: true
-    t.string "value", null: false
-    t.string "status", null: false
+    t.string "opportunity_need", default: "", null: false
+    t.string "value", default: "", null: false
+    t.string "status", default: "Pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["owner_id", "title"], name: "index_opportunities_on_owner_id_and_title", unique: true
+    t.string "industries", default: [], null: false, array: true
+    t.string "geography", default: [], null: false, array: true
+    t.string "deal_status", default: "Active", null: false
+    t.boolean "anonymous", default: false
+    t.string "view_type", default: "card", null: false
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
+    t.index ["status"], name: "index_opportunities_on_status"
   end
 
   create_table "opportunity_networks", force: :cascade do |t|

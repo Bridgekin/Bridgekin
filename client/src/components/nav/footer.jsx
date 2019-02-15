@@ -33,7 +33,7 @@ const styles = {
     // top:64,
     // bottom: 0,
     // height: 50,
-    borderTop: `1px solid ${theme.palette.grey1}`
+    // borderTop: `1px solid ${theme.palette.grey1}`
   },
   homeGrid:{
     flexGrow: 1,

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UserNetwork, type: :model do
   describe "user network" do
-    subject { UserNetwork.new(network_id: 1, member_id: 1) }
+    subject { create(:user_network) }
 
     it { should validate_presence_of(:network_id) }
     it { should validate_presence_of(:member_id) }

@@ -30,11 +30,6 @@ const styles = theme => ({
   },
   root: {
     flexGrow: 1,
-    // marginTop: 75,
-    // marginBottom: 75,
-    // position: 'relative',
-    // top: 64,
-    padding: "214px 10px 50px"
   },
   cover: {
     width: '100%',
@@ -46,16 +41,22 @@ const styles = theme => ({
     backgroundColor: theme.palette.lightGrey,
     color: theme.palette.grey1
   },
-  card: {
+  card:{
+    // height: 118,
     display: 'flex',
-    alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 20
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    // padding: 30,
+    backgroundColor: `${theme.palette.white}`,
+    // marginTop: 18,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`
   },
   cardSection:{
     marginTop: 10
   },
-  content:{marginLeft: 20},
+  content:{padding: "0px 10px"},
   wrapper:{
     display: 'flex',
     justifyContent: 'flex-start',
@@ -102,18 +103,18 @@ class AccountHome extends React.Component {
     )
 
     return (
-      <Grid container justify="center" alignItems="center"
-        className={classes.root}>
-        <Grid item xs={12} sm={9} md={8} lg={6}>
+      <Grid container justify='center' alignItems='center'>
+        <div style={{ overflow: 'scroll', maxHeight: window.innerHeight, padding: "0px 0px 150px 0px"}}>
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="flex-start"
-              spacing={16}>
+              style={{ margin: '25px 15px' }}>
 
-              <Grid item xs={8} md={5} container justify='center'>
+              <Grid item xs={8} md={4} container justify='center'
+                style={{ padding: 5}}>
                 {profilePic}
               </Grid>
 
-              <Grid item xs={10} md={6} className={classes.content}>
+              <Grid item xs={10} md={8} className={classes.content}>
                 <div className={classes.wrapper}>
                   <Typography variant="h3" gutterBottom color="secondary"
                     align='left'>
@@ -160,7 +161,8 @@ class AccountHome extends React.Component {
             </Grid>
 
           </Card>
-        </Grid>
+          <div style={{height: 150}} />
+        </div>
       </Grid>
     )
   }

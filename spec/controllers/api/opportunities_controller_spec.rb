@@ -28,7 +28,7 @@ RSpec.describe Api::OpportunitiesController, type: :controller do
     @token = JwtService.encode(payload)
   end
 
-  context "when signed in" do
+  context "when not signed in" do
     before do
       request.headers['Authorization'] = ''
       #using any action in opportunities

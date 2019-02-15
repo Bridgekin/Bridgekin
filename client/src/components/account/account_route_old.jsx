@@ -13,33 +13,54 @@ import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 
-import AccountMain from './account_main';
-import AccountOpportunities from './account_opportunities'
+import AccountNav from './account_nav';
+import AccountHome from './account_home';
+import AccountSettings from './account_settings';
+import AccountPosted from './account_posted';
+import AccountConnected from './account_connected';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
 });
 
 const mapDispatchToProps = dispatch => ({
+  // registerWaitlist: (user) => dispatch(registerWaitlist(user))
 });
 
 const styles = theme => ({
+  jumboRoot: {
+    flexGrow: 1
+  },
   root: {
     flexGrow: 1
+  },
+  acccountMain:{
+    marginTop: 50
   },
 });
 
 
 class AccountRoute extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {};
+  }
+
   render (){
     let classes = this.props.classes;
 
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
-        <Switch>
-          <ProtectedRoute path="/account/opportunities" component={AccountOpportunities} />
-          <ProtectedRoute path="/account" component={AccountMain} />
-        </Switch>
+        <div >
+          <AccountNav hash={this.props.location.pathname}/>
+
+          <Switch>
+            <ProtectedRoute path="/account/settings" component={AccountSettings} />
+            <ProtectedRoute path="/account/posted" component={AccountPosted} />
+            <ProtectedRoute path="/account/connected" component={AccountConnected} />
+            <ProtectedRoute path="/account" component={AccountHome} />
+          </Switch>
+        </div>
 
       </MuiThemeProvider>
     )
