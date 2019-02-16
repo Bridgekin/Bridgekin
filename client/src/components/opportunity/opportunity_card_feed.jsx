@@ -213,7 +213,8 @@ class OpportunityCard extends React.Component {
     dealStatusProgress } = this.state;
 
     let { title, description, industries, opportunityNeed, geography,
-      value, status, pictureUrl, dealStatus, anonymous, viewType } = opportunity;
+      value, status, pictureUrl, dealStatus, anonymous, viewType,
+      ownerPictureUrl } = opportunity;
 
     if (!_.isEmpty(opportunity)){
       let editOptions = editable ? (
@@ -292,9 +293,9 @@ class OpportunityCard extends React.Component {
                 onClick={() => this.props.history.push('/')}
                 color="secondary"
                 >
-                {currentUser.profilePicUrl && !anonymous ? (
+                {ownerPictureUrl && !anonymous ? (
                   <Avatar alt="profile-pic"
-                    src={currentUser.profilePicUrl}
+                    src={ownerPictureUrl}
                     className={classes.avatar} />
                 ) : (
                   <AccountCircle className={classes.avatar} />

@@ -12,18 +12,22 @@ class Api::OpportunitiesController < ApiController
       @opportunities = policy_scope(Opportunity)
         .where(status: 'Approved')
         .where.not(deal_status: 'Deleted')
+        .includes(:owner)
     else
       @opportunities = policy_scope(Opportunity)
         .where(opportunity_networks: { network_id: params[:network_id]})
         .where(status: 'Approved')
         .where.not(deal_status: 'Deleted')
+        .includes(:owner)
     end
 
     render :index
   end
 
   def userIndex
-    @opportunities = @user.opportunities.where.not(deal_status: 'Deleted')
+    @opportunities = @user.opportunities
+      .where.not(deal_status: 'Deleted')
+      .includes(:owner)
     render :index
   end
 
