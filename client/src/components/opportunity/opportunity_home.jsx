@@ -82,11 +82,11 @@ const styles = {
   },
   grid:{
     position: 'relative',
-    padding: "64px 35px 50px 35px",
-    paddingTop: 64 + 34,
+    padding: "64px 0px 50px 0px",
+    // paddingTop: 64 + 34,
     flexGrow: 1,
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    minHeight: window.innerHeight
+    minHeight: window.innerHeight-64
   },
   column:{
     paddingLeft: 0,
@@ -459,7 +459,7 @@ class OpportunityHome extends React.Component {
 
     let feed = (
       <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', maxHeight: window.innerHeight, padding: "0px 0px 150px 0px"}}>
+        <div style={{ overflow: 'scroll', padding: "0px 0px 50px 0px", width: '100%'}}>
           <CardActionArea className={classes.feedCard}
             onClick={this.handleOpportunityChangeModalOpen}>
             <Typography align='Left'
@@ -513,7 +513,6 @@ class OpportunityHome extends React.Component {
           </CardActionArea>
 
           {(opportunitiesLoaded) ? opportunityCards : loader}
-          <div style={{height: 150}} />
         </div>
       </Grid>
     )
@@ -568,7 +567,7 @@ class OpportunityHome extends React.Component {
               </ListItem>
             ))}
 
-            {otherDropdownOptions.map(other => (
+            {currentUser.isAdmin && otherDropdownOptions.map(other => (
               <ListItem button
                 className={classes.filterItem}
                 disabled={other.disabled}
@@ -593,17 +592,18 @@ class OpportunityHome extends React.Component {
     return (
       <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
         <Grid container justify='center' className={classes.grid}>
-          <div style={{ position: 'fixed', top: 64, width:1040 }}>
+          <div style={{ position: 'relative', margin: '0 auto',
+            width:1040, height: '100%'}}>
             <div className={classes.column}
-              style={{ position: 'static', marginRight: 20, width: 250}}>
+              style={{ position: 'fixed', top:64, width: 250}}>
               {column1}
             </div>
             <div className={classes.column}
-              style={{ position: 'static', maxHeight: window.innerHeight, width: 500 }}>
+              style={{ position: 'relative', marginLeft: 270, width: 500 }}>
               {feed}
             </div>
             <div className={classes.column}
-              style={{ position: 'static', marginLeft: 20, width: 250}}>
+              style={{ position: 'fixed', top:64, marginLeft: 20, width: 250}}>
               {filter}
             </div>
           </div>
@@ -628,6 +628,25 @@ class OpportunityHome extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(OpportunityHome));
+
+// <Grid container justify='center' className={classes.grid}>
+//   <div style={{ position: 'fixed', top: 64, width:1040 }}>
+//     <div className={classes.column}
+//       style={{ position: 'static', marginRight: 20, width: 250}}>
+//       {column1}
+//     </div>
+//     <div className={classes.column}
+//       style={{ position: 'static', maxHeight: window.innerHeight, width: 500 }}>
+//       {feed}
+//     </div>
+//     <div className={classes.column}
+//       style={{ position: 'static', marginLeft: 20, width: 250}}>
+//       {filter}
+//     </div>
+//   </div>
+// </Grid>
+//
+
 //
 // <Grid container className={classes.grid}>
 //   {header}

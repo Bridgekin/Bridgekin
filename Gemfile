@@ -49,6 +49,9 @@ gem 'underscore_params'
 
 gem "pundit"
 
+#Schedule cron jobs beyond heroku scheduler
+gem "simple_scheduler"
+
 gem 'heroku-deflater', :group => :production
 
 gem 'rails_12factor', group: :production

@@ -104,7 +104,7 @@ class AccountHome extends React.Component {
 
     return (
       <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', maxHeight: window.innerHeight, padding: "18px 0px 150px 0px"}}>
+        <div style={{ overflow: 'scroll', paddingTop: 18 }}>
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="flex-start"
               style={{ margin: '25px 15px' }}>

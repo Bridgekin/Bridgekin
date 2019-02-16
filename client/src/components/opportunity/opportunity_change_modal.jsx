@@ -69,6 +69,7 @@ import merge from 'lodash/merge';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
+  opportunityErrors: state.errors.opportunities
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -246,10 +247,17 @@ class OpportunityChangeModal extends React.Component {
       if(this.props.type === 'create'){
         this.props.createOpportunity(formData)
         .then(() => {
-          this.setState({
-            sendingProgress: false,
-            submitModalOpen: true
-          });
+          if(this.props.opportunityErrors.length !== 0){
+            this.setState({
+              sendingProgress: false,
+              submitModalOpen: true
+            });
+          } else {
+            this.setState({
+              sendingProgress: false
+            });
+            this.handleClose();
+          }
           // this.clearFields();
           // this.handleClose();
         })
@@ -257,10 +265,16 @@ class OpportunityChangeModal extends React.Component {
         formData.append(`opportunity[id]`, this.props.opportunity.id);
         this.props.updateOpportunity(formData)
         .then(() => {
-          this.setState({
-            sendingProgress: false,
-            submitModalOpen: true
-          });
+          if(this.props.opportunityErrors.length !== 0){
+            this.setState({
+              sendingProgress: false,
+              submitModalOpen: true
+            });
+          } else {
+            this.setState({
+              sendingProgress: false
+            });
+          }
           // this.clearFields();
           // this.handleClose();
         })
@@ -274,9 +288,16 @@ class OpportunityChangeModal extends React.Component {
     this.setState({ share: [] });
   }
 
-  handleSubmitModalClose(){
-    this.setState({ submitModalOpen: false },
-    () => this.handleClose());
+  handleSubmitModalClose(closeChangeModal){
+    return e => {
+      this.setState({ submitModalOpen: false },
+      () =>  {
+        if (closeChangeModal){
+          this.clearFields();
+          this.handleClose();
+        }
+      })
+    }
   }
 
   clearFields(){
@@ -297,12 +318,14 @@ class OpportunityChangeModal extends React.Component {
 
   handleMenuClick(anchor){
     return e => {
+      e.stopPropagation();
       this.setState({ [anchor]: e.currentTarget });
     }
   };
 
   handleMenuClose(anchor){
     return e => {
+      e.stopPropagation();
       this.setState({ [anchor]: null });
     }
   };
@@ -432,7 +455,8 @@ class OpportunityChangeModal extends React.Component {
       industryChoices, geographyChoices, valueChoices,
       privacyAnchorEl, shareAnchorEl, share,
       mobileImageCropPending, imageModalOpen, picture,
-      pictureUrl, title, submitModalOpen} = this.state;
+      pictureUrl, title, submitModalOpen, anonymous,
+      sendingProgress } = this.state;
 
     const infoOpen = Boolean(infoAnchorEl);
     const shareSelected = share.map(choice => choice.title).join(', ');
@@ -470,7 +494,7 @@ class OpportunityChangeModal extends React.Component {
               color="secondary"
               classes={{ root: classes.infoIconButton}}
               >
-              {currentUser.profilePicUrl ? (
+              {currentUser.profilePicUrl && !anonymous ? (
                 <Avatar alt="profile-pic"
                   src={currentUser.profilePicUrl}
                   className={classes.avatar} />
@@ -692,7 +716,7 @@ class OpportunityChangeModal extends React.Component {
                   </MenuItem>
                 ))}
 
-                {otherConnectionOptions.map(choice => (
+                {currentUser.isAdmin && otherConnectionOptions.map(choice => (
                   <MenuItem value={choice} key={choice.title}
                     style={{ textTransform: 'capitalize'}}
                     onClick={this.handleShareClose(choice)}
@@ -710,7 +734,8 @@ class OpportunityChangeModal extends React.Component {
                 onClick={this.handleSubmit}
                 disabled={
                   (viewType === 'card' && isError) ||
-                  (viewType === 'post' && isError)}>
+                  (viewType === 'post' && isError) ||
+                  sendingProgress}>
                 Post
               </Button>
             </Grid>

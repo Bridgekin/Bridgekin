@@ -152,7 +152,6 @@ class CardModal extends React.Component {
       prevProps.connectBool !== this.props.connectBool) &&
       (this.state.page !== this.props.page ||
       prevProps.connectBool !== this.props.connectBool)) {
-        debugger
         this.setState({
           page: this.props.page,
           connectBool: this.props.connectBool

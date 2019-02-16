@@ -71,15 +71,18 @@ class SubmitModal extends React.Component {
   }
 
   handleClose(){
-    if(this.props.opportunityErrors){
+    if(this.props.opportunityErrors.length > 0){
       this.props.clearOpportunityErrors();
+      this.props.handleClose(false)();
+    } else {
+      this.props.handleClose(true)();
+      // if (this.props.modalType === 'create'){
+      //   this.props.clearFields();
+      // }
     }
 
-    this.props.handleClose();
+
     // if (field === 'post' && this.props.modalType === 'create'){
-    if (this.props.modalType === 'create'){
-      this.props.clearFields();
-    }
     // } else if (field === 'post' && this.props.modalType !== 'create'){
     //   this.props.history.push('/postopportunity')
     // } else if (field === 'find'){

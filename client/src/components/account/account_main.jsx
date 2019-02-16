@@ -34,7 +34,8 @@ const styles = {
   grid:{
     position: 'relative',
     // padding: "64px 35px 50px 35px",
-    // paddingTop: 64 + 34,
+    padding: "64px 0px 0px 0px",
+    // paddingTop: 64 + 18,
     flexGrow: 1,
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
     minHeight: window.innerHeight
@@ -145,13 +146,14 @@ class AccountMain extends React.Component {
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container justify='center' className={classes.grid}>
-          <div style={{ position: 'fixed', top: 64, width:1040 }}>
+          <div style={{ position: 'relative', margin: '0 auto',
+            width:1040, height: '100%'}}>
             <div className={classes.column}
-              style={{ position: 'fixed', marginRight: 20, width: 250}}>
+              style={{ position: 'fixed', top:64, width: 250}}>
               {pathName === '/account/opportunities' && opp_filters}
             </div>
             <div className={classes.column}
-              style={{ position: 'static', maxHeight: window.innerHeight, width: 500, marginLeft: 270 }}>
+              style={{ position: 'relative', marginLeft: 270, width: 500 }}>
               <Switch>
                 <ProtectedRoute path="/account/settings" component={AccountSettings} />
                 <ProtectedRoute
@@ -162,7 +164,7 @@ class AccountMain extends React.Component {
               </Switch>
             </div>
             <div className={classes.column}
-              style={{ position: 'fixed', marginLeft: 20, width: 250}}>
+              style={{ position: 'fixed', top:64, marginLeft: 20, width: 250}}>
               {navigation}
             </div>
           </div>

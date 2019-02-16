@@ -51,6 +51,29 @@ UserNetwork.create!(
   member_id: 1,
 )
 
+User.create!(
+  email: 'eric@bridgekin.com',
+  password: 'bridgekindemo',
+  password_confirmation: 'bridgekindemo',
+  confirmed_at: DateTime.now,
+  confirmation_sent_at: DateTime.now,
+  fname: 'Eric',
+  lname: 'Conway',
+  title: "Software Engineer",
+  company: "Bridgekin Analytics"
+)
+
+UserNetwork.create!(
+  network_id: 1,
+  member_id: 2,
+)
+
+UserNetwork.create!(
+  network_id: 2,
+  member_id: 2,
+)
+
+
 Opportunity.create!(
   owner_id: 1,
   title: 'Test - Amazing castle opportunity in France',

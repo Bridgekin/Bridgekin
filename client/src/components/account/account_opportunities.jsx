@@ -147,12 +147,11 @@ class AccountOpportunities extends React.Component {
     if (loaded){
       return (
         <MuiThemeProvider theme={theme} className={classes.root}>
-          <Grid container justify='center' alignItems='center'>
-            <div style={{ overflow: 'scroll',
-              maxHeight: window.innerHeight, padding: "18px 0px 150px 0px",
+          <Grid container justify='center' alignItems='center'
+            style={{ marginTop: 18}}>
+            <div style={{ overflow: 'scroll', paddingBottom: 50,
               width: '100%'}}>
               {filteredOpportunities.length > 0 && opportunityCards }
-              <div style={{height: 150}} />
             </div>
 
             <OpportunityChangeModal

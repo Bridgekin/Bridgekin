@@ -7,9 +7,7 @@ namespace :heroku_scheduler do
     users = User.where(id: EmailNotification.where(notification_setting: 'Weekly').pluck(:user_id))
 
     puts "Sending Weekly Email to users"
-    users.each do |user|
-      user.send_weekly_email
-    end
+    users.each {|user| user.send_weekly_email }
   end
 end
 

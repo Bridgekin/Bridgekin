@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { AuthRoute, ProtectedRoute} from './util/route_util';
+import { AuthRoute, ProtectedRoute, AdminProtectedRoute } from './util/route_util';
 import './App.css';
 
 import HomeNav from './components/nav/home_nav';
@@ -41,7 +41,7 @@ class App extends React.Component {
           <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
           <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
           <ProtectedRoute path="/account" component={AccountMain} />
-          <ProtectedRoute path="/mynetwork" component={ConnectionsHome} />
+          <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
           <AuthRoute path="/signup/:code" component={SignupPage} />
           <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
           <AuthRoute path="/login" component={Login}/>

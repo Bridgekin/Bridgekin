@@ -61,11 +61,14 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
+
       @opportunity.reset_sharing(
         params[:opportunity][:networks],
         params[:opportunity][:connections],
         params[:opportunity][:circles]
-      )
+      ) if params[:opportunity][:networks] ||
+        params[:opportunity][:connections] ||
+        params[:opportunity][:circles]
 
       @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity
@@ -98,15 +101,15 @@ class Api::OpportunitiesController < ApiController
       if params[:opportunity][:picture] == "delete"
         opp_params = params.require(:opportunity).permit(:title, :description,
           :owner_id, :opportunity_need, :value, :anonymous, :view_type,
-          :industries, :geography )
+          :deal_status, :industries, :geography )
       else
         opp_params = params.require(:opportunity).permit(:title, :description,
           :owner_id, :opportunity_need, :value, :picture, :anonymous, :view_type,
-          :industries, :geography)
+          :deal_status, :industries, :geography)
       end
 
       [:geography, :industries].each do |field|
-        opp_params[field] = opp_params[field].split(',')
+        opp_params[field] = opp_params[field].split(',') unless opp_params[field].nil?
       end
       opp_params[:anonymous] = params[:opportunity][:anonymous] == 'true'
 

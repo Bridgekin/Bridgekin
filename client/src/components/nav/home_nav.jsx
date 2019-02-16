@@ -422,14 +422,14 @@ class HomeNav extends React.Component {
               Find & Connect
             </Typography>
           </Button>
-          <Button color='secondary'
+          {currentUser.isAdmin && <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
             <Typography variant="h4" align='left' color="textPrimary"
               style={(pathName === 'mynetwork') ? { fontWeight: 600} : {}}>
               My Trusted Network
             </Typography>
-          </Button>
+          </Button>}
           <div>
             <IconButton
               aria-owns={isMenuOpen ? 'material-appbar' : undefined}

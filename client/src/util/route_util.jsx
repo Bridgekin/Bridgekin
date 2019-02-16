@@ -3,34 +3,45 @@ import {connect} from 'react-redux';
 import {Redirect, Route, withRouter} from 'react-router-dom';
 
 const mapStateToProps = state => ({
-  loggedIn: Boolean(state.session.id)
+  // loggedIn: Boolean(state.session.id),
+  currentUser: state.users[state.session.id],
 });
 
-const Auth = ({ loggedIn, path, component: Component}) => (
+const Auth = ({ currentUser, path, component: Component}) => (
   <Route
     path={path}
     render={props => (
-      loggedIn ? <Redirect to="/findandconnect" /> :
+      currentUser ? <Redirect to="/findandconnect" /> :
       <Component{...props} />
     )}
   />
 );
 
-// const Protected = ({ loggedIn, path, component: Component}) => (
+// const Protected = ({ currentUser, path, component: Component}) => (
 //   <Route
 //     path={path}
 //     render={props => (
-//       loggedIn ? <Component {...props} /> :
+//       currentUser ? <Component {...props} /> :
 //       <Redirect to='/'/>
 //     )}
 //   />
 // );
 
-const Protected = ({ loggedIn, path, component: Component, passedProps}) => {
+const Protected = ({ currentUser, path, component: Component, passedProps}) => {
   return <Route
     path={path}
     render={props => (
-      loggedIn ? <Component {...Object.assign({}, props, passedProps)} /> :
+      currentUser ? <Component {...Object.assign({}, props, passedProps)} /> :
+      <Redirect to='/'/>
+    )}
+  />
+};
+
+const AdminProtected = ({ currentUser, path, component: Component, passedProps}) => {
+  return <Route
+    path={path}
+    render={props => (
+      (currentUser && currentUser.isAdmin) ? <Component {...Object.assign({}, props, passedProps)} /> :
       <Redirect to='/'/>
     )}
   />
@@ -38,3 +49,4 @@ const Protected = ({ loggedIn, path, component: Component, passedProps}) => {
 
 export const AuthRoute = withRouter(connect(mapStateToProps)(Auth));
 export const ProtectedRoute = withRouter(connect(mapStateToProps)(Protected));
+export const AdminProtectedRoute = withRouter(connect(mapStateToProps)(AdminProtected));
