@@ -77,6 +77,14 @@ class User < ApplicationRecord
     self.confirmed_at.present?
   end
 
+  def implement_trackable
+    self[:last_sign_in_at] = self[:current_sign_in_at] || DateTime.now
+    self[:current_sign_in_at] = DateTime.now
+
+    self[:sign_in_count] += 1
+    self.save
+  end
+
   def send_weekly_email
     seven_days_ago = DateTime.now - 7
     new_opportunities = Opportunity.joins(:opportunity_networks)

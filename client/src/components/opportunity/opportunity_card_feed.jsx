@@ -20,6 +20,7 @@ import Badge from '@material-ui/core/Badge';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 // import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
+import Menu from '@material-ui/core/Menu';
 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -43,6 +44,10 @@ import { PickImage } from '../../static/opportunity_images/image_util.js';
 import _ from 'lodash';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
+import theme from '../theme';
+
+import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
+import ReferIcon from '../../static/opp_feed_icons/refer.png'
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -106,6 +111,11 @@ const styles = theme => ({
   cardSubContent:{
     fontSize: 12,
     fontWeight: 600
+  },
+  oppActionIcon:{
+    marginRight: 10,
+    width: 12,
+    height: 12
   }
 });
 
@@ -119,8 +129,9 @@ class OpportunityCard extends React.Component {
       connectBool: null,
       cardModalPage: 'sent',
       changeModalOpen: false,
-      dealStatusMenuOpen: false,
-      dealStatusProgress: false
+      // dealStatusMenuOpen: false,
+      dealStatusProgress: false,
+      dealStatusAnchorEl: null
     }
 
     this.handleCardOpen = this.handleCardOpen.bind(this);
@@ -129,7 +140,7 @@ class OpportunityCard extends React.Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleCardOpen = this.handleCardOpen.bind(this);
     this.handleCardClose = this.handleCardClose.bind(this);
-    this.handleDealStatusOpen = this.handleDealStatusOpen.bind(this);
+    this.handleDealStatusToggle = this.handleDealStatusToggle.bind(this);
     this.handleDealStatusSend = this.handleDealStatusSend.bind(this);
   }
 
@@ -168,9 +179,10 @@ class OpportunityCard extends React.Component {
     this.props.handleEditOpen();
   }
 
-  handleDealStatusOpen(e){
+  handleDealStatusToggle(e){
     e.stopPropagation();
-    this.setState({ dealStatusMenuOpen: true })
+    const { dealStatusAnchorEl } = this.state;
+    this.setState({ dealStatusAnchorEl: dealStatusAnchorEl ? null : e.currentTarget })
   }
 
   handleDealStatusSend(value){
@@ -185,7 +197,7 @@ class OpportunityCard extends React.Component {
 
         this.props.updateOpportunity(formData)
         .then(() => this.setState({
-          dealStatusMenuOpen: false,
+          dealStatusAnchorEl: null,
           dealStatusProgress: false
         }))
       })
@@ -210,7 +222,7 @@ class OpportunityCard extends React.Component {
       currentUser }= this.props;
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
-    dealStatusProgress } = this.state;
+    dealStatusProgress, dealStatusAnchorEl } = this.state;
 
     let { title, description, industries, opportunityNeed, geography,
       value, status, pictureUrl, dealStatus, anonymous, viewType,
@@ -218,17 +230,25 @@ class OpportunityCard extends React.Component {
 
     if (!_.isEmpty(opportunity)){
       let editOptions = editable ? (
-        <Grid container justify='flex-start' alignItems='center'
-          style={{ marginTop: 10}}>
-          <Button variant="contained" className={classes.button}
-            onClick={this.handleEdit}
-            style={{ marginRight: 31}}>
-            Edit
-          </Button>
-          <Button variant="contained" className={classes.button}
-            onClick={this.handleDeleteOpen}>
-            Delete
-          </Button>
+        <Grid container justify='flex-start'
+          className={classes.feedCardActionContainer}>
+          <Grid item xs={6} container justify='center' alignItems='center'
+            style={{borderRight: `1px solid ${theme.palette.grey1}`}}>
+            <img alt='connect' src={ConnectIcon}/>
+              <Button
+                onClick={this.handleEdit}
+                style={{ marginRight: 31}}>
+                Edit
+              </Button>
+          </Grid>
+          <Grid item xs={6} container justify='center' alignItems='center'>
+            <img alt='refer' src={ReferIcon}/>
+            <Button
+              className={classes.button}
+              onClick={this.handleDeleteOpen}>
+              Delete
+            </Button>
+          </Grid>
         </Grid>
       ) : (<div></div>)
 
@@ -310,12 +330,9 @@ class OpportunityCard extends React.Component {
 
             <Grid item xs={6} container alignItems='center' justify='flex-end'>
               <Button className={classes.oppStatus}
-                buttonRef={node => {
-                    this.dealStatusAnchorEl = node;
-                  }}
-                aria-owns={dealStatusMenuOpen ? 'menu-list-grow' : undefined}
+                aria-owns={dealStatusAnchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
-                onClick={this.handleDealStatusOpen}
+                onClick={this.handleDealStatusToggle}
                 disabled={dealStatusProgress}
                 >
                 <div className={classes.statusIndicator}
@@ -323,29 +340,23 @@ class OpportunityCard extends React.Component {
                 {dealStatus}
               </Button>
 
-              <Popper open={dealStatusMenuOpen} anchorEl={this.dealStatusAnchorEl} transition disablePortal>
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
-                    id="menu-list-grow"
-                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                  >
-                    <Paper>
-                      <ClickAwayListener onClickAway={this.handleClose}>
-                        <MenuList>
-                          {['Active', 'Pending', 'Closed'].map(option => (
-                            <MenuItem onClick={this.handleDealStatusSend(option)}>
-                              <div className={classes.statusIndicator}
-                                style={{ backgroundColor: `${this.getStatusColor(option)}` }}/>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
+              <Menu
+                id="simple-menu"
+                anchorEl={dealStatusAnchorEl}
+                open={Boolean(dealStatusAnchorEl)}
+                onClose={this.handleDealStatusToggle}
+              >
+                {['Active', 'Pending', 'Closed'].map(option => (
+                  <MenuItem onClick={this.handleDealStatusSend(option)}>
+                    <div className={classes.statusIndicator}
+                      style={{ backgroundColor: `${this.getStatusColor(option)}` }}/>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
+              <div>
+                hi
+              </div>
             </Grid>
           </Grid>
 
@@ -441,23 +452,46 @@ class OpportunityCard extends React.Component {
                     </Typography>
                   </Grid>}
               </Grid>
+            </Grid>
 
-              <Grid container justify='flex-start'
-                className={classes.feedCardActionContainer}>
-                <Button color='primary' variant='contained'
-                  style={{ marginRight: 31}}
-                  onClick={this.handleCardOpen('confirm', true)}>
+            <Grid container justify='flex-start'
+              className={classes.feedCardActionContainer}>
+              <Grid item xs={6} container justify='center' alignItems='center'
+                style={{borderRight: `1px solid ${theme.palette.grey1}`}}>
+                <Button onClick={this.handleCardOpen('confirm', true)}>
+                  <img alt='connect' src={ConnectIcon}
+                    className={classes.oppActionIcon}/>
                   Connect
                 </Button>
-
-                <Button color='primary' variant='contained'
-                  onClick={this.handleCardOpen('confirm', false)}>
+              </Grid>
+              <Grid item xs={6} container justify='center' alignItems='center'>
+                <Button onClick={this.handleCardOpen('confirm', false)}>
+                  <img alt='refer' src={ReferIcon}
+                    className={classes.oppActionIcon}/>
                   Refer
                 </Button>
               </Grid>
-              {editable && editOptions}
-              {editable && deleteDialog}
+              { editable && false &&
+                <Grid item xs={3} container justify='center' alignItems='center'
+                  style={{borderLeft: `1px solid ${theme.palette.grey1}`, borderRight: `1px solid ${theme.palette.grey1}`}}>
+                  <Button onClick={this.handleEdit}>
+                    <img alt='connect' src={ConnectIcon}
+                      className={classes.oppActionIcon}/>
+                    Edit
+                  </Button>
+                </Grid>}
+              { editable && false &&
+                <Grid item xs={3} container justify='center' alignItems='center'>
+                  <Button onClick={this.handleDeleteOpen}>
+                    <img alt='refer' src={ReferIcon}
+                      className={classes.oppActionIcon}/>
+                    Delete
+                  </Button>
+                </Grid>
+              }
+
             </Grid>
+            {editable && deleteDialog}
           </Grid>
           <CardModal
             open={cardOpen}
@@ -477,3 +511,37 @@ class OpportunityCard extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(OpportunityCard)));
+
+// <Button className={classes.oppStatus}
+//   buttonRef={node => {
+//       this.dealStatusAnchorEl = node;
+//     }}
+//   aria-owns={dealStatusMenuOpen ? 'menu-list-grow' : undefined}
+//   aria-haspopup="true"
+//   onClick={this.handleDealStatusToggle}
+//   disabled={dealStatusProgress}
+//   >
+
+// <Popper open={dealStatusMenuOpen} anchorEl={this.dealStatusAnchorEl} transition disablePortal>
+//   {({ TransitionProps, placement }) => (
+//     <Grow
+//       {...TransitionProps}
+//       id="menu-list-grow"
+//       style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+//     >
+//       <Paper>
+//         <ClickAwayListener onClickAway={this.handleDealStatusToggle}>
+//           <MenuList>
+//             {['Active', 'Pending', 'Closed'].map(option => (
+//               <MenuItem onClick={this.handleDealStatusSend(option)}>
+//                 <div className={classes.statusIndicator}
+//                   style={{ backgroundColor: `${this.getStatusColor(option)}` }}/>
+//                 {option}
+//               </MenuItem>
+//             ))}
+//           </MenuList>
+//         </ClickAwayListener>
+//       </Paper>
+//     </Grow>
+//   )}
+// </Popper>

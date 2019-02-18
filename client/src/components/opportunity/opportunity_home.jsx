@@ -38,6 +38,7 @@ import OpportunityReferral from './opportunity_referral';
 import OpportunityWaitlist from './opportunity_waitlist';
 import WaitlistModal from '../waitlist_modal';
 import Loading from '../loading';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import Img from 'react-image'
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -82,16 +83,38 @@ const styles = {
   },
   grid:{
     position: 'relative',
-    padding: "64px 0px 50px 0px",
+    padding: "64px 0px 0px 0px",
     // paddingTop: 64 + 34,
     flexGrow: 1,
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    minHeight: window.innerHeight-64
+    minHeight: window.innerHeight
   },
-  column:{
+  feedContainer:{
+    width: '100%',
+    margin: '0 auto',
+    [theme.breakpoints.up('md')]: {
+      position: 'relative',
+      width: 1040,
+      height: '100%'
+    },
+  },
+  mainColumn:{
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: 265,
+      width: 500,
+      position: 'relative',
+      paddingLeft: 0,
+      paddingRight: 0,
+      display: 'inline-block'
+    },
+  },
+  sideColumn:{
     paddingLeft: 0,
     paddingRight: 0,
-    display: 'inline-block'
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-block'
+    }
   },
   feedCard:{
     // height: 118,
@@ -148,7 +171,8 @@ const styles = {
   createFilterButton:{
     textTransform: 'none',
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    marginRight: 10,
+    margin: "5px 10px 5px 0px",
+    fontSize: 12
   },
   filterButtonIcon:{
     width: 14,
@@ -170,96 +194,31 @@ const styles = {
     fontSize: 10,
     fontWeight: 300
   },
+  filterMobileHeader:{
+    fontSize: 11,
+    fontWeight: 600
+  },
+  filterMobileSubtext:{
+    fontSize: 9,
+    fontWeight: 300
+  },
   fieldLabel:{
     fontSize: 12
+  },
+  filterMobile: {
+    marginTop: 10,
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
+  },
+  filter:{
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex'
+    },
+    padding: 0,
+    width: '100%'
   }
-  // homeheader:{
-  //   padding: "20px 0px 20px 0px",
-  //   backgroundColor: 'RGBA(196,196,196,0.1)',
-  //   borderBottom: `0.5px solid ${theme.palette.grey1}`
-  // },
-  // headerTypography:{
-  //   margin: "25px 0px 25px 0px"
-  // },
-  // subheaderTypography:{
-  //   color: theme.palette.darkGrey,
-  //   fontSize: 24,
-  //   marginBottom: 20
-  // },
-  // headerDescriptionTypography:{
-  //   // color: theme.palette.grey2,
-  //   fontSize: 18,
-  //   fontWeight: 300
-  // },
-  // gridOpp:{
-  //   marginBottom: 15,
-  //   display: 'flex'
-  // },
-  // gridItem:{
-  //   margin: "15px 0px 15px 0px"
-  // },
-  // button:{
-  //   minWidth: 150
-  // },
-  // chipContainer:{
-  //   marginTop: 40
-  // },
-  // wrapper: {
-  //   display: 'flex',
-  //   justifyContent: 'center'
-  // },
-  // buttonProgress: {
-  //   color: '#4067B2',
-  //   position: 'absolute',
-  //   top: '50%',
-  //   left: '50%',
-  //   marginLeft: -12,
-  // },
-  // paper: {
-  //   position: 'absolute',
-  //   width: '40%',
-  //   height: 300,
-  //   backgroundColor: theme.palette.background.paper,
-  //   boxShadow: theme.shadows[5],
-  //   padding: theme.spacing.unit * 4,
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   alignItems: 'flex-start',
-  //   justifyContent: 'center'
-  // },
-  // refButton:{
-  //   fontSize: 20,
-  //   fontWeight: 700,
-  //   marginTop: 25,
-  //   height: 55,
-  //   width: 200
-  // },
-  // networkPaper: {
-  //   marginRight: theme.spacing.unit * 2,
-  // },
-  // formControl: {
-  //   margin: theme.spacing.unit,
-  //   minWidth: 120,
-  // },
-  // dropdownButton:{
-  //   display: 'flex'
-  // },
-  // dropdownMenuItem: {
-  //   // width: 150,
-  //   height: 'auto',
-  //   paddingTop: 3,
-  //   paddingBottom: 3,
-  //   borderBottom: "1px solid #D3D3D3",
-  // },
-  // dropdownHeader: { fontWeight: 600, fontSize: '0.85rem' },
-  // dropdownSubHeader: { fontWeight: 200, fontSize: '0.6rem' },
-  // addOportunityCard:{
-  //   height: 390,
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   justifyContent: 'center'
-  // }
 };
 
 const DEFAULTSTATE = {
@@ -368,20 +327,27 @@ class OpportunityHome extends React.Component {
     })
   }
 
-  handleDropdownClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleDropdownClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleDropdownChange(type, id){
+  handleDropdownClick(anchor){
     return e => {
+      e.stopPropagation();
+      this.setState({ [anchor]: e.currentTarget });
+    }
+  };
+
+  handleDropdownClose(anchor){
+    return e => {
+      e.stopPropagation();
+      this.setState({ [anchor]: null });
+    }
+  };
+
+  handleDropdownChange(anchor, type, id){
+    return e => {
+      e.stopPropagation();
       if (type === 'Network'){
         this.props.fetchOpportunities(id)
         .then(() => this.setState({
-            dropdownFocus: id, anchorEl: null
+            dropdownFocus: id, [anchor]: null
           })
         )
       }
@@ -397,13 +363,16 @@ class OpportunityHome extends React.Component {
         referral, currentUser } = this.props;
 
     const { loading, waitlistOpen, changeModalOpen,
-          referralNetwork, anchorEl,
-          dropdownFocus, opportunitiesLoaded } = this.state;
+        referralNetwork, anchorEl,
+        dropdownFocus, opportunitiesLoaded,
+        filterMobileAnchorEl } = this.state;
 
     const networksArray = Object.values(networks);
     const formattedNetworks = networksArray.map(network => (
       Object.assign({}, network, {type: 'network'})
     ))
+
+    // console.log(dropdownFocus)
 
     opportunities = opportunities.filter(o => o.status === "Approved")
 
@@ -443,6 +412,178 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
+    let otherDropdownOptions = [
+      {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
+      {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
+      {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
+    ]
+
+    let filterMobile = (
+      <Grid container justify='flex-end'
+        className={classes.filterMobile}>
+        <Button
+          aria-owns={filterMobileAnchorEl ? 'simple-menu' : undefined}
+          aria-haspopup="true"
+          onClick={this.handleDropdownClick('filterMobileAnchorEl')}
+          >
+          <Typography variant="subtitle1" align='left'
+            color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
+            {"View By:"}
+          </Typography>
+          <Typography variant="subtitle1" align='left'
+            color="textPrimary"
+            style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
+            {dropdownFocus === "" ? "All Opportunties" : networks[dropdownFocus].title}
+          </Typography>
+          <KeyboardArrowDownIcon />
+        </Button>
+
+        <Menu
+          id="simple-menu"
+          anchorEl={filterMobileAnchorEl}
+          open={Boolean(filterMobileAnchorEl)}
+          onClose={this.handleDropdownClose('filterMobileAnchorEl')}
+          style={{ padding: 0 }}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          >
+          <MenuItem onClick={this.handleDropdownChange('filterMobileAnchorEl','Network', '')}
+            className={classes.dropdownMenuItem}
+            selected={dropdownFocus === ''}
+            style={{ paddingLeft: 0}}>
+            <Grid container alignItems='center'>
+              <Checkbox checked={dropdownFocus === ''}/>
+              <div style={{ display: 'inline'}}>
+                <Typography variant="h6" align='left'
+                  color="textPrimary" className={classes.filterMobileHeader}>
+                  {'All Opportunities'}
+                </Typography>
+                <Typography variant="body2" align='left'
+                  color="textPrimary" className={classes.filterMobileSubtext}>
+                  {'Everything visible to you and the Bridgekin network'}
+                </Typography>
+              </div>
+            </Grid>
+          </MenuItem>
+
+          {networksArray.map(network => (
+            <MenuItem value={network.id}
+              className={classes.dropdownMenuItem}
+              onClick={this.handleDropdownChange('filterMobileAnchorEl', 'Network',network.id)}
+              selected={dropdownFocus === network.id}
+              style={{ paddingLeft: 0}}>
+              <Grid container alignItems='center'>
+                <Checkbox checked={dropdownFocus === network.id}/>
+                <div style={{ display: 'inline'}}>
+                  <Typography variant="h6" align='left'
+                    color="textPrimary" className={classes.filterMobileHeader}>
+                    {network.title}
+                  </Typography>
+                  <Typography variant="body2" align='left'
+                    color="textPrimary" className={classes.filterMobileSubtext}>
+                    {network.subtitle}
+                  </Typography>
+                </div>
+              </Grid>
+            </MenuItem>
+          ))}
+
+          {otherDropdownOptions.map(other => (
+            <MenuItem onClick={this.handleDropdownClose('filterMobileAnchorEl')}
+              className={classes.dropdownMenuItem}
+              disabled={other.disabled}
+              style={{ paddingLeft: 0}}>
+              <Grid container alignItems='center'>
+                <Checkbox checked={false}/>
+                <div style={{ display: 'inline'}}>
+                  <Typography variant="h6" align='left'
+                    color="textPrimary" className={classes.filterMobileHeader}>
+                    {other.header}
+                  </Typography>
+                  <Typography variant="body2" align='left'
+                    color="textPrimary" className={classes.filterMobileSubtext}>
+                    {other.subHeader}
+                  </Typography>
+              </div>
+            </Grid>
+            </MenuItem>
+          ))}
+        </Menu>
+      </Grid>
+    )
+
+    let filter = (
+      <Grid container justify='center' alignItems='center'
+        className={classes.filter}>
+        <div className={classes.filterCard}>
+          <Typography align='Left'
+            className={classes.cardHeader}
+            style={{ margin: "10px 20px 0px"}}>
+            What opportunities do you want to see?
+          </Typography>
+
+          <List component="nav">
+            <ListItem button className={classes.filterItem}
+              onClick={this.handleDropdownChange('anchorEl','Network','')}
+              selected={dropdownFocus === ''}>
+              <div>
+                <Typography variant="h6" align='left'
+                  color="textPrimary" className={classes.filterHeader}>
+                  {'All Opportunities'}
+                </Typography>
+                <Typography variant="body2" align='left'
+                  color="textPrimary" className={classes.filterSubtext}>
+                  {'Everything visible to you and the Bridgekin network'}
+                </Typography>
+              </div>
+            </ListItem>
+
+            {networksArray.map(network => (
+              <ListItem button value={network.id}
+                className={classes.filterItem}
+                onClick={this.handleDropdownChange('anchorEl','Network',network.id)}
+                selected={dropdownFocus === network.id}>
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textPrimary" className={classes.filterHeader}>
+                    {network.title}
+                  </Typography>
+                  <Typography variant="body2" align='left'
+                    color="textPrimary" className={classes.filterSubtext}>
+                    {network.subtitle}
+                  </Typography>
+                </div>
+              </ListItem>
+            ))}
+
+            {currentUser.isAdmin && otherDropdownOptions.map(other => (
+              <ListItem button
+                className={classes.filterItem}
+                disabled={other.disabled}
+                >
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textPrimary" className={classes.filterHeader}>
+                    {other.header}
+                  </Typography>
+                  <Typography variant="body2" align='left'
+                    color="textPrimary" className={classes.filterSubtext}>
+                    {other.subHeader}
+                  </Typography>
+                </div>
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      </Grid>
+    )
+
     let loader = (
       <Grid container justify='center' alignItems='center'
         className={classes.loader}>
@@ -450,17 +591,19 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let opportunityCards = opportunities.map(opportunity => (
+    let opportunityCards = opportunities.map((opportunity, idx) => (
       <OpportunityCardFeed
         currentUser={currentUser}
         opportunity={opportunity}
-        classes={classes} />
+        classes={classes}/>
     ));
 
     let feed = (
       <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', padding: "0px 0px 50px 0px", width: '100%'}}>
+        <div style={{ overflow: 'scroll', padding: "0px 0px 50px 0px",
+          width: '100%'}}>
           <CardActionArea className={classes.feedCard}
+            style={{ paddingBottom: 9}}
             onClick={this.handleOpportunityChangeModalOpen}>
             <Typography align='Left'
               className={classes.cardHeader}>
@@ -510,81 +653,11 @@ class OpportunityHome extends React.Component {
                 {`Share with: Connections`}
               </Button>
             </Grid>
+            {filterMobile}
           </CardActionArea>
 
+
           {(opportunitiesLoaded) ? opportunityCards : loader}
-        </div>
-      </Grid>
-    )
-
-    let otherDropdownOptions = [
-      {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
-      {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
-      {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
-    ]
-
-    let filter = (
-      <Grid container justify='center' alignItems='center'
-        style={{ padding: 0, width: '100%'}}>
-        <div className={classes.filterCard}>
-          <Typography align='Left'
-            className={classes.cardHeader}
-            style={{ margin: "10px 20px 0px"}}>
-            What opportunities do you want to see?
-          </Typography>
-
-          <List component="nav">
-            <ListItem button className={classes.filterItem}
-              onClick={this.handleDropdownChange('Network','')}
-              selected={dropdownFocus === ''}>
-              <div>
-                <Typography variant="h6" align='left'
-                  color="textPrimary" className={classes.filterHeader}>
-                  {'All Opportunities'}
-                </Typography>
-                <Typography variant="body2" align='left'
-                  color="textPrimary" className={classes.filterSubtext}>
-                  {'Everything visible to you and the Bridgekin network'}
-                </Typography>
-              </div>
-            </ListItem>
-
-            {networksArray.map(network => (
-              <ListItem button value={network.id}
-                className={classes.filterItem}
-                onClick={this.handleDropdownChange('Network',network.id)}
-                selected={dropdownFocus === network.id}>
-                <div>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterHeader}>
-                    {network.title}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterSubtext}>
-                    {network.subtitle}
-                  </Typography>
-                </div>
-              </ListItem>
-            ))}
-
-            {currentUser.isAdmin && otherDropdownOptions.map(other => (
-              <ListItem button
-                className={classes.filterItem}
-                disabled={other.disabled}
-                >
-                <div>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterHeader}>
-                    {other.header}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterSubtext}>
-                    {other.subHeader}
-                  </Typography>
-                </div>
-              </ListItem>
-            ))}
-          </List>
         </div>
       </Grid>
     )
@@ -592,18 +665,16 @@ class OpportunityHome extends React.Component {
     return (
       <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
         <Grid container justify='center' className={classes.grid}>
-          <div style={{ position: 'relative', margin: '0 auto',
-            width:1040, height: '100%'}}>
-            <div className={classes.column}
+          <div className={classes.feedContainer}>
+            <div className={classes.sideColumn}
               style={{ position: 'fixed', top:64, width: 250}}>
               {column1}
             </div>
-            <div className={classes.column}
-              style={{ position: 'relative', marginLeft: 270, width: 500 }}>
+            <div className={classes.mainColumn}>
               {feed}
             </div>
-            <div className={classes.column}
-              style={{ position: 'fixed', top:64, marginLeft: 20, width: 250}}>
+            <div className={classes.sideColumn}
+              style={{ position: 'fixed', top:64, marginLeft: 15, width: 250}}>
               {filter}
             </div>
           </div>
