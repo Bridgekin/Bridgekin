@@ -102,7 +102,7 @@ const styles = {
   },
   button:{
     marginTop: 20,
-    height: 25
+    height: 40
   },
   toolbar:{
     // display: 'flex',

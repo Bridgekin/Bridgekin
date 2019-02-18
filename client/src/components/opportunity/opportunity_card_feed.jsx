@@ -48,6 +48,7 @@ import theme from '../theme';
 
 import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
 import ReferIcon from '../../static/opp_feed_icons/refer.png'
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -79,7 +80,7 @@ const styles = theme => ({
     paddingBottom: 20
   },
   oppStatus:{
-    height: 29,
+    height: 40,
     width: 89,
     textTransform: 'uppercase',
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
@@ -142,6 +143,7 @@ class OpportunityCard extends React.Component {
     this.handleCardClose = this.handleCardClose.bind(this);
     this.handleDealStatusToggle = this.handleDealStatusToggle.bind(this);
     this.handleDealStatusSend = this.handleDealStatusSend.bind(this);
+    this.handleDetailsClick = this.handleDetailsClick.bind(this);
   }
 
   handleCardOpen(cardModalPage, connectBool){
@@ -157,8 +159,8 @@ class OpportunityCard extends React.Component {
     this.setState({ cardOpen: false })
   }
 
-  handleDeleteOpen = (e) => {
-    e.stopPropagation();
+  handleDeleteOpen(e){
+    // e.stopPropagation();
     console.log('open delete');
     this.setState({ deleteOpen: true });
   };
@@ -174,9 +176,24 @@ class OpportunityCard extends React.Component {
   };
 
   handleEdit(e){
-    e.stopPropagation();
+    // e.stopPropagation();
     // this.setState({ changeModalOpen: true})
     this.props.handleEditOpen();
+  }
+
+  handleDetailsClick(option){
+    return e => {
+      e.stopPropagation();
+      const { detailsAnchorEl } = this.state;
+      this.setState({ detailsAnchorEl: detailsAnchorEl ? null : e.currentTarget},
+      () => {
+        if (option && option === 'Edit'){
+          this.handleEdit();
+        } else if (option && option === 'Delete'){
+          this.handleDeleteOpen();
+        }
+      })
+    }
   }
 
   handleDealStatusToggle(e){
@@ -222,7 +239,9 @@ class OpportunityCard extends React.Component {
       currentUser }= this.props;
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
-    dealStatusProgress, dealStatusAnchorEl } = this.state;
+    dealStatusProgress, dealStatusAnchorEl,
+    detailsAnchorEl } = this.state;
+    const detailsOpen = Boolean(detailsAnchorEl);
 
     let { title, description, industries, opportunityNeed, geography,
       value, status, pictureUrl, dealStatus, anonymous, viewType,
@@ -354,9 +373,30 @@ class OpportunityCard extends React.Component {
                   </MenuItem>
                 ))}
               </Menu>
-              <div>
-                hi
-              </div>
+
+              {editable && <IconButton
+                aria-label="More"
+                aria-owns={detailsOpen ? 'long-menu' : undefined}
+                aria-haspopup="true"
+                onClick={this.handleDetailsClick()}
+                style={{ padding: 6}}
+              >
+                <MoreVertIcon />
+              </IconButton>}
+
+              <Menu
+                id="long-menu"
+                anchorEl={detailsAnchorEl}
+                open={detailsOpen}
+                onClose={this.handleDetailsClick()}
+              >
+                {['Edit', 'Delete'].map(option => (
+                  <MenuItem key={option}
+                    onClick={this.handleDetailsClick(option)}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
             </Grid>
           </Grid>
 

@@ -32,7 +32,7 @@ const styles = theme => ({
     fontSize: 14,
     fontWeight: 500,
     // marginTop: 25,
-    height: 26,
+    // height: 26,
     // width: 180
   },
   buttonProgress: {
