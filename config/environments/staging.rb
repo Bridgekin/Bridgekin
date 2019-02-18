@@ -61,8 +61,8 @@ config.static_cache_control = "public, max-age=31536000"
 
   # Generate digests for assets URLs
   config.assets.digest = true
-  # config.action_controller.asset_host = "d3l1lzvrluzkzs.cloudfront.net"
-  
+  config.action_controller.asset_host = "d3l1lzvrluzkzs.cloudfront.net"
+
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
