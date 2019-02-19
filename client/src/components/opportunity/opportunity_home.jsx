@@ -86,8 +86,8 @@ const styles = {
     padding: "64px 0px 0px 0px",
     // paddingTop: 64 + 34,
     flexGrow: 1,
-    // backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    backgroundColor: 'white',
+    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    // backgroundColor: 'white',
     minHeight: window.innerHeight
   },
   feedContainer:{
