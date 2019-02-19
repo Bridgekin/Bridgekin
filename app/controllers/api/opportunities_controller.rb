@@ -39,7 +39,7 @@ class Api::OpportunitiesController < ApiController
 
   def create
     @opportunity = Opportunity.new(opportunity_params
-      .merge({owner_id: @user.id, status: "Pending", deal_status:'Active'}))
+      .merge({owner_id: @user.id, status: "Approved", deal_status:'Active'}))
     authorize @opportunity
 
     if @opportunity.save
