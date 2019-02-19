@@ -41,7 +41,8 @@ const styles = {
     padding: "64px 0px 0px 0px",
     // paddingTop: 64 + 18,
     flexGrow: 1,
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    // backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: 'white',
     minHeight: window.innerHeight
   },
   column:{
@@ -134,7 +135,19 @@ const styles = {
     fontSize: 13,
     fontWeight: 400
   },
-  bold: {fontWeight: 600 }
+  bold: {fontWeight: 600 },
+  navMDContainer:{
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex'
+    }
+  },
+  navSMContainer:{
+    display: 'none',
+    [theme.breakpoints.only('sm')]: {
+      display: 'flex'
+    }
+  }
 };
 
 
@@ -306,7 +319,9 @@ class AccountMain extends React.Component {
             width:1040, height: '100%'}}>
             <div className={classes.column}
               style={{ position: 'fixed', top:64, width: 250}}>
-              {navigation}
+              <div className={classes.navSMContainer}>
+                {navigation}
+              </div>
               {pathName === '/account/opportunities' && oppFiltersDesktop}
             </div>
             <div className={classes.mainColumn}>
@@ -322,7 +337,9 @@ class AccountMain extends React.Component {
               </Switch>
             </div>
             <div className={classes.rightColumn}>
-              {navigation}
+              <div className={classes.navMDContainer}>
+                {navigation}
+              </div>
             </div>
           </div>
         </Grid>

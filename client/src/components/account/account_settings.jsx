@@ -77,20 +77,22 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    padding: '30px 0px',
+    // padding: '30px 15px',
     backgroundColor: `${theme.palette.white}`,
     // marginTop: 18,
-    width: '100%',
+    // width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`
+    border: `1px solid ${theme.palette.lightGrey}`,
+    [theme.breakpoints.up('sm')]: {
+      padding: '30px 0px',
+    },
   },
   cardSection:{
     marginTop: 10
   },
   content:{
-    margin: "0px 20px",
-    paddingTop: 0,
-    paddingBottom: 0
+    margin: 20,
+    padding: "0px 15px"
   },
   passwordContent:{
     margin: '0 auto',
@@ -139,9 +141,7 @@ const styles = theme => ({
   },
   settingsContainer:{
     overflow: 'scroll',
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 18
-    },
+    marginTop: 18,
   }
 });
 
@@ -377,11 +377,11 @@ class AccountSetting extends React.Component {
       case "email":
         return(
           <Card className={classes.card}>
-            <Grid container justify="center" alignItems="center"
-              spacing={16}>
+            <Grid container justify="center" alignItems="center">
 
               <Grid item xs={8} sm={6} container
-                justify="center" alignItems="center">
+                justify="center" alignItems="center"
+                className={classes.content}>
                 <Typography variant="h5" align='left'
                   color="secondary" gutterBottom>
                   Reset Email Below
@@ -418,11 +418,11 @@ class AccountSetting extends React.Component {
       case "password":
         return(
           <Card className={classes.card}>
-            <Grid container justify="center" alignItems="center"
-              spacing={16}>
+            <Grid container justify="center" alignItems="center">
 
               <Grid item xs={8} sm={6} container
-                justify="center" alignItems="center">
+                justify="center" alignItems="center"
+                className={classes.content}>
                 <Typography variant="h5" align='left'
                   color="secondary" gutterBottom>
                   Reset Password Below
@@ -493,10 +493,9 @@ class AccountSetting extends React.Component {
 
         return(
           <Card className={classes.card}>
-            <Grid container justify="center" alignItems="center"
-              spacing={16}>
+            <Grid container justify="center" alignItems="center">
 
-              <Grid item xs={12} sm={8}>
+              <Grid item xs={12} sm={8} className={classes.content}>
                 <Typography variant="h5" align='left'
                   color="secondary" gutterBottom
                   style={{marginBottom: 20}}>
@@ -689,8 +688,7 @@ class AccountSetting extends React.Component {
       // <Grid item xs={8} md={6} className={classes.content}>
         return (
           <Card className={classes.card}>
-            <Grid container justify="center" alignItems="flex-start"
-              spacing={16}>
+            <Grid container justify="center" alignItems="flex-start">
 
               <Grid item xs={12} md={8} className={classes.content}>
                 <div className={classes.wrapper}>
@@ -765,7 +763,7 @@ class AccountSetting extends React.Component {
 
     return (
       <Grid container justify='center' alignItems='center'>
-        <div classeName={classes.settingsContainer}>
+        <div className={classes.settingsContainer}>
           {this.getContent()}
         </div>
       </Grid>

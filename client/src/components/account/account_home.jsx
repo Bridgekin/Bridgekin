@@ -49,7 +49,7 @@ const styles = theme => ({
     // padding: 30,
     backgroundColor: `${theme.palette.white}`,
     // marginTop: 18,
-    width: '100%',
+    // width: '100%',
     borderRadius: 5,
     border: `1px solid ${theme.palette.lightGrey}`
   },
@@ -113,7 +113,7 @@ class AccountHome extends React.Component {
         <div className={classes.accountHomeContainer}>
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="flex-start"
-              style={{ margin: '25px 15px' }}>
+              style={{ padding: '25px 15px' }}>
 
               <Grid item xs={8} md={4} container justify='center'
                 style={{ padding: 5}}>

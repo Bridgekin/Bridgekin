@@ -74,11 +74,11 @@ const styles = theme => ({
     // marginTop: 18,
     backgroundColor: `${theme.palette.white}`,
     width: '100%',
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    marginBottom: 9,
+    border: `1px solid ${theme.palette.lightGrey}`,
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.lightGrey}`,
       borderRadius: 5,
-      marginTop: 18
     }
     // paddingBottom: 20
   },
@@ -336,7 +336,7 @@ class OpportunityCard extends React.Component {
         <CardActionArea className={classes.opportunityCard}
           onClick={this.handleCardOpen('none', undefined)}>
           <Grid container className={classes.oppCardGrid}>
-            <Grid item xs={6} container alignItems='center'>
+            <Grid item xs={7} container alignItems='center'>
               <IconButton
                 onClick={() => this.props.history.push('/')}
                 color="secondary"
@@ -356,7 +356,8 @@ class OpportunityCard extends React.Component {
               </Typography>
             </Grid>
 
-            <Grid item xs={6} container alignItems='center' justify='flex-end'>
+            <Grid item xs={5} container alignItems='center' justify='flex-end'
+              style={{ paddingRight: 10}}>
               <Button className={classes.oppStatus}
                 aria-owns={dealStatusAnchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
@@ -510,7 +511,8 @@ class OpportunityCard extends React.Component {
                 <Button onClick={this.handleCardOpen('confirm', true)}
                   style={{ width: '100%'}}>
                   <img alt='connect' src={ConnectIcon}
-                    className={classes.oppActionIcon}/>
+                    className={classes.oppActionIcon}
+                    style={{ width: 14, height: 14}}/>
                   Connect
                 </Button>
               </Grid>

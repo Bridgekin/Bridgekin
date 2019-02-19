@@ -54,6 +54,11 @@ const styles = {
     [theme.breakpoints.up('sm')]: {
       marginTop: 18,
     },
+  },
+  emptyOppsText:{
+    fontSize: 30,
+    fontWeight: 500,
+    margin: 20
   }
   // opportunityCard:{
   //   marginTop: 18,
@@ -156,7 +161,13 @@ class AccountOpportunities extends React.Component {
             className={classes.oppFeedContainer}>
             <div style={{ overflow: 'scroll', paddingBottom: 50,
               width: '100%'}}>
-              {filteredOpportunities.length > 0 && opportunityCards }
+              {filteredOpportunities.length > 0 &&
+                opportunityCards.length > 0 ? opportunityCards : (
+                  <Typography variant="h3" gutterBottom color="textSecondary"
+                    align='center' className={classes.emptyOppsText}>
+                    {`You haven't ${oppFilter} any opportunities yet`}
+                  </Typography>
+                ) }
             </div>
 
             <OpportunityChangeModal

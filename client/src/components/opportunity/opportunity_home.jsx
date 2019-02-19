@@ -86,7 +86,8 @@ const styles = {
     padding: "64px 0px 0px 0px",
     // paddingTop: 64 + 34,
     flexGrow: 1,
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    // backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: 'white',
     minHeight: window.innerHeight
   },
   feedContainer:{
@@ -120,13 +121,13 @@ const styles = {
     // height: 118,
     padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.white}`,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    border: `1px solid ${theme.palette.lightGrey}`,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
-      border: `1px solid ${theme.palette.lightGrey}`,
       padding: "9px 17px 20px",
-      marginTop: 18
+      marginBottom: 9
     },
   },
   waitlistMobileCard:{
@@ -134,6 +135,7 @@ const styles = {
     backgroundColor: `${theme.palette.white}`,
     borderRadius:0,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
+    // marginTop: 9,
     [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
       border: `1px solid ${theme.palette.lightGrey}`,
@@ -185,6 +187,10 @@ const styles = {
   loader:{
     marginTop: 50
   },
+  createFilterMain:{
+    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    height: 85
+  },
   createFilterButton:{
     textTransform: 'none',
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
@@ -221,6 +227,13 @@ const styles = {
   },
   fieldLabel:{
     fontSize: 12
+  },
+  filterMobile:{
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    marginTop: 10,
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
   },
   filterMobileCard:{
     // marginTop: 18,
@@ -400,9 +413,8 @@ class OpportunityHome extends React.Component {
 
     let column1 = (
       <Grid container justify='center' alignItems='center'
-        style={{ padding: 0, width: '100%'}}>
-        <div className={classes.feedCard}
-          >
+        style={{ padding: 0, width: '100%', marginTop: 18}}>
+        <div className={classes.feedCard}>
           <Typography gutterBottom align='Left'
             className={classes.cardHeader}
             style={{ marginBottom: 20}}>
@@ -621,7 +633,7 @@ class OpportunityHome extends React.Component {
 
     let feed = (
       <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', padding: "0px 0px 50px 0px",
+        <div style={{ overflow: 'scroll', padding: "18px 0px 50px 0px",
           width: '100%'}}>
           <CardActionArea className={classes.feedCard}
             style={{ paddingBottom: 9}}
@@ -631,8 +643,7 @@ class OpportunityHome extends React.Component {
               Create Opportunity
             </Typography>
 
-            <Grid container
-              style={{ borderBottom: `1px solid ${theme.palette.grey1}`}}>
+            <Grid container className={classes.createFilterMain}>
               <IconButton
                 onClick={() => this.props.history.push('/')}
                 color="secondary"
@@ -674,11 +685,8 @@ class OpportunityHome extends React.Component {
                 {`Share with: `}
               </Button>
             </Grid>
-          </CardActionArea>
-
-          <div className={classes.filterMobileCard}>
             {filterMobile}
-          </div>
+          </CardActionArea>
 
           {(opportunitiesLoaded) ? opportunityCards : loader}
 

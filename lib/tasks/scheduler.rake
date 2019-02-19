@@ -4,6 +4,8 @@ namespace :heroku_scheduler do
     # puts "Updating feed..."
     # NewsFeed.update
     # puts "done."
+
+    #check day
     users = User.where(id: EmailNotification.where(notification_setting: 'Weekly').pluck(:user_id))
 
     puts "Sending Weekly Email to users"
