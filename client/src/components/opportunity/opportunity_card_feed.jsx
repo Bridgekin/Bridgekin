@@ -72,15 +72,26 @@ const styles = theme => ({
   },
   opportunityCard:{
     // marginTop: 18,
-    marginBottom: 18,
+    [theme.breakpoints.up('sm')]: {
+      marginTop: 18
+    },
     backgroundColor: `${theme.palette.white}`,
     width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`,
-    paddingBottom: 20
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    [theme.breakpoints.up('sm')]: {
+      border: `1px solid ${theme.palette.lightGrey}`,
+      borderRadius: 5,
+    }
+    // paddingBottom: 20
+  },
+  oppCardGrid:{
+    // padding: "0px 8px",
+    [theme.breakpoints.up('sm')]: {
+      padding: "0px 17px"
+    }
   },
   oppStatus:{
-    height: 40,
+    // height: 40,
     width: 89,
     textTransform: 'uppercase',
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
@@ -326,7 +337,7 @@ class OpportunityCard extends React.Component {
       return (
         <CardActionArea className={classes.opportunityCard}
           onClick={this.handleCardOpen('none', undefined)}>
-          <Grid container style={{ padding: "0px 17px"}}>
+          <Grid container className={classes.oppCardGrid}>
             <Grid item xs={6} container alignItems='center'>
               <IconButton
                 onClick={() => this.props.history.push('/')}
@@ -359,7 +370,7 @@ class OpportunityCard extends React.Component {
                 {dealStatus}
               </Button>
 
-              <Menu
+              {editable && <Menu
                 id="simple-menu"
                 anchorEl={dealStatusAnchorEl}
                 open={Boolean(dealStatusAnchorEl)}
@@ -372,7 +383,7 @@ class OpportunityCard extends React.Component {
                     {option}
                   </MenuItem>
                 ))}
-              </Menu>
+              </Menu>}
 
               {editable && <IconButton
                 aria-label="More"
@@ -498,14 +509,16 @@ class OpportunityCard extends React.Component {
               className={classes.feedCardActionContainer}>
               <Grid item xs={6} container justify='center' alignItems='center'
                 style={{borderRight: `1px solid ${theme.palette.grey1}`}}>
-                <Button onClick={this.handleCardOpen('confirm', true)}>
+                <Button onClick={this.handleCardOpen('confirm', true)}
+                  style={{ width: '100%'}}>
                   <img alt='connect' src={ConnectIcon}
                     className={classes.oppActionIcon}/>
                   Connect
                 </Button>
               </Grid>
               <Grid item xs={6} container justify='center' alignItems='center'>
-                <Button onClick={this.handleCardOpen('confirm', false)}>
+                <Button onClick={this.handleCardOpen('confirm', false)}
+                  style={{ width: '100%'}}>
                   <img alt='refer' src={ReferIcon}
                     className={classes.oppActionIcon}/>
                   Refer

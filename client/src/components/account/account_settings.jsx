@@ -137,6 +137,12 @@ const styles = theme => ({
   textField:{
     marginLeft: 0
   },
+  settingsContainer:{
+    overflow: 'scroll',
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: 18
+    },
+  }
 });
 
 
@@ -759,7 +765,7 @@ class AccountSetting extends React.Component {
 
     return (
       <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', paddingTop: 18 }}>
+        <div classeName={classes.settingsContainer}>
           {this.getContent()}
         </div>
       </Grid>

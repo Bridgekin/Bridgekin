@@ -118,12 +118,24 @@ const styles = {
   },
   feedCard:{
     // height: 118,
-    padding: "9px 17px 20px",
+    padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.white}`,
-    marginTop: 18,
+    [theme.breakpoints.up('sm')]: {
+      padding: "9px 17px 20px",
+      marginTop: 18
+    },
     width: '100%',
     borderRadius: 5,
     border: `1px solid ${theme.palette.lightGrey}`
+  },
+  waitlistMobileCard:{
+    padding: "9px 8px 20px 8px",
+    backgroundColor: `${theme.palette.white}`,
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`,
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
   },
   oppNotification:{
     borderRadius: 5,
@@ -144,15 +156,15 @@ const styles = {
     borderRadius: 5,
     border: `1px solid ${theme.palette.lightGrey}`
   },
-  oppStatus:{
-    height: 29,
-    width: 89,
-    textTransform: 'uppercase',
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+  // oppStatus:{
+  //   // height: 29,
+  //   width: 89,
+  //   textTransform: 'uppercase',
+  //   backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+  //   display: 'flex',
+  //   justifyContent: 'center',
+  //   alignItems: 'center'
+  // },
   cover:{
     height: 140,
     width: '100%',
@@ -205,8 +217,12 @@ const styles = {
   fieldLabel:{
     fontSize: 12
   },
-  filterMobile: {
-    marginTop: 10,
+  filterMobileCard:{
+    // marginTop: 18,
+    backgroundColor: `${theme.palette.white}`,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`,
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
@@ -371,8 +387,6 @@ class OpportunityHome extends React.Component {
     const formattedNetworks = networksArray.map(network => (
       Object.assign({}, network, {type: 'network'})
     ))
-
-    // console.log(dropdownFocus)
 
     opportunities = opportunities.filter(o => o.status === "Approved")
 
@@ -594,8 +608,7 @@ class OpportunityHome extends React.Component {
     let opportunityCards = opportunities.map((opportunity, idx) => (
       <OpportunityCardFeed
         currentUser={currentUser}
-        opportunity={opportunity}
-        classes={classes}/>
+        opportunity={opportunity}/>
     ));
 
     let feed = (
@@ -605,7 +618,7 @@ class OpportunityHome extends React.Component {
           <CardActionArea className={classes.feedCard}
             style={{ paddingBottom: 9}}
             onClick={this.handleOpportunityChangeModalOpen}>
-            <Typography align='Left'
+            <Typography align='Left' gutterBottom
               className={classes.cardHeader}>
               Create Opportunity
             </Typography>
@@ -615,6 +628,7 @@ class OpportunityHome extends React.Component {
               <IconButton
                 onClick={() => this.props.history.push('/')}
                 color="secondary"
+                style={{ padding: 0 }}
                 >
                 {currentUser.profilePicUrl ? (
                   <Avatar alt="profile-pic"
@@ -625,12 +639,11 @@ class OpportunityHome extends React.Component {
                 )}
               </IconButton>
 
-              <Grid container style={{ flexGrow: 1, width: 'auto'}}
+              <Grid container style={{ flexGrow: 1, width: '75%', marginLeft: 10}}
                 alignItems='center'>
                 <Typography align='Left' color="textSecondary"
                   className={classes.cardHeader}
-                  style={{ padding: "15px 0px"}}
-                  onClick={() => console.log('open modal')}>
+                  style={{ padding: "15px 0px"}}>
                   {`What's your most pressing business need or opportunity`}
                 </Typography>
               </Grid>
@@ -650,14 +663,30 @@ class OpportunityHome extends React.Component {
               <Button className={classes.createFilterButton}>
                 <img src={ShareIconSVG} alt='share-icon'
                   className={classes.filterButtonIcon}/>
-                {`Share with: Connections`}
+                {`Share with: `}
               </Button>
             </Grid>
-            {filterMobile}
           </CardActionArea>
 
+          <Card className={classes.filterMobileCard}>
+            {filterMobile}
+          </Card>
 
           {(opportunitiesLoaded) ? opportunityCards : loader}
+
+          <Card className={classes.waitlistMobileCard}>
+            <Typography gutterBottom align='Left'
+              className={classes.cardHeader}
+              style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
+              Invite your trusted business contacts
+            </Typography>
+
+            <OpportunityWaitlist
+              handleSubmit={this.handleWaitlistSubmit}
+              loading={loading}
+              currentUser={currentUser}
+              />
+          </Card>
         </div>
       </Grid>
     )

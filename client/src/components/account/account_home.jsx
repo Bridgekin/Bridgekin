@@ -71,6 +71,12 @@ const styles = theme => ({
     height: 'auto',
     width: '100%',
     // borderRadius: 0
+  },
+  accountHomeContainer:{
+    overflow: 'scroll',
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: 18
+    },
   }
 });
 
@@ -104,7 +110,7 @@ class AccountHome extends React.Component {
 
     return (
       <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', paddingTop: 18 }}>
+        <div className={classes.accountHomeContainer}>
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="flex-start"
               style={{ margin: '25px 15px' }}>
@@ -161,7 +167,6 @@ class AccountHome extends React.Component {
             </Grid>
 
           </Card>
-          <div style={{height: 150}} />
         </div>
       </Grid>
     )

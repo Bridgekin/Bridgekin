@@ -49,7 +49,12 @@ const styles = {
   filterItem:{
     borderTop: `1px solid ${theme.palette.grey1}`,
   },
-  loader:{ height: 200}
+  loader:{ height: 200},
+  oppFeedContainer:{
+    [theme.breakpoints.up('sm')]: {
+      marginTop: 18,
+    },
+  }
   // opportunityCard:{
   //   marginTop: 18,
   //   backgroundColor: `${theme.palette.white}`,
@@ -90,11 +95,11 @@ class AccountOpportunities extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    if(prevProps.opp_filter === 'posted' &&
-      prevProps.opp_filter !== this.props.opp_filter){
+    if(prevProps.oppFilter === 'posted' &&
+      prevProps.oppFilter !== this.props.oppFilter){
       this.props.fetchConnectedOpportunities()
-    } else if (this.props.opp_filter === 'posted' &&
-      prevProps.opp_filter !== this.props.opp_filter){
+    } else if (this.props.oppFilter === 'posted' &&
+      prevProps.oppFilter !== this.props.oppFilter){
       this.props.fetchUserOpportunities();
     }
   }
@@ -110,9 +115,9 @@ class AccountOpportunities extends React.Component {
   }
 
   getOpportunities(){
-    const { opp_filter, connectedOpportunities,
+    const { oppFilter, connectedOpportunities,
       facilitatedOpportunities, opportunities } = this.props;
-    switch(opp_filter){
+    switch(oppFilter){
       case 'connected':
         return connectedOpportunities;
       case 'referred':
@@ -125,7 +130,7 @@ class AccountOpportunities extends React.Component {
   }
 
   render (){
-    const { classes, currentUser, networks, opp_filter } = this.props;
+    const { classes, currentUser, networks, oppFilter } = this.props;
     const { loaded, focusedOpportunity, changeModalOpen } = this.state;
 
     const formattedNetworks = networks.map(network => (
@@ -139,7 +144,7 @@ class AccountOpportunities extends React.Component {
         currentUser={currentUser}
         opportunity={opportunity}
         classes={classes}
-        editable={opp_filter === 'posted'}
+        editable={oppFilter === 'posted'}
         formattedNetworks={formattedNetworks}
         handleEditOpen={this.handleEditOpen(opportunity)}/>
     ));
@@ -148,7 +153,7 @@ class AccountOpportunities extends React.Component {
       return (
         <MuiThemeProvider theme={theme} className={classes.root}>
           <Grid container justify='center' alignItems='center'
-            style={{ marginTop: 18}}>
+            className={classes.oppFeedContainer}>
             <div style={{ overflow: 'scroll', paddingBottom: 50,
               width: '100%'}}>
               {filteredOpportunities.length > 0 && opportunityCards }

@@ -120,9 +120,11 @@ const styles = theme => ({
     background: theme.palette.lightGrey
   },
   badge: {
-    top: 4,
-    right: 4,
+    top: 19,
+    right: 19,
     border: `1px solid`,
+    borderRadius: '50%',
+    height: 'auto',
     color: theme.palette.white,
     backgroundColor: theme.palette.primary.main,
     padding: 5,

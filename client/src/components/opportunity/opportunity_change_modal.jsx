@@ -108,8 +108,11 @@ const styles = theme => ({
   },
   closeBar:{
     backgroundColor:`${fade(theme.palette.common.black,0.05)}`,
-    height: 33, minWidth: 400,
-    padding: "0px 10px"
+    height: 33,
+    padding: "0px 10px",
+    [theme.breakpoints.up('sm')]: {
+      minWidth: 400,
+    }
   },
   avatar:{
     width: 51,
@@ -157,10 +160,17 @@ const styles = theme => ({
   },
   fieldSelectNeed:{ width: 150 },
   fieldSelectIndustry:{ width: 130 },
+  modalWrapper:{
+    padding: 0,
+    // minWidth: 500,
+  },
   modalPaper:{
     margin: 0,
     position: 'fixed',
-    top: 84
+    top: 64,
+    [theme.breakpoints.up('sm')]: {
+      top: 84,
+    }
   },
   postErrorText:{
     fontSize: 10,
