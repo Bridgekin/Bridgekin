@@ -124,10 +124,10 @@ const styles = {
     // borderTop: `1px solid ${theme.palette.lightGrey}`,
     border: `1px solid ${theme.palette.lightGrey}`,
     width: '100%',
+    marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
       padding: "9px 17px 20px",
-      marginBottom: 9
     },
   },
   waitlistMobileCard:{
@@ -418,7 +418,7 @@ class OpportunityHome extends React.Component {
           <Typography gutterBottom align='Left'
             className={classes.cardHeader}
             style={{ marginBottom: 20}}>
-            Over $71M in opportunities connected
+            Over $71M connected
           </Typography>
 
           <div className={classes.oppNotification}>
@@ -559,7 +559,7 @@ class OpportunityHome extends React.Component {
           <Typography align='Left'
             className={classes.cardHeader}
             style={{ margin: "10px 20px 0px"}}>
-            What opportunities do you want to see?
+            {`Who's opportunities do you want to see?`}
           </Typography>
 
           <List component="nav">
@@ -644,11 +644,8 @@ class OpportunityHome extends React.Component {
             </Typography>
 
             <Grid container className={classes.createFilterMain}>
-              <IconButton
-                onClick={() => this.props.history.push('/')}
-                color="secondary"
-                style={{ padding: 0 }}
-                >
+              <IconButton color="secondary"
+                style={{ padding: 0 }} >
                 {currentUser.profilePicUrl ? (
                   <Avatar alt="profile-pic"
                     src={currentUser.profilePicUrl}

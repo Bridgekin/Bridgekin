@@ -38,7 +38,7 @@ const styles = theme => ({
     flexGrow: 1
   },
   grid:{
-    margin: '70px 0px 70px 0px'
+    margin: '30px 0px 30px 0px'
   },
   modalPaper:{
     margin: 0,
@@ -46,9 +46,11 @@ const styles = theme => ({
     width: '50%'
   },
   badge: {
-    top: 4,
-    right: 4,
+    top: 19,
+    right: 19,
     border: `1px solid`,
+    borderRadius: '50%',
+    height: 'auto',
     color: theme.palette.white,
     backgroundColor: theme.palette.primary.main,
     padding: 5,

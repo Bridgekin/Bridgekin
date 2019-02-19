@@ -101,7 +101,7 @@ class OpportunityWaitlist extends React.Component{
           <TextField
           required
           id="outlined-required"
-          placeholder="John"
+          placeholder=""
           className={classes.textField}
           fullWidth
           variant="outlined"
@@ -122,7 +122,7 @@ class OpportunityWaitlist extends React.Component{
           <TextField
           required
           id="outlined-required"
-          placeholder="johnsmith@email.com"
+          placeholder=""
           className={classes.textField}
           fullWidth
           variant="outlined"

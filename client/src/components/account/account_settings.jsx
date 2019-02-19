@@ -142,6 +142,9 @@ const styles = theme => ({
   settingsContainer:{
     overflow: 'scroll',
     marginTop: 18,
+    [theme.breakpoints.up('sm')]: {
+      flexGrow: 1
+    },
   }
 });
 
@@ -732,13 +735,13 @@ class AccountSetting extends React.Component {
                   {"********"}
                 </Typography>
 
-                <Typography variant="subtitle1" align='left'
+                {false && <Typography variant="subtitle1" align='left'
                   color="secondary" style={{ marginTop: 15}}>
                   {`How often would you like to be notified about
                     opportunities by email?`}
-                </Typography>
+                </Typography>}
 
-                <FormControl component="fieldset" className={classes.formControl}>
+                {false && <FormControl component="fieldset" className={classes.formControl}>
                   <RadioGroup
                     aria-label="Notifications"
                     name="notifications"
@@ -749,7 +752,7 @@ class AccountSetting extends React.Component {
                     <FormControlLabel value="Weekly" control={<Radio />} label="Weekly email recap" />
                     <FormControlLabel value="Never" control={<Radio />} label="Never, I am immune to FOMO" />
                   </RadioGroup>
-                </FormControl>
+                </FormControl>}
               </Grid>
             </Grid>
           </Card>

@@ -126,6 +126,9 @@ const styles = theme => ({
     marginRight: 10,
     width: 12,
     height: 12
+  },
+  oppActionButton:{
+    textTransform: 'capitalize'
   }
 });
 
@@ -509,7 +512,7 @@ class OpportunityCard extends React.Component {
               <Grid item xs={6} container justify='center' alignItems='center'
                 style={{borderRight: `1px solid ${theme.palette.grey1}`}}>
                 <Button onClick={this.handleCardOpen('confirm', true)}
-                  style={{ width: '100%'}}>
+                  classes={{ label: classes.oppActionButton }} fullWidth>
                   <img alt='connect' src={ConnectIcon}
                     className={classes.oppActionIcon}
                     style={{ width: 14, height: 14}}/>
@@ -518,7 +521,7 @@ class OpportunityCard extends React.Component {
               </Grid>
               <Grid item xs={6} container justify='center' alignItems='center'>
                 <Button onClick={this.handleCardOpen('confirm', false)}
-                  style={{ width: '100%'}}>
+                  classes={{ label: classes.oppActionButton }} fullWidth>
                   <img alt='refer' src={ReferIcon}
                     className={classes.oppActionIcon}/>
                   Refer

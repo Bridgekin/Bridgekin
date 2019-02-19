@@ -267,8 +267,8 @@ class OpportunityChangeModal extends React.Component {
               sendingProgress: false
             });
             this.handleClose();
+            this.clearFields();
           }
-          // this.clearFields();
           // this.handleClose();
         })
       } else {
@@ -317,11 +317,12 @@ class OpportunityChangeModal extends React.Component {
   handleChange(field){
     return e => {
       e.preventDefault();
-      let clickedOption = e.target.value;
+      let option = e.target.value;
       if ((['industries', 'geography'].includes(field) &&
-        clickedOption.length <= 3) ||
-        !['industries', 'geography'].includes(field)){
-          this.setState({ [field]: clickedOption})
+        option.length <= 3) ||
+        (field === 'title' && option.length <= 80 ) ||
+        !['industries', 'geography','title'].includes(field)) {
+          this.setState({ [field]: option})
       }
     }
   }
@@ -499,11 +500,8 @@ class OpportunityChangeModal extends React.Component {
           style={{ padding: "0px 20px"}}>
           <Grid container justify='center' alignItems='center'
             style={{ height: 95 }}>
-            <IconButton
-              onClick={() => this.props.history.push('/')}
-              color="secondary"
-              classes={{ root: classes.infoIconButton}}
-              >
+            <IconButton color="secondary"
+              classes={{ root: classes.infoIconButton}}>
               {currentUser.profilePicUrl && !anonymous ? (
                 <Avatar alt="profile-pic"
                   src={currentUser.profilePicUrl}
