@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(version: 2019_02_15_010112) do
     t.string "industries", default: [], null: false, array: true
     t.string "geography", default: [], null: false, array: true
     t.string "deal_status", default: "Active", null: false
-    t.boolean "anonymous", default: false
+    t.boolean "anonymous", default: true
     t.string "view_type", default: "card", null: false
     t.index ["owner_id"], name: "index_opportunities_on_owner_id"
     t.index ["status"], name: "index_opportunities_on_status"

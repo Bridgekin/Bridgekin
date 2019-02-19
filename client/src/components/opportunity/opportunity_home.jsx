@@ -120,19 +120,24 @@ const styles = {
     // height: 118,
     padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.white}`,
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    width: '100%',
     [theme.breakpoints.up('sm')]: {
+      borderRadius: 5,
+      border: `1px solid ${theme.palette.lightGrey}`,
       padding: "9px 17px 20px",
       marginTop: 18
     },
-    width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`
   },
   waitlistMobileCard:{
     padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.white}`,
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`,
+    borderRadius:0,
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    [theme.breakpoints.up('sm')]: {
+      borderRadius: 5,
+      border: `1px solid ${theme.palette.lightGrey}`,
+    },
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
@@ -221,8 +226,11 @@ const styles = {
     // marginTop: 18,
     backgroundColor: `${theme.palette.white}`,
     width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`,
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    [theme.breakpoints.up('sm')]: {
+      borderRadius: 5,
+      border: `1px solid ${theme.palette.lightGrey}`,
+    },
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
@@ -668,9 +676,9 @@ class OpportunityHome extends React.Component {
             </Grid>
           </CardActionArea>
 
-          <Card className={classes.filterMobileCard}>
+          <div className={classes.filterMobileCard}>
             {filterMobile}
-          </Card>
+          </div>
 
           {(opportunitiesLoaded) ? opportunityCards : loader}
 

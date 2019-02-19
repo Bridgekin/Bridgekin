@@ -72,15 +72,13 @@ const styles = theme => ({
   },
   opportunityCard:{
     // marginTop: 18,
-    [theme.breakpoints.up('sm')]: {
-      marginTop: 18
-    },
     backgroundColor: `${theme.palette.white}`,
     width: '100%',
     borderTop: `1px solid ${theme.palette.lightGrey}`,
     [theme.breakpoints.up('sm')]: {
       border: `1px solid ${theme.palette.lightGrey}`,
       borderRadius: 5,
+      marginTop: 18
     }
     // paddingBottom: 20
   },
