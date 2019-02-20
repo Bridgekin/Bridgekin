@@ -398,7 +398,8 @@ class OpportunityCard extends React.Component {
                 ))}
               </Menu>}
 
-              {viewType === 'card' && <IconButton
+              {(viewType === 'card' || (viewType === 'post' && editable)) &&
+                <IconButton
                 aria-label="More"
                 aria-owns={detailsOpen ? 'long-menu' : undefined}
                 aria-haspopup="true"
