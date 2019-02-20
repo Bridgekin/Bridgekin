@@ -135,6 +135,9 @@ const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
+  submitHeader:{
+    marginBottom: 25
+  }
 });
 
 class CardModal extends React.Component {
@@ -265,8 +268,8 @@ class CardModal extends React.Component {
             className={classes.grid}>
             <Grid item xs={11} sm={10} md={8}
               container justify='flex-start' alignItems='center'>
-              <Typography variant="h2" id="modal-title" align='left'
-                className={classes.section}>
+              <Typography variant="h5" id="modal-title" align='left'
+                className={classes.submitHeader}>
                 Time for business!
               </Typography>
               <Typography variant="body2" id="simple-modal-description"
@@ -291,8 +294,8 @@ class CardModal extends React.Component {
             className={classes.grid}>
             <Grid item xs={11} sm={10} md={8}
               container justify='flex-start' alignItems='center'>
-              <Typography variant="h2" id="modal-title" align='left'
-                className={classes.section}>
+              <Typography variant="h5" id="modal-title" align='left'
+                className={classes.submitHeader}>
                 Time for business!
               </Typography>
               <Typography variant="body2" id="simple-modal-description"
@@ -350,7 +353,7 @@ class CardModal extends React.Component {
             <Grid item xs={10} container justify='flex-start'
               style={{ margin: "40px 0px 25px"}}>
               <Typography variant="h5" gutterBottom align='left'
-                color="default" style={{ marginBottom: 20}}>
+                color="default" className={classes.submitHeader}>
                 {connectBool ?
                   `Connect to this opportunity` :
                   `Refer a trusted contact to this opportunity`}
