@@ -538,8 +538,8 @@ class OpportunityChangeModal extends React.Component {
                   viewType === 'card' ? "Opportunity title" :
                   `What's your most pressing business need or opportunity?`
                 }
-                value={this.state.title}
-                onChange={this.handleChange('title')}
+                value={viewType === 'post' ? this.state.description : this.state.title}
+                onChange={viewType === 'post' ? this.handleChange('description') : this.handleChange('title')}
                 className={classes.descriptionTextField}
                 />
             </Grid>
