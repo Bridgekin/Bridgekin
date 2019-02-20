@@ -431,6 +431,7 @@ class OpportunityCard extends React.Component {
           <Grid container justify='center'>
             <Grid item xs={10} style={{ paddingTop: 14}}>
               {opportunity.title &&
+                opportunity.viewType === 'card' &&
                 <div className={classes.cardHeaderWrapper}>
                   <Typography variant="h5" align='left'
                     color="default"
@@ -446,7 +447,6 @@ class OpportunityCard extends React.Component {
                   </Typography>
                 </div>}
               {opportunity.description &&
-                opportunity.viewType === 'card' &&
                 <div className={classes.cardDescriptionWrapper}>
                   <Typography variant="body2" align='left'
                     color="default" className={classes.description}

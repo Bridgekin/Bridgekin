@@ -465,7 +465,7 @@ class OpportunityChangeModal extends React.Component {
       }
       return errors.length > 0;
     } else {
-      return share.length === 0 || title === ''
+      return share.length === 0 || description === ''
     }
   }
 
