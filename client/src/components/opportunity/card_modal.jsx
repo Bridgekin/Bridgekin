@@ -93,7 +93,9 @@ const styles = theme => ({
     marginBottom: 25
   },
   section: {
-    marginBottom: 25
+    marginBottom: 25,
+    fontSize: 16,
+    lineHeight: 1.2
   },
   subContentSection :{
     // minWidth: 175,
@@ -150,15 +152,21 @@ class CardModal extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState){
-    if((prevProps.page !== this.props.page ||
-      prevProps.connectBool !== this.props.connectBool) &&
-      (this.state.page !== this.props.page ||
-      prevProps.connectBool !== this.props.connectBool)) {
-        this.setState({
-          page: this.props.page,
-          connectBool: this.props.connectBool
-        })
-      }
+    // if((prevProps.page !== this.props.page ||
+    //   prevProps.connectBool !== this.props.connectBool ) &&
+    //   (this.state.page !== this.props.page ||
+    //   prevProps.connectBool !== this.props.connectBool)) {
+    //     this.setState({
+    //       page: this.props.page,
+    //       connectBool: this.props.connectBool
+    //     })
+    //   }
+    if (prevProps.open !== this.props.open){
+      this.setState({
+        page: this.props.page,
+        connectBool: this.props.connectBool
+      })
+    }
   }
 
   handleClose(field){
@@ -234,12 +242,12 @@ class CardModal extends React.Component {
         className={classes.cover}
         loader={loader}
         />
-    ) : (
-      <Img src={PickImage(industries[0])}
-        className={classes.cover}
-        loader={loader}
-        />
-    )
+    ) : undefined
+
+    // <Img src={PickImage(industries[0])}
+    //   className={classes.cover}
+    //   loader={loader}
+    //   />
 
     switch(page) {
       case "sent":
@@ -264,12 +272,7 @@ class CardModal extends React.Component {
                   onClick={this.handleClose('find')}
                   className={classes.button}
                   style={{ marginRight: 20}}>
-                  View More Opportunities
-                </Button>
-                <Button variant="contained" color='secondary'
-                  onClick={this.handleClose('post')}
-                  className={classes.button}>
-                  Post An Opportunity
+                  Close
                 </Button>
               </Grid>
             </Grid>
@@ -295,12 +298,7 @@ class CardModal extends React.Component {
                   onClick={this.handleClose('find')}
                   className={classes.button}
                   style={{ marginRight: 20}}>
-                  View More Opportunities
-                </Button>
-                <Button variant="contained" color='secondary'
-                  onClick={this.handleClose('post')}
-                  className={classes.button}>
-                  Post An Opportunity
+                  Close
                 </Button>
               </Grid>
             </Grid>
@@ -353,7 +351,7 @@ class CardModal extends React.Component {
                   `Refer a trusted contact to this opportunity`}
               </Typography>
               <Typography variant="body1" gutterBottom align='left'
-                color="default">
+                color="default" className={classes.section}>
                 {connectBool ?
                   `Once you press the send button below you'll receive an
                   email introducing you to the opportunity owner. We'll
@@ -463,6 +461,8 @@ class CardModal extends React.Component {
 
   render () {
     const { open, classes, opportunity } = this.props;
+
+    debugger
 
     if (!_.isEmpty(opportunity)){
       return (

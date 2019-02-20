@@ -17,6 +17,7 @@ import Button from '@material-ui/core/Button';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { animateScroll } from 'react-scroll';
 
 import AccountHome from './account_home';
 import AccountSettings from './account_settings';
@@ -83,6 +84,7 @@ const styles = {
   },
   mainColumn:{
     // display: 'none',
+    paddingBottom: 50,
     [theme.breakpoints.up('sm')]: {
       position: 'relative',
       marginLeft: 270,
@@ -161,6 +163,14 @@ class AccountMain extends React.Component {
     };
 
     this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
+  }
+
+  handleFilter(name){
+    return e => {
+      this.setState({ oppFilter: name });
+      animateScroll.scrollTo(0);
+    }
   }
 
   handleMobileNavClick(path){
@@ -271,7 +281,7 @@ class AccountMain extends React.Component {
           <List component="nav">
             {filtersDesktop.map(item => (
               <ListItem button className={classes.filterItem}
-                onClick={() => this.setState({ oppFilter: item.name })}
+                onClick={this.handleFilter(item.name)}
                 selected={oppFilter === item.name}>
                 <Typography variant="h6" align='left'
                   color="textPrimary" className={classes.filterHeader}>

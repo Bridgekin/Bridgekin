@@ -232,6 +232,7 @@ const styles = {
   filterMobile:{
     borderTop: `1px solid ${theme.palette.lightGrey}`,
     marginTop: 10,
+    paddingTop: 9,
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
@@ -270,7 +271,7 @@ const DEFAULTSTATE = {
   picture: null,
   pictureUrl: null,
   // networks: [],
-  anonymous: true,
+  anonymous: false,
   viewType: 'post'
 }
 
@@ -471,7 +472,7 @@ class OpportunityHome extends React.Component {
           <Typography variant="subtitle1" align='left'
             color="textPrimary"
             style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
-            {dropdownFocus === "" ? "All Opportunties" : networks[dropdownFocus].title}
+            {dropdownFocus === "" ? "All Opportunities" : networks[dropdownFocus].title}
           </Typography>
           <KeyboardArrowDownIcon />
         </Button>
@@ -662,7 +663,7 @@ class OpportunityHome extends React.Component {
                 <Typography align='Left' color="textSecondary"
                   className={classes.cardHeader}
                   style={{ padding: "15px 0px"}}>
-                  {`What's your most pressing business need or opportunity`}
+                  {`What's your most pressing business need or opportunity?`}
                 </Typography>
               </Grid>
             </Grid>
@@ -734,7 +735,7 @@ class OpportunityHome extends React.Component {
           handleClose={this.handleModalClose('changeModalOpen')}
           currentUser={currentUser}
           opportunity={DEFAULTSTATE}
-          availNetworks={formattedNetworks}
+          availNetworks={Object.values(formattedNetworks)}
           type={'create'}
           />
       </MuiThemeProvider>

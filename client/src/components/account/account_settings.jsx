@@ -81,9 +81,12 @@ const styles = theme => ({
     backgroundColor: `${theme.palette.white}`,
     // marginTop: 18,
     // width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`,
+    borderRadius: 0,
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    borderBottom: `1px solid ${theme.palette.lightGrey}`,
     [theme.breakpoints.up('sm')]: {
+      border: `1px solid ${theme.palette.lightGrey}`,
+      borderRadius: 5,
       padding: '30px 0px',
     },
   },
@@ -141,9 +144,9 @@ const styles = theme => ({
   },
   settingsContainer:{
     overflow: 'scroll',
-    marginTop: 18,
+    flexGrow: 1,
     [theme.breakpoints.up('sm')]: {
-      flexGrow: 1
+      marginTop: 18
     },
   }
 });

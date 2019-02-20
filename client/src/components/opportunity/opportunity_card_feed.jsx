@@ -64,7 +64,7 @@ const styles = theme => ({
   feedCardActionContainer:{
     marginTop: 10,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
-    padding: "10px 0px"
+    padding: 0
   },
   statusIndicator:{
     width: 8, height: 8,
@@ -84,7 +84,7 @@ const styles = theme => ({
     // paddingBottom: 20
   },
   oppCardGrid:{
-    // padding: "0px 8px",
+    padding: "0px 8px",
     [theme.breakpoints.up('sm')]: {
       padding: "0px 17px"
     }
@@ -107,7 +107,7 @@ const styles = theme => ({
   avatar:{
     width: 51,
     height: 51,
-    margin: '12px 12px 12px 0px'
+    margin: '12px 12px 12px 5px'
   },
   titlePost:{
     fontSize: 15,
@@ -131,7 +131,8 @@ const styles = theme => ({
     height: 12
   },
   oppActionButton:{
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    height: 45
   },
   pagePeel:{
     position: 'absolute',
@@ -174,7 +175,9 @@ class OpportunityCard extends React.Component {
       e.preventDefault();
       e.stopPropagation();
       // this.props.handleCardOpen(this.props.opportunity)
-      this.setState({ cardOpen: true, cardModalPage, connectBool })
+      if (this.props.opportunity.viewType === 'card'){
+        this.setState({ cardOpen: true, cardModalPage, connectBool })
+      }
     }
   }
 
@@ -337,21 +340,24 @@ class OpportunityCard extends React.Component {
             loader={loader}
             />
         </VisibilitySensor>
-      ) : ( viewType === 'card' &&
-        <VisibilitySensor>
-          <Img src={PickImage(industries[0])}
-            className={classes.pictureCover}
-            loader={loader}
-            />
-        </VisibilitySensor>
-      )
+      ) : undefined
+
+      // ( viewType === 'card' &&
+      //   <VisibilitySensor>
+      //     <Img src={PickImage(industries[0])}
+      //       className={classes.pictureCover}
+      //       loader={loader}
+      //       />
+      //   </VisibilitySensor>
+      // )
+
+      // {viewType === 'card' && <img src={PagePeel} className={classes.pagePeel}
+      //   onClick={this.handleCardOpen('none', undefined)}
+      //   alt='pagepeel'/>}
 
       return (
         <div className={classes.opportunityCard}>
           <Grid container className={classes.oppCardGrid}>
-            {viewType === 'card' && <img src={PagePeel} className={classes.pagePeel}
-              onClick={this.handleCardOpen('none', undefined)}
-              alt='pagepeel'/>}
             <Grid item xs={7} container alignItems='center'>
               {ownerPictureUrl && !anonymous ? (
                 <Avatar alt="profile-pic"
@@ -367,8 +373,7 @@ class OpportunityCard extends React.Component {
               </Typography>
             </Grid>
 
-            <Grid item xs={5} container alignItems='center' justify='flex-end'
-              style={{ paddingRight: 10}}>
+            <Grid item xs={5} container alignItems='center' justify='flex-end'>
               <Button className={classes.oppStatus}
                 aria-owns={dealStatusAnchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
@@ -395,11 +400,12 @@ class OpportunityCard extends React.Component {
                 ))}
               </Menu>}
 
-              {editable && <IconButton
+              {viewType === 'card' && <IconButton
                 aria-label="More"
                 aria-owns={detailsOpen ? 'long-menu' : undefined}
                 aria-haspopup="true"
-                onClick={this.handleDetailsClick()}
+                onClick={(editable ? this.handleDetailsClick():
+                  this.handleCardOpen('opportunity', true))}
                 style={{ padding: 6}}
               >
                 <MoreVertIcon />

@@ -43,7 +43,7 @@ const styles = theme => ({
     marginLeft: -12,
   },
   textField:{
-    margin: "10px 0px 10px 0px",
+    margin: 5
     // padding: "10px 14px"
   },
   textfieldInput:{
@@ -93,15 +93,11 @@ class OpportunityWaitlist extends React.Component{
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={8}>
 
-        <Grid item xs={5} container flexDirection='column'>
-          <Typography align='Left'
-            className={classes.fieldLabel}>
-            First Name
-          </Typography>
+        <Grid item xs={5} sm={12} container flexDirection='column'>
           <TextField
           required
           id="outlined-required"
-          placeholder="Joe"
+          placeholder="First Name"
           className={classes.textField}
           fullWidth
           variant="outlined"
@@ -114,11 +110,7 @@ class OpportunityWaitlist extends React.Component{
           }}
           />
         </Grid>
-        <Grid item xs={7} container flexDirection='column'>
-          <Typography align='Left'
-            className={classes.fieldLabel}>
-            Email
-          </Typography>
+        <Grid item xs={7} sm={12} container flexDirection='column'>
           <TextField
           required
           id="outlined-required"

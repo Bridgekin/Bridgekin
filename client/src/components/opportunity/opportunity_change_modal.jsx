@@ -175,7 +175,12 @@ const styles = theme => ({
   postErrorText:{
     fontSize: 10,
     color: '#E88262',
-    width: 150
+    width: 150,
+    position: 'absolute',
+    right: 5,
+    // [theme.breakpoints.up('sm')]: {
+    //   top: 84,
+    // }
   },
   filterButtonIcon:{
     width: 14,
@@ -200,13 +205,13 @@ const DEFAULTSTATE = {
   valueChoices,
   mobileImageCropPending: false,
   imageModalOpen: false,
-  share: []
+  // share: []
 }
 
 class OpportunityChangeModal extends React.Component {
   constructor(props){
     super(props)
-    this.state = merge({}, DEFAULTSTATE, this.props.opportunity);
+    this.state = merge({}, DEFAULTSTATE, this.props.opportunity, {share: []});
 
     this.toggleOpp = this.toggleOpp.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
@@ -223,6 +228,12 @@ class OpportunityChangeModal extends React.Component {
     if(nextProps.opportunity !== this.props.opportunity){
       this.setState(merge({}, DEFAULTSTATE, nextProps.opportunity))
     }
+
+    if (nextProps.availNetworks !== this.props.availNetworks){
+      let share = nextProps.availNetworks.slice(0,1);
+      this.setState({ share })
+    }
+
     return true;
   }
 
@@ -473,6 +484,7 @@ class OpportunityChangeModal extends React.Component {
       pictureUrl, title, submitModalOpen, anonymous,
       sendingProgress } = this.state;
 
+    // debugger
     const infoOpen = Boolean(infoAnchorEl);
     const shareSelected = share.map(choice => choice.title).join(', ');
 
@@ -518,11 +530,13 @@ class OpportunityChangeModal extends React.Component {
               <TextField
                 id="outlined-multiline-static"
                 multiline
+                rows='2'
                 rowsMax="3"
                 fullWidth
+                required
                 placeholder={
                   viewType === 'card' ? "Opportunity title" :
-                  `What's your most pressing business need or opportunity`
+                  `What's your most pressing business need or opportunity?`
                 }
                 value={this.state.title}
                 onChange={this.handleChange('title')}
@@ -540,7 +554,8 @@ class OpportunityChangeModal extends React.Component {
                 rows="4"
                 rowsMax="8"
                 fullWidth
-                placeholder={"Describe your most pressing business need or opportunity..."}
+                required
+                placeholder={"Describe your most pressing business need or opportunity?"}
                 value={this.state.description}
                 onChange={this.handleChange('description')}
                 className={classes.descriptionTextField}
@@ -548,9 +563,9 @@ class OpportunityChangeModal extends React.Component {
             </Grid>}
 
           {viewType === 'card' &&
-            <Grid container justify='space-between' alignItems='center'>
+            <Grid container justify='space-around' alignItems='center'>
 
-              <FormControl className={classes.formControl}>
+              <FormControl required className={classes.formControl}>
                 <InputLabel htmlFor="age-required">Business Need</InputLabel>
                 <Select
                   value={this.state.opportunityNeed}
@@ -578,7 +593,7 @@ class OpportunityChangeModal extends React.Component {
                 </Select>
               </FormControl>
 
-              <FormControl className={classes.formControl}>
+              <FormControl required className={classes.formControl}>
                 <InputLabel htmlFor="age-required">Industry</InputLabel>
                 <Select
                   multiple
@@ -599,7 +614,7 @@ class OpportunityChangeModal extends React.Component {
                 </Select>
               </FormControl>
 
-              <FormControl className={classes.formControl}>
+              <FormControl required className={classes.formControl}>
                 <InputLabel htmlFor="age-required">Geography</InputLabel>
                 <Select
                   multiple
@@ -620,7 +635,7 @@ class OpportunityChangeModal extends React.Component {
                 </Select>
               </FormControl>
 
-              <FormControl className={classes.formControl}>
+              <FormControl required className={classes.formControl}>
                 <InputLabel htmlFor="age-required">Deal Value</InputLabel>
                 <Select
                   value={this.state.value}
@@ -642,9 +657,9 @@ class OpportunityChangeModal extends React.Component {
               </FormControl>
             </Grid>}
 
-          <Grid container justify='space-between' alignItems='center'
+          <Grid container justify='flex-end' alignItems='center'
             style={{ paddingTop: 17, margin: 0}}>
-            <Grid item xs={9}>
+            <Grid item containr justify='flex-start' xs={12}>
               <input
                 accept="image/*"
                 style={{ display: 'none'}}
@@ -715,10 +730,10 @@ class OpportunityChangeModal extends React.Component {
                 open={Boolean(shareAnchorEl)}
                 onClose={this.handleMenuClose('shareAnchorEl')}
               >
-                {Object.values(availNetworks).map(network => (
+                {availNetworks.map((network, idx) => (
                   <MenuItem
                     value={network}
-                    key={network.id}
+                    key={idx}
                     style={{ textTransform: 'capitalize'}}
                     onClick={this.handleShareClose(network)}>
                     <Checkbox checked={this.state.share.indexOf(network) > -1} />
@@ -737,24 +752,12 @@ class OpportunityChangeModal extends React.Component {
                 ))}
               </Menu>
             </Grid>
-
-            <Grid item xs={3} container justify='center' alignItems='center'>
-              <Button className={classes.postButton}
-                color='primary' variant='contained'
-                onClick={this.handleSubmit}
-                disabled={
-                  (viewType === 'card' && isError) ||
-                  (viewType === 'post' && isError) ||
-                  sendingProgress}>
-                Post
-              </Button>
-            </Grid>
           </Grid>
 
           <Grid container justify='space-between' alignItems='center'
-            style={{ paddingTop: 41}}>
+            style={{ paddingTop: 20, paddingBottom: 10}}>
             <Button onClick={this.toggleOpp}
-              style={{ position: 'relative'}}>
+              style={{ position: 'relative', paddingLeft: 0}}>
               <Typography align='Left' color="textSecondary"
                 variant='subtitle1'>
                 {viewType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
@@ -792,15 +795,15 @@ class OpportunityChangeModal extends React.Component {
                 </Popover>
             </Button>
 
-            {viewType === 'card' && isError &&
-              <Typography align='center' color="textSecondary"
-                variant='body2'
-                className={classes.postErrorText}>
-                {viewType === 'card' ?
-                  `Fill in all fields before submitting` :
-                  `Fill in title and share settings before submitting`}
-              </Typography>
-            }
+            <Button className={classes.postButton}
+              color='primary' variant='contained'
+              onClick={this.handleSubmit}
+              disabled={
+                (viewType === 'card' && isError) ||
+                (viewType === 'post' && isError) ||
+                sendingProgress}>
+              Post
+            </Button>
           </Grid>
         </Grid>
 
@@ -832,3 +835,25 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyle
 //   >
 //   Hello
 // </Badge>
+
+// {viewType === 'card' && isError &&
+//   <Typography align='center' color="textSecondary"
+//     variant='body2'
+//     className={classes.postErrorText}>
+//     {viewType === 'card' ?
+//       `Fill in all fields before submitting` :
+//       `Fill in title and share settings before submitting`}
+//   </Typography>
+// }
+
+// <Grid item xs={3} container justify='center' alignItems='center'>
+//   <Button className={classes.postButton}
+//     color='primary' variant='contained'
+//     onClick={this.handleSubmit}
+//     disabled={
+//       (viewType === 'card' && isError) ||
+//       (viewType === 'post' && isError) ||
+//       sendingProgress}>
+//     Post
+//   </Button>
+// </Grid>
