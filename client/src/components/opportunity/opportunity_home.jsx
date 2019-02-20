@@ -263,6 +263,11 @@ const styles = {
   //   width: 14,
   //   marginRight: 3
   // },
+  emptyOppsText:{
+    fontSize: 30,
+    fontWeight: 500,
+    margin: 20
+  }
 };
 
 const DEFAULTSTATE = {
@@ -637,11 +642,18 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let opportunityCards = opportunities.map((opportunity, idx) => (
-      <OpportunityCardFeed
-        currentUser={currentUser}
-        opportunity={opportunity}/>
-    ));
+    let opportunityCards = opportunities.length > 0 ? (
+        opportunities.map((opportunity, idx) => (
+        <OpportunityCardFeed
+          currentUser={currentUser}
+          opportunity={opportunity}/>
+      ))
+    ) : (
+      <Typography variant="h3" gutterBottom color="textSecondary"
+        align='center' className={classes.emptyOppsText}>
+        {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
+      </Typography>
+    )
 
     let feed = (
       <Grid container justify='center' alignItems='center'>
