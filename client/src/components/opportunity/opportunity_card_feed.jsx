@@ -175,9 +175,7 @@ class OpportunityCard extends React.Component {
       e.preventDefault();
       e.stopPropagation();
       // this.props.handleCardOpen(this.props.opportunity)
-      if (this.props.opportunity.viewType === 'card'){
-        this.setState({ cardOpen: true, cardModalPage, connectBool })
-      }
+      this.setState({ cardOpen: true, cardModalPage, connectBool })
     }
   }
 
@@ -569,7 +567,8 @@ class OpportunityCard extends React.Component {
             connectBool={connectBool}
             handleClose={this.handleCardClose}
             opportunity={opportunity}
-            demo={demo}/>
+            demo={demo}
+            viewType={viewType}/>
         </div>
       )
     } else {

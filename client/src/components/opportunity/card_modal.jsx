@@ -149,6 +149,7 @@ class CardModal extends React.Component {
     this.handleConfirm = this.handleConfirm.bind(this);
     this.getContent = this.getContent.bind(this);
     this.handleConnection = this.handleConnection.bind(this);
+    this.handleBack = this.handleBack.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -187,6 +188,14 @@ class CardModal extends React.Component {
       );
     }
   };
+
+  handleBack(){
+    if (this.props.viewType === 'card'){
+      this.setState({page: 'opportunity'})
+    } else {
+      this.props.handleClose();
+    }
+  }
 
   handleConnection(){
     return e => {
@@ -325,10 +334,6 @@ class CardModal extends React.Component {
                 </List>
               </Grid>
               <Grid item xs={12} container justify='flex-start'>
-                <Button onClick={() => this.setState({page: 'opportunity'})}
-                  color="textPrimary" variant='contained'>
-                  Back
-                </Button>
                 <Button variant="contained"
                   onClick={this.handleClose('find')} color='secondary'
                   style={{ marginLeft: 20}}>
@@ -362,12 +367,8 @@ class CardModal extends React.Component {
                 }
               </Typography>
 
-              <Grid container justify='space-between'
+              <Grid container justify='flex-end'
                 style={{ margin: "25px 0px"}}>
-                <Button onClick={() => this.setState({page: 'opportunity'})}
-                  color="textPrimary" variant='contained'>
-                  Back
-                </Button>
                 <Button onClick={this.handleConnection()}
                   variant='contained' color='primary'
                   style={{ marginLeft: 20}}>
