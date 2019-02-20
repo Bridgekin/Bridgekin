@@ -3,5 +3,6 @@ json.extract! opportunity, :id, :title, :description, :opportunity_need,
   :view_type
 
 json.ownerFirstName opportunity.owner.fname
+json.ownerLastName opportunity.owner.lname
 json.ownerPictureUrl url_for(opportunity.owner.profile_pic) if opportunity.owner.profile_pic.attached?
 json.pictureUrl url_for(opportunity.picture) if opportunity.picture.attached?

@@ -269,7 +269,7 @@ class OpportunityCard extends React.Component {
 
     let { title, description, industries, opportunityNeed, geography,
       value, status, pictureUrl, dealStatus, anonymous, viewType,
-      ownerPictureUrl, ownerFirstName } = opportunity;
+      ownerPictureUrl, ownerFirstName, ownerLastName } = opportunity;
 
     if (!_.isEmpty(opportunity)){
       let editOptions = editable ? (
@@ -367,7 +367,7 @@ class OpportunityCard extends React.Component {
               <Typography gutterBottom align='Left'
                 className={classes.cardHeader}
                 style={{ textTransform: 'capitalize'}}>
-                {anonymous ? 'Anonymous' : ownerFirstName}
+                {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
               </Typography>
             </Grid>
 
