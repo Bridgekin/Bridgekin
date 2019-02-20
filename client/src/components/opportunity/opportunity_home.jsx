@@ -59,6 +59,7 @@ import { animateScroll } from 'react-scroll';
 import PictureIconSVG from '../../static/opp_feed_icons/picture.svg'
 import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
 import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
+import PersonIcon from '@material-ui/icons/PersonSharp';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -257,7 +258,11 @@ const styles = {
     },
     padding: 0,
     width: '100%'
-  }
+  },
+  // filterButtonIcon:{
+  //   width: 14,
+  //   marginRight: 3
+  // },
 };
 
 const DEFAULTSTATE = {
@@ -413,6 +418,8 @@ class OpportunityHome extends React.Component {
     const formattedNetworks = networksArray.map(network => (
       Object.assign({}, network, {type: 'network'})
     ))
+
+    debugger
 
     opportunities = opportunities.filter(o => o.status === "Approved")
 
@@ -675,14 +682,13 @@ class OpportunityHome extends React.Component {
                 Image
               </Button>
               <Button className={classes.createFilterButton}>
-                <img src={PrivacyIconSVG} alt='privacy-icon'
-                  className={classes.filterButtonIcon}/>
+                <PersonIcon className={classes.filterButtonIcon}/>
                 Privacy
               </Button>
               <Button className={classes.createFilterButton}>
                 <img src={ShareIconSVG} alt='share-icon'
                   className={classes.filterButtonIcon}/>
-                {`Share with: `}
+                {`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`}
               </Button>
             </Grid>
             {filterMobile}
