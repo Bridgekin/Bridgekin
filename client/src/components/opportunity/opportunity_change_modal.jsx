@@ -260,14 +260,14 @@ class OpportunityChangeModal extends React.Component {
           if(this.props.opportunityErrors.length !== 0){
             this.setState({
               sendingProgress: false,
-              submitModalOpen: true
+              submitModalOpen: true,
+              share: []
             });
           } else {
             this.setState({
               sendingProgress: false
             });
             this.handleClose();
-            this.clearFields();
           }
           // this.handleClose();
         })
@@ -278,15 +278,16 @@ class OpportunityChangeModal extends React.Component {
           if(this.props.opportunityErrors.length !== 0){
             this.setState({
               sendingProgress: false,
-              submitModalOpen: true
+              submitModalOpen: true,
+              share: []
             });
           } else {
             this.setState({
               sendingProgress: false
             });
+            this.handleClose();
           }
           // this.clearFields();
-          // this.handleClose();
         })
       }
     });
@@ -294,6 +295,7 @@ class OpportunityChangeModal extends React.Component {
 
   handleClose(){
     // e.preventDefault();
+    this.clearFields();
     this.props.handleClose();
     this.setState({ share: [] });
   }
@@ -421,8 +423,10 @@ class OpportunityChangeModal extends React.Component {
   }
 
   handleRemoveFile(e){
-    e.preventDefault();
-    e.stopPropagation();
+    if (e){
+      e.preventDefault();
+      e.stopPropagation();
+    }
     this.setState({
       picture: null,
       pictureUrl: null,
@@ -500,16 +504,14 @@ class OpportunityChangeModal extends React.Component {
           style={{ padding: "0px 20px"}}>
           <Grid container justify='center' alignItems='center'
             style={{ height: 95 }}>
-            <IconButton color="secondary"
-              classes={{ root: classes.infoIconButton}}>
-              {currentUser.profilePicUrl && !anonymous ? (
-                <Avatar alt="profile-pic"
-                  src={currentUser.profilePicUrl}
-                  className={classes.avatar} />
-              ) : (
-                <AccountCircle className={classes.avatar}/>
-              )}
-            </IconButton>
+
+            {currentUser.profilePicUrl && !anonymous ? (
+              <Avatar alt="profile-pic"
+                src={currentUser.profilePicUrl}
+                className={classes.avatar} />
+            ) : (
+              <AccountCircle className={classes.avatar}/>
+            )}
 
             <Grid container style={{ flexGrow: 1, width: 'auto'}}
               alignItems='center'>

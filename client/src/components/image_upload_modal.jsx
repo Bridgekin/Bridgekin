@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
@@ -56,6 +57,13 @@ const styles = theme => ({
     padding: 5,
     cursor: 'pointer'
   },
+  buttonProgress: {
+    color: '#4067B2',
+    position: 'absolute',
+    top: '20%',
+    left: '50%',
+    marginLeft: -12,
+  },
 });
 
 class NotFound extends Component {
@@ -69,6 +77,7 @@ class NotFound extends Component {
         x: 0,
         y: 0,
       },
+      loading: false
     }
 
     this.cropper = React.createRef();
@@ -129,9 +138,12 @@ class NotFound extends Component {
   }
 
   handleClose(){
-    let fileUrl = this.cropper.crop();
+    this.setState({ loading: true},
+    () => {
+      let fileUrl = this.cropper.crop();
 
-    this.urlToFile(fileUrl)
+      this.urlToFile(fileUrl)
+    })
     // let blob = dataURLToBlob(file);
     // let newFile = new File([blob], "my-image.png");
     //
@@ -150,7 +162,10 @@ class NotFound extends Component {
     .then(image => {
       let blob = dataURLToBlob(image);
       let newFile = new File([blob], "my-image.png");
-      this.props.handleClose(newFile);
+      this.setState({ loading: false },
+      () => {
+        this.props.handleClose(newFile);
+      })
     })
     .catch(err=>{
       console.log(err)
@@ -164,6 +179,7 @@ class NotFound extends Component {
 
   render () {
     const {classes, open, fileUrl, ratio} = this.props;
+    const { loading } = this.state;
     // let height = this.cropper.width/4;
 
     return (
@@ -172,7 +188,7 @@ class NotFound extends Component {
           open={open}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
-          onClose={this.handleClose.bind(this)}
+          onClose={this.handleDelete}
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}
           >
@@ -199,8 +215,10 @@ class NotFound extends Component {
                 <Grid item xs={11} container justify='center'
                   style={{ marginTop: 20, marginBottom: 40 }}>
                   <Button color="primary" variant='contained'
-                    onClick={this.handleClose} >
+                    onClick={this.handleClose} disabled={loading}>
                     Crop
+                    {loading && <CircularProgress size={24}
+                    className={classes.buttonProgress} />}
                   </Button>
                 </Grid>
               </Grid>

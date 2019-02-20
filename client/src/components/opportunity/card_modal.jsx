@@ -214,7 +214,7 @@ class CardModal extends React.Component {
     const { connectBool, page } = this.state;
 
     let { title, description, industries, opportunityNeed, geography,
-      value, networks, pictureUrl } = opportunity;
+      value, networks, pictureUrl, viewType } = opportunity;
 
     let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
       <ListItem >
@@ -383,9 +383,9 @@ class CardModal extends React.Component {
       default:
         return (
           <Grid container justify="center" alignItems='center'>
-            <Grid item xs={12}>
+            {viewType === 'card' && <Grid item xs={12}>
               {picture}
-            </Grid>
+            </Grid>}
             <Grid item xs={11} sm={10} md={8} className={classes.cardContent}
               container justify='center' spacing={16}>
               <Grid item xs={12}>
@@ -393,13 +393,13 @@ class CardModal extends React.Component {
                   color="default">
                   {title}
                 </Typography>
-                <Typography variant="body2" gutterBottom align='left'
+                {viewType === 'card' && <Typography variant="body2" gutterBottom align='left'
                   color="default">
                   {description}
-                </Typography>
+                </Typography>}
               </Grid>
 
-              <Grid container justify='flex-start' spacing={24}>
+              {viewType === 'card' && <Grid container justify='flex-start' spacing={24}>
                 <Grid item xs={4}>
                   <Typography variant="h6" gutterBottom align='left'
                     className={classes.cardSubHeader}>
@@ -432,7 +432,7 @@ class CardModal extends React.Component {
                     {value}
                   </Typography>
                 </Grid>
-              </Grid>
+              </Grid>}
 
               <Grid container justify='flex-start'
                 style={{ margin: "10px 0px"}}>

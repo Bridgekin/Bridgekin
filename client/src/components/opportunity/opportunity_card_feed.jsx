@@ -48,6 +48,7 @@ import theme from '../theme';
 
 import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
 import ReferIcon from '../../static/opp_feed_icons/refer.png'
+import PagePeel from '../../static/opp_feed_icons/page_peel.jpeg'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const mapStateToProps = state => ({
@@ -73,7 +74,7 @@ const styles = theme => ({
   opportunityCard:{
     // marginTop: 18,
     backgroundColor: `${theme.palette.white}`,
-    width: '100%',
+    // width: '100%',
     // borderTop: `1px solid ${theme.palette.lightGrey}`,
     marginBottom: 9,
     border: `1px solid ${theme.palette.lightGrey}`,
@@ -95,7 +96,8 @@ const styles = theme => ({
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'relative'
   },
   pictureCover:{
     height: 140,
@@ -104,7 +106,8 @@ const styles = theme => ({
   },
   avatar:{
     width: 51,
-    height: 51
+    height: 51,
+    margin: '12px 12px 12px 0px'
   },
   titlePost:{
     fontSize: 15,
@@ -129,6 +132,14 @@ const styles = theme => ({
   },
   oppActionButton:{
     textTransform: 'capitalize'
+  },
+  pagePeel:{
+    position: 'absolute',
+    right: 0,
+    width: 25,
+    height: 25,
+    borderTopRightRadius: 5,
+    cursor: 'pointer'
   }
 });
 
@@ -336,22 +347,19 @@ class OpportunityCard extends React.Component {
       )
 
       return (
-        <CardActionArea className={classes.opportunityCard}
-          onClick={this.handleCardOpen('none', undefined)}>
+        <div className={classes.opportunityCard}>
           <Grid container className={classes.oppCardGrid}>
+            {viewType === 'card' && <img src={PagePeel} className={classes.pagePeel}
+              onClick={this.handleCardOpen('none', undefined)}
+              alt='pagepeel'/>}
             <Grid item xs={7} container alignItems='center'>
-              <IconButton
-                onClick={() => this.props.history.push('/')}
-                color="secondary"
-                >
-                {ownerPictureUrl && !anonymous ? (
-                  <Avatar alt="profile-pic"
-                    src={ownerPictureUrl}
-                    className={classes.avatar} />
-                ) : (
-                  <AccountCircle className={classes.avatar} />
-                )}
-              </IconButton>
+              {ownerPictureUrl && !anonymous ? (
+                <Avatar alt="profile-pic"
+                  src={ownerPictureUrl}
+                  className={classes.avatar} />
+              ) : (
+                <AccountCircle className={classes.avatar} />
+              )}
               <Typography gutterBottom align='Left'
                 className={classes.cardHeader}
                 style={{ textTransform: 'capitalize'}}>
@@ -556,7 +564,7 @@ class OpportunityCard extends React.Component {
             handleClose={this.handleCardClose}
             opportunity={opportunity}
             demo={demo}/>
-        </CardActionArea>
+        </div>
       )
     } else {
       return (

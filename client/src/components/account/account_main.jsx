@@ -39,6 +39,7 @@ const styles = {
     position: 'relative',
     // padding: "64px 35px 50px 35px",
     padding: "64px 0px 0px 0px",
+    // marginTop: 64,
     // paddingTop: 64 + 18,
     flexGrow: 1,
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,

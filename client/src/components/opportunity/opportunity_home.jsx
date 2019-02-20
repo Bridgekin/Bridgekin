@@ -54,6 +54,7 @@ import OpportunityChangeModal from './opportunity_change_modal';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
+import { animateScroll } from 'react-scroll';
 
 import PictureIconSVG from '../../static/opp_feed_icons/picture.svg'
 import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
@@ -269,7 +270,7 @@ const DEFAULTSTATE = {
   picture: null,
   pictureUrl: null,
   // networks: [],
-  anonymous: false,
+  anonymous: true,
   viewType: 'post'
 }
 
@@ -383,10 +384,13 @@ class OpportunityHome extends React.Component {
       e.stopPropagation();
       if (type === 'Network'){
         this.props.fetchOpportunities(id)
-        .then(() => this.setState({
+        .then(() => {
+          this.setState({
             dropdownFocus: id, [anchor]: null
-          })
-        )
+          });
+          // window.scrollTo(0, 0);
+          animateScroll.scrollTo(0);
+        })
       }
     }
   }
@@ -418,7 +422,7 @@ class OpportunityHome extends React.Component {
           <Typography gutterBottom align='Left'
             className={classes.cardHeader}
             style={{ marginBottom: 20}}>
-            Over $71M connected
+            Over $71M in opportunities connected
           </Typography>
 
           <div className={classes.oppNotification}>
@@ -559,7 +563,7 @@ class OpportunityHome extends React.Component {
           <Typography align='Left'
             className={classes.cardHeader}
             style={{ margin: "10px 20px 0px"}}>
-            {`Who's opportunities do you want to see?`}
+            {`Whose opportunities would you like to see?`}
           </Typography>
 
           <List component="nav">
@@ -643,17 +647,15 @@ class OpportunityHome extends React.Component {
               Create Opportunity
             </Typography>
 
-            <Grid container className={classes.createFilterMain}>
-              <IconButton color="secondary"
-                style={{ padding: 0 }} >
-                {currentUser.profilePicUrl ? (
-                  <Avatar alt="profile-pic"
-                    src={currentUser.profilePicUrl}
-                    className={classes.avatar} />
-                ) : (
-                  <AccountCircle className={classes.avatar}/>
-                )}
-              </IconButton>
+            <Grid container alignItems='center'
+              className={classes.createFilterMain}>
+              {currentUser.profilePicUrl ? (
+                <Avatar alt="profile-pic"
+                  src={currentUser.profilePicUrl}
+                  className={classes.avatar} />
+              ) : (
+                <AccountCircle className={classes.avatar}/>
+              )}
 
               <Grid container style={{ flexGrow: 1, width: '75%', marginLeft: 10}}
                 alignItems='center'>
