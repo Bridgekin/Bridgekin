@@ -68,11 +68,9 @@ class OpportunityReferral extends React.Component{
   }
 
   handleSubmit(){
-    const { getLink } = this.state;
-    if (getLink){
-      this.props.handleSubmit();
-      this.setState({ getLink: !getLink,  })
-    }
+    // const { getLink } = this.state;
+    this.props.handleSubmit();
+    this.setState({ getLink: true, copied: false })
   }
 
   render(){

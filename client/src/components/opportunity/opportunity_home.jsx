@@ -385,15 +385,9 @@ class OpportunityHome extends React.Component {
   }
 
   handleReferralSubmit(){
-    // return () => {
-      // if (submitBool){
-        this.props.createReferral({
-          network_id: this.state.referralNetwork
-        })
-    //   } else {
-    //
-    //   }
-    // }
+    this.props.createReferral({
+      network_id: this.state.referralNetwork
+    })
   }
 
   handleDropdownClick(anchor){
