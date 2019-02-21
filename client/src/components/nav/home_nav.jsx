@@ -322,7 +322,7 @@ class HomeNav extends React.Component {
             Find & Connect
           </Typography>
         </MenuItem>
-        {currentUser.isAdmin &&
+        {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('mynetwork')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             My Trusted Network
@@ -423,7 +423,8 @@ class HomeNav extends React.Component {
               Find & Connect
             </Typography>
           </Button>
-          {currentUser.isAdmin && <Button color='secondary'
+          {currentUser && currentUser.isAdmin &&
+            <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
             <Typography variant="h4" align='left' color="textPrimary"
