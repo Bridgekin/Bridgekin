@@ -25,6 +25,7 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 import SendIcon from '@material-ui/icons/SendSharp';
 
 import Typography from '@material-ui/core/Typography';
+import theme from '../theme';
 
 import { connect } from 'react-redux';
 import { clearConnectedOpportunityErrors } from '../../actions/error_actions';
@@ -145,7 +146,8 @@ class CardModal extends React.Component {
     super(props)
     this.state = {
       connectBool: true,
-      page: 'opportunity'
+      page: 'opportunity',
+      connectLoading: false
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleConnection = this.handleConnection.bind(this);
@@ -203,23 +205,26 @@ class CardModal extends React.Component {
   handleConnection(){
     return e => {
       e.preventDefault()
+      this.setState({ connectLoading: true},
+      () => {
+        const { connectBool } = this.state;
 
-      const { connectBool } = this.state;
-
-      if(!this.props.demo){
-        let opportunity = {
-          opportunityId: this.props.opportunity.id,
-          connectBool
-        }
-        this.props.createConnectedOpportunity(opportunity)
-        .then(() => {
-          this.setState({
-            sent: true,
-            page: 'sent',
+        if(!this.props.demo){
+          let opportunity = {
+            opportunityId: this.props.opportunity.id,
             connectBool
-          })
-        });
-      }
+          }
+          this.props.createConnectedOpportunity(opportunity)
+          .then(() => {
+            this.setState({
+              sent: true,
+              page: 'sent',
+              connectLoading: false,
+              connectBool
+            })
+          });
+        }
+      })
     }
   }
 
@@ -231,7 +236,7 @@ class CardModal extends React.Component {
 
   getContent(){
     const { classes, opportunity } = this.props;
-    const { connectBool, page } = this.state;
+    const { connectBool, page, connectLoading } = this.state;
 
     let { title, description, industries, opportunityNeed, geography,
       value, networks, pictureUrl, viewType } = opportunity;
@@ -374,6 +379,7 @@ class CardModal extends React.Component {
                 style={{ margin: "25px 0px"}}>
                 <Button onClick={this.handleConnection()}
                   variant='contained' color='primary'
+                  disabled={connectLoading}
                   style={{ marginLeft: 20}}>
                   Send
                   <SendIcon className={classes.rightIcon} />

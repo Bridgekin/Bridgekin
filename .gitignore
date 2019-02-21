@@ -31,7 +31,9 @@
 server.key
 server.pass.key
 server.csr
-server.cst
+server.crt
+server_wd.crt
+server_wd.csr
 
 /docker
 docker-compose.yml
