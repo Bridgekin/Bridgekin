@@ -9,7 +9,11 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   def index
     @connected_opportunities = @user.opportunity_connections
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted')
     @facilitated_connected_opportunities = @user.opportunity_connections_facilitated
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted')
     render :index
   end
 
