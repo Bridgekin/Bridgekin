@@ -16,8 +16,8 @@ import copy from 'copy-to-clipboard';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    // padding: "40px 0px",
-    // borderTop: `0.5px solid ${theme.palette.grey1}`
+    padding: "40px 0px",
+    borderTop: `0.5px solid ${theme.palette.grey1}`
   },
   headerTypography:{
     margin: "25px 0px 25px 0px"
@@ -39,14 +39,7 @@ const styles = theme => ({
     top: '50%',
     left: '50%',
     marginLeft: -12,
-  },
-  cardHeader:{
-    fontSize: 14,
-    fontWeight: 600
-  },
-  textfieldInput:{
-    padding: "10px 14px"
-  },
+  }
 });
 
 class OpportunityReferral extends React.Component{
@@ -68,11 +61,8 @@ class OpportunityReferral extends React.Component{
   }
 
   handleSubmit(){
-    const { getLink } = this.state;
-    if (getLink){
-      this.props.handleSubmit();
-      this.setState({ getLink: !getLink,  })
-    }
+    this.props.handleSubmit();
+    this.setState({ getLink: true })
   }
 
   render(){
@@ -89,14 +79,25 @@ class OpportunityReferral extends React.Component{
 
     return(
       <Grid container className={classes.root}
-        justify="flex-start" alignItems="center" >
+        justify="center" alignItems="center" >
 
-        <Typography variant="h6" gutterBottom align='left'
-          color="textSecondary" className={classes.cardHeader}>
-          {`Create a referral link for your network`}
-        </Typography>
-        <Grid container justify='flex-start' spacing={16}>
-          <Grid item xs={12} sm={5} container alignItems='center'>
+        <Grid item xs={11} sm={10} md={6} >
+          <Typography variant="h2" gutterBottom align='left'
+            color="secondary" className={classes.headerTypography}
+            style={{ lineHeight: 1.5}}>
+            {`Create a referral link for your network. When they click this link, they'll be invited to join Bridgekin.`}
+          </Typography>
+        </Grid>
+
+        <Grid item xs={11} sm={10} md={8}container justify="center"
+          alignItems="center" spacing={8}>
+
+          <Grid item xs={12} md={6} justify="center" alignItems="center">
+            <Typography variant="h6" align='center'
+              color="secondary" className={classes.headerTypography}>
+              Choose network to refer
+            </Typography>
+
             <FormControl className={classes.formControl} fullWidth>
               <Select
                 value={referralNetwork}
@@ -104,12 +105,24 @@ class OpportunityReferral extends React.Component{
                 name="age"
                 displayEmpty
                 className={classes.selectEmpty}
-                >
+              >
                 {options}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={7}>
+
+          <Grid item xs={12} md={3}  container justify="center" alignItems="center">
+            <Button variant="contained" color='secondary'
+              className={classes.refButton}
+              onClick={this.handleSubmit}>
+              Create Link
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={11} sm={10} md={8} container justify="center" alignItems="center"
+          spacing={8} style={{ marginTop: 20}}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="outlined-read-only-input"
               placeholder='Link displays here'
@@ -120,26 +133,19 @@ class OpportunityReferral extends React.Component{
               variant='outlined'
               InputProps={{
                 readOnly: true,
-                classes:{
-                  input: classes.textfieldInput
-                }
               }}
               />
           </Grid>
+
+          <Grid item xs={12} md={3} container justify="center" alignItems="center">
+            <Button variant="contained"
+              onClick={this.handleCopy(referralLink)}
+              style={{ backgroundColor: "#616161", color: '#FFF'}}>
+              { copied ? 'Copied!' : 'Copy Link'}
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12} container justify='space-around'
-          style={{ marginTop: 10}}>
-          <Button variant="contained" color='secondary'
-            onClick={this.handleSubmit}
-            style={{ marginRight: 10}}>
-            Create Link
-          </Button>
-          <Button variant="contained"
-            onClick={this.handleCopy(referralLink)}
-            style={{ backgroundColor: "#616161", color: '#FFF'}}>
-            { copied ? 'Copied!' : 'Copy'}
-          </Button>
-        </Grid>
+
       </Grid>
     )
   }

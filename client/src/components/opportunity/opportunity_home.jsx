@@ -104,6 +104,7 @@ const styles = {
   mainColumn:{
     [theme.breakpoints.up('sm')]: {
       marginLeft: 265,
+      // marginLeft: 15,
       width: 500,
       position: 'relative',
       paddingLeft: 0,
@@ -137,7 +138,7 @@ const styles = {
     backgroundColor: `${theme.palette.white}`,
     borderRadius:0,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
-    // marginTop: 9,
+    marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
       border: `1px solid ${theme.palette.lightGrey}`,
@@ -145,6 +146,19 @@ const styles = {
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
+  },
+  referralCard:{
+    padding: "9px 8px 20px 8px",
+    backgroundColor: `${theme.palette.white}`,
+    borderRadius:0,
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    // marginTop: 9,
+    [theme.breakpoints.up('sm')]: {
+      padding: "10px 17px",
+      borderRadius: 5,
+      border: `1px solid ${theme.palette.lightGrey}`,
+    },
   },
   oppNotification:{
     borderRadius: 5,
@@ -371,9 +385,15 @@ class OpportunityHome extends React.Component {
   }
 
   handleReferralSubmit(){
-    this.props.createReferral({
-      network_id: this.state.referralNetwork
-    })
+    // return () => {
+      // if (submitBool){
+        this.props.createReferral({
+          network_id: this.state.referralNetwork
+        })
+    //   } else {
+    //
+    //   }
+    // }
   }
 
   handleDropdownClick(anchor){
@@ -423,8 +443,6 @@ class OpportunityHome extends React.Component {
     const formattedNetworks = networksArray.map(network => (
       Object.assign({}, network, {type: 'network'})
     ))
-
-    debugger
 
     opportunities = opportunities.filter(o => o.status === "Approved")
 
@@ -721,6 +739,18 @@ class OpportunityHome extends React.Component {
               currentUser={currentUser}
               />
           </Card>
+
+          {this.props.currentUser.isAdmin &&
+            <div className={classes.referralCard}>
+              <OpportunityReferral
+                referralNetwork={referralNetwork}
+                networks={networksArray}
+                referral={referral}
+                handleChange={this.handleReferralChange}
+                handleSubmit={this.handleReferralSubmit}
+                />
+            </div>
+          }
         </div>
       </Grid>
     )
@@ -730,7 +760,7 @@ class OpportunityHome extends React.Component {
         <Grid container justify='center' className={classes.grid}>
           <div className={classes.feedContainer}>
             <div className={classes.sideColumn}
-              style={{ position: 'fixed', top:64, width: 250}}>
+              style={{ position: 'fixed', top: 64 ,width: 250}}>
               {column1}
             </div>
             <div className={classes.mainColumn}>

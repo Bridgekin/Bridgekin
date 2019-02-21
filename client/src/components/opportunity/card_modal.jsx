@@ -466,8 +466,6 @@ class CardModal extends React.Component {
   render () {
     const { open, classes, opportunity } = this.props;
 
-    debugger
-
     if (!_.isEmpty(opportunity)){
       return (
         <Dialog

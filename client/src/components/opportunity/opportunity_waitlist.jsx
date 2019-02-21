@@ -38,12 +38,12 @@ const styles = theme => ({
   buttonProgress: {
     color: '#4067B2',
     position: 'absolute',
-    top: '50%',
+    top: '20%',
     left: '50%',
     marginLeft: -12,
   },
   textField:{
-    margin: 5
+    margin: 3
     // padding: "10px 14px"
   },
   textfieldInput:{
@@ -84,6 +84,7 @@ class OpportunityWaitlist extends React.Component{
     }
 
     this.props.handleSubmit(user)
+    this.setState({ email: '', fname: ''})
   }
 
   render(){
@@ -133,9 +134,9 @@ class OpportunityWaitlist extends React.Component{
             onClick={this.handleSubmit}
             disabled={loading}>
             Invite Now
-          </Button>
-          {loading && <CircularProgress size={24}
+            {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
+          </Button>
         </Grid>
       </Grid>
     )
