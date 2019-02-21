@@ -1,7 +1,8 @@
 require_relative '../helpers/active_admin_helper.rb'
 ActiveAdmin.register Opportunity do
   permit_params :owner_id, :title, :opportunity_need, :value, :description,
-    :status, :created_at, :updated_at, industries: [], geography: []
+    :status, :deal_status, :anonymous, :view_type, :created_at, :updated_at,
+    industries: [], geography: []
 
   index do
     id_column
@@ -15,6 +16,9 @@ ActiveAdmin.register Opportunity do
     column :geography
     column :created_at
     column :updated_at
+    column :deal_status
+    column :anonymous
+    column :view_type
     actions
   end
 
@@ -30,6 +34,9 @@ ActiveAdmin.register Opportunity do
       row :geography
       row :created_at
       row :updated_at
+      row :deal_status
+      row :anonymous
+      row :view_type
       #   "#{opportunity.industries.join( ", " ) unless opportunity.industries.nil?}"
       # end
     end
@@ -47,6 +54,9 @@ ActiveAdmin.register Opportunity do
       f.input :status, as: :select, collection: ['Approved','Pending', 'Rejected']
       f.input :industries_raw, :as => :string
       f.input :geography_raw, :as => :string
+      f.input :deal_status,  as: :select, collection: ['Active','Pending', 'Closed', 'Deleted']
+      f.input :anonymous, :as => :boolean
+      f.input :view_type,  as: :select, collection: ['post','card']
     end
     f.actions
   end
