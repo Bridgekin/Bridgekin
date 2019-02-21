@@ -439,7 +439,7 @@ class OpportunityChangeModal extends React.Component {
       e.stopPropagation();
     }
     this.setState({
-      picture: null,
+      picture: 'delete',
       pictureUrl: null,
     })
   }

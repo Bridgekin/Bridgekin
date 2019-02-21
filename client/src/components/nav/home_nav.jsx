@@ -322,11 +322,12 @@ class HomeNav extends React.Component {
             Find & Connect
           </Typography>
         </MenuItem>
+        {currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('mynetwork')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             My Trusted Network
           </Typography>
-        </MenuItem>
+        </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('account')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             My Account

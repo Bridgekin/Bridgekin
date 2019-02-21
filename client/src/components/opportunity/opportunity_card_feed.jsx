@@ -91,7 +91,7 @@ const styles = theme => ({
   },
   oppStatus:{
     // height: 40,
-    width: 89,
+    minWidth: 89,
     textTransform: 'uppercase',
     backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
     display: 'flex',
