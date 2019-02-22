@@ -49,7 +49,9 @@ gem 'underscore_params'
 
 gem "pundit"
 
-#Schedule cron jobs beyond heroku scheduler
+gem 'pgbackups_s3'
+
+#Schedule cron jobs beyond heroku schedulers
 gem "simple_scheduler"
 
 gem 'heroku-deflater', :group => :production
@@ -82,6 +84,8 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
+  gem 'phantomjs'
+  gem 'poltergeist'
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome

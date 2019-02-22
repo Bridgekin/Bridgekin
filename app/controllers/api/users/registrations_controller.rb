@@ -26,6 +26,8 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       @token = get_login_token!(@user)
       @network = @referralLink.network
 
+      @user.implement_trackable
+
       UserNetwork.create(network_id: @network.id, member_id: @user.id) if @network.title != 'Bridgekin'
       #Create Bridgekin Connection
       UserNetwork.create(network_id: 1, member_id: @user.id)
