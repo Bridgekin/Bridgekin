@@ -454,7 +454,7 @@ class OpportunityHome extends React.Component {
             <Typography align='Left'
               className={classes.cardHeader}
               style={{ color: theme.palette.darkGrey}}>
-              There are 10 opportunities for you to checkout
+              {`There are ${opportunities.length} opportunities for you to checkout`}
             </Typography>
           </div>
         </div>
