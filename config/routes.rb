@@ -15,13 +15,13 @@ Rails.application.routes.draw do
     resource :waitlist_user, only: [:create]
     resources :referral_links, only: [:create]
     resource :email_notifications, only: [:create, :show]
-    get 'site_templates/:network_id', :to => 'site_templates#show'
     resources :users, only: [:show, :update, :destroy]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
-
+    get 'workspace_networks/:network_id', :to => 'networks#workspaceIndex'
+    get 'site_templates/:network_id', :to => 'site_templates#show'
     get 'userOpportunities', :to => 'opportunities#userIndex'
     get 'authorization', :to => 'users/sessions#authorize'
     get 'show', :to => 'users/sessions#show'

@@ -10,7 +10,7 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case RECEIVE_NETWORKS:
-      return merge({}, state, action.networks);
+      return merge({}, action.networks);
     case RECEIVE_NETWORK:
       return merge({}, state, {[action.network.id]: action.network });
     case REMOVE_NETWORK:

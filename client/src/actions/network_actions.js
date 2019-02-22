@@ -34,6 +34,18 @@ export const fetchNetworks = () => dispatch => (
     })
 );
 
+export const fetchWorkspaceNetworks = (workspaceId) => dispatch => (
+  NetworkApiUtil.fetchWorkspaceNetworks(workspaceId)
+    .then(handleErrors)
+    .then(data => dispatch(receiveNetworks(data.networks)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveNetworkErrors(errors))
+    })
+);
+
 export const fetchNetwork = (id) => dispatch => (
   NetworkApiUtil.fetchNetwork(id)
     .then(handleErrors)

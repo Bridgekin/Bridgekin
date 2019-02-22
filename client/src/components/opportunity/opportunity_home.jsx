@@ -48,7 +48,7 @@ import LinesEllipsis from 'react-lines-ellipsis';
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 import { fetchOpportunities } from '../../actions/opportunity_actions';
-import { fetchNetworks } from '../../actions/network_actions';
+import { fetchNetworks, fetchWorkspaceNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 import OpportunityChangeModal from './opportunity_change_modal';
 
@@ -66,13 +66,15 @@ const mapStateToProps = state => ({
   waitlistErrors: state.errors.waitlistUsers,
   opportunities: Object.values(state.entities.opportunities).reverse(),
   networks: state.entities.networks,
-  referral: state.entities.referral
+  referral: state.entities.referral,
+  siteTemplate: state.siteTemplate
 });
 
 const mapDispatchToProps = dispatch => ({
   registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user)),
   fetchOpportunities: (networkId) => dispatch(fetchOpportunities(networkId)),
   fetchNetworks: () => dispatch(fetchNetworks()),
+  fetchWorkspaceNetworks: (workspaceId) => dispatch(fetchWorkspaceNetworks(workspaceId)),
   createReferral: (referral) => dispatch(createReferral(referral))
 });
 
@@ -329,9 +331,9 @@ class OpportunityHome extends React.Component {
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handleOpportunityChangeModalOpen = this.handleOpportunityChangeModalOpen.bind(this);
   }
-
+  //
   componentDidMount(){
-    this.props.fetchNetworks()
+    this.props.fetchWorkspaceNetworks(this.props.siteTemplate.networkId)
     .then(() => {
       if(Object.values(this.props.networks).length > 0){
         let referralNetwork = Object.values(this.props.networks)[0].id;
@@ -343,6 +345,25 @@ class OpportunityHome extends React.Component {
           });
       }
     })
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps.siteTemplate !== this.props.siteTemplate){
+      this.props.fetchWorkspaceNetworks(nextProps.siteTemplate.networkId)
+      .then(() => {
+        if(Object.values(this.props.networks).length > 0){
+          let referralNetwork = Object.values(this.props.networks)[0].id;
+          this.props.fetchOpportunities(this.state.dropdownFocus)
+          .then(() => {
+            this.setState({
+              opportunitiesLoaded: true,
+              referralNetwork})
+            });
+        }
+      })
+    }
+
+    return true
   }
 
   // handleWaitlistChange(field){

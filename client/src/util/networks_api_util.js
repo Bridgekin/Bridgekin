@@ -8,6 +8,16 @@ export const fetchNetworks = () => (
   })
 )
 
+export const fetchWorkspaceNetworks = (workspaceId) => (
+  fetch(`${window.location.origin}/api/workspace_networks/${workspaceId}`, {
+    method: 'GET',
+    headers:{
+    	'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+  	}
+  })
+)
+
 export const fetchNetwork = id => (
   fetch(`${window.location.origin}/api/networks/${id}`, {
     method: 'GET',
