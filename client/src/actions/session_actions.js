@@ -1,5 +1,7 @@
 import * as SessionApiUtil from '../util/session_api_util';
 import {receiveUser} from './user_actions';
+import {receiveSiteTemplate} from './site_template_actions';
+import {receiveWorkspaces} from './workspace_actions';
 import {receiveSessionErrors, receiveUserErrors} from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
@@ -24,6 +26,8 @@ export const refSignup = (formUser, code) => dispatch => (
       localStorage.setItem('bridgekinToken', data.token);
       dispatch(receiveUser(data.user));
       dispatch(receiveCurrentUser(data.user));
+      dispatch(receiveSiteTemplate(data.siteTemplate));
+      dispatch(receiveWorkspaces(data.workspaces));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
@@ -40,6 +44,8 @@ export const login = formUser => dispatch => (
       localStorage.setItem('bridgekinToken', data.token);
       dispatch(receiveUser(data.user));
       dispatch(receiveCurrentUser(data.user));
+      dispatch(receiveSiteTemplate(data.siteTemplate));
+      dispatch(receiveWorkspaces(data.workspaces));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

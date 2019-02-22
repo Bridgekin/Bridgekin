@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_230354) do
+ActiveRecord::Schema.define(version: 2019_02_22_010919) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,6 +111,8 @@ ActiveRecord::Schema.define(version: 2019_02_20_230354) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "subtitle", default: ""
+    t.integer "parent_id"
+    t.integer "workspace_id"
   end
 
   create_table "opportunities", force: :cascade do |t|
@@ -162,6 +164,15 @@ ActiveRecord::Schema.define(version: 2019_02_20_230354) do
     t.index ["opportunity_id", "user_id"], name: "index_saved_opportunities_on_opportunity_id_and_user_id", unique: true
   end
 
+  create_table "site_templates", force: :cascade do |t|
+    t.string "name"
+    t.integer "network_id", null: false
+    t.boolean "test_feature", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["network_id"], name: "index_site_templates_on_network_id"
+  end
+
   create_table "user_networks", force: :cascade do |t|
     t.integer "network_id", null: false
     t.integer "member_id", null: false
@@ -204,6 +215,7 @@ ActiveRecord::Schema.define(version: 2019_02_20_230354) do
     t.datetime "locked_at"
     t.string "title", default: "", null: false
     t.string "company", default: "", null: false
+    t.integer "default_network_id"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

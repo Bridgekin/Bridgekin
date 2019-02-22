@@ -85,6 +85,39 @@ class User < ApplicationRecord
     self.save
   end
 
+  def get_template
+    networks = self.member_networks.where(parent_id: nil)
+    bridgekin_template = Network.find_by(title: 'Bridgekin').site_template
+
+    if networks.length == 0
+      return bridgekin_template
+    elsif self.default_network_id.nil?
+      return networks.last.site_template || bridgekin_template
+    else
+      return Network.find(self.default_network_id).site_template || bridgekin_template
+    end
+  end
+
+  def set_networks(network)
+    if network.title != 'Bridgekin'
+      UserNetwork.create(network_id: network.id, member_id: self.id)
+      self.default_network_id = network.id
+      self.save
+    end
+    #Create Bridgekin Connection
+    bridgekin = Network.find_by(title: 'Bridgekin')
+    UserNetwork.create(network_id: bridgekin.id, member_id: self.id)
+  end
+
+  def update_waitlist
+    waitlist_user = WaitlistUser.find_by(email: self.email)
+    if waitlist_user
+      waitlist_user[:status] = 'Full'
+      waitlist_user.save
+    end
+  end
+
+  #notifications
   def send_weekly_email
     seven_days_ago = DateTime.now - 7
     new_opportunities = Opportunity.joins(:opportunity_networks)

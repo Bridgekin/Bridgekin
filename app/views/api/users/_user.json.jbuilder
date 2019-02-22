@@ -1,5 +1,5 @@
 json.extract! user, :id, :fname, :lname,
 :confirmed_at, :is_admin, :title, :company, :email, :city,
-:state, :country, :last_sign_in_at
+:state, :country, :last_sign_in_at, :default_network_id
 
 json.profilePicUrl url_for(user.profile_pic) if user.profile_pic.attached?

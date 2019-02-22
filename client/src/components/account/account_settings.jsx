@@ -40,7 +40,8 @@ import { updateUser } from '../../actions/user_actions';
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   notification: state.entities.emailNotification,
-  userErrors: state.errors.users
+  userErrors: state.errors.users,
+  workspaces: state.workspaces
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -169,6 +170,7 @@ class AccountSetting extends React.Component {
       company: this.props.currentUser.company,
       city: this.props.currentUser.city,
       state: this.props.currentUser.state,
+      defaultNetworkId: this.props.currentUser.defaultNetworkId,
       country: countryList.getName(this.props.currentUser.country) || '',
       profilePicFile: null,
       previewUrl: null,
@@ -182,6 +184,7 @@ class AccountSetting extends React.Component {
     this.changePassword = this.changePassword.bind(this);
     this.changeEmail = this.changeEmail.bind(this);
     this.changeGeneralInformation = this.changeGeneralInformation.bind(this);
+    this.handleDefaultWorkspaceChange = this.handleDefaultWorkspaceChange.bind(this);
   }
 
   componentDidMount(){
@@ -201,6 +204,16 @@ class AccountSetting extends React.Component {
     .then(() => {
       this.setState({ notificationSetting });
     })
+  }
+
+  handleDefaultWorkspaceChange(e){
+    let workspaceId = e.target.value;
+    const formData = new FormData();
+    formData.append('user[defaultNetworkId]', workspaceId)
+    formData.append('user[id]', this.props.currentUser.id)
+
+    this.props.updateUser(formData)
+    .then(()=> this.setState({ modalOpen: true, defaultNetworkId: workspaceId}))
   }
 
   handleChangeFill(path){
@@ -341,11 +354,13 @@ class AccountSetting extends React.Component {
   //#######################
 
   getContent(){
-    const { classes, currentUser, width }= this.props;
+    const { classes, currentUser, width, workspaces }= this.props;
     const { settingState, modalOpen, previewUrl,
       imageModalOpen, profilePicFile, mobileImageCropPending } = this.state;
 
     const pictureUploaded = Boolean(previewUrl)
+
+    debugger
 
     let profilePicture = currentUser.profilePicUrl ? (
       <Avatar
@@ -737,6 +752,29 @@ class AccountSetting extends React.Component {
                   color="default" style={{ marginBottom: 15}}>
                   {"********"}
                 </Typography>
+
+                <Typography variant="h6" align='left'
+                  color="secondary" className={classes.fieldLabel}>
+                  Default Network
+                </Typography>
+                <Grid container justify="flex-start" alignItems="center"
+                  flexDirection='column'>
+                  <Select
+                    value={this.state.defaultNetworkId}
+                    onChange={this.handleDefaultWorkspaceChange}
+                    inputProps={{
+                      name: 'defaultNetworkId',
+                      id: 'defaultNetworkId-simple',
+                    }}
+                    renderValue={selected => workspaces[selected].title}
+                  >
+                    {Object.values(workspaces).map(workspace => (
+                      <MenuItem value={workspace.id}>
+                        {workspace.title}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
 
                 {false && <Typography variant="subtitle1" align='left'
                   color="secondary" style={{ marginTop: 15}}>

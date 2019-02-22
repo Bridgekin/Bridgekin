@@ -1,6 +1,9 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { AuthRoute, ProtectedRoute, AdminProtectedRoute } from './util/route_util';
+import { AuthRoute,
+  ProtectedRoute,
+  AdminProtectedRoute,
+  TemplateProtectedRoute } from './util/route_util';
 import './App.css';
 
 import HomeNav from './components/nav/home_nav';
@@ -19,6 +22,7 @@ import Login from './components/home/login_page';
 import PasswordReset from './components/home/password_reset';
 import PasswordUpdate from './components/home/password_update';
 // import ConnectionsHome from './components/wip';
+import TestFeature from './components/nav/test_feature';
 
 import UserAgreement from './components/terms/user_agreement';
 import PrivacyPolicy from './components/terms/privacy_policy';
@@ -42,6 +46,7 @@ class App extends React.Component {
           <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
           <ProtectedRoute path="/account" component={AccountMain} />
           <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
+          <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
           <AuthRoute path="/signup/:code" component={SignupPage} />
           <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
           <AuthRoute path="/login" component={Login}/>

@@ -15,10 +15,11 @@ Rails.application.routes.draw do
     resource :waitlist_user, only: [:create]
     resources :referral_links, only: [:create]
     resource :email_notifications, only: [:create, :show]
+    get 'site_templates/:network_id', :to => 'site_templates#show'
+    resources :users, only: [:show, :update, :destroy]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
-    resources :users, only: [:show, :update, :destroy]
     # resource :session, only: [:create, :destroy]
 
     get 'userOpportunities', :to => 'opportunities#userIndex'
