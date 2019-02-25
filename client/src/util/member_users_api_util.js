@@ -9,9 +9,8 @@ export const fetchMemberUsers = (networkId) => (
 )
 
 export const addMemberUser = (networkId, userId) => (
-  fetch(`${window.location.origin}/api/member_users?networkId=${networkId}`, {
+  fetch(`${window.location.origin}/api/member_users/${userId}?networkId=${networkId}`, {
     method: 'POST',
-    body: JSON.stringify({ userId }),
     headers:{
     	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
@@ -20,9 +19,8 @@ export const addMemberUser = (networkId, userId) => (
 )
 
 export const removeMemberUser = (networkId, userId) => (
-  fetch(`${window.location.origin}/api/member_users?networkId=${networkId}`, {
+  fetch(`${window.location.origin}/api/member_users/${userId}?networkId=${networkId}`, {
     method: 'DELETE',
-    body: JSON.stringify({ userId }),
     headers:{
     	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')

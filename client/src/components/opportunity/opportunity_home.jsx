@@ -61,6 +61,8 @@ import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
 import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
 import PersonIcon from '@material-ui/icons/PersonSharp';
 
+import FeedContainer from '../feed_container';
+
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
@@ -85,43 +87,43 @@ const styles = {
   root: {
     flexGrow: 1,
   },
-  grid:{
-    position: 'relative',
-    padding: "64px 0px 0px 0px",
-    // paddingTop: 64 + 34,
-    flexGrow: 1,
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    // backgroundColor: 'white',
-    minHeight: window.innerHeight
-  },
-  feedContainer:{
-    width: '100%',
-    margin: '0 auto',
-    [theme.breakpoints.up('md')]: {
-      position: 'relative',
-      width: 1040,
-      height: '100%'
-    },
-  },
-  mainColumn:{
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: 265,
-      // marginLeft: 15,
-      width: 500,
-      position: 'relative',
-      paddingLeft: 0,
-      paddingRight: 0,
-      display: 'inline-block'
-    },
-  },
-  sideColumn:{
-    paddingLeft: 0,
-    paddingRight: 0,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'inline-block'
-    }
-  },
+  // grid:{
+  //   position: 'relative',
+  //   padding: "64px 0px 0px 0px",
+  //   // paddingTop: 64 + 34,
+  //   flexGrow: 1,
+  //   backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+  //   // backgroundColor: 'white',
+  //   minHeight: window.innerHeight
+  // },
+  // feedContainer:{
+  //   width: '100%',
+  //   margin: '0 auto',
+  //   [theme.breakpoints.up('md')]: {
+  //     position: 'relative',
+  //     width: 1040,
+  //     height: '100%'
+  //   },
+  // },
+  // mainColumn:{
+  //   [theme.breakpoints.up('sm')]: {
+  //     marginLeft: 265,
+  //     // marginLeft: 15,
+  //     width: 500,
+  //     position: 'relative',
+  //     paddingLeft: 0,
+  //     paddingRight: 0,
+  //     display: 'inline-block'
+  //   },
+  // },
+  // sideColumn:{
+  //   paddingLeft: 0,
+  //   paddingRight: 0,
+  //   display: 'none',
+  //   [theme.breakpoints.up('sm')]: {
+  //     display: 'inline-block'
+  //   }
+  // },
   feedCard:{
     // height: 118,
     padding: "9px 8px 20px 8px",
@@ -772,21 +774,11 @@ class OpportunityHome extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
-        <Grid container justify='center' className={classes.grid}>
-          <div className={classes.feedContainer}>
-            <div className={classes.sideColumn}
-              style={{ position: 'fixed', top: 64 ,width: 250}}>
-              {column1}
-            </div>
-            <div className={classes.mainColumn}>
-              {feed}
-            </div>
-            <div className={classes.sideColumn}
-              style={{ position: 'fixed', top:64, marginLeft: 15, width: 250}}>
-              {filter}
-            </div>
-          </div>
-        </Grid>
+        <FeedContainer
+          column1={column1}
+          feed={feed}
+          column2={filter}
+          />
 
         <WaitlistModal
           open={waitlistOpen}

@@ -13,7 +13,7 @@ class Api::MemberUsersController < ApiController
 
   def create
     permission = UserNetwork.new(
-      network_id: @network.id, member_id: parmas[:user_id] )
+      network_id: @network.id, member_id: params[:id] )
 
     if permission.save
       render :show
@@ -23,7 +23,7 @@ class Api::MemberUsersController < ApiController
   end
 
   def destroy
-    permission = @network.user_networks.where(member_id: parmas[:user_id])
+    permission = @network.user_networks.where(member_id: params[:id])[0]
 
     if permission.destroy
       render json: ["User removed from network"]
@@ -39,6 +39,6 @@ class Api::MemberUsersController < ApiController
     end
 
     def set_user
-      @user = Network.find(params[:user_id])
+      @user = User.find(params[:id])
     end
 end
