@@ -38,3 +38,8 @@ server_wd.csr
 /docker
 docker-compose.yml
 heroku.yml
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity

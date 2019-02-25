@@ -225,7 +225,7 @@ class HomePage extends React.Component{
             <Grid item xs={10} >
               <Typography className={classes.homeHeader}
                 variant="h5" gutterBottom>
-                {"Bridgekin is changing the way people connect to the business opportunities within their network"}
+                {"Bridgekinzz is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
 

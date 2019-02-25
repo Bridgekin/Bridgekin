@@ -51,6 +51,10 @@ gem "pundit"
 
 gem 'pgbackups_s3'
 
+gem 'font_assets'
+
+gem 'webpacker', '~> 3.5'
+
 #Schedule cron jobs beyond heroku schedulers
 gem "simple_scheduler"
 

@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from './root';
-import configureStore from './store/store';
-import * as SessionApiUtil from './util/session_api_util';
-import * as WaitlistApiUtil from './util/waitlist_api_util';
-import './index.css';
+import Root from '../src/root';
+import configureStore from '../src/store/store';
+import * as SessionApiUtil from '../src/util/session_api_util';
+import * as WaitlistApiUtil from '../src/util/waitlist_api_util';
+import '../src/index.css';
 
-import { handleAuthErrors } from './actions/fetch_error_handler';
-import { getAuthUserId } from './util/session_api_util';
-import { receiveCurrentUser } from './actions/session_actions';
-import { receiveUser } from './actions/user_actions';
+import { handleAuthErrors } from '../src/actions/fetch_error_handler';
+import { getAuthUserId } from '../src/util/session_api_util';
+import { receiveCurrentUser } from '../src/actions/session_actions';
+import { receiveUser } from '../src/actions/user_actions';
 
 document.addEventListener("DOMContentLoaded", () => {
 
