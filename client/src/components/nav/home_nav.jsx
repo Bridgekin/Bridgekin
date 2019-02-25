@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, NavLink, withRouter } from 'react-router-dom';
 import withWidth from '@material-ui/core/withWidth';
 
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -308,15 +308,26 @@ class HomeNav extends React.Component {
         onClose={this.handleProfileMenuClose}
       >
         <MenuItem onClick={this.handleLinkClose('account')}>
-          My Account
+          <Typography variant="body1" align='left' color="textPrimary" >
+            My Account
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={this.handleLinkClose('managenetworks')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Manage Networks
+          </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
           <MenuItem onClick={this.handleLinkClose('admin')}>
-            Admin
+            <Typography variant="body1" align='left' color="textPrimary" >
+              Admin
+            </Typography>
           </MenuItem>
         }
         <MenuItem onClick={this.handleLinkClose('logout')}>
-          Logout
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Logout
+          </Typography>
         </MenuItem>
       </Menu>
     )
@@ -346,6 +357,11 @@ class HomeNav extends React.Component {
             My Trusted Network
           </Typography>
         </MenuItem>}
+        <MenuItem onClick={this.handleLinkClose('managenetworks')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Manage Networks
+          </Typography>
+        </MenuItem>
         <MenuItem onClick={this.handleLinkClose('account')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             My Account

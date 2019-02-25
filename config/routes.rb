@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     resources :referral_links, only: [:create]
     resource :email_notifications, only: [:create, :show]
     resources :users, only: [:show, :update, :destroy]
+    resources :network_admins, only: [:index]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end

@@ -23,6 +23,7 @@ import PasswordReset from './components/home/password_reset';
 import PasswordUpdate from './components/home/password_update';
 // import ConnectionsHome from './components/wip';
 import TestFeature from './components/nav/test_feature';
+import NetworkAdmin from './components/networks/network_admin';
 
 import UserAgreement from './components/terms/user_agreement';
 import PrivacyPolicy from './components/terms/privacy_policy';
@@ -45,6 +46,7 @@ class App extends React.Component {
           <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
           <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
           <ProtectedRoute path="/account" component={AccountMain} />
+          <ProtectedRoute path="/managenetworks" component={NetworkAdmin} />
           <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
           <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
           <AuthRoute path="/signup/:code" component={SignupPage} />

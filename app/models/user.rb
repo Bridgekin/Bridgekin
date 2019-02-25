@@ -51,7 +51,7 @@ class User < ApplicationRecord
     source: :network
 
   has_many :network_admins,
-    foreign_key: :network_id,
+    foreign_key: :admin_id,
     class_name: :NetworkAdmin
 
   has_many :managed_networks,
