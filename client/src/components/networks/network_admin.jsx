@@ -8,8 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { fetchManagedNetworks,
-  fetchManagedUsers, } from '../../actions/network_admin_actions';
+import { fetchManagedNetworks } from '../../actions/network_admin_actions';
+import { fetchMemberUsers,
+  addMemberUser, removeMemberUser} from '../../actions/member_users_actions';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -17,12 +18,14 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
-  managedNetworks: state.entities.managedNetworks,
+  managedNetworks: Object.values(state.entities.managedNetworks),
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchManagedNetworks: () => dispatch(fetchManagedNetworks()),
-  fetchManagedUsers: () => dispatch(fetchManagedUsers())
+  fetchMemberUsers: (networkId) => dispatch(fetchMemberUsers(networkId)),
+  addMemberUser: (networkId, userId) => dispatch(addMemberUser(networkId, userId)),
+  removeMemberUser: (networkId, userId) => dispatch(removeMemberUser(networkId, userId))
 });
 
 const styles = theme => ({
@@ -48,7 +51,10 @@ class NetworkAdmin extends React.Component {
 
   componentDidMount(){
     this.props.fetchManagedNetworks()
-    // .thn(() => )
+    .then(() => {
+      let firstNetwork = this.props.managedNetworks[0]
+      this.props.fetchMemberUsers(firstNetwork.id)
+    })
     .then(() => this.setState({ loaded: true }))
   }
 

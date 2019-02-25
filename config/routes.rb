@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     resource :email_notifications, only: [:create, :show]
     resources :users, only: [:show, :update, :destroy]
     resources :network_admins, only: [:index]
+    resource :member_users, only: [:index, :show, :create, :update, :destroy]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
