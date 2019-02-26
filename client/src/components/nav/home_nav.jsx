@@ -20,6 +20,12 @@ import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuList from '@material-ui/core/MenuList';
+
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -196,6 +202,7 @@ class HomeNav extends React.Component {
     this.handleLogoMenuClick = this.handleLogoMenuClick.bind(this);
     this.handleLogoMenuChangeTemplate = this.handleLogoMenuChangeTemplate.bind(this);
     this.redirectToLogin = this.redirectToLogin.bind(this);
+    this.handleClickAwayClose = this.handleClickAwayClose.bind(this);
   }
 
   handleSubmit(e){
@@ -268,6 +275,10 @@ class HomeNav extends React.Component {
         this.props.history.push('/findandconnect')
       }
     }
+  }
+
+  handleClickAwayClose(e) {
+    this.setState({ logoAnchorEl: null });
   }
 
   handleLinkClose = (field) => {
@@ -558,21 +569,39 @@ class HomeNav extends React.Component {
             style={{ padding: 3}}>
             <KeyboardArrowDownIcon />
           </IconButton>}
-        <Menu
-          anchorEl={logoAnchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={logoMenuOpen}
-          onClose={this.handleLogoMenuClick}
-        >
-          {workspaces.map(workspace => (
-            <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}>
-              <Typography variant="body1" align='left' color="textPrimary" >
-                {workspace.title}
-              </Typography>
-            </MenuItem>
-          ))}
-        </Menu>
+
+        <Popper open={logoMenuOpen} anchorEl={logoAnchorEl}
+          transition disablePortal
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}>
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              id="menu-list-grow"
+              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={this.handleClickAwayClose}>
+                  <MenuList>
+                    {workspaces.map(workspace => (
+                      <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}>
+                        <Typography variant="body1" align='left' color="textPrimary" >
+                          {workspace.title}
+                        </Typography>
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
 
       </Grid>
     )
