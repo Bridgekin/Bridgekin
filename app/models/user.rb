@@ -117,6 +117,11 @@ class User < ApplicationRecord
     end
   end
 
+  def decrement_invite_count
+    self.invites_remaining -= 1
+    self.save
+  end
+
   #notifications
   def send_weekly_email
     seven_days_ago = DateTime.now - 7

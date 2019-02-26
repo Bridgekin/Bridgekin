@@ -1,6 +1,7 @@
-ActiveAdmin.register Network do
-  permit_params :title, :subtitle, :parent_id, :workspace_id,
+ActiveAdmin.register SiteTemplate do
+  permit_params :name, :network_id, :test_feature,
   :created_at, :updated_at
+
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #

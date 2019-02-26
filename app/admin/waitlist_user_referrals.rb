@@ -1,5 +1,5 @@
-ActiveAdmin.register Network do
-  permit_params :title, :subtitle, :parent_id, :workspace_id,
+ActiveAdmin.register WaitlistUserReferral do
+  permit_params :waitlist_user_id, :from_referral_id,
   :created_at, :updated_at
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

@@ -1,7 +1,7 @@
 ActiveAdmin.register User do
   permit_params :email, :phone, :city, :state, :country, :is_admin,
-    :membership_type, :fname, :lname, :title, :company, :created_at,
-    :updated_at
+    :membership_type, :fname, :lname, :title, :company, :default_network_id,
+    :invites_remaining, :created_at, :updated_at
 
   index do
     id_column
@@ -16,6 +16,8 @@ ActiveAdmin.register User do
     column :state
     column :country
     column :phone
+    column :default_network_id
+    column :invites_remaining
     column :created_at
     column :updated_at
     actions
@@ -34,6 +36,8 @@ ActiveAdmin.register User do
       row :state
       row :country
       row :phone
+      row :default_network_id
+      row :invites_remaining
       row :created_at
       row :updated_at
     end
@@ -54,6 +58,8 @@ ActiveAdmin.register User do
       f.input :state
       f.input :country, :as => :string
       f.input :phone
+      f.input :default_network_id
+      f.input :invites_remaining
       f.input :created_at
       f.input :updated_at
     end

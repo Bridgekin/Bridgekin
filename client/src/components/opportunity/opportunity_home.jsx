@@ -46,7 +46,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import LinesEllipsis from 'react-lines-ellipsis';
 
 //Imported Actions
-import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
+import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
 import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchNetworks, fetchWorkspaceNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
@@ -73,7 +73,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user)),
+  registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
   fetchOpportunities: (networkId) => dispatch(fetchOpportunities(networkId)),
   fetchNetworks: () => dispatch(fetchNetworks()),
   fetchWorkspaceNetworks: (workspaceId) => dispatch(fetchWorkspaceNetworks(workspaceId)),
@@ -391,7 +391,7 @@ class OpportunityHome extends React.Component {
     if (!this.state.loading) {
       this.setState({ success: false, loading: true },
         () => {
-          this.props.registerWaitlistUser(user)
+          this.props.registerWaitlistFromReferral(user)
             .then(res => {
               this.setState({
                 loading: false,

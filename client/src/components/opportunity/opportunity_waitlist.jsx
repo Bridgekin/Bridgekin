@@ -52,6 +52,9 @@ const styles = theme => ({
   fieldLabel:{
     fontSize: 14,
     fontWeight: 600
+  },
+  inviteCounter:{
+    fontSize: 12
   }
 });
 
@@ -88,7 +91,7 @@ class OpportunityWaitlist extends React.Component{
   }
 
   render(){
-    const { loading, classes } = this.props;
+    const { loading, classes, currentUser } = this.props;
 
     return(
       <Grid container className={classes.root}
@@ -132,11 +135,20 @@ class OpportunityWaitlist extends React.Component{
           <Button variant="contained" color='secondary'
             className={classes.refButton}
             onClick={this.handleSubmit}
-            disabled={loading}>
+            disabled={loading || currentUser.invitesRemaining === 0}>
             Invite Now
             {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
           </Button>
+        </Grid>
+        <Grid item xs={12} container justify='flex-end'>
+          <Typography align='Right' color='textSecondary' variant='body1'
+            className={classes.inviteCounter}>
+            {currentUser.invitesRemaining > 0 ?
+              `Remaining: ${currentUser.invitesRemaining}` :
+              `You're currently out of invites!`
+            }
+          </Typography>
         </Grid>
       </Grid>
     )

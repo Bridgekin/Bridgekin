@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    post 'waitlist_user/create_with_referral', :to => 'waitlist_users#create_with_referral'
     post 'member_users/:id/referral/:referral_code', :to => 'member_users#add_by_referral'
     get 'workspace_networks/:network_id', :to => 'networks#workspaceIndex'
     get 'site_templates/:network_id', :to => 'site_templates#show'
