@@ -303,9 +303,6 @@ class HomeNav extends React.Component {
     const { auth, anchorEl, mobileMoreAnchorEl,
     logoAnchorEl } = this.state;
     // const open = Boolean(anchorEl);
-
-    debugger
-
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logoMenuOpen = Boolean(logoAnchorEl);

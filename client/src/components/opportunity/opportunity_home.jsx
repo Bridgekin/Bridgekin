@@ -249,22 +249,22 @@ const styles = {
     fontSize: 12
   },
   filterMobile:{
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    marginTop: 10,
-    paddingTop: 9,
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    marginTop: -9,
+    // paddingTop: 9,
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
   },
   filterMobileCard:{
     // marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
-    width: '100%',
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    [theme.breakpoints.up('sm')]: {
-      borderRadius: 5,
-      border: `1px solid ${theme.palette.lightGrey}`,
-    },
+    // backgroundColor: `${theme.palette.white}`,
+    // width: '100%',
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    // [theme.breakpoints.up('sm')]: {
+    //   borderRadius: 5,
+    //   border: `1px solid ${theme.palette.lightGrey}`,
+    // },
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
@@ -738,8 +738,12 @@ class OpportunityHome extends React.Component {
                 {`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`}
               </Button>
             </Grid>
-            {filterMobile}
           </CardActionArea>
+
+          <Grid container justify='flex-end'
+            className={classes.filterMobileCard}>
+            {filterMobile}
+          </Grid>
 
           {(opportunitiesLoaded) ? opportunityCards : loader}
 
