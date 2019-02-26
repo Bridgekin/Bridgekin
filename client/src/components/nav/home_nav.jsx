@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, NavLink, withRouter } from 'react-router-dom';
 import withWidth from '@material-ui/core/withWidth';
 
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -23,8 +23,10 @@ import InputBase from '@material-ui/core/InputBase';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
-import logo from '../../static/Bridgekin_Logo.png';
+// import logo from '../../static/Bridgekin_Logo.png';
+import logo from '../../static/castle.jpg';
 import './home_nav.css';
 import LoginModal from './login_modal';
 
@@ -32,12 +34,16 @@ import { login, logout } from '../../actions/session_actions';
 import { getAuthUserId } from '../../util/session_api_util';
 import { receiveCurrentUser } from '../../actions/session_actions';
 import { receiveUser } from '../../actions/user_actions';
+import { fetchSiteTemplate } from '../../actions/site_template_actions';
+import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   session: state.session.id,
-  sessionErrors: state.errors.login
+  sessionErrors: state.errors.login,
+  siteTemplate: state.siteTemplate,
+  workspaces: Object.values(state.workspaces)
   // homes: Object.values(state.entities.homes)
 });
 
@@ -45,7 +51,9 @@ const mapDispatchToProps = dispatch => ({
   login: (user) => dispatch(login(user)),
   logout: () => dispatch(logout()),
   receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
-  receiveUser: (user) => dispatch(receiveUser(user))
+  receiveUser: (user) => dispatch(receiveUser(user)),
+  fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
+  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
 });
 
 const styles = {
@@ -55,24 +63,9 @@ const styles = {
   grow: {
     flexGrow: 1,
   },
-  logoLinkDesktop: {
-    display: 'none',
+  logoLink: {
     [theme.breakpoints.up('sm')]: {
-      display: 'flex',
-    },
-    marginLeft: 25,
-    '&:hover': {
-      backgroundColor: '#fff'
-    },
-    '&:click':{
-      backgroundColor: '#fff'
-    },
-    padding: "12px 0px"
-  },
-  logoLinkMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
+      marginLeft: 25,
     },
     '&:hover': {
       backgroundColor: '#fff'
@@ -83,7 +76,10 @@ const styles = {
     padding: "12px 0px"
   },
   logo: {
-    height: 26
+    height: 26,
+    maxWidth: 228,
+    width: '100%',
+    objectFit: 'cover'
   },
   nav: {
     backgroundColor: 'white',
@@ -188,7 +184,8 @@ class HomeNav extends React.Component {
     this.state = {
       email: '',
       password: '',
-      anchorEl: null
+      anchorEl: null,
+      logoAnchorEl: null
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -196,17 +193,37 @@ class HomeNav extends React.Component {
     this.handleProfileMenuClose = this.handleProfileMenuClose.bind(this);
     this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
     this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
+    this.handleLogoMenuClick = this.handleLogoMenuClick.bind(this);
+    this.handleLogoMenuChangeTemplate = this.handleLogoMenuChangeTemplate.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
   }
 
   handleSubmit(e){
     e.preventDefault();
-
+    let path = window.location.pathname.split('/');
     let credentials = {
       email: this.state.email,
       password: this.state.password
     };
 
     this.props.login(credentials)
+    .then((user) => {
+      if(path.includes('signup') && user){
+        let referralCode = path.pop();
+        this.props.addUserByReferral(referralCode, user.id)
+      }
+    })
+  }
+
+  redirectToLogin(){
+    let path = window.location.pathname.split('/');
+
+    if(path.includes('signup')){
+      let referralCode = path.pop();
+      this.props.history.push(`/login/${referralCode}`)
+    } else {
+      this.props.history.push(`/login`)
+    }
   }
 
   handleChange(field){
@@ -231,6 +248,18 @@ class HomeNav extends React.Component {
   handleMobileMenuClose = () => {
     this.setState({ mobileMoreAnchorEl: null });
   };
+
+  handleLogoMenuClick(e){
+    const {logoAnchorEl} = this.state;
+    this.setState({ logoAnchorEl: logoAnchorEl ? null : e.currentTarget });
+  }
+
+  handleLogoMenuChangeTemplate(network_id){
+    return e => {
+      this.props.fetchSiteTemplate(network_id)
+      .then(() => this.setState({ logoAnchorEl: null}))
+    }
+  }
 
   handleNavButtonClick = (field) => {
     return e => {
@@ -268,13 +297,15 @@ class HomeNav extends React.Component {
   };
 
   render(){
-    let { classes, currentUser, sessionErrors, width } = this.props;
+    let { classes, currentUser, sessionErrors, width,
+      siteTemplate, workspaces} = this.props;
 
-    const { auth, anchorEl, mobileMoreAnchorEl } = this.state;
+    const { auth, anchorEl, mobileMoreAnchorEl,
+    logoAnchorEl } = this.state;
     // const open = Boolean(anchorEl);
-
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const logoMenuOpen = Boolean(logoAnchorEl);
 
     let pathName = this.props.location.pathname.split('/').pop();
 
@@ -296,15 +327,27 @@ class HomeNav extends React.Component {
         onClose={this.handleProfileMenuClose}
       >
         <MenuItem onClick={this.handleLinkClose('account')}>
-          My Account
+          <Typography variant="body1" align='left' color="textPrimary" >
+            My Account
+          </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
+        <MenuItem onClick={this.handleLinkClose('managenetworks')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Manage Networks
+          </Typography>
+        </MenuItem>}
+        {currentUser && currentUser.isAdmin &&
           <MenuItem onClick={this.handleLinkClose('admin')}>
-            Admin
+            <Typography variant="body1" align='left' color="textPrimary" >
+              Admin
+            </Typography>
           </MenuItem>
         }
         <MenuItem onClick={this.handleLinkClose('logout')}>
-          Logout
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Logout
+          </Typography>
         </MenuItem>
       </Menu>
     )
@@ -317,6 +360,12 @@ class HomeNav extends React.Component {
         open={isMobileMenuOpen}
         onClose={this.handleMobileMenuClose}
       >
+        {siteTemplate.testFeature &&
+        <MenuItem onClick={this.handleLinkClose('testfeature')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Test Feature
+          </Typography>
+        </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('findandconnect')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             Find & Connect
@@ -326,6 +375,12 @@ class HomeNav extends React.Component {
         <MenuItem onClick={this.handleLinkClose('mynetwork')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             My Trusted Network
+          </Typography>
+        </MenuItem>}
+        {currentUser && currentUser.isAdmin &&
+        <MenuItem onClick={this.handleLinkClose('managenetworks')}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            Manage Networks
           </Typography>
         </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('account')}>
@@ -403,7 +458,7 @@ class HomeNav extends React.Component {
 
         <div className={classes.sectionMobile}>
           <Button variant="contained" color="secondary"
-            onClick={() => this.props.history.push('/login')}
+            onClick={this.redirectToLogin}
             disableRipple>
             Login
           </Button>
@@ -416,6 +471,15 @@ class HomeNav extends React.Component {
         container justify='flex-end' alignItems='center'>
 
         <div className={classes.sectionDesktop}>
+          {siteTemplate.testFeature &&
+            <Button color='secondary'
+              onClick={this.handleLinkClose('testfeature')}
+              style={{ marginRight: 10}}>
+              <Typography variant="h4" align='left' color="textPrimary"
+                style={(pathName === 'testfeature') ? { fontWeight: 600} : {}}>
+                Test Feature
+              </Typography>
+            </Button>}
           <Button color='secondary'
             onClick={this.handleLinkClose('findandconnect')}>
             <Typography variant="h4" align='left' color="textPrimary"
@@ -478,6 +542,41 @@ class HomeNav extends React.Component {
       </Grid>
     ) : <div style={{ flexGrow: 1 }} />
 
+    let logoChunk = (
+      <Grid item xs={9} sm={6} md={4} lg={4}>
+        <IconButton aria-label="logo-link"
+          className={classes.logoLink}
+          onClick={() => this.props.history.push('/')}>
+          <img alt='logo' className={classes.logo}
+            src={siteTemplate.navLogo || logo} />
+        </IconButton>
+
+        {workspaces.length > 1 &&
+          <IconButton
+            aria-haspopup="true"
+            onClick={this.handleLogoMenuClick}
+            style={{ padding: 3}}>
+            <KeyboardArrowDownIcon />
+          </IconButton>}
+        <Menu
+          anchorEl={logoAnchorEl}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={logoMenuOpen}
+          onClose={this.handleLogoMenuClick}
+        >
+          {workspaces.map(workspace => (
+            <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}>
+              <Typography variant="body1" align='left' color="textPrimary" >
+                {workspace.title}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+
+      </Grid>
+    )
+
     // <Link to='/' className={classes.logoLink}>
     //   <img alt='logo' className={classes.logo} src={logo} />
     // </Link>
@@ -487,14 +586,7 @@ class HomeNav extends React.Component {
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
-              <Grid item xs={9} sm={6} md={4} lg={4}>
-                <IconButton aria-label="logo-link"
-                  className={width === 'xs' ? classes.logoLinkMobile : classes.logoLinkDesktop}
-                  onClick={() => this.props.history.push('/')}>
-                  <img alt='logo' className={classes.logo} src={logo} />
-                </IconButton>
-              </Grid>
-
+              {logoChunk}
               {searchBar}
               {navMenu}
             </Grid>

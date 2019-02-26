@@ -44,6 +44,7 @@ class Api::UsersController < ApiController
       user = params.require(:user).permit(:email, :fname, :lname,
         :phone, :city, :state, :country, :password,
         :membership_type, :password_confirmation,
-        :password_digest, :title, :company, :profile_pic)
+        :password_digest, :title, :company, :profile_pic,
+        :default_network_id)
     end
 end

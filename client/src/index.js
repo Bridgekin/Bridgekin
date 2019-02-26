@@ -11,19 +11,28 @@ import { getAuthUserId } from './util/session_api_util';
 import { receiveCurrentUser } from './actions/session_actions';
 import { receiveUser } from './actions/user_actions';
 
+import BridgekinLogo from './static/Bridgekin_Logo.png';
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const root = document.getElementById('root');
-  let preloadedState = undefined;
+  let preloadedState = {
+    siteTemplate: {
+      navLogo: BridgekinLogo,
+      network: null
+    }
+  };
   let token = localStorage.getItem('bridgekinToken');
 
   if (token){
     getAuthUserId(token)
     .then(handleAuthErrors)
-    .then( ({user}) => {
+    .then( ({user, token, siteTemplate, workspaces}) => {
       let preloadedState = {
         users: { [user.id]: user},
-        session: { id: user.id}
+        session: { id: user.id},
+        siteTemplate,
+        workspaces
       };
       let store = configureStore(preloadedState);
       console.log('Rendering site');
@@ -45,4 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.getAuthUserId = SessionApiUtil.getAuthUserId;
 
   window.joinWaitlist = WaitlistApiUtil.joinWaitlist;
+
+  // window.getTemplate = SiteTemplateApiUtil.fetchSiteTemplate;
 });

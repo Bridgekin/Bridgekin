@@ -4,11 +4,19 @@ class Api::NetworksController < ApplicationController
   before_action :set_network, only: [:show, :update, :destroy]
   before_action :authenticate_user
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: [:index, :workspaceIndex]
   after_action :verify_policy_scoped, only: :index
 
   def index
     @networks = policy_scope(Network)
+    render :index
+  end
+
+  def workspaceIndex
+    @networks = policy_scope(Network)
+      .where(workspace_id: params[:network_id])
+      .or(policy_scope(Network).where(id: params[:network_id]))
+
     render :index
   end
 

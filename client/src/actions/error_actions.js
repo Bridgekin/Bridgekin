@@ -21,6 +21,13 @@ export const CLEAR_REFERRAL_ERRORS = 'CLEAR_REFERRAL_ERRORS';
 
 export const RECEIVE_EMAIL_NOTIFICATION_ERRORS = 'RECEIVE_EMAIL_NOTIFICATION_ERRORS';
 export const CLEAR_EMAIL_NOTIFICATION_ERRORS = 'CLEAR_EMAIL_NOTIFICATION_ERRORS';
+export const RECEIVE_SITE_TEMPLATE_ERRORS = 'RECEIVE_SITE_TEMPLATE_ERRORS';
+export const CLEAR_SITE_TEMPLATE_ERRORS = 'CLEAR_SITE_TEMPLATE_ERRORS';
+
+export const RECEIVE_MANAGED_NETWORK_ERRORS = 'RECEIVE_MANAGED_NETWORK_ERRORS';
+export const CLEAR_MANAGED_NETWORK_ERRORS = 'CLEAR_MANAGED_NETWORK_ERRORS';
+export const RECEIVE_MEMBER_USER_ERRORS = 'RECEIVE_MEMBER_USER_ERRORS';
+export const CLEAR_MEMBER_USER_ERRORS = 'CLEAR_MEMBER_USER_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -110,4 +117,31 @@ export const receiveNotificationErrors = errors => ({
 
 export const clearNotificationErrors = () => ({
   type: CLEAR_EMAIL_NOTIFICATION_ERRORS,
+});
+
+export const receiveSiteTemplateErrors = errors => ({
+  type: RECEIVE_SITE_TEMPLATE_ERRORS,
+  errors
+});
+
+export const clearSiteTemplateErrors = () => ({
+  type: CLEAR_SITE_TEMPLATE_ERRORS,
+});
+
+export const receiveManagedNetworkErrors = errors => ({
+  type: RECEIVE_MANAGED_NETWORK_ERRORS,
+  errors
+});
+
+export const clearManagedNetworkErrors = () => ({
+  type: CLEAR_MANAGED_NETWORK_ERRORS,
+});
+
+export const receiveMemberUserErrors = errors => ({
+  type: RECEIVE_MEMBER_USER_ERRORS,
+  errors
+});
+
+export const clearMemberUserErrors = () => ({
+  type: CLEAR_MEMBER_USER_ERRORS,
 });

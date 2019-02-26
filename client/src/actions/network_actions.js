@@ -4,9 +4,15 @@ import { receiveNetworkErrors } from './error_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
+export const RESET_NETWORKS = 'RESET_NETWORKS';
 export const RECEIVE_NETWORKS = 'RECEIVE_NETWORKS';
 export const RECEIVE_NETWORK = 'RECEIVE_NETWORK';
 export const REMOVE_NETWORK = "REMOVE_NETWORK";
+
+export const resetNetworks = networks => ({
+  type: RESET_NETWORKS,
+  networks,
+});
 
 export const receiveNetworks = networks => ({
   type: RECEIVE_NETWORKS,
@@ -24,6 +30,18 @@ export const removeNetwork = () => ({
 
 export const fetchNetworks = () => dispatch => (
   NetworkApiUtil.fetchNetworks()
+    .then(handleErrors)
+    .then(data => dispatch(receiveNetworks(data.networks)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveNetworkErrors(errors))
+    })
+);
+
+export const fetchWorkspaceNetworks = (workspaceId) => dispatch => (
+  NetworkApiUtil.fetchWorkspaceNetworks(workspaceId)
     .then(handleErrors)
     .then(data => dispatch(receiveNetworks(data.networks)))
     .catch(errors => {

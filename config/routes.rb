@@ -15,12 +15,16 @@ Rails.application.routes.draw do
     resource :waitlist_user, only: [:create]
     resources :referral_links, only: [:create]
     resource :email_notifications, only: [:create, :show]
+    resources :users, only: [:show, :update, :destroy]
+    resources :network_admins, only: [:index]
+    resources :member_users, only: [:index, :show, :create, :update, :destroy]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
-    resources :users, only: [:show, :update, :destroy]
     # resource :session, only: [:create, :destroy]
-
+    post 'member_users/:id/referral/:referral_code', :to => 'member_users#add_by_referral'
+    get 'workspace_networks/:network_id', :to => 'networks#workspaceIndex'
+    get 'site_templates/:network_id', :to => 'site_templates#show'
     get 'userOpportunities', :to => 'opportunities#userIndex'
     get 'authorization', :to => 'users/sessions#authorize'
     get 'show', :to => 'users/sessions#show'

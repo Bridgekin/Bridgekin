@@ -48,7 +48,7 @@ import LinesEllipsis from 'react-lines-ellipsis';
 //Imported Actions
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
 import { fetchOpportunities } from '../../actions/opportunity_actions';
-import { fetchNetworks } from '../../actions/network_actions';
+import { fetchNetworks, fetchWorkspaceNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 import OpportunityChangeModal from './opportunity_change_modal';
 
@@ -61,18 +61,22 @@ import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
 import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
 import PersonIcon from '@material-ui/icons/PersonSharp';
 
+import FeedContainer from '../feed_container';
+
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
   opportunities: Object.values(state.entities.opportunities).reverse(),
   networks: state.entities.networks,
-  referral: state.entities.referral
+  referral: state.entities.referral,
+  siteTemplate: state.siteTemplate
 });
 
 const mapDispatchToProps = dispatch => ({
   registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user)),
   fetchOpportunities: (networkId) => dispatch(fetchOpportunities(networkId)),
   fetchNetworks: () => dispatch(fetchNetworks()),
+  fetchWorkspaceNetworks: (workspaceId) => dispatch(fetchWorkspaceNetworks(workspaceId)),
   createReferral: (referral) => dispatch(createReferral(referral))
 });
 
@@ -83,43 +87,43 @@ const styles = {
   root: {
     flexGrow: 1,
   },
-  grid:{
-    position: 'relative',
-    padding: "64px 0px 0px 0px",
-    // paddingTop: 64 + 34,
-    flexGrow: 1,
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-    // backgroundColor: 'white',
-    minHeight: window.innerHeight
-  },
-  feedContainer:{
-    width: '100%',
-    margin: '0 auto',
-    [theme.breakpoints.up('md')]: {
-      position: 'relative',
-      width: 1040,
-      height: '100%'
-    },
-  },
-  mainColumn:{
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: 265,
-      // marginLeft: 15,
-      width: 500,
-      position: 'relative',
-      paddingLeft: 0,
-      paddingRight: 0,
-      display: 'inline-block'
-    },
-  },
-  sideColumn:{
-    paddingLeft: 0,
-    paddingRight: 0,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'inline-block'
-    }
-  },
+  // grid:{
+  //   position: 'relative',
+  //   padding: "64px 0px 0px 0px",
+  //   // paddingTop: 64 + 34,
+  //   flexGrow: 1,
+  //   backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+  //   // backgroundColor: 'white',
+  //   minHeight: window.innerHeight
+  // },
+  // feedContainer:{
+  //   width: '100%',
+  //   margin: '0 auto',
+  //   [theme.breakpoints.up('md')]: {
+  //     position: 'relative',
+  //     width: 1040,
+  //     height: '100%'
+  //   },
+  // },
+  // mainColumn:{
+  //   [theme.breakpoints.up('sm')]: {
+  //     marginLeft: 265,
+  //     // marginLeft: 15,
+  //     width: 500,
+  //     position: 'relative',
+  //     paddingLeft: 0,
+  //     paddingRight: 0,
+  //     display: 'inline-block'
+  //   },
+  // },
+  // sideColumn:{
+  //   paddingLeft: 0,
+  //   paddingRight: 0,
+  //   display: 'none',
+  //   [theme.breakpoints.up('sm')]: {
+  //     display: 'inline-block'
+  //   }
+  // },
   feedCard:{
     // height: 118,
     padding: "9px 8px 20px 8px",
@@ -245,22 +249,22 @@ const styles = {
     fontSize: 12
   },
   filterMobile:{
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    marginTop: 10,
-    paddingTop: 9,
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    marginTop: -9,
+    // paddingTop: 9,
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
   },
   filterMobileCard:{
     // marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
-    width: '100%',
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    [theme.breakpoints.up('sm')]: {
-      borderRadius: 5,
-      border: `1px solid ${theme.palette.lightGrey}`,
-    },
+    // backgroundColor: `${theme.palette.white}`,
+    // width: '100%',
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    // [theme.breakpoints.up('sm')]: {
+    //   borderRadius: 5,
+    //   border: `1px solid ${theme.palette.lightGrey}`,
+    // },
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
@@ -329,9 +333,9 @@ class OpportunityHome extends React.Component {
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.handleOpportunityChangeModalOpen = this.handleOpportunityChangeModalOpen.bind(this);
   }
-
+  //
   componentDidMount(){
-    this.props.fetchNetworks()
+    this.props.fetchWorkspaceNetworks(this.props.siteTemplate.networkId)
     .then(() => {
       if(Object.values(this.props.networks).length > 0){
         let referralNetwork = Object.values(this.props.networks)[0].id;
@@ -343,6 +347,25 @@ class OpportunityHome extends React.Component {
           });
       }
     })
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps.siteTemplate !== this.props.siteTemplate){
+      this.props.fetchWorkspaceNetworks(nextProps.siteTemplate.networkId)
+      .then(() => {
+        if(Object.values(this.props.networks).length > 0){
+          let referralNetwork = Object.values(this.props.networks)[0].id;
+          this.props.fetchOpportunities(this.state.dropdownFocus)
+          .then(() => {
+            this.setState({
+              opportunitiesLoaded: true,
+              referralNetwork})
+            });
+        }
+      })
+    }
+
+    return true
   }
 
   // handleWaitlistChange(field){
@@ -715,8 +738,12 @@ class OpportunityHome extends React.Component {
                 {`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`}
               </Button>
             </Grid>
-            {filterMobile}
           </CardActionArea>
+
+          <Grid container justify='flex-end'
+            className={classes.filterMobileCard}>
+            {filterMobile}
+          </Grid>
 
           {(opportunitiesLoaded) ? opportunityCards : loader}
 
@@ -751,21 +778,11 @@ class OpportunityHome extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
-        <Grid container justify='center' className={classes.grid}>
-          <div className={classes.feedContainer}>
-            <div className={classes.sideColumn}
-              style={{ position: 'fixed', top: 64 ,width: 250}}>
-              {column1}
-            </div>
-            <div className={classes.mainColumn}>
-              {feed}
-            </div>
-            <div className={classes.sideColumn}
-              style={{ position: 'fixed', top:64, marginLeft: 15, width: 250}}>
-              {filter}
-            </div>
-          </div>
-        </Grid>
+        <FeedContainer
+          column1={column1}
+          feed={feed}
+          column2={filter}
+          />
 
         <WaitlistModal
           open={waitlistOpen}

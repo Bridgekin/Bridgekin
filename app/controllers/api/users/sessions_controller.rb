@@ -12,6 +12,7 @@ class Api::Users::SessionsController < ApiController
       @token = get_login_token!(@user)
 
       @user.implement_trackable
+      @site_template = @user.get_template
       render :show
     # elsif @user && !@user.confirmed?
     #   render json: ['You need to confirm your account before logging in.'], status: 404
@@ -22,11 +23,13 @@ class Api::Users::SessionsController < ApiController
 
   def show
     @token = get_login_token!(@user)
+    @site_template = @user.get_template
     render :show
   end
 
   def authorize
     @token = get_login_token!(@user)
+    @site_template = @user.get_template
     render :show
   end
 

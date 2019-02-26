@@ -1,4 +1,5 @@
 import {
+  // RESET_NETWORKS,
   RECEIVE_NETWORKS,
   RECEIVE_NETWORK,
   REMOVE_NETWORK} from '../../actions/network_actions';
@@ -9,8 +10,10 @@ export default(state = {}, action) => {
   let newState = merge({}, state);
 
   switch(action.type){
+    // case RESET_NETWORKS:
+    //   return merge({}, action.networks);
     case RECEIVE_NETWORKS:
-      return merge({}, state, action.networks);
+      return merge({}, action.networks);
     case RECEIVE_NETWORK:
       return merge({}, state, {[action.network.id]: action.network });
     case REMOVE_NETWORK:

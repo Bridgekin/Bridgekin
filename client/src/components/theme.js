@@ -59,6 +59,13 @@ let theme = createMuiTheme({
         fontWeight: 600
       },
     },
+    MuiListItem: { // Name of the component ⚛️ / style sheet
+      root: {
+        "&$selected": {
+          backgroundColor: "#E2E2E2"
+        }
+      }
+    },
     MuiTypography:{
       h1:{
         fontSize: 40,

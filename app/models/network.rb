@@ -36,4 +36,8 @@ class Network < ApplicationRecord
   has_many :finalized_opportunities,
     foreign_key: :network_id,
     class_name: :FinalizedOpportunity
+
+  has_one :site_template,
+    foreign_key: :network_id,
+    class_name: :SiteTemplate
 end

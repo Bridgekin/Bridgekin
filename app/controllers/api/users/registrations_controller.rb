@@ -15,11 +15,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
     if @referralLink && @referralLink[:status] == 'Active' && @user.save
       #Check for a single use code
-      if @referralLink[:usage_type] == "Single"
-        @referralLink[:status] = "Consumed"
-        @referralLink[:recipient_id] = @user.id
-        @referralLink.save
-      end
+      @referralLink.consume_charge(@user.id)
       # UserMailer.register_email(@user).deliver_now
       # sign_in User, @user
       # current_user.send_confirmation_email
@@ -27,17 +23,13 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       @network = @referralLink.network
 
       @user.implement_trackable
+      @site_template = @user.get_template
 
-      UserNetwork.create(network_id: @network.id, member_id: @user.id) if @network.title != 'Bridgekin'
-      #Create Bridgekin Connection
-      UserNetwork.create(network_id: 1, member_id: @user.id)
+      #set networks
+      @user.set_networks(@network)
 
       #Remove waitlist user from waitlist by changing status
-      waitlist_user = WaitlistUser.find_by(email: @user.email)
-      if waitlist_user
-        waitlist_user[:status] = 'Full'
-        waitlist_user.save
-      end
+      @user.update_waitlist
 
       @user[:referred_by_id] = @referralLink[:member_id]
       @user[:current_sign_in_at] = DateTime.now
