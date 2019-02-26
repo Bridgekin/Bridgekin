@@ -10,15 +10,19 @@ import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 
 import { login } from '../../actions/session_actions';
+import { addUserByReferral } from '../../actions/member_users_actions';
+
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
+  session: state.session.id,
 });
 
 const mapDispatchToProps = dispatch => ({
   login: (user) => dispatch(login(user)),
+  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
 });
 
 const styles = theme => ({
@@ -67,13 +71,20 @@ class AccountHome extends React.Component {
 
   handleSubmit(e){
     e.preventDefault();
-
+    let path = window.location.pathname.split('/');
     let credentials = {
       email: this.state.email,
       password: this.state.password
     };
 
     this.props.login(credentials)
+    .then((user) => {
+      let lastElement = path.pop();
+      if(lastElement !== 'login' && user){
+        this.props.addUserByReferral(lastElement, user.id)
+      }
+    })
+
   }
 
   handleChange(field){

@@ -119,12 +119,12 @@ class OpportunityReferral extends React.Component{
           style={{ marginTop: 10}}>
           <Button variant="contained" color='secondary'
             onClick={this.handleSubmit}
-            style={{ marginRight: 10}}>
+            style={{ marginRight: 10, padding: "6px 10px"}}>
             Create Link
           </Button>
-          <Button variant="contained"
+          <Button variant="contained" disabled={!referralLink}
             onClick={this.handleCopy(referralLink)}
-            style={{ backgroundColor: "#616161", color: '#FFF'}}>
+            style={{ backgroundColor: "#616161", color: '#FFF',  padding: "6px 10px"}}>
             { copied ? 'Copied!' : 'Copy'}
           </Button>
         </Grid>

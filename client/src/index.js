@@ -11,14 +11,14 @@ import { getAuthUserId } from './util/session_api_util';
 import { receiveCurrentUser } from './actions/session_actions';
 import { receiveUser } from './actions/user_actions';
 
-import GenericLogo from './static/castle.jpg';
+import BridgekinLogo from './static/Bridgekin_Logo.png';
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const root = document.getElementById('root');
   let preloadedState = {
     siteTemplate: {
-      navLogo: GenericLogo,
+      navLogo: BridgekinLogo,
       network: null
     }
   };

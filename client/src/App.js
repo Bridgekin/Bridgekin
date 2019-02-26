@@ -3,7 +3,8 @@ import { Switch, Route } from 'react-router-dom';
 import { AuthRoute,
   ProtectedRoute,
   AdminProtectedRoute,
-  TemplateProtectedRoute } from './util/route_util';
+  TemplateProtectedRoute,
+  ReferralProtectedRoute } from './util/route_util';
 import './App.css';
 
 import HomeNav from './components/nav/home_nav';
@@ -49,7 +50,7 @@ class App extends React.Component {
           <ProtectedRoute path="/managenetworks" component={NetworkAdmin} />
           <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
           <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
-          <AuthRoute path="/signup/:code" component={SignupPage} />
+          <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
           <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
           <AuthRoute path="/login" component={Login}/>
           <AuthRoute path="/passwordreset" component={PasswordReset}/>

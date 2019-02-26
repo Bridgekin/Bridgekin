@@ -37,4 +37,12 @@ class ReferralLink< ApplicationRecord
     SecureRandom.urlsafe_base64
   end
 
+  def consume_charge(user_id)
+    if self.usage_type == "Single"
+      self.status = "Consumed"
+      self.recipient_id = user_id
+      self.save
+    end
+  end
+
 end

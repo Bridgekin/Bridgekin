@@ -46,6 +46,7 @@ export const login = formUser => dispatch => (
       dispatch(receiveCurrentUser(data.user));
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
+      return data.user
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

@@ -12,6 +12,8 @@ import Button from '@material-ui/core/Button';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 import { fetchManagedNetworks } from '../../actions/network_admin_actions';
 import { fetchMemberUsers,
@@ -44,7 +46,19 @@ const styles = {
     flexGrow: 1,
   },
   feedCard:{
-    // height: 118,
+    padding: "9px 8px 9px 8px",
+    backgroundColor: `${theme.palette.white}`,
+    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    // width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      border: `1px solid ${theme.palette.lightGrey}`,
+      marginBottom: 9,
+      borderRadius: 5,
+      padding: "9px 17px 9px",
+    }
+  },
+  mobileFeedCard:{
     padding: "9px 8px 9px 8px",
     backgroundColor: `${theme.palette.white}`,
     // borderTop: `1px solid ${theme.palette.lightGrey}`,
@@ -52,8 +66,7 @@ const styles = {
     // width: '100%',
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
-      borderRadius: 5,
-      padding: "9px 17px 9px",
+      display: 'none'
     }
   },
   cardHeader:{
@@ -98,7 +111,25 @@ const styles = {
       width: 200,
     },
   },
-  sortBy: { fontSize: 14, fontWeight: 400, marginRight: 6}
+  sortBy: { fontSize: 14, fontWeight: 400, marginRight: 6},
+  filter:{
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex'
+    },
+    padding: 0,
+    width: '100%'
+  },
+  filterCard:{
+    marginTop: 18,
+    backgroundColor: `${theme.palette.white}`,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.lightGrey}`
+  },
+  filterHeader:{ fontSize: 14, fontWeight: 600 },
+  filterItem: { fontSize: 14, fontWeight: 400 },
+  listSelected: { backgroundColor: '#E5DBDB'}
 };
 
 class NetworkAdmin extends React.Component {
@@ -109,12 +140,15 @@ class NetworkAdmin extends React.Component {
       currentNetworkId: null,
       networkAnchorEl: null,
       userSortAnchorEl: null,
+      searchInput: '',
       userSortSetting: 'Recently Added'
     };
 
     this.handleMenuOpen = this.handleMenuOpen.bind(this);
     this.handleMenuClose = this.handleMenuClose.bind(this);
     this.handleChooseNetwork = this.handleChooseNetwork.bind(this);
+    this.sortUsers = this.sortUsers.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
   componentDidMount(){
@@ -162,6 +196,40 @@ class NetworkAdmin extends React.Component {
     }
   }
 
+  handleSearchChange(e){
+    this.setState({ searchInput: e.target.value })
+  }
+
+  sortUsers(users){
+    const { userSortSetting, searchInput } = this.state;
+
+    if (searchInput !== ''){
+      return [...users].filter(user => (
+        user.fname.toLowerCase().includes(searchInput.toLowerCase()) ||
+        user.lname.toLowerCase().includes(searchInput.toLowerCase())
+      ))
+    }
+
+    switch (userSortSetting){
+      case 'First Name':
+        return [...users].sort((a, b) => {
+          let userAFName = a.fname.toUpperCase();
+          let userBFName = b.fname.toUpperCase();
+          if(userAFName > userBFName){ return 1 }
+          else { return -1 }
+        })
+      case 'Last Name':
+        return [...users].sort((a, b) => {
+          let userALName = a.lname.toUpperCase();
+          let userBLName = b.lname.toUpperCase();
+          if(userALName > userBLName){ return 1 }
+          else { return -1 }
+        })
+      default:
+        return users;
+    }
+  }
+
   render () {
     const { classes, managedNetworks, memberUserIds,
       users } = this.props;
@@ -171,56 +239,107 @@ class NetworkAdmin extends React.Component {
     if (loaded) {
       const memberUsers = [...memberUserIds].map(id => users[id]);
 
+      let networkFilter = (
+        <div>
+          <Button
+            aria-owns={networkAnchorEl ? 'simple-menu' : undefined}
+            aria-haspopup="true"
+            onClick={this.handleMenuOpen('networkAnchorEl')}
+            style={{ textTransform: 'capitalize'}}
+          >
+            {managedNetworks[currentNetworkId].title || `No Network Chosen`}
+            <KeyboardArrowDownIcon />
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={networkAnchorEl}
+            open={Boolean(networkAnchorEl)}
+            onClose={this.handleMenuClose('networkAnchorEl')}
+          >
+            {Object.values(managedNetworks).map(workspace => (
+              <MenuItem onClick={this.handleChooseNetwork(workspace.id)}>
+                {workspace.title}
+              </MenuItem>
+            ))}
+          </Menu>
+        </div>
+      )
+
+      let referralGenerator = (
+        <div>
+          <Typography variant="body1" align="left"
+            className={classes.cardHeader}>
+            Add A New Member
+          </Typography>
+          <NetworkLinkGenerator
+            currentNetworkId={currentNetworkId}
+            />
+        </div>
+      )
+
       let column1 = (
         <div style={{ paddingTop: 18}}>
           <div className={classes.feedCard}>
-            <Button
-              aria-owns={networkAnchorEl ? 'simple-menu' : undefined}
-              aria-haspopup="true"
-              onClick={this.handleMenuOpen('networkAnchorEl')}
-            >
-              {managedNetworks[currentNetworkId].title || `No Network Chosen`}
-              <KeyboardArrowDownIcon />
-            </Button>
-            <Menu
-              id="simple-menu"
-              anchorEl={networkAnchorEl}
-              open={Boolean(networkAnchorEl)}
-              onClose={this.handleMenuClose('networkAnchorEl')}
-            >
-              {Object.values(managedNetworks).map(workspace => (
-                <MenuItem onClick={this.handleChooseNetwork(workspace.id)}>
-                  {workspace.title}
-                </MenuItem>
-              ))}
-            </Menu>
+            {networkFilter}
           </div>
-
           <div className={classes.feedCard}>
-            <Typography variant="body1" align="left"
-              className={classes.cardHeader}>
-              Add A New Member
-            </Typography>
-            <NetworkLinkGenerator
-              currentNetworkId={currentNetworkId}
-              />
+            {referralGenerator}
           </div>
         </div>
       )
 
+      let filter = (
+        <Grid container justify='center' alignItems='center'
+          className={classes.filter}>
+          <div className={classes.filterCard}>
+            <List component="nav" style={{ padding: 0}}>
+              <ListItem button className={classes.filterItem}>
+                <Typography variant="body1" align='left'
+                  color="textPrimary" className={classes.filterHeader}>
+                  {'Community Details'}
+                </Typography>
+              </ListItem>
+              <ListItem button className={classes.filterItem}
+                selected>
+                <Typography variant="body1" align='left'
+                  color="textPrimary" className={classes.filterItem}>
+                  {'Our Contacts  (5,200)'}
+                </Typography>
+              </ListItem>
+            </List>
+          </div>
+        </Grid>
+      )
+
       let userSortOptions = ['Recently Added', 'First Name', 'Last Name'];
 
-      let sortedUsers = memberUsers.map(user => (
-        <div className={classes.feedCard}>
-          <MemberCard
-            user={user}
-            networkId={currentNetworkId}
-            />
-        </div>
-      ))
+      let search = (
+        <Grid item sm={7}
+          className={classes.search}>
+          <InputBase
+            placeholder="Search by name"
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            onChange={this.handleSearchChange}
+          />
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+        </Grid>
+      )
 
       let feed = (
-        <div style={{ paddingTop: 18, width: '100%'}}>
+        <div style={{ padding: "18px 0px 30px", width: '100%'}}>
+          <Grid container justify='space-between' alignItems='center'
+            className={classes.mobileFeedCard}>
+            {networkFilter}
+            <Typography variant="body1" align='left'
+              color="textPrimary" className={classes.filterItem}>
+              {'Our Contacts  (5,200)'}
+            </Typography>
+          </Grid>
           <Grid container justify='space-between'
             className={classes.feedCard}>
             <Grid item xs={12} sm={5}>
@@ -250,27 +369,25 @@ class NetworkAdmin extends React.Component {
                 ))}
               </Menu>
             </Grid>
-
-
-            <Grid item sm={7}
-              className={classes.search}>
-              <InputBase
-                placeholder="Search by name"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-            </Grid>
+            {search}
           </Grid>
 
-          {sortedUsers}
+          {this.sortUsers(memberUsers).map(user => (
+            <div className={classes.feedCard}>
+              <MemberCard
+                user={user}
+                networkId={currentNetworkId}
+                />
+            </div>
+          ))}
+
+          <Grid container justify='space-between' alignItems='center'
+            className={classes.mobileFeedCard}
+            style={{ marginTop: 9}}>
+            {referralGenerator}
+          </Grid>
         </div>
       )
-      let filter = <div></div>
 
       return (
         <MuiThemeProvider theme={theme} className={classes.root}>

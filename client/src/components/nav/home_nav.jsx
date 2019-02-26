@@ -35,6 +35,7 @@ import { getAuthUserId } from '../../util/session_api_util';
 import { receiveCurrentUser } from '../../actions/session_actions';
 import { receiveUser } from '../../actions/user_actions';
 import { fetchSiteTemplate } from '../../actions/site_template_actions';
+import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -52,6 +53,7 @@ const mapDispatchToProps = dispatch => ({
   receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
   receiveUser: (user) => dispatch(receiveUser(user)),
   fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
+  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
 });
 
 const styles = {
@@ -193,17 +195,35 @@ class HomeNav extends React.Component {
     this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
     this.handleLogoMenuClick = this.handleLogoMenuClick.bind(this);
     this.handleLogoMenuChangeTemplate = this.handleLogoMenuChangeTemplate.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
   }
 
   handleSubmit(e){
     e.preventDefault();
-
+    let path = window.location.pathname.split('/');
     let credentials = {
       email: this.state.email,
       password: this.state.password
     };
 
     this.props.login(credentials)
+    .then((user) => {
+      if(path.includes('signup') && user){
+        let referralCode = path.pop();
+        this.props.addUserByReferral(referralCode, user.id)
+      }
+    })
+  }
+
+  redirectToLogin(){
+    let path = window.location.pathname.split('/');
+
+    if(path.includes('signup')){
+      let referralCode = path.pop();
+      this.props.history.push(`/login/${referralCode}`)
+    } else {
+      this.props.history.push(`/login`)
+    }
   }
 
   handleChange(field){
@@ -437,7 +457,7 @@ class HomeNav extends React.Component {
 
         <div className={classes.sectionMobile}>
           <Button variant="contained" color="secondary"
-            onClick={() => this.props.history.push('/login')}
+            onClick={this.redirectToLogin}
             disableRipple>
             Login
           </Button>

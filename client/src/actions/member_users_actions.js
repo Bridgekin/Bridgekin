@@ -54,6 +54,21 @@ export const addMemberUser = (networkId, userId) => dispatch => (
     })
 );
 
+export const addUserByReferral = (referralCode, userId) => dispatch => (
+  MemberUsersApiUtil.addUserByReferral(referralCode, userId)
+    .then(handleErrors)
+    .then(data => {
+      dispatch(receiveMemberUserId(data.memberUser.id))
+      dispatch(receiveUser(data.memberUser))
+    })
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveMemberUserErrors(errors))
+    })
+);
+
 export const removeMemberUser = (networkId, userId) => dispatch => (
   MemberUsersApiUtil.removeMemberUser(networkId, userId)
     .then(handleErrors)

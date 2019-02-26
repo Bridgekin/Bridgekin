@@ -15,11 +15,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
     if @referralLink && @referralLink[:status] == 'Active' && @user.save
       #Check for a single use code
-      if @referralLink[:usage_type] == "Single"
-        @referralLink[:status] = "Consumed"
-        @referralLink[:recipient_id] = @user.id
-        @referralLink.save
-      end
+      @referralLink.consume_charge(@user.id)
       # UserMailer.register_email(@user).deliver_now
       # sign_in User, @user
       # current_user.send_confirmation_email
