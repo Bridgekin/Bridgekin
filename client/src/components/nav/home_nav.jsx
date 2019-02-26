@@ -304,6 +304,8 @@ class HomeNav extends React.Component {
     logoAnchorEl } = this.state;
     // const open = Boolean(anchorEl);
 
+    debugger
+
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logoMenuOpen = Boolean(logoAnchorEl);
@@ -332,11 +334,12 @@ class HomeNav extends React.Component {
             My Account
           </Typography>
         </MenuItem>
+        {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('managenetworks')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             Manage Networks
           </Typography>
-        </MenuItem>
+        </MenuItem>}
         {currentUser && currentUser.isAdmin &&
           <MenuItem onClick={this.handleLinkClose('admin')}>
             <Typography variant="body1" align='left' color="textPrimary" >
@@ -377,11 +380,12 @@ class HomeNav extends React.Component {
             My Trusted Network
           </Typography>
         </MenuItem>}
+        {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('managenetworks')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             Manage Networks
           </Typography>
-        </MenuItem>
+        </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('account')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             My Account
@@ -550,7 +554,7 @@ class HomeNav extends React.Component {
             src={siteTemplate.navLogo || logo} />
         </IconButton>
 
-        { workspaces.length > 0 &&
+        {workspaces.length > 1 &&
           <IconButton
             aria-haspopup="true"
             onClick={this.handleLogoMenuClick}

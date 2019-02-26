@@ -47,7 +47,7 @@ class App extends React.Component {
           <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
           <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
           <ProtectedRoute path="/account" component={AccountMain} />
-          <ProtectedRoute path="/managenetworks" component={NetworkAdmin} />
+          <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
           <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
           <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
           <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
