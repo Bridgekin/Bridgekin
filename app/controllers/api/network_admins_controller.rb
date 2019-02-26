@@ -6,7 +6,7 @@ class Api::NetworkAdminsController < ApiController
   # after_action :verify_authorized, except: :show
 
   def index
-    @managed_networks = @user.member_networks
+    @managed_networks = @user.managed_networks
     render :index
   end
 
