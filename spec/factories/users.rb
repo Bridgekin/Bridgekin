@@ -3,9 +3,11 @@ FactoryBot.define do
     :reipient, :member, :admin, :facilitator] do
     fname { "John" }
     lname  { "Doe" }
+
     sequence :email do |n|
       "person#{n}@example.com"
     end
+
     phone { '4101234567'}
     city { 'San Francisco'}
     state { 'California' }
@@ -16,6 +18,32 @@ FactoryBot.define do
 
     confirmed_at { DateTime.now}
     email_confirmed_at { DateTime.now }
+
+    invites_remaining { 3 }
+
+    trait :with_networks do
+      transient do
+        networks { [] }
+      end
+
+      after(:create) do |user, evaluator|
+        networks.each{|network| user.member_networks << network}
+      end
+    end
+
+    trait :no_invites do
+      invites_remaining { 0 }
+    end
+
+    trait :with_default_workspace do
+      transient do
+        default_network_id { 1 }
+      end
+
+      after(:create) do |user, evaluator|
+        user.default_network_id = evaluator.default_network_id
+      end
+    end
 
     trait :is_admin do
       is_admin{ true }

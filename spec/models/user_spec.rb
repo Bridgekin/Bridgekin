@@ -42,5 +42,49 @@ RSpec.describe User, type: :model do
       end
     end
 
+    describe 'decrement_invite_count' do
+      it "should lower invites by 1" do
+        beforeInvites = subject.invites_remaining
+        subject.decrement_invite_count
+        afterInvites = beforeInvites - 1
+        expect(subject.invites_remaining).to eq afterInvites
+      end
+    end
+
+    describe 'update_waitlist' do
+      before do
+        waitlist_user = create(:waitlist_user, email: subject.email)
+      end
+
+      it "should change wailist status to full" do
+        subject.update_waitlist
+        expect(WaitlistUser.find_by(email: subject.email).status).to eq 'Full'
+      end
+    end
+
+    describe 'implement_trackable' do
+      it "should instantiate and increment sign in metrics" do
+        expect(subject.sign_in_count).to eq 0
+        expect(subject.last_sign_in_at).to eq nil
+        expect(subject.current_sign_in_at).to eq nil
+        subject.implement_trackable
+        expect(subject.sign_in_count).to eq 1
+      end
+
+      it "should set last sign to current sign in" do
+        subject.implement_trackable
+        expect(subject.sign_in_count).to eq 1
+        @old_sign_in = subject.current_sign_in_at
+
+        subject.implement_trackable
+        expect(subject.sign_in_count).to eq 2
+        expect(subject.last_sign_in_at).to eq @old_sign_in
+      end
+    end
+
+    describe "get_template" do
+      it "should "
+    end
+
   end
 end

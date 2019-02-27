@@ -1,8 +1,16 @@
 FactoryBot.define do
   factory :waitlist_user do
     fname { "John" }
-    sequence :email do |n|
-      "PErson#{n}@example.com"
+    status { "Waitlist" }
+
+    transient do
+      sequence :email do |n|
+        "PErson#{n}@example.com"
+      end
+    end
+
+    before(:create) do |waitlist_user, evaluator|
+       waitlist_user.email = evaluator.email
     end
 
     trait :from_referral do
@@ -11,7 +19,7 @@ FactoryBot.define do
       end
 
       after(:create) do |waitlist_user, evaluator|
-        from_referral_id { user.id }
+        from_referral_id { evaluator.user.id }
       end
     end
 

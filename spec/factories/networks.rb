@@ -1,7 +1,13 @@
 FactoryBot.define do
   factory :network do
-    sequence :title do |n|
-      "The Bay#{n}"
+    transient do
+      sequence :title do |n|
+        "The Bay#{n}"
+      end
+    end
+
+    before(:create) do |network, evaluator|
+      network.title = evaluator.title
     end
 
     subtitle { 'This is a test' }
