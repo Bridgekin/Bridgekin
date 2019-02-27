@@ -12,6 +12,10 @@ FactoryBot.define do
 
     subtitle { 'This is a test' }
 
+    trait :with_template do
+      site_template
+    end
+
     # transient do
     #   member_count { 4 }
     #   admin_count { 3 }

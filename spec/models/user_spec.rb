@@ -83,7 +83,13 @@ RSpec.describe User, type: :model do
     end
 
     describe "get_template" do
-      it "should "
+      before do
+        network1 = create(:network, title: 'Bridgekin')
+        network2 = create(:network)
+        let(:user) { create(:user, :with_networks, networks: [network1, network2] )}
+      end
+
+      it "should get template for "
     end
 
   end
