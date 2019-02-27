@@ -25,11 +25,15 @@ class Network < ApplicationRecord
 
   has_many :opp_permissions, as: :shareable
 
+  has_many :opportunities,
+    through: :opp_permissions,
+    source: :opportunity
+
   ###########
 
-  has_many :opportunities,
-    through: :opportunity_networks,
-    source: :opportunity
+  # has_many :opportunities,
+  #   through: :opportunity_networks,
+  #   source: :opportunity
 
   has_many :referral_links,
     foreign_key: :network_id,

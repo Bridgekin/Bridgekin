@@ -23,11 +23,26 @@ class Opportunity < ApplicationRecord
     foreign_key: :opportunity_id,
     class_name: :OppPermission
 
+  has_many :networks,
+    through: :opp_permissions,
+    source: :shareable,
+    source_type: 'Network'
+
+  # has_many :networks,
+  #   through: :opp_permissions,
+  #   source: :shareable,
+  #   source_type: 'Network'
+  #
+  # has_many :networks,
+  #   through: :opp_permissions,
+  #   source: :shareable,o
+  #   source_type: 'Network'
+
   ###########
 
-  has_many :networks,
-    through: :opportunity_networks,
-    source: :network
+  # has_many :networks,
+  #   through: :opportunity_networks,
+  #   source: :network
 
   has_many :connected_opportunities,
     foreign_key: :opportunity_id,

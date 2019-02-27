@@ -10,15 +10,11 @@ export default(state = new Set(), action) => {
   switch(action.type){
     case RECEIVE_MEMBER_USERS:
       return new Set([...action.memberUserIds])
-      // return newState.add(action.memberUserIds)
-      // return merge(new Set(), action.memberUserIds);
     case RECEIVE_MEMBER_USER:
       return new Set([...state, action.memberUserId])
-      // return merge(new Set(), state, action.memberUserId);
     case REMOVE_MEMBER_USER:
-      let newState = new Set(state);
+      let newState = new Set([...state]);
       newState.delete(action.memberUserId)
-      // delete newState[action.managaedNetworkID]
       return newState;
     default:
       return state;

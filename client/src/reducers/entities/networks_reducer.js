@@ -13,7 +13,7 @@ export default(state = {}, action) => {
     // case RESET_NETWORKS:
     //   return merge({}, action.networks);
     case RECEIVE_NETWORKS:
-      return merge({}, action.networks);
+      return merge({}, state, action.networks);
     case RECEIVE_NETWORK:
       return merge({}, state, {[action.network.id]: action.network });
     case REMOVE_NETWORK:

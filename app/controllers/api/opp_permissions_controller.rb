@@ -3,11 +3,16 @@ class Api::OppPermissionsController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user
   before_action :set_opportunity, only: [:index]
+  before_action :set_user_with_search, only: [:shareOptions]
   # after_action :verify_authorized, except: :show
 
   def index
     @opp_permissions = @opportunity.opp_permissions
     render :index
+  end
+
+  def shareOptions
+    render :shareOptions
   end
 
   def create
@@ -38,6 +43,10 @@ class Api::OppPermissionsController < ApiController
     # Use callbacks to share common setup or constraints between actions.
     def set_opportunity
       @opportunity = Opportunity.find(params[:opportunity_id])
+    end
+
+    def set_user_with_search
+      @user = User.find(@user.id).includes(:member_networks)
     end
 
     # def permission_params

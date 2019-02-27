@@ -28,7 +28,9 @@ class Api::OpportunitiesController < ApiController
     @opportunities = @user.opportunities
       .where.not(deal_status: 'Deleted')
       .includes(:owner)
-    render :index
+      .includes(:opp_permissions)
+      .includes(:networks)
+    render :userIndex
   end
 
   def show

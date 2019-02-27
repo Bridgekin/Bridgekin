@@ -802,7 +802,7 @@ class OpportunityChangeModal extends React.Component {
                 (viewType === 'card' && isError) ||
                 (viewType === 'post' && isError) ||
                 sendingProgress}>
-              Post
+              {type === 'create' ? `Post` : `Update`}
             </Button>
           </Grid>
         </Grid>
