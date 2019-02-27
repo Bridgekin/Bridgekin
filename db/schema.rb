@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_26_213824) do
+ActiveRecord::Schema.define(version: 2019_02_27_002430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,15 @@ ActiveRecord::Schema.define(version: 2019_02_26_213824) do
     t.string "subtitle", default: ""
     t.integer "parent_id"
     t.integer "workspace_id"
+  end
+
+  create_table "opp_permissions", force: :cascade do |t|
+    t.string "shareable_type"
+    t.bigint "shareable_id"
+    t.integer "opportunity_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shareable_type", "shareable_id"], name: "index_opp_permissions_on_shareable_type_and_shareable_id"
   end
 
   create_table "opportunities", force: :cascade do |t|

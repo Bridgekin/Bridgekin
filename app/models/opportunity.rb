@@ -12,10 +12,18 @@ class Opportunity < ApplicationRecord
     foreign_key: :owner_id,
     class_name: :User
 
+  ###########
+
   has_many :opportunity_networks,
     foreign_key: :opportunity_id,
     class_name: :OpportunityNetwork,
     dependent: :destroy
+
+  has_many :opp_permissions,
+    foreign_key: :opportunity_id,
+    class_name: :OppPermission
+
+  ###########
 
   has_many :networks,
     through: :opportunity_networks,

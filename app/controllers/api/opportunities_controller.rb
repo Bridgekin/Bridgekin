@@ -43,12 +43,12 @@ class Api::OpportunitiesController < ApiController
     authorize @opportunity
 
     if @opportunity.save
-      @opportunity.reset_sharing(
-        params[:opportunity][:networks],
-        params[:opportunity][:connections],
-        params[:opportunity][:circles]
-      )
-      @networks = @opportunity.networks.pluck(:id)
+      # @opportunity.reset_sharing(
+      #   params[:opportunity][:networks],
+      #   params[:opportunity][:connections],
+      #   params[:opportunity][:circles]
+      # )
+      # @networks = @opportunity.networks.pluck(:id)
 
       # Send email to joe
       OpportunityMailer.flag_opportunity_creation(@opportunity, @user).deliver_now
@@ -66,13 +66,13 @@ class Api::OpportunitiesController < ApiController
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
 
-      @opportunity.reset_sharing(
-        params[:opportunity][:networks],
-        params[:opportunity][:connections],
-        params[:opportunity][:circles]
-      ) if params[:opportunity][:networks] ||
-        params[:opportunity][:connections] ||
-        params[:opportunity][:circles]
+      # @opportunity.reset_sharing(
+      #   params[:opportunity][:networks],
+      #   params[:opportunity][:connections],
+      #   params[:opportunity][:circles]
+      # ) if params[:opportunity][:networks] ||
+      #   params[:opportunity][:connections] ||
+      #   params[:opportunity][:circles]
 
       @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity

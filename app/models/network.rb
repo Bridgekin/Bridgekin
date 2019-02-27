@@ -17,9 +17,15 @@ class Network < ApplicationRecord
     through: :network_admins,
     source: :admin
 
+  ###########
+
   has_many :opportunity_networks,
     foreign_key: :network_id,
     class_name: :OpportunityNetwork
+
+  has_many :opp_permissions, as: :shareable
+
+  ###########
 
   has_many :opportunities,
     through: :opportunity_networks,

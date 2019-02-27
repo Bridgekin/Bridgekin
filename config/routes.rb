@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :users, only: [:show, :update, :destroy]
     resources :network_admins, only: [:index]
     resources :member_users, only: [:index, :show, :create, :update, :destroy]
+    resources :opp_permissions, only: [:index, :create, :destroy]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
