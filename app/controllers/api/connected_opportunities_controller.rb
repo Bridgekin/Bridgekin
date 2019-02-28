@@ -18,7 +18,7 @@ class Api::ConnectedOpportunitiesController < ApiController
     @connected_opps = connected_opportunities.pluck(:id)
     @facilitated_opps = facilitated_opportunities.pluck(:id)
     @opportunities = connected_opportunities | facilitated_opportunities
-    debugger
+
     render :index
   end
 

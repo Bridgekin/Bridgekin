@@ -41,7 +41,9 @@ import withWidth from '@material-ui/core/withWidth';
 // import castlePic from '../../static/castle.jpg';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions';
-import {createOpportunity, updateOpportunity} from '../../actions/opportunity_actions';
+import { createOpportunity,
+  updateOpportunity } from '../../actions/opportunity_actions';
+import { fetchOppPermissions } from '../../actions/opp_permission_actions';
 import { clearConnectedOpportunityErrors } from '../../actions/error_actions';
 
 import Badge from '@material-ui/core/Badge';
@@ -65,16 +67,19 @@ import { geographyChoices } from '../../util/choices';
 import { valueChoices } from '../../util/choices';
 
 import SubmitModal from './submit_modal';
+import ShareModal from './share_modal';
 import merge from 'lodash/merge';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  opportunityErrors: state.errors.opportunities
+  opportunityErrors: state.errors.opportunities,
+  permissions: state.entities.oppPermissions
 });
 
 const mapDispatchToProps = dispatch => ({
   createOpportunity: (opp) => dispatch(createOpportunity(opp)),
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
+  fetchOppPermissions: (id) => dispatch(fetchOppPermissions(id))
 });
 
 const styles = theme => ({
@@ -205,13 +210,15 @@ const DEFAULTSTATE = {
   valueChoices,
   mobileImageCropPending: false,
   imageModalOpen: false,
+  shareModalOpen: false,
+  permissions: []
   // share: []
 }
 
 class OpportunityChangeModal extends React.Component {
   constructor(props){
     super(props)
-    this.state = merge({}, DEFAULTSTATE, this.props.opportunity, {share: []});
+    this.state = merge({}, DEFAULTSTATE, this.props.opportunity);
 
     this.toggleOpp = this.toggleOpp.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
@@ -222,12 +229,38 @@ class OpportunityChangeModal extends React.Component {
     this.checkErrors = this.checkErrors.bind(this);
     this.clearFields = this.clearFields.bind(this);
     this.handleSubmitModalClose = this.handleSubmitModalClose.bind(this);
+    this.handleShareClick = this.handleShareClick.bind(this);
+    this.handleUpdatePermissions = this.handleUpdatePermissions.bind(this);
+    this.handleRemovePermissions = this.handleRemovePermissions.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if(nextProps.opportunity !== this.props.opportunity){
-      this.setState(merge({}, DEFAULTSTATE, nextProps.opportunity))
+    if(nextProps.open && nextProps.open !== this.props.open){
+      if(nextProps.opportunity.id){
+        this.props.fetchOppPermissions(nextProps.opportunity.id)
+        .then(() => {
+          const { permissions } = this.props;
+          this.setState(merge({}, DEFAULTSTATE,
+            nextProps.opportunity,{ permissions }))
+        });
+      } else {
+        this.setState(merge({}, DEFAULTSTATE,
+          nextProps.opportunity))
+      }
     }
+    // if(nextProps.opportunity !== this.props.opportunity){
+    //   if(nextProps.opportunity.id){
+    //     this.props.fetchOppPermissions(nextProps.opportunity.id)
+    //     .then(() => {
+    //       const { permissions } = this.props;
+    //       this.setState(merge({}, DEFAULTSTATE,
+    //         nextProps.opportunity,{ permissions }))
+    //     });
+    //   } else {
+    //     this.setState(merge({}, DEFAULTSTATE,
+    //       nextProps.opportunity))
+    //   }
+    // }
 
     // if (nextProps.availNetworks !== this.props.availNetworks){
     //   let share = nextProps.availNetworks.slice(0,1);
@@ -243,7 +276,7 @@ class OpportunityChangeModal extends React.Component {
       // Base Fields
       let fields = ['geography', 'industries', 'value', 'title',
         'description', 'opportunityNeed', 'picture', 'anonymous', 'viewType'];
-      const { share }= this.state;
+      // const { share }= this.state;
       const formData = new FormData();
 
       for (let i = 0; i < fields.length; i++){
@@ -253,17 +286,17 @@ class OpportunityChangeModal extends React.Component {
       }
 
       // Add Sharing settings
-      let networks = [];
-      let connections = [];
-      let circles = [];
-      for(let i = 0; i < share.length; i++){
-        let option = share[i];
-        if(option.type === 'network'){ networks.push(option.id)}
-      }
+      // let networks = [];
+      // let connections = [];
+      // let circles = [];
+      // for(let i = 0; i < share.length; i++){
+      //   let option = share[i];
+      //   if(option.type === 'network'){ networks.push(option.id)}
+      // }
 
-      formData.append(`opportunity[networks]`, networks);
-      formData.append(`opportunity[connections]`, connections);
-      formData.append(`opportunity[circles]`, circles);
+      // formData.append(`opportunity[networks]`, networks);
+      // formData.append(`opportunity[connections]`, connections);
+      // formData.append(`opportunity[circles]`, circles);
 
       if(this.props.type === 'create'){
         this.props.createOpportunity(formData)
@@ -271,8 +304,7 @@ class OpportunityChangeModal extends React.Component {
           if(this.props.opportunityErrors.length !== 0){
             this.setState({
               sendingProgress: false,
-              submitModalOpen: true,
-              share: []
+              submitModalOpen: true
             });
           } else {
             this.setState({
@@ -289,8 +321,7 @@ class OpportunityChangeModal extends React.Component {
           if(this.props.opportunityErrors.length !== 0){
             this.setState({
               sendingProgress: false,
-              submitModalOpen: true,
-              share: []
+              submitModalOpen: true
             });
           } else {
             this.setState({
@@ -308,7 +339,7 @@ class OpportunityChangeModal extends React.Component {
     // e.preventDefault();
     this.clearFields();
     this.props.handleClose();
-    this.setState({ share: [] });
+    // this.setState({ share: permissions });
   }
 
   handleSubmitModalClose(closeChangeModal){
@@ -331,9 +362,10 @@ class OpportunityChangeModal extends React.Component {
     return e => {
       e.preventDefault();
       let option = e.target.value;
+
       if ((['industries', 'geography'].includes(field) &&
         option.length <= 3) ||
-        (field === 'title' && option.length <= 80 ) ||
+        (field === 'title' && option.length <= 80) ||
         !['industries', 'geography','title'].includes(field)) {
           this.setState({ [field]: option})
       }
@@ -361,19 +393,19 @@ class OpportunityChangeModal extends React.Component {
     }
   }
 
-  handleShareClose(choice){
-    return e => {
-      e.preventDefault();
-      let { share } = this.state;
-      let indexOfChoice = share.indexOf(choice)
-      if (indexOfChoice > -1){
-        share.splice(indexOfChoice, 1)
-      } else {
-        share.push(choice);
-      }
-      this.setState({ share })
-    }
-  }
+  // handleShareClose(choice){
+  //   return e => {
+  //     e.preventDefault();
+  //     let { share } = this.state;
+  //     let indexOfChoice = share.indexOf(choice)
+  //     if (indexOfChoice > -1){
+  //       share.splice(indexOfChoice, 1)
+  //     } else {
+  //       share.push(choice);
+  //     }
+  //     this.setState({ share })
+  //   }
+  // }
 
   toggleOpp(e){
     e.preventDefault();
@@ -444,13 +476,27 @@ class OpportunityChangeModal extends React.Component {
     })
   }
 
+  handleShareClick(e){
+    const { shareModalOpen } = this.state;
+    this.setState({ shareModalOpen: !shareModalOpen });
+  }
+
+  handleUpdatePermissions(permissions){
+    this.setState({ permissions })
+  }
+
+  handleRemovePermissions(e){
+    e.stopPropagation();
+    this.setState({ permissions: [] })
+  }
+
   checkErrors(){
     const { title, description, industries, opportunityNeed, geography,
-      value, share, viewType } = this.state;
+      value, viewType, permissions } = this.state;
 
     if (viewType === 'card'){
       let opp = { title, description, industries, opportunityNeed, value,
-        geography, share };
+        geography, permissions };
       let keys = Object.keys(opp);
       let errors = [];
 
@@ -465,7 +511,7 @@ class OpportunityChangeModal extends React.Component {
       }
       return errors.length > 0;
     } else {
-      return share.length === 0 || description === ''
+      return permissions.length === 0 || description === ''
     }
   }
 
@@ -479,14 +525,13 @@ class OpportunityChangeModal extends React.Component {
 
     const { viewType, infoAnchorEl, needsChoices,
       industryChoices, geographyChoices, valueChoices,
-      privacyAnchorEl, shareAnchorEl, share,
+      privacyAnchorEl, shareAnchorEl,
       mobileImageCropPending, imageModalOpen, picture,
       pictureUrl, title, submitModalOpen, anonymous,
-      sendingProgress } = this.state;
+      sendingProgress, shareModalOpen, permissions } = this.state;
 
-    // debugger
     const infoOpen = Boolean(infoAnchorEl);
-    const shareSelected = share.map(choice => choice.title).join(', ');
+    // const shareSelected = share.map(choice => choice.title).join(', ');
 
     const otherConnectionOptions = [
       {title: 'Connections', type: 'connection'},
@@ -717,14 +762,24 @@ class OpportunityChangeModal extends React.Component {
                 </MenuItem>
               </Menu>
 
-              <Button
-                className={classes.createFilterButton }
-                onClick={this.handleMenuClick('shareAnchorEl')}>
-                <img src={ShareIconSVG} alt='share-icon'
-                  className={classes.filterButtonIcon}/>
-                {`Share with: ${shareSelected}`}
+              <Button color="primary"
+                variant={permissions.length > 0 ? 'contained' : undefined }
+                className={permissions.length > 0 ?
+                  classes.createFilterSelectedButton :
+                  classes.createFilterButton }
+                onClick={this.handleShareClick}>
+                { permissions.length === 0 && <img src={ShareIconSVG} alt='share-icon'
+                  className={classes.filterButtonIcon}/>}
+                {`Share`}
+                { permissions.length > 0 &&
+                  <IconButton
+                    onClick={this.handleRemovePermissions.bind(this)}
+                    classes={{ root: classes.infoIconButton}}>
+                    <CloseIcon style={{ color: 'white', fontSize: 20}}/>
+                  </IconButton>
+                }
               </Button>
-              <Menu
+              {/*<Menu
                 id="simple-menu"
                 anchorEl={shareAnchorEl}
                 open={Boolean(shareAnchorEl)}
@@ -739,7 +794,7 @@ class OpportunityChangeModal extends React.Component {
                     <Checkbox checked={this.state.share.indexOf(network) > -1} />
                     <ListItemText primary={network.title} />
                   </MenuItem>
-                ))*/}
+                ))}
 
                 {currentUser.isAdmin && otherConnectionOptions.map(choice => (
                   <MenuItem value={choice} key={choice.title}
@@ -750,7 +805,7 @@ class OpportunityChangeModal extends React.Component {
                     <ListItemText primary={choice.title} />
                   </MenuItem>
                 ))}
-              </Menu>
+              </Menu>*/}
             </Grid>
           </Grid>
 
@@ -821,6 +876,13 @@ class OpportunityChangeModal extends React.Component {
           modalType={type}
           handleClose={this.handleSubmitModalClose}
           clearFields={this.clearFields}/>
+
+        <ShareModal
+          type={type}
+          open={shareModalOpen}
+          permissions={permissions}
+          handleClose={this.handleShareClick}
+          handleChange={this.handleUpdatePermissions}/>
       </Dialog>
     )
   }

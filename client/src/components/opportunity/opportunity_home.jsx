@@ -244,7 +244,8 @@ const DEFAULTSTATE = {
   pictureUrl: null,
   // networks: [],
   anonymous: false,
-  viewType: 'post'
+  viewType: 'post',
+  // permissions: []
 }
 
 class OpportunityHome extends React.Component {
@@ -716,8 +717,7 @@ class OpportunityHome extends React.Component {
         <FeedContainer
           column1={column1}
           feed={feed}
-          column2={filter}
-          />
+          column2={filter} />
 
         <WaitlistModal
           open={waitlistOpen}
@@ -729,8 +729,8 @@ class OpportunityHome extends React.Component {
           handleClose={this.handleModalClose('changeModalOpen')}
           currentUser={currentUser}
           opportunity={DEFAULTSTATE}
-          type={'create'}
-          />
+          type={'create'} />
+
       </MuiThemeProvider>
     )
   }

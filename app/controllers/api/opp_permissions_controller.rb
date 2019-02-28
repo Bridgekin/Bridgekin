@@ -7,7 +7,12 @@ class Api::OppPermissionsController < ApiController
   # after_action :verify_authorized, except: :show
 
   def index
-    @opp_permissions = @opportunity.opp_permissions
+    opp_perms = @opportunity.opp_permissions
+    @constructed_perms = opp_perms.reduce([]) do |arr, perm|
+      arr << "#{perm.shareable_id}-#{perm.shareable_type}"
+      arr
+    end
+
     render :index
   end
 

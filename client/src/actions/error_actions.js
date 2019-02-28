@@ -28,6 +28,8 @@ export const RECEIVE_MANAGED_NETWORK_ERRORS = 'RECEIVE_MANAGED_NETWORK_ERRORS';
 export const CLEAR_MANAGED_NETWORK_ERRORS = 'CLEAR_MANAGED_NETWORK_ERRORS';
 export const RECEIVE_MEMBER_USER_ERRORS = 'RECEIVE_MEMBER_USER_ERRORS';
 export const CLEAR_MEMBER_USER_ERRORS = 'CLEAR_MEMBER_USER_ERRORS';
+export const RECEIVE_OPP_PERMISSION_ERRORS = 'RECEIVE_OPP_PERMISSION_ERRORS';
+export const CLEAR_OPP_PERMISSION_ERRORS = 'CLEAR_OPP_PERMISSION_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -144,4 +146,13 @@ export const receiveMemberUserErrors = errors => ({
 
 export const clearMemberUserErrors = () => ({
   type: CLEAR_MEMBER_USER_ERRORS,
+});
+
+export const receiveOppPermissionErrors = errors => ({
+  type: RECEIVE_OPP_PERMISSION_ERRORS,
+  errors
+});
+
+export const clearOppPermissionErrors = () => ({
+  type: CLEAR_OPP_PERMISSION_ERRORS,
 });

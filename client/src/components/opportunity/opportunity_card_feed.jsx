@@ -562,6 +562,7 @@ class OpportunityCard extends React.Component {
             </Grid>
             {editable && deleteDialog}
           </Grid>
+
           <CardModal
             open={cardOpen}
             page={cardModalPage}
