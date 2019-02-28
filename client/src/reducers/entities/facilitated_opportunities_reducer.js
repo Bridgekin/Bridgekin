@@ -2,19 +2,20 @@ import {
   RECEIVE_FACILITATED_OPPORTUNITIES,
   RECEIVE_FACILITATED_OPPORTUNITY,
   REMOVE_FACILITATED_OPPORTUNITY} from '../../actions/facilitated_opportunity_actions';
-import merge from 'lodash/merge';
+// import merge from 'lodash/merge';
 
-export default(state = {}, action) => {
+export default(state = new Set(), action) => {
   Object.freeze(state);
-  let newState = merge({}, state);
+  // let newState = merge({}, state);
 
   switch(action.type){
     case RECEIVE_FACILITATED_OPPORTUNITIES:
-      return merge({}, action.opportunities);
+      return new Set([...action.facilitatedOppIds])
     case RECEIVE_FACILITATED_OPPORTUNITY:
-      return merge({}, state, {[action.opportunity.id]: action.opportunity });
+      return new Set([...state, action.facilitatedOppId])
     case REMOVE_FACILITATED_OPPORTUNITY:
-      delete newState[action.opportunityId]
+      let newState = new Set([...state]);
+      newState.delete(action.facilitatedOppId)
       return newState;
     default:
       return state;

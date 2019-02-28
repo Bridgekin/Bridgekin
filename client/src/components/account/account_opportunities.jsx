@@ -23,9 +23,9 @@ import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   opportunities: state.entities.opportunities,
-  userOpportunities: state.entities.userOpportunities,
-  connectedOpportunities: Object.values(state.entities.connectedOpportunities).reverse(),
-  facilitatedOpportunities: Object.values(state.entities.facilitatedOpportunities).reverse(),
+  userOpps: state.entities.userOpportunities,
+  connectedOpps: state.entities.connectedOpportunities,
+  facilitatedOpps: state.entities.facilitatedOpportunities,
   networks: Object.values(state.entities.networks),
 });
 
@@ -121,16 +121,16 @@ class AccountOpportunities extends React.Component {
   }
 
   getOpportunities(){
-    const { oppFilter, connectedOpportunities,
-      facilitatedOpportunities, opportunities,
-      userOpportunities } = this.props;
+    const { oppFilter, connectedOpps, facilitatedOpps, opportunities,
+      userOpps } = this.props;
+
     switch(oppFilter){
       case 'connected':
-        return connectedOpportunities;
+        return [...connectedOpps].reverse().map(id => opportunities[id]);
       case 'referred':
-        return facilitatedOpportunities;
+        return [...facilitatedOpps].reverse().map(id => opportunities[id]);
       case 'posted':
-        return [...userOpportunities].reverse().map(id => opportunities[id])
+        return [...userOpps].reverse().map(id => opportunities[id])
       default:
         return [];
     }

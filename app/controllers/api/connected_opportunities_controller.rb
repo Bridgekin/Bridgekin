@@ -8,12 +8,17 @@ class Api::ConnectedOpportunitiesController < ApiController
   # after_action :verify_policy_scoped, only: :index
 
   def index
-    @connected_opportunities = @user.opportunity_connections
+    connected_opportunities = @user.opportunity_connections
       .where(status: 'Approved')
       # .where.not(deal_status: 'Deleted')
-    @facilitated_connected_opportunities = @user.opportunity_connections_facilitated
+    facilitated_opportunities = @user.opportunity_connections_facilitated
       .where(status: 'Approved')
       # .where.not(deal_status: 'Deleted')
+
+    @connected_opps = connected_opportunities.pluck(:id)
+    @facilitated_opps = facilitated_opportunities.pluck(:id)
+    @opportunities = connected_opportunities | facilitated_opportunities
+    debugger
     render :index
   end
 

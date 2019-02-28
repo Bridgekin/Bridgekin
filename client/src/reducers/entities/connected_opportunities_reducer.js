@@ -2,19 +2,20 @@ import {
   RECEIVE_CONNECTED_OPPORTUNITIES,
   RECEIVE_CONNECTED_OPPORTUNITY,
   REMOVE_CONNECTED_OPPORTUNITY} from '../../actions/connected_opportunity_actions';
-import merge from 'lodash/merge';
+// import merge from 'lodash/merge';
 
-export default(state = {}, action) => {
+export default(state = new Set(), action) => {
   Object.freeze(state);
-  let newState = merge({}, state);
+  // let newState = merge({}, state);
 
   switch(action.type){
     case RECEIVE_CONNECTED_OPPORTUNITIES:
-      return merge({}, action.opportunities);
+      return new Set([...action.connectedOppIds])
     case RECEIVE_CONNECTED_OPPORTUNITY:
-      return merge({}, state, {[action.opportunity.id]: action.opportunity });
+      return new Set([...state, action.connectedOppId])
     case REMOVE_CONNECTED_OPPORTUNITY:
-      delete newState[action.opportunityId]
+      let newState = new Set([...state]);
+      newState.delete(action.connectedOppId)
       return newState;
     default:
       return state;

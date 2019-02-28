@@ -2,17 +2,17 @@ export const RECEIVE_FACILITATED_OPPORTUNITIES = 'RECEIVE_FACILITATED_OPPORTUNIT
 export const RECEIVE_FACILITATED_OPPORTUNITY = 'RECEIVE_FACILITATED_OPPORTUNITY';
 export const REMOVE_FACILITATED_OPPORTUNITY = "REMOVE_FACILITATED_OPPORTUNITY";
 
-export const receiveFacilitatedOpportunities = opportunities => ({
+export const receiveFacilitatedOpportunities = facilitatedOppIds => ({
   type: RECEIVE_FACILITATED_OPPORTUNITIES,
-  opportunities,
+  facilitatedOppIds,
 });
 
-export const receiveFacilitatedOpportunity = opportunity => ({
+export const receiveFacilitatedOpportunity = facilitatedOppId => ({
   type: RECEIVE_FACILITATED_OPPORTUNITY,
-  opportunity,
+  facilitatedOppId,
 });
 
-export const removeFacilitatedOpportunity = opportunityId => ({
+export const removeFacilitatedOpportunity = facilitatedOppId => ({
   type: REMOVE_FACILITATED_OPPORTUNITY,
-  opportunityId
+  facilitatedOppId
 });
