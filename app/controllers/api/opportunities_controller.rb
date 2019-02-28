@@ -3,24 +3,31 @@ class Api::OpportunitiesController < ApiController
   include DeviseControllerPatch
   before_action :set_opportunity, only: [:show, :update, :destroy]
   before_action :authenticate_user
+  before_action :set_workspace_networks, only: [:index]
 
   after_action :verify_authorized, except: [:index, :userIndex]
-  after_action :verify_policy_scoped, only: :index
+  # after_action :verify_policy_scoped, only: :index
 
   def index
     if params[:network_id].empty?
-      @opportunities = policy_scope(Opportunity)
+      @opportunities = Opportunity.joins(:opp_permissions)
+        .where(opp_permissions:
+          { shareable_id: @workspace_networks.pluck(:id),
+            shareable_type: 'Network'})
         .where(status: 'Approved')
         .where.not(deal_status: 'Deleted')
         .includes(:owner)
     else
-      @opportunities = policy_scope(Opportunity)
-        .where(opportunity_networks: { network_id: params[:network_id]})
+      @opportunities = Network.find(params[:network_id]).opportunities
         .where(status: 'Approved')
         .where.not(deal_status: 'Deleted')
         .includes(:owner)
+        # .where(opp_permissions: { sharable_id: params[:network_id],
+        #   shareable_type: 'Network' })
+        # .where(opportunity_networks: { network_id: params[:network_id]})
     end
-
+    # debugger
+    @networkOpps = @opportunities.pluck(:id)
     render :index
   end
 
@@ -28,9 +35,10 @@ class Api::OpportunitiesController < ApiController
     @opportunities = @user.opportunities
       .where.not(deal_status: 'Deleted')
       .includes(:owner)
-      .includes(:opp_permissions)
-      .includes(:networks)
+    @userOpportunities = @opportunities.pluck(:id)
     render :userIndex
+    # .includes(:networks)
+    # .includes(:opp_permissions)
   end
 
   def show
@@ -99,6 +107,13 @@ class Api::OpportunitiesController < ApiController
     # Use callbacks to share common setup or constraints between actions.
     def set_opportunity
       @opportunity = Opportunity.find(params[:id])
+    end
+
+    def set_workspace_networks
+      @workspace_networks = Network.where(workspace_id: params[:workspace_id])
+        .where(id: @user.member_networks)
+        .or(Network.where(id: params[:workspace_id]))
+        .includes(:opportunities)
     end
 
     # Only allow a trusted parameter "white list" through.

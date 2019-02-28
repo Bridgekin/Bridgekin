@@ -3,7 +3,7 @@ import {
   RECEIVE_USER_OPPORTUNITY,
   REMOVE_USER_OPPORTUNITY} from '../../actions/user_opportunity_actions';
 
-export default(state = {}, action) => {
+export default(state = new Set(), action) => {
   Object.freeze(state);
 
   switch(action.type){

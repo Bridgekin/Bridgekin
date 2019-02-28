@@ -27,8 +27,8 @@ export const removeOpportunity = opportunityId => ({
   opportunityId
 });
 
-export const fetchOpportunities = (networkId) => dispatch => (
-  OpportunityApiUtil.fetchOpportunities(networkId)
+export const fetchOpportunities = (workspaceId, networkId) => dispatch => (
+  OpportunityApiUtil.fetchOpportunities(workspaceId, networkId)
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));
@@ -47,9 +47,9 @@ export const fetchUserOpportunities = (networkId) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));
-      dispatch(receiveUserOpportunities(data.opportunities));
-      dispatch(receiveOppPermissions(data.opp_permissions));
-      dispatch(receiveNetworks(data.networks));
+      dispatch(receiveUserOpportunities(data.userOpportunities));
+      // dispatch(receiveOppPermissions(data.oppPermissions));
+      // dispatch(receiveNetworks(data.networks));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

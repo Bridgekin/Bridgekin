@@ -17,7 +17,8 @@ class Api::NetworksController < ApplicationController
       .where(workspace_id: params[:network_id])
       .or(policy_scope(Network).where(id: params[:network_id]))
 
-    render :index
+    @workspaceNetworks = @networks.pluck(:id)
+    render :workspaceIndex
   end
 
   # GET /networks/1

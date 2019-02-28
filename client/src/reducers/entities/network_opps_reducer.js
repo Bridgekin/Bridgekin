@@ -3,7 +3,7 @@ import {
   RECEIVE_NETWORK_OPP,
   REMOVE_NETWORK_OPP} from '../../actions/network_opp_actions';
 
-export default(state = {}, action) => {
+export default(state = new Set(), action) => {
   Object.freeze(state);
 
   switch(action.type){

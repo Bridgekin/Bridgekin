@@ -66,15 +66,17 @@ import FeedContainer from '../feed_container';
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
-  opportunities: Object.values(state.entities.opportunities).reverse(),
+  opportunities: state.entities.opportunities,
+  networkOpps: state.entities.networkOpps,
   networks: state.entities.networks,
+  workspaceNetworks: state.entities.workspaceNetworks,
   referral: state.entities.referral,
   siteTemplate: state.siteTemplate
 });
 
 const mapDispatchToProps = dispatch => ({
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
-  fetchOpportunities: (networkId) => dispatch(fetchOpportunities(networkId)),
+  fetchOpportunities: (workspaceId, networkId) => dispatch(fetchOpportunities(workspaceId, networkId)),
   fetchNetworks: () => dispatch(fetchNetworks()),
   fetchWorkspaceNetworks: (workspaceId) => dispatch(fetchWorkspaceNetworks(workspaceId)),
   createReferral: (referral) => dispatch(createReferral(referral))
@@ -87,43 +89,6 @@ const styles = {
   root: {
     flexGrow: 1,
   },
-  // grid:{
-  //   position: 'relative',
-  //   padding: "64px 0px 0px 0px",
-  //   // paddingTop: 64 + 34,
-  //   flexGrow: 1,
-  //   backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-  //   // backgroundColor: 'white',
-  //   minHeight: window.innerHeight
-  // },
-  // feedContainer:{
-  //   width: '100%',
-  //   margin: '0 auto',
-  //   [theme.breakpoints.up('md')]: {
-  //     position: 'relative',
-  //     width: 1040,
-  //     height: '100%'
-  //   },
-  // },
-  // mainColumn:{
-  //   [theme.breakpoints.up('sm')]: {
-  //     marginLeft: 265,
-  //     // marginLeft: 15,
-  //     width: 500,
-  //     position: 'relative',
-  //     paddingLeft: 0,
-  //     paddingRight: 0,
-  //     display: 'inline-block'
-  //   },
-  // },
-  // sideColumn:{
-  //   paddingLeft: 0,
-  //   paddingRight: 0,
-  //   display: 'none',
-  //   [theme.breakpoints.up('sm')]: {
-  //     display: 'inline-block'
-  //   }
-  // },
   feedCard:{
     // height: 118,
     padding: "9px 8px 20px 8px",
@@ -183,15 +148,6 @@ const styles = {
     borderRadius: 5,
     border: `1px solid ${theme.palette.lightGrey}`
   },
-  // oppStatus:{
-  //   // height: 29,
-  //   width: 89,
-  //   textTransform: 'uppercase',
-  //   backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
-  //   display: 'flex',
-  //   justifyContent: 'center',
-  //   alignItems: 'center'
-  // },
   cover:{
     height: 140,
     width: '100%',
@@ -257,14 +213,6 @@ const styles = {
     }
   },
   filterMobileCard:{
-    // marginTop: 18,
-    // backgroundColor: `${theme.palette.white}`,
-    // width: '100%',
-    // borderTop: `1px solid ${theme.palette.lightGrey}`,
-    // [theme.breakpoints.up('sm')]: {
-    //   borderRadius: 5,
-    //   border: `1px solid ${theme.palette.lightGrey}`,
-    // },
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
@@ -277,10 +225,6 @@ const styles = {
     padding: 0,
     width: '100%'
   },
-  // filterButtonIcon:{
-  //   width: 14,
-  //   marginRight: 3
-  // },
   emptyOppsText:{
     fontSize: 30,
     fontWeight: 500,
@@ -323,7 +267,6 @@ class OpportunityHome extends React.Component {
       anchorEl: null
     };
 
-    // this.handleWaitlistChange = this.handleWaitlistChange.bind(this);
     this.handleModalClose = this.handleModalClose.bind(this);
     this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     this.handleReferralChange = this.handleReferralChange.bind(this);
@@ -331,15 +274,32 @@ class OpportunityHome extends React.Component {
     this.handleDropdownClick = this.handleDropdownClick.bind(this);
     this.handleDropdownClose = this.handleDropdownClose.bind(this);
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
+    this.resetWorkspace = this.resetWorkspace.bind(this);
     this.handleOpportunityChangeModalOpen = this.handleOpportunityChangeModalOpen.bind(this);
   }
-  //
+
   componentDidMount(){
-    this.props.fetchWorkspaceNetworks(this.props.siteTemplate.networkId)
+    const workspaceId = this.props.siteTemplate.networkId
+    this.resetWorkspace(workspaceId);
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps.siteTemplate !== this.props.siteTemplate){
+      const workspaceId = nextProps.siteTemplate.networkId
+      this.resetWorkspace(workspaceId);
+    }
+    return true
+  }
+
+  resetWorkspace(workspaceId){
+    this.props.fetchWorkspaceNetworks(workspaceId)
     .then(() => {
-      if(Object.values(this.props.networks).length > 0){
-        let referralNetwork = Object.values(this.props.networks)[0].id;
-        this.props.fetchOpportunities(this.state.dropdownFocus)
+      const { workspaceNetworks, networks } = this.props;
+      if(workspaceNetworks.size > 0){
+        // Set network for referral component
+        let referralNetwork = networks[[...workspaceNetworks][0]].id;
+        // Choose all opportunities for this workspace
+        this.props.fetchOpportunities(workspaceId, '')
         .then(() => {
           this.setState({
             opportunitiesLoaded: true,
@@ -348,32 +308,6 @@ class OpportunityHome extends React.Component {
       }
     })
   }
-
-  shouldComponentUpdate(nextProps, nextState){
-    if(nextProps.siteTemplate !== this.props.siteTemplate){
-      this.props.fetchWorkspaceNetworks(nextProps.siteTemplate.networkId)
-      .then(() => {
-        if(Object.values(this.props.networks).length > 0){
-          let referralNetwork = Object.values(this.props.networks)[0].id;
-          this.props.fetchOpportunities(this.state.dropdownFocus)
-          .then(() => {
-            this.setState({
-              opportunitiesLoaded: true,
-              referralNetwork})
-            });
-        }
-      })
-    }
-
-    return true
-  }
-
-  // handleWaitlistChange(field){
-  //   return e => {
-  //     e.preventDefault();
-  //     this.setState({ [field]: e.target.value})
-  //   }
-  // }
 
   handleModalClose(modal){
     return e => {
@@ -387,7 +321,6 @@ class OpportunityHome extends React.Component {
   }
 
   handleWaitlistSubmit(user){
-
     if (!this.state.loading) {
       this.setState({ success: false, loading: true },
         () => {
@@ -431,12 +364,12 @@ class OpportunityHome extends React.Component {
     return e => {
       e.stopPropagation();
       if (type === 'Network'){
-        this.props.fetchOpportunities(id)
+        const workspaceId = this.props.siteTemplate.networkId
+        this.props.fetchOpportunities(workspaceId, id)
         .then(() => {
           this.setState({
             dropdownFocus: id, [anchor]: null
           });
-          // window.scrollTo(0, 0);
           animateScroll.scrollTo(0);
         })
       }
@@ -448,22 +381,24 @@ class OpportunityHome extends React.Component {
   }
 
   render (){
-    let { classes, opportunities, networks,
-        referral, currentUser } = this.props;
+    const { classes, opportunities, networks,
+      referral, currentUser, workspaceNetworks,
+      networkOpps, siteTemplate } = this.props;
 
     const { loading, waitlistOpen, changeModalOpen,
         referralNetwork, anchorEl,
         dropdownFocus, opportunitiesLoaded,
         filterMobileAnchorEl } = this.state;
 
-    const networksArray = Object.values(networks);
+    const workspaceId = siteTemplate.networkId;
+    const networksArray = [...workspaceNetworks].map(id => networks[id]);
     const formattedNetworks = networksArray.map(network => (
       Object.assign({}, network, {type: 'network'})
     ))
 
-    opportunities = opportunities.filter(o => o.status === "Approved")
+    const filteredOpps = [...networkOpps].map(id => opportunities[id]).filter(o => o.status === "Approved")
 
-    let column1 = (
+    const column1 = (
       <Grid container justify='center' alignItems='center'
         style={{ padding: 0, width: '100%', marginTop: 18}}>
         <div className={classes.feedCard}>
@@ -477,7 +412,7 @@ class OpportunityHome extends React.Component {
             <Typography align='Left'
               className={classes.cardHeader}
               style={{ color: theme.palette.darkGrey}}>
-              {`There are ${opportunities.length} opportunities for you to checkout`}
+              {`There are ${networkOpps.size} opportunities for you to checkout`}
             </Typography>
           </div>
         </div>
@@ -498,13 +433,13 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let otherDropdownOptions = [
+    const otherDropdownOptions = [
       {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
       {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
       {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
     ]
 
-    let filterMobile = (
+    const filterMobile = (
       <Grid container justify='flex-end'
         className={classes.filterMobile}>
         <Button
@@ -561,7 +496,7 @@ class OpportunityHome extends React.Component {
           {networksArray.map(network => (
             <MenuItem value={network.id}
               className={classes.dropdownMenuItem}
-              onClick={this.handleDropdownChange('filterMobileAnchorEl', 'Network',network.id)}
+              onClick={this.handleDropdownChange('filterMobileAnchorEl', 'Network', network.id)}
               selected={dropdownFocus === network.id}
               style={{ paddingLeft: 0}}>
               <Grid container alignItems='center'>
@@ -604,7 +539,7 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let filter = (
+    const filter = (
       <Grid container justify='center' alignItems='center'
         className={classes.filter}>
         <div className={classes.filterCard}>
@@ -616,7 +551,7 @@ class OpportunityHome extends React.Component {
 
           <List component="nav">
             <ListItem button className={classes.filterItem}
-              onClick={this.handleDropdownChange('anchorEl','Network','')}
+              onClick={this.handleDropdownChange('anchorEl','Network', '')}
               selected={dropdownFocus === ''}>
               <div>
                 <Typography variant="h6" align='left'
@@ -670,15 +605,15 @@ class OpportunityHome extends React.Component {
       </Grid>
     )
 
-    let loader = (
+    const loader = (
       <Grid container justify='center' alignItems='center'
         className={classes.loader}>
         <CircularProgress className={classes.progress} />
       </Grid>
     )
 
-    let opportunityCards = opportunities.length > 0 ? (
-        opportunities.map((opportunity, idx) => (
+    const opportunityCards = filteredOpps.length > 0 ? (
+        filteredOpps.map((opportunity, idx) => (
         <OpportunityCardFeed
           currentUser={currentUser}
           opportunity={opportunity}/>
@@ -690,7 +625,7 @@ class OpportunityHome extends React.Component {
       </Typography>
     )
 
-    let feed = (
+    const feed = (
       <Grid container justify='center' alignItems='center'>
         <div style={{ overflow: 'scroll', padding: "18px 0px 50px 0px",
           width: '100%'}}>

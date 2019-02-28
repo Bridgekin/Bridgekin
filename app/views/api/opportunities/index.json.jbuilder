@@ -6,6 +6,4 @@ json.opportunities do
   end
 end
 
-json.networkOpps do
-  @opportunities.pluck[:id]
-end
+json.networkOpps @networkOpps
