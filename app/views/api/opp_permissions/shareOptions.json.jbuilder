@@ -1,16 +1,11 @@
-json.shareNetworks do
-  @user.member_networks.pluck(:id)
-end
+json.shareOptions @share_options
 
 json.networks do
-  @user.member_networks do |network|
+  @networks.each do |network|
     json.set! network.id do
       json.partial! 'api/networks/network', network: network
     end
   end
-end
-
-json.shareConnections do
 end
 
 json.connections do

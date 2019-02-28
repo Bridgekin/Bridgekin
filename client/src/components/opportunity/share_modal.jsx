@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -13,15 +14,23 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Divider from '@material-ui/core/Divider';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
+import { fetchShareOptions } from '../../actions/opp_permission_actions';
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   networks: state.entities.networks,
   users: state.entities.users,
+  shareOptions: state.entities.shareOptions
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchShareOptions: () => dispatch(fetchShareOptions()),
 });
 
 const styles = theme => ({
@@ -75,6 +84,15 @@ const styles = theme => ({
       width: 200,
     },
   },
+  listItem: {
+    textTransform: 'capitalize',
+    height: 40
+  },
+  resultsContainer:{
+    paddingBottom: 5,
+    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+  },
+  listHeader:{ fontSize: 14, fontWeight: 600 },
   submitContainer:{
     height: 50,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
@@ -96,7 +114,9 @@ class ShareModal extends Component{
     if(nextProps.open && nextProps.open !== this.props.open){
       this.props.fetchShareOptions()
       .then(() => this.setState({
-        permissions: new Set([...this.props.permissions]) }) )
+        permissions: new Set([...this.props.permissions]),
+        loaded: true
+      }) )
     }
     return true
   }
@@ -127,8 +147,10 @@ class ShareModal extends Component{
   }
 
   render(){
-    const { classes, open, type } = this.props;
+    const { classes, open, type, shareOptions } = this.props;
     const { permissions, loaded } = this.state;
+
+    // let filteredOptions = ();
 
     let search = (
       <Grid item xs={12} sm={11}
@@ -148,16 +170,30 @@ class ShareModal extends Component{
     )
 
     let results = (
-      <Grid item xs={12} sm={11} container justify='center'>
-        {[...permissions].map(perm => (
-          <ListItem key={perm} style={{ textTransform: 'capitalize'}}>
-            {this.getItem(perm)}
-            <Checkbox checked={permissions.has(perm)} />
-          </ListItem>
-        ))}
-        {/*options.map(option => {
-
-        })*/}
+      <Grid item xs={12} sm={11} container justify='center'
+        style={{ overflow: 'scroll', height: 200}}>
+        <Grid container className={classes.resultsContainer}>
+          {permissions.size > 0 && [...permissions].map(perm => (
+            <ListItem key={perm} className={classes.listItem}>
+              {this.getItem(perm)}
+              <Checkbox checked={permissions.has(perm)} />
+            </ListItem>
+          ))}
+        </Grid>
+        <Grid container justify='flex-start'
+          style={{ marginTop: 10 }}>
+          <Typography gutterBottom align='Left'
+            className={classes.listHeader}>
+            Networks
+          </Typography>
+          {[...shareOptions].filter(opt => opt.includes('Network'))
+            .map(option => (
+              <ListItem key={option} className={classes.listItem}>
+                {this.getItem(option)}
+                <Checkbox checked={permissions.has(option)} />
+              </ListItem>
+            ))}
+        </Grid>
       </Grid>
     )
 
@@ -189,7 +225,7 @@ class ShareModal extends Component{
             <Grid container justify='center'
               style={{ padding: 12 }}>
               <Grid container justify='center'
-                style={{ height: 300}}>
+                style={{ height: 250}}>
                 {search}
                 {loaded ? results : loading}
               </Grid>
@@ -213,4 +249,4 @@ class ShareModal extends Component{
   }
 }
 
-export default withStyles(styles)(ShareModal);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ShareModal));

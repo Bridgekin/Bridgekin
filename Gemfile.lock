@@ -101,6 +101,9 @@ GEM
     bugsnag (6.11.1)
       concurrent-ruby (~> 1.0)
     builder (3.2.3)
+    bullet (5.9.0)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     byebug (10.0.2)
     capybara (3.12.0)
       addressable
@@ -363,6 +366,7 @@ GEM
       thread_safe (~> 0.1)
     underscore_params (0.0.2)
       activesupport (>= 3)
+    uniform_notifier (1.12.1)
     warden (1.2.8)
       rack (>= 2.0.6)
     warden-jwt_auth (0.3.5)
@@ -388,6 +392,7 @@ DEPENDENCIES
   binding_of_caller
   bootsnap (>= 1.1.0)
   bugsnag (~> 6.11)
+  bullet
   byebug
   capybara (>= 2.15)
   chromedriver-helper
