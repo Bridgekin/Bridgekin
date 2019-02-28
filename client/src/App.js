@@ -14,8 +14,8 @@ import HomePage from './components/home/home_page';
 // import AccountRoute from './components/account/account_route';
 import AccountMain from './components/account/account_main';
 import OpportunityHome from './components/opportunity/opportunity_home';
-import OpportunityCreate from './components/post_opportunity/opportunity_create';
-import OpportunityEdit from './components/post_opportunity/opportunity_edit';
+// import OpportunityCreate from './components/post_opportunity/opportunity_create';
+// import OpportunityEdit from './components/post_opportunity/opportunity_edit';
 import SignupPage from './components/home/signup_page';
 import AccountConfirmed from './components/account/account_confirmed';
 import ConnectionsHome from './components/connections/connections_home';
@@ -44,8 +44,6 @@ class App extends React.Component {
 
         <Switch>
           <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
-          <ProtectedRoute path="/postopportunity" component={OpportunityCreate} />
-          <ProtectedRoute path="/editopportunity/:id" component={OpportunityEdit} />
           <ProtectedRoute path="/account" component={AccountMain} />
           <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
           <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />

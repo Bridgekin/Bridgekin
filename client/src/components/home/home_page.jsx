@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import HomeImage from '../../static/Login_Background_Image.jpg'
-import './home.css';
+// import './home.css';
 
 import { connect } from 'react-redux';
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';

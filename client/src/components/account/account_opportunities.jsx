@@ -15,7 +15,7 @@ import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportunity_actions';
-import { fetchNetworks } from '../../actions/network_actions';
+// import { fetchNetworks } from '../../actions/network_actions';
 import { fetchConnectedOpportunities } from '../../actions/connected_opportunity_actions';
 import OpportunityCardFeed from '../opportunity/opportunity_card_feed';
 import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
@@ -31,7 +31,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchUserOpportunities: (networkId) => dispatch(fetchUserOpportunities(networkId)),
-  fetchNetworks: () => dispatch(fetchNetworks()),
+  // fetchNetworks: () => dispatch(fetchNetworks()),
   fetchConnectedOpportunities: () => dispatch(fetchConnectedOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id))
 });
@@ -97,7 +97,7 @@ class AccountOpportunities extends React.Component {
     this.props.fetchUserOpportunities()
     .then(() => this.setState({ loaded: true}))
 
-    this.props.fetchNetworks()
+    // this.props.fetchNetworks()
   }
 
   componentDidUpdate(prevProps){
@@ -137,12 +137,12 @@ class AccountOpportunities extends React.Component {
   }
 
   render (){
-    const { classes, currentUser, networks, oppFilter } = this.props;
+    const { classes, currentUser, oppFilter } = this.props;
     const { loaded, focusedOpportunity, changeModalOpen } = this.state;
 
-    const formattedNetworks = networks.map(network => (
-      Object.assign({}, network, {type: 'network'})
-    ))
+    // const formattedNetworks = networks.map(network => (
+    //   Object.assign({}, network, {type: 'network'})
+    // ))
 
     let filteredOpportunities = this.getOpportunities();
 
@@ -150,9 +150,7 @@ class AccountOpportunities extends React.Component {
       <OpportunityCardFeed
         currentUser={currentUser}
         opportunity={opportunity}
-        classes={classes}
         editable={oppFilter === 'posted'}
-        formattedNetworks={formattedNetworks}
         handleEditOpen={this.handleEditOpen(opportunity)}/>
     ));
 
@@ -177,7 +175,6 @@ class AccountOpportunities extends React.Component {
               handleClose={this.handleEditClose}
               currentUser={currentUser}
               opportunity={focusedOpportunity}
-              availNetworks={formattedNetworks}
               type={'update'}
               />
           </Grid>

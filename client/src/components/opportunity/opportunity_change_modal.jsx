@@ -64,7 +64,7 @@ import { industryChoices } from '../../util/choices';
 import { geographyChoices } from '../../util/choices';
 import { valueChoices } from '../../util/choices';
 
-import SubmitModal from '../post_opportunity/submit_modal';
+import SubmitModal from './submit_modal';
 import merge from 'lodash/merge';
 
 const mapStateToProps = state => ({
@@ -229,10 +229,10 @@ class OpportunityChangeModal extends React.Component {
       this.setState(merge({}, DEFAULTSTATE, nextProps.opportunity))
     }
 
-    if (nextProps.availNetworks !== this.props.availNetworks){
-      let share = nextProps.availNetworks.slice(0,1);
-      this.setState({ share })
-    }
+    // if (nextProps.availNetworks !== this.props.availNetworks){
+    //   let share = nextProps.availNetworks.slice(0,1);
+    //   this.setState({ share })
+    // }
 
     return true;
   }
@@ -730,7 +730,7 @@ class OpportunityChangeModal extends React.Component {
                 open={Boolean(shareAnchorEl)}
                 onClose={this.handleMenuClose('shareAnchorEl')}
               >
-                {availNetworks.map((network, idx) => (
+                {/*availNetworks.map((network, idx) => (
                   <MenuItem
                     value={network}
                     key={idx}
@@ -739,7 +739,7 @@ class OpportunityChangeModal extends React.Component {
                     <Checkbox checked={this.state.share.indexOf(network) > -1} />
                     <ListItemText primary={network.title} />
                   </MenuItem>
-                ))}
+                ))*/}
 
                 {currentUser.isAdmin && otherConnectionOptions.map(choice => (
                   <MenuItem value={choice} key={choice.title}

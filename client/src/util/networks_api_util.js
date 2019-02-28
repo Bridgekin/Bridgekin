@@ -1,4 +1,4 @@
-export const fetchNetworks = () => (
+export const fetchUserNetworks = () => (
   fetch(`${window.location.origin}/api/networks`, {
     method: 'GET',
     headers:{

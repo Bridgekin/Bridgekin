@@ -5,14 +5,14 @@ import { receiveWorkspaceNetworks } from './workspace_network_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
-// export const RESET_NETWORKS = 'RESET_NETWORKS';
+// export const RECEIVE_USER_NETWORKS = 'RECEIVE_USER_NETWORKS';
 export const RECEIVE_NETWORKS = 'RECEIVE_NETWORKS';
 export const RECEIVE_NETWORK = 'RECEIVE_NETWORK';
 export const REMOVE_NETWORK = "REMOVE_NETWORK";
 
-// export const resetNetworks = networks => ({
-//   type: RESET_NETWORKS,
-//   networks,
+// export const receiveUserNetworks = userNetworkIds => ({
+//   type: RECEIVE_USER_NETWORKS,
+//   userNetworkIds,
 // });
 
 export const receiveNetworks = networks => ({
@@ -29,17 +29,20 @@ export const removeNetwork = () => ({
   type: REMOVE_NETWORK,
 });
 
-export const fetchNetworks = () => dispatch => (
-  NetworkApiUtil.fetchNetworks()
-    .then(handleErrors)
-    .then(data => dispatch(receiveNetworks(data.networks)))
-    .catch(errors => {
-      if (!(errors instanceof Array)){
-        errors = [genericError];
-      }
-      dispatch(receiveNetworkErrors(errors))
-    })
-);
+// export const fetchUserNetworks = () => dispatch => (
+//   NetworkApiUtil.fetchUserNetworks()
+//     .then(handleErrors)
+//     .then(data => {
+//       dispatch(receiveNetworks(data.networks));
+//       dispatch(receiveUserNetworks(data.userNetworks));
+//     })
+//     .catch(errors => {
+//       if (!(errors instanceof Array)){
+//         errors = [genericError];
+//       }
+//       dispatch(receiveNetworkErrors(errors))
+//     })
+// );
 
 export const fetchWorkspaceNetworks = (workspaceId) => dispatch => (
   NetworkApiUtil.fetchWorkspaceNetworks(workspaceId)

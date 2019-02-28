@@ -33,7 +33,6 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 // import logo from '../../static/Bridgekin_Logo.png';
 import logo from '../../static/castle.jpg';
-import './home_nav.css';
 import LoginModal from './login_modal';
 
 import { login, logout } from '../../actions/session_actions';

@@ -32,7 +32,7 @@ import './opportunity_home.css'
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 //Import Local Components
-import OpportunityCard from './opportunity_card';
+// import OpportunityCard from './opportunity_card';
 import OpportunityCardFeed from './opportunity_card_feed';
 import OpportunityReferral from './opportunity_referral';
 import OpportunityWaitlist from './opportunity_waitlist';
@@ -48,7 +48,7 @@ import LinesEllipsis from 'react-lines-ellipsis';
 //Imported Actions
 import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
 import { fetchOpportunities } from '../../actions/opportunity_actions';
-import { fetchNetworks, fetchWorkspaceNetworks } from '../../actions/network_actions';
+import { fetchWorkspaceNetworks } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 import OpportunityChangeModal from './opportunity_change_modal';
 
@@ -77,7 +77,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
   fetchOpportunities: (workspaceId, networkId) => dispatch(fetchOpportunities(workspaceId, networkId)),
-  fetchNetworks: () => dispatch(fetchNetworks()),
+  // fetchNetworks: () => dispatch(fetchNetworks()),
   fetchWorkspaceNetworks: (workspaceId) => dispatch(fetchWorkspaceNetworks(workspaceId)),
   createReferral: (referral) => dispatch(createReferral(referral))
 });
@@ -729,7 +729,6 @@ class OpportunityHome extends React.Component {
           handleClose={this.handleModalClose('changeModalOpen')}
           currentUser={currentUser}
           opportunity={DEFAULTSTATE}
-          availNetworks={Object.values(formattedNetworks)}
           type={'create'}
           />
       </MuiThemeProvider>
