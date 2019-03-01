@@ -11,15 +11,15 @@ RSpec.describe Api::OpportunitiesController, type: :controller do
     opportunity_need: 'a', industries:['a'], geography: ['a'],
     value: 'a', status:'a')
     @network = Network.create(title: 'a')
-    OpportunityNetwork.create(network_id: @network.id,
-      opportunity_id: @opportunity.id )
+    # OpportunityNetwork.create(network_id: @network.id,
+    #   opportunity_id: @opportunity.id )
 
     @opportunity_2 = Opportunity.create(owner_id: @user.id, title: 'a',
     opportunity_need: 'a', industries:['a'], geography: ['a'],
     value: 'a', status:'a')
     @network_2 = Network.create(title: 'b')
-    OpportunityNetwork.create(network_id: @network_2.id,
-      opportunity_id: @opportunity.id )
+    # OpportunityNetwork.create(network_id: @network_2.id,
+    #   opportunity_id: @opportunity.id )
 
     payload = {
       "sub": @user.id,

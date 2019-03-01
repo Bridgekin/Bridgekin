@@ -43,7 +43,8 @@ import CardModal from './card_modal';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 import _ from 'lodash';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
+import { fetchUserOpportunities,
+  updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
 import theme from '../theme';
 
 import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
@@ -56,6 +57,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
 });
@@ -193,7 +195,8 @@ class OpportunityCard extends React.Component {
     return (e) => {
       e.stopPropagation();
       if (deleteBool){
-        this.props.deleteOpportunity(this.props.opportunity.id);
+        this.props.deleteOpportunity(this.props.opportunity.id)
+        .then(() => this.props.fetchUserOpportunities())
       }
       this.setState({ deleteOpen: false });
     }
@@ -267,11 +270,11 @@ class OpportunityCard extends React.Component {
     detailsAnchorEl } = this.state;
     const detailsOpen = Boolean(detailsAnchorEl);
 
-    let { title, description, industries, opportunityNeed, geography,
-      value, status, pictureUrl, dealStatus, anonymous, viewType,
-      ownerPictureUrl, ownerFirstName, ownerLastName } = opportunity;
-
     if (!_.isEmpty(opportunity)){
+      let { title, description, industries, opportunityNeed, geography,
+        value, status, pictureUrl, dealStatus, anonymous, viewType,
+        ownerPictureUrl, ownerFirstName, ownerLastName } = opportunity;
+
       let editOptions = editable ? (
         <Grid container justify='flex-start'
           className={classes.feedCardActionContainer}>

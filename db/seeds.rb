@@ -85,15 +85,15 @@ Opportunity.create!(
   status: "Approved",
 )
 
-OpportunityNetwork.create!(
-  network_id: 1,
-  opportunity_id: 1
-)
-
-OpportunityNetwork.create!(
-  network_id: 2,
-  opportunity_id: 1
-)
+# OpportunityNetwork.create!(
+#   network_id: 1,
+#   opportunity_id: 1
+# )
+#
+# OpportunityNetwork.create!(
+#   network_id: 2,
+#   opportunity_id: 1
+# )
 
 Opportunity.create!(
   owner_id: 1,
@@ -106,7 +106,7 @@ Opportunity.create!(
   status: "Approved"
 )
 
-OpportunityNetwork.create!(
-  network_id: 1,
-  opportunity_id: 2
-)
+# OpportunityNetwork.create!(
+#   network_id: 1,
+#   opportunity_id: 2
+# )

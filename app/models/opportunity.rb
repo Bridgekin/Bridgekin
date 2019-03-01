@@ -12,33 +12,22 @@ class Opportunity < ApplicationRecord
     foreign_key: :owner_id,
     class_name: :User
 
-  ###########
-
-  has_many :opportunity_networks,
-    foreign_key: :opportunity_id,
-    class_name: :OpportunityNetwork,
-    dependent: :destroy
-
   has_many :opp_permissions,
     foreign_key: :opportunity_id,
-    class_name: :OppPermission
+    class_name: :OppPermission,
+    dependent: :destroy
 
   has_many :networks,
     through: :opp_permissions,
     source: :shareable,
     source_type: 'Network'
 
-  # has_many :networks,
-  #   through: :opp_permissions,
-  #   source: :shareable,
-  #   source_type: 'Network'
-  #
-  # has_many :networks,
-  #   through: :opp_permissions,
-  #   source: :shareable,o
-  #   source_type: 'Network'
-
   ###########
+
+  # has_many :opportunity_networks,
+  #   foreign_key: :opportunity_id,
+  #   class_name: :OpportunityNetwork,
+  #   dependent: :destroy
 
   # has_many :networks,
   #   through: :opportunity_networks,
@@ -85,7 +74,6 @@ class Opportunity < ApplicationRecord
     remove_perms = old_permissions - new_permissions
 
     update_permissions(add_perms, remove_perms)
-    debugger
   end
 
   def update_permissions(add_perms, remove_perms)
@@ -100,26 +88,25 @@ class Opportunity < ApplicationRecord
 
     remove_perms.each do |perm|
       perm = perm.split('-')
-      OppPermission.delete
-        .where(
+      OppPermission.where(
           opportunity_id: self.id,
           shareable_id: perm.first,
           shareable_type: perm.last
-        )
+        ).destroy_all
     end
   end
 
-  def reset_sharing(networks, connections, circles)
-    #delete existing connections
-    self.opportunity_networks.delete_all
-
-    #create new network connections
-    network_params = networks.split(',')
-    network_params.reduce([]) do |arr, network_id|
-      arr << OpportunityNetwork.create(
-        opportunity_id: self.id,
-        network_id: network_id
-      )
-    end
-  end
+  # def reset_sharing(networks, connections, circles)
+  #   #delete existing connections
+  #   self.opportunity_networks.delete_all
+  #
+  #   #create new network connections
+  #   network_params = networks.split(',')
+  #   network_params.reduce([]) do |arr, network_id|
+  #     arr << OpportunityNetwork.create(
+  #       opportunity_id: self.id,
+  #       network_id: network_id
+  #     )
+  #   end
+  # end
 end

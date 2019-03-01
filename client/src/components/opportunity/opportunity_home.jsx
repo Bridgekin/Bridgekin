@@ -161,7 +161,13 @@ const styles = {
     width: 55
   },
   loader:{
-    marginTop: 50
+    padding: "164px 0px 0px 0px",
+    position: 'relative',
+    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    minHeight: window.innerHeight
+  },
+  progress:{
+    color: `${theme.palette.primary.main}`
   },
   createFilterMain:{
     borderBottom: `1px solid ${theme.palette.lightGrey}`,
@@ -257,7 +263,8 @@ class OpportunityHome extends React.Component {
       network: '',
       // fname: '',
       // email: '',
-      loaded: false,
+
+      loading: false,
       success: false,
       waitlistOpen: false,
       changeModalOpen: false,
@@ -277,6 +284,7 @@ class OpportunityHome extends React.Component {
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.resetWorkspace = this.resetWorkspace.bind(this);
     this.handleOpportunityChangeModalOpen = this.handleOpportunityChangeModalOpen.bind(this);
+    this.updateNetworkOpps = this.updateNetworkOpps.bind(this);
   }
 
   componentDidMount(){
@@ -377,6 +385,13 @@ class OpportunityHome extends React.Component {
     }
   }
 
+  updateNetworkOpps(){
+    const workspaceId = this.props.siteTemplate.networkId
+    const { dropdownFocus } = this.state;
+    this.props.fetchOpportunities(workspaceId, dropdownFocus)
+    .then(() => animateScroll.scrollTo(0) );
+  }
+
   capitalize(str){
     return str[0].toUpperCase() + str.slice(1)
   }
@@ -391,300 +406,40 @@ class OpportunityHome extends React.Component {
         dropdownFocus, opportunitiesLoaded,
         filterMobileAnchorEl } = this.state;
 
-    const workspaceId = siteTemplate.networkId;
-    const networksArray = [...workspaceNetworks].map(id => networks[id]);
-    const formattedNetworks = networksArray.map(network => (
-      Object.assign({}, network, {type: 'network'})
-    ))
+    // const workspaceId = siteTemplate.networkId;
+    // const formattedNetworks = networksArray.map(network => (
+    //   Object.assign({}, network, {type: 'network'})
+    // ))
 
-    const filteredOpps = [...networkOpps].map(id => opportunities[id]).filter(o => o.status === "Approved")
+    // const loader = (
+    //   <Grid container justify='center' alignItems='center'
+    //     className={classes.loader}>
+    //     <CircularProgress className={classes.progress} />
+    //   </Grid>
+    // )
 
-    const column1 = (
-      <Grid container justify='center' alignItems='center'
-        style={{ padding: 0, width: '100%', marginTop: 18}}>
-        <div className={classes.feedCard}>
-          <Typography gutterBottom align='Left'
-            className={classes.cardHeader}
-            style={{ marginBottom: 20}}>
-            Over $71M in opportunities connected
-          </Typography>
+    if(opportunitiesLoaded){
 
-          <div className={classes.oppNotification}>
-            <Typography align='Left'
+      const column1 = (
+        <Grid container justify='center' alignItems='center'
+          style={{ padding: 0, width: '100%', marginTop: 18}}>
+          <div className={classes.feedCard}>
+            <Typography gutterBottom align='Left'
               className={classes.cardHeader}
-              style={{ color: theme.palette.darkGrey}}>
-              {`There are ${networkOpps.size} opportunities for you to checkout`}
+              style={{ marginBottom: 20}}>
+              Over $71M in opportunities connected
             </Typography>
+
+            <div className={classes.oppNotification}>
+              <Typography align='Left'
+                className={classes.cardHeader}
+                style={{ color: theme.palette.darkGrey}}>
+                {`There are ${networkOpps.size} opportunities for you to checkout`}
+              </Typography>
+            </div>
           </div>
-        </div>
 
-        <div className={classes.feedCard}>
-          <Typography gutterBottom align='Left'
-            className={classes.cardHeader}
-            style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
-            Invite your trusted business contacts
-          </Typography>
-
-          <OpportunityWaitlist
-            handleSubmit={this.handleWaitlistSubmit}
-            loading={loading}
-            currentUser={currentUser}
-            />
-        </div>
-      </Grid>
-    )
-
-    const otherDropdownOptions = [
-      {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
-      {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
-      {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
-    ]
-
-    const filterMobile = (
-      <Grid container justify='flex-end'
-        className={classes.filterMobile}>
-        <Button
-          aria-owns={filterMobileAnchorEl ? 'simple-menu' : undefined}
-          aria-haspopup="true"
-          onClick={this.handleDropdownClick('filterMobileAnchorEl')}
-          >
-          <Typography variant="subtitle1" align='left'
-            color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
-            {"View By:"}
-          </Typography>
-          <Typography variant="subtitle1" align='left'
-            color="textPrimary"
-            style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
-            {dropdownFocus === "" ? "All Opportunities" : networks[dropdownFocus].title}
-          </Typography>
-          <KeyboardArrowDownIcon />
-        </Button>
-
-        <Menu
-          id="simple-menu"
-          anchorEl={filterMobileAnchorEl}
-          open={Boolean(filterMobileAnchorEl)}
-          onClose={this.handleDropdownClose('filterMobileAnchorEl')}
-          style={{ padding: 0 }}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          >
-          <MenuItem onClick={this.handleDropdownChange('filterMobileAnchorEl','Network', '')}
-            className={classes.dropdownMenuItem}
-            selected={dropdownFocus === ''}
-            style={{ paddingLeft: 0}}>
-            <Grid container alignItems='center'>
-              <Checkbox checked={dropdownFocus === ''}/>
-              <div style={{ display: 'inline'}}>
-                <Typography variant="h6" align='left'
-                  color="textPrimary" className={classes.filterMobileHeader}>
-                  {'All Opportunities'}
-                </Typography>
-                <Typography variant="body2" align='left'
-                  color="textPrimary" className={classes.filterMobileSubtext}>
-                  {'Everything visible to you and the Bridgekin network'}
-                </Typography>
-              </div>
-            </Grid>
-          </MenuItem>
-
-          {networksArray.map(network => (
-            <MenuItem value={network.id}
-              className={classes.dropdownMenuItem}
-              onClick={this.handleDropdownChange('filterMobileAnchorEl', 'Network', network.id)}
-              selected={dropdownFocus === network.id}
-              style={{ paddingLeft: 0}}>
-              <Grid container alignItems='center'>
-                <Checkbox checked={dropdownFocus === network.id}/>
-                <div style={{ display: 'inline'}}>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterMobileHeader}>
-                    {network.title}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterMobileSubtext}>
-                    {network.subtitle}
-                  </Typography>
-                </div>
-              </Grid>
-            </MenuItem>
-          ))}
-
-          {otherDropdownOptions.map(other => (
-            <MenuItem onClick={this.handleDropdownClose('filterMobileAnchorEl')}
-              className={classes.dropdownMenuItem}
-              disabled={other.disabled}
-              style={{ paddingLeft: 0}}>
-              <Grid container alignItems='center'>
-                <Checkbox checked={false}/>
-                <div style={{ display: 'inline'}}>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterMobileHeader}>
-                    {other.header}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterMobileSubtext}>
-                    {other.subHeader}
-                  </Typography>
-              </div>
-            </Grid>
-            </MenuItem>
-          ))}
-        </Menu>
-      </Grid>
-    )
-
-    const filter = (
-      <Grid container justify='center' alignItems='center'
-        className={classes.filter}>
-        <div className={classes.filterCard}>
-          <Typography align='Left'
-            className={classes.cardHeader}
-            style={{ margin: "10px 20px 0px"}}>
-            {`Whose opportunities would you like to see?`}
-          </Typography>
-
-          <List component="nav">
-            <ListItem button className={classes.filterItem}
-              onClick={this.handleDropdownChange('anchorEl','Network', '')}
-              selected={dropdownFocus === ''}>
-              <div>
-                <Typography variant="h6" align='left'
-                  color="textPrimary" className={classes.filterHeader}>
-                  {'All Opportunities'}
-                </Typography>
-                <Typography variant="body2" align='left'
-                  color="textPrimary" className={classes.filterSubtext}>
-                  {'Everything visible to you and the Bridgekin network'}
-                </Typography>
-              </div>
-            </ListItem>
-
-            {networksArray.map(network => (
-              <ListItem button value={network.id}
-                className={classes.filterItem}
-                onClick={this.handleDropdownChange('anchorEl','Network',network.id)}
-                selected={dropdownFocus === network.id}>
-                <div>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterHeader}>
-                    {network.title}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterSubtext}>
-                    {network.subtitle}
-                  </Typography>
-                </div>
-              </ListItem>
-            ))}
-
-            {currentUser.isAdmin && otherDropdownOptions.map(other => (
-              <ListItem button
-                className={classes.filterItem}
-                disabled={other.disabled}
-                >
-                <div>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterHeader}>
-                    {other.header}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterSubtext}>
-                    {other.subHeader}
-                  </Typography>
-                </div>
-              </ListItem>
-            ))}
-          </List>
-        </div>
-      </Grid>
-    )
-
-    const loader = (
-      <Grid container justify='center' alignItems='center'
-        className={classes.loader}>
-        <CircularProgress className={classes.progress} />
-      </Grid>
-    )
-
-    const opportunityCards = filteredOpps.length > 0 ? (
-        filteredOpps.map((opportunity, idx) => (
-        <OpportunityCardFeed
-          currentUser={currentUser}
-          opportunity={opportunity}/>
-      ))
-    ) : (
-      <Typography variant="h3" gutterBottom color="textSecondary"
-        align='center' className={classes.emptyOppsText}>
-        {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
-      </Typography>
-    )
-
-    const feed = (
-      <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', padding: "18px 0px 50px 0px",
-          width: '100%'}}>
-          <CardActionArea className={classes.feedCard}
-            style={{ paddingBottom: 9}}
-            onClick={this.handleOpportunityChangeModalOpen}>
-            <Typography align='Left' gutterBottom
-              className={classes.cardHeader}>
-              Create Opportunity
-            </Typography>
-
-            <Grid container alignItems='center'
-              className={classes.createFilterMain}>
-              {currentUser.profilePicUrl ? (
-                <Avatar alt="profile-pic"
-                  src={currentUser.profilePicUrl}
-                  className={classes.avatar} />
-              ) : (
-                <AccountCircle className={classes.avatar}/>
-              )}
-
-              <Grid container style={{ flexGrow: 1, width: '75%', marginLeft: 10}}
-                alignItems='center'>
-                <Typography align='Left' color="textSecondary"
-                  className={classes.cardHeader}
-                  style={{ padding: "15px 0px"}}>
-                  {`What's your most pressing business need or opportunity?`}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Grid container style={{ paddingTop: 17}}>
-              <Button className={classes.createFilterButton}>
-                <img src={PictureIconSVG} alt='pic-icon'
-                  className={classes.filterButtonIcon}/>
-                Image
-              </Button>
-              <Button className={classes.createFilterButton}>
-                <PersonIcon className={classes.filterButtonIcon}/>
-                Privacy
-              </Button>
-              <Button className={classes.createFilterButton}>
-                <img src={ShareIconSVG} alt='share-icon'
-                  className={classes.filterButtonIcon}/>
-                {/*`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`*/}
-                {`Share`}
-              </Button>
-            </Grid>
-          </CardActionArea>
-
-          <Grid container justify='flex-end'
-            className={classes.filterMobileCard}>
-            {filterMobile}
-          </Grid>
-
-          {(opportunitiesLoaded) ? opportunityCards : loader}
-
-          <Card className={classes.waitlistMobileCard}>
+          <div className={classes.feedCard}>
             <Typography gutterBottom align='Left'
               className={classes.cardHeader}
               style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
@@ -696,44 +451,318 @@ class OpportunityHome extends React.Component {
               loading={loading}
               currentUser={currentUser}
               />
-          </Card>
+          </div>
+        </Grid>
+      )
 
-          {this.props.currentUser.isAdmin &&
-            <div className={classes.referralCard}>
-              <OpportunityReferral
-                referralNetwork={referralNetwork}
-                networks={networksArray}
-                referral={referral}
-                handleChange={this.handleReferralChange}
-                handleSubmit={this.handleReferralSubmit}
+      const otherDropdownOptions = [
+        {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
+        {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
+        {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
+      ]
+
+      const networksArray = [...workspaceNetworks].map(id => networks[id]);
+      const filterMobile = (
+        <Grid container justify='flex-end'
+          className={classes.filterMobile}>
+          <Button
+            aria-owns={filterMobileAnchorEl ? 'simple-menu' : undefined}
+            aria-haspopup="true"
+            onClick={this.handleDropdownClick('filterMobileAnchorEl')}
+            >
+            <Typography variant="subtitle1" align='left'
+              color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
+              {"View By:"}
+            </Typography>
+            <Typography variant="subtitle1" align='left'
+              color="textPrimary"
+              style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
+              {dropdownFocus === "" ? "All Opportunities" : networks[dropdownFocus].title}
+            </Typography>
+            <KeyboardArrowDownIcon />
+          </Button>
+
+          {opportunitiesLoaded &&
+            <Menu
+              id="simple-menu"
+              anchorEl={filterMobileAnchorEl}
+              open={Boolean(filterMobileAnchorEl)}
+              onClose={this.handleDropdownClose('filterMobileAnchorEl')}
+              style={{ padding: 0 }}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              >
+              <MenuItem onClick={this.handleDropdownChange('filterMobileAnchorEl','Network', '')}
+                className={classes.dropdownMenuItem}
+                selected={dropdownFocus === ''}
+                style={{ paddingLeft: 0}}>
+                <Grid container alignItems='center'>
+                  <Checkbox checked={dropdownFocus === ''}/>
+                  <div style={{ display: 'inline'}}>
+                    <Typography variant="h6" align='left'
+                      color="textPrimary" className={classes.filterMobileHeader}>
+                      {'All Opportunities'}
+                    </Typography>
+                    <Typography variant="body2" align='left'
+                      color="textPrimary" className={classes.filterMobileSubtext}>
+                      {'Everything visible to you and the Bridgekin network'}
+                    </Typography>
+                  </div>
+                </Grid>
+              </MenuItem>
+
+              {networksArray.map(network => (
+                <MenuItem value={network.id}
+                  className={classes.dropdownMenuItem}
+                  onClick={this.handleDropdownChange('filterMobileAnchorEl', 'Network', network.id)}
+                  selected={dropdownFocus === network.id}
+                  style={{ paddingLeft: 0}}>
+                  <Grid container alignItems='center'>
+                    <Checkbox checked={dropdownFocus === network.id}/>
+                    <div style={{ display: 'inline'}}>
+                      <Typography variant="h6" align='left'
+                        color="textPrimary" className={classes.filterMobileHeader}>
+                        {network.title}
+                      </Typography>
+                      <Typography variant="body2" align='left'
+                        color="textPrimary" className={classes.filterMobileSubtext}>
+                        {network.subtitle}
+                      </Typography>
+                    </div>
+                  </Grid>
+                </MenuItem>
+              ))}
+
+              {otherDropdownOptions.map(other => (
+                <MenuItem onClick={this.handleDropdownClose('filterMobileAnchorEl')}
+                  className={classes.dropdownMenuItem}
+                  disabled={other.disabled}
+                  style={{ paddingLeft: 0}}>
+                  <Grid container alignItems='center'>
+                    <Checkbox checked={false}/>
+                    <div style={{ display: 'inline'}}>
+                      <Typography variant="h6" align='left'
+                        color="textPrimary" className={classes.filterMobileHeader}>
+                        {other.header}
+                      </Typography>
+                      <Typography variant="body2" align='left'
+                        color="textPrimary" className={classes.filterMobileSubtext}>
+                        {other.subHeader}
+                      </Typography>
+                  </div>
+                </Grid>
+                </MenuItem>
+              ))}
+            </Menu>}
+        </Grid>
+      )
+
+      const filter = (
+        <Grid container justify='center' alignItems='center'
+          className={classes.filter}>
+          {opportunitiesLoaded && <div className={classes.filterCard}>
+            <Typography align='Left'
+              className={classes.cardHeader}
+              style={{ margin: "10px 20px 0px"}}>
+              {`Whose opportunities would you like to see?`}
+            </Typography>
+
+            <List component="nav">
+              <ListItem button className={classes.filterItem}
+                onClick={this.handleDropdownChange('anchorEl','Network', '')}
+                selected={dropdownFocus === ''}>
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textPrimary" className={classes.filterHeader}>
+                    {'All Opportunities'}
+                  </Typography>
+                  <Typography variant="body2" align='left'
+                    color="textPrimary" className={classes.filterSubtext}>
+                    {'Everything visible to you and the Bridgekin network'}
+                  </Typography>
+                </div>
+              </ListItem>
+
+              {networksArray.map(network => (
+                <ListItem button value={network.id}
+                  className={classes.filterItem}
+                  onClick={this.handleDropdownChange('anchorEl','Network',network.id)}
+                  selected={dropdownFocus === network.id}>
+                  <div>
+                    <Typography variant="h6" align='left'
+                      color="textPrimary" className={classes.filterHeader}>
+                      {network.title}
+                    </Typography>
+                    <Typography variant="body2" align='left'
+                      color="textPrimary" className={classes.filterSubtext}>
+                      {network.subtitle}
+                    </Typography>
+                  </div>
+                </ListItem>
+              ))}
+
+              {currentUser.isAdmin && otherDropdownOptions.map(other => (
+                <ListItem button
+                  className={classes.filterItem}
+                  disabled={other.disabled}
+                  >
+                  <div>
+                    <Typography variant="h6" align='left'
+                      color="textPrimary" className={classes.filterHeader}>
+                      {other.header}
+                    </Typography>
+                    <Typography variant="body2" align='left'
+                      color="textPrimary" className={classes.filterSubtext}>
+                      {other.subHeader}
+                    </Typography>
+                  </div>
+                </ListItem>
+              ))}
+            </List>
+          </div>}
+        </Grid>
+      )
+
+      const filteredOpps = [...networkOpps].reverse()
+        .map(id => opportunities[id])
+        .filter(o => o.status === "Approved")
+
+      const opportunityCards = filteredOpps.length > 0 ? (
+          filteredOpps.map((opportunity, idx) => (
+          <OpportunityCardFeed
+            currentUser={currentUser}
+            opportunity={opportunity}/>
+        ))
+      ) : (
+        <Typography variant="h3" gutterBottom color="textSecondary"
+          align='center' className={classes.emptyOppsText}>
+          {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
+        </Typography>
+      )
+
+      const feed = (
+        <Grid container justify='center' alignItems='center'>
+          <div style={{ overflow: 'scroll', padding: "18px 0px 50px 0px",
+            width: '100%'}}>
+            <CardActionArea className={classes.feedCard}
+              style={{ paddingBottom: 9}}
+              onClick={this.handleOpportunityChangeModalOpen}>
+              <Typography align='Left' gutterBottom
+                className={classes.cardHeader}>
+                Create Opportunity
+              </Typography>
+
+              <Grid container alignItems='center'
+                className={classes.createFilterMain}>
+                {currentUser.profilePicUrl ? (
+                  <Avatar alt="profile-pic"
+                    src={currentUser.profilePicUrl}
+                    className={classes.avatar} />
+                ) : (
+                  <AccountCircle className={classes.avatar}/>
+                )}
+
+                <Grid container style={{ flexGrow: 1, width: '75%', marginLeft: 10}}
+                  alignItems='center'>
+                  <Typography align='Left' color="textSecondary"
+                    className={classes.cardHeader}
+                    style={{ padding: "15px 0px"}}>
+                    {`What's your most pressing business need or opportunity?`}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container style={{ paddingTop: 17}}>
+                <Button className={classes.createFilterButton}>
+                  <img src={PictureIconSVG} alt='pic-icon'
+                    className={classes.filterButtonIcon}/>
+                  Image
+                </Button>
+                <Button className={classes.createFilterButton}>
+                  <PersonIcon className={classes.filterButtonIcon}/>
+                  Privacy
+                </Button>
+                <Button className={classes.createFilterButton}>
+                  <img src={ShareIconSVG} alt='share-icon'
+                    className={classes.filterButtonIcon}/>
+                  {/*`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`*/}
+                  {`Share`}
+                </Button>
+              </Grid>
+            </CardActionArea>
+
+            <Grid container justify='flex-end'
+              className={classes.filterMobileCard}>
+              {filterMobile}
+            </Grid>
+
+            {opportunityCards}
+
+            <Card className={classes.waitlistMobileCard}>
+              <Typography gutterBottom align='Left'
+                className={classes.cardHeader}
+                style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
+                Invite your trusted business contacts
+              </Typography>
+
+              <OpportunityWaitlist
+                handleSubmit={this.handleWaitlistSubmit}
+                loading={loading}
+                currentUser={currentUser}
                 />
-            </div>
-          }
-        </div>
-      </Grid>
-    )
+            </Card>
 
-    return (
-      <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
-        <FeedContainer
-          column1={column1}
-          feed={feed}
-          column2={filter} />
+            {this.props.currentUser.isAdmin &&
+              <div className={classes.referralCard}>
+                <OpportunityReferral
+                  referralNetwork={referralNetwork}
+                  networks={networksArray}
+                  referral={referral}
+                  handleChange={this.handleReferralChange}
+                  handleSubmit={this.handleReferralSubmit}
+                  />
+              </div>
+            }
+          </div>
+        </Grid>
+      )
 
-        <WaitlistModal
-          open={waitlistOpen}
-          handleClose={this.handleModalClose('waitlistOpen')}
-          referred={true}/>
+      return (
+        <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
+          <FeedContainer
+            column1={column1}
+            feed={feed}
+            column2={filter} />
 
-        <OpportunityChangeModal
-          open={changeModalOpen}
-          handleClose={this.handleModalClose('changeModalOpen')}
-          currentUser={currentUser}
-          opportunity={DEFAULTSTATE}
-          type={'create'} />
+          <WaitlistModal
+            open={waitlistOpen}
+            handleClose={this.handleModalClose('waitlistOpen')}
+            referred={true}/>
 
-      </MuiThemeProvider>
-    )
+          <OpportunityChangeModal
+            open={changeModalOpen}
+            handleClose={this.handleModalClose('changeModalOpen')}
+            updateNetworkOpps={this.updateNetworkOpps}
+            currentUser={currentUser}
+            opportunity={DEFAULTSTATE}
+            type={'create'} />
+
+        </MuiThemeProvider>
+      )
+    } else {
+      return (
+        <Grid container justify='center' alignItems='flex-start'
+          className={classes.loader}>
+          <CircularProgress className={classes.progress} />
+        </Grid>
+      )
+    }
   }
 }
 

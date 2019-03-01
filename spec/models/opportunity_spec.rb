@@ -17,7 +17,7 @@ RSpec.describe Opportunity, type: :model do
     .allow_blank}
 
   it { should belong_to(:owner) }
-  it { should have_many(:opportunity_networks) }
+  # it { should have_many(:opportunity_networks) }
   it { should have_many(:networks) }
   it { should have_many(:connected_opportunities) }
   it { should have_many(:finalized_opportunities) }

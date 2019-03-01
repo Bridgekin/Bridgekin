@@ -9,7 +9,7 @@ RSpec.describe Network, type: :model do
   it { should have_many(:members) }
   it { should have_many(:network_admins) }
   it { should have_many(:admins) }
-  it { should have_many(:opportunity_networks) }
+  # it { should have_many(:opportunity_networks) }
   it { should have_many(:opportunities) }
   it { should have_many(:referral_links) }
   it { should have_many(:connected_opportunities) }

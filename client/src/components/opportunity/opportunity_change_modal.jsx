@@ -299,6 +299,7 @@ class OpportunityChangeModal extends React.Component {
               sendingProgress: false
             });
             this.handleClose();
+            this.props.updateNetworkOpps();
           }
           // this.handleClose();
         })

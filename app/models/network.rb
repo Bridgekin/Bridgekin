@@ -19,9 +19,9 @@ class Network < ApplicationRecord
 
   ###########
 
-  has_many :opportunity_networks,
-    foreign_key: :network_id,
-    class_name: :OpportunityNetwork
+  # has_many :opportunity_networks,
+  #   foreign_key: :network_id,
+  #   class_name: :OpportunityNetwork
 
   has_many :opp_permissions, as: :shareable
 
@@ -50,4 +50,6 @@ class Network < ApplicationRecord
   has_one :site_template,
     foreign_key: :network_id,
     class_name: :SiteTemplate
+
+  has_one_attached :picture
 end

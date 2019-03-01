@@ -26,7 +26,7 @@ class Api::OpportunitiesController < ApiController
         #   shareable_type: 'Network' })
         # .where(opportunity_networks: { network_id: params[:network_id]})
     end
-    # debugger
+
     @networkOpps = @opportunities.pluck(:id)
     render :index
   end
@@ -54,12 +54,6 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.save
       @opportunity.set_permissions(params[:opportunity][:permissions])
-      # @opportunity.reset_sharing(
-      #   params[:opportunity][:networks],
-      #   params[:opportunity][:connections],
-      #   params[:opportunity][:circles]
-      # )
-      # @networks = @opportunity.networks.pluck(:id)
 
       # Send email to joe
       OpportunityMailer.flag_opportunity_creation(@opportunity, @user).deliver_now
@@ -76,15 +70,7 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
-
       @opportunity.set_permissions(params[:opportunity][:permissions])
-      # @opportunity.reset_sharing(
-      #   params[:opportunity][:networks],
-      #   params[:opportunity][:connections],
-      #   params[:opportunity][:circles]
-      # ) if params[:opportunity][:networks] ||
-      #   params[:opportunity][:connections] ||
-      #   params[:opportunity][:circles]
 
       @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity

@@ -17,10 +17,12 @@ import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/CloseSharp';
 import SearchIcon from '@material-ui/icons/Search';
 import GroupWorkIcon from '@material-ui/icons/GroupWorkOutlined';
+import Img from 'react-image';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import defaultNetworkIcon from '../../static/favicon_default.ico';
 
 import { fetchShareOptions } from '../../actions/opp_permission_actions';
 
@@ -53,10 +55,10 @@ const styles = theme => ({
     border: `1px solid ${theme.palette.grey1}`,
     width: '100%',
     height: 33,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'flex'
-    },
+    // display: 'none',
+    // [theme.breakpoints.up('sm')]: {
+    //   display: 'flex'
+    // },
   },
   searchIcon: {
     width: theme.spacing.unit * 9,
@@ -106,7 +108,11 @@ const styles = theme => ({
     height: 60,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
   },
-  actionButton: { fontSize: 12 }
+  actionButton: { fontSize: 12 },
+  networkIcon: {
+    marginRight: 8,
+    width: 13, height: 13
+  }
 });
 
 class ShareModal extends Component{
@@ -159,7 +165,7 @@ class ShareModal extends Component{
 
   getItem(perm){
     if(this.state.loaded){
-      const { networks } = this.props;
+      const { networks, classes } = this.props;
       let [typeId, type] = perm.split('-');
 
       switch(type) {
@@ -167,7 +173,11 @@ class ShareModal extends Component{
         let network = networks[typeId]
         return (
           <Grid container alignItems='center' style={{ flexGrow: 1}}>
-            <GroupWorkIcon style={{ marginRight: 5 }}/>
+            {network.pictureUrl ?
+              <Img src={network.pictureUrl}
+                className={classes.networkIcon}/> :
+              <Img src={defaultNetworkIcon}
+                className={classes.networkIcon}/>}
             {network.title}
           </Grid>
         )
@@ -201,7 +211,7 @@ class ShareModal extends Component{
       searchInput !== '' ? this.filterItem(option) : true ));
 
     let search = (
-      <Grid item xs={12}
+      <Grid item xs={12} sm={11} md={10}
         className={classes.search}>
         <InputBase
           placeholder="Search..."
@@ -218,7 +228,7 @@ class ShareModal extends Component{
     )
 
     let results = (
-      <Grid item xs={12} sm={11}
+      <Grid item xs={12} sm={11} md={10}
         className={classes.resultsGrid}>
         {permissions.size > 0 ?
           <Grid container className={classes.chosenResults}>

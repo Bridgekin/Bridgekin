@@ -30,7 +30,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchUserOpportunities: (networkId) => dispatch(fetchUserOpportunities(networkId)),
+  fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   // fetchNetworks: () => dispatch(fetchNetworks()),
   fetchConnectedOpportunities: () => dispatch(fetchConnectedOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id))
@@ -151,7 +151,8 @@ class AccountOpportunities extends React.Component {
         currentUser={currentUser}
         opportunity={opportunity}
         editable={oppFilter === 'posted'}
-        handleEditOpen={this.handleEditOpen(opportunity)}/>
+        handleEditOpen={this.handleEditOpen(opportunity)}
+        />
     ));
 
     if (loaded){

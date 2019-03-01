@@ -125,8 +125,10 @@ class User < ApplicationRecord
   #notifications
   def send_weekly_email
     seven_days_ago = DateTime.now - 7
-    new_opportunities = Opportunity.joins(:opportunity_networks)
-      .where(opportunity_networks: { network_id: self.member_networks.pluck(:id)})
+    new_opportunities = Opportunity.joins(:opp_permissions)
+      .where(opp_permissions: {
+        shareable_id: self.member_networks.pluck(:id),
+        shareable_type: "Network" })
       .where("opportunities.created_at >= ?", seven_days_ago )
     NotificationMailer.weekly_update(self, new_opportunities.count).deliver_now
   end
