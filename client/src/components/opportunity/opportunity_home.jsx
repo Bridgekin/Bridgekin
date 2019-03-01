@@ -263,7 +263,6 @@ class OpportunityHome extends React.Component {
       network: '',
       // fname: '',
       // email: '',
-
       loading: false,
       success: false,
       waitlistOpen: false,
@@ -289,7 +288,7 @@ class OpportunityHome extends React.Component {
 
   componentDidMount(){
     const workspaceId = this.props.siteTemplate.networkId
-    this.resetWorkspace(workspaceId);
+    if(workspaceId){this.resetWorkspace(workspaceId)}
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -301,6 +300,7 @@ class OpportunityHome extends React.Component {
   }
 
   resetWorkspace(workspaceId){
+    debugger
     this.props.fetchWorkspaceNetworks(workspaceId)
     .then(() => {
       const { workspaceNetworks, networks } = this.props;
