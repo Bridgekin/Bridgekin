@@ -53,6 +53,7 @@ class Api::OpportunitiesController < ApiController
     authorize @opportunity
 
     if @opportunity.save
+      @opportunity.set_permissions(params[:opportunity][:permissions])
       # @opportunity.reset_sharing(
       #   params[:opportunity][:networks],
       #   params[:opportunity][:connections],
@@ -76,6 +77,7 @@ class Api::OpportunitiesController < ApiController
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
 
+      @opportunity.set_permissions(params[:opportunity][:permissions])
       # @opportunity.reset_sharing(
       #   params[:opportunity][:networks],
       #   params[:opportunity][:connections],
@@ -122,14 +124,14 @@ class Api::OpportunitiesController < ApiController
       if params[:opportunity][:picture] == "delete"
         opp_params = params.require(:opportunity).permit(:title, :description,
           :owner_id, :opportunity_need, :value, :anonymous, :view_type,
-          :deal_status, :industries, :geography )
+          :deal_status, :industries, :geography)
       else
         opp_params = params.require(:opportunity).permit(:title, :description,
           :owner_id, :opportunity_need, :value, :picture, :anonymous, :view_type,
           :deal_status, :industries, :geography)
       end
 
-      [:geography, :industries].each do |field|
+      [:geography, :industries ].each do |field|
         opp_params[field] = opp_params[field].split(',') unless opp_params[field].nil?
       end
       opp_params[:anonymous] = params[:opportunity][:anonymous] == 'true' unless params[:opportunity][:anonymous].nil?

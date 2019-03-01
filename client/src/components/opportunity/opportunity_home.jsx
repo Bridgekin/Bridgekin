@@ -671,7 +671,8 @@ class OpportunityHome extends React.Component {
               <Button className={classes.createFilterButton}>
                 <img src={ShareIconSVG} alt='share-icon'
                   className={classes.filterButtonIcon}/>
-                {`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`}
+                {/*`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`*/}
+                {`Share`}
               </Button>
             </Grid>
           </CardActionArea>

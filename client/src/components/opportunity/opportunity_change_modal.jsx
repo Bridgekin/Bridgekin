@@ -275,7 +275,8 @@ class OpportunityChangeModal extends React.Component {
     () => {
       // Base Fields
       let fields = ['geography', 'industries', 'value', 'title',
-        'description', 'opportunityNeed', 'picture', 'anonymous', 'viewType'];
+        'description', 'opportunityNeed', 'picture', 'anonymous',
+        'viewType', 'permissions'];
       // const { share }= this.state;
       const formData = new FormData();
 
@@ -284,19 +285,6 @@ class OpportunityChangeModal extends React.Component {
           formData.append(`opportunity[${fields[i]}]`, this.state[fields[i]]);
         }
       }
-
-      // Add Sharing settings
-      // let networks = [];
-      // let connections = [];
-      // let circles = [];
-      // for(let i = 0; i < share.length; i++){
-      //   let option = share[i];
-      //   if(option.type === 'network'){ networks.push(option.id)}
-      // }
-
-      // formData.append(`opportunity[networks]`, networks);
-      // formData.append(`opportunity[connections]`, connections);
-      // formData.append(`opportunity[circles]`, circles);
 
       if(this.props.type === 'create'){
         this.props.createOpportunity(formData)

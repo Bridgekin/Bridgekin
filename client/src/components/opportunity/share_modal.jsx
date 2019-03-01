@@ -93,8 +93,8 @@ const styles = theme => ({
   },
   resultsGrid:{
     overflow: 'scroll',
-    maxHeight: 250,
-    margin: "10px 0px"
+    height: 250,
+    marginTop: 10
   },
   chosenResults:{
     paddingBottom: 5,
@@ -103,9 +103,10 @@ const styles = theme => ({
   listHeader:{ fontSize: 14, fontWeight: 600 },
   emptyList: { fontSize: 14, fontWeight: 400, fontStyle: 'italic' },
   submitContainer:{
-    height: 50,
+    height: 60,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
-  }
+  },
+  actionButton: { fontSize: 12 }
 });
 
 class ShareModal extends Component{
@@ -217,8 +218,7 @@ class ShareModal extends Component{
     )
 
     let results = (
-      <Grid item xs={12} container justify='center'
-        alignItems='flex-start'
+      <Grid item xs={12} sm={11}
         className={classes.resultsGrid}>
         {permissions.size > 0 ?
           <Grid container className={classes.chosenResults}>
@@ -255,6 +255,23 @@ class ShareModal extends Component{
       </Grid>
     )
 
+    let submit = (
+      <Grid container justify='flex-end' alignItems='center'
+        className={classes.submitContainer}>
+        <Button variant='contained'
+          onClick={this.props.handleClose}
+          classes={{ root: classes.actionButton}}
+          style={{ marginRight: 10 }}>
+          {`Cancel`}
+        </Button>
+        <Button color='primary' variant='contained'
+          classes={{ root: classes.actionButton}}
+          onClick={this.handleSave}>
+          {`Save`}
+        </Button>
+      </Grid>
+    )
+
     let loading = (
       <Grid container justify='center' alignItems='center'
         style={{ height: 100 }}>
@@ -283,23 +300,12 @@ class ShareModal extends Component{
             <Grid container justify='center'
               style={{ padding: 12 }}>
               <Grid container justify='center' alignItems='flex-start'
-                style={{ height: 300}}>
+                style={{ maxHeight: 300}}>
                 {search}
                 {loaded ? results : loading}
               </Grid>
 
-              <Grid container justify='flex-end' alignItems='center'
-                className={classes.submitContainer}>
-                <Button variant='contained'
-                  onClick={this.props.handleClose}
-                  style={{ marginRight: 10 }}>
-                  {`Cancel`}
-                </Button>
-                <Button color='primary' variant='contained'
-                  onClick={this.handleSave}>
-                  {`Save`}
-                </Button>
-              </Grid>
+              {submit}
             </Grid>
         </Dialog>
       </MuiThemeProvider>

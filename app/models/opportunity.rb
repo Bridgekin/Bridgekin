@@ -74,6 +74,41 @@ class Opportunity < ApplicationRecord
     self.geography.join(",") unless self.geography.nil?
   end
 
+  def set_permissions(permsString)
+    new_permissions = permsString.split(',')
+    current_permissions = self.opp_permissions
+    old_permissions = current_permissions.reduce([]) do |arr, perm|
+      arr << "#{perm.shareable_id}-#{perm.shareable_type}"
+    end
+
+    add_perms = new_permissions - old_permissions
+    remove_perms = old_permissions - new_permissions
+
+    update_permissions(add_perms, remove_perms)
+    debugger
+  end
+
+  def update_permissions(add_perms, remove_perms)
+    add_perms.each do |perm|
+      perm = perm.split('-')
+      OppPermission.create(
+        opportunity_id: self.id,
+        shareable_id: perm.first,
+        shareable_type: perm.last
+      )
+    end
+
+    remove_perms.each do |perm|
+      perm = perm.split('-')
+      OppPermission.delete
+        .where(
+          opportunity_id: self.id,
+          shareable_id: perm.first,
+          shareable_type: perm.last
+        )
+    end
+  end
+
   def reset_sharing(networks, connections, circles)
     #delete existing connections
     self.opportunity_networks.delete_all
