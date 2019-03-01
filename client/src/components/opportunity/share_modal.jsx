@@ -7,14 +7,16 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import Badge from '@material-ui/core/Badge';
-import CloseIcon from '@material-ui/icons/CloseSharp';
-import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
+
+import CloseIcon from '@material-ui/icons/CloseSharp';
+import SearchIcon from '@material-ui/icons/Search';
+import GroupWorkIcon from '@material-ui/icons/GroupWorkOutlined';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -86,13 +88,20 @@ const styles = theme => ({
   },
   listItem: {
     textTransform: 'capitalize',
-    height: 40
+    height: 30,
+    padding: "5px 16px"
   },
-  resultsContainer:{
+  resultsGrid:{
+    overflow: 'scroll',
+    maxHeight: 250,
+    margin: "10px 0px"
+  },
+  chosenResults:{
     paddingBottom: 5,
     borderBottom: `1px solid ${theme.palette.lightGrey}`,
   },
   listHeader:{ fontSize: 14, fontWeight: 600 },
+  emptyList: { fontSize: 14, fontWeight: 400, fontStyle: 'italic' },
   submitContainer:{
     height: 50,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
@@ -104,10 +113,14 @@ class ShareModal extends Component{
     super(props);
     this.state = {
       permissions: new Set([...this.props.permissions]),
+      searchInput: '',
       loaded: false
     };
     this.handleSave = this.handleSave.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
     this.getItem = this.getItem.bind(this);
+    this.filterItem = this.filterItem.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -121,9 +134,26 @@ class ShareModal extends Component{
     return true
   }
 
+  handleUpdate(value){
+    return e => {
+      let { permissions } = this.state;
+      if(permissions.has(value)){
+        permissions.delete(value);
+      } else {
+        permissions.add(value);
+      }
+      this.setState({ permissions });
+    }
+  }
+
   handleSave(){
     this.props.handleChange([...this.state.permissions]);
     this.props.handleClose();
+  }
+
+  handleSearchChange(e){
+
+    this.setState({ searchInput: e.target.value })
   }
 
   getItem(perm){
@@ -135,8 +165,8 @@ class ShareModal extends Component{
         case "Network":
         let network = networks[typeId]
         return (
-          <Grid container
-            style={{ flexGrow: 1}}>
+          <Grid container alignItems='center' style={{ flexGrow: 1}}>
+            <GroupWorkIcon style={{ marginRight: 5 }}/>
             {network.title}
           </Grid>
         )
@@ -146,17 +176,34 @@ class ShareModal extends Component{
     }
   }
 
+  filterItem(option){
+    if(this.state.loaded){
+      const { networks } = this.props;
+      const { searchInput } = this.state;
+      let [typeId, type] = option.split('-');
+
+      switch(type) {
+        case "Network":
+          let networkTitle = networks[typeId].title.toLowerCase();
+          return networkTitle.includes(searchInput.toLowerCase());
+        default:
+          return false;
+      }
+    }
+  }
+
   render(){
     const { classes, open, type, shareOptions } = this.props;
-    const { permissions, loaded } = this.state;
+    const { permissions, loaded, searchInput } = this.state;
 
-    // let filteredOptions = ();
+    let filteredOptions = [...shareOptions].filter(option => (
+      searchInput !== '' ? this.filterItem(option) : true ));
 
     let search = (
-      <Grid item xs={12} sm={11}
+      <Grid item xs={12}
         className={classes.search}>
         <InputBase
-          placeholder="Search by name"
+          placeholder="Search..."
           classes={{
             root: classes.inputRoot,
             input: classes.inputInput,
@@ -170,25 +217,36 @@ class ShareModal extends Component{
     )
 
     let results = (
-      <Grid item xs={12} sm={11} container justify='center'
-        style={{ overflow: 'scroll', height: 200}}>
-        <Grid container className={classes.resultsContainer}>
-          {permissions.size > 0 && [...permissions].map(perm => (
-            <ListItem key={perm} className={classes.listItem}>
-              {this.getItem(perm)}
-              <Checkbox checked={permissions.has(perm)} />
-            </ListItem>
-          ))}
-        </Grid>
+      <Grid item xs={12} container justify='center'
+        alignItems='flex-start'
+        className={classes.resultsGrid}>
+        {permissions.size > 0 ?
+          <Grid container className={classes.chosenResults}>
+            {[...permissions].map(perm => (
+              <ListItem key={perm} className={classes.listItem}
+                onClick={this.handleUpdate(perm)}>
+                {this.getItem(perm)}
+                <Checkbox checked={permissions.has(perm)} />
+              </ListItem>
+            ))}
+          </Grid> :
+          <Grid container>
+            <Typography gutterBottom align='Left'
+              className={classes.emptyList}>
+              Share your opportunity with any options below
+            </Typography>
+          </Grid>
+        }
         <Grid container justify='flex-start'
           style={{ marginTop: 10 }}>
           <Typography gutterBottom align='Left'
             className={classes.listHeader}>
             Networks
           </Typography>
-          {[...shareOptions].filter(opt => opt.includes('Network'))
+          {[...filteredOptions].filter(opt => opt.includes('Network'))
             .map(option => (
-              <ListItem key={option} className={classes.listItem}>
+              <ListItem key={option} className={classes.listItem}
+                onClick={this.handleUpdate(option)}>
                 {this.getItem(option)}
                 <Checkbox checked={permissions.has(option)} />
               </ListItem>
@@ -216,7 +274,7 @@ class ShareModal extends Component{
           >
             <Grid container justify='space-between' alignItems='center'
               className={classes.closeBar}>
-              {`How do you want to share this opportunty?`}
+              {`Share your opportunity`}
               <CloseIcon
                 onClick={this.props.handleClose}
                 style={{ cursor: 'pointer'}}/>
@@ -224,8 +282,8 @@ class ShareModal extends Component{
 
             <Grid container justify='center'
               style={{ padding: 12 }}>
-              <Grid container justify='center'
-                style={{ height: 250}}>
+              <Grid container justify='center' alignItems='flex-start'
+                style={{ height: 300}}>
                 {search}
                 {loaded ? results : loading}
               </Grid>
