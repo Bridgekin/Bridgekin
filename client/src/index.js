@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let siteTemplate = {
     navLogo: BridgekinLogo,
     network: null,
-    base1: '#c43525'
+    base1: '#c43525' || '#FFFFFF'
   }
   let preloadedState = {
     siteTemplate,

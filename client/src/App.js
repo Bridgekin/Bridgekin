@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { AuthRoute,
   ProtectedRoute,
@@ -7,13 +8,16 @@ import { AuthRoute,
   ReferralProtectedRoute } from './util/route_util';
 import './App.css';
 
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import getTheme from './components/theme';
+
 import HomeNav from './components/nav/home_nav';
 import Footer from './components/nav/footer';
 
-// import HomePage from './components/home/home_page';
+import OpportunityHome from './components/opportunity/opportunity_home';
+import HomePage from './components/home/home_page';
 // // import AccountRoute from './components/account/account_route';
 // import AccountMain from './components/account/account_main';
-// import OpportunityHome from './components/opportunity/opportunity_home';
 // // import OpportunityCreate from './components/post_opportunity/opportunity_create';
 // // import OpportunityEdit from './components/post_opportunity/opportunity_edit';
 // import SignupPage from './components/home/signup_page';
@@ -33,18 +37,22 @@ import Footer from './components/nav/footer';
 // import ConfirmationError from './components/confirmation_error';
 import ScrollToTop from './components/scroll_to_top';
 
+const mapStateToProps = (state, ownProps) => ({
+  theme: getTheme(state.siteTemplate)
+})
+
 // export default () => (
 class App extends React.Component {
-
   render(){
     return (
-      <div style={{ position: 'relative', minHeight: window.innerHeight}}>
+      <MuiThemeProvider theme={this.props.theme}
+        style={{ position: 'relative', minHeight: window.innerHeight, flexGrow: 1}}>
         <ScrollToTop />
         <Route path="/" component={HomeNav} />
 
         <Switch>
-          {/*<ProtectedRoute path="/findandconnect" component={OpportunityHome} />
-          <ProtectedRoute path="/account" component={AccountMain} />
+          <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
+          {/*<ProtectedRoute path="/account" component={AccountMain} />
           <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
           <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
           <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
@@ -52,21 +60,21 @@ class App extends React.Component {
           <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
           <AuthRoute path="/login" component={Login}/>
           <AuthRoute path="/passwordreset" component={PasswordReset}/>
-          <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>
+          <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>*/}
           <AuthRoute exact path="/" component={HomePage} />
-          <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
+          {/*<AuthRoute path="/confirmationerror" component={ConfirmationError}/>
           <Route path="/useragreement" component={UserAgreement} />
           <Route path="/privacypolicy" component={PrivacyPolicy} />
           <Route component={NotFound} />*/}
         </Switch>
 
         <Route path="/" component={Footer} />
-      </div>
+      </MuiThemeProvider>
     )
   }
 };
 
-export default App;
+export default connect(mapStateToProps, {})(App);
 
 // shouldComponentUpdate(nextProps, nextState){
 //   window.scrollTo(0, 0);

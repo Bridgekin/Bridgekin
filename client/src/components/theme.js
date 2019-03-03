@@ -5,16 +5,21 @@ import indigo from '@material-ui/core/colors/indigo';
 import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
 import store from '../store/store.js'
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 let theme = (siteTemplate) => createMuiTheme({
   palette: {
     primary: {
-      main: ((siteTemplate && siteTemplate.base1) || '#000000')
+      main: (siteTemplate && siteTemplate.button1) || '#000000'
     },
     secondary: {
-      main: '#000000'
+      main: (siteTemplate && siteTemplate.button2) || '#000000'
       // main: '#4067B2',
     },
+    base1: (siteTemplate && siteTemplate.base1) || 'red',//'#FFFFFF',
+    base2: (siteTemplate && siteTemplate.base2) || `rgba(0,0,0,0.05)`,
+    base3: (siteTemplate && siteTemplate.base3) || 'blue', //'#FFFFFF',
+    base4: (siteTemplate && siteTemplate.base4) || '#000000',
     lightGrey: "#E2E2E2",
     grey1: "#C4C4C4",
     grey2: "#999999",
@@ -27,8 +32,8 @@ let theme = (siteTemplate) => createMuiTheme({
       // tertiary: '#FFFFFF' //white
     },
     border: {
-      primary: (siteTemplate && siteTemplate.border1) || "#E2E2E2",
-      secondary: (siteTemplate && siteTemplate.border2) || "#C4C4C4"
+      primary: (siteTemplate && siteTemplate.border1) || '#000000',//"#E2E2E2",
+      secondary: (siteTemplate && siteTemplate.border2) || '#FFFFFF', //"#C4C4C4"
     },
     error:{
       main: '#f44336'
@@ -63,7 +68,8 @@ let theme = (siteTemplate) => createMuiTheme({
       root: { // Name of the rule
         // color: 'white', // Some CSS
         fontSize: '14px',
-        fontWeight: 600
+        fontWeight: 600,
+        color: (siteTemplate && siteTemplate.button1) || "#000000"
       },
     },
     MuiListItem: { // Name of the component ⚛️ / style sheet
@@ -99,7 +105,7 @@ let theme = (siteTemplate) => createMuiTheme({
       h6: { // Opportunity Categories
         fontSize: 18,
         fontWeight: 600,
-        color: "#999999"
+        // color: "#999999"
       },
       subtitle1: { // Opportunity Tags
         fontSize: 14,

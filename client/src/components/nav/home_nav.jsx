@@ -29,8 +29,8 @@ import getTheme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
-// import logo from '../../static/Bridgekin_Logo.png';
-import logo from '../../static/castle.jpg';
+// import logo from '../../static/castle.jpg';
+import logo from '../../static/Bridgekin_Logo.png';
 import LoginModal from './login_modal';
 
 import { login, logout } from '../../actions/session_actions';
@@ -67,7 +67,7 @@ let styles = (theme) => ({
     objectFit: 'cover'
   },
   nav: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.base1,
     color: '#4067B2',
     width: '100%',
     borderBottom: `1px solid ${theme.palette.grey1}`,
@@ -79,7 +79,7 @@ let styles = (theme) => ({
     marginLeft: 10,
     marginRight: 10,
     width: '40%',
-    border: `0.5px solid ${theme.palette.secondary}`,
+    border: `1px solid ${theme.palette.secondary}`,
   },
   button:{
     marginTop: 20,
@@ -166,7 +166,6 @@ const mapStateToProps = (state, ownProps) => {
     session: state.session.id,
     sessionErrors: state.errors.login,
     workspaces: Object.values(state.workspaces),
-    // classes: styles(theme),
     siteTemplate,
     theme
   })
@@ -305,10 +304,8 @@ class HomeNav extends React.Component {
   };
 
   render(){
-    let { classes, currentUser, sessionErrors, width,
+    let { classes, currentUser, sessionErrors,
       siteTemplate, workspaces} = this.props;
-
-    debugger
 
     const { auth, anchorEl, mobileMoreAnchorEl,
     logoAnchorEl } = this.state;
@@ -460,14 +457,14 @@ class HomeNav extends React.Component {
               },
             }}
           />
-          <Button variant="contained" color="secondary"
+        <Button variant="contained" color="primary"
             className={classes.button} onClick={this.handleSubmit}>
             Login
           </Button>
         </div>
 
         <div className={classes.sectionMobile}>
-          <Button variant="contained" color="secondary"
+          <Button variant="contained" color="primary"
             onClick={this.redirectToLogin}
             disableRipple>
             Login
@@ -610,7 +607,7 @@ class HomeNav extends React.Component {
     // </Link>
     // <div className={classes.grow} />
     return (
-      <MuiThemeProvider theme={this.props.theme} className={classes.root}>
+      <div>
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
@@ -622,7 +619,7 @@ class HomeNav extends React.Component {
         </AppBar>
 
         <LoginModal open={loginOpen} />
-      </MuiThemeProvider>
+      </div>
     );
   }
 }

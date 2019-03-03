@@ -132,7 +132,7 @@ class OpportunityWaitlist extends React.Component{
           />
         </Grid>
         <Grid item xs={12} container justify='flex-end'>
-          <Button variant="contained" color='secondary'
+          <Button variant="contained" color='primary'
             className={classes.refButton}
             onClick={this.handleSubmit}
             disabled={loading || currentUser.invitesRemaining === 0}>

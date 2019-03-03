@@ -17,97 +17,56 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 // import UserAgreementText from './legal_text';
 
 const mapStateToProps = (state, ownProps) => ({
-  currentUser: state.users[state.session.id],
-  siteTemplate: state.siteTemplate
+  currentUser: state.users[state.session.id]
 });
 
-const mapDispatchToProps = dispatch => ({})
-
-const styles = {
-  // root: {
-  //   flexGrow: 1,
-  //   // position: 'relative',
-  //   // top: 64
-  // },
-  // grid:{
-  //   // position:"absolute",
-  //   // top:64,
-  //   // bottom: 0,
-  //   // height: 50,
-  //   // borderTop: `1px solid ${theme.palette.grey1}`
-  // },
-  // homeGrid:{
-  //   flexGrow: 1,
-  //   paddingTop: 0,
-  //   backgroundColor: theme.palette.grey2,
-  //   padding: "30px 10px 30px 0px"
-  // },
-  // header: { margin: "30px 0px"},
-  // buttonWrapper:{
-  //   display: 'flex',
-  //   border: '1px solid red'
-  // },
-  // label: {
-  //   textTransform: 'lowercase',
-  // },
-  // footerCard: {
-  //   // display: 'none',
-  //   // [theme.breakpoints.up('sm')]: {
-  //   //   display: 'flex',
-  //   // },
-  //   // position: 'relative',
-  //   // bottom: 10,
-  //   // right: 10,
-  //   width: 100,
-  //   // height: 35
-  //   margin: 15
-  // },
-  // actionArea:{
-  //   display: 'flex',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   height: 20,
-  //   padding: 5
-  // },
-  // button: {
-  //   textTransform: 'capitalize',
-  //   fontSize: 12,
-  //   // margin: 2
-  // }
-};
+const styles = theme => ({
+  grid:{
+    position: 'fixed',
+    bottom: 0,
+    width: '100%'
+  },
+  button:{
+    padding: "4px 8px 4px 8px",
+    minHeight: 30
+  },
+  buttonText: {
+    textTransform: 'capitalize',
+    fontSize: 12,
+    // margin: 2
+  }
+});
 
 class Footer extends Component {
   render () {
     const {classes, currentUser} = this.props;
-    return (
-      <MuiThemeProvider theme={theme(this.props.siteTemplate)} className={classes.root}>
-        <div style={{ position: 'absolute', bottom: 0, width: '100%'}}>
-          {currentUser &&
-          <Grid container justify='flex-end' alignItems="center"
-            className={classes.grid}>
+    if(currentUser){
+      return (
+        <Grid container justdify='flex-end' alignItems="center"
+          className={classes.grid}>
 
-            <Button onClick={()=> this.props.history.push('/useragreement')}
-              style={{ padding: "4px 8px 4px 8px", minHeight: 30}}>
-              <Typography variant="body2" align='center' color='inherit'
-                className={ classes.button}>
-                User Agreement
-              </Typography>
-            </Button>
+          <Button onClick={()=> this.props.history.push('/useragreement')}
+            className={ classes.button}>
+            <Typography variant="body2" align='center'
+              color='textPrimary' className={ classes.buttonText}>
+              User Agreement
+            </Typography>
+          </Button>
 
-            <Button onClick={()=> this.props.history.push('/privacypolicy')}
-              style={{ padding: "4px 8px 4px 8px", minHeight: 30, marginRight: 20}}>
-              <Typography variant="body2" align='center' color='inherit'
-                className={ classes.button}>
-                Privacy Policy
-              </Typography>
-            </Button>
+          <Button onClick={()=> this.props.history.push('/privacypolicy')}
+            style={{ marginRight: 20}} className={ classes.button}>
+            <Typography variant="body2" align='center'
+              color='textPrimary' className={ classes.buttonText}>
+              Privacy Policy
+            </Typography>
+          </Button>
 
-          </Grid>}
-        </div>
-
-      </MuiThemeProvider>
-    )
+        </Grid>
+      )
+    } else {
+      return <div></div>
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Footer));
+export default connect(mapStateToProps, {})(withStyles(styles)(Footer));

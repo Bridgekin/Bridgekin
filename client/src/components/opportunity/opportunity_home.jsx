@@ -26,8 +26,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
 
 //Import CSS and theme
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from '../theme';
 import './opportunity_home.css'
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
@@ -82,7 +82,7 @@ const mapDispatchToProps = dispatch => ({
   createReferral: (referral) => dispatch(createReferral(referral))
 });
 
-const styles = {
+const styles = theme => ({
   jumboRoot: {
     flexGrow: 1
   },
@@ -92,61 +92,61 @@ const styles = {
   feedCard:{
     // height: 118,
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme().palette.white}`,
-    // borderTop: `1px solid ${theme().palette.lightGrey}`,
-    border: `1px solid ${theme().palette.lightGrey}`,
+    backgroundColor: `${theme.palette.base3}`,
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    border: `1px solid ${theme.palette.border.primary}`,
     width: '100%',
     marginBottom: 9,
-    [theme().breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
       padding: "9px 17px 20px",
     },
   },
   waitlistMobileCard:{
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme().palette.white}`,
+    backgroundColor: `${theme.palette.base1}`,
     borderRadius:0,
-    borderTop: `1px solid ${theme().palette.lightGrey}`,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
     marginBottom: 9,
-    [theme().breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
-      border: `1px solid ${theme().palette.lightGrey}`,
+      border: `1px solid ${theme.palette.border.primary}`,
     },
-    [theme().breakpoints.up('md')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none'
     }
   },
   referralCard:{
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme().palette.white}`,
+    backgroundColor: `${theme.palette.base1}`,
     borderRadius:0,
-    borderTop: `1px solid ${theme().palette.lightGrey}`,
-    borderBottom: `1px solid ${theme().palette.lightGrey}`,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     // marginTop: 9,
-    [theme().breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       padding: "10px 17px",
       borderRadius: 5,
-      border: `1px solid ${theme().palette.lightGrey}`,
+      border: `1px solid ${theme.palette.border.primary}`,
     },
   },
   oppNotification:{
     borderRadius: 5,
     padding: "8px 10px",
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`
+    backgroundColor: `${theme.palette.base2}`
   },
   filterCard:{
     marginTop: 18,
-    backgroundColor: `${theme().palette.white}`,
+    backgroundColor: `${theme.palette.base3}`,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme().palette.lightGrey}`
+    border: `1px solid ${theme.palette.border.primary}`
   },
   opportunityCard:{
     marginTop: 18,
-    backgroundColor: `${theme().palette.white}`,
+    backgroundColor: `${theme.palette.base1}`,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme().palette.lightGrey}`
+    border: `1px solid ${theme.palette.border.primary}`
   },
   cover:{
     height: 140,
@@ -154,7 +154,7 @@ const styles = {
     objectFit: 'cover'
   },
   filterItem:{
-    borderTop: `1px solid ${theme().palette.grey1}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
   },
   avatar:{
     height: 55,
@@ -163,19 +163,19 @@ const styles = {
   loader:{
     padding: "164px 0px 0px 0px",
     position: 'relative',
-    backgroundColor: `${fade(theme().palette.common.black,0.05)}`,
+    backgroundColor: `${theme.palette.base2}`,
     minHeight: window.innerHeight
   },
   progress:{
-    color: `${theme().palette.primary.main}`
+    color: `${theme.palette.primary.main}`
   },
   createFilterMain:{
-    borderBottom: `1px solid ${theme().palette.lightGrey}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     height: 85
   },
   createFilterButton:{
     textTransform: 'none',
-    backgroundColor: `${fade(theme().palette.common.black,0.05)}`,
+    backgroundColor: `${theme.palette.base2}`,
     margin: "5px 10px 5px 0px",
     fontSize: 12
   },
@@ -214,18 +214,18 @@ const styles = {
     // borderTop: `1px solid ${theme.palette.lightGrey}`,
     marginTop: -9,
     // paddingTop: 9,
-    [theme().breakpoints.up('md')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none'
     }
   },
   filterMobileCard:{
-    [theme().breakpoints.up('md')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none'
     }
   },
   filter:{
     display: 'none',
-    [theme().breakpoints.up('md')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'flex'
     },
     padding: 0,
@@ -236,7 +236,7 @@ const styles = {
     fontWeight: 500,
     margin: 20
   }
-};
+});
 
 const DEFAULTSTATE = {
   opportunityNeed: '',
@@ -398,7 +398,7 @@ class OpportunityHome extends React.Component {
   render (){
     const { classes, opportunities, networks,
       referral, currentUser, workspaceNetworks,
-      networkOpps, siteTemplate } = this.props;
+      networkOpps } = this.props;
 
     const { loading, waitlistOpen, changeModalOpen,
         referralNetwork, anchorEl,
@@ -423,16 +423,15 @@ class OpportunityHome extends React.Component {
         <Grid container justify='center' alignItems='center'
           style={{ padding: 0, width: '100%', marginTop: 18}}>
           <div className={classes.feedCard}>
-            <Typography gutterBottom align='Left'
+            <Typography gutterBottom align='Left' color='textPrimary'
               className={classes.cardHeader}
               style={{ marginBottom: 20}}>
               Over $71M in opportunities connected
             </Typography>
 
             <div className={classes.oppNotification}>
-              <Typography align='Left'
-                className={classes.cardHeader}
-                style={{ color: theme.palette.darkGrey}}>
+              <Typography align='Left' color='textSecondary'
+                className={classes.cardHeader}>
                 {`There are ${networkOpps.size} opportunities for you to checkout`}
               </Typography>
             </div>
@@ -440,8 +439,8 @@ class OpportunityHome extends React.Component {
 
           <div className={classes.feedCard}>
             <Typography gutterBottom align='Left'
-              className={classes.cardHeader}
-              style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
+              className={classes.cardHeader} color='textSecondary'
+              style={{ marginBottom: 20}}>
               Invite your trusted business contacts
             </Typography>
 
@@ -705,8 +704,8 @@ class OpportunityHome extends React.Component {
 
             <Card className={classes.waitlistMobileCard}>
               <Typography gutterBottom align='Left'
-                className={classes.cardHeader}
-                style={{ marginBottom: 20, color: theme.palette.darkGrey}}>
+                className={classes.cardHeader} color='textSecondary'
+                style={{ marginBottom: 20 }}>
                 Invite your trusted business contacts
               </Typography>
 
@@ -733,7 +732,7 @@ class OpportunityHome extends React.Component {
       )
 
       return (
-        <MuiThemeProvider theme={theme} style={{flexGrow: 1}}>
+        <div style={{flexGrow: 1}}>
           <FeedContainer
             column1={column1}
             feed={feed}
@@ -752,7 +751,7 @@ class OpportunityHome extends React.Component {
             opportunity={DEFAULTSTATE}
             type={'create'} />
 
-        </MuiThemeProvider>
+        </div>
       )
     } else {
       return (
@@ -766,45 +765,3 @@ class OpportunityHome extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(OpportunityHome));
-
-// <Grid container justify='center' className={classes.grid}>
-//   <div style={{ position: 'fixed', top: 64, width:1040 }}>
-//     <div className={classes.column}
-//       style={{ position: 'static', marginRight: 20, width: 250}}>
-//       {column1}
-//     </div>
-//     <div className={classes.column}
-//       style={{ position: 'static', maxHeight: window.innerHeight, width: 500 }}>
-//       {feed}
-//     </div>
-//     <div className={classes.column}
-//       style={{ position: 'static', marginLeft: 20, width: 250}}>
-//       {filter}
-//     </div>
-//   </div>
-// </Grid>
-//
-
-//
-// <Grid container className={classes.grid}>
-//   {header}
-//   {opportunitiesLoaded ? opportunityGrid : (
-//     <div style={{ padding: "114px 20px 50px", width: '100%' }}>
-//       <Loading />
-//     </div>
-//   )}
-//   <OpportunityWaitlist
-//     handleSubmit={this.handleWaitlistSubmit}
-//     loading={loading}
-//     currentUser={this.props.currentUser}
-//     />
-//   {this.props.currentUser.isAdmin &&
-//     <OpportunityReferral
-//       referralNetwork={referralNetwork}
-//       networks={networksArray}
-//       referral={referral}
-//       handleChange={this.handleReferralChange}
-//       handleSubmit={this.handleReferralSubmit}
-//       />
-//   }
-// </Grid>

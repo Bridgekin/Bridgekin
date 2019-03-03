@@ -201,7 +201,7 @@ class HomePage extends React.Component{
               />
           </Grid>
           <Grid item xs={10} className={classes.wrapper}>
-            <Button variant="contained" color="secondary"
+            <Button variant="contained" color="primary"
               className={classes.button} disabled={loading}
               onClick={this.handleWaitlistSubmit}>
               Join Our Waitlist
@@ -223,14 +223,14 @@ class HomePage extends React.Component{
           <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >
-              <Typography className={classes.homeHeader}
+              <Typography className={classes.homeHeader} color="textPrimary"
                 variant="h5" gutterBottom>
                 {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
 
             <Grid item xs={10} sm={8}>
-              <Typography className={classes.homeSubheader}
+              <Typography className={classes.homeSubheader} color="textPrimary"
                 variant="body1" gutterBottom>
                 {"Bridgekin is currently an invite-only community that has connected over $71M in opportunities. Sign up now to join our waitlist."}
               </Typography>

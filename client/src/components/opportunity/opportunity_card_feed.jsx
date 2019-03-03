@@ -65,7 +65,7 @@ const mapDispatchToProps = dispatch => ({
 const styles = theme => ({
   feedCardActionContainer:{
     marginTop: 10,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
     padding: 0
   },
   statusIndicator:{
@@ -75,11 +75,11 @@ const styles = theme => ({
   },
   opportunityCard:{
     // marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: `${theme.palette.base3}`,
     // width: '100%',
-    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    // borderTop: `1px solid ${theme.palette.border.primary}`,
     marginBottom: 9,
-    border: `1px solid ${theme.palette.lightGrey}`,
+    border: `1px solid ${theme.palette.border.primary}`,
     [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
     }
@@ -95,7 +95,7 @@ const styles = theme => ({
     // height: 40,
     minWidth: 89,
     textTransform: 'uppercase',
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: `${theme.palette.base2}`,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -127,6 +127,9 @@ const styles = theme => ({
     fontSize: 12,
     fontWeight: 600
   },
+  buttonGrid:{
+    borderRight: `1px solid ${theme.palette.border.secondary}`
+  },
   oppActionIcon:{
     marginRight: 10,
     width: 12,
@@ -134,7 +137,8 @@ const styles = theme => ({
   },
   oppActionButton:{
     textTransform: 'capitalize',
-    height: 45
+    height: 45,
+    color: theme.palette.text.primary
   },
   pagePeel:{
     position: 'absolute',
@@ -275,29 +279,6 @@ class OpportunityCard extends React.Component {
         value, status, pictureUrl, dealStatus, anonymous, viewType,
         ownerPictureUrl, ownerFirstName, ownerLastName } = opportunity;
 
-      let editOptions = editable ? (
-        <Grid container justify='flex-start'
-          className={classes.feedCardActionContainer}>
-          <Grid item xs={6} container justify='center' alignItems='center'
-            style={{borderRight: `1px solid ${theme.palette.grey1}`}}>
-            <img alt='connect' src={ConnectIcon}/>
-              <Button
-                onClick={this.handleEdit}
-                style={{ marginRight: 31}}>
-                Edit
-              </Button>
-          </Grid>
-          <Grid item xs={6} container justify='center' alignItems='center'>
-            <img alt='refer' src={ReferIcon}/>
-            <Button
-              className={classes.button}
-              onClick={this.handleDeleteOpen}>
-              Delete
-            </Button>
-          </Grid>
-        </Grid>
-      ) : (<div></div>)
-
       let deleteDialog = editable ? (
         <Dialog
           open={this.state.deleteOpen}
@@ -329,10 +310,10 @@ class OpportunityCard extends React.Component {
 
       let loader = (
         <Grid container justify='center' alignItems='center'
-          className={classes.loader}>
+          color="textPrimary" className={classes.loader}>
+          <CircularProgress className={classes.progress} />
         </Grid>
       )
-      // <CircularProgress className={classes.progress} />
 
       let picture = opportunity.pictureUrl ? (
         <VisibilitySensor>
@@ -368,7 +349,7 @@ class OpportunityCard extends React.Component {
                 <AccountCircle className={classes.avatar} />
               )}
               <Typography gutterBottom align='Left'
-                className={classes.cardHeader}
+                className={classes.cardHeader} color="textPrimary"
                 style={{ textTransform: 'capitalize'}}>
                 {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
               </Typography>
@@ -383,7 +364,10 @@ class OpportunityCard extends React.Component {
                 >
                 <div className={classes.statusIndicator}
                   style={{ backgroundColor: `${this.getStatusColor(dealStatus)}` }}/>
-                {dealStatus}
+                <Typography align='Left' color="textPrimary"
+                  style={{ fontSize: 14, fontWeight: 600 }}>
+                  {dealStatus}
+                </Typography>
               </Button>
 
               {editable && <Menu
@@ -393,10 +377,11 @@ class OpportunityCard extends React.Component {
                 onClose={this.handleDealStatusToggle}
               >
                 {['Active', 'Pending', 'Closed'].map(option => (
-                  <MenuItem onClick={this.handleDealStatusSend(option)}>
+                  <MenuItem color="textPrimary"
+                    onClick={this.handleDealStatusSend(option)}>
                     <div className={classes.statusIndicator}
                       style={{ backgroundColor: `${this.getStatusColor(option)}` }}/>
-                    {option}
+                      {option}
                   </MenuItem>
                 ))}
               </Menu>}
@@ -420,7 +405,7 @@ class OpportunityCard extends React.Component {
                 onClose={this.handleDetailsClick()}
               >
                 {['Edit', 'Delete'].map(option => (
-                  <MenuItem key={option}
+                  <MenuItem key={option} color="textPrimary"
                     onClick={this.handleDetailsClick(option)}>
                     {option}
                   </MenuItem>
@@ -437,7 +422,7 @@ class OpportunityCard extends React.Component {
                 opportunity.viewType === 'card' &&
                 <div className={classes.cardHeaderWrapper}>
                   <Typography variant="h5" align='left'
-                    color="default"
+                    color="textPrimary"
                     className={opportunity.viewType === 'card' ?
                       classes.titleCard : classes.titlePost} >
                     <LinesEllipsis
@@ -452,8 +437,8 @@ class OpportunityCard extends React.Component {
               {opportunity.description &&
                 <div className={classes.cardDescriptionWrapper}>
                   <Typography variant="body2" align='left'
-                    color="default" className={classes.description}
-                    >
+                    color="textPrimary"
+                    className={classes.description}>
                     <LinesEllipsis
                       text={description}
                       maxLine='3'
@@ -470,11 +455,12 @@ class OpportunityCard extends React.Component {
                   opportunity.viewType === 'card' &&
                   <Grid item xs={4} md={4}>
                     <Typography variant="h6" gutterBottom align='left'
-                      className={classes.cardSubHeader} noWrap>
+                      color="textSecondary" noWrap
+                      className={classes.cardSubHeader}>
                       Geography
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom align='left'
-                      color="default" className={classes.cardSubContent}>
+                      color="textPrimary" className={classes.cardSubContent}>
                       <LinesEllipsis
                         text={geography.join(", ")}
                         maxLine='3'
@@ -489,12 +475,13 @@ class OpportunityCard extends React.Component {
                   opportunity.viewType === 'card' &&
                   <Grid item xs={4} md={4}>
                     <Typography variant="h6" gutterBottom align='left'
+                      color="textSecondary"
                       className={classes.cardSubHeader}
                       noWrap>
                       Industry
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom align='left'
-                      color="default" className={classes.cardSubContent}
+                      color="textPrimary" className={classes.cardSubContent}
                       >
                       <LinesEllipsis
                         text={opportunity.industries.join(", ")}
@@ -510,12 +497,13 @@ class OpportunityCard extends React.Component {
                   opportunity.viewType === 'card' &&
                   <Grid item xs={3}>
                     <Typography variant="h6" gutterBottom align='left'
+                      color="textSecondary"
                       className={classes.cardSubHeader}
                       noWrap>
                       Value
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom align='left'
-                      color="default" className={classes.cardSubContent}
+                      color="textPrimary" className={classes.cardSubContent}
                       >
                       {opportunity.value}
                     </Typography>
@@ -526,7 +514,7 @@ class OpportunityCard extends React.Component {
             <Grid container justify='flex-start'
               className={classes.feedCardActionContainer}>
               <Grid item xs={6} container justify='center' alignItems='center'
-                style={{borderRight: `1px solid ${theme.palette.grey1}`}}>
+                className={classes.buttonGrid}>
                 <Button onClick={this.handleCardOpen('confirm', true)}
                   classes={{ label: classes.oppActionButton }} fullWidth>
                   <img alt='connect' src={ConnectIcon}
@@ -543,25 +531,6 @@ class OpportunityCard extends React.Component {
                   Refer
                 </Button>
               </Grid>
-              { editable && false &&
-                <Grid item xs={3} container justify='center' alignItems='center'
-                  style={{borderLeft: `1px solid ${theme.palette.grey1}`, borderRight: `1px solid ${theme.palette.grey1}`}}>
-                  <Button onClick={this.handleEdit}>
-                    <img alt='connect' src={ConnectIcon}
-                      className={classes.oppActionIcon}/>
-                    Edit
-                  </Button>
-                </Grid>}
-              { editable && false &&
-                <Grid item xs={3} container justify='center' alignItems='center'>
-                  <Button onClick={this.handleDeleteOpen}>
-                    <img alt='refer' src={ReferIcon}
-                      className={classes.oppActionIcon}/>
-                    Delete
-                  </Button>
-                </Grid>
-              }
-
             </Grid>
             {editable && deleteDialog}
           </Grid>
