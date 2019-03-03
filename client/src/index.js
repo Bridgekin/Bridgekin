@@ -10,17 +10,21 @@ import { handleAuthErrors } from './actions/fetch_error_handler';
 import { getAuthUserId } from './util/session_api_util';
 import { receiveCurrentUser } from './actions/session_actions';
 import { receiveUser } from './actions/user_actions';
+import getTheme from './components/theme.js';
 
 import BridgekinLogo from './static/Bridgekin_Logo.png';
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const root = document.getElementById('root');
+  let siteTemplate = {
+    navLogo: BridgekinLogo,
+    network: null,
+    base1: '#c43525'
+  }
   let preloadedState = {
-    siteTemplate: {
-      navLogo: BridgekinLogo,
-      network: null
-    }
+    siteTemplate,
+    theme: getTheme(siteTemplate)
   };
   let token = localStorage.getItem('bridgekinToken');
 
@@ -32,7 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
         users: { [user.id]: user},
         session: { id: user.id},
         siteTemplate,
-        workspaces
+        workspaces,
+        theme: getTheme(siteTemplate)
       };
       let store = configureStore(preloadedState);
       console.log('Rendering site');
@@ -45,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   } else {
     let store = configureStore(preloadedState);
+    console.log('Rendering site');
     ReactDOM.render(<Root store={store}/>, root);
   }
 

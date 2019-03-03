@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink, withRouter } from 'react-router-dom';
-import withWidth from '@material-ui/core/withWidth';
 
-// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -27,7 +25,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+import getTheme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
@@ -43,25 +41,7 @@ import { fetchSiteTemplate } from '../../actions/site_template_actions';
 import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 
-const mapStateToProps = (state, ownProps) => ({
-  currentUser: state.users[state.session.id],
-  session: state.session.id,
-  sessionErrors: state.errors.login,
-  siteTemplate: state.siteTemplate,
-  workspaces: Object.values(state.workspaces)
-  // homes: Object.values(state.entities.homes)
-});
-
-const mapDispatchToProps = dispatch => ({
-  login: (user) => dispatch(login(user)),
-  logout: () => dispatch(logout()),
-  receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
-  receiveUser: (user) => dispatch(receiveUser(user)),
-  fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
-  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
-});
-
-const styles = {
+let styles = (theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -87,10 +67,10 @@ const styles = {
     objectFit: 'cover'
   },
   nav: {
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.primary.main,
     color: '#4067B2',
     width: '100%',
-    borderBottom: `0.5px solid ${theme.palette.grey1}`,
+    borderBottom: `1px solid ${theme.palette.grey1}`,
     boxShadow: 'none',
     position: 'fixed',
     top: 0
@@ -134,10 +114,6 @@ const styles = {
   textFieldLabel:{
     fontSize: 14
   },
-  // navSectionContainer:{
-  //   display: 'flex',
-  //   justifyContent: 'space-between'
-  // },
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -179,9 +155,31 @@ const styles = {
     [theme.breakpoints.up('md')]: {
       width: 200,
     },
-  },
-  // menuIcon:{ color: }
+  }
+});
+
+const mapStateToProps = (state, ownProps) => {
+  const siteTemplate = state.siteTemplate;
+  const theme = getTheme(siteTemplate);
+  return ({
+    currentUser: state.users[state.session.id],
+    session: state.session.id,
+    sessionErrors: state.errors.login,
+    workspaces: Object.values(state.workspaces),
+    // classes: styles(theme),
+    siteTemplate,
+    theme
+  })
 };
+
+const mapDispatchToProps = dispatch => ({
+  login: (user) => dispatch(login(user)),
+  logout: () => dispatch(logout()),
+  receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
+  receiveUser: (user) => dispatch(receiveUser(user)),
+  fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
+  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
+});
 
 class HomeNav extends React.Component {
   constructor(props){
@@ -310,9 +308,11 @@ class HomeNav extends React.Component {
     let { classes, currentUser, sessionErrors, width,
       siteTemplate, workspaces} = this.props;
 
+    debugger
+
     const { auth, anchorEl, mobileMoreAnchorEl,
     logoAnchorEl } = this.state;
-    // const open = Boolean(anchorEl);
+
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logoMenuOpen = Boolean(logoAnchorEl);
@@ -610,7 +610,7 @@ class HomeNav extends React.Component {
     // </Link>
     // <div className={classes.grow} />
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
+      <MuiThemeProvider theme={this.props.theme} className={classes.root}>
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
@@ -627,4 +627,5 @@ class HomeNav extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withWidth()(HomeNav)));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(HomeNav));

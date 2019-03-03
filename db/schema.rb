@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_27_002430) do
+ActiveRecord::Schema.define(version: 2019_03_01_191128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -179,6 +179,16 @@ ActiveRecord::Schema.define(version: 2019_02_27_002430) do
     t.boolean "test_feature", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "base1"
+    t.string "base2"
+    t.string "base3"
+    t.string "base4"
+    t.string "font1"
+    t.string "font2"
+    t.string "button1"
+    t.string "button2"
+    t.string "border1"
+    t.string "border2"
     t.index ["network_id"], name: "index_site_templates_on_network_id"
   end
 

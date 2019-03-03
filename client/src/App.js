@@ -10,27 +10,27 @@ import './App.css';
 import HomeNav from './components/nav/home_nav';
 import Footer from './components/nav/footer';
 
-import HomePage from './components/home/home_page';
-// import AccountRoute from './components/account/account_route';
-import AccountMain from './components/account/account_main';
-import OpportunityHome from './components/opportunity/opportunity_home';
-// import OpportunityCreate from './components/post_opportunity/opportunity_create';
-// import OpportunityEdit from './components/post_opportunity/opportunity_edit';
-import SignupPage from './components/home/signup_page';
-import AccountConfirmed from './components/account/account_confirmed';
-import ConnectionsHome from './components/connections/connections_home';
-import Login from './components/home/login_page';
-import PasswordReset from './components/home/password_reset';
-import PasswordUpdate from './components/home/password_update';
-// import ConnectionsHome from './components/wip';
-import TestFeature from './components/nav/test_feature';
-import NetworkAdmin from './components/networks/network_admin';
-
-import UserAgreement from './components/terms/user_agreement';
-import PrivacyPolicy from './components/terms/privacy_policy';
-
-import NotFound from './components/not_found';
-import ConfirmationError from './components/confirmation_error';
+// import HomePage from './components/home/home_page';
+// // import AccountRoute from './components/account/account_route';
+// import AccountMain from './components/account/account_main';
+// import OpportunityHome from './components/opportunity/opportunity_home';
+// // import OpportunityCreate from './components/post_opportunity/opportunity_create';
+// // import OpportunityEdit from './components/post_opportunity/opportunity_edit';
+// import SignupPage from './components/home/signup_page';
+// import AccountConfirmed from './components/account/account_confirmed';
+// import ConnectionsHome from './components/connections/connections_home';
+// import Login from './components/home/login_page';
+// import PasswordReset from './components/home/password_reset';
+// import PasswordUpdate from './components/home/password_update';
+// // import ConnectionsHome from './components/wip';
+// import TestFeature from './components/nav/test_feature';
+// import NetworkAdmin from './components/networks/network_admin';
+//
+// import UserAgreement from './components/terms/user_agreement';
+// import PrivacyPolicy from './components/terms/privacy_policy';
+//
+// import NotFound from './components/not_found';
+// import ConfirmationError from './components/confirmation_error';
 import ScrollToTop from './components/scroll_to_top';
 
 // export default () => (
@@ -43,7 +43,7 @@ class App extends React.Component {
         <Route path="/" component={HomeNav} />
 
         <Switch>
-          <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
+          {/*<ProtectedRoute path="/findandconnect" component={OpportunityHome} />
           <ProtectedRoute path="/account" component={AccountMain} />
           <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
           <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
@@ -57,7 +57,7 @@ class App extends React.Component {
           <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
           <Route path="/useragreement" component={UserAgreement} />
           <Route path="/privacypolicy" component={PrivacyPolicy} />
-          <Route component={NotFound} />
+          <Route component={NotFound} />*/}
         </Switch>
 
         <Route path="/" component={Footer} />

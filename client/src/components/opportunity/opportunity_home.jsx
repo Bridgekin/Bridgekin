@@ -92,41 +92,41 @@ const styles = {
   feedCard:{
     // height: 118,
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme.palette.white}`,
-    // borderTop: `1px solid ${theme.palette.lightGrey}`,
-    border: `1px solid ${theme.palette.lightGrey}`,
+    backgroundColor: `${theme().palette.white}`,
+    // borderTop: `1px solid ${theme().palette.lightGrey}`,
+    border: `1px solid ${theme().palette.lightGrey}`,
     width: '100%',
     marginBottom: 9,
-    [theme.breakpoints.up('sm')]: {
+    [theme().breakpoints.up('sm')]: {
       borderRadius: 5,
       padding: "9px 17px 20px",
     },
   },
   waitlistMobileCard:{
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: `${theme().palette.white}`,
     borderRadius:0,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    borderTop: `1px solid ${theme().palette.lightGrey}`,
     marginBottom: 9,
-    [theme.breakpoints.up('sm')]: {
+    [theme().breakpoints.up('sm')]: {
       borderRadius: 5,
-      border: `1px solid ${theme.palette.lightGrey}`,
+      border: `1px solid ${theme().palette.lightGrey}`,
     },
-    [theme.breakpoints.up('md')]: {
+    [theme().breakpoints.up('md')]: {
       display: 'none'
     }
   },
   referralCard:{
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: `${theme().palette.white}`,
     borderRadius:0,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    borderTop: `1px solid ${theme().palette.lightGrey}`,
+    borderBottom: `1px solid ${theme().palette.lightGrey}`,
     // marginTop: 9,
-    [theme.breakpoints.up('sm')]: {
+    [theme().breakpoints.up('sm')]: {
       padding: "10px 17px",
       borderRadius: 5,
-      border: `1px solid ${theme.palette.lightGrey}`,
+      border: `1px solid ${theme().palette.lightGrey}`,
     },
   },
   oppNotification:{
@@ -136,17 +136,17 @@ const styles = {
   },
   filterCard:{
     marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: `${theme().palette.white}`,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`
+    border: `1px solid ${theme().palette.lightGrey}`
   },
   opportunityCard:{
     marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: `${theme().palette.white}`,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`
+    border: `1px solid ${theme().palette.lightGrey}`
   },
   cover:{
     height: 140,
@@ -154,7 +154,7 @@ const styles = {
     objectFit: 'cover'
   },
   filterItem:{
-    borderTop: `1px solid ${theme.palette.grey1}`,
+    borderTop: `1px solid ${theme().palette.grey1}`,
   },
   avatar:{
     height: 55,
@@ -163,19 +163,19 @@ const styles = {
   loader:{
     padding: "164px 0px 0px 0px",
     position: 'relative',
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: `${fade(theme().palette.common.black,0.05)}`,
     minHeight: window.innerHeight
   },
   progress:{
-    color: `${theme.palette.primary.main}`
+    color: `${theme().palette.primary.main}`
   },
   createFilterMain:{
-    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    borderBottom: `1px solid ${theme().palette.lightGrey}`,
     height: 85
   },
   createFilterButton:{
     textTransform: 'none',
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: `${fade(theme().palette.common.black,0.05)}`,
     margin: "5px 10px 5px 0px",
     fontSize: 12
   },
@@ -214,18 +214,18 @@ const styles = {
     // borderTop: `1px solid ${theme.palette.lightGrey}`,
     marginTop: -9,
     // paddingTop: 9,
-    [theme.breakpoints.up('md')]: {
+    [theme().breakpoints.up('md')]: {
       display: 'none'
     }
   },
   filterMobileCard:{
-    [theme.breakpoints.up('md')]: {
+    [theme().breakpoints.up('md')]: {
       display: 'none'
     }
   },
   filter:{
     display: 'none',
-    [theme.breakpoints.up('md')]: {
+    [theme().breakpoints.up('md')]: {
       display: 'flex'
     },
     padding: 0,
@@ -300,7 +300,6 @@ class OpportunityHome extends React.Component {
   }
 
   resetWorkspace(workspaceId){
-    debugger
     this.props.fetchWorkspaceNetworks(workspaceId)
     .then(() => {
       const { workspaceNetworks, networks } = this.props;

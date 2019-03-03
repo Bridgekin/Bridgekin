@@ -1,16 +1,19 @@
+import { Component } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import indigo from '@material-ui/core/colors/indigo';
 import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
+import store from '../store/store.js'
 
-let theme = createMuiTheme({
+let theme = (siteTemplate) => createMuiTheme({
   palette: {
     primary: {
-      main: '#000000'
+      main: ((siteTemplate && siteTemplate.base1) || '#000000')
     },
     secondary: {
-      // main: '#4067B2',
       main: '#000000'
+      // main: '#4067B2',
     },
     lightGrey: "#E2E2E2",
     grey1: "#C4C4C4",
@@ -18,14 +21,18 @@ let theme = createMuiTheme({
     darkGrey: "#616161",
     white: "#FFFFFF",
     backgroundGrey: '#f5f5f5', //Opportunity Change
+    text: {
+      primary: (siteTemplate && siteTemplate.font1) || "#000000" , //black
+      secondary: (siteTemplate && siteTemplate.font2) || "#616161", //grey
+      // tertiary: '#FFFFFF' //white
+    },
+    border: {
+      primary: (siteTemplate && siteTemplate.border1) || "#E2E2E2",
+      secondary: (siteTemplate && siteTemplate.border2) || "#C4C4C4"
+    },
     error:{
       main: '#f44336'
     },
-    text: {
-      primary: "#000000", //black
-      secondary: "#616161", //grey
-      tertiary: '#FFFFFF' //white
-    }
   },
   typography:{
     fontWeight: 300,
@@ -155,56 +162,7 @@ let theme = createMuiTheme({
         }
       }
     }
-  },
-  // htmlFontSize: 10
-  // pxToRem: () => {
-  //
-  // }
+  }
 });
-
-
-//
-// const { breakpoints, typography: { pxToRem } } = theme
-//
-// let options = {
-//   h1: 96,
-//   h2: 60,
-//   h3: 48,
-//   h4: 34,
-//   h5: 24,
-//   h6: 20,
-//   subtitle1: 16,
-//   subtitle2: 14,
-//   body1Next: 16,
-//   body2Next: 14,
-//   buttonNext: 14,
-//   captionNext: 12,
-//   overline: 12
-// }
-//
-// theme = {
-//   ...theme,
-//   overrides: {
-//     MuiTypography: {
-//       htmlFontSize: 10
-//     }
-//   }
-// }
-
-// theme = {
-//   ...theme,
-//   overrides: {
-//     MuiTypography: {
-//       h2: {
-//         fontSize: pxToRem(24),
-//         [breakpoints.up("md")]: {
-//           fontSize: pxToRem(32)
-//         }
-//       }
-//     }
-//   }
-// }
-
-
 
 export default theme;
