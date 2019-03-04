@@ -35,7 +35,7 @@ const styles = theme => ({
     width: '100%',
     height: 217,
     // backgroundColor: theme.palette.base3,
-    color: theme.palette.text.primary
+    color: theme.palette.text.secondary
   },
   card:{
     // height: 118,

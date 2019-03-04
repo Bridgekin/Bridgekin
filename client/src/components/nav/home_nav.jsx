@@ -508,7 +508,7 @@ class HomeNav extends React.Component {
               aria-owns={isMenuOpen ? 'material-appbar' : undefined}
               aria-haspopup="true"
               onClick={this.handleProfileMenuOpen}
-              color="secondary"
+              color="primary"
             >
               {currentUser.profilePicUrl ? (
                 <Avatar alt="profile-pic"
