@@ -158,7 +158,8 @@ const styles = theme => ({
   },
   avatar:{
     height: 55,
-    width: 55
+    width: 55,
+    color: theme.palette.text.primary
   },
   loader:{
     padding: "164px 0px 0px 0px",

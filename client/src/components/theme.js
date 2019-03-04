@@ -17,13 +17,13 @@ let theme = (siteTemplate) => createMuiTheme({
       // main: '#4067B2',
     },
     // Nav Bar Color
-    base1: (siteTemplate && siteTemplate.base1) || 'brown', //'#FFFFFF',
+    base1: (siteTemplate && siteTemplate.base1) || '#FFFFFF', // 'brown'
     // Site Background
-    base2: (siteTemplate && siteTemplate.base2) || 'blue',//`rgba(0,0,0,0.05)`,
+    base2: (siteTemplate && siteTemplate.base2) || '#f4f4f4', //`rgba(0,0,0,0.05)`, //'blue',
     // All Cards/Inside Backgrounds
-    base3: (siteTemplate && siteTemplate.base3) || 'green', //'#FFFFFF',
+    base3: (siteTemplate && siteTemplate.base3) || '#FFFFFF', //'green',
     // Button Hover
-    base4: (siteTemplate && siteTemplate.base4) || 'orange', //`rgba(0,0,0,0.05)`,
+    base4: (siteTemplate && siteTemplate.base4) || '#f4f4f4', //`rgba(0,0,0,0.05)`, // 'orange'
     lightGrey: "#E2E2E2",
     grey1: "#C4C4C4",
     grey2: "#999999",
@@ -31,13 +31,13 @@ let theme = (siteTemplate) => createMuiTheme({
     white: "#FFFFFF",
     backgroundGrey: '#f5f5f5', //Opportunity Change
     text: {
-      primary: (siteTemplate && siteTemplate.font1) || "#551A8B",//'#FFFFFF', //"#000000" , //black
-      secondary: (siteTemplate && siteTemplate.font2) || 'yellow', //"#616161", //grey
+      primary: (siteTemplate && siteTemplate.font1) || "#000000" , //"#551A8B", //black
+      secondary: (siteTemplate && siteTemplate.font2) || "#616161", //'yellow', //grey
       // tertiary: '#FFFFFF' //white
     },
     border: {
-      primary: (siteTemplate && siteTemplate.border1) || '#000000',//"#E2E2E2",
-      secondary: (siteTemplate && siteTemplate.border2) || '#FFFFFF', //"#C4C4C4"
+      primary: (siteTemplate && siteTemplate.border1) || "#E2E2E2", //'#000000'
+      secondary: (siteTemplate && siteTemplate.border2) || "#C4C4C4", //'#FFFFFF',
     },
     error:{
       main: '#f44336'
@@ -77,6 +77,18 @@ let theme = (siteTemplate) => createMuiTheme({
     //     borderRadius: 3
     //   }
     // },
+    MuiMenu:{
+      paper:{
+        backgroundColor: (siteTemplate && siteTemplate.base3) || '#FFFFFF',//'#f4f4f4',//`rgba(0,0,0,0.05)`, // 'orange',
+      }
+    },
+    MuiListItem: { // Name of the component ⚛️ / style sheet
+      root: {
+        "&$selected": {
+          backgroundColor: (siteTemplate && siteTemplate.base5) || "#E2E2E2", // 'pink',
+        }
+      }
+    },
     MuiButton: { // Name of the component ⚛️ / style sheet
       root: { // Name of the rule
         // color: 'white', // Some CSS
@@ -85,13 +97,6 @@ let theme = (siteTemplate) => createMuiTheme({
         fontFamily: "'Muli', sans-serif",
         color: (siteTemplate && siteTemplate.button1) || "#000000"
       },
-    },
-    MuiListItem: { // Name of the component ⚛️ / style sheet
-      root: {
-        "&$selected": {
-          backgroundColor: (siteTemplate && siteTemplate.button1) || 'pink',//"#E2E2E2"
-        }
-      }
     },
     MuiTypography:{
       h1:{
@@ -178,7 +183,7 @@ let theme = (siteTemplate) => createMuiTheme({
     MuiSelect: {
       select: {
         "&:focus": {
-          backgroundColor: 'white'
+          // backgroundColor: 'white'
         }
       }
     }

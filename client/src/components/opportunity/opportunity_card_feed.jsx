@@ -260,6 +260,8 @@ class OpportunityCard extends React.Component {
         return '#F6E694';
       case 'Closed':
         return '#E88262';
+      case 'Deleted':
+        return '#000000';
       default:
         return '';
     }

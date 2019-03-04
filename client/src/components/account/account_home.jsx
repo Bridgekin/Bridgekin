@@ -74,7 +74,7 @@ const styles = theme => ({
       paddingTop: 18
     },
   },
-  moreIcon: { color:theme.palette.text.primary}
+  moreIcon: { color:theme.palette.text.secondary}
 });
 
 
