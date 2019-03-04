@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { HashRouter, BrowserRouter } from 'react-router-dom';
+import GAListener from './components/ga_listener';
 import App from './App';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -15,7 +16,9 @@ class ThemeProvider extends React.Component{
     return (
       <MuiThemeProvider theme={getTheme(this.props.siteTemplate)}>
         <BrowserRouter>
-          <App />
+          <GAListener>
+            <App />
+          </GAListener>
         </BrowserRouter>
       </MuiThemeProvider>
     )
