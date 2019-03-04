@@ -17,15 +17,15 @@ import BridgekinLogo from './static/Bridgekin_Logo.png';
 document.addEventListener("DOMContentLoaded", () => {
 
   const root = document.getElementById('root');
-  let siteTemplate = {
-    navLogo: BridgekinLogo,
-    network: null,
-    base1: '#c43525' || '#FFFFFF'
-  }
-  let preloadedState = {
-    siteTemplate,
-    theme: getTheme(siteTemplate)
-  };
+  // let siteTemplate = {
+  //   navLogo: BridgekinLogo,
+  //   network: null,
+  // }
+  // let preloadedState = {
+  //   siteTemplate,
+  //   theme: getTheme(siteTemplate)
+  // };
+  let preloadedState = {};
   let token = localStorage.getItem('bridgekinToken');
 
   if (token){
@@ -37,24 +37,24 @@ document.addEventListener("DOMContentLoaded", () => {
         session: { id: user.id},
         siteTemplate,
         workspaces,
-        theme: getTheme(siteTemplate)
+        // theme: getTheme(siteTemplate)
       };
       let store = configureStore(preloadedState);
       console.log('Rendering site');
       ReactDOM.render(
-        <Root store={store} siteTemplate={siteTemplate}/>, root);
+        <Root store={store}/>, root);
     })
     .catch(() => {
       localStorage.removeItem('bridgekinToken');
       let store = configureStore(preloadedState);
       ReactDOM.render(
-        <Root store={store} siteTemplate={siteTemplate}/>, root);
+        <Root store={store}/>, root);
     })
   } else {
     let store = configureStore(preloadedState);
     console.log('Rendering site');
     ReactDOM.render(
-      <Root store={store} siteTemplate={siteTemplate}/>, root);
+      <Root store={store}/>, root);
   }
 
   // window.signup = SessionApiUtil.signup;

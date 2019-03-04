@@ -17,7 +17,7 @@ let theme = (siteTemplate) => createMuiTheme({
       // main: '#4067B2',
     },
     // Nav Bar Color
-    base1: (siteTemplate && siteTemplate.base1) || '#FFFFFF', // 'brown'
+    base1: siteTemplate.base1 || '#FFFFFF', // 'brown'
     // Site Background
     base2: (siteTemplate && siteTemplate.base2) || '#f4f4f4', //`rgba(0,0,0,0.05)`, //'blue',
     // All Cards/Inside Backgrounds
