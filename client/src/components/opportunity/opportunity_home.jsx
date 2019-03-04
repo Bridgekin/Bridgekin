@@ -182,7 +182,8 @@ const styles = theme => ({
   },
   filterButtonIcon:{
     width: 14,
-    marginRight: 3
+    marginRight: 3,
+    color: '#000000'
   },
   cardHeader: {
     fontSize: 14,
