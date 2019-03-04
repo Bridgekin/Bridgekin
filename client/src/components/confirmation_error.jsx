@@ -42,29 +42,27 @@ class ConfirmationError extends Component {
     const homeLink = <a href='/'>our homepage.</a>
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container justify="center" alignItems="center"
-          className={classes.homeGrid}>
-          <Grid item xs={6} style={{ marginTop: 100}}>
-            <Typography variant="h1" align='center' color='inherit'
-              gutterBottom className={classes.header}>
-              Sorry
-            </Typography>
-            <Typography variant="h6" align='center' color='inherit'
-              gutterBottom style={{ marginBottom: 15}}>
-              We're usually much better at connecting the dots :)
-            </Typography>
-            <Typography variant="h6" align='center' color='inherit'
-              gutterBottom style={{ marginBottom: 30}}>
-              However, your confirmation token is expired or invalid.
-            </Typography>
-            <Typography variant="h6" align='center' color='inherit'
-              style={{ marginBottom: 30}}>
-              {"Try going back to "} {homeLink}
-            </Typography>
-          </Grid>
+      <Grid container justify="center" alignItems="center"
+        className={classes.homeGrid}>
+        <Grid item xs={6} style={{ marginTop: 100}}>
+          <Typography variant="h1" align='center' color='textPrimary'
+            gutterBottom className={classes.header}>
+            Sorry
+          </Typography>
+          <Typography variant="h6" align='center' color='textPrimary'
+            gutterBottom style={{ marginBottom: 15}}>
+            We're usually much better at connecting the dots :)
+          </Typography>
+          <Typography variant="h6" align='center' color='textPrimary'
+            gutterBottom style={{ marginBottom: 30}}>
+            However, your confirmation token is expired or invalid.
+          </Typography>
+          <Typography variant="h6" align='center' color='textPrimary'
+            style={{ marginBottom: 30}}>
+            {"Try going back to "} {homeLink}
+          </Typography>
         </Grid>
-      </MuiThemeProvider>
+      </Grid>
     )
   }
 }

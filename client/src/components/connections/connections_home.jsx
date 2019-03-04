@@ -29,8 +29,8 @@ import PersonIcon from '@material-ui/icons/Person';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import { connect } from 'react-redux';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from '../theme';
 
 import Joe from '../../static/my_trusted_network_images/Joe_Lopardo.png';
 import Eric from '../../static/my_trusted_network_images/Eric_Conway.png';
@@ -55,23 +55,17 @@ const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
 });
 
-const mapDispatchToProps = dispatch => ({
-
-});
-
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
   homeGrid:{
-    // background: theme.palette.darkGrey
-    backgroundColor: 'RGBA(196,196,196,0.1)'
+    backgroundColor: theme.palette.base2
   },
   header:{
     marginTop: 25,
     marginBottom: 30,
-    fontSize: 50,
-    color: theme.palette.darkGrey
+    fontSize: 50
   },
   searchIcon: {
     width: theme.spacing.unit * 9,
@@ -81,16 +75,13 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: theme.palette.text.primary
   },
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     border: `1px solid ${theme.palette.grey2}`,
-    backgroundColor: theme.palette.white,
-    // backgroundColor: fade(theme.palette.common.white, 0.15),
-    // '&:hover': {
-    //   backgroundColor: fade(theme.palette.common.white, 0.25),
-    // },
+    backgroundColor: theme.palette.base3,
     marginRight: theme.spacing.unit * 2,
     marginLeft: 0,
     width: '100%',
@@ -104,6 +95,7 @@ const styles = {
     width: '100%',
   },
   inputInput: {
+    color: theme.palette.text.secondary,
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
@@ -125,16 +117,19 @@ const styles = {
     fontWeight: 600
   },
   buttonMobileLabel:{
-    fontSize: 9
+    fontSize: 9,
+    color: theme.palette.text.primary
   },
   card: {
     borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.base3,
     padding: 15
   },
   label:{
     textTransform: 'capitalize',
     fontWeight: 600,
-    fontSize: 13
+    fontSize: 13,
+    color: theme.palette.text.primary
   },
   subtitleDropdown:{
     margin: "20px 0px 20px 0px"
@@ -164,7 +159,7 @@ const styles = {
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
-    backgroundColor: theme.palette.backgroundGrey,
+    backgroundColor: theme.palette.base2,
     // position:'relative',
     // top: 64
     paddingTop: 64
@@ -174,7 +169,7 @@ const styles = {
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
-    backgroundColor: theme.palette.backgroundGrey,
+    backgroundColor: theme.palette.base2,
     // position:'relative',
     // top: 64
     paddingTop: 64
@@ -187,8 +182,10 @@ const styles = {
   },
   networkFilter:{
     fontSize: 13
-  }
-};
+  },
+  listItemText: { color: theme.palette.text.primary },
+  horizIcon: { color: theme.palette.text.primary}
+});
 
 const people = [
   { title: 'CEO', company: 'Bridgekin', fname: 'joe', lname: 'lopardo', picture: Joe},
@@ -255,17 +252,19 @@ class ConnectionsHome extends React.Component{
         <Grid item xs={8} md={6} container justify='flex-start'
           className={classes.subtitleDropdown} alignItems="center">
           <Grid item md={5} lg={4} container justify='center' alignItems='center'>
-            <Button color="primary" className={classes.button}>
+            <Button classes={{ label: classes.label}}
+              className={classes.button}>
               Connection Requests
+              <KeyboardArrowDownIcon />
             </Button>
-            <KeyboardArrowDownIcon />
           </Grid>
 
           <Grid item md={5} lg={4}  container justify='center' alignItems='center'>
-            <Button color="primary" className={classes.button}>
+            <Button classes={{ label: classes.label}}
+              className={classes.button}>
               Add Trusted Contacts
+              <KeyboardArrowDownIcon />
             </Button>
-            <KeyboardArrowDownIcon />
           </Grid>
         </Grid>
       </Grid>
@@ -276,20 +275,20 @@ class ConnectionsHome extends React.Component{
         alignItems="center" className={classes.subtitleWrapperMobile}>
         <Grid item xs={6}  container justify='center'
           className={classes.subtitleDropdown} alignItems="center">
-          <Button color="primary" className={classes.button}
+          <Button className={classes.button}
             classes={{ root: classes.buttonMobileLabel }}>
             Connection Requests
+            <KeyboardArrowDownIcon style={{fontSize: 16}}/>
           </Button>
-          <KeyboardArrowDownIcon style={{fontSize: 16}}/>
         </Grid>
 
         <Grid item xs={6} container justify='center'
           className={classes.subtitleDropdown} alignItems="center">
-          <Button color="primary" className={classes.button}
+          <Button className={classes.button}
             classes={{ root: classes.buttonMobileLabel }}>
             Add Trusted Contacts
+            <KeyboardArrowDownIcon style={{fontSize: 16}}/>
           </Button>
-          <KeyboardArrowDownIcon style={{fontSize: 16}}/>
         </Grid>
       </Grid>
     )
@@ -317,20 +316,22 @@ class ConnectionsHome extends React.Component{
             <Grid item xs={6} sm={7} md={6} lg={5} alignItems='flex-start'
               container direction='column' justify='flex-start'>
               <Typography variant="body2" align="left"
+                color='textPrimary'
                 className={classes.networkFilter}>
                 {"Sort By: "}
               </Typography>
               <Grid container justify='flex-start' alignItems='center'>
-                <Button color="primary" classes={{ label: classes.label}}
+                <Button classes={{ label: classes.label}}
                   style={{ paddingLeft: 0}}>
                   Recently Added
+                  <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
                 </Button>
-                <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
               </Grid>
             </Grid>
 
             <Grid item xs={6} sm={5} md={5} lg={4}>
               <Typography variant="body2" align="center"
+                color='textPrimary'
                 style={{ fontSize: 14}}>
                 120 Connections
               </Typography>
@@ -353,13 +354,16 @@ class ConnectionsHome extends React.Component{
                     </ListItemAvatar>
 
                     <ListItemText
+                      classes={{
+                        primary: classes.listItemText,
+                        secondary: classes.listItemText}}
                       primary={`${this.capitalize(person.fname)} ${this.capitalize(person.lname)}`}
                       secondary={`${this.capitalize(person.title)} @ ${this.capitalize(person.company)}`}
                     />
 
                     <ListItemSecondaryAction>
                       <IconButton aria-label="More">
-                        <MoreHorizIcon />
+                        <MoreHorizIcon className={classes.horizIcon}/>
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -417,8 +421,8 @@ class ConnectionsHome extends React.Component{
                 <Button color="primary" classes={{ label: classes.label}}
                   style={{ paddingLeft: 0}}>
                   Recently Added
+                  <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
                 </Button>
-                <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
               </Grid>
             </Grid>
 
@@ -442,14 +446,17 @@ class ConnectionsHome extends React.Component{
                       </Avatar>
                     </ListItemAvatar>
 
-                    <ListItemText
+                      <ListItemText
+                      classes={{
+                        primary: classes.listItemText,
+                        secondary: classes.listItemText}}
                       primary={`${this.capitalize(circle.title)}`}
                       secondary={`${this.capitalize(circle.subtitle)}`}
                     />
 
                     <ListItemSecondaryAction>
                       <IconButton aria-label="Delete">
-                        <MoreHorizIcon />
+                        <MoreHorizIcon className={classes.horizIcon}/>
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -462,13 +469,14 @@ class ConnectionsHome extends React.Component{
     )
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
+      <div className={classes.root}>
         <Grid container className={classes.sectionDesktop}
           justify="center" alignItems="center">
 
           <Grid item xs={10} container justify="center"
             alignItems="center" >
             <Typography variant="h1" className={classes.header}
+              color="textSecondary"
               gutterBottom align="center">
               Coming Soon
             </Typography>
@@ -527,9 +535,9 @@ class ConnectionsHome extends React.Component{
 
           {subHeaderMobile}
         </Grid>
-      </MuiThemeProvider>
+      </div>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ConnectionsHome));
+export default connect(mapStateToProps, {})(withStyles(styles)(ConnectionsHome));

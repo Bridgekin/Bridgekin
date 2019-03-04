@@ -25,7 +25,7 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 import SendIcon from '@material-ui/icons/SendSharp';
 
 import Typography from '@material-ui/core/Typography';
-import theme from '../theme';
+// import theme from '../theme';
 
 import { connect } from 'react-redux';
 import { clearConnectedOpportunityErrors } from '../../actions/error_actions';
@@ -41,18 +41,18 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  paper: {
-    // position: 'absolute',
-    margin: 15,
-    // height: 'auto',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
+  // paper: {
+  //   // position: 'absolute',
+  //   margin: 15,
+  //   // height: 'auto',
+  //   backgroundColor: theme.palette.background.paper,
+  //   boxShadow: theme.shadows[5],
+  //   padding: theme.spacing.unit * 4,
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   alignItems: 'flex-start',
+  //   justifyContent: 'center'
+  // },
   cardModalWrapper:{
     padding: 0,
     // minWidth: 500,
@@ -128,8 +128,8 @@ const styles = theme => ({
     border: `1px solid`,
     borderRadius: '50%',
     height: 'auto',
-    color: theme.palette.white,
-    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.base3,
+    backgroundColor: theme.palette.text.primary,
     padding: 5,
     cursor: 'pointer'
   },
@@ -138,7 +138,9 @@ const styles = theme => ({
   },
   submitHeader:{
     marginBottom: 25
-  }
+  },
+  container: { backgroundColor: theme.palette.base3},
+  listText:{ color: theme.palette.text.primary}
 });
 
 class CardModal extends React.Component {
@@ -243,7 +245,8 @@ class CardModal extends React.Component {
 
     let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
       <ListItem >
-        <ListItemText primary={error} />
+        <ListItemText primary={error}
+          classes={{ primary: classes.listText }}/>
       </ListItem>
     ));
 
@@ -274,10 +277,12 @@ class CardModal extends React.Component {
             <Grid item xs={11} sm={10} md={8}
               container justify='flex-start' alignItems='center'>
               <Typography variant="h5" id="modal-title" align='left'
+                color="textPrimary"
                 className={classes.submitHeader}>
                 Time for business!
               </Typography>
               <Typography variant="body2" id="simple-modal-description"
+                color="textPrimary"
                 className={classes.section} align='left'>
                 {`We're as excited about this opportunity as you are! We just sent
                   an email connecting you to the opportunity owner, so that should
@@ -285,7 +290,7 @@ class CardModal extends React.Component {
               </Typography>
               <Grid item xs={12} className={classes.postButtons}
                 style={{ marginBottom: 25 }}>
-                <Button variant="contained" color='secondary'
+                <Button variant="contained" color='primary'
                   onClick={this.handleClose('find')}
                   className={classes.button}
                   style={{ marginRight: 20}}>
@@ -300,10 +305,12 @@ class CardModal extends React.Component {
             <Grid item xs={11} sm={10} md={8}
               container justify='flex-start' alignItems='center'>
               <Typography variant="h5" id="modal-title" align='left'
+                color="textPrimary"
                 className={classes.submitHeader}>
                 Time for business!
               </Typography>
               <Typography variant="body2" id="simple-modal-description"
+                color="textPrimary"
                 className={classes.section} align='left'>
                 {`We're as excited about this opportunity as you are!
                   We just sent an email connecting you to the opportunity owner
@@ -311,7 +318,7 @@ class CardModal extends React.Component {
                   We'll let you take it from here.`}
               </Typography>
               <Grid item xs={12} className={classes.postButtons}>
-                <Button variant="contained" color='secondary'
+                <Button variant="contained" color='primary'
                   onClick={this.handleClose('find')}
                   className={classes.button}
                   style={{ marginRight: 20}}>
@@ -330,10 +337,12 @@ class CardModal extends React.Component {
             <Grid item xs={11} sm={10} md={8}
               container justify='flex-start' alignItems='center'>
               <Typography variant="h1" id="modal-title" align='left'
+                color="textPrimary"
                 className={classes.errorHeader}>
                 Hold on there!
               </Typography>
-              <Typography variant="body2" id="simple-modal-description" align='left'>
+              <Typography variant="body2" id="simple-modal-description"
+                align='left' color="textPrimary">
                 Unfortunately, we weren't able to connect you to this opportunity because:
               </Typography>
               <Grid item xs={12}>
@@ -343,7 +352,7 @@ class CardModal extends React.Component {
               </Grid>
               <Grid item xs={12} container justify='flex-start'>
                 <Button variant="contained"
-                  onClick={this.handleClose('find')} color='secondary'
+                  onClick={this.handleClose('find')} color='primary'
                   style={{ marginLeft: 20}}>
                   Close
                 </Button>
@@ -358,13 +367,13 @@ class CardModal extends React.Component {
             <Grid item xs={10} container justify='flex-start'
               style={{ margin: "40px 0px 25px"}}>
               <Typography variant="h5" gutterBottom align='left'
-                color="default" className={classes.submitHeader}>
+                color="textPrimary" className={classes.submitHeader}>
                 {connectBool ?
                   `Connect to this opportunity` :
                   `Refer a trusted contact to this opportunity`}
               </Typography>
               <Typography variant="body1" gutterBottom align='left'
-                color="default" className={classes.section}>
+                color="textPrimary" className={classes.section}>
                 {connectBool ?
                   `Once you press the send button below you'll receive an
                   email introducing you to the opportunity owner. We'll
@@ -398,11 +407,11 @@ class CardModal extends React.Component {
               container justify='center' spacing={16}>
               <Grid item xs={12}>
                 <Typography variant="h5" gutterBottom align='left'
-                  color="default">
+                  color="textPrimary">
                   {title}
                 </Typography>
                 {viewType === 'card' && <Typography variant="body2" gutterBottom align='left'
-                  color="default">
+                  color="textPrimary">
                   {description}
                 </Typography>}
               </Grid>
@@ -410,33 +419,36 @@ class CardModal extends React.Component {
               {viewType === 'card' && <Grid container justify='flex-start' spacing={24}>
                 <Grid item xs={4}>
                   <Typography variant="h6" gutterBottom align='left'
+                    color="textPrimary"
                     className={classes.cardSubHeader}>
                     Geography
                   </Typography>
                   <Typography variant="subtitle1" gutterBottom align='left'
-                    color="default" className={classes.cardSubContent}>
+                    color="textPrimary" className={classes.cardSubContent}>
                     {geography.join(", ")}
                   </Typography>
                 </Grid>
 
                 <Grid item xs={5}>
                   <Typography variant="h6" gutterBottom align='left'
+                    color="textPrimary"
                     className={classes.cardSubHeader}>
                     Industry
                   </Typography>
                   <Typography variant="subtitle1" gutterBottom align='left'
-                    color="default" className={classes.cardSubContent}>
+                    color="textPrimary" className={classes.cardSubContent}>
                     {industries.join(", ")}
                   </Typography>
                 </Grid>
 
                 <Grid item xs={3}>
                   <Typography variant="h6" gutterBottom align='left'
+                    color="textPrimary"
                     className={classes.cardSubHeader}>
                     Value
                   </Typography>
                   <Typography variant="subtitle1" gutterBottom align='left'
-                    color="default" className={classes.cardSubContent}>
+                    color="textPrimary"className={classes.cardSubContent}>
                     {value}
                   </Typography>
                 </Grid>
@@ -444,14 +456,14 @@ class CardModal extends React.Component {
 
               <Grid container justify='flex-start'
                 style={{ margin: "10px 0px"}}>
-                <Button variant="contained" color='secondary'
+                <Button variant="contained" color='primary'
                   onClick={this.handleConfirm(true)}
                   className={classes.actionButton}
                   style={{marginRight: 20}}>
                   Connect Me
                 </Button>
 
-                <Button variant="contained" color='secondary'
+                <Button variant="contained" color='primary'
                   onClick={this.handleConfirm(false)}
                   className={classes.actionButton}>
                   Refer A Trusted Contact
@@ -459,7 +471,7 @@ class CardModal extends React.Component {
               </Grid>
 
               <Typography variant="body2" align='left'
-                color="default" style={{ marginBottom: 30 }}>
+                color="textPrimary" style={{ marginBottom: 30 }}>
                 Once you connect or refer above, we'll send you an email introducing
                 you to the opportunity owner
               </Typography>
@@ -486,7 +498,9 @@ class CardModal extends React.Component {
             classes={{ badge: classes.badge }}
             style={{ width: '100%'}}
             >
-            {this.getContent()}
+            <div className={classes.container}>
+              {this.getContent()}
+            </div>
           </Badge>
         </Dialog>
       )

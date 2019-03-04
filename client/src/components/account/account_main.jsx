@@ -14,10 +14,12 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { animateScroll } from 'react-scroll';
+
+import FeedContainer from '../feed_container';
 
 import AccountHome from './account_home';
 import AccountSettings from './account_settings';
@@ -25,25 +27,23 @@ import AccountOpportunities from './account_opportunities';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
 
-const mapStateToProps = state => ({
-  currentUser: state.users[state.session.id]
+const mapStateToProps = (state, ownProps) => ({
+  currentUser: state.users[state.session.id],
+  pathname: window.location.pathname
 });
 
-const mapDispatchToProps = dispatch => ({
-});
-
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
   grid:{
     position: 'relative',
     // padding: "64px 35px 50px 35px",
-    padding: "64px 0px 0px 0px",
+    // padding: "64px 0px 0px 0px",
     // marginTop: 64,
     // paddingTop: 64 + 18,
     flexGrow: 1,
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: theme.palette.base2,
     // backgroundColor: 'white',
     minHeight: window.innerHeight
   },
@@ -54,13 +54,13 @@ const styles = {
   },
   filterCard:{
     marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: theme.palette.base3,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`
+    border: `1px solid ${theme.palette.border.primary}`
   },
   filterItem:{
-    borderTop: `1px solid ${theme.palette.grey1}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
   },
   cardHeader: {
     fontSize: 14,
@@ -101,8 +101,8 @@ const styles = {
     }
   },
   mobileNavigation:{
-    padding: 25,
-    backgroundColor: 'white',
+    padding: "15px 25px",
+    backgroundColor: theme.palette.base3,
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     }
@@ -124,8 +124,8 @@ const styles = {
     height: 84,
     display: 'flex',
     // backgroundColor: `${theme.palette.lightGrey}`,
-    backgroundColor: `#fafafa`,
-    borderTop: `1px solid ${theme.palette.grey1}`,
+    backgroundColor: theme.palette.base3,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     }
@@ -150,21 +150,32 @@ const styles = {
     [theme.breakpoints.only('sm')]: {
       display: 'flex'
     }
-  }
-};
+  },
+  moreIcon: { color: theme.palette.text.primary}
+});
 
 
 class AccountMain extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      loaded: false,
       oppFilter: 'posted',
       mobileNavAnchorEl: null
     };
 
     this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
+    // this.handleNav = this.handleNav.bind(this);
   }
+
+  // shouldComponentUpdate(nextProps, nextState){
+  //   debugger
+  //   if(nextProps.location.pathname !== this.props.location.pathname){
+  //     return true;
+  //   }
+  //   return true;
+  // }
 
   handleFilter(name){
     return e => {
@@ -184,6 +195,18 @@ class AccountMain extends React.Component {
       })
     }
   }
+
+  // handleNav(path){
+  //   return e => {
+  //     // this.setState({ loaded: false},
+  //     // () => {
+  //       this.props.history.push(path);
+  //       const props = this.props;
+  //       debugger
+  //       // this.setState({ loaded: true })
+  //     // })
+  //   }
+  // }
 
   render (){
     let { classes } = this.props;
@@ -227,15 +250,15 @@ class AccountMain extends React.Component {
     let mobileNavigation = (
       <Grid container justify='flex-start' alignItems='center'
         className={classes.mobileNavigation}>
-        <Typography align='Left'
-          className={classes.mobileNavHeader}
-          style={{ marginTop: 15 }}>
+        <Typography align='Left' color="textPrimary"
+          className={classes.mobileNavHeader}>
           My Account
           <IconButton
             aria-label="More"
             aria-owns={mobileNavOpen ? 'long-menu' : undefined}
             aria-haspopup="true"
             onClick={this.handleMobileNavClick()}
+            classes={{ label: classes.moreIcon }}
             style={{ padding: 6}}
             >
             <MoreVertIcon />
@@ -272,7 +295,7 @@ class AccountMain extends React.Component {
       <Grid container justify='center' alignItems='center'
         className={classes.oppFiltersDesktop}>
         <div className={classes.filterCard}>
-          <Typography align='Left'
+          <Typography align='Left' color="textPrimary"
             className={classes.cardHeader}
             style={{ margin: "10px 15px 0px"}}>
             Connected Opportunities
@@ -298,7 +321,7 @@ class AccountMain extends React.Component {
       <Grid container justify='flex-start' alignItems='center'
         className={classes.oppFiltersMobile}>
         <div>
-          <Typography align='Left'
+          <Typography align='Left' color='textPrimary'
             className={classes.cardHeader}
             style={{ margin: "10px 15px 10px"}}>
             Opportunities You've
@@ -323,40 +346,250 @@ class AccountMain extends React.Component {
       </Grid>
     )
 
+    let column1 = (
+      <div>
+        <div className={classes.navSMContainer}>
+          {navigation}
+        </div>
+        {pathName === '/account/opportunities' && oppFiltersDesktop}
+      </div>
+    )
+
+    let feed = (
+      <div>
+        {mobileNavigation}
+        {pathName === '/account/opportunities' && oppFiltersMobile}
+        <Switch>
+          <ProtectedRoute path="/account/settings" component={AccountSettings} />
+          <ProtectedRoute
+              path="/account/opportunities"
+              component={AccountOpportunities}
+              passedProps={{ oppFilter  }} />
+          <ProtectedRoute path="/account/home" component={AccountHome} />
+        </Switch>
+      </div>
+    )
+
+    let filter = (
+      <div className={classes.navMDContainer}>
+        {navigation}
+      </div>
+    )
+
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container justify='center' className={classes.grid}>
-          <div style={{ position: 'relative', margin: '0 auto',
-            width:1040, height: '100%'}}>
-            <div className={classes.column}
-              style={{ position: 'fixed', top:64, width: 250}}>
-              <div className={classes.navSMContainer}>
-                {navigation}
-              </div>
-              {pathName === '/account/opportunities' && oppFiltersDesktop}
-            </div>
-            <div className={classes.mainColumn}>
-              {mobileNavigation}
-              {pathName === '/account/opportunities' && oppFiltersMobile}
-              <Switch>
-                <ProtectedRoute path="/account/settings" component={AccountSettings} />
-                <ProtectedRoute
-                    path="/account/opportunities"
-                    component={AccountOpportunities}
-                    passedProps={{ oppFilter  }} />
-                <ProtectedRoute path="/account/home" component={AccountHome} />
-              </Switch>
-            </div>
-            <div className={classes.rightColumn}>
-              <div className={classes.navMDContainer}>
-                {navigation}
-              </div>
-            </div>
-          </div>
-        </Grid>
-      </MuiThemeProvider>
+      <FeedContainer
+        column1={column1}
+        feed={feed}
+        column2={filter} />
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AccountMain));
+export default withRouter(connect(mapStateToProps, {})(withStyles(styles)(AccountMain)));
+
+// <div style={{ position: 'relative', margin: '0 auto',
+//   width:1040, height: '100%'}}>
+//   <div className={classes.column}
+//     style={{ position: 'fixed', top:64, width: 250}}>
+//     <div className={classes.navSMContainer}>
+//       {navigation}
+//     </div>
+//     {pathName === '/account/opportunities' && oppFiltersDesktop}
+//   </div>
+//   <div className={classes.mainColumn}>
+//     {mobileNavigation}
+//     {pathName === '/account/opportunities' && oppFiltersMobile}
+//     <Switch>
+//       <ProtectedRoute path="/account/settings" component={AccountSettings} />
+//       <ProtectedRoute
+//           path="/account/opportunities"
+//           component={AccountOpportunities}
+//           passedProps={{ oppFilter  }} />
+//       <ProtectedRoute path="/account/home" component={AccountHome} />
+//     </Switch>
+//   </div>
+//   <div className={classes.rightColumn}>
+//     <div className={classes.navMDContainer}>
+//       {navigation}
+
+//#################################################
+
+// <FeedContainer
+//   column1={column1}
+//   feed={feed}
+//   column2={filter} />
+
+//#################################################
+
+// let { classes } = this.props;
+// let pathName = this.props.location.pathname;
+// let { oppFilter, mobileNavAnchorEl } = this.state;
+//
+// const mobileNavOpen = Boolean(mobileNavAnchorEl);
+//
+// let destinations = [
+//   {title: 'My Profile', dest: '/account/home'},
+//   {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
+//   {title: 'Settings', dest: '/account/settings'}
+// ]
+//
+// let navigation = (
+//   <Grid container justify='center' alignItems='center'
+//     className={ classes.navigation }>
+//     <div className={classes.filterCard}>
+//       <Typography align='Left'
+//         className={classes.cardHeader}
+//         style={{ margin: "10px 15px 0px"}}>
+//         My Account
+//       </Typography>
+//
+//       <List component="nav">
+//         {destinations.map(item => (
+//           <ListItem button className={classes.filterItem}
+//             onClick={() => this.props.history.push(item.dest)}
+//             selected={pathName === item.dest}>
+//             <Typography variant="h6" align='left'
+//               color="textPrimary" className={classes.filterHeader}>
+//               {item.title}
+//             </Typography>
+//           </ListItem>
+//         ))}
+//       </List>
+//     </div>
+//   </Grid>
+// )
+//
+// let mobileNavigation = (
+//   <Grid container justify='flex-start' alignItems='center'
+//     className={classes.mobileNavigation}>
+//     <Typography align='Left'
+//       className={classes.mobileNavHeader}
+//       style={{ marginTop: 15 }}>
+//       My Account
+//       <IconButton
+//         aria-label="More"
+//         aria-owns={mobileNavOpen ? 'long-menu' : undefined}
+//         aria-haspopup="true"
+//         onClick={this.handleMobileNavClick()}
+//         style={{ padding: 6}}
+//         >
+//         <MoreVertIcon />
+//       </IconButton>
+//     </Typography>
+//
+//     <Menu
+//       id="long-menu"
+//       anchorEl={mobileNavAnchorEl}
+//       open={mobileNavOpen}
+//       onClose={this.handleMobileNavClick()}
+//     >
+//       {destinations.map(item => (
+//         <ListItem button className={classes.filterItem}
+//           onClick={this.handleMobileNavClick(item.dest)}
+//           selected={pathName === item.dest}>
+//           <Typography variant="body1" align='left'
+//             color="textPrimary" className={classes.filterHeader}>
+//             {item.title}
+//           </Typography>
+//         </ListItem>
+//       ))}
+//     </Menu>
+//   </Grid>
+// )
+//
+// let filtersDesktop = [
+//   {title: "Opportunities You've Connected To", name: 'connected'},
+//   {title: "Opportunities You've Referred", name: 'referred'},
+//   {title: "Opportunities You've Posted", name: 'posted'}
+// ]
+//
+// let oppFiltersDesktop = (
+//   <Grid container justify='center' alignItems='center'
+//     className={classes.oppFiltersDesktop}>
+//     <div className={classes.filterCard}>
+//       <Typography align='Left'
+//         className={classes.cardHeader}
+//         style={{ margin: "10px 15px 0px"}}>
+//         Connected Opportunities
+//       </Typography>
+//
+//       <List component="nav">
+//         {filtersDesktop.map(item => (
+//           <ListItem button className={classes.filterItem}
+//             onClick={this.handleFilter(item.name)}
+//             selected={oppFilter === item.name}>
+//             <Typography variant="h6" align='left'
+//               color="textPrimary" className={classes.filterHeader}>
+//               {item.title}
+//             </Typography>
+//           </ListItem>
+//         ))}
+//       </List>
+//     </div>
+//   </Grid>
+// )
+//
+// let oppFiltersMobile = (
+//   <Grid container justify='flex-start' alignItems='center'
+//     className={classes.oppFiltersMobile}>
+//     <div>
+//       <Typography align='Left'
+//         className={classes.cardHeader}
+//         style={{ margin: "10px 15px 10px"}}>
+//         Opportunities You've
+//       </Typography>
+//     </div>
+//     <Grid container justify='flex-start' >
+//       {['connected', 'referred', 'posted'].map(option => (
+//         <Button
+//           onClick={() => this.setState({ oppFilter: option })}
+//           className={classes.mobileFilterButton}>
+//           <Typography variant="h6" align='left'
+//             color="textPrimary"
+//             className={oppFilter === option ?
+//               [classes.mobileFilterTypo, classes.bold].join(' ') :
+//               classes.mobileFilterTypo
+//             }>
+//             {option}
+//           </Typography>
+//         </Button>
+//       ))}
+//     </Grid>
+//   </Grid>
+// )
+//
+// return (
+//   <div className={classes.root}>
+//     <Grid container justify='center' className={classes.grid}>
+//       <div style={{ position: 'relative', margin: '0 auto',
+//         width:1040, height: '100%'}}>
+//         <div className={classes.column}
+//           style={{ position: 'fixed', top:64, width: 250}}>
+//           <div className={classes.navSMContainer}>
+//             {navigation}
+//           </div>
+//           {pathName === '/account/opportunities' && oppFiltersDesktop}
+//         </div>
+//         <div className={classes.mainColumn}>
+//           {mobileNavigation}
+//           {pathName === '/account/opportunities' && oppFiltersMobile}
+//           <Switch>
+//             <ProtectedRoute path="/account/settings" component={AccountSettings} />
+//             <ProtectedRoute
+//                 path="/account/opportunities"
+//                 component={AccountOpportunities}
+//                 passedProps={{ oppFilter  }} />
+//             <ProtectedRoute path="/account/home" component={AccountHome} />
+//           </Switch>
+//         </div>
+//         <div className={classes.rightColumn}>
+//           <div className={classes.navMDContainer}>
+//             {navigation}
+//           </div>
+//         </div>
+//       </div>
+//     </Grid>
+//   </div>
+// )
+// }
+// }

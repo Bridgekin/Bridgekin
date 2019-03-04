@@ -10,8 +10,8 @@ import Typography from '@material-ui/core/Typography';
 // import Button from '@material-ui/core/Button';
 // import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from '../theme';
 
 import AccountMain from './account_main';
 import AccountOpportunities from './account_opportunities'
@@ -35,13 +35,10 @@ class AccountRoute extends React.Component {
     let classes = this.props.classes;
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
-        <Switch>
-          <ProtectedRoute path="/account/opportunities" component={AccountOpportunities} />
-          <ProtectedRoute path="/account" component={AccountMain} />
-        </Switch>
-
-      </MuiThemeProvider>
+      <Switch>
+        <ProtectedRoute path="/account/opportunities" component={AccountOpportunities} />
+        <ProtectedRoute path="/account" component={AccountMain} />
+      </Switch>
     )
   }
 }

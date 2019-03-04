@@ -33,7 +33,7 @@ const styles = theme => ({
   },
   thanksHeader:{
     marginBottom: 30,
-    color: theme.palette.darkGrey
+    color: theme.palette.text.secondary
   },
   actionButton: {
     margin: 10
@@ -50,7 +50,8 @@ const styles = theme => ({
     // minWidth: 500,
   },
   modalPaper:{
-    margin: 15
+    margin: 15,
+    backgroundColor: theme.palette.base3
   },
   badge: {
     top: 19,
@@ -58,11 +59,12 @@ const styles = theme => ({
     border: `1px solid`,
     borderRadius: '50%',
     height: 'auto',
-    color: theme.palette.white,
-    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.base3,
+    backgroundColor: theme.palette.text.primary,
     padding: 5,
     cursor: 'pointer'
   },
+  listText:{ color: theme.palette.text.primary}
 });
 
 class SubmitModal extends React.Component {
@@ -101,7 +103,8 @@ class SubmitModal extends React.Component {
       });
       return (
         <ListItem >
-          <ListItemText primary={error} />
+          <ListItemText primary={error}
+            classes={{ primary: classes.listText }}/>
         </ListItem>
       )
     })
@@ -123,17 +126,19 @@ class SubmitModal extends React.Component {
         container justify='center'>
         <Grid item xs={9} sm={10} md={9} container justify='flex-start'
           spacing={16}>
-          <Typography variant="h2" id="modal-title" color='secondary'
+          <Typography variant="h2" id="modal-title"
+            color='textPrimary'
             className={classes.thanksHeader}>
             Thanks For Posting!
           </Typography>
-          <Typography variant="body1" id="simple-modal-description">
+          <Typography variant="body1" id="simple-modal-description"
+            color='textPrimary'>
             {`Thanks for sharing your opportunity! Our team is doing a quick review
               and your post will go live within 24 hours.`}
           </Typography>
 
           <Grid container justify='flex-start' className={classes.actionWrapper}>
-            <Button variant="contained" color='secondary'
+            <Button variant="contained" color='primary'
               className={classes.actionButton}
               onClick={this.handleClose}>
               Close
@@ -147,18 +152,19 @@ class SubmitModal extends React.Component {
         <Grid item xs={9} sm={10} md={9} container justify='flex-start'
           spacing={16}>
 
-          <Typography variant="h2" id="modal-title" color='secondary'
+          <Typography variant="h2" id="modal-title"
+            color='textPrimary'
             className={classes.thanksHeader} align='left'>
             Thanks For Updating Your Opportunity
           </Typography>
           <Typography variant="body1" id="simple-modal-description"
-            align='left'>
+            color='textPrimary' align='left'>
             {`You've successfully updated your opportunity, you can visit
               your account page to see it live!`}
           </Typography>
 
           <Grid container justify='flex-start' className={classes.actionWrapper}>
-            <Button variant="contained" color='secondary'
+            <Button variant="contained" color='primary'
               className={classes.actionButton}
               onClick={this.handleClose}>
               Close
@@ -175,19 +181,20 @@ class SubmitModal extends React.Component {
           container justify='center'>
           <Grid item xs={11} sm={10} md={8} container justify='flex-start'
             spacing={16}>
-            <Typography variant="h2" id="modal-title" color='secondary'
-              className={classes.thanksHeader} align='left'>
+            <Typography variant="h2" id="modal-title"
+              color='textPrimary' align='left'
+              className={classes.thanksHeader}>
               You're almost there!
             </Typography>
             <Typography variant="body1" id="simple-modal-description"
-              align='left'>
+              color='textPrimary' align='left'>
               You've got a few pieces to correct before submitting your opportunity, listed below:
             </Typography>
             <List>
               {opportunityErrors}
             </List>
             <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-              onClick={this.handleClose} color='secondary'>
+              onClick={this.handleClose} color='primary'>
               Close
             </Button>
           </Grid>

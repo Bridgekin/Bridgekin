@@ -45,7 +45,7 @@ const styles = theme => ({
     fontWeight: 600
   },
   textfieldInput:{
-    padding: "10px 14px"
+    padding: "10px 14px",
   },
 });
 
@@ -101,8 +101,7 @@ class OpportunityReferral extends React.Component{
                 onChange={this.props.handleChange}
                 name="age"
                 displayEmpty
-                className={classes.selectEmpty}
-                >
+                className={classes.selectEmpty}>
                 {options}
               </Select>
             </FormControl>
@@ -127,14 +126,13 @@ class OpportunityReferral extends React.Component{
         </Grid>
         <Grid item xs={12} container justify='space-around'
           style={{ marginTop: 10}}>
-          <Button variant="contained" color='secondary'
+          <Button variant="contained" color='primary'
             onClick={this.handleSubmit}
             style={{ marginRight: 10}}>
             Create Link
           </Button>
           <Button variant="contained"
-            onClick={this.handleCopy(referralLink)}
-            style={{ backgroundColor: "#616161", color: '#FFF'}}>
+            onClick={this.handleCopy(referralLink)}>
             { copied ? 'Copied!' : 'Copy'}
           </Button>
         </Grid>

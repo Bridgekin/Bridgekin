@@ -104,7 +104,7 @@ const styles = theme => ({
   },
   waitlistMobileCard:{
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme.palette.base1}`,
+    backgroundColor: `${theme.palette.base3}`,
     borderRadius:0,
     borderTop: `1px solid ${theme.palette.border.primary}`,
     marginBottom: 9,
@@ -118,7 +118,7 @@ const styles = theme => ({
   },
   referralCard:{
     padding: "9px 8px 20px 8px",
-    backgroundColor: `${theme.palette.base1}`,
+    backgroundColor: `${theme.palette.base3}`,
     borderRadius:0,
     borderTop: `1px solid ${theme.palette.border.primary}`,
     borderBottom: `1px solid ${theme.palette.border.primary}`,
@@ -132,7 +132,7 @@ const styles = theme => ({
   oppNotification:{
     borderRadius: 5,
     padding: "8px 10px",
-    backgroundColor: `${theme.palette.base2}`
+    backgroundColor: `${theme.palette.base4}`
   },
   filterCard:{
     marginTop: 18,
@@ -175,7 +175,7 @@ const styles = theme => ({
   },
   createFilterButton:{
     textTransform: 'none',
-    backgroundColor: `${theme.palette.base2}`,
+    backgroundColor: theme.palette.base4,
     margin: "5px 10px 5px 0px",
     fontSize: 12
   },

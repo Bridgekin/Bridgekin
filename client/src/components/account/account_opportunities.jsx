@@ -10,8 +10,8 @@ import Typography from '@material-ui/core/Typography';
 // import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportunity_actions';
@@ -36,19 +36,19 @@ const mapDispatchToProps = dispatch => ({
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id))
 });
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1
   },
   filterCard:{
     marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: `${theme.palette.base2}`,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`
+    border: `1px solid ${theme.palette.border.primary}`
   },
   filterItem:{
-    borderTop: `1px solid ${theme.palette.grey1}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
   },
   loader:{ height: 200},
   oppFeedContainer:{
@@ -60,7 +60,8 @@ const styles = {
     fontSize: 30,
     fontWeight: 500,
     margin: 20
-  }
+  },
+  progress: { color: theme.palette.text.primary}
   // opportunityCard:{
   //   marginTop: 18,
   //   backgroundColor: `${theme.palette.white}`,
@@ -77,7 +78,7 @@ const styles = {
   //   justifyContent: 'center',
   //   alignItems: 'center'
   // },
-};
+});
 
 
 class AccountOpportunities extends React.Component {
@@ -157,29 +158,27 @@ class AccountOpportunities extends React.Component {
 
     if (loaded){
       return (
-        <MuiThemeProvider theme={theme} className={classes.root}>
-          <Grid container justify='center' alignItems='center'
-            className={classes.oppFeedContainer}>
-            <div style={{ overflow: 'scroll', paddingBottom: 50,
-              width: '100%'}}>
-              {filteredOpportunities.length > 0 &&
-                opportunityCards.length > 0 ? opportunityCards : (
-                  <Typography variant="h3" gutterBottom color="textSecondary"
-                    align='center' className={classes.emptyOppsText}>
-                    {`You haven't ${oppFilter} any opportunities yet`}
-                  </Typography>
-                ) }
-            </div>
+        <Grid container justify='center' alignItems='center'
+          className={classes.oppFeedContainer}>
+          <div style={{ overflow: 'scroll', paddingBottom: 50,
+            width: '100%'}}>
+            {filteredOpportunities.length > 0 &&
+              opportunityCards.length > 0 ? opportunityCards : (
+                <Typography variant="h3" gutterBottom color="textSecondary"
+                  align='center' className={classes.emptyOppsText}>
+                  {`You haven't ${oppFilter} any opportunities yet`}
+                </Typography>
+              ) }
+          </div>
 
-            <OpportunityChangeModal
-              open={changeModalOpen}
-              handleClose={this.handleEditClose}
-              currentUser={currentUser}
-              opportunity={focusedOpportunity}
-              type={'update'}
-              />
-          </Grid>
-        </MuiThemeProvider>
+          <OpportunityChangeModal
+            open={changeModalOpen}
+            handleClose={this.handleEditClose}
+            currentUser={currentUser}
+            opportunity={focusedOpportunity}
+            type={'update'}
+            />
+        </Grid>
       )
     } else {
       return (

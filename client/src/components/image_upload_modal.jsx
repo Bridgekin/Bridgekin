@@ -11,8 +11,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from './theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from './theme';
 
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
@@ -44,7 +44,8 @@ const styles = theme => ({
   modalPaper:{
     margin: 0,
     minWidth: 290,
-    width: '50%'
+    width: '50%',
+    backgroundColor: theme.palette.base3
   },
   badge: {
     top: 19,
@@ -52,8 +53,8 @@ const styles = theme => ({
     border: `1px solid`,
     borderRadius: '50%',
     height: 'auto',
-    color: theme.palette.white,
-    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.base3,
+    backgroundColor: theme.palette.text.primary,
     padding: 5,
     cursor: 'pointer'
   },
@@ -64,6 +65,7 @@ const styles = theme => ({
     left: '50%',
     marginLeft: -12,
   },
+  listText:{ color: theme.palette.text.primary}
 });
 
 class NotFound extends Component {
@@ -183,49 +185,47 @@ class NotFound extends Component {
     // let height = this.cropper.width/4;
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
-        <Dialog
-          open={open}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          onClose={this.handleDelete}
-          className={classes.cardModalWrapper}
-          classes={{ paper: classes.modalPaper}}
+      <Dialog
+        open={open}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        onClose={this.handleDelete}
+        className={classes.cardModalWrapper}
+        classes={{ paper: classes.modalPaper}}
+        >
+        <Badge
+          badgeContent={<CloseIcon onClick={this.handleDelete}/>}
+          classes={{ badge: classes.badge }}
+          style={{ width: '100%'}}
           >
-          <Badge
-            badgeContent={<CloseIcon onClick={this.handleDelete}/>}
-            classes={{ badge: classes.badge }}
-            style={{ width: '100%'}}
-            >
-            <Grid container justify='center' alignItems='center'
-              className={classes.grid}>
-              <Grid item xs={11} sm={10} md={8}>
-                <Typography variant="h2" align='left' color='textPrimary'
-                  style={{ margin:'30px 0px'}}>
-                  {"Crop your image"}
-                </Typography>
-                <Cropper
-                  src={fileUrl}
-                  ratio={ratio || 1}
-                  ref={ ref => { this.cropper = ref }}
-                  width={200}
-                  height={50}
-                  />
+          <Grid container justify='center' alignItems='center'
+            className={classes.grid}>
+            <Grid item xs={11} sm={10} md={8}>
+              <Typography variant="h2" align='left' color='textPrimary'
+                style={{ margin:'30px 0px'}}>
+                {"Crop your image"}
+              </Typography>
+              <Cropper
+                src={fileUrl}
+                ratio={ratio || 1}
+                ref={ ref => { this.cropper = ref }}
+                width={200}
+                height={50}
+                />
 
-                <Grid item xs={11} container justify='center'
-                  style={{ marginTop: 20, marginBottom: 40 }}>
-                  <Button color="primary" variant='contained'
-                    onClick={this.handleClose} disabled={loading}>
-                    Crop
-                    {loading && <CircularProgress size={24}
-                    className={classes.buttonProgress} />}
-                  </Button>
-                </Grid>
+              <Grid item xs={11} container justify='center'
+                style={{ marginTop: 20, marginBottom: 40 }}>
+                <Button color="primary" variant='contained'
+                  onClick={this.handleClose} disabled={loading}>
+                  Crop
+                  {loading && <CircularProgress size={24}
+                  className={classes.buttonProgress} />}
+                </Button>
               </Grid>
             </Grid>
-          </Badge>
-        </Dialog>
-      </MuiThemeProvider>
+          </Grid>
+        </Badge>
+      </Dialog>
     )
   }
 

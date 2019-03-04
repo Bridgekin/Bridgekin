@@ -18,14 +18,6 @@ const styles = theme => ({
     paddingTop: 0,
     marginBottom: 50
   },
-  header: { fontSize: 60, marginBottom: 30},
-  buttonWrapper:{
-    display: 'flex',
-    border: '1px solid red'
-  },
-  label: {
-    textTransform: 'lowercase',
-  },
   progress: {
     fontSize: 48,
     color: theme.palette.grey2
@@ -35,9 +27,6 @@ const styles = theme => ({
 class Loading extends Component {
   render () {
     const {classes} = this.props;
-
-    const homeLink = <a href='/'>our homepage.</a>
-
     return (
       <MuiThemeProvider theme={theme} className={classes.root}>
         <Grid container justify="center" alignItems="center"

@@ -74,16 +74,12 @@ const styles = theme => ({
     marginRight: 6
   },
   opportunityCard:{
-    // marginTop: 18,
     backgroundColor: `${theme.palette.base3}`,
-    // width: '100%',
-    // borderTop: `1px solid ${theme.palette.border.primary}`,
     marginBottom: 9,
     border: `1px solid ${theme.palette.border.primary}`,
     [theme.breakpoints.up('sm')]: {
       borderRadius: 5,
     }
-    // paddingBottom: 20
   },
   oppCardGrid:{
     padding: "0px 8px",
@@ -95,7 +91,7 @@ const styles = theme => ({
     // height: 40,
     minWidth: 89,
     textTransform: 'uppercase',
-    backgroundColor: `${theme.palette.base2}`,
+    backgroundColor: theme.palette.base4,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -109,7 +105,8 @@ const styles = theme => ({
   avatar:{
     width: 51,
     height: 51,
-    margin: '12px 12px 12px 5px'
+    margin: '12px 12px 12px 5px',
+    color: theme.palette.text.primary
   },
   titlePost:{
     fontSize: 15,
@@ -133,7 +130,8 @@ const styles = theme => ({
   oppActionIcon:{
     marginRight: 10,
     width: 12,
-    height: 12
+    height: 12,
+    color: theme.palette.text.primary
   },
   oppActionButton:{
     textTransform: 'capitalize',
@@ -147,7 +145,9 @@ const styles = theme => ({
     height: 25,
     borderTopRightRadius: 5,
     cursor: 'pointer'
-  }
+  },
+  moreIcon: { color: theme.palette.text.primary},
+  progress: { color: theme.palette.text.primary},
 });
 
 
@@ -391,6 +391,7 @@ class OpportunityCard extends React.Component {
                 aria-label="More"
                 aria-owns={detailsOpen ? 'long-menu' : undefined}
                 aria-haspopup="true"
+                classes={{ label: classes.moreIcon}}
                 onClick={(editable ? this.handleDetailsClick():
                   this.handleCardOpen('opportunity', true))}
                 style={{ padding: 6}}

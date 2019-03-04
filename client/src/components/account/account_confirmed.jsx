@@ -26,7 +26,11 @@ const styles = theme => ({
     flexGrow: 1,
     // marginTop: 50
     position: 'fixed',
-    top: 64
+    paddingTop: 50,
+    top: 64,
+    backgroundColor: theme.palette.base2,
+    minHeight: window.innerHeight
+    // style={{ paddingTop: 50, position:'relative', top: 64}}
   },
   button: {
     marginTop: 30
@@ -40,7 +44,8 @@ const styles = theme => ({
     alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 20,
-    marginTop: 30
+    marginTop: 30,
+    backgroundColor: theme.palette.base3
   },
   signinHeader: {
     marginBottom: 20
@@ -92,57 +97,55 @@ class AccountConfirmed extends React.Component  {
     let classes = this.props.classes;
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container className={classes.root} justify="center"
-          style={{ paddingTop: 50, position:'relative', top: 64}}>
-          <Grid item xs={10} sm={8} md={6}>
-            <Typography variant="h2" gutterBottom align='left'
-              color="secondary">
-              Thanks for confirming your email!
-            </Typography>
+      <Grid container className={classes.root} justify="center">
+        <Grid item xs={10} sm={8} md={6}>
+          <Typography variant="h2" gutterBottom align='left'
+            color="textPrimary">
+            Thanks for confirming your email!
+          </Typography>
 
-            <Card className={classes.card}>
-              <Grid container justify="center" alignItems="center">
+          <Card className={classes.card}>
+            <Grid container justify="center" alignItems="center">
 
-                <Grid item xs={8} sm={7} md={6} className={classes.content}>
-                  <Typography variant="h2" align='center' color="textPrimary"
-                    className={classes.signinHeader}>
-                    Sign in below:
-                  </Typography>
-                  <TextField
-                    required
-                    label="Email"
-                    className={classes.textField}
-                    margin="normal"
-                    fullWidth
-                    variant='outlined'
-                    value={this.state.email}
-                    onChange={this.handleChange('email')}
-                    />
-                  <TextField
-                    required
-                    label="Password"
-                    className={classes.textField}
-                    type="password"
-                    margin="normal"
-                    fullWidth
-                    variant='outlined'
-                    value={this.state.password}
-                    onChange={this.handleChange('password')}
-                    />
-                  <div className={classes.buttonWrapper}>
-                    <Button variant="contained" color="secondary"
-                      className={classes.button} onClick={this.handleSubmit}>
-                      Login
-                    </Button>
-                  </div>
-                </Grid>
+              <Grid item xs={8} sm={7} md={6} className={classes.content}>
+                <Typography variant="h2" align='center'
+                  color="textPrimary"
+                  className={classes.signinHeader}>
+                  Sign in below:
+                </Typography>
+                <TextField
+                  required
+                  label="Email"
+                  className={classes.textField}
+                  margin="normal"
+                  fullWidth
+                  variant='outlined'
+                  value={this.state.email}
+                  onChange={this.handleChange('email')}
+                  />
+                <TextField
+                  required
+                  label="Password"
+                  className={classes.textField}
+                  type="password"
+                  margin="normal"
+                  fullWidth
+                  variant='outlined'
+                  value={this.state.password}
+                  onChange={this.handleChange('password')}
+                  />
+                <div className={classes.buttonWrapper}>
+                  <Button variant="contained" color="primary"
+                    className={classes.button} onClick={this.handleSubmit}>
+                    Login
+                  </Button>
+                </div>
               </Grid>
-            </Card>
+            </Grid>
+          </Card>
 
-          </Grid>
         </Grid>
-      </MuiThemeProvider>
+      </Grid>
     )
   }
 }

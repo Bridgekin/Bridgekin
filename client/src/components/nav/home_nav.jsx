@@ -41,6 +41,27 @@ import { fetchSiteTemplate } from '../../actions/site_template_actions';
 import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 
+const mapStateToProps = (state, ownProps) => {
+  const siteTemplate = state.siteTemplate;
+  const theme = getTheme(siteTemplate);
+  return ({
+    currentUser: state.users[state.session.id],
+    session: state.session.id,
+    sessionErrors: state.errors.login,
+    workspaces: Object.values(state.workspaces),
+    siteTemplate, theme
+  })
+};
+
+const mapDispatchToProps = dispatch => ({
+  login: (user) => dispatch(login(user)),
+  logout: () => dispatch(logout()),
+  receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
+  receiveUser: (user) => dispatch(receiveUser(user)),
+  fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
+  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
+});
+
 let styles = (theme) => ({
   root: {
     flexGrow: 1,
@@ -155,29 +176,8 @@ let styles = (theme) => ({
     [theme.breakpoints.up('md')]: {
       width: 200,
     },
-  }
-});
-
-const mapStateToProps = (state, ownProps) => {
-  const siteTemplate = state.siteTemplate;
-  const theme = getTheme(siteTemplate);
-  return ({
-    currentUser: state.users[state.session.id],
-    session: state.session.id,
-    sessionErrors: state.errors.login,
-    workspaces: Object.values(state.workspaces),
-    siteTemplate,
-    theme
-  })
-};
-
-const mapDispatchToProps = dispatch => ({
-  login: (user) => dispatch(login(user)),
-  logout: () => dispatch(logout()),
-  receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
-  receiveUser: (user) => dispatch(receiveUser(user)),
-  fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
-  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
+  },
+  buttonText: { color: theme.palette.text.primary}
 });
 
 class HomeNav extends React.Component {
@@ -524,8 +524,9 @@ class HomeNav extends React.Component {
         <div className={classes.sectionMobile}>
           <IconButton aria-haspopup="true" color="inherit"
             onClick={this.handleMobileMenuOpen}
+            classes={{ label: classes.buttonText }}
             style={{ padding: 0 }}>
-            <MenuIcon className={classes.menuIcon} color='primary'/>
+            <MenuIcon className={classes.menuIcon}/>
           </IconButton>
         </div>
         {renderMenu}
@@ -562,7 +563,8 @@ class HomeNav extends React.Component {
           <IconButton
             aria-haspopup="true"
             onClick={this.handleLogoMenuClick}
-            style={{ padding: 3}}>
+            style={{ padding: 3}}
+            classes={{ label: classes.buttonText}}>
             <KeyboardArrowDownIcon />
           </IconButton>}
 

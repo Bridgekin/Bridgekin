@@ -83,18 +83,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  paper: {
-    // position: 'absolute',
-    margin: 15,
-    // height: 'auto',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
   cardModalWrapper:{
     padding: 0,
     // minWidth: 500,
@@ -112,7 +100,7 @@ const styles = theme => ({
     overflow: 'scroll'
   },
   closeBar:{
-    backgroundColor:`${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: theme.palette.base4,
     height: 33,
     padding: "0px 10px",
     [theme.breakpoints.up('sm')]: {
@@ -122,11 +110,12 @@ const styles = theme => ({
   avatar:{
     width: 51,
     height: 51,
-    marginRight: 12
+    marginRight: 12,
+    color: theme.palette.text.primary
   },
   createFilterButton:{
     textTransform: 'none',
-    backgroundColor: `${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: theme.palette.base4,
     margin: "5px 10px 5px 0px",
     borderRadius: 10,
   },
@@ -148,7 +137,8 @@ const styles = theme => ({
   },
   popoverPaper:{
     padding: 3,
-    maxWidth: 230
+    maxWidth: 230,
+    backgroundColor: theme.palette.base4
   },
   descriptionField:{
     // height: 122,
@@ -193,6 +183,14 @@ const styles = theme => ({
   },
   textListSecondary:{
     fontSize: 10
+  },
+  xbutton:{
+    cursor: 'pointer',
+    color: theme.palette.text.primary
+  },
+  contentContainer:{
+    padding: "0px 20px",
+    backgroundColor: theme.palette.base3
   }
 });
 
@@ -540,14 +538,17 @@ class OpportunityChangeModal extends React.Component {
 
         <Grid container justify='space-between' alignItems='center'
           className={classes.closeBar}>
-          {type === 'create' ? `Create Opportunity` : `Update Opportunity`}
+          <Typography align='Left' color="textPrimary"
+            variant='body1' style={{ fontSize: 16 }}>
+            {type === 'create' ? `Create Opportunity` : `Update Opportunity`}
+          </Typography>
           <CloseIcon
             onClick={this.handleClose}
-            style={{ cursor: 'pointer'}}/>
+            className={classes.xbutton}/>
         </Grid>
 
         <Grid container justify='center' alignItems='center'
-          style={{ padding: "0px 20px"}}>
+          className={classes.contentContainer}>
           <Grid container justify='center' alignItems='center'
             style={{ height: 95 }}>
 

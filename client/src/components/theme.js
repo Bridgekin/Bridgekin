@@ -13,13 +13,17 @@ let theme = (siteTemplate) => createMuiTheme({
       main: (siteTemplate && siteTemplate.button1) || '#000000'
     },
     secondary: {
-      main: (siteTemplate && siteTemplate.button2) || '#000000'
+      main: (siteTemplate && siteTemplate.button2) || "#616161"
       // main: '#4067B2',
     },
-    base1: (siteTemplate && siteTemplate.base1) || 'red',//'#FFFFFF',
-    base2: (siteTemplate && siteTemplate.base2) || `rgba(0,0,0,0.05)`,
-    base3: (siteTemplate && siteTemplate.base3) || 'blue', //'#FFFFFF',
-    base4: (siteTemplate && siteTemplate.base4) || '#000000',
+    // Nav Bar Color
+    base1: (siteTemplate && siteTemplate.base1) || 'brown', //'#FFFFFF',
+    // Site Background
+    base2: (siteTemplate && siteTemplate.base2) || 'blue',//`rgba(0,0,0,0.05)`,
+    // All Cards/Inside Backgrounds
+    base3: (siteTemplate && siteTemplate.base3) || 'green', //'#FFFFFF',
+    // Button Hover
+    base4: (siteTemplate && siteTemplate.base4) || 'orange', //`rgba(0,0,0,0.05)`,
     lightGrey: "#E2E2E2",
     grey1: "#C4C4C4",
     grey2: "#999999",
@@ -27,8 +31,8 @@ let theme = (siteTemplate) => createMuiTheme({
     white: "#FFFFFF",
     backgroundGrey: '#f5f5f5', //Opportunity Change
     text: {
-      primary: (siteTemplate && siteTemplate.font1) || "#000000" , //black
-      secondary: (siteTemplate && siteTemplate.font2) || "#616161", //grey
+      primary: (siteTemplate && siteTemplate.font1) || "#551A8B",//'#FFFFFF', //"#000000" , //black
+      secondary: (siteTemplate && siteTemplate.font2) || 'yellow', //"#616161", //grey
       // tertiary: '#FFFFFF' //white
     },
     border: {
@@ -64,18 +68,28 @@ let theme = (siteTemplate) => createMuiTheme({
     },
   },
   overrides: {
+    // MuiListItemText:{
+    //   color: (siteTemplate && siteTemplate.font1) || '#FFFFFF', //"#000000"
+    // },
+    // MuiInput: {
+    //   input:{
+    //     border: `1px solid ${(siteTemplate && siteTemplate.border1) || '#000000'}`,
+    //     borderRadius: 3
+    //   }
+    // },
     MuiButton: { // Name of the component ⚛️ / style sheet
       root: { // Name of the rule
         // color: 'white', // Some CSS
         fontSize: '14px',
         fontWeight: 600,
+        fontFamily: "'Muli', sans-serif",
         color: (siteTemplate && siteTemplate.button1) || "#000000"
       },
     },
     MuiListItem: { // Name of the component ⚛️ / style sheet
       root: {
         "&$selected": {
-          backgroundColor: "#E2E2E2"
+          backgroundColor: (siteTemplate && siteTemplate.button1) || 'pink',//"#E2E2E2"
         }
       }
     },

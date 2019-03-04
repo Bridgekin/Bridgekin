@@ -70,8 +70,8 @@ const styles = theme => ({
   addProfilePicIcon:{
     width: '100%',
     height: 217,
-    backgroundColor: theme.palette.lightGrey,
-    color: theme.palette.grey1
+    // backgroundColor: theme.palette.lightGrey,
+    color: theme.palette.text.primary
   },
   card:{
     // height: 118,
@@ -79,14 +79,14 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'flex-start',
     // padding: '30px 15px',
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: theme.palette.base3,
     // marginTop: 18,
     // width: '100%',
     borderRadius: 0,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.lightGrey}`,
+      border: `1px solid ${theme.palette.border.primary}`,
       borderRadius: 5,
       padding: '30px 0px',
     },
@@ -130,9 +130,9 @@ const styles = theme => ({
   fieldLabel:{
     marginTop: 15
   },
-  iconWrapper:{
-    backgroundColor: theme.palette.grey1
-  },
+  // iconWrapper:{
+  //   backgroundColor: theme.palette.grey1
+  // },
   countryWrapper:{
     display: 'flex',
     flexDirection: 'column'
@@ -360,8 +360,6 @@ class AccountSetting extends React.Component {
 
     const pictureUploaded = Boolean(previewUrl)
 
-    debugger
-
     let profilePicture = currentUser.profilePicUrl ? (
       <Avatar
         className={classes.pic}
@@ -404,7 +402,7 @@ class AccountSetting extends React.Component {
                 justify="center" alignItems="center"
                 className={classes.content}>
                 <Typography variant="h5" align='left'
-                  color="secondary" gutterBottom>
+                  color="textPrimary" gutterBottom>
                   Reset Email Below
                 </Typography>
                 <TextField
@@ -422,7 +420,7 @@ class AccountSetting extends React.Component {
                     Back
                   </Button>
 
-                  <Button color="secondary" className={classes.submitButton}
+                  <Button color="primary" className={classes.submitButton}
                     onClick={this.changeEmail} variant='contained'>
                     Change Email
                   </Button>
@@ -445,7 +443,7 @@ class AccountSetting extends React.Component {
                 justify="center" alignItems="center"
                 className={classes.content}>
                 <Typography variant="h5" align='left'
-                  color="secondary" gutterBottom>
+                  color="textPrimary" gutterBottom>
                   Reset Password Below
                 </Typography>
                 <TextField
@@ -484,7 +482,7 @@ class AccountSetting extends React.Component {
                     Back
                   </Button>
 
-                  <Button color="secondary" className={classes.submitButton}
+                  <Button color="primary" className={classes.submitButton}
                     onClick={this.changePassword} variant='contained'>
                     Change Password
                   </Button>
@@ -518,12 +516,12 @@ class AccountSetting extends React.Component {
 
               <Grid item xs={12} sm={8} className={classes.content}>
                 <Typography variant="h5" align='left'
-                  color="secondary" gutterBottom
+                  color="textPrimary" gutterBottom
                   style={{marginBottom: 20}}>
                   Change your profile information
                 </Typography>
                 <Typography variant="h6" align='left'
-                  color="secondary" className={classes.fieldLabel}>
+                  color="textPrimary" className={classes.fieldLabel}>
                   Name
                 </Typography>
                 <Grid container justify="center" alignItems="center"
@@ -552,7 +550,7 @@ class AccountSetting extends React.Component {
                 </Grid>
 
                 <Typography variant="h6" align='left'
-                  color="secondary" className={classes.fieldLabel}>
+                  color="textPrimary" className={classes.fieldLabel}>
                   Position
                 </Typography>
                 <Grid container justify="center" alignItems="center"
@@ -580,7 +578,7 @@ class AccountSetting extends React.Component {
                 </Grid>
 
                 <Typography variant="h6" align='left'
-                  color="secondary" className={classes.fieldLabel}>
+                  color="textPrimary" className={classes.fieldLabel}>
                   Location
                 </Typography>
                 <Grid container justify="center" alignItems="center"
@@ -615,7 +613,7 @@ class AccountSetting extends React.Component {
                 </Grid>
 
                 <Typography variant="h6" align='left'
-                  color="secondary" className={classes.fieldLabel}>
+                  color="textPrimary" className={classes.fieldLabel}>
                   Upload Profile Picture
                 </Typography>
                 <Grid container justify="flex-start" alignItems="center"
@@ -672,7 +670,7 @@ class AccountSetting extends React.Component {
                     Back
                   </Button>
 
-                  <Button color="secondary" className={classes.submitButton}
+                  <Button color="primary" className={classes.submitButton}
                     onClick={this.changeGeneralInformation}
                     variant='contained'>
                     Update Information
@@ -711,50 +709,54 @@ class AccountSetting extends React.Component {
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="flex-start">
 
-              <Grid item xs={12} md={8} className={classes.content}>
+              <Grid item xs={12} sm={8} className={classes.content}>
                 <div className={classes.wrapper}>
-                  <Typography variant="h3" align='left'>
+                  <Typography variant="h3" align='left'
+                    color="textPrimary">
                     {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
                   </Typography>
                 </div>
 
                 <Grid container>
-                  <Typography variant="h6" align='left' color='textPrimary'>
+                  <Typography variant="h6" align='left'
+                    color='textPrimary'>
                     Email Address
                   </Typography>
                   <Link to='/account/settings/email'
                     style={{ marginLeft: 15}}>
-                    <Typography variant="h6" align='left' color='textPrimary'
+                    <Typography variant="h6" align='left'
+                      color='textPrimary'
                       style={{fontWeight: 300}}>
                       Change
                     </Typography>
                   </Link>
                 </Grid>
                 <Typography variant="body1" gutterBottom align='left'
-                  color="default" style={{ marginBottom: 15}}>
+                  color="textPrimary" style={{ marginBottom: 15}}>
                   {currentUser.email}
                 </Typography>
 
                 <Grid container>
-                  <Typography variant="h6" align='left' color='textPrimary'>
+                  <Typography variant="h6" align='left'
+                    color='textPrimary'>
                     Current Password
                   </Typography>
                   <Link to='/account/settings/password'
                     style={{ marginLeft: 15}}>
-                    <Typography variant="h6" align='left' color='textPrimary'
-                      style={{fontWeight: 300}}>
+                    <Typography variant="h6" align='left'
+                      color='textPrimary' style={{ fontWeight: 300 }}>
                       Change
                     </Typography>
                   </Link>
                 </Grid>
 
                 <Typography variant="body1" gutterBottom align='left'
-                  color="default" style={{ marginBottom: 15}}>
+                  color="textPrimary" style={{ marginBottom: 15}}>
                   {"********"}
                 </Typography>
 
                 <Typography variant="h6" align='left'
-                  color="secondary" className={classes.fieldLabel}>
+                  color="textPrimary" className={classes.fieldLabel}>
                   Default Network
                 </Typography>
                 <Grid container justify="flex-start" alignItems="center"
@@ -777,7 +779,7 @@ class AccountSetting extends React.Component {
                 </Grid>
 
                 {false && <Typography variant="subtitle1" align='left'
-                  color="secondary" style={{ marginTop: 15}}>
+                  color="textPrimary" style={{ marginTop: 15}}>
                   {`How often would you like to be notified about
                     opportunities by email?`}
                 </Typography>}

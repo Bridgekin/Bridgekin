@@ -42,7 +42,7 @@ const styles = theme => ({
     flexGrow: 1
   },
   closeBar:{
-    backgroundColor:`${fade(theme.palette.common.black,0.05)}`,
+    backgroundColor: theme.palette.base4,
     height: 33,
     padding: "0px 10px",
     [theme.breakpoints.up('sm')]: {
@@ -52,7 +52,7 @@ const styles = theme => ({
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.grey1}`,
+    border: `1px solid ${theme.palette.border.secondary}`,
     width: '100%',
     height: 33,
     // display: 'none',
@@ -72,7 +72,7 @@ const styles = theme => ({
     top: 0, right: 0
   },
   inputRoot: {
-    color: theme.palette.darkGrey,
+    color: theme.palette.text.secondary,
     width: '100%',
     fontSize: 15,
     fontWeight: 500,
@@ -91,7 +91,8 @@ const styles = theme => ({
   listItem: {
     textTransform: 'capitalize',
     height: 30,
-    padding: "5px 16px"
+    padding: "5px 16px",
+    color: theme.palette.text.primary
   },
   resultsGrid:{
     overflow: 'scroll',
@@ -100,18 +101,26 @@ const styles = theme => ({
   },
   chosenResults:{
     paddingBottom: 5,
-    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
   },
   listHeader:{ fontSize: 14, fontWeight: 600 },
   emptyList: { fontSize: 14, fontWeight: 400, fontStyle: 'italic' },
   submitContainer:{
     height: 60,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
   },
   actionButton: { fontSize: 12 },
   networkIcon: {
     marginRight: 8,
     width: 13, height: 13
+  },
+  xbutton:{
+    cursor: 'pointer',
+    color: theme.palette.text.primary
+  },
+  contentContainer:{
+    padding: 12,
+    backgroundColor: theme.palette.base3
   }
 });
 
@@ -308,7 +317,7 @@ class ShareModal extends Component{
             </Grid>
 
             <Grid container justify='center'
-              style={{ padding: 12 }}>
+              className={classes.contentContainer}>
               <Grid container justify='center' alignItems='flex-start'
                 style={{ maxHeight: 300}}>
                 {search}

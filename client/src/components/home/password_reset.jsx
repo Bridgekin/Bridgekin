@@ -32,10 +32,13 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  // grid:{
-  //   flexGrow: 1,
-  //   paddingTop: 50
-  // },
+  grid:{
+    flexGrow: 1,
+    top: 64,
+    position: 'relative',
+    backgroundColor: theme.palette.base2,
+    minHeight: window.innerHeight-64
+  },
   cover: {
     width: '100%',
     height: 217
@@ -44,7 +47,8 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     paddingTop: 20,
-    paddingBottom: 20
+    paddingBottom: 20,
+    backgroundColor: theme.palette.base3
   },
   responseHeader: {
     marginBottom: 20
@@ -105,31 +109,32 @@ class PasswordReset extends React.Component {
     const { classes } = this.props;
     const { sent } = this.state;
 
-    let userErrors = this.props.userErrors.map(error => (
-      <ListItem>
-        <ListItemText primary={error} />
-      </ListItem>
-    ))
+    // let userErrors = this.props.userErrors.map(error => (
+    //   <ListItem>
+    //     <ListItemText primary={error} />
+    //   </ListItem>
+    // ))
 
     let response = this.props.userErrors.length === 0 ? (
-      <Grid item xs={8} sm={7} md={7} className={classes.grid}>
-        <Typography variant="h2" id="modal-title" color='secondary'
+      <Grid item xs={8} sm={7} md={7}>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.responseHeader} align='left' gutterBottom>
           Password Reset Sent
         </Typography>
-        <Typography variant="body2" align='left'>
+        <Typography variant="body2" align='left' color='textPrimary'>
           We've sent you an email with a link to change your password.
         </Typography>
         <Grid item xs={12}>
-          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose('/login')} color='secondary'>
+          <Button variant="contained" color='primary'
+            style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose('/login')}>
             Back to login
           </Button>
         </Grid>
       </Grid>
     ) : (
-      <Grid item xs={8} sm={7} md={7} className={classes.grid}>
-        <Typography variant="h2" color='secondary' align='left'
+      <Grid item xs={8} sm={7} md={7}>
+        <Typography variant="h2" color='textPrimary' align='left'
           className={classes.responseHeader} >
           Password Change Error
         </Typography>
@@ -139,12 +144,12 @@ class PasswordReset extends React.Component {
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{ marginTop: 30 }}
-            onClick={this.handleClose('/login')} color='secondary'>
+            onClick={this.handleClose('/login')} color='primary'>
             Back to login
           </Button>
           <Button variant="contained"
             style={{margin: "30px 0px 0px 10px"}}
-            onClick={this.handleClose('resend')} color='secondary'>
+            onClick={this.handleClose('resend')}>
             Resend
           </Button>
         </Grid>
@@ -152,7 +157,7 @@ class PasswordReset extends React.Component {
     )
 
     let form = (
-      <Grid item xs={8} sm={7} md={7} className={classes.grid}>
+      <Grid item xs={8} sm={7} md={7}>
         <Typography variant="h2" align='center' color="textPrimary"
           className={classes.signinHeader}>
           Forgot your password?
@@ -168,7 +173,7 @@ class PasswordReset extends React.Component {
           onChange={this.handleChange}
           />
         <div className={classes.buttonWrapper}>
-          <Button variant="contained" color="secondary"
+          <Button variant="contained" color="primary"
             className={classes.button} onClick={this.handleSubmit}>
             Reset Password
           </Button>
@@ -179,22 +184,18 @@ class PasswordReset extends React.Component {
     let cardText = sent ? response : form;
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container justify="center" alignItems="center"
-          className={classes.grid}
-          style={{ top: 64, position: 'relative' }}>
+      <Grid container justify="center" alignItems="center"
+        className={classes.grid}>
 
-          <Grid item xs={10} sm={8} md={6}
-            style={{ paddingTop: 40 }}>
-            <Card className={classes.card}>
-              <Grid container justify="center" alignItems="center">
-                {cardText}
-              </Grid>
+        <Grid item xs={10} sm={8} md={6}>
+          <Card className={classes.card}>
+            <Grid container justify="center" alignItems="center">
+              {cardText}
+            </Grid>
 
-            </Card>
-          </Grid>
+          </Card>
         </Grid>
-      </MuiThemeProvider>
+      </Grid>
     )
   }
 }

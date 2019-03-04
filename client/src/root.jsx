@@ -5,14 +5,25 @@ import GAListener from './components/ga_listener';
 import ErrorBoundary from './error_handler';
 import App from './App';
 
-export default ({ store }) => (
-  <ErrorBoundary>
-    <Provider store={store}>
-      <BrowserRouter>
-        <GAListener>
-          <App />
-        </GAListener>
-      </BrowserRouter>
-    </Provider>
-  </ErrorBoundary>
-);
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import getTheme from './components/theme';
+
+class Root extends React.Component{
+  render(){
+    return (
+      <ErrorBoundary>
+        <MuiThemeProvider theme={getTheme(this.props.siteTemplate)}>
+          <Provider store={this.props.store}>
+            <GAListener>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </GAListener>
+          </Provider>
+        </MuiThemeProvider>
+      </ErrorBoundary>
+    )
+  }
+}
+
+export default Root;

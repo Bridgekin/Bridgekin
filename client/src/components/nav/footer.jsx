@@ -22,9 +22,9 @@ const mapStateToProps = (state, ownProps) => ({
 
 const styles = theme => ({
   grid:{
-    position: 'fixed',
-    bottom: 0,
-    width: '100%'
+    // position: 'absolute',
+    // // bottom: 0,
+    // width: '100%'
   },
   button:{
     padding: "4px 8px 4px 8px",
@@ -42,26 +42,28 @@ class Footer extends Component {
     const {classes, currentUser} = this.props;
     if(currentUser){
       return (
-        <Grid container justdify='flex-end' alignItems="center"
-          className={classes.grid}>
+        <div style={{ position: 'absolute', bottom: 0, width: '100%'}}>
+          <Grid container justify='flex-end' alignItems="center"
+            className={classes.grid}>
 
-          <Button onClick={()=> this.props.history.push('/useragreement')}
-            className={ classes.button}>
-            <Typography variant="body2" align='center'
-              color='textPrimary' className={ classes.buttonText}>
-              User Agreement
-            </Typography>
-          </Button>
+            <Button onClick={()=> this.props.history.push('/useragreement')}
+              className={ classes.button}>
+              <Typography variant="body2" align='center'
+                color='textPrimary' className={ classes.buttonText}>
+                User Agreement
+              </Typography>
+            </Button>
 
-          <Button onClick={()=> this.props.history.push('/privacypolicy')}
-            style={{ marginRight: 20}} className={ classes.button}>
-            <Typography variant="body2" align='center'
-              color='textPrimary' className={ classes.buttonText}>
-              Privacy Policy
-            </Typography>
-          </Button>
+            <Button onClick={()=> this.props.history.push('/privacypolicy')}
+              style={{ marginRight: 20}} className={ classes.button}>
+              <Typography variant="body2" align='center'
+                color='textPrimary' className={ classes.buttonText}>
+                Privacy Policy
+              </Typography>
+            </Button>
 
-        </Grid>
+          </Grid>
+        </div>
       )
     } else {
       return <div></div>

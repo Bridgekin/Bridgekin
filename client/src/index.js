@@ -41,17 +41,20 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       let store = configureStore(preloadedState);
       console.log('Rendering site');
-      ReactDOM.render(<Root store={store}/>, root);
+      ReactDOM.render(
+        <Root store={store} siteTemplate={siteTemplate}/>, root);
     })
     .catch(() => {
       localStorage.removeItem('bridgekinToken');
       let store = configureStore(preloadedState);
-      ReactDOM.render(<Root store={store}/>, root);
+      ReactDOM.render(
+        <Root store={store} siteTemplate={siteTemplate}/>, root);
     })
   } else {
     let store = configureStore(preloadedState);
     console.log('Rendering site');
-    ReactDOM.render(<Root store={store}/>, root);
+    ReactDOM.render(
+      <Root store={store} siteTemplate={siteTemplate}/>, root);
   }
 
   // window.signup = SessionApiUtil.signup;

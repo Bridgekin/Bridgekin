@@ -16,7 +16,7 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
 import { clearWaitlistUserErrors } from '../actions/error_actions';
-import theme from './theme';
+// import theme from './theme';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -33,14 +33,15 @@ const styles = theme => ({
   },
   thanksHeader:{
     marginBottom: 30,
-    color: theme.palette.darkGrey
+    // color: theme.palette.darkGrey
   },
   cardModalWrapper:{
     padding: 0,
     // minWidth: 500,
   },
   modalPaper:{
-    margin: 15
+    margin: 15,
+    backgroundColor: theme.palette.base3
   },
   badge: {
     top: 19,
@@ -48,11 +49,12 @@ const styles = theme => ({
     border: `1px solid`,
     borderRadius: '50%',
     height: 'auto',
-    color: theme.palette.white,
-    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.base3,
+    backgroundColor: theme.palette.text.primary,
     padding: 5,
     cursor: 'pointer'
   },
+  listText:{ color: theme.palette.text.primary}
 });
 
 class WaitlistModal extends React.Component {
@@ -87,7 +89,8 @@ class WaitlistModal extends React.Component {
 
       return (
         <ListItem >
-          <ListItemText primary={error} />
+          <ListItemText primary={error}
+            classes={{ primary: classes.listText }}/>
         </ListItem>
       )
     })
@@ -100,12 +103,12 @@ class WaitlistModal extends React.Component {
           Thanks for referring your trusted contact!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          align='left' color='textPrimary'>
           We’ve sent them an email letting them know you referred them and they’ve been added to our waitlist.
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
@@ -118,12 +121,12 @@ class WaitlistModal extends React.Component {
           Thanks for signing up!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          align='left' color='textPrimary'>
           You've now been added to our waitlist! You'll receive a confirmation email shortly.
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
@@ -138,7 +141,7 @@ class WaitlistModal extends React.Component {
           Thanks for referring your trusted contact!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          align='left' color='textPrimary'>
           It looks like we were unable to add them to the waitlist because:
         </Typography>
         <List>
@@ -146,7 +149,7 @@ class WaitlistModal extends React.Component {
         </List>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
@@ -159,7 +162,7 @@ class WaitlistModal extends React.Component {
           Thanks for your interest in Bridgekin!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          align='left' color='textPrimary'>
           Unfortunately, we weren't able to sign you up because:
         </Typography>
         <List>
@@ -167,7 +170,7 @@ class WaitlistModal extends React.Component {
         </List>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>

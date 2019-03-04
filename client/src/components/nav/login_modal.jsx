@@ -28,6 +28,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
+  grid:{
+    margin: '70px 0px 70px 0px'
+  },
   thanksHeader:{
     marginBottom: 30,
     color: theme.palette.darkGrey
@@ -36,11 +39,9 @@ const styles = theme => ({
     padding: 0,
     // minWidth: 500,
   },
-  grid:{
-    margin: '70px 0px 70px 0px'
-  },
   modalPaper:{
-    margin: 15
+    margin: 15,
+    backgroundColor: theme.palette.base3
   },
   badge: {
     top: 19,
@@ -48,11 +49,12 @@ const styles = theme => ({
     border: `1px solid`,
     borderRadius: '50%',
     height: 'auto',
-    color: theme.palette.white,
-    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.base3,
+    backgroundColor: theme.palette.text.primary,
     padding: 5,
     cursor: 'pointer'
   },
+  listText:{ color: theme.palette.text.primary}
 });
 
 class LoginModal extends React.Component {
@@ -86,7 +88,8 @@ class LoginModal extends React.Component {
       });
       return (
         <ListItem >
-          <ListItemText primary={error} />
+          <ListItemText primary={error}
+            classes={{ primary: classes.listText }}/>
         </ListItem>
       )
     })
@@ -98,7 +101,7 @@ class LoginModal extends React.Component {
           You’re almost back in!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          align='left' color='textPrimary'>
           We weren’t able to log you in because:
         </Typography>
         <List>
@@ -109,7 +112,7 @@ class LoginModal extends React.Component {
         </Link>
         <Grid item xs={12} container justify='flex-start'>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>

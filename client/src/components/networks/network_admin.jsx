@@ -19,8 +19,8 @@ import { fetchManagedNetworks } from '../../actions/network_admin_actions';
 import { fetchMemberUsers,
   addMemberUser, removeMemberUser} from '../../actions/member_users_actions';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import FeedContainer from '../feed_container';
@@ -41,18 +41,18 @@ const mapDispatchToProps = dispatch => ({
   removeMemberUser: (networkId, userId) => dispatch(removeMemberUser(networkId, userId))
 });
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1,
   },
   feedCard:{
     padding: "9px 8px 9px 8px",
-    backgroundColor: `${theme.palette.white}`,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    backgroundColor: theme.palette.base3,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     // width: '100%',
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.lightGrey}`,
+      border: `1px solid ${theme.palette.border.primary}`,
       marginBottom: 9,
       borderRadius: 5,
       padding: "9px 17px 9px",
@@ -60,9 +60,9 @@ const styles = {
   },
   mobileFeedCard:{
     padding: "9px 8px 9px 8px",
-    backgroundColor: `${theme.palette.white}`,
-    // borderTop: `1px solid ${theme.palette.lightGrey}`,
-    border: `1px solid ${theme.palette.lightGrey}`,
+    backgroundColor: `${theme.palette.base3}`,
+    // borderTop: `1px solid ${theme.palette.border.primary}`,
+    border: `1px solid ${theme.palette.border.primary}`,
     // width: '100%',
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
@@ -76,7 +76,7 @@ const styles = {
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.grey1}`,
+    border: `1px solid ${theme.palette.border.secondary}`,
     width: '100%',
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -91,11 +91,11 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: theme.palette.darkGrey,
+    color: theme.palette.text.secondary,
     top: 0, right: 0
   },
   inputRoot: {
-    color: theme.palette.darkGrey,
+    color: theme.palette.text.secondary,
     width: '100%',
     fontSize: 15,
     fontWeight: 500,
@@ -122,15 +122,16 @@ const styles = {
   },
   filterCard:{
     marginTop: 18,
-    backgroundColor: `${theme.palette.white}`,
+    backgroundColor: `${theme.palette.base3}`,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme.palette.lightGrey}`
+    border: `1px solid ${theme.palette.border.primary}`
   },
   filterHeader:{ fontSize: 14, fontWeight: 600 },
   filterItem: { fontSize: 14, fontWeight: 400 },
-  listSelected: { backgroundColor: '#E5DBDB'}
-};
+  listSelected: { backgroundColor: '#E5DBDB'},
+  buttonText: { color: theme.palette.text.primary },
+});
 
 class NetworkAdmin extends React.Component {
   constructor(props){
@@ -244,6 +245,7 @@ class NetworkAdmin extends React.Component {
           <Button
             aria-owns={networkAnchorEl ? 'simple-menu' : undefined}
             aria-haspopup="true"
+            classes={{ label: classes.buttonText}}
             onClick={this.handleMenuOpen('networkAnchorEl')}
             style={{ textTransform: 'capitalize'}}
           >
@@ -347,6 +349,7 @@ class NetworkAdmin extends React.Component {
                 style={{ paddingLeft: 0, textTransform: 'capitalize'}}
                 aria-owns={userSortAnchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
+                classes={{ label: classes.buttonText}}
                 onClick={this.handleMenuOpen('userSortAnchorEl')}
                 >
                 <Typography align='Left' className={classes.sortBy}>
@@ -390,13 +393,13 @@ class NetworkAdmin extends React.Component {
       )
 
       return (
-        <MuiThemeProvider theme={theme} className={classes.root}>
+        <div className={classes.root}>
           <FeedContainer
             column1={column1}
             feed={feed}
             column2={filter}
             />
-        </MuiThemeProvider>
+        </div>
       )
     } else {
       return <div> Loading </div>

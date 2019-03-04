@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
-import theme from '../theme';
+// import theme from '../theme';
 import Grid from '@material-ui/core/Grid';
 
 import Badge from '@material-ui/core/Badge';
@@ -26,18 +26,18 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = theme => ({
-  paper: {
-    // position: 'absolute',
-    // width: '40%',
-    height: 350,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
+  // paper: {
+  //   // position: 'absolute',
+  //   // width: '40%',
+  //   height: 350,
+  //   backgroundColor: theme.palette.background.paper,
+  //   boxShadow: theme.shadows[5],
+  //   padding: theme.spacing.unit * 4,
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   alignItems: 'flex-start',
+  //   justifyContent: 'center'
+  // },
   thanksHeader:{
     marginBottom: 30,
     color: theme.palette.darkGrey
@@ -46,7 +46,8 @@ const styles = theme => ({
     margin: '70px 0px 70px 0px'
   },
   modalPaper:{
-    margin: 15
+    margin: 15,
+    backgroundColor: theme.palette.base3
   },
   badge: {
     top: 19,
@@ -54,11 +55,12 @@ const styles = theme => ({
     border: `1px solid`,
     borderRadius: '50%',
     height: 'auto',
-    color: theme.palette.white,
-    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.base3,
+    backgroundColor: theme.palette.text.primary,
     padding: 5,
     cursor: 'pointer'
   },
+  listText:{ color: theme.palette.text.primary}
 });
 
 class UpdateUserModal extends React.Component {
@@ -93,7 +95,8 @@ class UpdateUserModal extends React.Component {
       });
       return (
         <ListItem >
-          <ListItemText primary={error} />
+          <ListItemText primary={error}
+            classes={{ primary: classes.listText }}/>
         </ListItem>
       )
     })
@@ -105,12 +108,12 @@ class UpdateUserModal extends React.Component {
           Email Confirmation Sent!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          color='textPrimary' align='left'>
           We've sent you an email confirmation at your new email address. Confirm your email to finalize this change.
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
@@ -122,7 +125,7 @@ class UpdateUserModal extends React.Component {
           Email Confirmation Error
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          color='textPrimary' align='left'>
           Unfortunately, we weren't able to change your email because:
         </Typography>
         <List>
@@ -130,7 +133,7 @@ class UpdateUserModal extends React.Component {
         </List>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
@@ -144,12 +147,12 @@ class UpdateUserModal extends React.Component {
           Password Changed!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          color='textPrimary' align='left'>
           You have successfully updated your password.
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
@@ -161,7 +164,7 @@ class UpdateUserModal extends React.Component {
           Password wasn't changed
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          color='textPrimary' align='left'>
           Unfortunately, we weren't able to change your password because:
         </Typography>
         <List>
@@ -169,7 +172,7 @@ class UpdateUserModal extends React.Component {
         </List>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
@@ -178,29 +181,29 @@ class UpdateUserModal extends React.Component {
 
     let modalTextGeneral = this.props.userErrors.length === 0 ? (
       <Grid item xs={11} sm={10} md={8} className={classes.grid}>
-        <Typography variant="h2" id="modal-title" color='secondary'
+        <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.thanksHeader} align='left'>
           Profile Information Updated
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          color='textPrimary' align='left'>
           You have successfully updated your profile information.
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>
       </Grid>
     ) : (
       <Grid item xs={11} sm={10} md={8} className={classes.grid}>
-        <Typography variant="h2" id="modal-title" color='secondary'
+        <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.thanksHeader} align='left'>
           Profile Information Wasn't Updated
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left'>
+          color='textPrimary' align='left'>
           Unfortunately, we weren't able to update your profile info because:
         </Typography>
         <List>
@@ -208,7 +211,7 @@ class UpdateUserModal extends React.Component {
         </List>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose} color='secondary'>
+            onClick={this.handleClose} color='primary'>
             Close
           </Button>
         </Grid>

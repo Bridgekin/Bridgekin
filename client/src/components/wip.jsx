@@ -28,16 +28,16 @@ class WorkInProgress extends Component {
         <Grid container justify="center" alignItems="center"
           className={classes.wrapper}>
           <Grid item xs={6}>
-            <Typography variant="h1" align='center' color='inherit'
+            <Typography variant="h1" align='center' color='textPrimary'
               gutterBottom className={classes.typography}>
               Work in Progress!
             </Typography>
-            <Typography variant="h6" align='center' color='inherit'
+            <Typography variant="h6" align='center' color='textPrimary'
               gutterBottom className={classes.typography}>
               Check back here in a little while to see what we've been working on!
             </Typography>
             <div style={{ display:'flex', justifyContent:'center'}}>
-              <Button variant="contained" color="secondary"
+              <Button variant="contained" color="primary"
                 href='/'>
                 Back to home
               </Button>

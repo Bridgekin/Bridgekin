@@ -42,6 +42,8 @@ const styles = theme => ({
     width: '100%',
     objectFit: 'cover'
   },
+  listItemText: { color: theme.palette.text.primary },
+  horizIcon: { color: theme.palette.text.primary}
 });
 
 class MemberCard extends React.Component{
@@ -89,6 +91,9 @@ class MemberCard extends React.Component{
           </ListItemAvatar>
 
           <ListItemText
+            classes={{
+              primary: classes.listItemText,
+              secondary: classes.listItemText}}
             primary={`${this.capitalize(user.fname)} ${this.capitalize(user.lname)}`}
             secondary={`${user.email}`}
           />
@@ -96,7 +101,7 @@ class MemberCard extends React.Component{
           <ListItemSecondaryAction>
             <IconButton aria-label="More"
               onClick={this.handleMenuClick}>
-              <MoreHorizIcon />
+              <MoreHorizIcon className={classes.horizIcon}/>
             </IconButton>
 
             <Menu

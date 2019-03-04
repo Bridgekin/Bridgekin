@@ -14,8 +14,8 @@ import './home.css';
 import { connect } from 'react-redux';
 import { refSignup } from '../../actions/session_actions';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from '../theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from '../theme';
 import SignupModal from './signup_modal';
 import BottomFade from '../../static/bottom-fade.png';
 
@@ -254,7 +254,7 @@ class SignupPage extends React.Component{
             />
           </Grid>
           <Grid item xs={12} className={classes.wrapper}>
-            <Button variant="contained" color="secondary" className={classes.button}
+            <Button variant="contained" color="primary" className={classes.button}
               disabled={loading || !termsAgreement } onClick={this.handleSignupSubmit}>
               Sign In Now
             </Button>
@@ -266,7 +266,7 @@ class SignupPage extends React.Component{
     )
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
+      <div>
         <Grid container className={classes.homeGridDesktop}
           justify="flex-start" alignItems="center"
           style={{ top: 64, position: 'relative'}}>
@@ -274,14 +274,14 @@ class SignupPage extends React.Component{
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >
               <Typography className={classes.homeHeader}
-                variant="h5" gutterBottom>
+                color="textPrimary" variant="h5" gutterBottom>
                 {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
 
             <Grid item xs={10} sm={8} >
               <Typography className={classes.homeSubheader}
-                variant="body1" gutterBottom>
+                color="textPrimary" variant="body1" gutterBottom>
                 {"You’ve received a private invitation to join the Bridgekin network, an invite-only community that has connected over $71M in opportunities. Complete your registration and sign in below!"}
               </Typography>
               {form}
@@ -298,14 +298,14 @@ class SignupPage extends React.Component{
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >
               <Typography className={classes.homeHeader}
-                variant="h5" gutterBottom>
+                color="textPrimary" variant="h5" gutterBottom>
                 {"Bridgekin is changing the way people connect to the business opportunities within their network"}
               </Typography>
             </Grid>
 
             <Grid item xs={10} sm={8} >
               <Typography className={classes.homeSubheader}
-                variant="body1" gutterBottom>
+                color="textPrimary" variant="body1" gutterBottom>
                 {"You’ve received a private invitation to join the Bridgekin network, an invite-only community that has connected over $71M in opportunities. Complete your registration and sign in below!"}
               </Typography>
               {form}
@@ -319,7 +319,7 @@ class SignupPage extends React.Component{
         <SignupModal
           open={open}
           handleClose={this.handleClose}/>
-      </MuiThemeProvider>
+      </div>
     );
   }
 }

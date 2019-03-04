@@ -1,30 +1,30 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import theme from './theme';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+// import theme from './theme';
+// import { fade } from '@material-ui/core/styles/colorManipulator';
 
-const styles = {
+const styles = theme => ({
   grid:{
     position: 'relative',
     padding: "64px 0px 0px 0px",
     // paddingTop: 64 + 34,
     flexGrow: 1,
-    backgroundColor: `${fade(theme().palette.common.black,0.05)}`,
+    backgroundColor: theme.palette.base2,
     // backgroundColor: 'white',
     minHeight: window.innerHeight
   },
   feedContainer:{
     width: '100%',
     margin: '0 auto',
-    [theme().breakpoints.up('md')]: {
+    [theme.breakpoints.up('md')]: {
       position: 'relative',
       width: 1040,
       height: '100%'
     },
   },
   mainColumn:{
-    [theme().breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       marginLeft: 265,
       // marginLeft: 15,
       width: 500,
@@ -38,11 +38,11 @@ const styles = {
     paddingLeft: 0,
     paddingRight: 0,
     display: 'none',
-    [theme().breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'inline-block'
     }
   },
-}
+});
 
 class FeedContainer extends React.Component{
   render () {
@@ -65,6 +65,6 @@ class FeedContainer extends React.Component{
       </Grid>
     )
   }
-}
+};
 
 export default withStyles(styles)(FeedContainer);
