@@ -74,10 +74,10 @@ let styles = (theme) => ({
       marginLeft: 25,
     },
     '&:hover': {
-      // backgroundColor: '#fff'
+      backgroundColor: theme.palette.base1
     },
     '&:click':{
-      // backgroundColor: '#fff'
+      backgroundColor: theme.palette.base1
     },
     padding: "12px 0px"
   },
