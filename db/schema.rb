@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_01_191128) do
+ActiveRecord::Schema.define(version: 2019_03_05_003210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(version: 2019_03_01_191128) do
     t.string "button2"
     t.string "border1"
     t.string "border2"
+    t.string "base5"
     t.index ["network_id"], name: "index_site_templates_on_network_id"
   end
 

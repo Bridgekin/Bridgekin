@@ -297,7 +297,7 @@ class OpportunityCard extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleDeleteClose(false)}
-              color="secondary" >
+              variant='contained'>
               Cancel
             </Button>
             <Button autoFocus color='error' variant='contained'
