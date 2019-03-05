@@ -71,7 +71,20 @@ class User < ApplicationRecord
     class_name: :EmailNotification
     # dependent: :destroy
 
+  has_many :requested_connections,
+    foreign_key: :user_id,
+    class_name: :User
+
+  has_many :received_connections,
+    foreign_key: :friend_id,
+    class_name: :User
+
   has_one_attached :profile_pic
+
+  def connections
+    Connection.where("user_id = ? OR friend_id = ?", self.id, self.id)
+      .includes(:requestor, :recipient)
+  end
 
   def confirmed?
     self.confirmed_at.present?

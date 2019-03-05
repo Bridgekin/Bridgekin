@@ -8,7 +8,7 @@ const styles = theme => ({
   grid:{
     position: 'relative',
     padding: "64px 0px 0px 0px",
-    // paddingTop: 64 + 34,
+    paddingTop: 64 + 18,
     flexGrow: 1,
     backgroundColor: theme.palette.base2,
     // backgroundColor: 'white',
@@ -35,6 +35,7 @@ const styles = theme => ({
     },
   },
   sideColumn:{
+    paddingTop: 18,
     paddingLeft: 0,
     paddingRight: 0,
     display: 'none',

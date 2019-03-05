@@ -1,0 +1,29 @@
+import React from 'react';
+// import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  feedCard:{
+    padding: "9px 8px 20px 8px",
+    backgroundColor: `${theme.palette.base3}`,
+    // borderTop: `1px solid ${theme.palette.lightGrey}`,
+    border: `1px solid ${theme.palette.border.primary}`,
+    // width: '100%',
+    marginBottom: 9,
+    [theme.breakpoints.up('sm')]: {
+      borderRadius: 5,
+      padding: "9px 17px 20px",
+    },
+  },
+})
+
+const FeedCard = ({ contents, classes }) => (
+  <div className={classes.feedCard}>
+    {contents}
+  </div>
+)
+
+export default withStyles(styles)(FeedCard)

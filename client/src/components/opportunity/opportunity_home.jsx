@@ -62,6 +62,7 @@ import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
 import PersonIcon from '@material-ui/icons/PersonSharp';
 
 import FeedContainer from '../feed_container';
+import FeedCard from '../feed_card';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -102,6 +103,21 @@ const styles = theme => ({
       padding: "9px 17px 20px",
     },
   },
+  filterCard:{
+    // marginTop: 18,
+    backgroundColor: `${theme.palette.base3}`,
+    width: '100%',
+    borderRadius: 5,
+    border: `1px solid ${theme.palette.border.primary}`
+  },
+  filter:{
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex'
+    },
+    padding: 0,
+    width: '100%'
+  },
   waitlistMobileCard:{
     padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.base3}`,
@@ -133,13 +149,6 @@ const styles = theme => ({
     borderRadius: 5,
     padding: "8px 10px",
     backgroundColor: `${theme.palette.base4}`
-  },
-  filterCard:{
-    marginTop: 18,
-    backgroundColor: `${theme.palette.base3}`,
-    width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.border.primary}`
   },
   opportunityCard:{
     marginTop: 18,
@@ -225,14 +234,6 @@ const styles = theme => ({
       display: 'none'
     }
   },
-  filter:{
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex'
-    },
-    padding: 0,
-    width: '100%'
-  },
   emptyOppsText:{
     fontSize: 30,
     fontWeight: 500,
@@ -265,9 +266,9 @@ class OpportunityHome extends React.Component {
       network: '',
       // fname: '',
       // email: '',
-      loading: false,
+      // loading: false,
       success: false,
-      waitlistOpen: false,
+      // waitlistOpen: false,
       changeModalOpen: false,
       cardOpen: false,
       dropdownOpen: false,
@@ -277,7 +278,7 @@ class OpportunityHome extends React.Component {
     };
 
     this.handleModalClose = this.handleModalClose.bind(this);
-    this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
+    // this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
     this.handleReferralChange = this.handleReferralChange.bind(this);
     this.handleReferralSubmit = this.handleReferralSubmit.bind(this);
     this.handleDropdownClick = this.handleDropdownClick.bind(this);
@@ -330,21 +331,21 @@ class OpportunityHome extends React.Component {
     this.setState({ changeModalOpen: true });
   }
 
-  handleWaitlistSubmit(user){
-    if (!this.state.loading) {
-      this.setState({ success: false, loading: true },
-        () => {
-          this.props.registerWaitlistFromReferral(user)
-            .then(res => {
-              this.setState({
-                loading: false,
-                success: true,
-                waitlistOpen: true,
-              })
-            })
-      })
-    }
-  }
+  // handleWaitlistSubmit(user){
+  //   if (!this.state.loading) {
+  //     this.setState({ success: false, loading: true },
+  //       () => {
+  //         this.props.registerWaitlistFromReferral(user)
+  //           .then(res => {
+  //             this.setState({
+  //               loading: false,
+  //               success: true,
+  //               waitlistOpen: true,
+  //             })
+  //           })
+  //     })
+  //   }
+  // }
 
   handleReferralChange(e){
     this.setState({ referralNetwork: e.target.value})
@@ -423,35 +424,37 @@ class OpportunityHome extends React.Component {
 
       const column1 = (
         <Grid container justify='center' alignItems='center'
-          style={{ padding: 0, width: '100%', marginTop: 18}}>
-          <div className={classes.feedCard}>
-            <Typography gutterBottom align='Left' color='textPrimary'
-              className={classes.cardHeader}
-              style={{ marginBottom: 20}}>
-              Over $71M in opportunities connected
-            </Typography>
+          style={{ padding: 0, width: '100%' }}>
+          <FeedCard contents={
+              <div>
+                <Typography gutterBottom align='Left' color='textPrimary'
+                  className={classes.cardHeader}
+                  style={{ marginBottom: 20}}>
+                  Over $71M in opportunities connected
+                </Typography>
 
-            <div className={classes.oppNotification}>
-              <Typography align='Left' color='textSecondary'
-                className={classes.cardHeader}>
-                {`There are ${networkOpps.size} opportunities for you to checkout`}
+                <div className={classes.oppNotification}>
+                  <Typography align='Left' color='textSecondary'
+                    className={classes.cardHeader}>
+                    {`There are ${networkOpps.size} opportunities for you to checkout`}
+                  </Typography>
+                </div>
+              </div>
+            }/>
+
+          <FeedCard contents={
+            <div>
+              <Typography gutterBottom align='Left'
+                className={classes.cardHeader} color='textSecondary'
+                style={{ marginBottom: 20}}>
+                Invite your trusted business contacts
               </Typography>
+
+              <OpportunityWaitlist
+                currentUser={currentUser}
+                />
             </div>
-          </div>
-
-          <div className={classes.feedCard}>
-            <Typography gutterBottom align='Left'
-              className={classes.cardHeader} color='textSecondary'
-              style={{ marginBottom: 20}}>
-              Invite your trusted business contacts
-            </Typography>
-
-            <OpportunityWaitlist
-              handleSubmit={this.handleWaitlistSubmit}
-              loading={loading}
-              currentUser={currentUser}
-              />
-          </div>
+          }/>
         </Grid>
       )
 
@@ -648,7 +651,7 @@ class OpportunityHome extends React.Component {
 
       const feed = (
         <Grid container justify='center' alignItems='center'>
-          <div style={{ overflow: 'scroll', padding: "18px 0px 50px 0px",
+          <div style={{ overflow: 'scroll', paddingBottom:50,
             width: '100%'}}>
             <CardActionArea className={classes.feedCard}
               style={{ paddingBottom: 9}}
@@ -740,11 +743,6 @@ class OpportunityHome extends React.Component {
             feed={feed}
             column2={filter} />
 
-          <WaitlistModal
-            open={waitlistOpen}
-            handleClose={this.handleModalClose('waitlistOpen')}
-            referred={true}/>
-
           <OpportunityChangeModal
             open={changeModalOpen}
             handleClose={this.handleModalClose('changeModalOpen')}
@@ -767,3 +765,8 @@ class OpportunityHome extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(OpportunityHome));
+
+// <WaitlistModal
+//   open={waitlistOpen}
+//   handleClose={this.handleModalClose('waitlistOpen')}
+//   referred={true}/>

@@ -22,7 +22,9 @@ import AccountMain from './components/account/account_main';
 // // import OpportunityEdit from './components/post_opportunity/opportunity_edit';
 import SignupPage from './components/home/signup_page';
 import AccountConfirmed from './components/account/account_confirmed';
-import ConnectionsHome from './components/connections/connections_home';
+// import ConnectionsHome from './components/connections/connections_home';
+import MyTrustedNetwork from './components/connections/my_trusted_network';
+
 import Login from './components/home/login_page';
 import PasswordReset from './components/home/password_reset';
 import PasswordUpdate from './components/home/password_update';
@@ -46,7 +48,7 @@ export default () => (
       <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
       <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
-      <AdminProtectedRoute path="/mynetwork" component={ConnectionsHome} />
+      <AdminProtectedRoute path="/mynetwork" component={MyTrustedNetwork} />
       <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
       <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />

@@ -71,7 +71,7 @@ const styles = theme => ({
   accountHomeContainer:{
     overflow: 'scroll',
     [theme.breakpoints.up('sm')]: {
-      paddingTop: 18
+      // paddingTop: 18
     },
   },
   moreIcon: { color:theme.palette.text.secondary}

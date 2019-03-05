@@ -53,7 +53,7 @@ const styles = theme => ({
     display: 'inline-block'
   },
   filterCard:{
-    marginTop: 18,
+    // marginTop: 18,
     backgroundColor: theme.palette.base3,
     width: '100%',
     borderRadius: 5,
@@ -215,7 +215,7 @@ class AccountMain extends React.Component {
 
     const mobileNavOpen = Boolean(mobileNavAnchorEl);
 
-    let destinations = [
+    let pages = [
       {title: 'My Profile', dest: '/account/home'},
       {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
       {title: 'Settings', dest: '/account/settings'}
@@ -232,7 +232,7 @@ class AccountMain extends React.Component {
           </Typography>
 
           <List component="nav">
-            {destinations.map(item => (
+            {pages.map(item => (
               <ListItem button className={classes.filterItem}
                 onClick={() => this.props.history.push(item.dest)}
                 selected={pathName === item.dest}>
@@ -271,7 +271,7 @@ class AccountMain extends React.Component {
           open={mobileNavOpen}
           onClose={this.handleMobileNavClick()}
         >
-          {destinations.map(item => (
+          {pages.map(item => (
             <ListItem button className={classes.filterItem}
               onClick={this.handleMobileNavClick(item.dest)}
               selected={pathName === item.dest}>

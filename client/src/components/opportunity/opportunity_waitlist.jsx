@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -7,16 +8,18 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
+import WaitlistModal from '../waitlist_modal';
 
-// const mapStateToProps = state => ({
-//   currentUser: state.users[state.session.id],
-//   waitlistErrors: state.errors.waitlistUsers
-// });
-//
-// const mapDispatchToProps = dispatch => ({
-//   registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user))
-// });
+import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
 
+const mapStateToProps = state => ({
+  currentUser: state.users[state.session.id],
+  // waitlistErrors: state.errors.waitlistUsers
+});
+
+const mapDispatchToProps = dispatch => ({
+  registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user))
+});
 
 const styles = theme => ({
   root: {
@@ -64,10 +67,14 @@ class OpportunityWaitlist extends React.Component{
     this.state={
       email: '',
       fname: '',
+      open: false,
+      success: false,
+      loading: false
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
   handleChange(field){
@@ -86,12 +93,30 @@ class OpportunityWaitlist extends React.Component{
       fromReferralId: this.props.currentUser.id
     }
 
-    this.props.handleSubmit(user)
-    this.setState({ email: '', fname: ''})
+    if (!this.state.loading) {
+      this.setState({ success: false, loading: true },
+      () => {
+        this.props.registerWaitlistFromReferral(user)
+          .then(res => {
+            this.setState({
+              loading: false,
+              success: true,
+              open: true,
+              email: '',
+              fname: ''
+            })
+          })
+      })
+    }
+  }
+
+  handleClose(){
+    this.setState({ open: false });
   }
 
   render(){
-    const { loading, classes, currentUser } = this.props;
+    const { classes, currentUser } = this.props;
+    const { loading, open } = this.state;
 
     return(
       <Grid container className={classes.root}
@@ -150,12 +175,17 @@ class OpportunityWaitlist extends React.Component{
             }
           </Typography>
         </Grid>
+
+        <WaitlistModal
+          open={open}
+          handleClose={this.handleClose}
+          referred={true}/>
       </Grid>
     )
   }
 };
 
-export default (withStyles(styles)(OpportunityWaitlist));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(OpportunityWaitlist));
 
 //REFERRAL CODE FOR WHEN WE WANT TO CREATE REFERRAL LINKS
 

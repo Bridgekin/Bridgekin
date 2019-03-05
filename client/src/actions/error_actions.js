@@ -30,6 +30,8 @@ export const RECEIVE_MEMBER_USER_ERRORS = 'RECEIVE_MEMBER_USER_ERRORS';
 export const CLEAR_MEMBER_USER_ERRORS = 'CLEAR_MEMBER_USER_ERRORS';
 export const RECEIVE_OPP_PERMISSION_ERRORS = 'RECEIVE_OPP_PERMISSION_ERRORS';
 export const CLEAR_OPP_PERMISSION_ERRORS = 'CLEAR_OPP_PERMISSION_ERRORS';
+export const RECEIVE_CONNECTION_ERRORS = 'RECEIVE_CONNECTION_ERRORS';
+export const CLEAR_CONNECTION_ERRORS = 'CLEAR_CONNECTION_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -155,4 +157,13 @@ export const receiveOppPermissionErrors = errors => ({
 
 export const clearOppPermissionErrors = () => ({
   type: CLEAR_OPP_PERMISSION_ERRORS,
+});
+
+export const receiveConnectionErrors = errors => ({
+  type: RECEIVE_CONNECTION_ERRORS,
+  errors
+});
+
+export const clearConnectionErrors = () => ({
+  type: CLEAR_CONNECTION_ERRORS,
 });

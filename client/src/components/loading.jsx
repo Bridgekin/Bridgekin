@@ -5,8 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import theme from './theme';
+// import { MuiThemeProvider } from '@material-ui/core/styles';
+// import theme from './theme';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
@@ -28,12 +28,10 @@ class Loading extends Component {
   render () {
     const {classes} = this.props;
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
-        <Grid container justify="center" alignItems="center"
-          className={classes.homeGrid}>
-          <CircularProgress className={classes.progress}/>
-        </Grid>
-      </MuiThemeProvider>
+      <Grid container justify="center" alignItems="center"
+        className={classes.homeGrid}>
+        <CircularProgress className={classes.progress}/>
+      </Grid>
     )
   }
 }

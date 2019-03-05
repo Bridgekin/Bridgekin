@@ -121,7 +121,7 @@ const styles = theme => ({
     width: '100%'
   },
   filterCard:{
-    marginTop: 18,
+    // marginTop: 18,
     backgroundColor: `${theme.palette.base3}`,
     width: '100%',
     borderRadius: 5,
@@ -280,7 +280,7 @@ class NetworkAdmin extends React.Component {
       )
 
       let column1 = (
-        <div style={{ paddingTop: 18}}>
+        <div>
           <div className={classes.feedCard}>
             {networkFilter}
           </div>
@@ -333,7 +333,7 @@ class NetworkAdmin extends React.Component {
       )
 
       let feed = (
-        <div style={{ padding: "18px 0px 30px", width: '100%'}}>
+        <div style={{ paddingBottom:30, width: '100%'}}>
           <Grid container justify='space-between' alignItems='center'
             className={classes.mobileFeedCard}>
             {networkFilter}

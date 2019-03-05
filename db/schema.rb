@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_05_032833) do
+ActiveRecord::Schema.define(version: 2019_03_05_184948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,16 @@ ActiveRecord::Schema.define(version: 2019_03_05_032833) do
     t.integer "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
     t.index ["opportunity_id"], name: "index_connected_opportunities_on_opportunity_id"
     t.index ["user_id"], name: "index_connected_opportunities_on_user_id"
+  end
+
+  create_table "connections", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "friend_id"
+    t.string "status", default: "Pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["friend_id"], name: "index_connections_on_friend_id"
+    t.index ["user_id"], name: "index_connections_on_user_id"
   end
 
   create_table "email_notifications", force: :cascade do |t|

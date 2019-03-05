@@ -53,7 +53,7 @@ const styles = theme => ({
   loader:{ height: 200},
   oppFeedContainer:{
     [theme.breakpoints.up('sm')]: {
-      marginTop: 18,
+      // marginTop: 18,
     },
   },
   emptyOppsText:{
