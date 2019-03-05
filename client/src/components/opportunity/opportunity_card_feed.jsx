@@ -147,7 +147,7 @@ const styles = theme => ({
     cursor: 'pointer'
   },
   moreIcon: { color: theme.palette.text.primary},
-  progress: { color: theme.palette.text.primary},
+  progress: { color: theme.palette.text.primary}
 });
 
 
@@ -296,11 +296,11 @@ class OpportunityCard extends React.Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleDeleteClose(false)}
-              variant='contained'>
+            <Button onClick={this.handleDeleteClose(false)}>
               Cancel
             </Button>
-            <Button autoFocus color='error' variant='contained'
+            <Button autoFocus variant='contained'
+              className={classes.delete}
               onClick={this.handleDeleteClose(true)}>
               Delete
             </Button>
