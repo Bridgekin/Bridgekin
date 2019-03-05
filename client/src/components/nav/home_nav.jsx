@@ -177,7 +177,8 @@ let styles = (theme) => ({
       width: 200,
     },
   },
-  buttonText: { color: theme.palette.text.primary}
+  buttonText: { color: theme.palette.text.tertiary},
+  navButtonText: { color: theme.palette.text.tertiary}
 });
 
 class HomeNav extends React.Component {
@@ -482,15 +483,17 @@ class HomeNav extends React.Component {
             <Button color='secondary'
               onClick={this.handleLinkClose('testfeature')}
               style={{ marginRight: 10}}>
-              <Typography variant="h4" align='left' color="textPrimary"
-                style={(pathName === 'testfeature') ? { fontWeight: 600} : {}}>
+              <Typography variant="h4" align='left'
+                style={(pathName === 'testfeature') ? { fontWeight: 600} : {}}
+                className={classes.navButtonText}>
                 Test Feature
               </Typography>
             </Button>}
           <Button color='secondary'
             onClick={this.handleLinkClose('findandconnect')}>
-            <Typography variant="h4" align='left' color="textPrimary"
-              style={(pathName === 'findandconnect') ? { fontWeight: 600} : {}}>
+            <Typography variant="h4" align='left'
+              style={(pathName === 'findandconnect') ? { fontWeight: 600} : {}}
+              className={classes.navButtonText}>
               Find & Connect
             </Typography>
           </Button>
@@ -498,8 +501,9 @@ class HomeNav extends React.Component {
             <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
-            <Typography variant="h4" align='left' color="textPrimary"
-              style={(pathName === 'mynetwork') ? { fontWeight: 600} : {}}>
+            <Typography variant="h4" align='left'
+              style={(pathName === 'mynetwork') ? { fontWeight: 600} : {}}
+              className={classes.navButtonText}>
               My Trusted Network
             </Typography>
           </Button>}
@@ -508,7 +512,7 @@ class HomeNav extends React.Component {
               aria-owns={isMenuOpen ? 'material-appbar' : undefined}
               aria-haspopup="true"
               onClick={this.handleProfileMenuOpen}
-              color="primary"
+              className={classes.navButtonText}
             >
               {currentUser.profilePicUrl ? (
                 <Avatar alt="profile-pic"

@@ -607,7 +607,7 @@ class OpportunityHome extends React.Component {
                 </ListItem>
               ))}
 
-              {currentUser.isAdmin && otherDropdownOptions.map(other => (
+              {false && currentUser.isAdmin && otherDropdownOptions.map(other => (
                 <ListItem button
                   className={classes.filterItem}
                   disabled={other.disabled}

@@ -33,7 +33,7 @@ let theme = (siteTemplate) => createMuiTheme({
     text: {
       primary: (siteTemplate && siteTemplate.font1) || "#000000" , //"#551A8B", //black
       secondary: (siteTemplate && siteTemplate.font2) || "#616161", //'yellow', //grey
-      // tertiary: '#FFFFFF' //white
+      tertiary: (siteTemplate && siteTemplate.font3) || "#000000", //black
     },
     border: {
       primary: (siteTemplate && siteTemplate.border1) || "#E2E2E2", //'#000000'

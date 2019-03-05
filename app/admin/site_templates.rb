@@ -1,7 +1,7 @@
 ActiveAdmin.register SiteTemplate do
   permit_params :name, :network_id, :test_feature, :base1, :base2,
-  :base3, :base4, :base5, :font1, :font2, :button1, :button2, :border1,
-  :border2, :created_at, :updated_at
+  :base3, :base4, :base5, :font1, :font2, :font3, :button1, :button2,
+  :border1, :border2, :created_at, :updated_at
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
