@@ -262,8 +262,9 @@ class ShareModal extends Component{
             className={classes.listHeader}>
             Networks
           </Typography>
-          {[...filteredOptions].filter(opt => opt.includes('Network'))
-            .map(option => (
+          {[...filteredOptions].filter(x => (
+            !permissions.has(x)) && x.includes('Network')
+          ).map(option => (
               <ListItem key={option} className={classes.listItem}
                 onClick={this.handleUpdate(option)}>
                 {this.getItem(option)}
@@ -273,6 +274,7 @@ class ShareModal extends Component{
         </Grid>
       </Grid>
     )
+    // {[...filteredOptions].filter(opt => opt.includes('Network'))
 
     let submit = (
       <Grid container justify='flex-end' alignItems='center'
