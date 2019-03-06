@@ -86,6 +86,17 @@ class User < ApplicationRecord
       .includes(:requestor, :recipient)
   end
 
+  def friends
+    self.connections.where(status: 'Accepted')
+    .reduce([]) do |arr, connection|
+      if connection.requestor.id == self.id
+        arr << connection.recipient
+      else
+        arr << connection.requestor
+      end
+    end
+  end
+
   def confirmed?
     self.confirmed_at.present?
   end

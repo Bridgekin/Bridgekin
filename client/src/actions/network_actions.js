@@ -1,7 +1,7 @@
 import * as NetworkApiUtil from '../util/networks_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveNetworkErrors } from './error_actions';
-import { receiveWorkspaceNetworks } from './workspace_network_actions';
+import { receiveWorkspaceOptions } from './workspace_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
@@ -44,12 +44,27 @@ export const removeNetwork = () => ({
 //     })
 // );
 
-export const fetchWorkspaceNetworks = (workspaceId) => dispatch => (
-  NetworkApiUtil.fetchWorkspaceNetworks(workspaceId)
+// export const fetchWorkspaceNetworks = (workspaceId) => dispatch => (
+//   NetworkApiUtil.fetchWorkspaceNetworks(workspaceId)
+//     .then(handleErrors)
+//     .then(data => {
+//       dispatch(receiveNetworks(data.networks))
+//       dispatch(receiveWorkspaceNetworks(data.workspaceNetworks))
+//     })
+//     .catch(errors => {
+//       if (!(errors instanceof Array)){
+//         errors = [genericError];
+//       }
+//       dispatch(receiveNetworkErrors(errors))
+//     })
+// );
+
+export const fetchWorkspaceOptions = (workspaceId) => dispatch => (
+  NetworkApiUtil.fetchWorkspaceOptions(workspaceId)
     .then(handleErrors)
     .then(data => {
-      dispatch(receiveNetworks(data.networks))
-      dispatch(receiveWorkspaceNetworks(data.workspaceNetworks))
+      dispatch(receiveWorkspaceOptions(data.workspaceOptions));
+      dispatch(receiveNetworks(data.networks));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

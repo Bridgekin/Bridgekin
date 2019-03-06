@@ -1,6 +1,8 @@
 require_relative '../concerns/devise_controller_patch.rb'
+require_relative '../concerns/sql_controller_module.rb'
 class Api::OpportunitiesController < ApiController
   include DeviseControllerPatch
+  include SQLControllerModule
   before_action :set_opportunity, only: [:show, :update, :destroy]
   before_action :authenticate_user
   before_action :set_workspace_networks, only: [:index]
@@ -9,22 +11,29 @@ class Api::OpportunitiesController < ApiController
   # after_action :verify_policy_scoped, only: :index
 
   def index
-    if params[:network_id].empty?
-      @opportunities = Opportunity.joins(:opp_permissions)
-        .where(opp_permissions:
-          { shareable_id: @workspace_networks.pluck(:id),
-            shareable_type: 'Network'})
-        .where(status: 'Approved')
-        .where.not(deal_status: 'Deleted')
-        .includes(:owner)
+    option = params[:option].split('-')
+    @opportunities = []
+    if option.empty?
+      @opportunities = opps_all_networks + opps_all_connections
     else
-      @opportunities = Network.find(params[:network_id]).opportunities
-        .where(status: 'Approved')
-        .where.not(deal_status: 'Deleted')
-        .includes(:owner)
-        # .where(opp_permissions: { sharable_id: params[:network_id],
-        #   shareable_type: 'Network' })
-        # .where(opportunity_networks: { network_id: params[:network_id]})
+      if option.first == 'All'
+        case option.last
+        when 'Network'
+          @opportunities = opps_all_networks
+        when 'Connection'
+          @opportunities = opps_all_connections
+        else
+          render json: ["Houston, we have a problem"], status: 422
+        end
+      elsif option.first == 'Direct'
+        # Only for Direct Connections
+        @opportunities = opps_direct_connections
+      else
+        if option.last == 'Network'
+          # For Networks by I
+          @opportunities = opps_network_id(option.first)
+        end
+      end
     end
 
     @networkOpps = @opportunities.pluck(:id)
@@ -33,8 +42,10 @@ class Api::OpportunitiesController < ApiController
 
   def userIndex
     @opportunities = @user.opportunities
-      .where.not(deal_status: 'Deleted')
       .includes(:owner)
+      .where.not(deal_status: 'Deleted')
+      .order(created_at: :desc)
+
     @userOpportunities = @opportunities.pluck(:id)
     render :userIndex
     # .includes(:networks)
@@ -102,6 +113,11 @@ class Api::OpportunitiesController < ApiController
         .where(id: @user.member_networks)
         .or(Network.where(id: params[:workspace_id]))
         .includes(:opportunities)
+
+      @workspace_network_members = User.joins(:user_networks)
+        .where(user_networks: { network_id: @workspace_networks.pluck(:id)})
+      # @workspace_connections = @user.friends.joins(:user_networks)
+      #   .where(user_networks: { network_id: @workspace_networks.pluck(:id) })
     end
 
     # Only allow a trusted parameter "white list" through.

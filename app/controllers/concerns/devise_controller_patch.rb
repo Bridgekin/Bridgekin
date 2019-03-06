@@ -34,4 +34,16 @@ module DeviseControllerPatch
     @user
   end
 
+  def createShareOptions(resources, name)
+    resources.reduce([]) do |arr, resource|
+      arr << "#{resource.id}-#{name}"
+    end
+  end
+
+  def createOppPermissions(oppPermissions)
+    oppPermissions.reduce([]) do |arr, perm|
+      arr << "#{perm.shareable_id}-#{perm.shareable_type}"
+    end
+  end
+
 end

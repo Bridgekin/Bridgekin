@@ -1,5 +1,5 @@
-export const fetchOpportunities = (workspaceId, networkId) => (
-  fetch(`${window.location.origin}/api/opportunities?networkId=${networkId}&workspaceId=${workspaceId}`, {
+export const fetchOpportunities = (workspaceId, option) => (
+  fetch(`${window.location.origin}/api/opportunities?option=${option}&workspaceId=${workspaceId}`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',

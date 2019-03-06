@@ -17,9 +17,9 @@ class Api::NetworksController < ApplicationController
       .where(workspace_id: params[:network_id])
       .or(policy_scope(Network).where(id: params[:network_id]))
 
-    # debugger
+    @workspaceOptions = createShareOptions(@networks, 'Network')
+      # ['All-Network', 'All-Connection', 'All-Circle']
 
-    @workspaceNetworks = @networks.pluck(:id)
     render :workspaceIndex
   end
 

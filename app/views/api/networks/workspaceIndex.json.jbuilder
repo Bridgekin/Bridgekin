@@ -6,4 +6,4 @@ json.networks do
   end
 end
 
-json.workspaceNetworks @workspaceNetworks
+json.workspaceOptions @workspaceOptions

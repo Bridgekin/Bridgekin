@@ -48,7 +48,7 @@ import LinesEllipsis from 'react-lines-ellipsis';
 //Imported Actions
 import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
 import { fetchOpportunities } from '../../actions/opportunity_actions';
-import { fetchWorkspaceNetworks } from '../../actions/network_actions';
+import { fetchWorkspaceOptions } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 import OpportunityChangeModal from './opportunity_change_modal';
 
@@ -70,16 +70,15 @@ const mapStateToProps = state => ({
   opportunities: state.entities.opportunities,
   networkOpps: state.entities.networkOpps,
   networks: state.entities.networks,
-  workspaceNetworks: state.entities.workspaceNetworks,
+  workspaceOptions: state.entities.workspaceOptions,
   referral: state.entities.referral,
   siteTemplate: state.siteTemplate
 });
 
 const mapDispatchToProps = dispatch => ({
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
-  fetchOpportunities: (workspaceId, networkId) => dispatch(fetchOpportunities(workspaceId, networkId)),
-  // fetchNetworks: () => dispatch(fetchNetworks()),
-  fetchWorkspaceNetworks: (workspaceId) => dispatch(fetchWorkspaceNetworks(workspaceId)),
+  fetchOpportunities: (workspaceId, option) => dispatch(fetchOpportunities(workspaceId, option)),
+  fetchWorkspaceOptions: (workspaceId) => dispatch(fetchWorkspaceOptions(workspaceId)),
   createReferral: (referral) => dispatch(createReferral(referral))
 });
 
@@ -287,6 +286,10 @@ class OpportunityHome extends React.Component {
     this.resetWorkspace = this.resetWorkspace.bind(this);
     this.handleOpportunityChangeModalOpen = this.handleOpportunityChangeModalOpen.bind(this);
     this.updateNetworkOpps = this.updateNetworkOpps.bind(this);
+    this.setFilters = this.setFilters.bind(this);
+    this.createMenuItem = this.createMenuItem.bind(this);
+    this.createListItem = this.createListItem.bind(this);
+    this.getSelectedTitle = this.getSelectedTitle.bind(this);
   }
 
   componentDidMount(){
@@ -296,19 +299,23 @@ class OpportunityHome extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
     if(nextProps.siteTemplate !== this.props.siteTemplate){
-      const workspaceId = nextProps.siteTemplate.networkId
-      this.resetWorkspace(workspaceId);
+      this.setState({ opportunitiesLoaded: false },
+      () => {
+        const workspaceId = nextProps.siteTemplate.networkId
+        this.resetWorkspace(workspaceId);
+      })
     }
     return true
   }
 
   resetWorkspace(workspaceId){
-    this.props.fetchWorkspaceNetworks(workspaceId)
+    this.props.fetchWorkspaceOptions(workspaceId)
     .then(() => {
-      const { workspaceNetworks, networks } = this.props;
-      if(workspaceNetworks.size > 0){
+      const { networks } = this.props;
+      const networksArray = Object.values(networks);
+      if(networksArray.length > 0){
         // Set network for referral component
-        let referralNetwork = networks[[...workspaceNetworks][0]].id;
+        let referralNetwork = networksArray[0].id;
         // Choose all opportunities for this workspace
         this.props.fetchOpportunities(workspaceId, '')
         .then(() => {
@@ -330,22 +337,6 @@ class OpportunityHome extends React.Component {
     e.preventDefault();
     this.setState({ changeModalOpen: true });
   }
-
-  // handleWaitlistSubmit(user){
-  //   if (!this.state.loading) {
-  //     this.setState({ success: false, loading: true },
-  //       () => {
-  //         this.props.registerWaitlistFromReferral(user)
-  //           .then(res => {
-  //             this.setState({
-  //               loading: false,
-  //               success: true,
-  //               waitlistOpen: true,
-  //             })
-  //           })
-  //     })
-  //   }
-  // }
 
   handleReferralChange(e){
     this.setState({ referralNetwork: e.target.value})
@@ -371,19 +362,19 @@ class OpportunityHome extends React.Component {
     }
   };
 
-  handleDropdownChange(anchor, type, id){
+  handleDropdownChange(anchor, value){
     return e => {
       e.stopPropagation();
-      if (type === 'Network'){
+      // if (value.includes('Network')){
         const workspaceId = this.props.siteTemplate.networkId
-        this.props.fetchOpportunities(workspaceId, id)
+        this.props.fetchOpportunities(workspaceId, value)
         .then(() => {
           this.setState({
-            dropdownFocus: id, [anchor]: null
+            dropdownFocus: value, [anchor]: null
           });
           animateScroll.scrollTo(0);
         })
-      }
+      // }
     }
   }
 
@@ -398,15 +389,100 @@ class OpportunityHome extends React.Component {
     return str[0].toUpperCase() + str.slice(1)
   }
 
-  render (){
-    const { classes, opportunities, networks,
-      referral, currentUser, workspaceNetworks,
-      networkOpps } = this.props;
+  createMenuItem(item, type){
+    const { classes } = this.props;
+    const { dropdownFocus } = this.state;
 
-    const { loading, waitlistOpen, changeModalOpen,
-        referralNetwork, anchorEl,
+    if(type === 'Network'){
+      return (<MenuItem value={`${item.id}-Network`}
+        className={classes.dropdownMenuItem}
+        onClick={this.handleDropdownChange('filterMobileAnchorEl', `${item.id}-Network`)}
+        selected={dropdownFocus === `${item.id}-Network`}
+        style={{ paddingLeft: 0}}>
+        <Grid container alignItems='center'>
+          <Checkbox checked={dropdownFocus === `${item.id}-Network`}/>
+          <div style={{ display: 'inline'}}>
+            <Typography variant="h6" align='left'
+              color="textPrimary" className={classes.filterMobileHeader}>
+              {item.title}
+            </Typography>
+            <Typography variant="body2" align='left'
+              color="textPrimary" className={classes.filterMobileSubtext}>
+              {item.subtitle}
+            </Typography>
+          </div>
+        </Grid>
+      </MenuItem>)
+    }
+  }
+
+  createListItem(item, type){
+    const { classes } = this.props;
+    const { dropdownFocus } = this.state;
+
+    if (type === 'Network'){
+      return (
+        <ListItem button value={`${item.id}-Network`}
+          className={classes.filterItem}
+          onClick={this.handleDropdownChange('anchorEl', `${item.id}-Network`)}
+          selected={dropdownFocus === `${item.id}-Network`}>
+          <div>
+            <Typography variant="h6" align='left'
+              color="textPrimary" className={classes.filterHeader}>
+              {item.title}
+            </Typography>
+            <Typography variant="body2" align='left'
+              color="textPrimary" className={classes.filterSubtext}>
+              {item.subtitle}
+            </Typography>
+          </div>
+        </ListItem>
+      )
+    }
+  }
+
+  setFilters(setting){
+    const { workspaceOptions, networks } = this.props;
+    let optionsArray = [...workspaceOptions]
+    let networkItems = optionsArray.filter(x => x.includes('Network'))
+      .map(x => networks[x.split('-')[0]])
+      .map(network => {
+        if (setting === 'List'){
+          return this.createListItem(network, 'Network')
+        } else {
+          return this.createMenuItem(network, 'Network')
+        }
+      })
+    return networkItems
+  }
+
+  getSelectedTitle(dropdownFocus){
+    const { networks } = this.props;
+    switch(dropdownFocus){
+      case '':
+        return "All Opportunities";
+      case dropdownFocus.includes('Direct'):
+        return "Direct Opportunities";
+      case dropdownFocus.includes('All'):
+        return `All-${dropdownFocus.split('-').pop()}s`;
+      case dropdownFocus.includes('Network'):
+        return `${networks[dropdownFocus.split('-').unshift()]}`;
+      default:
+        return "None"
+    }
+  }
+
+  render (){
+    const { classes, opportunities, networks, workspaceOptions,
+      referral, currentUser, networkOpps } = this.props;
+
+    const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
         filterMobileAnchorEl } = this.state;
+
+    const networksArray = [...workspaceOptions]
+      .filter(x => x.includes('Network'))
+      .map(x => networks[x.split('-')[0]])
 
     // const workspaceId = siteTemplate.networkId;
     // const formattedNetworks = networksArray.map(network => (
@@ -458,13 +534,15 @@ class OpportunityHome extends React.Component {
         </Grid>
       )
 
-      const otherDropdownOptions = [
-        {header: 'Connections' , subHeader: 'Your Connections', disabled: true},
-        {header: 'Network Circles' , subHeader: 'Your segmented lists of connections', disabled: true},
-        {header: 'Custom' , subHeader: 'Include and exclude specific connections', disabled: true}
+      const genericDropdownOptions = [
+        {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
+          value: 'Direct-Connection', disabled: false},
+        {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
+          value: 'All-Connection',disabled: false},
+        {header: 'All Opportunities' , subHeader: 'Your segmented lists of connections',
+          value: '',disabled: false},
       ]
 
-      const networksArray = [...workspaceNetworks].map(id => networks[id]);
       const filterMobile = (
         <Grid container justify='flex-end'
           className={classes.filterMobile}>
@@ -480,7 +558,7 @@ class OpportunityHome extends React.Component {
             <Typography variant="subtitle1" align='left'
               color="textPrimary"
               style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
-              {dropdownFocus === "" ? "All Opportunities" : networks[dropdownFocus].title}
+              {this.getSelectedTitle(dropdownFocus)}
             </Typography>
             <KeyboardArrowDownIcon />
           </Button>
@@ -501,54 +579,13 @@ class OpportunityHome extends React.Component {
                 horizontal: 'right',
               }}
               >
-              <MenuItem onClick={this.handleDropdownChange('filterMobileAnchorEl','Network', '')}
-                className={classes.dropdownMenuItem}
-                selected={dropdownFocus === ''}
-                style={{ paddingLeft: 0}}>
-                <Grid container alignItems='center'>
-                  <Checkbox checked={dropdownFocus === ''}/>
-                  <div style={{ display: 'inline'}}>
-                    <Typography variant="h6" align='left'
-                      color="textPrimary" className={classes.filterMobileHeader}>
-                      {'All Opportunities'}
-                    </Typography>
-                    <Typography variant="body2" align='left'
-                      color="textPrimary" className={classes.filterMobileSubtext}>
-                      {'Everything visible to you and the Bridgekin network'}
-                    </Typography>
-                  </div>
-                </Grid>
-              </MenuItem>
-
-              {networksArray.map(network => (
-                <MenuItem value={network.id}
-                  className={classes.dropdownMenuItem}
-                  onClick={this.handleDropdownChange('filterMobileAnchorEl', 'Network', network.id)}
-                  selected={dropdownFocus === network.id}
-                  style={{ paddingLeft: 0}}>
-                  <Grid container alignItems='center'>
-                    <Checkbox checked={dropdownFocus === network.id}/>
-                    <div style={{ display: 'inline'}}>
-                      <Typography variant="h6" align='left'
-                        color="textPrimary" className={classes.filterMobileHeader}>
-                        {network.title}
-                      </Typography>
-                      <Typography variant="body2" align='left'
-                        color="textPrimary" className={classes.filterMobileSubtext}>
-                        {network.subtitle}
-                      </Typography>
-                    </div>
-                  </Grid>
-                </MenuItem>
-              ))}
-
-              {otherDropdownOptions.map(other => (
-                <MenuItem onClick={this.handleDropdownClose('filterMobileAnchorEl')}
+              {genericDropdownOptions.map(other => (
+                <MenuItem onClick={this.handleDropdownChange('filterMobileAnchorEl', other.values)}
                   className={classes.dropdownMenuItem}
                   disabled={other.disabled}
                   style={{ paddingLeft: 0}}>
                   <Grid container alignItems='center'>
-                    <Checkbox checked={false}/>
+                    <Checkbox checked={dropdownFocus === other.value}/>
                     <div style={{ display: 'inline'}}>
                       <Typography variant="h6" align='left'
                         color="textPrimary" className={classes.filterMobileHeader}>
@@ -558,10 +595,12 @@ class OpportunityHome extends React.Component {
                         color="textPrimary" className={classes.filterMobileSubtext}>
                         {other.subHeader}
                       </Typography>
-                  </div>
-                </Grid>
+                    </div>
+                  </Grid>
                 </MenuItem>
               ))}
+              {this.setFilters('Menu')}
+
             </Menu>}
         </Grid>
       )
@@ -577,44 +616,12 @@ class OpportunityHome extends React.Component {
             </Typography>
 
             <List component="nav">
-              <ListItem button className={classes.filterItem}
-                onClick={this.handleDropdownChange('anchorEl','Network', '')}
-                selected={dropdownFocus === ''}>
-                <div>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterHeader}>
-                    {'All Opportunities'}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterSubtext}>
-                    {'Everything visible to you and the Bridgekin network'}
-                  </Typography>
-                </div>
-              </ListItem>
-
-              {networksArray.map(network => (
-                <ListItem button value={network.id}
+              {currentUser.isAdmin && genericDropdownOptions.map(other => (
+                <ListItem button value={other.value}
                   className={classes.filterItem}
-                  onClick={this.handleDropdownChange('anchorEl','Network',network.id)}
-                  selected={dropdownFocus === network.id}>
-                  <div>
-                    <Typography variant="h6" align='left'
-                      color="textPrimary" className={classes.filterHeader}>
-                      {network.title}
-                    </Typography>
-                    <Typography variant="body2" align='left'
-                      color="textPrimary" className={classes.filterSubtext}>
-                      {network.subtitle}
-                    </Typography>
-                  </div>
-                </ListItem>
-              ))}
-
-              {false && currentUser.isAdmin && otherDropdownOptions.map(other => (
-                <ListItem button
-                  className={classes.filterItem}
+                  onClick={this.handleDropdownChange('anchorEl', other.value)}
                   disabled={other.disabled}
-                  >
+                  selected={dropdownFocus === other.value}>
                   <div>
                     <Typography variant="h6" align='left'
                       color="textPrimary" className={classes.filterHeader}>
@@ -627,13 +634,14 @@ class OpportunityHome extends React.Component {
                   </div>
                 </ListItem>
               ))}
+
+              {this.setFilters('List')}
             </List>
           </div>}
         </Grid>
       )
 
-      const filteredOpps = [...networkOpps].reverse()
-        .map(id => opportunities[id])
+      const filteredOpps = [...networkOpps].map(id => opportunities[id])
         .filter(o => o.status === "Approved")
 
       const opportunityCards = filteredOpps.length > 0 ? (

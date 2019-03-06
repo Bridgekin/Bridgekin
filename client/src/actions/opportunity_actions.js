@@ -27,8 +27,8 @@ export const removeOpportunity = opportunityId => ({
   opportunityId
 });
 
-export const fetchOpportunities = (workspaceId, networkId) => dispatch => (
-  OpportunityApiUtil.fetchOpportunities(workspaceId, networkId)
+export const fetchOpportunities = (workspaceId, option) => dispatch => (
+  OpportunityApiUtil.fetchOpportunities(workspaceId, option)
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));

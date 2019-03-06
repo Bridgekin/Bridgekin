@@ -15,3 +15,22 @@ export const receiveWorkspaces = workspaces => ({
 export const removeWorkspace = () => ({
   type: REMOVE_WORKSPACE,
 });
+
+export const RECEIVE_WORKSPACE_OPTIONS = 'RECEIVE_WORKSPACE_OPTIONS';
+export const RECEIVE_WORKSPACE_OPTION = 'RECEIVE_WORKSPACE_OPTION';
+export const REMOVE_WORKSPACE_OPTION = "REMOVE_WORKSPACE_OPTION";
+
+export const receiveWorkspaceOptions = workspaceOptionIds => ({
+  type: RECEIVE_WORKSPACE_OPTIONS,
+  workspaceOptionIds,
+});
+
+export const receiveWorkspaceOptionId = workspaceOptionId => ({
+  type: RECEIVE_WORKSPACE_OPTION,
+  workspaceOptionId,
+});
+
+export const removeWorkspaceOptionId = workspaceOptionId => ({
+  type: REMOVE_WORKSPACE_OPTION,
+  workspaceOptionId
+});

@@ -127,11 +127,11 @@ class AccountOpportunities extends React.Component {
 
     switch(oppFilter){
       case 'connected':
-        return [...connectedOpps].reverse().map(id => opportunities[id]);
+        return [...connectedOpps].map(id => opportunities[id]);
       case 'referred':
-        return [...facilitatedOpps].reverse().map(id => opportunities[id]);
+        return [...facilitatedOpps].map(id => opportunities[id]);
       case 'posted':
-        return [...userOpps].reverse().map(id => opportunities[id])
+        return [...userOpps].map(id => opportunities[id])
       default:
         return [];
     }

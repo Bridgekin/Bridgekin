@@ -10,9 +10,11 @@ class Api::ConnectedOpportunitiesController < ApiController
   def index
     connected_opportunities = @user.opportunity_connections
       .where(status: 'Approved')
+      .order(created_at: :desc)
       # .where.not(deal_status: 'Deleted')
     facilitated_opportunities = @user.opportunity_connections_facilitated
       .where(status: 'Approved')
+      .order(created_at: :desc)
       # .where.not(deal_status: 'Deleted')
 
     @connected_opps = connected_opportunities.pluck(:id)

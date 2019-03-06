@@ -9,4 +9,10 @@ class Connection < ApplicationRecord
   belongs_to :recipient,
     foreign_key: :friend_id,
     class_name: :User
+
+  has_many :opp_permissions, as: :shareable
+
+  has_many :opportunities,
+    through: :opp_permissions,
+    source: :opportunity
 end

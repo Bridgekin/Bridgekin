@@ -8,20 +8,19 @@ class Api::OppPermissionsController < ApiController
 
   def index
     opp_perms = @opportunity.opp_permissions
-    @constructed_perms = opp_perms.reduce([]) do |arr, perm|
-      arr << "#{perm.shareable_id}-#{perm.shareable_type}"
-    end
+    @constructed_perms = createOppPermissions(opp_perms)
 
     render :index
   end
 
   def shareOptions
     @networks = @user.member_networks
-    constructed_networks = @networks.reduce([]) do |arr, resource|
-      arr << "#{resource.id}-Network"
-    end
+    @connections = @user.connections.includes(:requestor, :recipient)
+      .where(status: 'Accepted')
 
-    @share_options = constructed_networks
+    @share_options = createShareOptions(@networks, 'Network') +
+      createShareOptions(@connections, 'Connection')
+
     render :shareOptions
   end
 

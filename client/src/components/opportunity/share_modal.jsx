@@ -15,6 +15,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 
 import CloseIcon from '@material-ui/icons/CloseSharp';
+import PersonIcon from '@material-ui/icons/PersonSharp';
 import SearchIcon from '@material-ui/icons/Search';
 import GroupWorkIcon from '@material-ui/icons/GroupWorkOutlined';
 import Img from 'react-image';
@@ -29,7 +30,8 @@ import { fetchShareOptions } from '../../actions/opp_permission_actions';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   networks: state.entities.networks,
-  users: state.entities.users,
+  connections: state.entities.connections,
+  users: state.users,
   shareOptions: state.entities.shareOptions
 });
 
@@ -110,10 +112,6 @@ const styles = theme => ({
     borderTop: `1px solid ${theme.palette.border.primary}`,
   },
   actionButton: { fontSize: 12 },
-  networkIcon: {
-    marginRight: 8,
-    width: 13, height: 13
-  },
   xbutton:{
     cursor: 'pointer',
     color: theme.palette.text.primary
@@ -121,6 +119,13 @@ const styles = theme => ({
   contentContainer:{
     padding: 12,
     backgroundColor: theme.palette.base3
+  },
+  shareIcon: {
+    marginRight: 8,
+    width: 20, height: 20
+  },
+  shareItemText:{
+    fontSize: 14
   }
 });
 
@@ -174,31 +179,52 @@ class ShareModal extends Component{
 
   getItem(perm){
     if(this.state.loaded){
-      const { networks, classes } = this.props;
+      const { networks, classes, connections,
+        users, currentUser } = this.props;
       let [typeId, type] = perm.split('-');
 
       switch(type) {
         case "Network":
-        let network = networks[typeId]
-        return (
-          <Grid container alignItems='center' style={{ flexGrow: 1}}>
-            {network.pictureUrl ?
-              <Img src={network.pictureUrl}
-                className={classes.networkIcon}/> :
-              <Img src={defaultNetworkIcon}
-                className={classes.networkIcon}/>}
-            {network.title}
-          </Grid>
-        )
+          let network = networks[typeId]
+          return (
+            <Grid container alignItems='center' style={{ flexGrow: 1}}>
+              {false && network.pictureUrl ?
+                <Img src={network.pictureUrl}
+                  className={classes.shareIcon}/> :
+                <Img src={defaultNetworkIcon}
+                  className={classes.shareIcon}/>}
+              <Typography align='Left'
+                className={classes.shareItemText}>
+                {network.title}
+              </Typography>
+            </Grid>
+          )
+        case 'Connection':
+          let connection = connections[typeId]
+          let friendId = (currentUser.id !== connection.userId) ?
+            connection.userId : connection.friendId
+          let friend = users[friendId];
+          return (
+            <Grid container alignItems='center' style={{ flexGrow: 1}}>
+              {friend.profilePicUrl ?
+                <Img src={network.profilePicUrl}
+                  className={classes.shareIcon}/> :
+                <PersonIcon className={classes.shareIcon}/>}
+              <Typography align='Left'
+                className={classes.shareItemText}>
+                {`${friend.fname} ${friend.lname}`}
+              </Typography>
+            </Grid>
+          )
         default:
-        return <div></div>
+          return <div></div>
       }
     }
   }
 
   filterItem(option){
     if(this.state.loaded){
-      const { networks } = this.props;
+      const { networks, connections } = this.props;
       const { searchInput } = this.state;
       let [typeId, type] = option.split('-');
 
@@ -206,6 +232,9 @@ class ShareModal extends Component{
         case "Network":
           let networkTitle = networks[typeId].title.toLowerCase();
           return networkTitle.includes(searchInput.toLowerCase());
+        case "Connection":
+          let connectionTitle = connections[typeId].title.toLowerCase();
+          return connectionTitle.includes(searchInput.toLowerCase());
         default:
           return false;
       }
@@ -264,6 +293,20 @@ class ShareModal extends Component{
           </Typography>
           {[...filteredOptions].filter(x => (
             !permissions.has(x)) && x.includes('Network')
+          ).map(option => (
+              <ListItem key={option} className={classes.listItem}
+                onClick={this.handleUpdate(option)}>
+                {this.getItem(option)}
+                <Checkbox checked={permissions.has(option)} />
+              </ListItem>
+            ))}
+
+          <Typography gutterBottom align='Left'
+            className={classes.listHeader}>
+            Connections
+          </Typography>
+          {[...filteredOptions].filter(x => (
+            !permissions.has(x)) && x.includes('Connection')
           ).map(option => (
               <ListItem key={option} className={classes.listItem}
                 onClick={this.handleUpdate(option)}>

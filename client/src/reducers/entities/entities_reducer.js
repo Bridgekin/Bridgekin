@@ -11,7 +11,7 @@ import memberUsersReducer from './member_users_reducer.js';
 import networkOppsReducer from './network_opps_reducer.js';
 import oppPermissionsReducer from './opp_permissions_reducer.js';
 import userOpportunitiesReducer from './user_opportunities_reducer.js';
-import workspaceNetworkReducer from './workspace_network_reducer.js';
+import workspaceOptionsReducer from './workspace_options_reducer.js';
 import shareOptionsReducer from './share_options_reducer.js';
 import connectionsReducer from './connections_reducer.js';
 
@@ -27,7 +27,7 @@ export default combineReducers({
   networkOpps: networkOppsReducer,
   oppPermissions: oppPermissionsReducer,
   userOpportunities: userOpportunitiesReducer,
-  workspaceNetworks: workspaceNetworkReducer,
+  workspaceOptions: workspaceOptionsReducer,
   shareOptions: shareOptionsReducer,
   connections: connectionsReducer
 });
