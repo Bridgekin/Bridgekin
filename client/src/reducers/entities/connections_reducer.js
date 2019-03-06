@@ -10,7 +10,7 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case RECEIVE_CONNECTIONS:
-      return merge({}, state, action.connections);
+      return merge({}, action.connections);
     case RECEIVE_CONNECTION:
       return merge({}, state, {[action.connection.id]: action.connection });
     case REMOVE_CONNECTION:

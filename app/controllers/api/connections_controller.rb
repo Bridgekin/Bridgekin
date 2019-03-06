@@ -42,11 +42,11 @@ class Api::ConnectionsController < ApiController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_connection
-      @connection = Connection.find(params[:id])
-        .includes(:requestor, :recipient)
+      @connection = Connection.includes(:requestor, :recipient)
+        .where(id: params[:id]).first
     end
 
     def connection_params
-      params.require(:user).permit(:friend_id, :status)
+      params.require(:connection).permit(:friend_id, :status)
     end
 end

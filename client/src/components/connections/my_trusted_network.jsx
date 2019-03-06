@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { Switch, Route , withRouter } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import { ProtectedRoute} from '../../util/route_util';
 // import { Link, NavLink, withRouter } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
@@ -22,10 +23,11 @@ import {
 
 import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
+import FilterCard from '../filter_card';
 import Loading from '../loading';
 import OpportunityWaitlist from '../opportunity/opportunity_waitlist';
-// import Contacts from './contacts';
-// import Requests from './requests';
+import Contacts from './contacts';
+// import Invitations from './invitations';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -79,7 +81,7 @@ class MyTrustedNetwork extends React.Component {
   render(){
     const{ classes, connections, currentUser } = this.props;
     const { loaded } = this.state;
-    let pathName = this.props.location.pathname;
+    const pathName = this.props.location.pathname;
 
     if (loaded){
       let column1 = (
@@ -99,39 +101,22 @@ class MyTrustedNetwork extends React.Component {
       )
 
       let pages = [
-        {title: 'Invitations', dest: '/mytrustednetwork/invitations'},
-        {title: `My Contacts`, dest: '/mytrustednetwork/contacts'},
+        {title: `My Contacts`, dest: '/mynetwork'},
+        {title: 'Invitations', dest: '/mynetwork/invitations'},
+        {title: 'Invitations Sent', dest: '/mynetwork/pending'},
       ]
 
       let filter = (
-        <div className={classes.filterCard}>
-          <Typography align='Left' color="textPrimary"
-            className={classes.cardHeader}
-            style={{ margin: "10px 15px 0px"}}>
-            Connected Opportunities
-          </Typography>
-
-          <List component="nav">
-            {pages.map(item => (
-              <ListItem button className={classes.filterItem}
-                onClick={() => this.props.history.push(item.dest)}
-                selected={pathName === item.dest}>
-                <Typography variant="body1" align='left'
-                  color="textPrimary" className={classes.filterHeader}>
-                  {item.title}
-                </Typography>
-              </ListItem>
-            ))}
-          </List>
-        </div>
+        <FilterCard
+          title={`My Trusted Network`}
+          pages={pages}
+          />
       )
 
       let feed = (
         <div>
-          Feed
-          <Switch>
-
-          </Switch>
+          <Contacts
+            pathName={pathName}/>
         </div>
       )
 
@@ -151,3 +136,8 @@ class MyTrustedNetwork extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MyTrustedNetwork));
+
+// <Switch>
+//   <ProtectedRoute path="/mynetwork/invitations" component={Invitations} />
+//   <ProtectedRoute path="/mynetwork" component={Contacts} />
+// </Switch>

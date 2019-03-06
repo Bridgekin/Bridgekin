@@ -315,7 +315,7 @@ class HomeNav extends React.Component {
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logoMenuOpen = Boolean(logoAnchorEl);
 
-    let pathName = this.props.location.pathname.split('/').pop();
+    let pathName = this.props.location.pathname//split('/').pop();
 
     let loginOpen = Boolean(sessionErrors.length > 0);
 
@@ -484,7 +484,7 @@ class HomeNav extends React.Component {
               onClick={this.handleLinkClose('testfeature')}
               style={{ marginRight: 10}}>
               <Typography variant="h4" align='left'
-                style={(pathName === 'testfeature') ? { fontWeight: 600} : {}}
+                style={(pathName.includes('testfeature')) ? { fontWeight: 600} : {}}
                 className={classes.navButtonText}>
                 Test Feature
               </Typography>
@@ -492,7 +492,7 @@ class HomeNav extends React.Component {
           <Button color='secondary'
             onClick={this.handleLinkClose('findandconnect')}>
             <Typography variant="h4" align='left'
-              style={(pathName === 'findandconnect') ? { fontWeight: 600} : {}}
+              style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
               className={classes.navButtonText}>
               Find & Connect
             </Typography>
@@ -502,7 +502,7 @@ class HomeNav extends React.Component {
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
             <Typography variant="h4" align='left'
-              style={(pathName === 'mynetwork') ? { fontWeight: 600} : {}}
+              style={(pathName.includes('mynetwork')) ? { fontWeight: 600} : {}}
               className={classes.navButtonText}>
               My Trusted Network
             </Typography>
