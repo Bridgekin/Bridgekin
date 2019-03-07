@@ -310,8 +310,8 @@ class ShareModal extends Component{
             {this.getItem('-Network')}
             <Checkbox checked={permissions.has('-Network')} />
           </ListItem>
-          {[...filteredOptions].filter(x => (
-            !permissions.has(x)) && x.includes('Network')
+          {[...filteredOptions].filter(x =>
+            !permissions.has(x) && x.includes('Network')
           ).map(option => (
               <ListItem key={option} className={classes.listItem}
                 onClick={this.handleUpdate(option)}>
@@ -319,7 +319,10 @@ class ShareModal extends Component{
                 <Checkbox checked={permissions.has(option)} />
               </ListItem>
             ))}
-          {currentUser.isAdmin && <ListItem key={'-Connection'}
+          {currentUser.isAdmin &&
+            [...filteredOptions].filter(x => x.includes('Connection'))
+              .length > 0 &&
+            <ListItem key={'-Connection'}
             className={classes.listItemHeader}
             onClick={this.handleUpdate('-Connection')}>
             {this.getItem('-Connection')}
