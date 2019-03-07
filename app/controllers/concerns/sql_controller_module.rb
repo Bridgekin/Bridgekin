@@ -4,7 +4,7 @@ module SQLControllerModule
       .includes(:owner)
       .where(opp_permissions: { shareable_id: [@workspace_networks.pluck(:id), nil]})
       .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
+      .where.not(deal_status: 'Deleted', owner_id: @user.id)
       .order(created_at: :desc)
   end
 
@@ -17,7 +17,7 @@ module SQLControllerModule
         friend_id: @workspace_network_members.pluck(:id)
       })
       .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
+      .where.not(deal_status: 'Deleted', owner_id: @user.id)
       .order(created_at: :desc)
   end
 
@@ -30,10 +30,12 @@ module SQLControllerModule
         friend_id: @workspace_network_members.pluck(:id)
       })
       .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc) +
+      .where.not(deal_status: 'Deleted', owner_id: @user.id)
+      .order(created_at: :desc)
     all = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
+      .includes(:owner)
       .where(opp_permissions: { shareable_id: nil })
+      .where.not(deal_status: 'Deleted', owner_id: @user.id)
 
     direct + all
   end
@@ -42,7 +44,7 @@ module SQLControllerModule
     Network.find(network_id).opportunities
       .includes(:owner)
       .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
+      .where.not(deal_status: 'Deleted', owner_id: @user.id)
       .order(created_at: :desc)
       # .where(opp_permissions: { sharable_id: network_id,
       #   shareable_type: 'Network' })
