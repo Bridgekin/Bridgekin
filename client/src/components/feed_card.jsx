@@ -18,10 +18,21 @@ const styles = theme => ({
       padding: "9px 17px 20px",
     },
   },
+  mobileFeedCard:{
+    padding: "9px 8px 9px 8px",
+    backgroundColor: `${theme.palette.base3}`,
+    // borderTop: `1px solid ${theme.palette.border.primary}`,
+    border: `1px solid ${theme.palette.border.primary}`,
+    // width: '100%',
+    marginBottom: 9,
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  },
 })
 
-const FeedCard = ({ contents, classes }) => (
-  <div className={classes.feedCard}>
+const FeedCard = ({ contents, classes, mobile }) => (
+  <div className={mobile ? classes.mobileFeedCard : classes.feedCard}>
     {contents}
   </div>
 )

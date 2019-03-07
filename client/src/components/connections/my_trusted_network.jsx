@@ -49,6 +49,17 @@ const styles = theme => ({
     position: 'relative',
     top: 200
   },
+  mobileFilterCard:{
+    padding: "9px 8px 9px 8px",
+    backgroundColor: `${theme.palette.base3}`,
+    // borderTop: `1px solid ${theme.palette.border.primary}`,
+    border: `1px solid ${theme.palette.border.primary}`,
+    // width: '100%',
+    marginBottom: 9,
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
+  },
   filterCard:{
     // marginTop: 18,
     backgroundColor: theme.palette.base3,
@@ -63,14 +74,25 @@ const styles = theme => ({
     fontSize: 13,
     fontWeight: 500
   },
+  buttonText: { color: theme.palette.text.primary },
+  mobileWaitlist: {
+    display: 'flex',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    },
+  }
 })
 
 class MyTrustedNetwork extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      loaded: false
+      loaded: false,
+      contactAnchorEl: null
     }
+
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleChangePage = this.handleChangePage.bind(this);
   }
 
   componentDidMount(){
@@ -78,13 +100,28 @@ class MyTrustedNetwork extends React.Component {
     .then(() => this.setState({ loaded: true }))
   }
 
+  handleMenuClick(menuAnchor){
+    return e => {
+      e.preventDefault();
+      let anchor = this.state[menuAnchor];
+      this.setState({ [menuAnchor]: anchor ? null : e.currentTarget})
+    }
+  }
+
+  handleChangePage(dest){
+    return e => {
+      this.props.history.push(dest);
+      this.setState({ contactAnchorEl: null })
+    }
+  }
+
   render(){
     const{ classes, connections, currentUser } = this.props;
-    const { loaded } = this.state;
+    const { loaded, contactAnchorEl } = this.state;
     const pathName = this.props.location.pathname;
 
     if (loaded){
-      let column1 = (
+      let waitlistCard = (
         <FeedCard contents={
             <div>
               <Typography gutterBottom align='Left'
@@ -110,19 +147,51 @@ class MyTrustedNetwork extends React.Component {
         <FilterCard
           title={`My Trusted Network`}
           pages={pages}
+          mobile={false}
           />
       )
 
+      let mobileFilter = (
+        <Grid container justify='flex-end' alignItems='center'
+          className={classes.mobileFilterCard}>
+          <Button
+            aria-owns={contactAnchorEl ? 'simple-menu' : undefined}
+            aria-haspopup="true"
+            classes={{ label: classes.buttonText}}
+            onClick={this.handleMenuClick('contactAnchorEl')}
+            style={{ textTransform: 'capitalize'}}
+          >
+            {pages.find(x => x.dest === pathName).title}
+            <KeyboardArrowDownIcon />
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={contactAnchorEl}
+            open={Boolean(contactAnchorEl)}
+            onClose={this.handleMenuClick('contactAnchorEl')}
+          >
+            {pages.map(page => (
+              <MenuItem onClick={this.handleChangePage(page.dest)}>
+                {page.title}
+              </MenuItem>
+            ))}
+          </Menu>
+        </Grid>
+      )
+
       let feed = (
-        <div>
-          <Contacts
-            pathName={pathName}/>
+        <div style={{ paddingBottom:30, width: '100%'}}>
+          {mobileFilter}
+          <Contacts pathName={pathName}/>
+          <div className={classes.mobileWaitlist}>
+            {waitlistCard}
+          </div>
         </div>
       )
 
       return (
         <FeedContainer
-          column1={column1}
+          column1={waitlistCard}
           feed={feed}
           column2={filter}
           />
