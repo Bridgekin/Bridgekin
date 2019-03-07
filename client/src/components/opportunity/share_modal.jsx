@@ -221,7 +221,7 @@ class ShareModal extends Component{
             return (
               <Grid container alignItems='center' style={{ flexGrow: 1}}>
                 {friend.profilePicUrl ?
-                  <Img src={network.profilePicUrl}
+                  <Img src={friend.profilePicUrl}
                     className={classes.shareIcon}/> :
                     <PersonIcon className={classes.shareIcon}/>}
                 <Typography align='Left'
