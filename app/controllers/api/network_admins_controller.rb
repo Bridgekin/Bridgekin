@@ -10,10 +10,6 @@ class Api::NetworkAdminsController < ApiController
     render :index
   end
 
-  # def show
-  #   render :show
-  # end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_site_template
