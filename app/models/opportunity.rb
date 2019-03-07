@@ -96,6 +96,10 @@ class Opportunity < ApplicationRecord
     end
   end
 
+  def method_name
+
+  end
+
   # def reset_sharing(networks, connections, circles)
   #   #delete existing connections
   #   self.opportunity_networks.delete_all

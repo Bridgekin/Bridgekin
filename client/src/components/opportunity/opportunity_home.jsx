@@ -365,16 +365,14 @@ class OpportunityHome extends React.Component {
   handleDropdownChange(anchor, value){
     return e => {
       e.stopPropagation();
-      // if (value.includes('Network')){
-        const workspaceId = this.props.siteTemplate.networkId
-        this.props.fetchOpportunities(workspaceId, value)
-        .then(() => {
-          this.setState({
-            dropdownFocus: value, [anchor]: null
-          });
-          animateScroll.scrollTo(0);
-        })
-      // }
+      const workspaceId = this.props.siteTemplate.networkId
+      this.props.fetchOpportunities(workspaceId, value)
+      .then(() => {
+        this.setState({
+          dropdownFocus: value, [anchor]: null
+        });
+        animateScroll.scrollTo(0);
+      })
     }
   }
 
@@ -534,13 +532,20 @@ class OpportunityHome extends React.Component {
         </Grid>
       )
 
-      const genericDropdownOptions = [
-        {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
-          value: 'Direct-Connection', disabled: false},
-        {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
-          value: 'All-Connection',disabled: false},
+      const genericDropdownOptions = currentUser.isAdmin ? [
         {header: 'All Opportunities' , subHeader: 'Your segmented lists of connections',
           value: '',disabled: false},
+        {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
+          value: 'All-Network',disabled: false},
+        {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
+          value: 'All-Connection',disabled: false},
+        {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
+          value: 'Direct-Connection', disabled: false},
+      ] : [
+        {header: 'All Opportunities' , subHeader: 'Your segmented lists of connections',
+          value: '',disabled: false},
+        {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
+          value: 'All-Network',disabled: false}
       ]
 
       const filterMobile = (
@@ -616,7 +621,7 @@ class OpportunityHome extends React.Component {
             </Typography>
 
             <List component="nav">
-              {currentUser.isAdmin && genericDropdownOptions.map(other => (
+              {genericDropdownOptions.map(other => (
                 <ListItem button value={other.value}
                   className={classes.filterItem}
                   onClick={this.handleDropdownChange('anchorEl', other.value)}
@@ -634,7 +639,6 @@ class OpportunityHome extends React.Component {
                   </div>
                 </ListItem>
               ))}
-
               {this.setFilters('List')}
             </List>
           </div>}

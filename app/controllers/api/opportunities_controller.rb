@@ -30,13 +30,16 @@ class Api::OpportunitiesController < ApiController
         @opportunities = opps_direct_connections
       else
         if option.last == 'Network'
-          # For Networks by I
+          # For Networks by ID
           @opportunities = opps_network_id(option.first)
         end
       end
     end
 
+    # Sory by DESC
+    @opportunities = @opportunities.sort{|a,b| b.created_at <=> a.created_at}
     @networkOpps = @opportunities.pluck(:id)
+
     render :index
   end
 

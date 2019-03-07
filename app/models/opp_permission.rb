@@ -5,5 +5,6 @@ class OppPermission < ApplicationRecord
     foreign_key: :opportunity_id,
     class_name: :Opportunity
 
-  belongs_to :shareable, polymorphic: true
+  belongs_to :shareable, polymorphic: true,
+    optional: true
 end

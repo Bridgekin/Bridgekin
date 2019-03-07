@@ -90,6 +90,12 @@ const styles = theme => ({
       width: 200,
     },
   },
+  listItemHeader: {
+    textTransform: 'capitalize',
+    height: 30,
+    padding: "5px 16px 5px 0px",
+    color: theme.palette.text.primary
+  },
   listItem: {
     textTransform: 'capitalize',
     height: 30,
@@ -124,6 +130,7 @@ const styles = theme => ({
     marginRight: 8,
     width: 20, height: 20
   },
+  shareItemHeader:{ fontSize: 14, fontWeight: 600 },
   shareItemText:{
     fontSize: 14
   }
@@ -182,42 +189,50 @@ class ShareModal extends Component{
       const { networks, classes, connections,
         users, currentUser } = this.props;
       let [typeId, type] = perm.split('-');
-
-      switch(type) {
-        case "Network":
-          let network = networks[typeId]
-          return (
-            <Grid container alignItems='center' style={{ flexGrow: 1}}>
-              {false && network.pictureUrl ?
-                <Img src={network.pictureUrl}
-                  className={classes.shareIcon}/> :
-                <Img src={defaultNetworkIcon}
-                  className={classes.shareIcon}/>}
-              <Typography align='Left'
-                className={classes.shareItemText}>
-                {network.title}
-              </Typography>
-            </Grid>
-          )
-        case 'Connection':
-          let connection = connections[typeId]
-          let friendId = (currentUser.id !== connection.userId) ?
+      if(typeId === ''){
+        return (<Grid container alignItems='center' style={{ flexGrow: 1}}>
+          <Typography align='Left'
+            className={classes.shareItemHeader}>
+            {`All ${type}s`}
+          </Typography>
+        </Grid>)
+      } else {
+        switch(type) {
+          case "Network":
+            let network = networks[typeId]
+            return (
+              <Grid container alignItems='center' style={{ flexGrow: 1}}>
+                {false && network.pictureUrl ?
+                  <Img src={network.pictureUrl}
+                    className={classes.shareIcon}/> :
+                    <Img src={defaultNetworkIcon}
+                      className={classes.shareIcon}/>}
+                <Typography align='Left'
+                  className={classes.shareItemText}>
+                  {network.title}
+                </Typography>
+              </Grid>
+            )
+          case 'Connection':
+            let connection = connections[typeId]
+            let friendId = (currentUser.id !== connection.userId) ?
             connection.userId : connection.friendId
-          let friend = users[friendId];
-          return (
-            <Grid container alignItems='center' style={{ flexGrow: 1}}>
-              {friend.profilePicUrl ?
-                <Img src={network.profilePicUrl}
-                  className={classes.shareIcon}/> :
-                <PersonIcon className={classes.shareIcon}/>}
-              <Typography align='Left'
-                className={classes.shareItemText}>
-                {`${friend.fname} ${friend.lname}`}
-              </Typography>
-            </Grid>
-          )
-        default:
+            let friend = users[friendId];
+            return (
+              <Grid container alignItems='center' style={{ flexGrow: 1}}>
+                {friend.profilePicUrl ?
+                  <Img src={network.profilePicUrl}
+                    className={classes.shareIcon}/> :
+                    <PersonIcon className={classes.shareIcon}/>}
+                <Typography align='Left'
+                  className={classes.shareItemText}>
+                  {`${friend.fname} ${friend.lname}`}
+                </Typography>
+              </Grid>
+            )
+          default:
           return <div></div>
+        }
       }
     }
   }
@@ -242,7 +257,7 @@ class ShareModal extends Component{
   }
 
   render(){
-    const { classes, open, type, shareOptions } = this.props;
+    const { classes, open, type, shareOptions, currentUser } = this.props;
     const { permissions, loaded, searchInput } = this.state;
 
     let filteredOptions = [...shareOptions].filter(option => (
@@ -271,7 +286,9 @@ class ShareModal extends Component{
         {permissions.size > 0 ?
           <Grid container className={classes.chosenResults}>
             {[...permissions].map(perm => (
-              <ListItem key={perm} className={classes.listItem}
+              <ListItem key={perm}
+                className={perm.includes('All') ?
+                  classes.listItemHeader : classes.listItem}
                 onClick={this.handleUpdate(perm)}>
                 {this.getItem(perm)}
                 <Checkbox checked={permissions.has(perm)} />
@@ -287,10 +304,12 @@ class ShareModal extends Component{
         }
         <Grid container justify='flex-start'
           style={{ marginTop: 10 }}>
-          <Typography gutterBottom align='Left'
-            className={classes.listHeader}>
-            Networks
-          </Typography>
+          <ListItem key={'-Network'}
+            className={classes.listItemHeader}
+            onClick={this.handleUpdate('-Network')}>
+            {this.getItem('-Network')}
+            <Checkbox checked={permissions.has('-Network')} />
+          </ListItem>
           {[...filteredOptions].filter(x => (
             !permissions.has(x)) && x.includes('Network')
           ).map(option => (
@@ -300,12 +319,13 @@ class ShareModal extends Component{
                 <Checkbox checked={permissions.has(option)} />
               </ListItem>
             ))}
-
-          <Typography gutterBottom align='Left'
-            className={classes.listHeader}>
-            Connections
-          </Typography>
-          {[...filteredOptions].filter(x => (
+          {currentUser.isAdmin && <ListItem key={'-Connection'}
+            className={classes.listItemHeader}
+            onClick={this.handleUpdate('-Connection')}>
+            {this.getItem('-Connection')}
+            <Checkbox checked={permissions.has('-Connection')} />
+          </ListItem>}
+          {currentUser.isAdmin && [...filteredOptions].filter(x => (
             !permissions.has(x)) && x.includes('Connection')
           ).map(option => (
               <ListItem key={option} className={classes.listItem}
