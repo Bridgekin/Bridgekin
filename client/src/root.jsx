@@ -9,14 +9,23 @@ import ThemeProvider from './theme_provider';
 // import { MuiThemeProvider } from '@material-ui/core/styles';
 // import getTheme from './components/theme';
 
+import bugsnag from '@bugsnag/js'
+import bugsnagReact from '@bugsnag/plugin-react'
+
+let bugsnagClient = bugsnag('d8bce99bd337612bba15fa627e999afd');
+bugsnagClient.use(bugsnagReact, React);
+let BugsnagBoundary = bugsnagClient.getPlugin('react');
+
 class Root extends React.Component{
   render(){
     return (
-      <ErrorBoundary>
-        <Provider store={this.props.store}>
-          <ThemeProvider siteTemplate={this.props.siteTemplate}/>
-        </Provider>
-      </ErrorBoundary>
+      <BugsnagBoundary>
+        <ErrorBoundary>
+          <Provider store={this.props.store}>
+            <ThemeProvider siteTemplate={this.props.siteTemplate}/>
+          </Provider>
+        </ErrorBoundary>
+      </BugsnagBoundary>
     )
   }
 }
