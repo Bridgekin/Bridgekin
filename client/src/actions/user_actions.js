@@ -44,6 +44,18 @@ export const fetchSearchResults = (searchInput) => dispatch => (
     })
 );
 
+export const fetchProfile = (userId) => dispatch => (
+  UserApiUtil.fetchProfile(userId)
+    .then(handleErrors)
+    .then(data => dispatch(receiveUser(data)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveUserErrors(errors))
+    })
+);
+
 export const updateUser = (user) => dispatch => (
   UserApiUtil.updateUser(user)
     .then(handleErrors)

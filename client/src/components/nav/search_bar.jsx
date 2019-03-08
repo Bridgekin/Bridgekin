@@ -19,9 +19,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import PersonIcon from '@material-ui/icons/Person';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-
+import SearchItem from './search_item';
 import { fetchSearchResults } from '../../actions/user_actions';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -124,15 +122,13 @@ class SearchBar extends React.Component {
     })
   }
 
-  handleProfilePage(userId){
-    return e => {
-      this.props.history.push("/mynetwork/profile/userId")
-    }
-  }
-
   handleAllResultsPage(){
     const { searchInput } = this.state;
     this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
+  }
+
+  handleInvite(){
+
   }
 
   capitalize(str){
@@ -154,35 +150,7 @@ class SearchBar extends React.Component {
     if(currentUser){
       let results = !searchLoading && searchResults.slice(0,5).map(result => {
         let user = users[result];
-        return <MenuItem onClick={this.handleProfilePage(result)}
-          style={{ height: 30 }}>
-          <Grid container>
-            <Grid item sm={10} container justify='space-between' alignItems='center'>
-              <Avatar
-                style={{ height: 25, width: 25 }}>
-                <PersonIcon />
-              </Avatar>
-              <Grid item sm={10} container direction='column'>
-                <Typography variant="body1" align='left' color="textPrimary"
-                  noWrap
-                  style={{ fontSize: 12, fontWeight: 600, width:'100%'}}>
-                  {`${this.capitalize(user.fname)} ${this.capitalize(user.lname)}`}
-                </Typography>
-                <Typography variant="body1" align='left' color="textPrimary"
-                  noWrap
-                  style={{ fontSize: 12, fontWeight: 400, width:'100%'}}>
-                  {user.title && `${this.capitalize(user.title)} @ `}
-                  {user.company && `${this.capitalize(user.company)}`}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item sm={2}>
-              <IconButton>
-                <AddCircleIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </MenuItem>
+        return <SearchItem user={user}/>
       })
 
       let searchResultContainer = currentUser && (

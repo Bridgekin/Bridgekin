@@ -128,7 +128,7 @@ class MyTrustedNetwork extends React.Component {
       let feed = (
         <div>
           <Switch>
-            <ProtectedRoute path="/mynetwork/profile/:id" component={ProfilePage} />
+            <ProtectedRoute path="/mynetwork/profile/:userId" component={ProfilePage} />
             <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
             <ProtectedRoute
                 path="/mynetwork"

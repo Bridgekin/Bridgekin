@@ -273,6 +273,8 @@ class ContactCard extends React.Component {
           />
 
         {this.getSecondaryAction()}
+
+        {/* Invite Modal */}
       </Grid>
     )
   }

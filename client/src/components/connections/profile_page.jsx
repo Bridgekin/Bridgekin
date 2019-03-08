@@ -2,12 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import Loading from '../loading';
+import FeedCard from '../feed_card';
+import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+
+import { fetchProfile } from '../../actions/user_actions';
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
+  userId: ownProps.match.params.userId,
+  users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  fetchProfile: (userId) => dispatch(fetchProfile(userId))
 });
 
 const styles = theme => ({
@@ -16,15 +28,38 @@ const styles = theme => ({
   },
 })
 
-class Template extends React.Component {
+class ProfilePage extends React.Component {
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {
+      loaded: false
+    }
+  }
+
+  componentDidMount(){
+    this.props.fetchProfile(this.props.userId)
+    .then(() => this.setState({ loaded: true }))
   }
 
   render(){
-    return <div></div>
+    const { loaded } = this.state;
+    if (loaded){
+      let profile = (
+        <Grid container>
+          {`Profile`}
+        </Grid>
+      )
+      return (
+        <FeedCard
+          contents={profile}
+          />
+      )
+    } else {
+      return <div style={{ paddingTop: 50 }}>
+        <Loading />
+      </div>
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Template));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ProfilePage));

@@ -3,12 +3,12 @@ class Api::UsersController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user
 
-  after_action :verify_authorized, only: [:show, :update, :destroy]
+  after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
 
   def show
     @user = User.find(params[:id])
-    authorize @user
+    # authorize @user
     render :show
   end
 
@@ -64,6 +64,11 @@ class Api::UsersController < ApiController
     @search_users = @users.pluck(:id)
     render :searchBar
   end
+
+  # def profile
+  #   @user = User.find(params[:id])
+  #   render :profile
+  # end
 
   private
     # Only allow a trusted parameter "white list" through.
