@@ -7,22 +7,24 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import VisibilitySensor from 'react-visibility-sensor';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import VisibilitySensor from 'react-visibility-sensor';
 import PersonIcon from '@material-ui/icons/Person';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import Img from 'react-image'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
 
 import { updateConnection, deleteConnection }
   from '../../actions/connection_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
-  users: state.users
+  users: state.users,
+  connections: state.entities.connections
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -64,7 +66,8 @@ class ContactCard extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      anchorEl: null
+      anchorEl: null,
+      inviteModalOpen: false
     }
 
     this.handleMenuClick = this.handleMenuClick.bind(this);
@@ -72,6 +75,7 @@ class ContactCard extends React.Component {
     this.getSecondaryAction = this.getSecondaryAction.bind(this);
     this.removeConnection = this.removeConnection.bind(this);
     this.acceptConnection = this.acceptConnection.bind(this);
+    this.openInvite = this.openInvite.bind(this);
   }
 
   // handleRemoveUser(){
@@ -103,12 +107,41 @@ class ContactCard extends React.Component {
     return str[0].toUpperCase() + str.slice(1)
   }
 
+  openInvite(){
+    this.setState({ inviteModalOpen: true })
+  }
+
   getSecondaryAction(){
-    const { classes, connection, currentUser } = this.props;
+    const { classes, contact, currentUser,
+      search, connections } = this.props;
     const { contactAnchorEl, inviteAnchorEl } = this.state;
 
-    switch (connection.status) {
-      case 'Accepted':
+    if(search){
+      let connected = Object.values(connections).filter(x =>
+        x.status === 'Accepted' && (
+          (x.userId === currentUser.id && x.friendId === contact) ||
+          (x.friendId === currentUser.id && x.userId === contact)
+        )).length > 0
+
+      if(connected){
+        return (
+          <Typography align='left' color='textPrimary'
+            style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}>
+            {`My Contact`}
+          </Typography>
+        )
+      } else {
+        return (
+          <Button variant='contained' color='primary'
+            onClick={this.openInvite}
+            style={{ textTransform: 'capitalize'}}>
+            {`Add Contact`}
+          </Button>
+        )
+      }
+    } else {
+      switch (contact.status) {
+        case 'Accepted':
         return (
           <ListItemSecondaryAction>
             <IconButton aria-label="More"
@@ -129,7 +162,7 @@ class ContactCard extends React.Component {
                 vertical: 'top',
                 horizontal: 'right',
               }}
-            >
+              >
               <MenuItem onClick={this.removeConnection}>
                 <DeleteIcon
                   style={{ marginRight: 3 }}/>
@@ -138,8 +171,8 @@ class ContactCard extends React.Component {
             </Menu>
           </ListItemSecondaryAction>
         )
-      case 'Pending':
-        if(currentUser.id === connection.friendId){
+        case 'Pending':
+        if(currentUser.id === contact.friendId){
           return (
             <ListItemSecondaryAction>
               <Grid container justify='flex-end'
@@ -197,17 +230,24 @@ class ContactCard extends React.Component {
             </ListItemSecondaryAction>
           )
         };
-      default:
+        default:
         return <div></div>
+      }
     }
   }
 
   render(){
-    const { classes, users, currentUser, connection } = this.props;
+    const { classes, users, currentUser,
+      contact, search } = this.props;
+    let user = {};
 
-    let friend = (currentUser.id !== connection.userId) ?
-      connection.userId : connection.friendId
-    let user = users[friend];
+    if(search){
+      user = users[contact]
+    } else {
+      let friend = (currentUser.id !== contact.userId) ?
+      contact.userId : contact.friendId
+      user = users[friend];
+    }
 
     return (
       <Grid container className={classes.userCard}

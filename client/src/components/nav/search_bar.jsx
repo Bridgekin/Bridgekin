@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -97,6 +98,7 @@ class SearchBar extends React.Component {
 
     this.handleClickAwayClose = this.handleClickAwayClose.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleAllResultsPage = this.handleAllResultsPage.bind(this);
   }
 
   handleClickAwayClose(anchorEl) {
@@ -122,11 +124,15 @@ class SearchBar extends React.Component {
     })
   }
 
-  handleProfilePage(userid){
+  handleProfilePage(userId){
     return e => {
-      // load profile page
-      this.setState({ searchAnchorEl: null})
+      this.props.history.push("/mynetwork/profile/userId")
     }
+  }
+
+  handleAllResultsPage(){
+    const { searchInput } = this.state;
+    this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
   }
 
   capitalize(str){
@@ -148,7 +154,7 @@ class SearchBar extends React.Component {
     if(currentUser){
       let results = !searchLoading && searchResults.slice(0,5).map(result => {
         let user = users[result];
-        return <MenuItem onClick={this.handleProfilePage('loaded')}
+        return <MenuItem onClick={this.handleProfilePage(result)}
           style={{ height: 30 }}>
           <Grid container>
             <Grid item sm={10} container justify='space-between' alignItems='center'>
@@ -240,4 +246,4 @@ class SearchBar extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SearchBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(SearchBar)));

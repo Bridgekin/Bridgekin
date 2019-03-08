@@ -27,6 +27,9 @@ import FilterCard from '../filter_card';
 import Loading from '../loading';
 import OpportunityWaitlist from '../opportunity/opportunity_waitlist';
 import Contacts from './contacts';
+import ProfilePage from './profile_page';
+import SearchResults from './search_results';
+import ContactsPage from './contacts_page';
 // import Invitations from './invitations';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -48,17 +51,6 @@ const styles = theme => ({
   loading:{
     position: 'relative',
     top: 200
-  },
-  mobileFilterCard:{
-    padding: "9px 8px 9px 8px",
-    backgroundColor: `${theme.palette.base3}`,
-    // borderTop: `1px solid ${theme.palette.border.primary}`,
-    border: `1px solid ${theme.palette.border.primary}`,
-    // width: '100%',
-    marginBottom: 9,
-    [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }
   },
   filterCard:{
     // marginTop: 18,
@@ -88,11 +80,7 @@ class MyTrustedNetwork extends React.Component {
     super(props)
     this.state = {
       loaded: false,
-      contactAnchorEl: null
     }
-
-    this.handleMenuClick = this.handleMenuClick.bind(this);
-    this.handleChangePage = this.handleChangePage.bind(this);
   }
 
   componentDidMount(){
@@ -100,25 +88,9 @@ class MyTrustedNetwork extends React.Component {
     .then(() => this.setState({ loaded: true }))
   }
 
-  handleMenuClick(menuAnchor){
-    return e => {
-      e.preventDefault();
-      let anchor = this.state[menuAnchor];
-      this.setState({ [menuAnchor]: anchor ? null : e.currentTarget})
-    }
-  }
-
-  handleChangePage(dest){
-    return e => {
-      this.props.history.push(dest);
-      this.setState({ contactAnchorEl: null })
-    }
-  }
-
   render(){
-    const{ classes, connections, currentUser } = this.props;
-    const { loaded, contactAnchorEl } = this.state;
-    const pathName = this.props.location.pathname;
+    const{ classes, currentUser } = this.props;
+    const { loaded } = this.state;
 
     if (loaded){
       let waitlistCard = (
@@ -141,6 +113,8 @@ class MyTrustedNetwork extends React.Component {
         {title: `My Contacts`, dest: '/mynetwork'},
         {title: 'Invitations', dest: '/mynetwork/invitations'},
         {title: 'Invitations Sent', dest: '/mynetwork/pending'},
+        // {title: 'Invitations Sent', dest: '/mynetwork/profile/:id'},
+        // {title: 'Invitations Sent', dest: '/mynetwork/pending'},
       ]
 
       let filter = (
@@ -151,41 +125,16 @@ class MyTrustedNetwork extends React.Component {
           />
       )
 
-      let mobileFilter = (
-        <Grid container justify='flex-end' alignItems='center'
-          className={classes.mobileFilterCard}>
-          <Button
-            aria-owns={contactAnchorEl ? 'simple-menu' : undefined}
-            aria-haspopup="true"
-            classes={{ label: classes.buttonText}}
-            onClick={this.handleMenuClick('contactAnchorEl')}
-            style={{ textTransform: 'capitalize'}}
-          >
-            {pages.find(x => x.dest === pathName).title}
-            <KeyboardArrowDownIcon />
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={contactAnchorEl}
-            open={Boolean(contactAnchorEl)}
-            onClose={this.handleMenuClick('contactAnchorEl')}
-          >
-            {pages.map(page => (
-              <MenuItem onClick={this.handleChangePage(page.dest)}>
-                {page.title}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Grid>
-      )
-
       let feed = (
-        <div style={{ paddingBottom:30, width: '100%'}}>
-          {mobileFilter}
-          <Contacts pathName={pathName}/>
-          <div className={classes.mobileWaitlist}>
-            {waitlistCard}
-          </div>
+        <div>
+          <Switch>
+            <ProtectedRoute path="/mynetwork/profile/:id" component={ProfilePage} />
+            <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
+            <ProtectedRoute
+                path="/mynetwork"
+                component={ContactsPage}
+                passedProps={{ waitlistCard, pages }} />
+          </Switch>
         </div>
       )
 

@@ -52,7 +52,7 @@ class Contacts extends React.Component {
     let connections = this.filterConnections();
     let connectionCards = connections.map(contact => (
       <FeedCard
-        contents={<ContactCard connection={contact} />}
+        contents={<ContactCard contact={contact} />}
         />
     ))
 
