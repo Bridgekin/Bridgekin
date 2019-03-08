@@ -3,7 +3,7 @@ class Api::UsersController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, only: [:show, :update, :destroy]
   # after_action :verify_policy_scoped, only: :index
 
   def show
@@ -36,6 +36,33 @@ class Api::UsersController < ApiController
     else
       render json: @user.errors.full_messages, status: 422
     end
+  end
+
+  def search_bar
+    input = params[:search_input].split(' ');
+    @users = []
+
+    if (input.length > 1)
+      fname = input[0]
+      lname = input[1]
+      @users = User.where("LOWER(fname) LIKE ?" , "%" + fname.downcase + "%")
+        .where("LOWER(lname) LIKE ?" , "%" + lname.downcase + "%")
+        .or(User.where("LOWER(fname) LIKE ?" , "%" + lname.downcase + "%")
+          .where("LOWER(lname) LIKE ?" , "%" + fname.downcase + "%"))
+      # @users = User.where(User.arel_table[:fname].lower.matches("%?%", fname.downcase))
+      # .where(User.arel_table[:lname].lower.matches("%?%", lname.downcase))
+      # .or(User.where(User.arel_table[:fname].lower.matches("%?%", lname.downcase))
+      #   .where(User.arel_table[:lname].lower.matches("%?%", fname.downcase)))
+    else
+      # debugger
+      @users = User.where("LOWER(fname) LIKE ?" , "%" + input[0].downcase + "%")
+        .or(User.where("LOWER(lname) LIKE ?" , "%" + input[0].downcase + "%"))
+      # @users = User.where(User.arel_table[:fname].lower.matches("%?%", input[0].downcase))
+      # .or(User.where(User.arel_table[:lname].lower.matches("%?%", input[0].downcase)))
+    end
+
+    @search_users = @users.pluck(:id)
+    render :searchBar
   end
 
   private

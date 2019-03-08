@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    get 'search_bar', :to => 'users#search_bar'
     get 'opp_permissions/share_options', :to => 'opp_permissions#shareOptions'
     post 'waitlist_user/create_with_referral', :to => 'waitlist_users#create_with_referral'
     post 'member_users/:id/referral/:referral_code', :to => 'member_users#add_by_referral'
