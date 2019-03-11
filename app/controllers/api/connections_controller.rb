@@ -17,6 +17,7 @@ class Api::ConnectionsController < ApiController
   def create
     @connection = Connection.new(connection_params)
     if @connection.save
+      # create_notification()
       render :show
     else
       render json: @connection.errors.full_messages, status: 422

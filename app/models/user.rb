@@ -120,6 +120,12 @@ class User < ApplicationRecord
     else
       return Network.find(self.default_network_id).site_template || bridgekin_template
     end
+
+    # if self.default_network_id.nil?
+    #   networks.last.site_template #|| {network_id: networks.last.id}
+    # else
+    #   Network.find(self.default_network_id).site_template #|| {network_id: self.default_network_id}
+    # end
   end
 
   def set_networks(network)

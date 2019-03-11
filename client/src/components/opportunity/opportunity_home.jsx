@@ -72,7 +72,8 @@ const mapStateToProps = state => ({
   networks: state.entities.networks,
   workspaceOptions: state.entities.workspaceOptions,
   referral: state.entities.referral,
-  siteTemplate: state.siteTemplate
+  siteTemplate: state.siteTemplate,
+  workspaces: state.workspaces
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -294,6 +295,7 @@ class OpportunityHome extends React.Component {
 
   componentDidMount(){
     const workspaceId = this.props.siteTemplate.networkId
+    //||Object.values(this.props.workspaces)[0].id
     if(workspaceId){this.resetWorkspace(workspaceId)}
   }
 
