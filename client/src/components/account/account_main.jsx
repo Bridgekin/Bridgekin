@@ -98,14 +98,15 @@ const styles = theme => ({
       padding: 0,
       display: 'flex',
       width: '100%'
-    }
+    },
+    marginBottom: 9
   },
   mobileNavigation:{
     padding: "15px 25px",
     backgroundColor: theme.palette.base3,
     [theme.breakpoints.up('sm')]: {
       display: 'none'
-    }
+    },
   },
   mobileNavHeader:{
     fontSize: 24
@@ -128,7 +129,8 @@ const styles = theme => ({
     borderTop: `1px solid ${theme.palette.border.secondary}`,
     [theme.breakpoints.up('sm')]: {
       display: 'none'
-    }
+    },
+    // marginTop: 20
   },
   mobileFilterButton:{
     margin: "0px 10px"

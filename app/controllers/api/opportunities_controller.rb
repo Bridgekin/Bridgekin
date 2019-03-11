@@ -84,7 +84,7 @@ class Api::OpportunitiesController < ApiController
 
     if @opportunity.update(opportunity_params)
       @opportunity.picture.purge if params[:opportunity][:picture] == "delete"
-      @opportunity.set_permissions(params[:opportunity][:permissions])
+      @opportunity.set_permissions(params[:opportunity][:permissions]) if params[:opportunity][:permissions]
 
       @networks = @opportunity.networks.pluck(:id)
       # render json: @opportunity

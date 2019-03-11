@@ -37,7 +37,8 @@ const styles = theme => ({
     top: 64,
     position: 'relative',
     backgroundColor: theme.palette.base2,
-    minHeight: window.innerHeight-64
+    minHeight: window.innerHeight-64,
+    paddingTop: 50
   },
   cover: {
     width: '100%',
@@ -46,8 +47,8 @@ const styles = theme => ({
   card: {
     display: 'flex',
     alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 50,
+    paddingBottom: 50,
     backgroundColor: theme.palette.base3
   },
   responseHeader: {
@@ -184,12 +185,12 @@ class PasswordReset extends React.Component {
     let cardText = sent ? response : form;
 
     return (
-      <Grid container justify="center" alignItems="center"
+      <Grid container justify="center" alignItems="flex-start"
         className={classes.grid}>
 
         <Grid item xs={10} sm={8} md={6}>
           <Card className={classes.card}>
-            <Grid container justify="center" alignItems="center">
+            <Grid container justify="center" alignItems="flex-start">
               {cardText}
             </Grid>
 
