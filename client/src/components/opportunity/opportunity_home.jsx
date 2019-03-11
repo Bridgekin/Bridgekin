@@ -474,7 +474,8 @@ class OpportunityHome extends React.Component {
 
   render (){
     const { classes, opportunities, networks, workspaceOptions,
-      referral, currentUser, networkOpps } = this.props;
+      referral, currentUser, networkOpps, siteTemplate,
+      workspaces } = this.props;
 
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
@@ -535,7 +536,7 @@ class OpportunityHome extends React.Component {
       )
 
       const genericDropdownOptions = currentUser.isAdmin ? [
-        {header: 'All Opportunities' , subHeader: 'Your segmented lists of connections',
+        {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
           value: '',disabled: false},
         {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
           value: 'All-Network',disabled: false},

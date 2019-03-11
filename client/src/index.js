@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     getAuthUserId(token)
     .then(handleAuthErrors)
     .then( ({user, token, siteTemplate, workspaces}) => {
-      debugger
       let preloadedState = {
         users: { [user.id]: user},
         session: { id: user.id},
