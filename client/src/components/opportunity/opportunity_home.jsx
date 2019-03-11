@@ -254,7 +254,7 @@ const DEFAULTSTATE = {
   // networks: [],
   anonymous: false,
   viewType: 'post',
-  permissions: ['-Network']
+  // permissions: ['-Network']
 }
 
 class OpportunityHome extends React.Component {
