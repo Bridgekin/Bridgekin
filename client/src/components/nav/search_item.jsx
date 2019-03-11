@@ -13,6 +13,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import PersonIcon from '@material-ui/icons/Person';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
+import InviteModal from '../connections/invite_modal';
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
 });
@@ -33,8 +35,10 @@ class SearchTemplate extends React.Component {
     this.state = {
       inviteModalOpen: false
     }
+
     this.handleProfilePage = this.handleProfilePage.bind(this);
     this.openInvite = this.openInvite.bind(this);
+    this.closeInvite = this.closeInvite.bind(this);
   }
 
   handleProfilePage(userId){
@@ -48,8 +52,13 @@ class SearchTemplate extends React.Component {
     this.setState({ inviteModalOpen: true })
   }
 
+  closeInvite(){
+    this.setState({ inviteModalOpen: false })
+  }
+
   render(){
     const { user } = this.props;
+    const { inviteModalOpen } = this.state;
 
     return (
       <MenuItem onClick={this.handleProfilePage(user.id)}
@@ -81,7 +90,11 @@ class SearchTemplate extends React.Component {
           </Grid>
         </Grid>
 
-        {/* Invite Modal */}
+        <InviteModal
+          open={inviteModalOpen}
+          userId={user.id}
+          handleClose={this.closeInvite}
+          />
       </MenuItem>
     )
   }

@@ -1,16 +1,18 @@
 import { combineReducers } from 'redux';
-import LoginErrorsReducer from './login_errors_reducer';
-import UsersErrorsReducer from './user_errors_reducer';
-import WaitlistUsersErrorsReducer from './waitlist_user_errors_reducer';
-import OpportunityErrorsReducer from './opportunity_errors_reducer';
-import ConnectedOpportunityErrorsReducer from './connected_opportunity_errors_reducer';
-import SiteTemplateErrorsReducer from './site_template_errors_reducer';
+import loginErrorsReducer from './login_errors_reducer';
+import usersErrorsReducer from './user_errors_reducer';
+import waitlistUsersErrorsReducer from './waitlist_user_errors_reducer';
+import opportunityErrorsReducer from './opportunity_errors_reducer';
+import connectedOpportunityErrorsReducer from './connected_opportunity_errors_reducer';
+import siteTemplateErrorsReducer from './site_template_errors_reducer';
+import connectionErrorsReducer from './connection_errors_reducer';
 
 export default combineReducers({
-  login: LoginErrorsReducer,
-  users: UsersErrorsReducer,
-  waitlistUsers: WaitlistUsersErrorsReducer,
-  opportunities: OpportunityErrorsReducer,
-  connectedOpportunities: ConnectedOpportunityErrorsReducer,
-  siteTemplate: SiteTemplateErrorsReducer,
+  login: loginErrorsReducer,
+  users: usersErrorsReducer,
+  waitlistUsers: waitlistUsersErrorsReducer,
+  opportunities: opportunityErrorsReducer,
+  connectedOpportunities: connectedOpportunityErrorsReducer,
+  siteTemplate: siteTemplateErrorsReducer,
+  connection: connectionErrorsReducer,
 });

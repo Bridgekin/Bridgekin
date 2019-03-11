@@ -21,6 +21,8 @@ import Typography from '@material-ui/core/Typography';
 import { updateConnection, deleteConnection }
   from '../../actions/connection_actions';
 
+import InviteModal from '../connections/invite_modal';
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
@@ -76,6 +78,7 @@ class ContactCard extends React.Component {
     this.removeConnection = this.removeConnection.bind(this);
     this.acceptConnection = this.acceptConnection.bind(this);
     this.openInvite = this.openInvite.bind(this);
+    this.closeInvite = this.closeInvite.bind(this);
   }
 
   // handleRemoveUser(){
@@ -111,23 +114,33 @@ class ContactCard extends React.Component {
     this.setState({ inviteModalOpen: true })
   }
 
+  closeInvite(){
+    this.setState({ inviteModalOpen: false })
+  }
+
   getSecondaryAction(){
     const { classes, contact, currentUser,
       search, connections } = this.props;
     const { contactAnchorEl, inviteAnchorEl } = this.state;
 
     if(search){
-      let connected = Object.values(connections).filter(x =>
-        x.status === 'Accepted' && (
+      let connected = Object.values(connections).filter(x =>(
           (x.userId === currentUser.id && x.friendId === contact) ||
           (x.friendId === currentUser.id && x.userId === contact)
-        )).length > 0
+        ))
 
-      if(connected){
+      if(connected.length > 0 && connected[0].status === 'Accepted'){
         return (
           <Typography align='left' color='textPrimary'
             style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}>
             {`My Contact`}
+          </Typography>
+        )
+      } else if(connected.length > 0 && connected[0].status === 'Pending'){
+        return (
+          <Typography align='left' color='textPrimary'
+            style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}>
+            {`Pending Invite`}
           </Typography>
         )
       } else {
@@ -239,6 +252,7 @@ class ContactCard extends React.Component {
   render(){
     const { classes, users, currentUser,
       contact, search } = this.props;
+    const { inviteModalOpen } = this.state;
     let user = {};
 
     if(search){
@@ -274,7 +288,11 @@ class ContactCard extends React.Component {
 
         {this.getSecondaryAction()}
 
-        {/* Invite Modal */}
+        <InviteModal
+          open={inviteModalOpen}
+          userId={user.id}
+          handleClose={this.closeInvite}
+          />
       </Grid>
     )
   }

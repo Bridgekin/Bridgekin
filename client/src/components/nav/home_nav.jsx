@@ -616,9 +616,9 @@ class HomeNav extends React.Component {
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
               {logoChunk}
-              <Grid item xs={0} sm={4} md={3} lg={3}>
+              {currentUser ? <Grid item xs={0} sm={4} md={3} lg={3}>
                 <SearchBar />
-              </Grid>
+              </Grid> : <div style={{ flexGrow: 1}}/>}
               {navMenu}
             </Grid>
           </Toolbar>

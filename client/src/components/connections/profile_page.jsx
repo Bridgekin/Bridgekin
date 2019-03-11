@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
 import { fetchProfile } from '../../actions/user_actions';
+import ProfileCard from '../account/profile_card';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -43,16 +44,11 @@ class ProfilePage extends React.Component {
 
   render(){
     const { loaded } = this.state;
+    const { users, userId } = this.props;
+
     if (loaded){
-      let profile = (
-        <Grid container>
-          {`Profile`}
-        </Grid>
-      )
       return (
-        <FeedCard
-          contents={profile}
-          />
+        <ProfileCard user={users[userId]}/>
       )
     } else {
       return <div style={{ paddingTop: 50 }}>
