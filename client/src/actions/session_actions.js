@@ -2,6 +2,7 @@ import * as SessionApiUtil from '../util/session_api_util';
 import {receiveUser} from './user_actions';
 import {receiveSiteTemplate} from './site_template_actions';
 import {receiveWorkspaces} from './workspace_actions';
+import {removeSiteTemplate} from './site_template_actions';
 import {receiveSessionErrors, receiveUserErrors} from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
@@ -62,5 +63,6 @@ export const logout = () => dispatch => (
     .then(() => {
       localStorage.removeItem('bridgekinToken');
       dispatch(logoutCurrentUser());
+      dispatch(removeSiteTemplate());
     })
 );

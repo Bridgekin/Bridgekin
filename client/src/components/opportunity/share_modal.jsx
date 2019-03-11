@@ -334,8 +334,9 @@ class ShareModal extends Component{
             [...filteredOptions].filter(x => x.includes('Connection'))
               .length > 0 &&
             <ListItem key={'-Connection'}
-            className={classes.listItemHeader}
-            onClick={this.handleUpdate('-Connection')}>
+              disabled={[...permissions].filter(x => x.includes('Connection')).length > 0 && !permissions.has('-Connection')}
+              className={classes.listItemHeader}
+              onClick={this.handleUpdate('-Connection')}>
             {this.getItem('-Connection')}
             <Checkbox checked={permissions.has('-Connection')} />
           </ListItem>}
@@ -343,6 +344,7 @@ class ShareModal extends Component{
             !permissions.has(x)) && x.includes('Connection')
           ).map(option => (
               <ListItem key={option} className={classes.listItem}
+                disabled={permissions.has('-Connection')}
                 onClick={this.handleUpdate(option)}>
                 {this.getItem(option)}
                 <Checkbox checked={permissions.has(option)} />
