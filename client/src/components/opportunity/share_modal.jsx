@@ -167,15 +167,33 @@ class ShareModal extends Component{
       let { permissions } = this.state;
       if(permissions.has(value)){
         permissions.delete(value);
-      } else if((value === "-Network" && [...permissions].filter(x => x.includes('Network')).length > 0)
-        || (value === "-Connection" && [...permissions].filter(x => x.includes('Connection')).length > 0)){
-        // permissions.add(value);
-      } else if((!permissions.has("-Network") && value.includes("Network"))
-        || (permissions.has("-Network") && !value.includes("Network"))
-        || (!permissions.has("-Connection") && value.includes("Connection"))
-        || (permissions.has("-Connection") && !value.includes("Connection"))) {
-        permissions.add(value);
+      } else if (value.includes('Network')){
+        if(value === "-Network" && [...permissions].filter(x => x.includes('Network')).length > 0){
+          // Do nothing
+        } else if((!permissions.has("-Network") && value.includes("Network"))
+          || (permissions.has("-Network") && !value.includes("Network")) ) {
+          permissions.add(value);
+        }
+      } else if (value.includes('Connection')){
+        if(value === "-Connection" && [...permissions].filter(x => x.includes('Connection')).length > 0){
+          // Do nothing
+        } else if((!permissions.has("-Connection") && value.includes("Connection"))
+          || (permissions.has("-Connection") && !value.includes("Connection")) ) {
+          permissions.add(value);
+        }
       }
+
+      // } else if(value === "-Network" && [...permissions].filter(x => x.includes('Network')).length > 0){
+      //   // permissions.add(value);
+      // } else if (value === "-Connection" && [...permissions].filter(x => x.includes('Connection')).length > 0){
+      //   // permissions.add(value);
+      // } else if((!permissions.has("-Network") && value.includes("Network"))
+      //   || (permissions.has("-Network") && !value.includes("Network"))){
+      //   permissions.add(value);
+      // } else if((!permissions.has("-Connection") && value.includes("Connection"))
+      //   || (permissions.has("-Connection") && !value.includes("Connection"))) {
+      //   permissions.add(value);
+      // }
       this.setState({ permissions });
     }
   }
