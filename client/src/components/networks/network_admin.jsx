@@ -305,7 +305,7 @@ class NetworkAdmin extends React.Component {
                 selected>
                 <Typography variant="body1" align='left'
                   color="textPrimary" className={classes.filterItem}>
-                  {'Our Contacts  (5,200)'}
+                  {`Our Contacts (${memberUserIds.size})`}
                 </Typography>
               </ListItem>
             </List>
@@ -339,17 +339,17 @@ class NetworkAdmin extends React.Component {
             {networkFilter}
             <Typography variant="body1" align='left'
               color="textPrimary" className={classes.filterItem}>
-              {'Our Contacts  (5,200)'}
+              {`Our Contacts (${memberUserIds.size})`}
             </Typography>
           </Grid>
           <Grid container justify='space-between'
             className={classes.feedCard}>
             <Grid item xs={12} sm={5}>
-              <Button color="primary" classes={{ label: classes.label}}
+              <Button color="primary"
                 style={{ paddingLeft: 0, textTransform: 'capitalize'}}
                 aria-owns={userSortAnchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
-                classes={{ label: classes.buttonText}}
+                classes={{ label: classes.buttonText }}
                 onClick={this.handleMenuOpen('userSortAnchorEl')}
                 >
                 <Typography align='Left' className={classes.sortBy}>
