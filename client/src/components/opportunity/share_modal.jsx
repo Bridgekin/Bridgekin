@@ -167,7 +167,13 @@ class ShareModal extends Component{
       let { permissions } = this.state;
       if(permissions.has(value)){
         permissions.delete(value);
-      } else {
+      } else if((value === "-Network" && [...permissions].filter(x => x.includes('Network')).length > 0)
+        || (value === "-Connection" && [...permissions].filter(x => x.includes('Connection')).length > 0)){
+        // permissions.add(value);
+      } else if((!permissions.has("-Network") && value.includes("Network"))
+        || (permissions.has("-Network") && !value.includes("Network"))
+        || (!permissions.has("-Connection") && value.includes("Connection"))
+        || (permissions.has("-Connection") && !value.includes("Connection"))) {
         permissions.add(value);
       }
       this.setState({ permissions });
@@ -280,6 +286,8 @@ class ShareModal extends Component{
       </Grid>
     )
 
+    // disabled={[...permissions].filter(x => x.includes('Network')).length > 0}
+
     let results = (
       <Grid item xs={12} sm={11} md={10}
         className={classes.resultsGrid}>
@@ -305,6 +313,7 @@ class ShareModal extends Component{
         <Grid container justify='flex-start'
           style={{ marginTop: 10 }}>
           <ListItem key={'-Network'}
+            disabled={[...permissions].filter(x => x.includes('Network')).length > 0 && !permissions.has('-Network')}
             className={classes.listItemHeader}
             onClick={this.handleUpdate('-Network')}>
             {this.getItem('-Network')}
@@ -314,9 +323,11 @@ class ShareModal extends Component{
             !permissions.has(x) && x.includes('Network')
           ).map(option => (
               <ListItem key={option} className={classes.listItem}
+                disabled={permissions.has('-Network')}
                 onClick={this.handleUpdate(option)}>
                 {this.getItem(option)}
-                <Checkbox checked={permissions.has(option)} />
+                <Checkbox
+                  checked={permissions.has(option)} />
               </ListItem>
             ))}
           {currentUser.isAdmin &&

@@ -209,7 +209,7 @@ const DEFAULTSTATE = {
   mobileImageCropPending: false,
   imageModalOpen: false,
   shareModalOpen: false,
-  permissions: []
+  // permissions: []
   // share: []
 }
 

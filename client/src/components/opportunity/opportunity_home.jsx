@@ -254,7 +254,7 @@ const DEFAULTSTATE = {
   // networks: [],
   anonymous: false,
   viewType: 'post',
-  // permissions: []
+  permissions: ['-Network']
 }
 
 class OpportunityHome extends React.Component {
@@ -545,10 +545,10 @@ class OpportunityHome extends React.Component {
         {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
           value: 'Direct-Connection', disabled: false},
       ] : [
-        {header: 'All Opportunities' , subHeader: 'Your segmented lists of connections',
+        {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
           value: '',disabled: false},
-        {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
-          value: 'All-Network',disabled: false}
+        // {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
+        //   value: 'All-Network',disabled: false}
       ]
 
       const filterMobile = (

@@ -79,13 +79,16 @@ let styles = (theme) => ({
     '&:click':{
       backgroundColor: theme.palette.base1
     },
-    padding: "12px 0px"
+    // padding: "12px 0px"
+    padding: 0,
+    // height: '100%'
   },
   logo: {
-    height: 26,
+    // height: 26,
+    height: 26 + 24,
     maxWidth: 228,
     width: '100%',
-    objectFit: 'cover'
+    objectFit: 'contain'
   },
   nav: {
     backgroundColor: theme.palette.base1,
@@ -564,6 +567,7 @@ class HomeNav extends React.Component {
         </IconButton>
 
         {workspaces.length > 1 &&
+          currentUser &&
           <IconButton
             aria-haspopup="true"
             onClick={this.handleLogoMenuClick}
