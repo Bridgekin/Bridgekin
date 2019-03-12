@@ -11,11 +11,13 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
+import Popover from '@material-ui/core/Popover';
 import MenuList from '@material-ui/core/MenuList';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -29,7 +31,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput))
+  fetchSearchResults: (searchInput, bool) => dispatch(fetchSearchResults(searchInput, bool))
 });
 
 const styles = theme => ({
@@ -78,6 +80,7 @@ const styles = theme => ({
       width: 200,
     },
   },
+  menuPaper:{ minWidth: 300 },
   buttonText: { color: theme.palette.text.tertiary},
   navButtonText: { color: theme.palette.text.tertiary},
   listItemText: { fontSize: 12 }
@@ -93,8 +96,8 @@ class SearchBar extends React.Component {
     }
 
     this.timeout = null;
-
     this.handleClickAwayClose = this.handleClickAwayClose.bind(this);
+    this.handleCloseMenu = this.handleCloseMenu.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleAllResultsPage = this.handleAllResultsPage.bind(this);
   }
@@ -103,6 +106,10 @@ class SearchBar extends React.Component {
     return e => {
       this.setState({ [anchorEl]: null });
     }
+  }
+
+  handleCloseMenu(e){
+    this.setState({ searchAnchorEl: null });
   }
 
   handleSearchChange(e){
@@ -115,7 +122,7 @@ class SearchBar extends React.Component {
       if(input.length > 0){
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-          this.props.fetchSearchResults(input)
+          this.props.fetchSearchResults(input, true)
           .then(() => this.setState({ searchLoading: false }))
         }, 500)
       }
@@ -124,11 +131,8 @@ class SearchBar extends React.Component {
 
   handleAllResultsPage(){
     const { searchInput } = this.state;
+    this.setState({ searchAnchorEl: null })
     this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
-  }
-
-  handleInvite(){
-
   }
 
   capitalize(str){
@@ -150,7 +154,7 @@ class SearchBar extends React.Component {
     if(currentUser){
       let results = !searchLoading && searchResults.slice(0,5).map(result => {
         let user = users[result];
-        return <SearchItem user={user}/>
+        return <SearchItem user={user} closeMenu={this.handleCloseMenu}/>
       })
 
       let searchResultContainer = currentUser && (
@@ -172,18 +176,13 @@ class SearchBar extends React.Component {
                       <CircularProgress />
                     </Grid>
                   ) : (
-                    searchResults.length > 0 ? (
-                      <MenuList>
-                        {results}
-                        <MenuItem onClick={this.handleAllResultsPage}>
-                          {`See all results for "${searchInput}"`}
-                        </MenuItem>
-                      </MenuList>
-                    ): (
-                      <MenuList>
-
-                      </MenuList>
-                    )
+                    <MenuList>
+                      {results}
+                      <MenuItem onClick={this.handleAllResultsPage}
+                        style={{ fontWeight: 600}}>
+                        {`See all results for "${searchInput}"`}
+                      </MenuItem>
+                    </MenuList>
                   )}
                 </ClickAwayListener>
               </Paper>
@@ -192,9 +191,45 @@ class SearchBar extends React.Component {
         </Popper>
       )
 
+      // let searchResultContainer = currentUser && (
+      //   <Menu
+      //     id="simple-menu"
+      //     anchorEl={searchAnchorEl}
+      //     open={searchOpen}
+      //     onClose={this.handleCloseMenu}
+      //     getContentAnchorEl={null}
+      //     anchorOrigin={{
+      //       vertical: 'bottom',
+      //       horizontal: 'left',
+      //     }}
+      //     transformOrigin={{
+      //       vertical: 'top',
+      //       horizontal: 'left',
+      //     }}
+      //     disableAutoFocusItem
+      //     classes={{ paper: classes.menuPaper }}
+      //   >
+      //     {searchLoading ? (
+      //       <Grid container justify='center' alignItems='center'
+      //         style={{ height: 100 }}>
+      //         <CircularProgress />
+      //       </Grid>
+      //     ) : (
+      //       <MenuList>
+      //         {results}
+      //         <MenuItem onClick={this.handleAllResultsPage}>
+      //           {`See all results for "${searchInput}"`}
+      //         </MenuItem>
+      //       </MenuList>
+      //     )}
+      //   </Menu>
+      // )
+
       return (
         <div className={classes.search}>
           <InputBase
+            onClick={this.handleSearchChange}
+            autoFocus={true}
             onChange={this.handleSearchChange}
             placeholder="Search…"
             classes={{

@@ -35,7 +35,8 @@ import ContactsPage from './contacts_page';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
-  connections: state.connections
+  connections: state.connections,
+  searchResultsPage: state.entities.searchResultsPage,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -89,8 +90,9 @@ class MyTrustedNetwork extends React.Component {
   }
 
   render(){
-    const{ classes, currentUser } = this.props;
+    const{ classes, currentUser, searchResultsPage } = this.props;
     const { loaded } = this.state;
+    const pathName = this.props.location.pathname;
 
     if (loaded){
       let waitlistCard = (
@@ -101,10 +103,8 @@ class MyTrustedNetwork extends React.Component {
                 style={{ marginBottom: 20}}>
                 Invite your trusted business contacts
               </Typography>
-
               <OpportunityWaitlist
-                currentUser={currentUser}
-                />
+                currentUser={currentUser} />
             </div>
           }/>
       )
@@ -131,16 +131,17 @@ class MyTrustedNetwork extends React.Component {
             <ProtectedRoute path="/mynetwork/profile/:userId" component={ProfilePage} />
             <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
             <ProtectedRoute
-                path="/mynetwork"
-                component={ContactsPage}
-                passedProps={{ waitlistCard, pages }} />
+              path="/mynetwork"
+              component={ContactsPage}
+              passedProps={{ waitlistCard, pages }} />
           </Switch>
         </div>
       )
 
       return (
         <FeedContainer
-          column1={waitlistCard}
+          column1={(!pathName.includes('search') || searchResultsPage.length > 0)
+            && waitlistCard}
           feed={feed}
           column2={filter}
           />

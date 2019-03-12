@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -79,6 +80,8 @@ class ContactCard extends React.Component {
     this.acceptConnection = this.acceptConnection.bind(this);
     this.openInvite = this.openInvite.bind(this);
     this.closeInvite = this.closeInvite.bind(this);
+    this.handleProfilePage = this.handleProfilePage.bind(this);
+    this.getUser = this.getUser.bind(this);
   }
 
   // handleRemoveUser(){
@@ -90,12 +93,19 @@ class ContactCard extends React.Component {
   handleMenuClick(anchor){
     return e => {
       // this.setState({ [anchor]: e.currentTarget})
+      e.stopPropagation();
       const anchorEl = this.state[anchor];
       this.setState({ [anchor]: anchorEl ? null : e.currentTarget})
     }
   }
 
-  acceptConnection(){
+  handleProfilePage(e){
+    e.stopPropagation();
+    this.props.history.push(`/mynetwork/profile/${this.getUser().id}`)
+  }
+
+  acceptConnection(e){
+    e.stopPropagation();
     this.props.updateConnection({
       status: 'Accepted',
       id: this.props.connection.id
@@ -103,6 +113,7 @@ class ContactCard extends React.Component {
   }
 
   removeConnection(e){
+    e.stopPropagation();
     this.props.deleteConnection(this.props.connection.id)
   }
 
@@ -110,7 +121,9 @@ class ContactCard extends React.Component {
     return str[0].toUpperCase() + str.slice(1)
   }
 
-  openInvite(){
+  openInvite(e){
+    e.stopPropagation();
+    // console.log('opened invite')
     this.setState({ inviteModalOpen: true })
   }
 
@@ -249,23 +262,28 @@ class ContactCard extends React.Component {
     }
   }
 
+  getUser(){
+    const { search, users, contact, currentUser } = this.props;
+
+    if(search){
+      return users[contact]
+    } else {
+      let friend = (currentUser.id !== contact.userId) ?
+      contact.userId : contact.friendId
+      return users[friend];
+    }
+  }
+
   render(){
     const { classes, users, currentUser,
       contact, search } = this.props;
     const { inviteModalOpen } = this.state;
-    let user = {};
-
-    if(search){
-      user = users[contact]
-    } else {
-      let friend = (currentUser.id !== contact.userId) ?
-      contact.userId : contact.friendId
-      user = users[friend];
-    }
+    let user = this.getUser();
 
     return (
       <Grid container className={classes.userCard}
-        justify="center" alignItems="center">
+        justify="center" alignItems="center"
+        onClick={this.handleProfilePage}>
           <ListItemAvatar>
             <Avatar>
               {user.profilePicUrl ? (
@@ -298,4 +316,4 @@ class ContactCard extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ContactCard));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(ContactCard)));

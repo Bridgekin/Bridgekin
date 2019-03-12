@@ -131,7 +131,8 @@ class Profile extends React.Component {
 
           {currentUser.id !== user.id &&
             <Button variant='contained' color='primary'
-              onClick={this.openInvite}>
+              onClick={this.openInvite}
+              style={{ marginTop: 20}}>
               {`Invite`}
             </Button>
           }
@@ -143,12 +144,11 @@ class Profile extends React.Component {
               color="textSecondary" align='left'>
               {`${user.fname} ${user.lname}`.toUpperCase()}
             </Typography>
-            <div style={{ marginLeft: 10 }}
-              onClick={() => this.props.history.push('/account/settings/general')}>
-              <IconButton className={classes.button} aria-label="Edit">
-                <EditIcon className={classes.moreIcon}/>
-              </IconButton>
-            </div>
+            {currentUser.id === user.id && <IconButton className={classes.button}
+              onClick={() => this.props.history.push('/account/settings/general')}
+              style={{ marginLeft: 10 }}>
+              <EditIcon className={classes.moreIcon}/>
+            </IconButton>}
           </div>
 
           <Typography variant="h6" gutterBottom align='left'

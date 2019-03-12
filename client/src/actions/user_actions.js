@@ -4,10 +4,16 @@ import { handleErrors } from './fetch_error_handler';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
+export const RECEIVE_SEARCH_RESULTS_PAGE = 'RECEIVE_SEARCH_RESULTS_PAGE';
 export const RECEIVE_SEARCH_RESULTS = 'RECEIVE_SEARCH_RESULTS';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_USER = 'RECEIVE_USER';
 export const REMOVE_USER = "REMOVE_USER";
+
+export const receiveSearchResultsPage = searchResultIds => ({
+  type: RECEIVE_SEARCH_RESULTS_PAGE,
+  searchResultIds,
+});
 
 export const receiveSearchResults = searchResultIds => ({
   type: RECEIVE_SEARCH_RESULTS,
@@ -29,12 +35,16 @@ export const removeUser = userId => ({
   userId
 });
 
-export const fetchSearchResults = (searchInput) => dispatch => (
+export const fetchSearchResults = (searchInput, bool) => dispatch => (
   UserApiUtil.fetchSearchResults(searchInput)
     .then(handleErrors)
     .then(data => {
       dispatch(receiveUsers(data.users));
-      dispatch(receiveSearchResults(data.searchUsers));
+      if(bool){
+        dispatch(receiveSearchResults(data.searchUsers));
+      } else {
+        dispatch(receiveSearchResultsPage(data.searchUsers));
+      }
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

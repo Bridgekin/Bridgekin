@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
+import VisibilitySensor from 'react-visibility-sensor';
+import Img from 'react-image'
 
 import PersonIcon from '@material-ui/icons/Person';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -27,6 +29,11 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  itemPic:{
+    objectFit: 'cover',
+    height: 'auto',
+    width: '100%',
+  }
 })
 
 class SearchTemplate extends React.Component {
@@ -43,7 +50,9 @@ class SearchTemplate extends React.Component {
 
   handleProfilePage(userId){
     return e => {
+      e.stopPropagation();
       this.props.history.push(`/mynetwork/profile/${userId}`)
+      this.props.closeMenu();
     }
   }
 
@@ -54,10 +63,11 @@ class SearchTemplate extends React.Component {
 
   closeInvite(){
     this.setState({ inviteModalOpen: false })
+    this.props.closeMenu();
   }
 
   render(){
-    const { user } = this.props;
+    const { user, classes } = this.props;
     const { inviteModalOpen } = this.state;
 
     return (
@@ -67,7 +77,13 @@ class SearchTemplate extends React.Component {
           <Grid item sm={10} container justify='space-between' alignItems='center'>
             <Avatar
               style={{ height: 25, width: 25 }}>
-              <PersonIcon />
+              {user.profilePicUrl ? (
+                <VisibilitySensor>
+                  <Img src={user.profilePicUrl}
+                    className={classes.itemPic}
+                    />
+                </VisibilitySensor>
+              ):<PersonIcon />}
             </Avatar>
             <Grid item sm={10} container direction='column'>
               <Typography variant="body1" align='left' color="textPrimary"
@@ -83,11 +99,11 @@ class SearchTemplate extends React.Component {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item sm={2}>
+          {/*<Grid item sm={2}>
             <IconButton onClick={this.openInvite}>
               <AddCircleIcon />
             </IconButton>
-          </Grid>
+          </Grid>*/}
         </Grid>
 
         <InviteModal

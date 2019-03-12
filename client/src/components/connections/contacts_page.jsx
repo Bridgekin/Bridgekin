@@ -34,6 +34,11 @@ const styles = theme => ({
       display: 'none'
     }
   },
+  mobileWaitlist:{
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  }
 })
 
 class ContactsFeed extends React.Component {

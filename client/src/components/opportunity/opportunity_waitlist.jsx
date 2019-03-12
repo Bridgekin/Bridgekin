@@ -115,14 +115,13 @@ class OpportunityWaitlist extends React.Component{
   }
 
   render(){
-    const { classes, currentUser } = this.props;
+    const { classes, currentUser, largeForSearch } = this.props;
     const { loading, open } = this.state;
 
     return(
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={8}>
-
-        <Grid item xs={5} sm={12} container flexDirection='column'>
+        <Grid item xs={5} sm={largeForSearch ? 5 : 12} container flexDirection='column'>
           <TextField
           required
           id="outlined-required"
@@ -139,7 +138,7 @@ class OpportunityWaitlist extends React.Component{
           }}
           />
         </Grid>
-        <Grid item xs={7} sm={12} container flexDirection='column'>
+        <Grid item xs={7} sm={largeForSearch ? 7 : 12} container flexDirection='column'>
           <TextField
           required
           id="outlined-required"

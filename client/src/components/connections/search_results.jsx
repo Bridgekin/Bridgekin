@@ -2,27 +2,34 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import Typography from '@material-ui/core/Typography';
 import ContactCard from './contact_card';
 import FeedCard from '../feed_card';
 import Loading from '../loading';
 
+import OpportunityWaitlist from '../opportunity/opportunity_waitlist';
 import { fetchSearchResults } from '../../actions/user_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   searchInput: ownProps.match.params.input,
-  searchResults: state.entities.searchResults,
+  searchResultsPage: state.entities.searchResultsPage,
   users: state.users,
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput))
+  fetchSearchResults: (searchInput, bool) => dispatch(fetchSearchResults(searchInput, bool))
 });
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  mobileWaitlist:{
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  }
 })
 
 class SearchResults extends React.Component {
@@ -34,20 +41,49 @@ class SearchResults extends React.Component {
   }
 
   componentDidMount(){
-    this.props.fetchSearchResults(this.props.searchInput)
+    this.props.fetchSearchResults(this.props.searchInput, false)
     .then(() => this.setState({ loaded: true }))
   }
 
-  render(){
-    const { loaded } = this.state;
-    if (loaded){
-      const { searchResults } = this.props;
-      let resultCards = searchResults.map(contactId => (
+  getContent(){
+    const { waitlistContents, classes } = this.props;
+    const { searchResultsPage, currentUser } = this.props;
+
+    if (searchResultsPage.length > 0){
+      let resultCards = searchResultsPage.map(contactId => (
         <FeedCard
           contents={<ContactCard contact={contactId} search={true}/>}
           />
       ))
-      return <div>{resultCards}</div>
+      return <div>
+        {resultCards}
+      </div>
+    } else {
+      return <FeedCard contents={
+          <div style={{ padding: 30}}>
+            <Typography variant="h3" gutterBottom
+              color="textSecondary" align='left'
+              style={{ fontSize: 36, fontWeight: 600}}>
+              {`No Results Found`}
+            </Typography>
+            <Typography variant="bod1" gutterBottom
+              color="textSecondary" align='left'
+              style={{ fontSize: 13, margin: "20px 0px" }}>
+              {`Looking for someone not yet on Bridgekin? You have 3 invitations for your trusted business contacts.`}
+            </Typography>
+            <OpportunityWaitlist
+              currentUser={currentUser}
+              largeForSearch/>
+          </div>
+        } />
+    }
+  }
+
+  render(){
+    const { loaded } = this.state;
+
+    if (loaded){
+      return this.getContent()
     } else {
       return <div style={{ paddingTop: 50 }}>
         <Loading />

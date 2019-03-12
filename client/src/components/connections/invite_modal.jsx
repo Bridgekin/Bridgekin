@@ -52,7 +52,8 @@ const styles = theme => ({
     padding: 5,
     cursor: 'pointer'
   },
-  listText:{ color: theme.palette.text.primary}
+  listText:{ color: theme.palette.text.primary},
+  pic: { width: 135, height: 135}
 })
 
 class InviteModal extends React.Component {
@@ -63,9 +64,11 @@ class InviteModal extends React.Component {
     }
 
     this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClose = () => {
+  handleClose(e){
+    e.stopPropagation();
     if(this.props.waitlistErrors){
       this.props.clearConnectionErrors();
     }
@@ -99,7 +102,7 @@ class InviteModal extends React.Component {
       />
     ) : (
       <PersonIcon
-        className={classes.addProfilePicIcon}
+        className={classes.pic}
         onClick={()=> this.props.history.push('/account/settings/general')}/>
     )
 
@@ -109,8 +112,8 @@ class InviteModal extends React.Component {
 
     let modalContent = (
       <Grid container justify='center' alignItems='center'
-        style={{ padding: '46px 30px'}}>
-        <Grid item sm={3} container justify='center'>
+        style={{ padding: '46px 30px'}} spacing={16}>
+        <Grid item sm={3} container justify='center' alignItems='flex-start'>
           {profilePic}
         </Grid>
 
@@ -129,10 +132,11 @@ class InviteModal extends React.Component {
           <Typography variant="body1" gutterBottom
             color="textPrimary" align='left'
             style={{ fontSize: 18 }}>
-            {`If John is a trusted contact of yours enter their email  below to send him a connection request.`}
+            {`If John is a trusted contact of yours, enter their email  below to send them a connection request.`}
           </Typography>
           <TextField
             fullWidth
+            label='Email'
             className={classes.textField}
             value={this.state.name}
             onChange={this.handleEmailChange}
