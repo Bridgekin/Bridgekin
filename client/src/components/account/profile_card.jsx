@@ -236,10 +236,12 @@ class Profile extends React.Component {
               {"********"}
             </Typography>
 
-            <Typography variant="h6" align='left'
-              color='textSecondary' className={classes.fieldLabel}>
-              Default Network
-            </Typography>
+            <Grid container>
+              <Typography variant="h6" align='left'
+                color='textSecondary' className={classes.fieldLabel}>
+                Default Network
+              </Typography>
+            </Grid>
             <Grid container justify="flex-start" alignItems="center"
               flexDirection='column'>
               <Select
