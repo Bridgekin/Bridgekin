@@ -38,9 +38,11 @@ import PrivacyPolicy from './components/terms/privacy_policy';
 import NotFound from './components/not_found';
 import ConfirmationError from './components/confirmation_error';
 import ScrollToTop from './components/scroll_to_top';
+import IdleWatcher from './idle';
 
 export default () => (
   <div style={{ position: 'relative', minHeight: window.innerHeight}}>
+    <IdleWatcher />
     <ScrollToTop />
     <Route path="/" component={HomeNav} />
 
