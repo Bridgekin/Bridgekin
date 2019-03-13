@@ -26,6 +26,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 import FeedCard from '../feed_card';
 import { openInvite } from '../../actions/modal_actions';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -138,19 +139,19 @@ class Profile extends React.Component {
 
     let profile = (
       <Grid container justify="center" alignItems="flex-start"
-        style={{ padding: '25px 15px' }}>
+        style={{ padding: '25px 15px', position: 'relative' }}>
+
+        <div style={{ position: 'absolute', top: 0, right: 0}}>
+          {currentUser.id !== user.id &&
+            <IconButton onClick={this.openInvite}>
+              <AddCircleIcon style={{ color: 'black', width: 40, height: 40}}/>
+            </IconButton>
+          }
+        </div>
 
         <Grid item xs={12} sm={6} md={4} container justify='center'
           style={{ padding: 5}}>
           {profilePic}
-
-          {currentUser.id !== user.id &&
-            <Button variant='contained' color='primary'
-              onClick={this.openInvite}
-              style={{ marginTop: 20}}>
-              {`Invite`}
-            </Button>
-          }
         </Grid>
 
         <Grid item xs={12} md={8} className={classes.content}>

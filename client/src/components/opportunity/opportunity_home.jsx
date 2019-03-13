@@ -93,11 +93,12 @@ const styles = theme => ({
     // height: 118,
     padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.base3}`,
-    // borderTop: `1px solid ${theme.palette.lightGrey}`,
-    border: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     width: '100%',
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
+      border: `1px solid ${theme.palette.border.primary}`,
       borderRadius: 5,
       padding: "9px 17px 20px",
     },
@@ -122,10 +123,11 @@ const styles = theme => ({
     backgroundColor: `${theme.palette.base3}`,
     borderRadius:0,
     borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
-      borderRadius: 5,
       border: `1px solid ${theme.palette.border.primary}`,
+      borderRadius: 5,
     },
     [theme.breakpoints.up('md')]: {
       display: 'none'
@@ -719,7 +721,8 @@ class OpportunityHome extends React.Component {
 
             {opportunityCards}
 
-            <Card className={classes.waitlistMobileCard}>
+
+            <div className={classes.waitlistMobileCard}>
               <Typography gutterBottom align='Left'
                 className={classes.cardHeader} color='textSecondary'
                 style={{ marginBottom: 20 }}>
@@ -731,7 +734,7 @@ class OpportunityHome extends React.Component {
                 loading={loading}
                 currentUser={currentUser}
                 />
-            </Card>
+            </div>
 
             {this.props.currentUser.isAdmin &&
               <div className={classes.referralCard}>
