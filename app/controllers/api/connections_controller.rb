@@ -15,11 +15,22 @@ class Api::ConnectionsController < ApiController
   end
 
   def create
-    @connection = Connection.new(connection_params)
-    if @connection.save
-      render :show
+    # Find target user, find current user
+    friend = User.find(params[:connection][:friend_id])
+    inputted_email = params[:connection][:email].downcase
+    # Check if provided email is the same (downcased)
+
+    if friend.email.downcase == inputted_email
+      @connection = Connection.new(connection_params
+        .merge({ user_id: @user.id}))
+      # debugger
+      if @connection.save
+        render :show
+      else
+        render json: @connection.errors.full_messages, status: 422
+      end
     else
-      render json: @connection.errors.full_messages, status: 422
+      render json: ["Provided email doesn't match #{friend.fname.capitalize}'s email"], status: 422
     end
   end
 

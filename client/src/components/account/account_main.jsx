@@ -356,7 +356,7 @@ class AccountMain extends React.Component {
     )
 
     let feed = (
-      <div>
+      <div style={{ paddingBottom: 30 }}>
         {mobileNavigation}
         {pathName === '/account/opportunities' && oppFiltersMobile}
         <Switch>

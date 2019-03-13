@@ -158,7 +158,7 @@ class AccountSetting extends React.Component {
     super(props);
     this.state = {
       notificationSetting: 'Never',
-      settingState: "Home",
+      settingState: "General",
       currentPassword: '',
       password: '',
       passwordConfirmation: '',
@@ -354,25 +354,25 @@ class AccountSetting extends React.Component {
   //#######################
 
   getContent(){
-    const { classes, currentUser, width, workspaces }= this.props;
+    const { classes, currentUser, width }= this.props;
     const { settingState, modalOpen, previewUrl,
       imageModalOpen, profilePicFile, mobileImageCropPending } = this.state;
 
     const pictureUploaded = Boolean(previewUrl)
 
-    let profilePicture = currentUser.profilePicUrl ? (
-      <Avatar
-        className={classes.pic}
-        src={currentUser.profilePicUrl}
-        alt="Account Profile Picture"
-        onClick={()=> this.props.history.push('/account/settings/general')}
-      />
-    ) : (
-      <PersonIcon
-        className={classes.addProfilePicIcon}
-        onClick={this.handleChangeFill('general')}
-      />
-    )
+    // let profilePicture = currentUser.profilePicUrl ? (
+    //   <Avatar
+    //     className={classes.pic}
+    //     src={currentUser.profilePicUrl}
+    //     alt="Account Profile Picture"
+    //     onClick={()=> this.props.history.push('/account/settings/general')}
+    //   />
+    // ) : (
+    //   <PersonIcon
+    //     className={classes.addProfilePicIcon}
+    //     onClick={this.handleChangeFill('general')}
+    //   />
+    // )
 
     let preview = previewUrl ? (
       <img
@@ -496,7 +496,7 @@ class AccountSetting extends React.Component {
               handleClose={this.handleModalClose}/>
           </Card>
         );
-      case "general":
+      default:
         let countryOptions = this.options.reduce((result, option) =>{
           if (option !== "United States"){
             result.push(<MenuItem value={option}>{option}</MenuItem>)
@@ -693,7 +693,7 @@ class AccountSetting extends React.Component {
               handleClose={this.handleModalClose}/>
           </Card>
         );
-      default:
+      // default:
 
       // <Grid item xs={8} md={5} container justify='center'>
       //   {profilePicture}
@@ -705,101 +705,102 @@ class AccountSetting extends React.Component {
       //   </div>
       // </Grid>
       // <Grid item xs={8} md={6} className={classes.content}>
-        return (
-          <Card className={classes.card}>
-            <Grid container justify="center" alignItems="flex-start">
-
-              <Grid item xs={12} sm={8} className={classes.content}>
-                <div className={classes.wrapper}>
-                  <Typography variant="h3" align='left'
-                    color="textPrimary">
-                    {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
-                  </Typography>
-                </div>
-
-                <Grid container>
-                  <Typography variant="h6" align='left'
-                    color='textPrimary'>
-                    Email Address
-                  </Typography>
-                  <Link to='/account/settings/email'
-                    style={{ marginLeft: 15}}>
-                    <Typography variant="h6" align='left'
-                      color='textPrimary'
-                      style={{fontWeight: 300}}>
-                      Change
-                    </Typography>
-                  </Link>
-                </Grid>
-                <Typography variant="body1" gutterBottom align='left'
-                  color="textPrimary" style={{ marginBottom: 15}}>
-                  {currentUser.email}
-                </Typography>
-
-                <Grid container>
-                  <Typography variant="h6" align='left'
-                    color='textPrimary'>
-                    Current Password
-                  </Typography>
-                  <Link to='/account/settings/password'
-                    style={{ marginLeft: 15}}>
-                    <Typography variant="h6" align='left'
-                      color='textPrimary' style={{ fontWeight: 300 }}>
-                      Change
-                    </Typography>
-                  </Link>
-                </Grid>
-
-                <Typography variant="body1" gutterBottom align='left'
-                  color="textPrimary" style={{ marginBottom: 15}}>
-                  {"********"}
-                </Typography>
-
-                <Typography variant="h6" align='left'
-                  color="textPrimary" className={classes.fieldLabel}>
-                  Default Network
-                </Typography>
-                <Grid container justify="flex-start" alignItems="center"
-                  flexDirection='column'>
-                  <Select
-                    value={this.state.defaultNetworkId}
-                    onChange={this.handleDefaultWorkspaceChange}
-                    inputProps={{
-                      name: 'defaultNetworkId',
-                      id: 'defaultNetworkId-simple',
-                    }}
-                    renderValue={selected => workspaces[selected].title}
-                  >
-                    {Object.values(workspaces).map(workspace => (
-                      <MenuItem value={workspace.id}>
-                        {workspace.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-
-                {false && <Typography variant="subtitle1" align='left'
-                  color="textPrimary" style={{ marginTop: 15}}>
-                  {`How often would you like to be notified about
-                    opportunities by email?`}
-                </Typography>}
-
-                {false && <FormControl component="fieldset" className={classes.formControl}>
-                  <RadioGroup
-                    aria-label="Notifications"
-                    name="notifications"
-                    className={classes.group}
-                    value={this.state.notificationSetting}
-                    onChange={this.handleNotificationChange}
-                  >
-                    <FormControlLabel value="Weekly" control={<Radio />} label="Weekly email recap" />
-                    <FormControlLabel value="Never" control={<Radio />} label="Never, I am immune to FOMO" />
-                  </RadioGroup>
-                </FormControl>}
-              </Grid>
-            </Grid>
-          </Card>
-        );
+        // return (
+        //   <Card className={classes.card}>
+        //     <Grid container justify="center" alignItems="flex-start">
+        //
+        //       <Grid item xs={12} sm={8} className={classes.content}>
+        //         <div className={classes.wrapper}>
+        //           <Typography variant="h3" align='left'
+        //             color="textPrimary">
+        //             {`${currentUser.fname} ${currentUser.lname}`.toUpperCase()}
+        //           </Typography>
+        //         </div>
+        //
+        //         <Grid container>
+        //           <Typography variant="h6" align='left'
+        //             color='textPrimary'>
+        //             Email Address
+        //           </Typography>
+        //           <Link to='/account/settings/email'
+        //             style={{ marginLeft: 15}}>
+        //             <Typography variant="h6" align='left'
+        //               color='textPrimary'
+        //               style={{fontWeight: 300}}>
+        //               Change
+        //             </Typography>
+        //           </Link>
+        //         </Grid>
+        //         <Typography variant="body1" gutterBottom align='left'
+        //           color="textPrimary" style={{ marginBottom: 15}}>
+        //           {currentUser.email}
+        //         </Typography>
+        //
+        //         <Grid container>
+        //           <Typography variant="h6" align='left'
+        //             color='textPrimary'>
+        //             Current Password
+        //           </Typography>
+        //           <Link to='/account/settings/password'
+        //             style={{ marginLeft: 15}}>
+        //             <Typography variant="h6" align='left'
+        //               color='textPrimary' style={{ fontWeight: 300 }}>
+        //               Change
+        //             </Typography>
+        //           </Link>
+        //         </Grid>
+        //
+        //         <Typography variant="body1" gutterBottom align='left'
+        //           color="textPrimary" style={{ marginBottom: 15}}>
+        //           {"********"}
+        //         </Typography>
+        //
+        //         <Typography variant="h6" align='left'
+        //           color="textPrimary" className={classes.fieldLabel}>
+        //           Default Network
+        //         </Typography>
+        //         <Grid container justify="flex-start" alignItems="center"
+        //           flexDirection='column'>
+        //           <Select
+        //             value={this.state.defaultNetworkId}
+        //             onChange={this.handleDefaultWorkspaceChange}
+        //             inputProps={{
+        //               name: 'defaultNetworkId',
+        //               id: 'defaultNetworkId-simple',
+        //             }}
+        //             renderValue={selected => workspaces[selected].title}
+        //           >
+        //             {Object.values(workspaces).map(workspace => (
+        //               <MenuItem value={workspace.id}>
+        //                 {workspace.title}
+        //               </MenuItem>
+        //             ))}
+        //           </Select>
+        //         </Grid>
+        //
+        //         {false && <Typography variant="subtitle1" align='left'
+        //           color="textPrimary" style={{ marginTop: 15}}>
+        //           {`How often would you like to be notified about
+        //             opportunities by email?`}
+        //         </Typography>}
+        //
+        //         {false && <FormControl component="fieldset" className={classes.formControl}>
+        //           <RadioGroup
+        //             aria-label="Notifications"
+        //             name="notifications"
+        //             className={classes.group}
+        //             value={this.state.notificationSetting}
+        //             onChange={this.handleNotificationChange}
+        //           >
+        //             <FormControlLabel value="Weekly" control={<Radio />} label="Weekly email recap" />
+        //             <FormControlLabel value="Never" control={<Radio />} label="Never, I am immune to FOMO" />
+        //           </RadioGroup>
+        //         </FormControl>}
+        //       </Grid>
+        //     </Grid>
+        //   </Card>
+        // );
+      // return <div></div>
     }
   }
 

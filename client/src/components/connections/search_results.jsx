@@ -45,6 +45,18 @@ class SearchResults extends React.Component {
     .then(() => this.setState({ loaded: true }))
   }
 
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps.searchInput !== this.props.searchInput){
+      this.setState({ loaded: false},
+      () => {
+        this.props.fetchSearchResults(nextProps.searchInput, false)
+        .then(() => this.setState({ loaded: true }))
+      })
+    }
+
+    return true
+  }
+
   getContent(){
     const { waitlistContents, classes } = this.props;
     const { searchResultsPage, currentUser } = this.props;
@@ -55,7 +67,13 @@ class SearchResults extends React.Component {
           contents={<ContactCard contact={contactId} search={true}/>}
           />
       ))
-      return <div>
+      return <div style={{ paddingBottom: 30}}>
+        <FeedCard contents={
+          <Typography align='Left' color='textSecondary'
+            style={{ fontSize: 20 }}>
+            {`Search Results (${searchResultsPage.length})`}
+          </Typography>
+        } />
         {resultCards}
       </div>
     } else {

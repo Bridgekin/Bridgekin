@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import entitiesReducer from './entities/entities_reducer';
+import modalsReducer from './modals/modals_reducer';
 import sessionReducer from './session/session_reducer';
 import usersReducer from './users/users_reducer';
 import siteTemplateReducer from './site_templates/site_template_reducer.js';
@@ -8,6 +9,7 @@ import errorsReducer from './errors/errors_reducer';
 
 export default combineReducers({
   entities: entitiesReducer,
+  modals: modalsReducer,
   session: sessionReducer,
   users: usersReducer,
   siteTemplate: siteTemplateReducer,

@@ -13,16 +13,19 @@ import VisibilitySensor from 'react-visibility-sensor';
 import Img from 'react-image'
 
 import PersonIcon from '@material-ui/icons/Person';
+import CheckIcon from '@material-ui/icons/Check';
+import LoopIcon from '@material-ui/icons/Loop';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-
-import InviteModal from '../connections/invite_modal';
+import { openInvite } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
+  users: state.users,
+  connections: state.entities.connections
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  openInvite: userId => dispatch(openInvite(userId))
 });
 
 const styles = theme => ({
@@ -45,7 +48,6 @@ class SearchTemplate extends React.Component {
 
     this.handleProfilePage = this.handleProfilePage.bind(this);
     this.openInvite = this.openInvite.bind(this);
-    this.closeInvite = this.closeInvite.bind(this);
   }
 
   handleProfilePage(userId){
@@ -58,12 +60,31 @@ class SearchTemplate extends React.Component {
 
   openInvite(e){
     e.stopPropagation();
-    this.setState({ inviteModalOpen: true })
+    this.props.openInvite(this.props.user.id)
   }
 
-  closeInvite(){
-    this.setState({ inviteModalOpen: false })
-    this.props.closeMenu();
+  getSecondaryAction(){
+    const { currentUser, connections, user } = this.props;
+    let connected = Object.values(connections).filter(x =>(
+        (x.userId === currentUser.id && x.friendId === user.id) ||
+        (x.friendId === currentUser.id && x.userId === user.id)
+      ))
+
+    if(connected.length > 0 && connected[0].status === 'Accepted'){
+      return (<Grid container justify='center'>
+        <CheckIcon/>
+      </Grid>)
+    } else if(connected.length > 0 && connected[0].status === 'Pending'){
+      return (<Grid container justify='center'>
+        <LoopIcon/>
+      </Grid>)
+    } else if(currentUser.id !== user.id){
+      return (
+        <IconButton onClick={this.openInvite}>
+          <AddCircleIcon />
+        </IconButton>
+      )
+    } else { return <div></div>}
   }
 
   render(){
@@ -74,18 +95,20 @@ class SearchTemplate extends React.Component {
       <MenuItem onClick={this.handleProfilePage(user.id)}
         style={{ height: 30 }}>
         <Grid container>
-          <Grid item sm={10} container justify='space-between' alignItems='center'>
-            <Avatar
-              style={{ height: 25, width: 25 }}>
-              {user.profilePicUrl ? (
-                <VisibilitySensor>
-                  <Img src={user.profilePicUrl}
-                    className={classes.itemPic}
-                    />
-                </VisibilitySensor>
-              ):<PersonIcon />}
-            </Avatar>
-            <Grid item sm={10} container direction='column'>
+          <Grid item xs={10} container justify='space-between' alignItems='center'>
+            <Grid item xs={2}>
+              <Avatar
+                style={{ height: 25, width: 25 }}>
+                {user.profilePicUrl ? (
+                  <VisibilitySensor>
+                    <Img src={user.profilePicUrl}
+                      className={classes.itemPic}
+                      />
+                  </VisibilitySensor>
+                ):<PersonIcon />}
+              </Avatar>
+            </Grid>
+            <Grid item xs={10} container direction='column'>
               <Typography variant="body1" align='left' color="textPrimary"
                 noWrap
                 style={{ fontSize: 12, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
@@ -99,18 +122,10 @@ class SearchTemplate extends React.Component {
               </Typography>
             </Grid>
           </Grid>
-          {/*<Grid item sm={2}>
-            <IconButton onClick={this.openInvite}>
-              <AddCircleIcon />
-            </IconButton>
-          </Grid>*/}
+          <Grid item xs={2}>
+            {this.getSecondaryAction()}
+          </Grid>
         </Grid>
-
-        <InviteModal
-          open={inviteModalOpen}
-          userId={user.id}
-          handleClose={this.closeInvite}
-          />
       </MenuItem>
     )
   }

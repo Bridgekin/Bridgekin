@@ -37,6 +37,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 // import logo from '../../static/castle.jpg';
 import logo from '../../static/Bridgekin_Logo.png';
+import logoMobile from '../../static/apple-touch-icon.png';
 import LoginModal from './login_modal';
 import SearchBar from './search_bar';
 
@@ -91,11 +92,23 @@ let styles = (theme) => ({
     },
     padding: "12px 0px"
   },
-  logo: {
+  logoDesktop: {
     height: 26,
     maxWidth: 228,
     width: '100%',
-    objectFit: 'cover'
+    objectFit: 'cover',
+    display:'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex'
+    },
+  },
+  logoMobile:{
+    width: 26,
+    height: 26,
+    objectFit: 'cover',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    },
   },
   nav: {
     backgroundColor: theme.palette.base1,
@@ -287,7 +300,7 @@ class HomeNav extends React.Component {
 
       switch(field){
         case 'account':
-          return this.props.history.push('/account/home');
+          return this.props.history.push('/account/profile');
         case 'admin':
           return window.location.replace(`${window.location.origin}/admin/login`);
         case 'logout':
@@ -552,12 +565,14 @@ class HomeNav extends React.Component {
     )
 
     let logoChunk = (
-      <Grid item xs={9} sm={6} md={4} lg={4}>
+      <Grid item xs={2} sm={6} md={4} lg={4}>
         <IconButton aria-label="logo-link"
           className={classes.logoLink}
           onClick={() => this.props.history.push('/')}>
-          <img alt='logo' className={classes.logo}
+          <img alt='logo' className={classes.logoDesktop}
             src={siteTemplate.navLogo || logo} />
+          <img alt='logo' className={classes.logoMobile}
+            src={siteTemplate.navLogoMobile || logoMobile} />
         </IconButton>
 
         {workspaces.length > 1 &&
@@ -616,7 +631,7 @@ class HomeNav extends React.Component {
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
               {logoChunk}
-              {currentUser ? <Grid item xs={0} sm={4} md={3} lg={3}>
+              {currentUser ? <Grid item xs={8} sm={4} md={3} lg={3}>
                 <SearchBar />
               </Grid> : <div style={{ flexGrow: 1}}/>}
               {navMenu}

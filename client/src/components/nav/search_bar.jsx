@@ -23,14 +23,17 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import SearchItem from './search_item';
 import { fetchSearchResults } from '../../actions/user_actions';
+import { fetchConnections } from '../../actions/connection_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   searchResults: state.entities.searchResults,
   users: state.users,
+  connections: state.connections,
 });
 
 const mapDispatchToProps = dispatch => ({
+  fetchConnections: () => dispatch(fetchConnections()),
   fetchSearchResults: (searchInput, bool) => dispatch(fetchSearchResults(searchInput, bool))
 });
 
@@ -45,12 +48,12 @@ const styles = theme => ({
     // marginRight: theme.spacing.unit * 2,
     // marginLeft: 0,
     width: '100%',
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'flex'
-      // marginLeft: theme.spacing.unit * 3,
-      // width: 'auto',
-    },
+    // display: 'none',
+    // [theme.breakpoints.up('sm')]: {
+    //   display: 'flex'
+    //   // marginLeft: theme.spacing.unit * 3,
+    //   // width: 'auto',
+    // },
   },
   searchIcon: {
     width: theme.spacing.unit * 9,
@@ -102,8 +105,14 @@ class SearchBar extends React.Component {
     this.handleAllResultsPage = this.handleAllResultsPage.bind(this);
   }
 
+  componentDidMount(){
+    this.props.fetchConnections()
+    .then(() => this.setState({ loaded: true }))
+  }
+
   handleClickAwayClose(anchorEl) {
     return e => {
+      // Add fade animation
       this.setState({ [anchorEl]: null });
     }
   }

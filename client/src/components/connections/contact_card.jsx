@@ -11,18 +11,21 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import VisibilitySensor from 'react-visibility-sensor';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import PersonIcon from '@material-ui/icons/Person';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import Img from 'react-image'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 
+import PersonIcon from '@material-ui/icons/Person';
+import DeleteIcon from '@material-ui/icons/Delete';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import CheckIcon from '@material-ui/icons/Check';
+import LoopIcon from '@material-ui/icons/Loop';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+
 import { updateConnection, deleteConnection }
   from '../../actions/connection_actions';
-
-import InviteModal from '../connections/invite_modal';
+import { openInvite } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -31,6 +34,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  openInvite: userId => dispatch(openInvite(userId)),
   updateConnection: connection => dispatch(updateConnection(connection)),
   deleteConnection: (id) => dispatch(deleteConnection(id)),
 });
@@ -79,7 +83,6 @@ class ContactCard extends React.Component {
     this.removeConnection = this.removeConnection.bind(this);
     this.acceptConnection = this.acceptConnection.bind(this);
     this.openInvite = this.openInvite.bind(this);
-    this.closeInvite = this.closeInvite.bind(this);
     this.handleProfilePage = this.handleProfilePage.bind(this);
     this.getUser = this.getUser.bind(this);
   }
@@ -123,12 +126,7 @@ class ContactCard extends React.Component {
 
   openInvite(e){
     e.stopPropagation();
-    // console.log('opened invite')
-    this.setState({ inviteModalOpen: true })
-  }
-
-  closeInvite(){
-    this.setState({ inviteModalOpen: false })
+    this.props.openInvite(this.getUser().id)
   }
 
   getSecondaryAction(){
@@ -144,34 +142,60 @@ class ContactCard extends React.Component {
 
       if(connected.length > 0 && connected[0].status === 'Accepted'){
         return (
-          <Typography align='left' color='textPrimary'
-            style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}>
-            {`My Contact`}
-          </Typography>
+          <div>
+            <Typography align='left' color='textPrimary'
+              style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}
+              className={classes.desktopOptions}>
+              {`My Contact`}
+            </Typography>
+            <CheckIcon className={classes.mobileOptions}
+              style={{ marginRight: 13}}/>
+          </div>
         )
       } else if(connected.length > 0 && connected[0].status === 'Pending'){
         return (
-          <Typography align='left' color='textPrimary'
-            style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}>
-            {`Pending Invite`}
-          </Typography>
+          <div>
+            <Typography align='left' color='textPrimary'
+              style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}
+              className={classes.desktopOptions}>
+              {`Pending Invite`}
+            </Typography>
+            <LoopIcon className={classes.mobileOptions}
+              style={{ marginRight: 13}}/>
+          </div>
         )
       } else {
         return (
-          <Button variant='contained' color='primary'
-            onClick={this.openInvite}
-            style={{ textTransform: 'capitalize'}}>
-            {`Add Contact`}
-          </Button>
+          <div>
+            <Button variant='contained' color='primary'
+              onClick={this.openInvite}
+              style={{ textTransform: 'capitalize'}}
+              className={classes.desktopOptions}>
+              {`Add Contact`}
+            </Button>
+            <IconButton
+              onClick={this.openInvite}
+              className={classes.mobileOptions}>
+              <AddCircleIcon />
+            </IconButton>
+          </div>
         )
       }
     } else {
       switch (contact.status) {
         case 'Accepted':
         return (
-          <ListItemSecondaryAction>
+          <div>
+            <Button variant='contained' color='primary'
+              onClick={this.removeConnection}
+              className={classes.desktopOptions}
+              style={{ textTransform: 'capitalize'}}>
+              {`Remove User`}
+            </Button>
+
             <IconButton aria-label="More"
-              onClick={this.handleMenuClick('contactAnchorEl')}>
+              onClick={this.handleMenuClick('contactAnchorEl')}
+              className={classes.mobileOptions}>
               <MoreHorizIcon className={classes.horizIcon}/>
             </IconButton>
 
@@ -195,12 +219,12 @@ class ContactCard extends React.Component {
                 {`Remove User`}
               </MenuItem>
             </Menu>
-          </ListItemSecondaryAction>
+          </div>
         )
         case 'Pending':
         if(currentUser.id === contact.friendId){
           return (
-            <ListItemSecondaryAction>
+            <div>
               <Grid container justify='flex-end'
                 className={classes.desktopOptions}>
                 <Button color='primary' variant='contained'
@@ -244,16 +268,44 @@ class ContactCard extends React.Component {
                   </MenuItem>
                 </Menu>
               </Grid>
-            </ListItemSecondaryAction>
+            </div>
           )
         } else {
           return (
-            <ListItemSecondaryAction>
+            <div>
               <Button variant='contained'
-                onClick={this.removeConnection}>
+                onClick={this.removeConnection}
+                className={classes.desktopOptions}>
                 Revoke
               </Button>
-            </ListItemSecondaryAction>
+
+              <Grid container justify='flex-end'
+                className={classes.mobileOptions}>
+                <IconButton aria-label="More"
+                  onClick={this.handleMenuClick('inviteAnchorEl')}>
+                  <MoreHorizIcon className={classes.horizIcon}/>
+                </IconButton>
+
+                <Menu
+                  id="simple-menu"
+                  anchorEl={inviteAnchorEl}
+                  open={Boolean(inviteAnchorEl)}
+                  onClose={this.handleMenuClick('inviteAnchorEl')}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  >
+                  <MenuItem onClick={this.removeConnection}>
+                    {`Revoke`}
+                  </MenuItem>
+                </Menu>
+              </Grid>
+            </div>
           )
         };
         default:
@@ -280,39 +332,55 @@ class ContactCard extends React.Component {
     const { inviteModalOpen } = this.state;
     let user = this.getUser();
 
-    return (
-      <Grid container className={classes.userCard}
-        justify="center" alignItems="center"
-        onClick={this.handleProfilePage}>
-          <ListItemAvatar>
-            <Avatar>
-              {user.profilePicUrl ? (
-                <VisibilitySensor>
-                  <Img src={user.profilePicUrl}
-                    className={classes.profilePic}
-                    />
-                </VisibilitySensor>
-              ):<PersonIcon />}
-            </Avatar>
-          </ListItemAvatar>
+    if(user){
+      return (
+        <Grid container className={classes.userCard}
+          justify="center" alignItems="center"
+          onClick={this.handleProfilePage}>
+          <Grid item xs={9} sm={7} container justify='space-between' alignItems='center'>
+            <Grid item xs={3}>
+              <Avatar>
+                {user.profilePicUrl ? (
+                  <VisibilitySensor>
+                    <Img src={user.profilePicUrl}
+                      className={classes.profilePic}
+                      />
+                  </VisibilitySensor>
+                ):<PersonIcon />}
+              </Avatar>
+            </Grid>
+            <Grid item xs={9} container direction='column'>
+              <Typography variant="body1" align='left' color="textPrimary"
+                noWrap
+                style={{ fontSize: 15, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
+                {`${user.fname} ${user.lname}`}
+              </Typography>
+              <Typography variant="body1" align='left' color="textPrimary"
+                noWrap
+                style={{ fontSize: 12, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
+                {user.title && `${user.title} @ `}
+                {user.company && `${user.company}`}
+              </Typography>
+            </Grid>
+          </Grid>
 
-          <ListItemText
+          {/*<ListItemText
             classes={{
-              primary: classes.listItemText,
-              secondary: classes.listItemText}}
+            primary: classes.listItemText,
+            secondary: classes.listItemText}}
             primary={`${this.capitalize(user.fname)} ${this.capitalize(user.lname)}`}
-            secondary={`${user.email}`}
-          />
+            secondary={(user.title && `${user.title} @ `) + (user.company && `${user.company}`)}
+            />*/}
 
-        {this.getSecondaryAction()}
+            <Grid item xs={3} sm={5} container justify='flex-end'>
+              {this.getSecondaryAction()}
+            </Grid>
 
-        <InviteModal
-          open={inviteModalOpen}
-          userId={user.id}
-          handleClose={this.closeInvite}
-          />
-      </Grid>
-    )
+          </Grid>
+        )
+    } else {
+      return <div></div>
+    }
   }
 }
 

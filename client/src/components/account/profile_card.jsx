@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -16,12 +16,25 @@ import AddIcon from '@material-ui/icons/AddSharp';
 import PersonIcon from '@material-ui/icons/PersonSharp';
 import Avatar from '@material-ui/core/Avatar';
 
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+
 import FeedCard from '../feed_card';
-import InviteModal from '../connections/invite_modal';
+import { openInvite } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
+  workspaces: state.workspaces
 });
+
+const mapDispatchToProps = dispatch => ({
+  openInvite: userId => dispatch(openInvite(userId))
+})
 
 const styles = theme => ({
   jumboRoot: {
@@ -34,12 +47,12 @@ const styles = theme => ({
     width: '100%',
     height: 217
   },
-  addProfilePicIcon:{
-    width: '100%',
-    height: 217,
-    // backgroundColor: theme.palette.base3,
-    color: theme.palette.text.secondary
-  },
+  // addProfilePicIcon:{
+  //   width: '100%',
+  //   height: 217,
+  //   // backgroundColor: theme.palette.base3,
+  //   color: theme.palette.text.secondary
+  // },
   // card:{
   //   // height: 118,
   //   display: 'flex',
@@ -69,6 +82,8 @@ const styles = theme => ({
   pic:{
     height: 'auto',
     width: '100%',
+    maxWidth: 178,
+    color: theme.palette.text.secondary
     // borderRadius: 0
   },
   // accountHomeContainer:{
@@ -84,12 +99,10 @@ const styles = theme => ({
 class Profile extends React.Component {
   constructor(props){
     super(props)
-    this.state = {
-      inviteModalOpen: false
-    }
+    this.state = {}
 
     this.openInvite = this.openInvite.bind(this);
-    this.closeInvite = this.closeInvite.bind(this);
+    this.sendToAccountSettings = this.sendToAccountSettings.bind(this);
   }
 
   capitalize(str){
@@ -97,35 +110,37 @@ class Profile extends React.Component {
   }
 
   openInvite(e){
-    this.setState({ inviteModalOpen: true })
+    this.props.openInvite(this.props.user.id)
   }
 
-  closeInvite(){
-    this.setState({ inviteModalOpen: false })
+  sendToAccountSettings(){
+    const { user, currentUser }= this.props;
+    if(currentUser.id === user.id){
+      this.props.history.push('/account/settings/general')
+    }
   }
 
   render(){
-    const { classes, user, currentUser }= this.props;
-    const { inviteModalOpen } = this.state;
+    const { classes, user, currentUser, workspaces }= this.props;
 
     let profilePic = user.profilePicUrl ? (
       <Avatar
         className={classes.pic}
         src={user.profilePicUrl}
         alt="Account Profile Picture"
-        onClick={()=> this.props.history.push('/account/settings/general')}
+        onClick={this.sendToAccountSettings}
       />
     ) : (
       <PersonIcon
-        className={classes.addProfilePicIcon}
-        onClick={()=> this.props.history.push('/account/settings/general')}/>
+        className={classes.pic}
+        onClick={this.sendToAccountSettings}/>
     )
 
     let profile = (
       <Grid container justify="center" alignItems="flex-start"
         style={{ padding: '25px 15px' }}>
 
-        <Grid item xs={8} sm={6} md={4} container justify='center'
+        <Grid item xs={12} sm={6} md={4} container justify='center'
           style={{ padding: 5}}>
           {profilePic}
 
@@ -138,7 +153,7 @@ class Profile extends React.Component {
           }
         </Grid>
 
-        <Grid item xs={10} md={8} className={classes.content}>
+        <Grid item xs={12} md={8} className={classes.content}>
           <div className={classes.wrapper}>
             <Typography variant="h3" gutterBottom
               color="textSecondary" align='left'>
@@ -180,13 +195,89 @@ class Profile extends React.Component {
               "Unknown"
             }
           </Typography>
-        </Grid>
 
-        <InviteModal
-          open={inviteModalOpen}
-          userId={user.id}
-          handleClose={this.closeInvite}
-          />
+          {currentUser.id === user.id && <Grid container>
+            <Grid container>
+              <Typography variant="h6" align='left'
+                color='textSecondary'>
+                Email Address
+              </Typography>
+              <Link to='/account/settings/email'
+                style={{ marginLeft: 15}}>
+                <Typography variant="h6" align='left'
+                  color='textSecondary'
+                  style={{fontWeight: 300}}>
+                  Change
+                </Typography>
+              </Link>
+            </Grid>
+            <Typography variant="body1" gutterBottom align='left'
+              color="textPrimary" style={{ marginBottom: 15}}>
+              {currentUser.email}
+            </Typography>
+
+            <Grid container>
+              <Typography variant="h6" align='left'
+                color='textSecondary'>
+                Current Password
+              </Typography>
+              <Link to='/account/settings/password'
+                style={{ marginLeft: 15}}>
+                <Typography variant="h6" align='left'
+                  color='textSecondary' style={{ fontWeight: 300 }}>
+                  Change
+                </Typography>
+              </Link>
+            </Grid>
+
+            <Typography variant="body1" gutterBottom align='left'
+              color="textPrimary" style={{ marginBottom: 15}}>
+              {"********"}
+            </Typography>
+
+            <Typography variant="h6" align='left'
+              color='textSecondary' className={classes.fieldLabel}>
+              Default Network
+            </Typography>
+            <Grid container justify="flex-start" alignItems="center"
+              flexDirection='column'>
+              <Select
+                value={this.state.defaultNetworkId}
+                onChange={this.handleDefaultWorkspaceChange}
+                inputProps={{
+                  name: 'defaultNetworkId',
+                  id: 'defaultNetworkId-simple',
+                }}
+                renderValue={selected => workspaces[selected].title}
+                >
+                {Object.values(workspaces).map(workspace => (
+                  <MenuItem value={workspace.id}>
+                    {workspace.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+
+            {false && <Typography variant="subtitle1" align='left'
+              color="textPrimary" style={{ marginTop: 15}}>
+              {`How often would you like to be notified about
+                opportunities by email?`}
+              </Typography>}
+
+              {false && <FormControl component="fieldset" className={classes.formControl}>
+              <RadioGroup
+                aria-label="Notifications"
+                name="notifications"
+                className={classes.group}
+                value={this.state.notificationSetting}
+                onChange={this.handleNotificationChange}
+                >
+                <FormControlLabel value="Weekly" control={<Radio />} label="Weekly email recap" />
+                <FormControlLabel value="Never" control={<Radio />} label="Never, I am immune to FOMO" />
+              </RadioGroup>
+            </FormControl>}
+          </Grid>}
+        </Grid>
       </Grid>
     )
 
@@ -194,7 +285,7 @@ class Profile extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, {})(withStyles(styles)(withRouter(Profile)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(Profile)));
 
 // <div className={classes.accountHomeContainer}>
 //   <Card className={classes.card}>

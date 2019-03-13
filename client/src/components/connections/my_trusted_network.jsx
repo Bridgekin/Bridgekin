@@ -31,6 +31,8 @@ import ProfilePage from './profile_page';
 import SearchResults from './search_results';
 import ContactsPage from './contacts_page';
 // import Invitations from './invitations';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -81,17 +83,31 @@ class MyTrustedNetwork extends React.Component {
     super(props)
     this.state = {
       loaded: false,
+      mobileNavAnchorEl: null
     }
+    this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
   }
 
   componentDidMount(){
-    this.props.fetchConnections()
-    .then(() => this.setState({ loaded: true }))
+    // this.props.fetchConnections()
+    this.setState({ loaded: true })
+  }
+
+  handleMobileNavClick(path){
+    return e => {
+      const { mobileNavAnchorEl } = this.state;
+      this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget },
+      () => {
+        if(path){
+          this.props.history.push(path)
+        }
+      })
+    }
   }
 
   render(){
     const{ classes, currentUser, searchResultsPage } = this.props;
-    const { loaded } = this.state;
+    const { loaded, mobileNavAnchorEl } = this.state;
     const pathName = this.props.location.pathname;
 
     if (loaded){
@@ -125,10 +141,48 @@ class MyTrustedNetwork extends React.Component {
           />
       )
 
+      // let mobileNavigation = (
+      //   <Grid container justify='flex-start' alignItems='center'
+      //     className={classes.mobileNavigation}>
+      //     <Typography align='Left' color="textPrimary"
+      //       className={classes.mobileNavHeader}>
+      //       My Trusted Network
+      //       <IconButton
+      //         onClick={this.handleMobileNavClick()}
+      //         classes={{ label: classes.moreIcon }}
+      //         style={{ padding: 6}}
+      //         >
+      //         <MoreVertIcon />
+      //       </IconButton>
+      //     </Typography>
+      //
+      //     <Menu
+      //       id="long-menu"
+      //       anchorEl={mobileNavAnchorEl}
+      //       open={Boolean(mobileNavAnchorEl)}
+      //       onClose={this.handleMobileNavClick()}
+      //     >
+      //       {pages.map(item => (
+      //         <ListItem button className={classes.filterItem}
+      //           onClick={this.handleMobileNavClick(item.dest)}
+      //           selected={pathName === item.dest}>
+      //           <Typography variant="body1" align='left'
+      //             color="textPrimary" className={classes.filterHeader}>
+      //             {item.title}
+      //           </Typography>
+      //         </ListItem>
+      //       ))}
+      //     </Menu>
+      //   </Grid>
+      // )
+
       let feed = (
         <div>
           <Switch>
-            <ProtectedRoute path="/mynetwork/profile/:userId" component={ProfilePage} />
+            <ProtectedRoute
+              path="/mynetwork/profile/:userId"
+              component={ProfilePage}
+              passedProps={{ waitlistCard }} />
             <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
             <ProtectedRoute
               path="/mynetwork"

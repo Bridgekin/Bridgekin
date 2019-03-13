@@ -27,6 +27,12 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  mobileWaitlist:{
+    display: 'flex',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  }
 })
 
 class ProfilePage extends React.Component {
@@ -44,11 +50,16 @@ class ProfilePage extends React.Component {
 
   render(){
     const { loaded } = this.state;
-    const { users, userId } = this.props;
+    const { classes, users, userId, waitlistCard } = this.props;
 
     if (loaded){
       return (
-        <ProfileCard user={users[userId]}/>
+        <div style={{ paddingBottom: 30 }}>
+          <ProfileCard user={users[userId]}/>
+          <div className={classes.mobileWaitlist}>
+            {waitlistCard}
+          </div>
+        </div>
       )
     } else {
       return <div style={{ paddingTop: 50 }}>
