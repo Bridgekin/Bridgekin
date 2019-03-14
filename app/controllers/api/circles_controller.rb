@@ -31,7 +31,7 @@ class Api::CirclesController < ApiController
       member_id: params[:member_id]
     )
     if @user_circle.save
-      render :show
+      render :member
     else
       render json: @user_circle.errors.full_messages, status: 422
     end
@@ -43,7 +43,7 @@ class Api::CirclesController < ApiController
       member_id: params[:member_id]
     )
     if @user_circle.destroy
-      render :show
+      render :member
     else
       render json: @user_circle.errors.full_messages, status: 422
     end

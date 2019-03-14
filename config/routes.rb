@@ -20,6 +20,10 @@ Rails.application.routes.draw do
     resources :member_users, only: [:index, :show, :create, :update, :destroy]
     resources :opp_permissions, only: [:index, :create, :destroy]
     resources :connections
+    resources :circles do
+      post 'add_member/:member_id', :to => 'circles#add_member'
+      delete 'remove_member/:member_id', :to => 'circles#remove_member'
+    end
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end

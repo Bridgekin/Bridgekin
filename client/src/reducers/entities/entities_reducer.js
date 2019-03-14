@@ -12,10 +12,13 @@ import networkOppsReducer from './network_opps_reducer.js';
 import oppPermissionsReducer from './opp_permissions_reducer.js';
 import userOpportunitiesReducer from './user_opportunities_reducer.js';
 import workspaceOptionsReducer from './workspace_options_reducer.js';
+
 import shareOptionsReducer from './share_options_reducer.js';
 import connectionsReducer from './connections_reducer.js';
 import searchResultsReducer from './search_results_reducer.js';
 import searchResultsPageReducer from './search_results_page_reducer.js';
+import circlesReducer from './circles_reducer.js';
+import circlesMembersReducer from './circles_members_reducer.js';
 
 export default combineReducers({
   opportunities: opportuntiesReducer,
@@ -33,5 +36,7 @@ export default combineReducers({
   shareOptions: shareOptionsReducer,
   connections: connectionsReducer,
   searchResults: searchResultsReducer,
-  searchResultsPage: searchResultsPageReducer
+  searchResultsPage: searchResultsPageReducer,
+  circles: circlesReducer,
+  circleMembers: circlesMembersReducer,
 });
