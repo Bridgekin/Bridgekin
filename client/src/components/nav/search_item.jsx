@@ -71,11 +71,11 @@ class SearchTemplate extends React.Component {
       ))
 
     if(connected.length > 0 && connected[0].status === 'Accepted'){
-      return (<Grid container justify='center'>
+      return (<Grid container justify='center' alignItems='center'>
         <CheckIcon/>
       </Grid>)
     } else if(connected.length > 0 && connected[0].status === 'Pending'){
-      return (<Grid container justify='center'>
+      return (<Grid container justify='center' alignItems='center'>
         <LoopIcon/>
       </Grid>)
     } else if(currentUser.id !== user.id){

@@ -22,7 +22,6 @@ module DeviseControllerPatch
         # @token = get_login_token!(@user)
 
       rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
-        redirect_to "#{root_url}"
         head :unauthorized
       end
 
