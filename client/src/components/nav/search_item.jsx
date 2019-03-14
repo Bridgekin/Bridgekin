@@ -122,7 +122,7 @@ class SearchTemplate extends React.Component {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} container alignItems='center' justify='center'>
             {this.getSecondaryAction()}
           </Grid>
         </Grid>
