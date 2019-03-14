@@ -32,8 +32,10 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # gem 'rack-cors'
 
 gem 'jquery-rails'
-
 gem "aws-sdk-s3"
+
+# APM
+gem 'newrelic_rpm'
 
 # ActiveAdmin
 gem 'devise'
