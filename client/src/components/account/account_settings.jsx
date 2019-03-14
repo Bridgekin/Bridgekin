@@ -222,7 +222,7 @@ class AccountSetting extends React.Component {
       if (path){
         this.props.history.push(`/account/settings/${path}`)
       } else {
-        this.props.history.push(`/account/home`)
+        this.props.history.push(`/account/profile`)
       }
     }
   }
@@ -255,7 +255,7 @@ class AccountSetting extends React.Component {
         mobileImageCropPending: false
       },
       ()=> {
-        this.props.history.push('/account/home')
+        this.props.history.push('/account/profile')
       })
     }
   };
