@@ -79,6 +79,18 @@ class User < ApplicationRecord
     foreign_key: :friend_id,
     class_name: :User
 
+  has_many :user_circles,
+    foreign_key: :member_id,
+    class_name: :UserCircle
+
+  has_many :member_circles,
+    through: :user_circles,
+    source: :circle
+
+  has_many :circles,
+    foreign_key: :owner_id,
+    class_name: :Circle
+
   has_one_attached :profile_pic
 
   def connections

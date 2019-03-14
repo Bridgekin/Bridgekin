@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_05_184948) do
+ActiveRecord::Schema.define(version: 2019_03_14_174751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,14 @@ ActiveRecord::Schema.define(version: 2019_03_05_184948) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "circles", force: :cascade do |t|
+    t.string "title"
+    t.integer "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_circles_on_owner_id"
   end
 
   create_table "connected_opportunities", force: :cascade do |t|
@@ -123,6 +131,15 @@ ActiveRecord::Schema.define(version: 2019_03_05_184948) do
     t.string "subtitle", default: ""
     t.integer "parent_id"
     t.integer "workspace_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "subjects", array: true
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "opp_permissions", force: :cascade do |t|
@@ -202,6 +219,14 @@ ActiveRecord::Schema.define(version: 2019_03_05_184948) do
     t.string "base5"
     t.string "font3"
     t.index ["network_id"], name: "index_site_templates_on_network_id"
+  end
+
+  create_table "user_circles", force: :cascade do |t|
+    t.integer "circle_id"
+    t.integer "member_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["circle_id"], name: "index_user_circles_on_circle_id"
   end
 
   create_table "user_networks", force: :cascade do |t|
