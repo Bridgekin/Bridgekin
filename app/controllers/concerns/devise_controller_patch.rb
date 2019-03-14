@@ -3,7 +3,7 @@ module DeviseControllerPatch
   def get_login_token!(user)
     payload = {
       "sub": user.id,
-      "exp": 14.days.from_now.to_i 
+      "exp": 14.days.from_now.to_i
     }
     JwtService.encode(payload)
   end
@@ -22,6 +22,7 @@ module DeviseControllerPatch
         # @token = get_login_token!(@user)
 
       rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+        redirect_to "#{root_url}"
         head :unauthorized
       end
 

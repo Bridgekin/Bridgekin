@@ -114,6 +114,15 @@ class InviteModal extends React.Component {
     this.setState({ email: e.target.value})
   }
 
+  capitalize(str){
+    let strArray = str.split(' ');
+    for (let i = 0; i < strArray.length; i++) {
+      strArray[i] = strArray[i][0].toUpperCase() + strArray[i].slice(1)
+    }
+    return strArray.join(' ')
+  }
+
+
   render(){
     const { classes, inviteModal, users,
       connectionErrors } = this.props;
@@ -190,7 +199,7 @@ class InviteModal extends React.Component {
           container justify='flex-start'>
           <Typography variant="h2" id="modal-title" color='textPrimary'
             className={classes.thanksHeader} align='left'>
-            {`Awesome - You've sent ${user.fname} a connection request!`}
+            {`Awesome - You've sent ${this.capitalize(user.fname)} a connection request!`}
           </Typography>
           <Typography variant="body1" id="simple-modal-description"
             align='left' color='textPrimary'>
