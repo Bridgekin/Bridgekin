@@ -39,11 +39,14 @@ import NotFound from './components/not_found';
 import ConfirmationError from './components/confirmation_error';
 import ScrollToTop from './components/scroll_to_top';
 
+import InviteModal from './components/modals/invite_modal';
+
 export default () => (
   <div style={{ position: 'relative', minHeight: window.innerHeight}}>
     <ScrollToTop />
     <Route path="/" component={HomeNav} />
 
+    {/* General Modals */}
     <Switch>
       <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
@@ -62,7 +65,12 @@ export default () => (
       <Route component={NotFound} />
     </Switch>
 
+    {/* Footer */}
     <Route path="/" component={Footer} />
+
+    {/* MODALS */}
+    <InviteModal/>
+
   </div>
 )
 

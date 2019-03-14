@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 
+import Typography from '@material-ui/core/Typography';
 import ContactCard from './contact_card';
 import FeedCard from '../feed_card';
 
@@ -52,12 +53,12 @@ class Contacts extends React.Component {
     let connections = this.filterConnections();
     let connectionCards = connections.map(contact => (
       <FeedCard
-        contents={<ContactCard connection={contact} />}
+        contents={<ContactCard contact={contact} />}
         />
     ))
 
     return (
-      <div>
+      <div style={{ paddingBottom: 30}}>
         {connectionCards}
       </div>
     )

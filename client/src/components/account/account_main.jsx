@@ -21,7 +21,7 @@ import { animateScroll } from 'react-scroll';
 
 import FeedContainer from '../feed_container';
 
-import AccountHome from './account_home';
+import ProfileCard from './profile_card';
 import AccountSettings from './account_settings';
 import AccountOpportunities from './account_opportunities';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -103,6 +103,7 @@ const styles = theme => ({
   },
   mobileNavigation:{
     padding: "15px 25px",
+    borderTop: `1px solid ${theme.palette.border.primary}`,
     backgroundColor: theme.palette.base3,
     [theme.breakpoints.up('sm')]: {
       display: 'none'
@@ -211,14 +212,14 @@ class AccountMain extends React.Component {
   // }
 
   render (){
-    let { classes } = this.props;
+    let { classes, currentUser } = this.props;
     let pathName = this.props.location.pathname;
     let { oppFilter, mobileNavAnchorEl } = this.state;
 
     const mobileNavOpen = Boolean(mobileNavAnchorEl);
 
     let pages = [
-      {title: 'My Profile', dest: '/account/home'},
+      {title: 'My Profile', dest: '/account/profile'},
       {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
       {title: 'Settings', dest: '/account/settings'}
     ]
@@ -358,16 +359,21 @@ class AccountMain extends React.Component {
     )
 
     let feed = (
-      <div>
+      <div style={{ paddingBottom: 30 }}>
         {mobileNavigation}
         {pathName === '/account/opportunities' && oppFiltersMobile}
         <Switch>
           <ProtectedRoute path="/account/settings" component={AccountSettings} />
           <ProtectedRoute
-              path="/account/opportunities"
-              component={AccountOpportunities}
-              passedProps={{ oppFilter  }} />
-          <ProtectedRoute path="/account/home" component={AccountHome} />
+            path="/account/opportunities"
+            component={AccountOpportunities}
+            passedProps={{ oppFilter  }}
+          />
+          <ProtectedRoute
+            path="/account/profile"
+            component={ProfileCard}
+            passedProps={{ user: currentUser }}
+          />
         </Switch>
       </div>
     )

@@ -23,15 +23,23 @@ import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import getTheme from '../theme';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import VisibilitySensor from 'react-visibility-sensor';
+import Img from 'react-image';
+import PersonIcon from '@material-ui/icons/Person';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 // import logo from '../../static/castle.jpg';
 import logo from '../../static/Bridgekin_Logo.png';
+import logoMobile from '../../static/apple-touch-icon.png';
 import LoginModal from './login_modal';
+import SearchBar from './search_bar';
 
 import { login, logout } from '../../actions/session_actions';
 import { getAuthUserId } from '../../util/session_api_util';
@@ -40,16 +48,18 @@ import { receiveUser } from '../../actions/user_actions';
 import { fetchSiteTemplate } from '../../actions/site_template_actions';
 import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
+import { fetchSearchResults } from '../../actions/user_actions';
 
 const mapStateToProps = (state, ownProps) => {
   const siteTemplate = state.siteTemplate;
-  const theme = getTheme(siteTemplate);
   return ({
     currentUser: state.users[state.session.id],
     session: state.session.id,
     sessionErrors: state.errors.login,
     workspaces: Object.values(state.workspaces),
-    siteTemplate, theme
+    searchResults: state.entities.searchResults,
+    users: state.users,
+    siteTemplate
   })
 };
 
@@ -59,7 +69,8 @@ const mapDispatchToProps = dispatch => ({
   receiveCurrentUser: (user) => dispatch(receiveCurrentUser(user)),
   receiveUser: (user) => dispatch(receiveUser(user)),
   fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
-  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
+  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId)),
+  fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput))
 });
 
 let styles = (theme) => ({
@@ -83,12 +94,23 @@ let styles = (theme) => ({
     padding: 0,
     // height: '100%'
   },
-  logo: {
-    // height: 26,
-    height: 26 + 24,
+  logoDesktop: {
+    height: 26,
     maxWidth: 228,
     width: '100%',
-    objectFit: 'contain'
+    objectFit: 'cover',
+    display:'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex'
+    },
+  },
+  logoMobile:{
+    width: 26,
+    height: 26,
+    objectFit: 'cover',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    },
   },
   nav: {
     backgroundColor: theme.palette.base1,
@@ -138,50 +160,9 @@ let styles = (theme) => ({
   textFieldLabel:{
     fontSize: 14
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.grey1}`,
-    // marginRight: theme.spacing.unit * 2,
-    // marginLeft: 0,
-    width: '100%',
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'flex'
-      // marginLeft: theme.spacing.unit * 3,
-      // width: 'auto',
-    },
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.darkGrey,
-    top: 0, right: 0
-  },
-  inputRoot: {
-    color: theme.palette.darkGrey,
-    width: '100%',
-    fontSize: 15,
-    fontWeight: 500,
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit,
-    paddingRight: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
-  },
   buttonText: { color: theme.palette.text.tertiary},
-  navButtonText: { color: theme.palette.text.tertiary}
+  navButtonText: { color: theme.palette.text.tertiary},
+  listItemText: { fontSize: 12 }
 });
 
 class HomeNav extends React.Component {
@@ -191,8 +172,14 @@ class HomeNav extends React.Component {
       email: '',
       password: '',
       anchorEl: null,
-      logoAnchorEl: null
+      logoAnchorEl: null,
+      searchInput: '',
+      searchLoading: true,
+      searchAnchorEl: null,
     };
+
+    this.timeout = null;
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleProfileMenuOpen = this.handleProfileMenuOpen.bind(this);
@@ -203,6 +190,7 @@ class HomeNav extends React.Component {
     this.handleLogoMenuChangeTemplate = this.handleLogoMenuChangeTemplate.bind(this);
     this.redirectToLogin = this.redirectToLogin.bind(this);
     this.handleClickAwayClose = this.handleClickAwayClose.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
   handleSubmit(e){
@@ -277,8 +265,34 @@ class HomeNav extends React.Component {
     }
   }
 
-  handleClickAwayClose(e) {
-    this.setState({ logoAnchorEl: null });
+  handleClickAwayClose(anchorEl) {
+    return e => {
+      this.setState({ [anchorEl]: null });
+    }
+  }
+
+  handleSearchChange(e){
+    let input = e.target.value;
+    this.setState({
+      searchLoading: true,
+      searchAnchorEl: (input.length > 0 ? e.currentTarget : null),
+      searchInput: input
+    }, () => {
+      if(input.length > 0){
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          this.props.fetchSearchResults(input)
+          .then(() => this.setState({ searchLoading: false }))
+        }, 500)
+      }
+    })
+  }
+
+  handleProfilePage(userid){
+    return e => {
+      // load profile page
+      this.setState({ searchAnchorEl: null})
+    }
   }
 
   handleLinkClose = (field) => {
@@ -288,7 +302,7 @@ class HomeNav extends React.Component {
 
       switch(field){
         case 'account':
-          return this.props.history.push('/account/home');
+          return this.props.history.push('/account/profile');
         case 'admin':
           return window.location.replace(`${window.location.origin}/admin/login`);
         case 'logout':
@@ -307,13 +321,24 @@ class HomeNav extends React.Component {
     }
   };
 
+  capitalize(str){
+    if(str){
+      return str[0].toUpperCase() + str.slice(1)
+    }
+    return ''
+  }
+
+
   render(){
-    let { classes, currentUser, sessionErrors,
-      siteTemplate, workspaces} = this.props;
+    const { classes, currentUser, sessionErrors,
+      siteTemplate, workspaces, users,
+      searchResults } = this.props;
 
     const { auth, anchorEl, mobileMoreAnchorEl,
-    logoAnchorEl } = this.state;
+    logoAnchorEl, searchAnchorEl,
+    searchLoading, searchOutput, searchInput } = this.state;
 
+    const searchOpen = Boolean(searchAnchorEl);
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logoMenuOpen = Boolean(logoAnchorEl);
@@ -541,29 +566,15 @@ class HomeNav extends React.Component {
       </Grid>
     )
 
-    let searchBar = (false && currentUser) ? (
-      <Grid item xs={0} sm={4} md={3} lg={3}
-        className={classes.search}>
-        <InputBase
-          placeholder="Search…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-        />
-        <div className={classes.searchIcon}>
-          <SearchIcon />
-        </div>
-      </Grid>
-    ) : <div style={{ flexGrow: 1 }} />
-
     let logoChunk = (
-      <Grid item xs={9} sm={6} md={4} lg={4}>
+      <Grid item xs={2} sm={6} md={4} lg={4}>
         <IconButton aria-label="logo-link"
           className={classes.logoLink}
           onClick={() => this.props.history.push('/')}>
-          <img alt='logo' className={classes.logo}
+          <img alt='logo' className={classes.logoDesktop}
             src={siteTemplate.navLogo || logo} />
+          <img alt='logo' className={classes.logoMobile}
+            src={siteTemplate.navLogoMobile || logoMobile} />
         </IconButton>
 
         {workspaces.length > 1 &&
@@ -593,7 +604,8 @@ class HomeNav extends React.Component {
               style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
             >
               <Paper>
-                <ClickAwayListener onClickAway={this.handleClickAwayClose}>
+                <ClickAwayListener
+                  onClickAway={this.handleClickAwayClose('logoAnchorEl')}>
                   <MenuList>
                     {workspaces.map(workspace => (
                       <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}>
@@ -622,7 +634,9 @@ class HomeNav extends React.Component {
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
               {logoChunk}
-              {searchBar}
+              {currentUser && currentUser.isAdmin ? <Grid item xs={8} sm={4} md={3} lg={3}>
+                <SearchBar />
+              </Grid> : <div style={{ flexGrow: 1}}/>}
               {navMenu}
             </Grid>
           </Toolbar>

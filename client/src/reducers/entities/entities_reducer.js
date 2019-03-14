@@ -14,6 +14,8 @@ import userOpportunitiesReducer from './user_opportunities_reducer.js';
 import workspaceOptionsReducer from './workspace_options_reducer.js';
 import shareOptionsReducer from './share_options_reducer.js';
 import connectionsReducer from './connections_reducer.js';
+import searchResultsReducer from './search_results_reducer.js';
+import searchResultsPageReducer from './search_results_page_reducer.js';
 
 export default combineReducers({
   opportunities: opportuntiesReducer,
@@ -29,5 +31,7 @@ export default combineReducers({
   userOpportunities: userOpportunitiesReducer,
   workspaceOptions: workspaceOptionsReducer,
   shareOptions: shareOptionsReducer,
-  connections: connectionsReducer
+  connections: connectionsReducer,
+  searchResults: searchResultsReducer,
+  searchResultsPage: searchResultsPageReducer
 });

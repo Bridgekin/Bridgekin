@@ -76,8 +76,10 @@ const styles = theme => ({
   opportunityCard:{
     backgroundColor: `${theme.palette.base3}`,
     marginBottom: 9,
-    border: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     [theme.breakpoints.up('sm')]: {
+      border: `1px solid ${theme.palette.border.primary}`,
       borderRadius: 5,
     }
   },

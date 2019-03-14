@@ -27,12 +27,18 @@ import FilterCard from '../filter_card';
 import Loading from '../loading';
 import OpportunityWaitlist from '../opportunity/opportunity_waitlist';
 import Contacts from './contacts';
+import ProfilePage from './profile_page';
+import SearchResults from './search_results';
+import ContactsPage from './contacts_page';
 // import Invitations from './invitations';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
-  connections: state.connections
+  connections: state.connections,
+  searchResultsPage: state.entities.searchResultsPage,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -48,17 +54,6 @@ const styles = theme => ({
   loading:{
     position: 'relative',
     top: 200
-  },
-  mobileFilterCard:{
-    padding: "9px 8px 9px 8px",
-    backgroundColor: `${theme.palette.base3}`,
-    // borderTop: `1px solid ${theme.palette.border.primary}`,
-    border: `1px solid ${theme.palette.border.primary}`,
-    // width: '100%',
-    marginBottom: 9,
-    [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }
   },
   filterCard:{
     // marginTop: 18,
@@ -88,36 +83,31 @@ class MyTrustedNetwork extends React.Component {
     super(props)
     this.state = {
       loaded: false,
-      contactAnchorEl: null
+      mobileNavAnchorEl: null
     }
-
-    this.handleMenuClick = this.handleMenuClick.bind(this);
-    this.handleChangePage = this.handleChangePage.bind(this);
+    this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
   }
 
   componentDidMount(){
-    this.props.fetchConnections()
-    .then(() => this.setState({ loaded: true }))
+    // this.props.fetchConnections()
+    this.setState({ loaded: true })
   }
 
-  handleMenuClick(menuAnchor){
+  handleMobileNavClick(path){
     return e => {
-      e.preventDefault();
-      let anchor = this.state[menuAnchor];
-      this.setState({ [menuAnchor]: anchor ? null : e.currentTarget})
-    }
-  }
-
-  handleChangePage(dest){
-    return e => {
-      this.props.history.push(dest);
-      this.setState({ contactAnchorEl: null })
+      const { mobileNavAnchorEl } = this.state;
+      this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget },
+      () => {
+        if(path){
+          this.props.history.push(path)
+        }
+      })
     }
   }
 
   render(){
-    const{ classes, connections, currentUser } = this.props;
-    const { loaded, contactAnchorEl } = this.state;
+    const{ classes, currentUser, searchResultsPage } = this.props;
+    const { loaded, mobileNavAnchorEl } = this.state;
     const pathName = this.props.location.pathname;
 
     if (loaded){
@@ -129,10 +119,8 @@ class MyTrustedNetwork extends React.Component {
                 style={{ marginBottom: 20}}>
                 Invite your trusted business contacts
               </Typography>
-
               <OpportunityWaitlist
-                currentUser={currentUser}
-                />
+                currentUser={currentUser} />
             </div>
           }/>
       )
@@ -141,6 +129,8 @@ class MyTrustedNetwork extends React.Component {
         {title: `My Contacts`, dest: '/mynetwork'},
         {title: 'Invitations', dest: '/mynetwork/invitations'},
         {title: 'Invitations Sent', dest: '/mynetwork/pending'},
+        // {title: 'Invitations Sent', dest: '/mynetwork/profile/:id'},
+        // {title: 'Invitations Sent', dest: '/mynetwork/pending'},
       ]
 
       let filter = (
@@ -151,47 +141,61 @@ class MyTrustedNetwork extends React.Component {
           />
       )
 
-      let mobileFilter = (
-        <Grid container justify='flex-end' alignItems='center'
-          className={classes.mobileFilterCard}>
-          <Button
-            aria-owns={contactAnchorEl ? 'simple-menu' : undefined}
-            aria-haspopup="true"
-            classes={{ label: classes.buttonText}}
-            onClick={this.handleMenuClick('contactAnchorEl')}
-            style={{ textTransform: 'capitalize'}}
-          >
-            {pages.find(x => x.dest === pathName).title}
-            <KeyboardArrowDownIcon />
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={contactAnchorEl}
-            open={Boolean(contactAnchorEl)}
-            onClose={this.handleMenuClick('contactAnchorEl')}
-          >
-            {pages.map(page => (
-              <MenuItem onClick={this.handleChangePage(page.dest)}>
-                {page.title}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Grid>
-      )
+      // let mobileNavigation = (
+      //   <Grid container justify='flex-start' alignItems='center'
+      //     className={classes.mobileNavigation}>
+      //     <Typography align='Left' color="textPrimary"
+      //       className={classes.mobileNavHeader}>
+      //       My Trusted Network
+      //       <IconButton
+      //         onClick={this.handleMobileNavClick()}
+      //         classes={{ label: classes.moreIcon }}
+      //         style={{ padding: 6}}
+      //         >
+      //         <MoreVertIcon />
+      //       </IconButton>
+      //     </Typography>
+      //
+      //     <Menu
+      //       id="long-menu"
+      //       anchorEl={mobileNavAnchorEl}
+      //       open={Boolean(mobileNavAnchorEl)}
+      //       onClose={this.handleMobileNavClick()}
+      //     >
+      //       {pages.map(item => (
+      //         <ListItem button className={classes.filterItem}
+      //           onClick={this.handleMobileNavClick(item.dest)}
+      //           selected={pathName === item.dest}>
+      //           <Typography variant="body1" align='left'
+      //             color="textPrimary" className={classes.filterHeader}>
+      //             {item.title}
+      //           </Typography>
+      //         </ListItem>
+      //       ))}
+      //     </Menu>
+      //   </Grid>
+      // )
 
       let feed = (
-        <div style={{ paddingBottom:30, width: '100%'}}>
-          {mobileFilter}
-          <Contacts pathName={pathName}/>
-          <div className={classes.mobileWaitlist}>
-            {waitlistCard}
-          </div>
+        <div>
+          <Switch>
+            <ProtectedRoute
+              path="/mynetwork/profile/:userId"
+              component={ProfilePage}
+              passedProps={{ waitlistCard }} />
+            <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
+            <ProtectedRoute
+              path="/mynetwork"
+              component={ContactsPage}
+              passedProps={{ waitlistCard, pages }} />
+          </Switch>
         </div>
       )
 
       return (
         <FeedContainer
-          column1={waitlistCard}
+          column1={(!pathName.includes('search') || searchResultsPage.length > 0)
+            && waitlistCard}
           feed={feed}
           column2={filter}
           />
