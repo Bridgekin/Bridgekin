@@ -32,6 +32,8 @@ export const RECEIVE_OPP_PERMISSION_ERRORS = 'RECEIVE_OPP_PERMISSION_ERRORS';
 export const CLEAR_OPP_PERMISSION_ERRORS = 'CLEAR_OPP_PERMISSION_ERRORS';
 export const RECEIVE_CONNECTION_ERRORS = 'RECEIVE_CONNECTION_ERRORS';
 export const CLEAR_CONNECTION_ERRORS = 'CLEAR_CONNECTION_ERRORS';
+export const RECEIVE_CIRCLE_ERRORS = 'RECEIVE_CIRCLE_ERRORS';
+export const CLEAR_CIRCLE_ERRORS = 'CLEAR_CIRCLE_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -166,4 +168,13 @@ export const receiveConnectionErrors = errors => ({
 
 export const clearConnectionErrors = () => ({
   type: CLEAR_CONNECTION_ERRORS,
+});
+
+export const receiveCircleErrors = errors => ({
+  type: RECEIVE_CIRCLE_ERRORS,
+  errors
+});
+
+export const clearCircleErrors = () => ({
+  type: CLEAR_CIRCLE_ERRORS,
 });

@@ -22,6 +22,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CheckIcon from '@material-ui/icons/Check';
 import LoopIcon from '@material-ui/icons/Loop';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddIcon from '@material-ui/icons/Add';
 
 import { updateConnection, deleteConnection }
   from '../../actions/connection_actions';
@@ -30,7 +31,9 @@ import { openInvite } from '../../actions/modal_actions';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
-  connections: state.entities.connections
+  connections: state.entities.connections,
+  circles: state.entities.circles,
+  circleMembers: state.entities.circleMembers
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -66,7 +69,8 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     },
-  }
+  },
+  borderBelow: { borderBottom: `1px solid ${theme.palette.border.primary}`}
 })
 
 class ContactCard extends React.Component {
@@ -74,7 +78,8 @@ class ContactCard extends React.Component {
     super(props)
     this.state = {
       anchorEl: null,
-      inviteModalOpen: false
+      inviteModalOpen: false,
+      circleMenu: false
     }
 
     this.handleMenuClick = this.handleMenuClick.bind(this);
@@ -85,6 +90,7 @@ class ContactCard extends React.Component {
     this.openInvite = this.openInvite.bind(this);
     this.handleProfilePage = this.handleProfilePage.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.handleToggleCircleMenu = this.handleToggleCircleMenu.bind(this);
   }
 
   // handleRemoveUser(){
@@ -98,7 +104,10 @@ class ContactCard extends React.Component {
       // this.setState({ [anchor]: e.currentTarget})
       e.stopPropagation();
       const anchorEl = this.state[anchor];
-      this.setState({ [anchor]: anchorEl ? null : e.currentTarget})
+      this.setState({
+        [anchor]: anchorEl ? null : e.currentTarget,
+        circleMenu: false
+      })
     }
   }
 
@@ -129,10 +138,17 @@ class ContactCard extends React.Component {
     this.props.openInvite(this.getUser().id)
   }
 
+  handleToggleCircleMenu(e){
+    e.stopPropagation();
+    let { circleMenu } = this.state;
+    this.setState({ circleMenu: !circleMenu })
+  }
+
   getSecondaryAction(){
     const { classes, contact, currentUser,
-      search, connections } = this.props;
-    const { contactAnchorEl, inviteAnchorEl } = this.state;
+      search, connections, circles, circleMembers } = this.props;
+    const { contactAnchorEl, inviteAnchorEl,
+      circleMenu } = this.state;
 
     if(search){
       let connected = Object.values(connections).filter(x =>(
@@ -183,19 +199,19 @@ class ContactCard extends React.Component {
       }
     } else {
       switch (contact.status) {
+        // <Button variant='contained' color='primary'
+        //   onClick={this.removeConnection}
+        //   className={classes.desktopOptions}
+        //   style={{ textTransform: 'capitalize'}}>
+        //   {`Remove User`}
+        // </Button>
+        // <DeleteIcon
+        //   style={{ marginRight: 3 }}/>
         case 'Accepted':
         return (
           <div>
-            <Button variant='contained' color='primary'
-              onClick={this.removeConnection}
-              className={classes.desktopOptions}
-              style={{ textTransform: 'capitalize'}}>
-              {`Remove User`}
-            </Button>
-
             <IconButton aria-label="More"
-              onClick={this.handleMenuClick('contactAnchorEl')}
-              className={classes.mobileOptions}>
+              onClick={this.handleMenuClick('contactAnchorEl')}>
               <MoreHorizIcon className={classes.horizIcon}/>
             </IconButton>
 
@@ -205,19 +221,57 @@ class ContactCard extends React.Component {
               open={Boolean(contactAnchorEl)}
               onClose={this.handleMenuClick('contactAnchorEl')}
               anchorOrigin={{
-                vertical: 'bottom',
+                vertical: 'top',
                 horizontal: 'right',
               }}
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'center',
               }}
+              getContentAnchorEl={null}
               >
-              <MenuItem onClick={this.removeConnection}>
-                <DeleteIcon
-                  style={{ marginRight: 3 }}/>
-                {`Remove User`}
-              </MenuItem>
+              { !circleMenu ? (
+                <div>
+                  {/*List all Circles this user is a part of */}
+                  {Object.values(circles).filter(x => (
+                    circleMembers[x.id].includes(this.getUser().id)
+                  )).map(circle => (
+                    <MenuItem onClick={this.openCirclePage}>
+                      {`${this.capitalize(circle.title)}`}
+                    </MenuItem>
+                  )) }
+                  <MenuItem onClick={this.handleToggleCircleMenu}
+                    className={classes.borderBelow}>
+                    {`Add to Another Circle`}
+                  </MenuItem>
+                  <MenuItem onClick={this.removeConnection}>
+                    {`Remove User`}
+                  </MenuItem>
+                </div>
+              ) : (
+                <div>
+                  <MenuItem onClick={this.handleToggleCircleMenu}
+                    className={classes.borderBelow}>
+                    {`Go Back`}
+                  </MenuItem>
+                  {/*List all Circles you have */}
+                  {Object.values(circles).map(circle => (
+                    <MenuItem onClick={this.handleToggleCircleMenu}>
+                      {circleMembers[circle.id].includes(this.getUser().id) ?
+                        <CheckIcon
+                          style={{ marginRight: 4 }}/> :
+                        <div style={{ width: 29 }}/>
+                      }
+                      {`${this.capitalize(circle.title)}`}
+                    </MenuItem>
+                  ))}
+                  <MenuItem onClick={this.props.circleModalOpen}>
+                    <AddIcon
+                      style={{ marginRight: 4 }}/>
+                    {`Add another circle...`}
+                  </MenuItem>
+                </div>
+              )}
             </Menu>
           </div>
         )

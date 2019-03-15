@@ -6,7 +6,7 @@ import { receiveUsers } from './user_actions';
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_CIRCLE_MEMBERS = 'RECEIVE_CIRCLE_MEMBERS';
-export const REMOVE_CIRCLE_MEMBER = 'REMOVE_CIRCLE_MEMBER';
+export const REMOVE_CIRCLE_MEMBERS = 'REMOVE_CIRCLE_MEMBERS';
 export const RECEIVE_CIRCLES = 'RECEIVE_CIRCLES';
 export const RECEIVE_CIRCLE = 'RECEIVE_CIRCLE';
 export const REMOVE_CIRCLE = "REMOVE_CIRCLE";
@@ -17,7 +17,7 @@ export const receiveCircleMembers = circleMembers => ({
 });
 
 export const removeCircleMembers = circleId => ({
-  type: REMOVE_CIRCLE_MEMBER,
+  type: REMOVE_CIRCLE_MEMBERS,
   circleId,
 });
 

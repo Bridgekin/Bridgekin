@@ -7,7 +7,13 @@ class Api::CirclesController < ApiController
   # after_action :verify_authorized, except: :show
 
   def index
-    @circles = @user.circles.includes(:members,)
+    @circles = @user.circles.includes(:members)
+
+    @circleMemberIds = @circles.reduce({}) do |acc, circle|
+      acc[circle.id] = circle.user_circles.pluck(:member_id)
+      acc
+    end
+
     render :index
   end
 

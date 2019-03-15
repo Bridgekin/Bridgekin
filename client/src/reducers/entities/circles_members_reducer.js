@@ -1,6 +1,6 @@
 import {
   RECEIVE_CIRCLE_MEMBERS,
-  REMOVE_CIRCLE_MEMBERS} from '../../actions/network_admin_actions';
+  REMOVE_CIRCLE_MEMBERS} from '../../actions/circle_actions';
 import merge from 'lodash/merge';
 
 export default(state = {}, action) => {

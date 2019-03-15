@@ -9,7 +9,7 @@ class Circle < ApplicationRecord
     through: :user_circles,
     source: :member
 
-  has_one :owner,
+  belongs_to :owner,
     foreign_key: :owner_id,
     class_name: :User
 end

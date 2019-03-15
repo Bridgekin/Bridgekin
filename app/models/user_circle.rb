@@ -1,4 +1,4 @@
-class UserCircles < ApplicationRecord
+class UserCircle < ApplicationRecord
   validates :circle_id, :member_id, presence: true
 
   belongs_to :member,

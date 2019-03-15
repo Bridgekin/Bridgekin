@@ -6,13 +6,7 @@ json.circles do |json|
   end
 end
 
-json.circleMemberIds do
-  @circles.each do |circle|
-    json.set! circle.id do
-      circle.user_circles.pluck(:member_id)
-    end
-  end
-end
+json.circleMemberIds @circleMemberIds
 
 json.users do
   @circles.each do |circle|

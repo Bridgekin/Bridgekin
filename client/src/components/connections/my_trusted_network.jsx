@@ -20,6 +20,7 @@ import ListItem from '@material-ui/core/ListItem';
 import {
   fetchConnections, updateConnection, deleteConnection
 } from '../../actions/connection_actions';
+import { fetchCircles } from '../../actions/circle_actions';
 
 import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
@@ -30,6 +31,7 @@ import Contacts from './contacts';
 import ProfilePage from './profile_page';
 import SearchResults from './search_results';
 import ContactsPage from './contacts_page';
+import CirclesPage from './circles_page';
 // import Invitations from './invitations';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
@@ -45,6 +47,7 @@ const mapDispatchToProps = dispatch => ({
   fetchConnections: () => dispatch(fetchConnections()),
   updateConnection: connection => dispatch(updateConnection(connection)),
   deleteConnection: (id) => dispatch(deleteConnection(id)),
+  fetchCircles: () => dispatch(fetchCircles()),
 });
 
 const styles = theme => ({
@@ -90,7 +93,10 @@ class MyTrustedNetwork extends React.Component {
 
   componentDidMount(){
     // this.props.fetchConnections()
-    this.setState({ loaded: true })
+    this.props.fetchCircles()
+    .then(() => {
+      this.setState({ loaded: true })
+    })
   }
 
   handleMobileNavClick(path){
@@ -129,7 +135,7 @@ class MyTrustedNetwork extends React.Component {
         {title: `My Contacts`, dest: '/mynetwork'},
         {title: 'Invitations', dest: '/mynetwork/invitations'},
         {title: 'Invitations Sent', dest: '/mynetwork/pending'},
-        // {title: 'Invitations Sent', dest: '/mynetwork/profile/:id'},
+        {title: 'Network Circles', dest: '/mynetwork/circles'},
         // {title: 'Invitations Sent', dest: '/mynetwork/pending'},
       ]
 
@@ -179,11 +185,14 @@ class MyTrustedNetwork extends React.Component {
       let feed = (
         <div>
           <Switch>
+            <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
             <ProtectedRoute
               path="/mynetwork/profile/:userId"
               component={ProfilePage}
               passedProps={{ waitlistCard }} />
-            <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
+            <ProtectedRoute
+              path="/mynetwork/circles"
+              component={CirclesPage}/>
             <ProtectedRoute
               path="/mynetwork"
               component={ContactsPage}
