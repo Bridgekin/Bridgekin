@@ -189,6 +189,7 @@ const styles = theme => ({
     textTransform: 'none',
     backgroundColor: theme.palette.base4,
     margin: "5px 10px 5px 0px",
+    padding: "6px 8px",
     fontSize: 12
   },
   filterButtonIcon:{
@@ -276,7 +277,10 @@ class OpportunityHome extends React.Component {
       dropdownOpen: false,
       dropdownFocus: '',
       referralNetwork: null,
-      anchorEl: null
+      anchorEl: null,
+      shareOpen: false,
+      privacyOpen: false,
+      imageOpen: false
     };
 
     this.handleModalClose = this.handleModalClose.bind(this);
@@ -293,6 +297,7 @@ class OpportunityHome extends React.Component {
     this.createMenuItem = this.createMenuItem.bind(this);
     this.createListItem = this.createListItem.bind(this);
     this.getSelectedTitle = this.getSelectedTitle.bind(this);
+    this.handleChangeModalWithOpen = this.handleChangeModalWithOpen.bind(this);
   }
 
   componentDidMount(){
@@ -340,6 +345,16 @@ class OpportunityHome extends React.Component {
   handleOpportunityChangeModalOpen(e){
     e.preventDefault();
     this.setState({ changeModalOpen: true });
+  }
+
+  handleChangeModalWithOpen(button){
+    return e => {
+      e.preventDefault();
+      this.setState({
+        changeModalOpen: true,
+        [button]: true
+      });
+    }
   }
 
   handleReferralChange(e){
@@ -481,7 +496,8 @@ class OpportunityHome extends React.Component {
 
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
-        filterMobileAnchorEl } = this.state;
+        filterMobileAnchorEl, shareOpen, privacyOpen,
+        imageOpen } = this.state;
 
     const networksArray = [...workspaceOptions]
       .filter(x => x.includes('Network'))
@@ -699,16 +715,22 @@ class OpportunityHome extends React.Component {
               </Grid>
 
               <Grid container style={{ paddingTop: 17}}>
-                <Button className={classes.createFilterButton}>
+                <Button className={classes.createFilterButton}
+                  variant='contained'
+                  onClick={this.handleChangeModalWithOpen('imageOpen')}>
                   <img src={PictureIconSVG} alt='pic-icon'
                     className={classes.filterButtonIcon}/>
                   Image
                 </Button>
-                <Button className={classes.createFilterButton}>
+                <Button className={classes.createFilterButton}
+                  variant='contained'
+                  onClick={this.handleChangeModalWithOpen('privacyOpen')}>
                   <PersonIcon className={classes.filterButtonIcon}/>
                   Privacy
                 </Button>
-                <Button className={classes.createFilterButton}>
+                <Button className={classes.createFilterButton}
+                  variant='contained'
+                  onClick={this.handleChangeModalWithOpen('shareOpen')}>
                   <img src={ShareIconSVG} alt='share-icon'
                     className={classes.filterButtonIcon}/>
                   {/*`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`*/}
@@ -767,6 +789,9 @@ class OpportunityHome extends React.Component {
             updateNetworkOpps={this.updateNetworkOpps}
             currentUser={currentUser}
             opportunity={DEFAULTSTATE}
+            shareOpen={shareOpen}
+            privacyOpen={privacyOpen}
+            imageOpen={imageOpen}
             type={'create'} />
 
         </div>

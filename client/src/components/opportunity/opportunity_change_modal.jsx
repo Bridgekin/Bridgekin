@@ -218,6 +218,8 @@ class OpportunityChangeModal extends React.Component {
     super(props)
     this.state = merge({}, DEFAULTSTATE, this.props.opportunity);
 
+    this.buttonRef = React.createRef()
+
     this.toggleOpp = this.toggleOpp.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleMenuClose = this.handleMenuClose.bind(this);
@@ -234,16 +236,24 @@ class OpportunityChangeModal extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if(nextProps.open && nextProps.open !== this.props.open){
+      // check for open buttons
+      const checkOpen = {
+        shareModalOpen: nextProps.shareOpen,
+        privacyAnchorEl: (nextProps.privacyOpen ? this.buttonRef.current : null)
+      }
+
       if(nextProps.opportunity.id){
         this.props.fetchOppPermissions(nextProps.opportunity.id)
         .then(() => {
+          // Permissions is probably incorrect
           const { permissions } = this.props;
+          // check for open buttons
           this.setState(merge({}, DEFAULTSTATE,
-            nextProps.opportunity,{ permissions }))
+            nextProps.opportunity,{ permissions }, checkOpen))
         });
       } else {
         this.setState(merge({}, DEFAULTSTATE,
-          nextProps.opportunity))
+          nextProps.opportunity, checkOpen))
       }
     }
     // if(nextProps.opportunity !== this.props.opportunity){
@@ -362,7 +372,11 @@ class OpportunityChangeModal extends React.Component {
   handleMenuClick(anchor){
     return e => {
       e.stopPropagation();
-      this.setState({ [anchor]: e.currentTarget });
+      this.setState({ [anchor]: e.currentTarget },
+      () => {
+        const example = this.state[anchor];
+        debugger
+      });
     }
   };
 
@@ -554,7 +568,6 @@ class OpportunityChangeModal extends React.Component {
             className={classes.contentContainer}>
             <Grid container justify='center' alignItems='center'
               style={{ height: 95 }}>
-
               {currentUser.profilePicUrl && !anonymous ? (
                 <Avatar alt="profile-pic"
                   src={currentUser.profilePicUrl}
@@ -600,284 +613,258 @@ class OpportunityChangeModal extends React.Component {
                   />
               </Grid>}
 
-              {viewType === 'card' &&
-                <Grid container justify='space-around' alignItems='center'>
+            {viewType === 'card' &&
+              <Grid container justify='space-around' alignItems='center'>
 
-                  <FormControl required className={classes.formControl}>
-                    <InputLabel htmlFor="age-required">Business Need</InputLabel>
-                    <Select
-                      value={this.state.opportunityNeed}
-                      onChange={this.handleChange('opportunityNeed')}
-                      name="opportunityNeed"
-                      inputProps={{
-                        id: 'opportunityNeed-required',
-                        name: 'opportunityNeed'
-                      }}
-                      renderValue={selected => selected}
-                      className={classes.fieldSelectNeed}
-                      >
-                      {needsChoices.map(choice => (
-                        <MenuItem value={choice} key={choice}
-                          style={{ textTransform: 'capitalize'}}>
-                          <ListItemText
-                            primary={choice}
-                            secondary={this.getSecondaryText(choice)}
-                            classes={{
-                              primary: classes.textListPrimary,
-                              secondary: classes.textListSecondary
-                            }}/>
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl required className={classes.formControl}>
-                      <InputLabel htmlFor="age-required">Industry</InputLabel>
-                      <Select
-                        multiple
-                        value={this.state.industries}
-                        onChange={this.handleChange('industries')}
-                        name="industries"
-                        input={<Input id="select-multiple-chip" />}
-                        renderValue={selected => selected.join(', ')}
-                        className={classes.fieldSelectIndustry}
-                        >
-                        {industryChoices.map(choice => (
-                          <MenuItem value={choice} key={choice}
-                            style={{ textTransform: 'capitalize'}}>
-                            <Checkbox checked={this.state.industries.indexOf(choice) > -1} />
-                            <ListItemText primary={choice} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl required className={classes.formControl}>
-                      <InputLabel htmlFor="age-required">Geography</InputLabel>
-                      <Select
-                        multiple
-                        value={this.state.geography}
-                        onChange={this.handleChange('geography')}
-                        name="geography"
-                        input={<Input id="select-multiple-chip" />}
-                        renderValue={selected => selected.join(', ')}
-                        className={classes.fieldSelectIndustry}
-                        >
-                        {geographyChoices.map(choice => (
-                          <MenuItem value={choice} key={choice}
-                            style={{ textTransform: 'capitalize'}}>
-                            <Checkbox checked={this.state.geography.indexOf(choice) > -1} />
-                            <ListItemText primary={choice} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl required className={classes.formControl}>
-                      <InputLabel htmlFor="age-required">Deal Value</InputLabel>
-                      <Select
-                        value={this.state.value}
-                        onChange={this.handleChange('value')}
-                        name="value"
-                        inputProps={{
-                          id: 'value-required',
-                          name: 'value'
-                        }}
-                        className={classes.fieldSelectIndustry}
-                        >
-                        {valueChoices.map(choice => (
-                          <MenuItem value={choice}
-                            style={{ textTransform: 'capitalize'}}>
-                            {choice}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>}
-
-                  <Grid container justify='flex-end' alignItems='center'
-                    style={{ paddingTop: 17, margin: 0}}>
-                    <Grid item containr justify='flex-start' xs={12}>
-                      <input
-                        accept="image/*"
-                        style={{ display: 'none'}}
-                        id="contained-button-file"
-                        type="file"
-                        onChange={this.handleFile.bind(this)}
-                        onClick={(event)=> {
-                          event.target.value = null
-                        }}
-                        />
-                      <label htmlFor="contained-button-file">
-                        <Button
-                          color='primary'
-                          variant={pictureUrl ? 'contained' : undefined }
-                          className={ pictureUrl ?
-                            classes.createFilterSelectedButton :
-                            classes.createFilterButton}
-                            component="span">
-                            { !pictureUrl && <img src={PictureIconSVG} alt='pic-icon'
-                            className={classes.filterButtonIcon}/>}
-                            Image
-                            { pictureUrl &&
-                              <IconButton
-                                onClick={this.handleRemoveFile.bind(this)}
-                                classes={{ root: classes.infoIconButton}}>
-                                <CloseIcon style={{ color: 'white', fontSize: 20}}/>
-                              </IconButton>
-                            }
-                          </Button>
-                        </label>
-                        <Button
-                          className={classes.createFilterButton }
-                          style={{ padding: "6px 8px"}}
-                          onClick={this.handleMenuClick('privacyAnchorEl')}>
-                          {this.state.anonymous ?
-                            <img src={PrivacyIconSVG} alt='privacy-icon'
-                              className={classes.filterButtonIcon}/> :
-                              <PersonIcon className={classes.filterButtonIcon}/>
-                            }
-                            Privacy
-                          </Button>
-                          <Menu
-                            id="simple-menu"
-                            anchorEl={privacyAnchorEl}
-                            open={Boolean(privacyAnchorEl)}
-                            onClose={this.handleMenuClose('privacyAnchorEl')}
-                            >
-                            <MenuItem onClick={this.handlePrivacyClose(false)}>
-                              <Checkbox checked={!this.state.anonymous} />
-                              <ListItemText primary={`Post with Name & Picture`} />
-                            </MenuItem>
-                            <MenuItem onClick={this.handlePrivacyClose(true)}>
-                              <Checkbox checked={this.state.anonymous} />
-                              <ListItemText primary={`Post anonymously`} />
-                            </MenuItem>
-                          </Menu>
-
-                          <Button color="primary"
-                            variant={permissions.length > 0 ? 'contained' : undefined }
-                            className={permissions.length > 0 ?
-                              classes.createFilterSelectedButton :
-                              classes.createFilterButton }
-                              onClick={this.handleShareClick}>
-                              { permissions.length === 0 && <img src={ShareIconSVG} alt='share-icon'
-                              className={classes.filterButtonIcon}/>}
-                              {`Share`}
-                              { permissions.length > 0 &&
-                                <IconButton
-                                  onClick={this.handleRemovePermissions.bind(this)}
-                                  classes={{ root: classes.infoIconButton}}>
-                                  <CloseIcon style={{ color: 'white', fontSize: 20}}/>
-                                </IconButton>
-                              }
-                            </Button>
-                            {/*<Menu
-                              id="simple-menu"
-                              anchorEl={shareAnchorEl}
-                              open={Boolean(shareAnchorEl)}
-                              onClose={this.handleMenuClose('shareAnchorEl')}
-                              >
-                              {/*availNetworks.map((network, idx) => (
-                              <MenuItem
-                              value={network}
-                              key={idx}
-                              style={{ textTransform: 'capitalize'}}
-                              onClick={this.handleShareClose(network)}>
-                              <Checkbox checked={this.state.share.indexOf(network) > -1} />
-                              <ListItemText primary={network.title} />
-                            </MenuItem>
-                          ))}
-
-                          {currentUser.isAdmin && otherConnectionOptions.map(choice => (
-                          <MenuItem value={choice} key={choice.title}
-                          style={{ textTransform: 'capitalize'}}
-                          onClick={this.handleShareClose(choice)}
-                          disabled>
-                          <Checkbox checked={this.state.share.indexOf(choice) > -1} />
-                          <ListItemText primary={choice.title} />
+                <FormControl required className={classes.formControl}>
+                  <InputLabel htmlFor="age-required">Business Need</InputLabel>
+                  <Select
+                    value={this.state.opportunityNeed}
+                    onChange={this.handleChange('opportunityNeed')}
+                    name="opportunityNeed"
+                    inputProps={{
+                      id: 'opportunityNeed-required',
+                      name: 'opportunityNeed'
+                    }}
+                    renderValue={selected => selected}
+                    className={classes.fieldSelectNeed}
+                    >
+                    {needsChoices.map(choice => (
+                      <MenuItem value={choice} key={choice}
+                        style={{ textTransform: 'capitalize'}}>
+                        <ListItemText
+                          primary={choice}
+                          secondary={this.getSecondaryText(choice)}
+                          classes={{
+                            primary: classes.textListPrimary,
+                            secondary: classes.textListSecondary
+                          }}/>
                         </MenuItem>
                       ))}
-                    </Menu>*/}
-                  </Grid>
-                </Grid>
+                    </Select>
+                  </FormControl>
 
-                <Grid container justify='space-between' alignItems='center'
-                  style={{ paddingTop: 20, paddingBottom: 10}}>
-                  <Button onClick={this.toggleOpp}
-                    style={{ position: 'relative', paddingLeft: 0}}>
-                    <Typography align='Left' color="textSecondary"
-                      variant='subtitle1'>
-                      {viewType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
-                    </Typography>
-
-                    <IconButton className={classes.infoButton}
-                      aria-owns={open ? 'simple-popper' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleMenuClick('infoAnchorEl')}
-                      classes={{ root: classes.infoIconButton}}>
-                      <InfoIcon/>
-                    </IconButton>
-
-                    <Popover
-                      id="simple-popper"
-                      open={infoOpen}
-                      anchorEl={infoAnchorEl}
-                      onClose={this.handleMenuClose('infoAnchorEl')}
-                      anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                      transformOrigin={{
-                        vertical: 'center',
-                        horizontal: 'left',
-                      }}
-                      classes={{ paper: classes.popoverPaper}}
+                  <FormControl required className={classes.formControl}>
+                    <InputLabel htmlFor="age-required">Industry</InputLabel>
+                    <Select
+                      multiple
+                      value={this.state.industries}
+                      onChange={this.handleChange('industries')}
+                      name="industries"
+                      input={<Input id="select-multiple-chip" />}
+                      renderValue={selected => selected.join(', ')}
+                      className={classes.fieldSelectIndustry}
                       >
-                      <Typography align='Left' color="textSecondary"
-                        variant='body2' style={{ fontSize: 10 }}>
-                        {viewType === 'post' ?
-                          `An opportunity card allows you to add more details and tags` :
-                          `An opportunity post allows you to share a quick business need or opportunity`}
-                      </Typography>
-                    </Popover>
-                  </Button>
+                      {industryChoices.map(choice => (
+                        <MenuItem value={choice} key={choice}
+                          style={{ textTransform: 'capitalize'}}>
+                          <Checkbox checked={this.state.industries.indexOf(choice) > -1} />
+                          <ListItemText primary={choice} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-                  <Button className={classes.postButton}
-                    color='primary' variant='contained'
-                    onClick={this.handleSubmit}
-                    disabled={
-                      (viewType === 'card' && isError) ||
-                      (viewType === 'post' && isError) ||
-                      sendingProgress}>
-                      {type === 'create' ? `Post` : `Update`}
+                  <FormControl required className={classes.formControl}>
+                    <InputLabel htmlFor="age-required">Geography</InputLabel>
+                    <Select
+                      multiple
+                      value={this.state.geography}
+                      onChange={this.handleChange('geography')}
+                      name="geography"
+                      input={<Input id="select-multiple-chip" />}
+                      renderValue={selected => selected.join(', ')}
+                      className={classes.fieldSelectIndustry}
+                      >
+                      {geographyChoices.map(choice => (
+                        <MenuItem value={choice} key={choice}
+                          style={{ textTransform: 'capitalize'}}>
+                          <Checkbox checked={this.state.geography.indexOf(choice) > -1} />
+                          <ListItemText primary={choice} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl required className={classes.formControl}>
+                    <InputLabel htmlFor="age-required">Deal Value</InputLabel>
+                    <Select
+                      value={this.state.value}
+                      onChange={this.handleChange('value')}
+                      name="value"
+                      inputProps={{
+                        id: 'value-required',
+                        name: 'value'
+                      }}
+                      className={classes.fieldSelectIndustry}
+                      >
+                      {valueChoices.map(choice => (
+                        <MenuItem value={choice}
+                          style={{ textTransform: 'capitalize'}}>
+                          {choice}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>}
+
+            <Grid container justify='flex-end' alignItems='center'
+              style={{ paddingTop: 17, margin: 0}}>
+              <Grid item containr justify='flex-start' xs={12}>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none'}}
+                  id="contained-button-file"
+                  type="file"
+                  onChange={this.handleFile.bind(this)}
+                  onClick={(event)=> {
+                    event.target.value = null
+                  }}
+                  />
+                <label htmlFor="contained-button-file">
+                  <Button
+                    color='primary'
+                    variant={pictureUrl ? 'contained' : undefined }
+                    className={ pictureUrl ?
+                      classes.createFilterSelectedButton :
+                      classes.createFilterButton}
+                      component="span">
+                      { !pictureUrl && <img src={PictureIconSVG} alt='pic-icon'
+                      className={classes.filterButtonIcon}/>}
+                      Image
+                      { pictureUrl &&
+                        <IconButton
+                          onClick={this.handleRemoveFile.bind(this)}
+                          classes={{ root: classes.infoIconButton}}>
+                          <CloseIcon style={{ color: 'white', fontSize: 20}}/>
+                        </IconButton>
+                      }
+                    </Button>
+                  </label>
+                  <Button
+                    className={classes.createFilterButton }
+                    style={{ padding: "6px 8px"}}
+                    innerRef={node => this.buttonRef = node}
+                    onClick={this.handleMenuClick('privacyAnchorEl')}>
+                    {this.state.anonymous ?
+                      <img src={PrivacyIconSVG} alt='privacy-icon'
+                        className={classes.filterButtonIcon}/> :
+                        <PersonIcon className={classes.filterButtonIcon}/>
+                    }
+                    Privacy
                   </Button>
-                </Grid>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={privacyAnchorEl}
+                    open={Boolean(privacyAnchorEl)}
+                    onClose={this.handleMenuClose('privacyAnchorEl')}
+                    >
+                    <MenuItem onClick={this.handlePrivacyClose(false)}>
+                      <Checkbox checked={!this.state.anonymous} />
+                      <ListItemText primary={`Post with Name & Picture`} />
+                    </MenuItem>
+                    <MenuItem onClick={this.handlePrivacyClose(true)}>
+                      <Checkbox checked={this.state.anonymous} />
+                      <ListItemText primary={`Post anonymously`} />
+                    </MenuItem>
+                  </Menu>
+
+                  <Button color="primary"
+                    variant={permissions.length > 0 ? 'contained' : undefined }
+                    className={permissions.length > 0 ?
+                      classes.createFilterSelectedButton :
+                      classes.createFilterButton }
+                      onClick={this.handleShareClick}>
+                    { permissions.length === 0 && <img src={ShareIconSVG} alt='share-icon'
+                    className={classes.filterButtonIcon}/>}
+                    {`Share`}
+                    { permissions.length > 0 &&
+                      <IconButton
+                        onClick={this.handleRemovePermissions.bind(this)}
+                        classes={{ root: classes.infoIconButton}}>
+                        <CloseIcon style={{ color: 'white', fontSize: 20}}/>
+                      </IconButton>
+                    }
+                  </Button>
               </Grid>
+            </Grid>
 
-              <ImageCropModal
-                handleClose={this.handleCloseImageModal.bind(this)}
-                open={imageModalOpen}
-                handleDelete={this.handleRemoveFile.bind(this)}
-                fileUrl={pictureUrl}
-                file={picture}
-                ratio={2.3/1}
-                innerRef={(ref) => this.cropperModal = ref} />
+            <Grid container justify='space-between' alignItems='center'
+              style={{ paddingTop: 20, paddingBottom: 10}}>
+              <Button onClick={this.toggleOpp}
+                style={{ position: 'relative', paddingLeft: 0}}>
+                <Typography align='Left' color="textSecondary"
+                  variant='subtitle1'>
+                  {viewType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
+                </Typography>
 
-              <SubmitModal
-                open={submitModalOpen}
-                modalType={type}
-                handleClose={this.handleSubmitModalClose}
-                clearFields={this.clearFields}/>
+                <IconButton className={classes.infoButton}
+                  aria-owns={open ? 'simple-popper' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleMenuClick('infoAnchorEl')}
+                  classes={{ root: classes.infoIconButton}}>
+                  <InfoIcon/>
+                </IconButton>
 
-              <ShareModal
-                type={type}
-                open={shareModalOpen}
-                permissions={permissions}
-                handleClose={this.handleShareClick}
-                handleChange={this.handleUpdatePermissions}/>
-            </Dialog>
-          )
+                <Popover
+                  id="simple-popper"
+                  open={infoOpen}
+                  anchorEl={infoAnchorEl}
+                  onClose={this.handleMenuClose('infoAnchorEl')}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'left',
+                  }}
+                  classes={{ paper: classes.popoverPaper}}
+                  >
+                  <Typography align='Left' color="textSecondary"
+                    variant='body2' style={{ fontSize: 10 }}>
+                    {viewType === 'post' ?
+                      `An opportunity card allows you to add more details and tags` :
+                      `An opportunity post allows you to share a quick business need or opportunity`}
+                  </Typography>
+                </Popover>
+              </Button>
+
+              <Button className={classes.postButton}
+                color='primary' variant='contained'
+                onClick={this.handleSubmit}
+                disabled={
+                  (viewType === 'card' && isError) ||
+                  (viewType === 'post' && isError) ||
+                  sendingProgress}>
+                  {type === 'create' ? `Post` : `Update`}
+              </Button>
+            </Grid>
+          </Grid>
+
+          <ImageCropModal
+            handleClose={this.handleCloseImageModal.bind(this)}
+            open={imageModalOpen}
+            handleDelete={this.handleRemoveFile.bind(this)}
+            fileUrl={pictureUrl}
+            file={picture}
+            ratio={2.3/1}
+            innerRef={(ref) => this.cropperModal = ref} />
+
+          <SubmitModal
+            open={submitModalOpen}
+            modalType={type}
+            handleClose={this.handleSubmitModalClose}
+            clearFields={this.clearFields}/>
+
+          <ShareModal
+            type={type}
+            open={shareModalOpen}
+            permissions={permissions}
+            handleClose={this.handleShareClick}
+            handleChange={this.handleUpdatePermissions}/>
+        </Dialog>
+      )
 
     } else {
       return <div></div>

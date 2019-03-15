@@ -151,6 +151,16 @@ class ShareModal extends Component{
     this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
+  componentDidMount(){
+    if(this.props.open){
+      this.props.fetchShareOptions()
+      .then(() => this.setState({
+        permissions: new Set([...this.props.permissions]),
+        loaded: true
+      }) )
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState){
     if(nextProps.open && nextProps.open !== this.props.open){
       this.props.fetchShareOptions()
