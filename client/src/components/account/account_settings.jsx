@@ -102,7 +102,7 @@ const styles = theme => ({
     margin: '0 auto',
     width: '50%',
     display: 'flex',
-    flexDirection: 'column'
+    direction: 'column'
   },
   wrapper:{
     display: 'flex',
@@ -135,7 +135,7 @@ const styles = theme => ({
   // },
   countryWrapper:{
     display: 'flex',
-    flexDirection: 'column'
+    direction: 'column'
   },
   input: {
     display: 'none',
@@ -760,7 +760,7 @@ class AccountSetting extends React.Component {
         //           Default Network
         //         </Typography>
         //         <Grid container justify="flex-start" alignItems="center"
-        //           flexDirection='column'>
+        //           direction='column'>
         //           <Select
         //             value={this.state.defaultNetworkId}
         //             onChange={this.handleDefaultWorkspaceChange}

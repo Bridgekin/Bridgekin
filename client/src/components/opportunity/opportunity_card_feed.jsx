@@ -352,7 +352,7 @@ class OpportunityCard extends React.Component {
               ) : (
                 <AccountCircle className={classes.avatar} />
               )}
-              <Typography gutterBottom align='Left'
+              <Typography gutterBottom align='left'
                 className={classes.cardHeader} color="textPrimary"
                 style={{ textTransform: 'capitalize'}}>
                 {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
@@ -368,7 +368,7 @@ class OpportunityCard extends React.Component {
                 >
                 <div className={classes.statusIndicator}
                   style={{ backgroundColor: `${this.getStatusColor(dealStatus)}` }}/>
-                <Typography align='Left' color="textPrimary"
+                <Typography align='left' color="textPrimary"
                   style={{ fontSize: 14, fontWeight: 600 }}>
                   {dealStatus}
                 </Typography>

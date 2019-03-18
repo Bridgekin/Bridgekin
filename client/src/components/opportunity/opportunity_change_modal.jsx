@@ -94,7 +94,7 @@ const styles = theme => ({
   },
   card: {
     display: 'flex',
-    flexDirection: 'column',
+    direction: 'column',
     alignItems: 'center',
     minHeight: 440,
     overflow: 'scroll'
@@ -541,7 +541,7 @@ class OpportunityChangeModal extends React.Component {
 
           <Grid container justify='space-between' alignItems='center'
             className={classes.closeBar}>
-            <Typography align='Left' color="textPrimary"
+            <Typography align='left' color="textPrimary"
               variant='body1' style={{ fontSize: 16 }}>
               {type === 'create' ? `Create Opportunity` : `Update Opportunity`}
             </Typography>
@@ -806,7 +806,7 @@ class OpportunityChangeModal extends React.Component {
                   style={{ paddingTop: 20, paddingBottom: 10}}>
                   <Button onClick={this.toggleOpp}
                     style={{ position: 'relative', paddingLeft: 0}}>
-                    <Typography align='Left' color="textSecondary"
+                    <Typography align='left' color="textSecondary"
                       variant='subtitle1'>
                       {viewType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
                     </Typography>
@@ -834,7 +834,7 @@ class OpportunityChangeModal extends React.Component {
                       }}
                       classes={{ paper: classes.popoverPaper}}
                       >
-                      <Typography align='Left' color="textSecondary"
+                      <Typography align='left' color="textSecondary"
                         variant='body2' style={{ fontSize: 10 }}>
                         {viewType === 'post' ?
                           `An opportunity card allows you to add more details and tags` :

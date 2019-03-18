@@ -40,6 +40,7 @@ import ConfirmationError from './components/confirmation_error';
 import ScrollToTop from './components/scroll_to_top';
 
 import InviteModal from './components/modals/invite_modal';
+import CreateCircleModal from './components/modals/create_circle_modal';
 
 export default () => (
   <div style={{ position: 'relative', minHeight: window.innerHeight}}>
@@ -70,7 +71,7 @@ export default () => (
 
     {/* MODALS */}
     <InviteModal/>
-
+    <CreateCircleModal/>
   </div>
 )
 

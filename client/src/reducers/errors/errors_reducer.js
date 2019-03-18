@@ -6,6 +6,7 @@ import opportunityErrorsReducer from './opportunity_errors_reducer';
 import connectedOpportunityErrorsReducer from './connected_opportunity_errors_reducer';
 import siteTemplateErrorsReducer from './site_template_errors_reducer';
 import connectionErrorsReducer from './connection_errors_reducer';
+import circleErrorsReducer from './circle_errors_reducer';
 
 export default combineReducers({
   login: loginErrorsReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   connectedOpportunities: connectedOpportunityErrorsReducer,
   siteTemplate: siteTemplateErrorsReducer,
   connection: connectionErrorsReducer,
+  circle: circleErrorsReducer,
 });

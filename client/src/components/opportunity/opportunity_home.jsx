@@ -506,14 +506,14 @@ class OpportunityHome extends React.Component {
           style={{ padding: 0, width: '100%' }}>
           <FeedCard contents={
               <div>
-                <Typography gutterBottom align='Left' color='textPrimary'
+                <Typography gutterBottom align='left' color='textPrimary'
                   className={classes.cardHeader}
                   style={{ marginBottom: 20}}>
                   Over $71M in opportunities connected
                 </Typography>
 
                 <div className={classes.oppNotification}>
-                  <Typography align='Left' color='textSecondary'
+                  <Typography align='left' color='textSecondary'
                     className={classes.cardHeader}>
                     {`There are ${networkOpps.size} opportunities for you to checkout`}
                   </Typography>
@@ -523,7 +523,7 @@ class OpportunityHome extends React.Component {
 
           <FeedCard contents={
             <div>
-              <Typography gutterBottom align='Left'
+              <Typography gutterBottom align='left'
                 className={classes.cardHeader} color='textSecondary'
                 style={{ marginBottom: 20}}>
                 Invite your trusted business contacts
@@ -619,7 +619,7 @@ class OpportunityHome extends React.Component {
         <Grid container justify='center' alignItems='center'
           className={classes.filter}>
           {opportunitiesLoaded && <div className={classes.filterCard}>
-            <Typography align='Left'
+            <Typography align='left'
               className={classes.cardHeader}
               style={{ margin: "10px 20px 0px"}}>
               {`Whose opportunities would you like to see?`}
@@ -673,7 +673,7 @@ class OpportunityHome extends React.Component {
             <CardActionArea className={classes.feedCard}
               style={{ paddingBottom: 9}}
               onClick={this.handleOpportunityChangeModalOpen}>
-              <Typography align='Left' gutterBottom
+              <Typography align='left' gutterBottom
                 className={classes.cardHeader}>
                 Create Opportunity
               </Typography>
@@ -690,7 +690,7 @@ class OpportunityHome extends React.Component {
 
                 <Grid container style={{ flexGrow: 1, width: '75%', marginLeft: 10}}
                   alignItems='center'>
-                  <Typography align='Left' color="textSecondary"
+                  <Typography align='left' color="textSecondary"
                     className={classes.cardHeader}
                     style={{ padding: "15px 0px"}}>
                     {`What's your most pressing business need or opportunity?`}
@@ -726,7 +726,7 @@ class OpportunityHome extends React.Component {
 
 
             <div className={classes.waitlistMobileCard}>
-              <Typography gutterBottom align='Left'
+              <Typography gutterBottom align='left'
                 className={classes.cardHeader} color='textSecondary'
                 style={{ marginBottom: 20 }}>
                 Invite your trusted business contacts

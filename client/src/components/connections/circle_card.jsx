@@ -24,6 +24,9 @@ import LoopIcon from '@material-ui/icons/Loop';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AddIcon from '@material-ui/icons/Add';
 
+import { deleteCircle } from '../../actions/circle_actions';
+import { openCreateCircle } from '../../actions/modal_actions';
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
@@ -32,7 +35,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  // openInvite: userId => dispatch(openInvite(userId)),
+  openCreateCircle: () => dispatch(openCreateCircle()),
+  deleteCircle: circleId => dispatch(deleteCircle(circleId)),
 });
 
 const styles = theme => ({
@@ -47,10 +51,34 @@ class CircleCard extends React.Component {
     this.state = {
       anchorEl: null,
     }
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.addCircle = this.addCircle.bind(this);
+    this.openCircle = this.openCircle.bind(this);
+    this.deleteCircle = this.deleteCircle.bind(this);
   }
 
   capitalize(str){
     return str[0].toUpperCase() + str.slice(1)
+  }
+
+  handleMenuClick(e){
+    const { anchorEl } = this.state;
+    this.setState({ anchorEl: (anchorEl ? null : e.currentTarget)})
+  }
+
+  addCircle(e){
+    e.stopPropagation();
+    this.props.openCreateCircle();
+  }
+
+  openCircle(e){
+    e.stopPropagation();
+
+  }
+
+  deleteCircle(e){
+    this.props.deleteCircle(this.props.circle.id)
+    .then(() => this.setState({ anchorEl: null }))
   }
 
   render(){
@@ -63,11 +91,11 @@ class CircleCard extends React.Component {
       return (
         <Grid container className={classes.userCard}
           justify="center" alignItems="center"
-          onClick={this.handleProfilePage}>
+          onClick={circle.add && this.addCircle}>
           <Grid item xs={9} sm={7} container justify='space-between' alignItems='center'>
             <Grid item xs={3}>
-              <Avatar>
-                {`${this.capitalize(circle.title[0])}`}
+              <Avatar style={{ backgroundColor: '#EF7E3B'}}>
+                {circle.add ? <AddIcon /> : `${this.capitalize(circle.title[0])}`}
               </Avatar>
             </Grid>
             <Grid item xs={9} container direction='column'>
@@ -76,19 +104,20 @@ class CircleCard extends React.Component {
                 style={{ fontSize: 15, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
                 {`${circle.title}`}
               </Typography>
-              <Typography variant="body1" align='left' color="textPrimary"
+              {!(circle.add) && circleMembers[circle.id] && <Typography variant="body1" align='left' color="textPrimary"
                 noWrap
                 style={{ fontSize: 12, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
-                {`${circleMembers[circle.id]} Members`}
-              </Typography>
+                {circleMembers[circle.id].length === 1 ? `1 member` :
+                  `${circleMembers[circle.id].length} Members`}
+              </Typography>}
             </Grid>
           </Grid>
 
           <Grid item xs={3} sm={5} container justify='flex-end'>
-            <IconButton aria-label="More"
+            {!(circle.add) && <IconButton aria-label="More"
               onClick={this.handleMenuClick}>
               <MoreHorizIcon className={classes.horizIcon}/>
-            </IconButton>
+            </IconButton>}
 
             <Menu
               id="simple-menu"
@@ -105,15 +134,17 @@ class CircleCard extends React.Component {
               }}
               getContentAnchorEl={null}
               >
-              <MenuItem onClick={this.handleToggleCircleMenu}
+              <MenuItem onClick={this.openCircle}
                 className={classes.borderBelow}>
-                {`Go Back`}
+                {`View Contacts`}
+              </MenuItem>
+              <MenuItem onClick={this.deleteCircle}>
+                {`Delete Circle`}
               </MenuItem>
             </Menu>
           </Grid>
-
-          </Grid>
-        )
+        </Grid>
+      )
     } else {
       return <div></div>
     }

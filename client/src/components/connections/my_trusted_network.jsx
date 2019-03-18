@@ -120,7 +120,7 @@ class MyTrustedNetwork extends React.Component {
       let waitlistCard = (
         <FeedCard contents={
             <div>
-              <Typography gutterBottom align='Left'
+              <Typography gutterBottom align='left'
                 className={classes.cardHeader} color='textSecondary'
                 style={{ marginBottom: 20}}>
                 Invite your trusted business contacts
@@ -150,7 +150,7 @@ class MyTrustedNetwork extends React.Component {
       // let mobileNavigation = (
       //   <Grid container justify='flex-start' alignItems='center'
       //     className={classes.mobileNavigation}>
-      //     <Typography align='Left' color="textPrimary"
+      //     <Typography align='left' color="textPrimary"
       //       className={classes.mobileNavHeader}>
       //       My Trusted Network
       //       <IconButton

@@ -12,4 +12,9 @@ class Circle < ApplicationRecord
   belongs_to :owner,
     foreign_key: :owner_id,
     class_name: :User
+
+
+  def fill_with_members(membersIds)
+    membersIds.each{|userId| self.user_circles.create(member_id: userId)}
+  end
 end

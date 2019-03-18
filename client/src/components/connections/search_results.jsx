@@ -69,7 +69,7 @@ class SearchResults extends React.Component {
       ))
       return <div style={{ paddingBottom: 30}}>
         <FeedCard contents={
-          <Typography align='Left' color='textSecondary'
+          <Typography align='left' color='textSecondary'
             style={{ fontSize: 20 }}>
             {`Search Results (${searchResultsPage.length})`}
           </Typography>

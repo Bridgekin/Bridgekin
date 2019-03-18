@@ -32,7 +32,7 @@ const styles = theme => ({
 
 const FilterCard = ({ classes, title, pages, history, location }) => (
   <div className={classes.filterCard}>
-    <Typography align='Left' color="textPrimary"
+    <Typography align='left' color="textPrimary"
       className={classes.cardHeader}
       style={{ margin: "10px 15px 0px"}}>
       {title}

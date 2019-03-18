@@ -40,7 +40,7 @@ const styles = theme => ({
   addOportunityCard:{
     height: 475,
     display: 'flex',
-    flexDirection: 'column',
+    direction: 'column',
     alignItems: 'center',
     justifyContent: 'center'
   }

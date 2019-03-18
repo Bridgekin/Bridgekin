@@ -215,7 +215,7 @@ class ShareModal extends Component{
       let [typeId, type] = perm.split('-');
       if(typeId === ''){
         return (<Grid container alignItems='center' style={{ flexGrow: 1}}>
-          <Typography align='Left'
+          <Typography align='left'
             className={classes.shareItemHeader}>
             {`All ${type}s`}
           </Typography>
@@ -231,7 +231,7 @@ class ShareModal extends Component{
                     className={classes.shareIcon}/> :
                     <Img src={defaultNetworkIcon}
                       className={classes.shareIcon}/>}
-                <Typography align='Left'
+                <Typography align='left'
                   className={classes.shareItemText}>
                   {network.title}
                 </Typography>
@@ -248,7 +248,7 @@ class ShareModal extends Component{
                   <Img src={friend.profilePicUrl}
                     className={classes.shareIcon}/> :
                     <PersonIcon className={classes.shareIcon}/>}
-                <Typography align='Left'
+                <Typography align='left'
                   className={classes.shareItemText}>
                   {`${friend.fname} ${friend.lname}`}
                 </Typography>
@@ -322,7 +322,7 @@ class ShareModal extends Component{
             ))}
           </Grid> :
           <Grid container>
-            <Typography gutterBottom align='Left'
+            <Typography gutterBottom align='left'
               className={classes.emptyList}>
               Share your opportunity with any options below
             </Typography>

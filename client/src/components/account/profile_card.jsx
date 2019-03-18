@@ -243,7 +243,7 @@ class Profile extends React.Component {
               </Typography>
             </Grid>
             <Grid container justify="flex-start" alignItems="center"
-              flexDirection='column'>
+              direction='column'>
               <Select
                 value={this.state.defaultNetworkId}
                 onChange={this.handleDefaultWorkspaceChange}

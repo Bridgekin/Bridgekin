@@ -376,7 +376,7 @@ class ConnectionsHome extends React.Component{
     )
 
     // <Avatar
-    //   style={{display:'flex', flexDirection:'column'}}
+    //   style={{display:'flex', direction:'column'}}
     //   >
     //   <div style={{display:'flex'}}>
     //     <img src={randomImages[`${((circle.id*4) + 1) % 10}`]}

@@ -121,7 +121,7 @@ class OpportunityWaitlist extends React.Component{
     return(
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={8}>
-        <Grid item xs={5} sm={largeForSearch ? 5 : 12} container flexDirection='column'>
+        <Grid item xs={5} sm={largeForSearch ? 5 : 12} container direction='column'>
           <TextField
           required
           id="outlined-required"
@@ -138,7 +138,7 @@ class OpportunityWaitlist extends React.Component{
           }}
           />
         </Grid>
-        <Grid item xs={7} sm={largeForSearch ? 7 : 12} container flexDirection='column'>
+        <Grid item xs={7} sm={largeForSearch ? 7 : 12} container direction='column'>
           <TextField
           required
           id="outlined-required"
@@ -166,7 +166,7 @@ class OpportunityWaitlist extends React.Component{
           </Button>
         </Grid>
         <Grid item xs={12} container justify='flex-end'>
-          <Typography align='Right' color='textSecondary' variant='body1'
+          <Typography align='right' color='textSecondary' variant='body1'
             className={classes.inviteCounter}>
             {currentUser.invitesRemaining > 0 ?
               `Remaining: ${currentUser.invitesRemaining}` :

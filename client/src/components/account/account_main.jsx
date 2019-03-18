@@ -228,7 +228,7 @@ class AccountMain extends React.Component {
       <Grid container justify='center' alignItems='center'
         className={ classes.navigation }>
         <div className={classes.filterCard}>
-          <Typography align='Left'
+          <Typography align='left'
             className={classes.cardHeader}
             style={{ margin: "10px 15px 0px"}}>
             My Account
@@ -253,7 +253,7 @@ class AccountMain extends React.Component {
     let mobileNavigation = (
       <Grid container justify='flex-start' alignItems='center'
         className={classes.mobileNavigation}>
-        <Typography align='Left' color="textPrimary"
+        <Typography align='left' color="textPrimary"
           className={classes.mobileNavHeader}>
           My Account
           <IconButton
@@ -298,7 +298,7 @@ class AccountMain extends React.Component {
       <Grid container justify='center' alignItems='center'
         className={classes.oppFiltersDesktop}>
         <div className={classes.filterCard}>
-          <Typography align='Left' color="textPrimary"
+          <Typography align='left' color="textPrimary"
             className={classes.cardHeader}
             style={{ margin: "10px 15px 0px"}}>
             Connected Opportunities
@@ -324,7 +324,7 @@ class AccountMain extends React.Component {
       <Grid container justify='flex-start' alignItems='center'
         className={classes.oppFiltersMobile}>
         <div>
-          <Typography align='Left' color='textPrimary'
+          <Typography align='left' color='textPrimary'
             className={classes.cardHeader}
             style={{ margin: "10px 15px 10px"}}>
             Opportunities You've
@@ -445,7 +445,7 @@ export default withRouter(connect(mapStateToProps, {})(withStyles(styles)(Accoun
 //   <Grid container justify='center' alignItems='center'
 //     className={ classes.navigation }>
 //     <div className={classes.filterCard}>
-//       <Typography align='Left'
+//       <Typography align='left'
 //         className={classes.cardHeader}
 //         style={{ margin: "10px 15px 0px"}}>
 //         My Account
@@ -470,7 +470,7 @@ export default withRouter(connect(mapStateToProps, {})(withStyles(styles)(Accoun
 // let mobileNavigation = (
 //   <Grid container justify='flex-start' alignItems='center'
 //     className={classes.mobileNavigation}>
-//     <Typography align='Left'
+//     <Typography align='left'
 //       className={classes.mobileNavHeader}
 //       style={{ marginTop: 15 }}>
 //       My Account
@@ -515,7 +515,7 @@ export default withRouter(connect(mapStateToProps, {})(withStyles(styles)(Accoun
 //   <Grid container justify='center' alignItems='center'
 //     className={classes.oppFiltersDesktop}>
 //     <div className={classes.filterCard}>
-//       <Typography align='Left'
+//       <Typography align='left'
 //         className={classes.cardHeader}
 //         style={{ margin: "10px 15px 0px"}}>
 //         Connected Opportunities
@@ -541,7 +541,7 @@ export default withRouter(connect(mapStateToProps, {})(withStyles(styles)(Accoun
 //   <Grid container justify='flex-start' alignItems='center'
 //     className={classes.oppFiltersMobile}>
 //     <div>
-//       <Typography align='Left'
+//       <Typography align='left'
 //         className={classes.cardHeader}
 //         style={{ margin: "10px 15px 10px"}}>
 //         Opportunities You've

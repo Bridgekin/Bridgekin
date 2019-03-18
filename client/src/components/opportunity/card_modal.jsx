@@ -49,7 +49,7 @@ const styles = theme => ({
   //   boxShadow: theme.shadows[5],
   //   padding: theme.spacing.unit * 4,
   //   display: 'flex',
-  //   flexDirection: 'column',
+  //   direction: 'column',
   //   alignItems: 'flex-start',
   //   justifyContent: 'center'
   // },
@@ -64,7 +64,7 @@ const styles = theme => ({
   },
   card: {
     display: 'flex',
-    flexDirection: 'column',
+    direction: 'column',
     alignItems: 'center',
     minHeight: 440,
     overflow: 'scroll'

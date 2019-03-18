@@ -352,7 +352,7 @@ class NetworkAdmin extends React.Component {
                 classes={{ label: classes.buttonText }}
                 onClick={this.handleMenuOpen('userSortAnchorEl')}
                 >
-                <Typography align='Left' className={classes.sortBy}>
+                <Typography align='left' className={classes.sortBy}>
                   {`Sort by:`}
                 </Typography>
                 {userSortSetting}
@@ -417,7 +417,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(N
 // </Grid>
 //
 // <Grid item sm={3} container justify='center'
-//   flexDirection='column'>
+//   direction='column'>
 //   <Typography variant="body1" align='left' color="textPrimary" >
 //     Choose a network
 //   </Typography>

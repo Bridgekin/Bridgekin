@@ -2,8 +2,7 @@ require_relative '../concerns/devise_controller_patch.rb'
 class Api::CirclesController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user
-  before_action :set_circles, only: [:show, :update, :destroy,
-    :add_member, :remove_member]
+  before_action :set_circle, only: [:show, :update, :destroy]
   # after_action :verify_authorized, except: :show
 
   def index
@@ -18,6 +17,7 @@ class Api::CirclesController < ApiController
   end
 
   def show
+    @circleMemberIds = @circle.user_circles.pluck(:member_id)
     render :show
   end
 
@@ -25,6 +25,8 @@ class Api::CirclesController < ApiController
     @circle = Circle.new(circle_params
       .merge({ owner_id: @user.id}))
     if @circle.save
+      @circle.fill_with_members(params[:circle][:members])
+      @circleMemberIds = @circle.user_circles.pluck(:member_id)
       render :show
     else
       render json: @circle.errors.full_messages, status: 422
@@ -33,10 +35,14 @@ class Api::CirclesController < ApiController
 
   def add_member
     @user_circle = UserCircle.new(
-      circle_id: params[:id],
+      circle_id: params[:circle_id],
       member_id: params[:member_id]
     )
     if @user_circle.save
+      @circle = Circle.includes(:user_circles)
+        .find(params[:circle_id])
+      @circleMemberIds = @circle.user_circles.pluck(:member_id)
+
       render :member
     else
       render json: @user_circle.errors.full_messages, status: 422
@@ -45,10 +51,14 @@ class Api::CirclesController < ApiController
 
   def remove_member
     @user_circle = UserCircle.find_by(
-      circle_id: params[:id],
+      circle_id: params[:circle_id],
       member_id: params[:member_id]
     )
     if @user_circle.destroy
+      @circle = Circle.includes(:user_circles)
+        .find(params[:circle_id])
+      @circleMemberIds = @circle.user_circles.pluck(:member_id)
+
       render :member
     else
       render json: @user_circle.errors.full_messages, status: 422
@@ -57,7 +67,7 @@ class Api::CirclesController < ApiController
 
   def update
     if @circle.update(circle_params)
-      render :show
+      render :update
     else
       render json: @circle.errors.full_messages, status: 422
     end
@@ -74,11 +84,11 @@ class Api::CirclesController < ApiController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_circle
-      @circle = Circle.includes(:members)
-        .where(id: params[:id]).first
+      @circle = Circle.includes(:members, :user_circles)
+        .where(id: [params[:id], params[:circle_id]]).first
     end
 
     def circle_params
-      params.require(:connection).permit(:title)
+      params.require(:circle).permit(:title)
     end
 end

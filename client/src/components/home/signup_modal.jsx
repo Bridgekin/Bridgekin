@@ -34,7 +34,7 @@ const styles = theme => ({
   //   boxShadow: theme.shadows[5],
   //   padding: theme.spacing.unit * 4,
   //   display: 'flex',
-  //   flexDirection: 'column',
+  //   direction: 'column',
   //   alignItems: 'flex-start',
   //   justifyContent: 'center'
   // },

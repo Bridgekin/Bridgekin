@@ -5,19 +5,25 @@ import { receiveUsers } from './user_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
-export const RECEIVE_CIRCLE_MEMBERS = 'RECEIVE_CIRCLE_MEMBERS';
-export const REMOVE_CIRCLE_MEMBERS = 'REMOVE_CIRCLE_MEMBERS';
+export const RECEIVE_CIRCLE_MEMBER_SETS = 'RECEIVE_CIRCLE_MEMBER_SETS';
+export const RECEIVE_CIRCLE_MEMBER_SET = 'RECEIVE_CIRCLE_MEMBER_SET';
+export const REMOVE_CIRCLE_MEMBER_SET = 'REMOVE_CIRCLE_MEMBER_SET';
 export const RECEIVE_CIRCLES = 'RECEIVE_CIRCLES';
 export const RECEIVE_CIRCLE = 'RECEIVE_CIRCLE';
 export const REMOVE_CIRCLE = "REMOVE_CIRCLE";
 
-export const receiveCircleMembers = circleMembers => ({
-  type: RECEIVE_CIRCLE_MEMBERS,
-  circleMembers,
+export const receiveCircleMemberSets = circleMemberSets => ({
+  type: RECEIVE_CIRCLE_MEMBER_SETS,
+  circleMemberSets,
 });
 
-export const removeCircleMembers = circleId => ({
-  type: REMOVE_CIRCLE_MEMBERS,
+export const receiveCircleMemberSet = (circleMembers, circleId) => ({
+  type: RECEIVE_CIRCLE_MEMBER_SET,
+  circleMembers, circleId
+});
+
+export const removeCircleMemberSet = circleId => ({
+  type: REMOVE_CIRCLE_MEMBER_SET,
   circleId,
 });
 
@@ -40,7 +46,7 @@ export const addMember = (circleId, memberId) => dispatch => (
   CircleApiUtil.addMember(circleId, memberId)
     .then(handleErrors)
     .then(data => {
-      dispatch(receiveCircleMembers(data.circleMemberIds));
+      dispatch(receiveCircleMemberSet(data.circleMemberIds, circleId));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
@@ -54,7 +60,7 @@ export const removeMember = (circleId, memberId) => dispatch => (
   CircleApiUtil.removeMember(circleId, memberId)
     .then(handleErrors)
     .then(data => {
-      dispatch(receiveCircleMembers(data.circleMemberIds));
+      dispatch(receiveCircleMemberSet(data.circleMemberIds, circleId));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
@@ -69,7 +75,7 @@ export const fetchCircles = () => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveCircles(data.circles));
-      dispatch(receiveCircleMembers(data.circleMemberIds));
+      dispatch(receiveCircleMemberSets(data.circleMemberIds));
       dispatch(receiveUsers(data.users));
     })
     .catch(errors => {
@@ -85,7 +91,7 @@ export const fetchCircle = (id) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveCircle(data.circle));
-      dispatch(receiveCircleMembers(data.circleMemberIds));
+      dispatch(receiveCircleMemberSet(data.circleMemberIds));
       dispatch(receiveUsers(data.users));
     })
     .catch(errors => {
@@ -101,7 +107,7 @@ export const createCircle = (circle) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveCircle(data.circle));
-      dispatch(receiveCircleMembers(data.circleMemberIds));
+      dispatch(receiveCircleMemberSet(data.circleMemberIds, data.circle.id));
       dispatch(receiveUsers(data.users));
     })
     .catch(errors => {
@@ -117,7 +123,7 @@ export const updateCircle = (circle) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveCircle(data.circle));
-      dispatch(receiveCircleMembers(data.circleMemberIds));
+      dispatch(receiveCircleMemberSet(data.circleMemberIds, data.circle.id));
       dispatch(receiveUsers(data.users));
     })
     .catch(errors => {
@@ -134,7 +140,7 @@ export const deleteCircle = (id) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(removeCircle(id));
-      dispatch(removeCircleMembers(id));
+      dispatch(removeCircleMemberSet(id));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

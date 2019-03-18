@@ -39,7 +39,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
     },
-    flexDirection: 'column',
+    direction: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   },
