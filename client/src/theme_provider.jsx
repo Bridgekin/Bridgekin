@@ -7,17 +7,27 @@ import App from './App';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import getTheme from './components/theme';
 
+import InviteModal from './components/modals/invite_modal';
+import CreateCircleModal from './components/modals/create_circle_modal';
+import CircleModal from './components/modals/circle_modal';
+
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
+  currentUser: state.users[state.session.id]
 });
 
 class ThemeProvider extends React.Component{
   render(){
+    const { currentUser, siteTemplate } = this.props;
     return (
-      <MuiThemeProvider theme={getTheme(this.props.siteTemplate)}>
+      <MuiThemeProvider theme={getTheme(siteTemplate)}>
         <BrowserRouter>
           <GAListener>
             <App />
+            {/* MODALS */}
+            {currentUser && <InviteModal/>}
+            {currentUser && <CreateCircleModal/>}
+            {currentUser && <CircleModal/>}
           </GAListener>
         </BrowserRouter>
       </MuiThemeProvider>

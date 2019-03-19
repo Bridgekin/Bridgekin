@@ -8,6 +8,52 @@ module SQLControllerModule
       .order(created_at: :desc)
   end
 
+  def opps_network_id(network_id)
+    network_opps = Network.find(network_id).opportunities
+      .includes(:owner)
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted')
+      .order(created_at: :desc)
+      # .where(opp_permissions: { sharable_id: network_id,
+      #   shareable_type: 'Network' })
+      # .where(opportunity_networks: { network_id: network_id})
+
+    all_opps = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
+      .includes(:owner)
+      .where(opp_permissions: { shareable_id: [@workspace_networks.pluck(:id), nil]})
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted')
+      .order(created_at: :desc)
+
+    network_opps + all_opps
+  end
+
+  def opps_all_circles
+    Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Circle'")
+      .includes(:owner)
+      .where(opp_permissions: { shareable_id: [@user.circles.pluck(:id), nil]})
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted')
+      .order(created_at: :desc)
+  end
+
+  def opps_circle_id(circle_id)
+    circle_opps = Circle.find(circle_id).opportunities
+      .includes(:owner)
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted')
+      .order(created_at: :desc)
+
+    all_opps = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Circle'")
+      .includes(:owner)
+      .where(opp_permissions: { shareable_id: nil })
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted')
+      .order(created_at: :desc)
+
+    circle_opps + all_opps
+  end
+
   def opps_direct_connections
     Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
       .joins("LEFT JOIN connections on connections.id = opp_permissions.shareable_id")
@@ -39,25 +85,5 @@ module SQLControllerModule
       .where.not(deal_status: 'Deleted')
 
     direct + all
-  end
-
-  def opps_network_id(network_id)
-    network_opps = Network.find(network_id).opportunities
-      .includes(:owner)
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
-      # .where(opp_permissions: { sharable_id: network_id,
-      #   shareable_type: 'Network' })
-      # .where(opportunity_networks: { network_id: network_id})
-
-    all_opps = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
-      .includes(:owner)
-      .where(opp_permissions: { shareable_id: [@workspace_networks.pluck(:id), nil]})
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
-
-    network_opps + all_opps
   end
 end

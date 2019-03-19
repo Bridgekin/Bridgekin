@@ -2,6 +2,7 @@ import * as NetworkApiUtil from '../util/networks_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveNetworkErrors } from './error_actions';
 import { receiveWorkspaceOptions } from './workspace_actions';
+import { receiveCircles } from './circle_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
@@ -65,6 +66,7 @@ export const fetchWorkspaceOptions = (workspaceId) => dispatch => (
     .then(data => {
       dispatch(receiveWorkspaceOptions(data.workspaceOptions));
       dispatch(receiveNetworks(data.networks));
+      dispatch(receiveCircles(data.circles));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

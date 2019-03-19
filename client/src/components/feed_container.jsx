@@ -59,7 +59,8 @@ class FeedContainer extends React.Component{
             {feed}
           </div>
           <div className={classes.sideColumn}
-            style={{ position: 'fixed', top:64, marginLeft: 15, width: 250}}>
+            style={{ position: 'fixed', top:64, marginLeft: 15, width: 250,
+            maxHeight: window.innerHeight-100, overflow: 'scroll' }}>
             {column2}
           </div>
         </div>

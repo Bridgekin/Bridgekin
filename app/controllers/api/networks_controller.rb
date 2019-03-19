@@ -16,8 +16,10 @@ class Api::NetworksController < ApplicationController
     @networks = policy_scope(Network)
       .where(workspace_id: params[:network_id])
       .or(policy_scope(Network).where(id: params[:network_id]))
+    @circles = @user.circles
 
-    @workspaceOptions = createShareOptions(@networks, 'Network')
+    @workspaceOptions = createShareOptions(@networks, 'Network') +
+      createShareOptions(@circles, 'Circle')
 
     render :workspaceIndex
   end

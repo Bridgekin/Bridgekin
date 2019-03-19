@@ -14,7 +14,7 @@ class Api::OpportunitiesController < ApiController
     option = params[:option].split('-')
     @opportunities = []
     if option.empty?
-      @opportunities = opps_all_networks + opps_all_connections
+      @opportunities = opps_all_networks + opps_all_connections + opps_all_circles
     else
       if option.first == 'All'
         case option.last
@@ -22,6 +22,8 @@ class Api::OpportunitiesController < ApiController
           @opportunities = opps_all_networks
         when 'Connection'
           @opportunities = opps_all_connections
+        when 'Circle'
+          @opportunities = opps_all_circles
         else
           render json: ["Houston, we have a problem"], status: 422
         end
@@ -32,6 +34,8 @@ class Api::OpportunitiesController < ApiController
         if option.last == 'Network'
           # For Networks by ID
           @opportunities = opps_network_id(option.first)
+        elsif option.last == 'Circle'
+          @opportunities = opps_circle_id(option.first)
         end
       end
     end

@@ -27,6 +27,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { updateConnection, deleteConnection }
   from '../../actions/connection_actions';
 import { openInvite } from '../../actions/modal_actions';
+import { openCreateCircle, openCircle } from '../../actions/modal_actions';
 import { addMember, removeMember } from '../../actions/circle_actions';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -39,6 +40,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   openInvite: userId => dispatch(openInvite(userId)),
+  openCreateCircle: () => dispatch(openCreateCircle()),
+  openCircle: circleId => dispatch(openCircle(circleId)),
   updateConnection: connection => dispatch(updateConnection(connection)),
   deleteConnection: (id) => dispatch(deleteConnection(id)),
   addMember: (circleId, memberId) => dispatch(addMember(circleId, memberId)),
@@ -80,7 +83,7 @@ class ContactCard extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      anchorEl: null,
+      contactAnchorEl: null,
       inviteModalOpen: false,
       circleMenu: false
     }
@@ -95,6 +98,7 @@ class ContactCard extends React.Component {
     this.getUser = this.getUser.bind(this);
     this.handleToggleCircleMenu = this.handleToggleCircleMenu.bind(this);
     this.openCircle = this.openCircle.bind(this);
+    this.openCreateModal = this.openCreateModal.bind(this);
   }
 
   // handleRemoveUser(){
@@ -162,9 +166,16 @@ class ContactCard extends React.Component {
   openCircle(circleId){
     return e => {
       e.stopPropagation();
-      console.log('opening circle page');
+      this.props.openCircle(circleId);
+      this.setState({ contactAnchorEl: null });
       // this.props.history.push(`/mynetwork/circles/${circleId}`);
     }
+  }
+
+  openCreateModal(e){
+    e.stopPropagation();
+    this.props.openCreateCircle();
+    this.setState({ contactAnchorEl: null });
   }
 
   getSecondaryAction(){
@@ -290,7 +301,7 @@ class ContactCard extends React.Component {
                       {`${this.capitalize(circle.title)}`}
                     </MenuItem>
                   })}
-                  <MenuItem onClick={this.props.circleModalOpen}>
+                  <MenuItem onClick={this.openCreateModal}>
                     <AddIcon
                       style={{ marginRight: 4 }}/>
                     {`Add another circle...`}

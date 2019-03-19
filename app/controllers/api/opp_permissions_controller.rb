@@ -15,11 +15,13 @@ class Api::OppPermissionsController < ApiController
 
   def shareOptions
     @networks = @user.member_networks
+    @circles = @user.circles
     @connections = @user.connections.includes(:requestor, :recipient)
       .where(status: 'Accepted')
 
     @share_options = createShareOptions(@networks, 'Network') +
-      createShareOptions(@connections, 'Connection')
+      createShareOptions(@connections, 'Connection') +
+      createShareOptions(@circles, 'Circle')
 
     render :shareOptions
   end

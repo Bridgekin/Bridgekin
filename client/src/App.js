@@ -41,8 +41,22 @@ import ScrollToTop from './components/scroll_to_top';
 
 import InviteModal from './components/modals/invite_modal';
 import CreateCircleModal from './components/modals/create_circle_modal';
+import CircleModal from './components/modals/circle_modal';
 
-export default () => (
+// const mapStateToProps = state => ({
+//   currentUser: state.users[state.session.id]
+// });
+
+// class App extends React.Component {
+//   render(){
+//     const { currentUser } = this.props;
+//
+//     return (
+//     )
+//   }
+// }
+
+export default ()=> (
   <div style={{ position: 'relative', minHeight: window.innerHeight}}>
     <ScrollToTop />
     <Route path="/" component={HomeNav} />
@@ -69,11 +83,10 @@ export default () => (
     {/* Footer */}
     <Route path="/" component={Footer} />
 
-    {/* MODALS */}
-    <InviteModal/>
-    <CreateCircleModal/>
   </div>
 )
+
+// export default connect(mapStateToProps, {})(withRouter(App))
 
 // shouldComponentUpdate(nextProps, nextState){
 //   window.scrollTo(0, 0);

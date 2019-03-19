@@ -30,6 +30,7 @@ import { fetchShareOptions } from '../../actions/opp_permission_actions';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   networks: state.entities.networks,
+  circles: state.entities.circles,
   connections: state.entities.connections,
   users: state.users,
   shareOptions: state.entities.shareOptions
@@ -181,6 +182,13 @@ class ShareModal extends Component{
           || (permissions.has("-Connection") && !value.includes("Connection")) ) {
           permissions.add(value);
         }
+      } else if (value.includes('Circle')){
+        if(value === "-Circle" && [...permissions].filter(x => x.includes('Circle')).length > 0){
+          // Do nothing
+        } else if((!permissions.has("-Circle") && value.includes("Circle"))
+          || (permissions.has("-Circle") && !value.includes("Circle")) ) {
+          permissions.add(value);
+        }
       }
 
       // } else if(value === "-Network" && [...permissions].filter(x => x.includes('Network')).length > 0){
@@ -210,7 +218,7 @@ class ShareModal extends Component{
 
   getItem(perm){
     if(this.state.loaded){
-      const { networks, classes, connections,
+      const { networks, classes, connections, circles,
         users, currentUser } = this.props;
       let [typeId, type] = perm.split('-');
       if(typeId === ''){
@@ -251,6 +259,21 @@ class ShareModal extends Component{
                 <Typography align='left'
                   className={classes.shareItemText}>
                   {`${friend.fname} ${friend.lname}`}
+                </Typography>
+              </Grid>
+            )
+          case 'Circle':
+            let circle = circles[typeId]
+            return (
+              <Grid container alignItems='center' style={{ flexGrow: 1}}>
+                {false && network.pictureUrl ?
+                  <Img src={network.pictureUrl}
+                    className={classes.shareIcon}/> :
+                    <Img src={defaultNetworkIcon}
+                      className={classes.shareIcon}/>}
+                <Typography align='left'
+                  className={classes.shareItemText}>
+                  {circle.title}
                 </Typography>
               </Grid>
             )
@@ -330,6 +353,7 @@ class ShareModal extends Component{
         }
         <Grid container justify='flex-start'
           style={{ marginTop: 10 }}>
+
           <ListItem key={'-Network'}
             disabled={[...permissions].filter(x => x.includes('Network')).length > 0 && !permissions.has('-Network')}
             className={classes.listItemHeader}
@@ -340,14 +364,37 @@ class ShareModal extends Component{
           {[...filteredOptions].filter(x =>
             !permissions.has(x) && x.includes('Network')
           ).map(option => (
+            <ListItem key={option} className={classes.listItem}
+              disabled={permissions.has('-Network')}
+              onClick={this.handleUpdate(option)}>
+              {this.getItem(option)}
+              <Checkbox
+                checked={permissions.has(option)} />
+            </ListItem>
+          ))}
+
+          {currentUser.isAdmin &&
+            [...filteredOptions].filter(x => x.includes('Circle'))
+              .length > 0 &&
+            <ListItem key={'-Circle'}
+              disabled={[...permissions].filter(x => x.includes('Circle')).length > 0 && !permissions.has('-Circle')}
+              className={classes.listItemHeader}
+              onClick={this.handleUpdate('-Circle')}>
+            {this.getItem('-Circle')}
+            <Checkbox checked={permissions.has('-Circle')} />
+          </ListItem>}
+          {currentUser.isAdmin &&
+            [...filteredOptions].filter(x => (
+              !permissions.has(x)) && x.includes('Circle')
+            ).map(option => (
               <ListItem key={option} className={classes.listItem}
-                disabled={permissions.has('-Network')}
+                disabled={permissions.has('-Circle')}
                 onClick={this.handleUpdate(option)}>
                 {this.getItem(option)}
-                <Checkbox
-                  checked={permissions.has(option)} />
+                <Checkbox checked={permissions.has(option)} />
               </ListItem>
             ))}
+
           {currentUser.isAdmin &&
             [...filteredOptions].filter(x => x.includes('Connection'))
               .length > 0 &&
@@ -358,9 +405,10 @@ class ShareModal extends Component{
             {this.getItem('-Connection')}
             <Checkbox checked={permissions.has('-Connection')} />
           </ListItem>}
-          {currentUser.isAdmin && [...filteredOptions].filter(x => (
-            !permissions.has(x)) && x.includes('Connection')
-          ).map(option => (
+          {currentUser.isAdmin &&
+            [...filteredOptions].filter(x => (
+              !permissions.has(x)) && x.includes('Connection')
+            ).map(option => (
               <ListItem key={option} className={classes.listItem}
                 disabled={permissions.has('-Connection')}
                 onClick={this.handleUpdate(option)}>

@@ -20,3 +20,15 @@ export const openCreateCircle = () => ({
 export const closeCreateCircle = () => ({
   type: CLOSE_CREATE_CIRCLE_MODAL,
 });
+
+export const OPEN_CIRCLE_MODAL = 'OPEN_CIRCLE_MODAL';
+export const CLOSE_CIRCLE_MODAL = "CLOSE_CIRCLE_MODAL";
+
+export const openCircle = circleId => ({
+  type: OPEN_CIRCLE_MODAL,
+  circleId,
+});
+
+export const closeCircle = () => ({
+  type: CLOSE_CIRCLE_MODAL,
+});

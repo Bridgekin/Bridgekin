@@ -70,6 +70,7 @@ const mapStateToProps = state => ({
   opportunities: state.entities.opportunities,
   networkOpps: state.entities.networkOpps,
   networks: state.entities.networks,
+  circles: state.entities.circles,
   workspaceOptions: state.entities.workspaceOptions,
   referral: state.entities.referral,
   siteTemplate: state.siteTemplate,
@@ -320,6 +321,7 @@ class OpportunityHome extends React.Component {
       if(networksArray.length > 0){
         // Set network for referral component
         let referralNetwork = networksArray[0].id;
+
         // Choose all opportunities for this workspace
         this.props.fetchOpportunities(workspaceId, '')
         .then(() => {
@@ -395,14 +397,14 @@ class OpportunityHome extends React.Component {
     const { classes } = this.props;
     const { dropdownFocus } = this.state;
 
-    if(type === 'Network'){
-      return (<MenuItem value={`${item.id}-Network`}
+    return (
+      <MenuItem value={`${item.id}-${type}`}
         className={classes.dropdownMenuItem}
-        onClick={this.handleDropdownChange('filterMobileAnchorEl', `${item.id}-Network`)}
-        selected={dropdownFocus === `${item.id}-Network`}
+        onClick={this.handleDropdownChange('filterMobileAnchorEl', `${item.id}-${type}`)}
+        selected={dropdownFocus === `${item.id}-${type}`}
         style={{ paddingLeft: 0}}>
         <Grid container alignItems='center'>
-          <Checkbox checked={dropdownFocus === `${item.id}-Network`}/>
+          <Checkbox checked={dropdownFocus === `${item.id}-${type}`}/>
           <div style={{ display: 'inline'}}>
             <Typography variant="h6" align='left'
               color="textPrimary" className={classes.filterMobileHeader}>
@@ -414,38 +416,43 @@ class OpportunityHome extends React.Component {
             </Typography>
           </div>
         </Grid>
-      </MenuItem>)
-    }
+      </MenuItem>
+    )
   }
 
   createListItem(item, type){
     const { classes } = this.props;
     const { dropdownFocus } = this.state;
 
-    if (type === 'Network'){
-      return (
-        <ListItem button value={`${item.id}-Network`}
-          className={classes.filterItem}
-          onClick={this.handleDropdownChange('anchorEl', `${item.id}-Network`)}
-          selected={dropdownFocus === `${item.id}-Network`}>
-          <div>
-            <Typography variant="h6" align='left'
-              color="textPrimary" className={classes.filterHeader}>
-              {item.title}
-            </Typography>
-            <Typography variant="body2" align='left'
-              color="textPrimary" className={classes.filterSubtext}>
-              {item.subtitle}
-            </Typography>
-          </div>
-        </ListItem>
-      )
-    }
+    return (
+      <ListItem button value={`${item.id}-${type}`}
+        className={classes.filterItem}
+        onClick={this.handleDropdownChange('anchorEl', `${item.id}-${type}`)}
+        selected={dropdownFocus === `${item.id}-${type}`}>
+        <div>
+          <Typography variant="h6" align='left'
+            color="textPrimary" className={classes.filterHeader}>
+            {item.title}
+          </Typography>
+          <Typography variant="body2" align='left'
+            color="textPrimary" className={classes.filterSubtext}>
+            {item.subtitle}
+          </Typography>
+        </div>
+      </ListItem>
+    )
   }
 
   setFilters(setting){
-    const { workspaceOptions, networks } = this.props;
+    const { workspaceOptions, networks, circles,
+      classes } = this.props;
     let optionsArray = [...workspaceOptions]
+
+    let networkHeader = <ListItem disabled
+      className={classes.filterItem}>
+        {`Networks:`}
+      </ListItem>
+
     let networkItems = optionsArray.filter(x => x.includes('Network'))
       .map(x => networks[x.split('-')[0]])
       .map(network => {
@@ -455,7 +462,24 @@ class OpportunityHome extends React.Component {
           return this.createMenuItem(network, 'Network')
         }
       })
-    return networkItems
+
+    let circleHeader = <ListItem disabled
+      className={classes.filterItem}>
+        {`Circles:`}
+      </ListItem>
+
+    let circleItems = optionsArray.filter(x => x.includes('Circle'))
+      .map(x => circles[x.split('-')[0]])
+      .map(circle => {
+        if (setting === 'List'){
+          return this.createListItem(circle, 'Circle')
+        } else {
+          return this.createMenuItem(circle, 'Circle')
+        }
+      })
+
+    return [].concat(networkHeader, networkItems, circleHeader,
+      circleItems)
   }
 
   getSelectedTitle(dropdownFocus){
@@ -544,6 +568,8 @@ class OpportunityHome extends React.Component {
           value: 'All-Network',disabled: false},
         {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
           value: 'All-Connection',disabled: false},
+        {header: 'All Circles' , subHeader: 'Opportunities posted within my circles',
+          value: 'All-Circle',disabled: false},
         {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
           value: 'Direct-Connection', disabled: false},
       ] : [

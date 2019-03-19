@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { Switch } from 'react-router-dom';
+import { Switch, withRouter } from 'react-router-dom';
 import { ProtectedRoute} from '../../util/route_util';
 // import { Link, NavLink, withRouter } from 'react-router-dom';
 
@@ -217,7 +217,7 @@ class MyTrustedNetwork extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MyTrustedNetwork));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(MyTrustedNetwork)));
 
 // <Switch>
 //   <ProtectedRoute path="/mynetwork/invitations" component={Invitations} />

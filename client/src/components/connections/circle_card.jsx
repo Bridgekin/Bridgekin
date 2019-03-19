@@ -25,7 +25,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AddIcon from '@material-ui/icons/Add';
 
 import { deleteCircle } from '../../actions/circle_actions';
-import { openCreateCircle } from '../../actions/modal_actions';
+import { openCreateCircle, openCircle } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -36,6 +36,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   openCreateCircle: () => dispatch(openCreateCircle()),
+  openCircle: circleId => dispatch(openCircle(circleId)),
   deleteCircle: circleId => dispatch(deleteCircle(circleId)),
 });
 
@@ -73,7 +74,8 @@ class CircleCard extends React.Component {
 
   openCircle(e){
     e.stopPropagation();
-
+    this.props.openCircle(this.props.circle.id)
+    this.setState({ anchorEl: null })
   }
 
   deleteCircle(e){

@@ -3,6 +3,7 @@ import { handleErrors } from './fetch_error_handler';
 import { receiveOppPermissionErrors } from './error_actions';
 import { receiveNetworks } from './network_actions';
 import { receiveConnections } from './connection_actions';
+import { receiveCircles } from './circle_actions';
 import { receiveUsers } from './user_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
@@ -51,6 +52,7 @@ export const fetchShareOptions = () => dispatch => (
       dispatch(receiveShareOptions(data.shareOptions));
       dispatch(receiveNetworks(data.networks));
       dispatch(receiveConnections(data.connections));
+      dispatch(receiveCircles(data.circles));
       dispatch(receiveUsers(data.users));
     })
     .catch(errors => {

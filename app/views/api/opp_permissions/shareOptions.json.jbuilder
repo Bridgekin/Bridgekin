@@ -16,6 +16,14 @@ json.connections do
   end
 end
 
+json.circles do |json|
+  @circles.each do |circle|
+    json.set! circle.id do
+      json.partial! 'api/circles/circle', circle: circle
+    end
+  end
+end
+
 json.users do
   @connections.each do |connection|
     requestor = connection.requestor
