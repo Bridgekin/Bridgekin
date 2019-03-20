@@ -29,7 +29,6 @@ const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   searchResults: state.entities.searchResults,
   users: state.users,
-  connections: state.connections,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -142,7 +141,9 @@ class SearchBar extends React.Component {
   handleAllResultsPage(){
     const { searchInput } = this.state;
     this.setState({ searchAnchorEl: null })
-    this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
+    if (searchInput.length > 0){
+      this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
+    }
   }
 
   keyPress(e){
