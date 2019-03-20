@@ -81,6 +81,11 @@ const styles = theme => ({
       minWidth: 400,
     }
   },
+  profilePic: {
+    objectFit: 'cover',
+    height: 'auto',
+    width: '100%',
+  }
 })
 
 class CreateCircleModal extends React.Component {
@@ -147,7 +152,7 @@ class CreateCircleModal extends React.Component {
     if(this.props.connectionErrors){
       this.props.clearConnectionErrors();
     }
-    this.setState({ name: '', responsePage: false, members: new Set()},
+    this.setState({ name: '', search: '', responsePage: false, members: new Set()},
     () => this.props.closeCreateCircle());
   };
 
@@ -287,7 +292,7 @@ class CreateCircleModal extends React.Component {
                             onClickAway={this.handleMenuClose}>
                             {connections.filter(x => this.filterSearch(x))
                               .map(user => (
-                                <Grid container
+                                <Grid container alignItems='center'
                                   onClick={this.handleMembersChange(user.id)}
                                   style={{ minWidth: 250}}>
                                   <Avatar>
@@ -358,6 +363,7 @@ class CreateCircleModal extends React.Component {
               {`Cancel`}
             </Button>
             <Button variant='contained' color="primary"
+              disabled={members.size === 0}
               style={{ marginLeft: 20 }}
               onClick={this.handleSubmit}>
               {`Create`}

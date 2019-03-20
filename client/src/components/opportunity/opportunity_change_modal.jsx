@@ -262,6 +262,7 @@ class OpportunityChangeModal extends React.Component {
       //   this.setState(merge({}, DEFAULTSTATE,
       //     nextProps.opportunity))
       // }
+
       const { type } = this.props;
 
       if(type === 'create'){
