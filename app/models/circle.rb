@@ -13,13 +13,6 @@ class Circle < ApplicationRecord
     foreign_key: :owner_id,
     class_name: :User
 
-  has_many :opp_permissions, as: :shareable
-
-  has_many :opportunities,
-    through: :opp_permissions,
-    source: :opportunity
-
-
   def fill_with_members(membersIds)
     membersIds.each{|userId| self.user_circles.create(member_id: userId)}
   end
