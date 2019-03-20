@@ -209,7 +209,7 @@ const DEFAULTSTATE = {
   mobileImageCropPending: false,
   imageModalOpen: false,
   shareModalOpen: false,
-  permissions: ['-Network']
+  permissions: []
   // share: []
 }
 
@@ -232,39 +232,50 @@ class OpportunityChangeModal extends React.Component {
     this.handleRemovePermissions = this.handleRemovePermissions.bind(this);
   }
 
+  // componentDidMount(){
+  //   const { type } = this.props;
+  //   debugger
+  //   if(type === 'create'){
+  //     this.setState({ permissions: ["-Network"]});
+  //   } else {
+  //     this.props.fetchOppPermissions(this.props.opportunity.id)
+  //     .then(() => {
+  //       const { permissions } = this.props;
+  //       this.setState({ permissions });
+  //     })
+  //   }
+  // }
+
   shouldComponentUpdate(nextProps, nextState) {
     if(nextProps.open && nextProps.open !== this.props.open){
-      if(nextProps.opportunity.id){
+      // if(nextProps.opportunity.id){
+      //   this.props.fetchOppPermissions(nextProps.opportunity.id)
+      //   .then(() => {
+      //     const { permissions, type } = this.props;
+      //     // let new_state = merge({}, DEFAULTSTATE,
+      //     //   nextProps.opportunity,{ permissions })
+      //
+      //     this.setState(merge({}, DEFAULTSTATE,
+      //       nextProps.opportunity,{ permissions }))
+      //   });
+      // } else {
+      //   this.setState(merge({}, DEFAULTSTATE,
+      //     nextProps.opportunity))
+      // }
+      const { type } = this.props;
+
+      if(type === 'create'){
+        this.setState(merge({}, DEFAULTSTATE,
+          nextProps.opportunity, { permissions: ["-Network"]}));
+      } else {
         this.props.fetchOppPermissions(nextProps.opportunity.id)
         .then(() => {
           const { permissions } = this.props;
           this.setState(merge({}, DEFAULTSTATE,
             nextProps.opportunity,{ permissions }))
-        });
-      } else {
-        this.setState(merge({}, DEFAULTSTATE,
-          nextProps.opportunity))
+        })
       }
     }
-    // if(nextProps.opportunity !== this.props.opportunity){
-    //   if(nextProps.opportunity.id){
-    //     this.props.fetchOppPermissions(nextProps.opportunity.id)
-    //     .then(() => {
-    //       const { permissions } = this.props;
-    //       this.setState(merge({}, DEFAULTSTATE,
-    //         nextProps.opportunity,{ permissions }))
-    //     });
-    //   } else {
-    //     this.setState(merge({}, DEFAULTSTATE,
-    //       nextProps.opportunity))
-    //   }
-    // }
-
-    // if (nextProps.availNetworks !== this.props.availNetworks){
-    //   let share = nextProps.availNetworks.slice(0,1);
-    //   this.setState({ share })
-    // }
-
     return true;
   }
 
