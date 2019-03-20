@@ -101,7 +101,8 @@ const styles = theme => ({
     textTransform: 'capitalize',
     height: 30,
     padding: "5px 16px",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
+    borderTop: `1px solid ${theme.palette.border.primary}`
   },
   resultsGrid:{
     overflow: 'scroll',

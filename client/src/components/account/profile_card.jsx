@@ -30,7 +30,8 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  workspaces: state.workspaces
+  workspaces: state.workspaces,
+  connections: state.entities.connections
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -104,6 +105,7 @@ class Profile extends React.Component {
 
     this.openInvite = this.openInvite.bind(this);
     this.sendToAccountSettings = this.sendToAccountSettings.bind(this);
+    this.getInviteText = this.getInviteText.bind(this);
   }
 
   capitalize(str){
@@ -118,6 +120,27 @@ class Profile extends React.Component {
     const { user, currentUser }= this.props;
     if(currentUser.id === user.id){
       this.props.history.push('/account/settings/general')
+    }
+  }
+
+  getInviteText(){
+    const { user, currentUser, connections } = this.props;
+    let connection = Object.values(connections).filter( x => (
+      (x.userId === user.id && x.friendId === currentUser.id) ||
+      (x.userId === currentUser.id && x.friendId === user.id)
+    ))
+
+    if (connection.length > 0){
+      switch(connection[0].status){
+        case "Accepted":
+        return "Connected";
+        case "Pending":
+        return "Pending";
+        default:
+        return "Unknown";
+      }
+    } else {
+      return 'Add Contact';
     }
   }
 
@@ -137,17 +160,19 @@ class Profile extends React.Component {
         onClick={this.sendToAccountSettings}/>
     )
 
+    let inviteUserText = this.getInviteText();
+
     let profile = (
       <Grid container justify="center" alignItems="flex-start"
         style={{ padding: '25px 15px', position: 'relative' }}>
 
-        <div style={{ position: 'absolute', top: 0, right: 0}}>
+        {/*<div style={{ position: 'absolute', top: 0, right: 0}}>
           {currentUser.id !== user.id &&
             <IconButton onClick={this.openInvite}>
               <AddCircleIcon style={{ color: 'black', width: 40, height: 40}}/>
             </IconButton>
           }
-        </div>
+        </div>*/}
 
         <Grid item xs={12} sm={6} md={4} container justify='center'
           style={{ padding: 5}}>
@@ -196,6 +221,14 @@ class Profile extends React.Component {
               "Unknown"
             }
           </Typography>
+          {currentUser.id !== user.id &&
+            <Button variant='contained' color='primary'
+              onClick={this.openInvite}
+              disabled={inviteUserText !== "Add Contact"}
+              style={{ margin: "10px 0px"}}>
+              {inviteUserText}
+            </Button>
+          }
 
           {currentUser.id === user.id && <Grid container>
             <Grid container>

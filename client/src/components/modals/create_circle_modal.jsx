@@ -85,6 +85,9 @@ const styles = theme => ({
     objectFit: 'cover',
     height: 'auto',
     width: '100%',
+  },
+  textField:{
+    fontSize: 14
   }
 })
 
@@ -251,7 +254,11 @@ class CreateCircleModal extends React.Component {
                 <TextField
                   onClick={this.handleChange('name')}
                   onChange={this.handleChange('name')}
-                  className={classes.textField}
+                  InputProps={{
+                    classes: {
+                      input: classes.textField
+                    },
+                  }}
                   variant="outlined"
                   fullWidth
                 />
@@ -272,7 +279,11 @@ class CreateCircleModal extends React.Component {
                   onClick={this.handleChange('search')}
                   onChange={this.handleChange('search')}
                   placeholder="Who would you like to add to this circle?"
-                  className={classes.textField}
+                  InputProps={{
+                    classes: {
+                      input: classes.textField
+                    },
+                  }}
                   value={this.state.search}
                   variant="outlined"
                   fullWidth

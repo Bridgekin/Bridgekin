@@ -117,7 +117,7 @@ class CirclesFeed extends React.Component {
       <div style={{ paddingBottom:30, width: '100%'}}>
         {/*mobileFilter*/}
         <FeedCard contents={
-          <CircleCard circle={{title: 'Add Contact', add: true}} />        
+          <CircleCard circle={{title: 'Add Network Circle', add: true}} />
         } />
         {circleCards}
       </div>

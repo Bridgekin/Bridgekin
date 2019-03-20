@@ -7,7 +7,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   feedCard:{
-    padding: "9px 8px 20px 8px",
+    padding: "10px 8px 12px 8px",
     backgroundColor: `${theme.palette.base3}`,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
     borderBottom: `1px solid ${theme.palette.lightGrey}`,
@@ -16,7 +16,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       border: `1px solid ${theme.palette.border.primary}`,
       borderRadius: 5,
-      padding: "9px 17px 20px",
+      padding: "10px 17px 12px",
     },
   },
   mobileFeedCard:{

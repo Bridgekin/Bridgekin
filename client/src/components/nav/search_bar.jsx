@@ -103,6 +103,7 @@ class SearchBar extends React.Component {
     this.handleCloseMenu = this.handleCloseMenu.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleAllResultsPage = this.handleAllResultsPage.bind(this);
+    this.keyPress = this.keyPress.bind(this);
   }
 
   componentDidMount(){
@@ -142,6 +143,12 @@ class SearchBar extends React.Component {
     const { searchInput } = this.state;
     this.setState({ searchAnchorEl: null })
     this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
+  }
+
+  keyPress(e){
+    if(e.keyCode === 13){
+      this.handleAllResultsPage();
+    }
   }
 
   capitalize(str){
@@ -235,7 +242,9 @@ class SearchBar extends React.Component {
       // )
 
       return (
-        <div className={classes.search}>
+        <div onKeyDown={this.keyPress}
+          className={classes.search}>
+
           <InputBase
             onClick={this.handleSearchChange}
             autoFocus={true}

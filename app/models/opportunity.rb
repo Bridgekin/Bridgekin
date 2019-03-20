@@ -81,19 +81,29 @@ class Opportunity < ApplicationRecord
 
   def distill_perms(new_permissions)
     #Fill empty set with new perms
+    user = User.find(self.owner_id)
     new_permissions.reduce(Set.new()) do |acc, perm|
       split = perm.split('-')
-      case split.first
-      when ''
-        acc = Set.new((acc.to_a) | find_for_all_perms(split.last))
+      if split.first == ''
+        acc = Set.new((acc.to_a) | find_for_all_perms(split.last, user))
+      elsif split.last == "Circle"
+        acc = Set.new((acc.to_a) | find_for_circle(split.first, user))
       else
         acc << perm
       end
     end.to_a
   end
 
-  def find_for_all_perms(type)
-    user = User.find(self.owner_id)
+  def find_for_circle(circle_id, user)
+    circle_members_ids = Circle.find(circle_id).members
+
+    connections = Connection.where(user_id: circle_members_ids, friend_id: user.id)
+      .or(Connection.where(friend_id: circle_members_ids, user_id: user.id))
+
+    connections.pluck(:id).reduce([]){|acc, id| acc << "#{id}-Connection"}
+  end
+
+  def find_for_all_perms(type, user)
     case type
     when 'Network'
       network_ids = user.member_networks.pluck(:id)
