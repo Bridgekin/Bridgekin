@@ -64,25 +64,66 @@ class Opportunity < ApplicationRecord
   end
 
   def set_permissions(permsString)
+    #Example: All-Network, Network #1, All-Circle
     new_permissions = permsString.split(',')
     current_permissions = self.opp_permissions
     old_permissions = current_permissions.reduce([]) do |arr, perm|
       arr << "#{perm.shareable_id}-#{perm.shareable_type}"
     end
 
-    add_perms = new_permissions - old_permissions
-    remove_perms = old_permissions - new_permissions
+    distilled_new_perms = distill_perms(new_permissions)
 
-    update_permissions(add_perms, remove_perms)
+    add_perms = distilled_new_perms - old_permissions
+    remove_perms = old_permissions - distilled_new_perms
+
+    update_permissions(add_perms, remove_perms, new_permissions.include?("-Connection"))
   end
 
-  def update_permissions(add_perms, remove_perms)
+  def distill_perms(new_permissions)
+    #Fill empty set with new perms
+    new_permissions.reduce(Set.new()) do |acc, perm|
+      split = perm.split('-')
+      case split.first
+      when ''
+        acc = Set.new((acc.to_a) | find_for_all_perms(split.last))
+      else
+        acc << perm
+      end
+    end.to_a
+  end
+
+  def find_for_all_perms(type)
+    user = User.find(self.owner_id)
+    case type
+    when 'Network'
+      network_ids = user.member_networks.pluck(:id)
+      network_ids.reduce([]){|acc, id| acc << "#{id}-Network"}
+    when 'Connection'
+      connection_ids = user.connections.pluck(:id)
+      connection_ids.reduce([]){|acc, id| acc << "#{id}-Connection"}
+    when 'Circle'
+      circle_members_ids = user.circles.includes(:members)
+        .reduce(Set.new()) do |acc, circle|
+          Set.new((acc.to_a) | circle.members.pluck(:id))
+        end.to_a
+
+      connections = Connection.where(user_id: circle_members_ids, friend_id: user.id)
+        .or(Connection.where(friend_id: circle_members_ids, user_id: user.id))
+
+      connections.pluck(:id).reduce([]){|acc, id| acc << "#{id}-Connection"}
+    else
+      puts "Error: Something went wrong!!!!"
+    end
+  end
+
+  def update_permissions(add_perms, remove_perms, massBoolean)
     add_perms.each do |perm|
       perm = perm.split('-')
       OppPermission.create(
         opportunity_id: self.id,
         shareable_id: perm.first,
-        shareable_type: perm.last
+        shareable_type: perm.last,
+        mass: (massBoolean && perm.last == 'Connection')
       )
     end
 
@@ -96,7 +137,7 @@ class Opportunity < ApplicationRecord
     end
   end
 
-  def method_name
+  def send_notification
 
   end
 

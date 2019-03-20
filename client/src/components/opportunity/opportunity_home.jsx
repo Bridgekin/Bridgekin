@@ -445,7 +445,7 @@ class OpportunityHome extends React.Component {
 
   setFilters(setting){
     const { workspaceOptions, networks, circles,
-      classes } = this.props;
+      classes, currentUser } = this.props;
     let optionsArray = [...workspaceOptions]
 
     let networkHeader = <ListItem disabled
@@ -463,23 +463,28 @@ class OpportunityHome extends React.Component {
         }
       })
 
-    let circleHeader = <ListItem disabled
-      className={classes.filterItem}>
-        {`Circles:`}
-      </ListItem>
+    // let circleHeader = <ListItem disabled
+    //   className={classes.filterItem}>
+    //     {`Circles:`}
+    //   </ListItem>
+    //
+    // let circleItems = optionsArray.filter(x => x.includes('Circle'))
+    //   .map(x => circles[x.split('-')[0]])
+    //   .map(circle => {
+    //     if (setting === 'List'){
+    //       return this.createListItem(circle, 'Circle')
+    //     } else {
+    //       return this.createMenuItem(circle, 'Circle')
+    //     }
+    //   })
 
-    let circleItems = optionsArray.filter(x => x.includes('Circle'))
-      .map(x => circles[x.split('-')[0]])
-      .map(circle => {
-        if (setting === 'List'){
-          return this.createListItem(circle, 'Circle')
-        } else {
-          return this.createMenuItem(circle, 'Circle')
-        }
-      })
-
-    return [].concat(networkHeader, networkItems, circleHeader,
-      circleItems)
+    // if (currentUser.isAdmin){
+    //   return [].concat(networkHeader, networkItems, circleHeader,
+    //     circleItems)
+    // } else {
+    //   return [].concat(networkHeader, networkItems)
+    // }
+    return [].concat(networkHeader, networkItems)
   }
 
   getSelectedTitle(dropdownFocus){
@@ -568,8 +573,8 @@ class OpportunityHome extends React.Component {
           value: 'All-Network',disabled: false},
         {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
           value: 'All-Connection',disabled: false},
-        {header: 'All Circles' , subHeader: 'Opportunities posted within my circles',
-          value: 'All-Circle',disabled: false},
+        // {header: 'All Circles' , subHeader: 'Opportunities posted within my circles',
+        //   value: 'All-Circle',disabled: false},
         {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
           value: 'Direct-Connection', disabled: false},
       ] : [

@@ -14,7 +14,8 @@ class Api::OpportunitiesController < ApiController
     option = params[:option].split('-')
     @opportunities = []
     if option.empty?
-      @opportunities = opps_all_networks + opps_all_connections + opps_all_circles
+      @opportunities = opps_all_networks + opps_direct_connections +
+      opps_all_connections
     else
       if option.first == 'All'
         case option.last
@@ -118,7 +119,8 @@ class Api::OpportunitiesController < ApiController
     def set_workspace_networks
       @workspace_networks = Network.where(workspace_id: params[:workspace_id])
         .where(id: @user.member_networks)
-        .or(Network.where(id: params[:workspace_id]))
+        .or(Network.where(id: params[:workspace_id])
+          .where(id: @user.member_networks))
         .includes(:opportunities)
 
       @workspace_network_members = User.joins(:user_networks)

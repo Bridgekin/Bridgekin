@@ -1,89 +1,81 @@
 module SQLControllerModule
   def opps_all_networks
-    Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
-      .includes(:owner)
-      .where(opp_permissions: { shareable_id: [@workspace_networks.pluck(:id), nil]})
+    Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
+      .where(opp_permissions: { shareable_id: @workspace_networks.pluck(:id)})
       .where(status: 'Approved')
       .where.not(deal_status: 'Deleted')
       .order(created_at: :desc)
   end
 
   def opps_network_id(network_id)
-    network_opps = Network.find(network_id).opportunities
-      .includes(:owner)
+    Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
+      .where(opp_permissions: { shareable_id: network_id })
       .where(status: 'Approved')
       .where.not(deal_status: 'Deleted')
       .order(created_at: :desc)
-      # .where(opp_permissions: { sharable_id: network_id,
-      #   shareable_type: 'Network' })
-      # .where(opportunity_networks: { network_id: network_id})
-
-    all_opps = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
-      .includes(:owner)
-      .where(opp_permissions: { shareable_id: [@workspace_networks.pluck(:id), nil]})
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
-
-    network_opps + all_opps
   end
 
   def opps_all_circles
-    Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Circle'")
-      .includes(:owner)
-      .where(opp_permissions: { shareable_id: [@user.circles.pluck(:id), nil]})
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
+    circle_members_ids = @user.circles.includes(:members)
+      .reduce(Set.new()) do |acc, circle|
+        Set.new((acc.to_a) | circle.members.pluck(:id))
+      end.to_a
+
+    connections = Connection.where(user_id: circle_members_ids, friend_id: @user.id)
+      .or(Connection.where(friend_id: circle_members_ids, user_id: @user.id))
+
+    Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
+      .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
+      .where(opp_permissions: { shareable_id: connections.pluck(:id) })
   end
 
   def opps_circle_id(circle_id)
-    circle_opps = Circle.find(circle_id).opportunities
-      .includes(:owner)
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
+    circle_members_ids = Circle.find(circle_id).members
 
-    all_opps = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Circle'")
-      .includes(:owner)
-      .where(opp_permissions: { shareable_id: nil })
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
+    connections = Connection.where(user_id: circle_members_ids, friend_id: @user.id)
+      .or(Connection.where(friend_id: circle_members_ids, user_id: @user.id))
 
-    circle_opps + all_opps
+    Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
+      .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
+      .where(opp_permissions: { shareable_id: connections.pluck(:id) })
   end
 
   def opps_direct_connections
-    Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
-      .joins("LEFT JOIN connections on connections.id = opp_permissions.shareable_id")
-      .includes(:owner)
-      .where(connections: {
-        user_id: @workspace_network_members.pluck(:id),
-        friend_id: @workspace_network_members.pluck(:id)
-      })
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
+    # Find all connections
+    connections = @user.requested_connections.includes(:opportunities) +
+      @user.received_connections.includes(:opportunities)
+
+    Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
+      .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
+      .where(opp_permissions: { shareable_id: connections.pluck(:id) })
+      .where(opp_permissions: { mass: false })
   end
 
   def opps_all_connections
-    direct = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
-      .joins("LEFT JOIN connections on connections.id = opp_permissions.shareable_id")
-      .includes(:owner)
-      .where(connections: {
-        user_id: @workspace_network_members.pluck(:id),
-        friend_id: @workspace_network_members.pluck(:id)
-      })
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
+    connections = @user.requested_connections.includes(:opportunities) +
+      @user.received_connections.includes(:opportunities)
 
-    all = Opportunity.joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
-      .includes(:owner)
-      .where(opp_permissions: { shareable_id: nil })
-      .where.not(deal_status: 'Deleted')
-
-    direct + all
+    Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
+      .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
+      .where(opp_permissions: { shareable_id: connections.pluck(:id) })
+      .where(opp_permissions: { mass: true })
   end
 end
+
+# opportunity_ids = connections.reduce(Set.new()) do |acc, conn|
+#   Set.new((acc.to_a) | conn.opportunities.where.not(owner_id: u.id).pluck(:id))
+# end.to_a
+
+# workspace_members = User.joins(:user_networks).where(user_networks: { network_id: workspace_networks.pluck(:id)})
+#
+# workspace_networks = Network.where(workspace_id: 1).where(id: u.member_networks).or(Network.where(id: 1).where(id: u.member_networks)).includes(:opportunities)
+#
+# direct_opps = Opportunity.includes(:owner).joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'").joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id").where(connections: {user_id: u.id,friend_id: workspace_members.pluck(:id)}).or(Opportunity.includes(:owner).joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'").joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id").where(connections: {friend_id: u.id,user_id: (workspace_members.uniq.pluck(:id)) - [u.id] }))
+#
+# u.connections.includes(:opportunities).reduce(Set.new()){|acc,con| acc << con.opportunities}

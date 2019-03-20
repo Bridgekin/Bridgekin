@@ -73,11 +73,11 @@ class User < ApplicationRecord
 
   has_many :requested_connections,
     foreign_key: :user_id,
-    class_name: :User
+    class_name: :Connection
 
   has_many :received_connections,
     foreign_key: :friend_id,
-    class_name: :User
+    class_name: :Connection
 
   has_many :user_circles,
     foreign_key: :member_id,
