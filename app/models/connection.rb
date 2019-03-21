@@ -15,4 +15,7 @@ class Connection < ApplicationRecord
   has_many :opportunities,
     through: :opp_permissions,
     source: :opportunity
+
+  has_many :notifications, as: :acted_with
+  has_many :notifications, as: :targetable
 end

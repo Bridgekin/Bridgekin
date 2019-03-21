@@ -4,7 +4,10 @@ import connectedOpportuntiesReducer from './connected_opportunities_reducer';
 import facilitatedOpportuntiesReducer from './facilitated_opportunities_reducer';
 import networkReducer from './networks_reducer';
 import referralsReducer from './referrals_reducer';
-import emailNotificationReducer from './email_notification_reducer';
+
+import emailNotificationReducer from './notifications/email_notification_reducer';
+import notificationsReducer from './notifications/notifications_reducer';
+import notificationSettingsReducer from './notifications/notification_settings_reducer';
 
 import managedNetworksReducer from './managed_networks_reducer.js';
 import memberUsersReducer from './member_users_reducer.js';
@@ -39,4 +42,6 @@ export default combineReducers({
   searchResultsPage: searchResultsPageReducer,
   circles: circlesReducer,
   circleMembers: circlesMembersReducer,
+  notifications: notificationsReducer,
+  notificationSettings: notificationSettingsReducer
 });

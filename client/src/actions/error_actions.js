@@ -35,6 +35,11 @@ export const CLEAR_CONNECTION_ERRORS = 'CLEAR_CONNECTION_ERRORS';
 export const RECEIVE_CIRCLE_ERRORS = 'RECEIVE_CIRCLE_ERRORS';
 export const CLEAR_CIRCLE_ERRORS = 'CLEAR_CIRCLE_ERRORS';
 
+export const RECEIVE_NOTIFICATION_SETTING_ERRORS = 'RECEIVE_NOTIFICATION_SETTING_ERRORS';
+export const CLEAR_NOTIFICATION_SETTING_ERRORS = 'CLEAR_NOTIFICATION_SETTING_ERRORS';
+export const RECEIVE_NOTIFICATION_ERRORS = 'RECEIVE_NOTIFICATION_ERRORS';
+export const CLEAR_NOTIFICATION_ERRORS = 'CLEAR_NOTIFICATION_ERRORS';
+
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
   errors
@@ -116,12 +121,12 @@ export const clearReferralErrors = () => ({
   type: CLEAR_REFERRAL_ERRORS,
 });
 
-export const receiveNotificationErrors = errors => ({
+export const receiveEmailNotificationErrors = errors => ({
   type: RECEIVE_EMAIL_NOTIFICATION_ERRORS,
   errors
 });
 
-export const clearNotificationErrors = () => ({
+export const clearEmailNotificationErrors = () => ({
   type: CLEAR_EMAIL_NOTIFICATION_ERRORS,
 });
 
@@ -177,4 +182,22 @@ export const receiveCircleErrors = errors => ({
 
 export const clearCircleErrors = () => ({
   type: CLEAR_CIRCLE_ERRORS,
+});
+
+export const receiveNotificationSettingErrors = errors => ({
+  type: RECEIVE_NOTIFICATION_SETTING_ERRORS,
+  errors
+});
+
+export const clearNotificationSettingErrors = () => ({
+  type: CLEAR_NOTIFICATION_SETTING_ERRORS,
+});
+
+export const receiveNotificationErrors = errors => ({
+  type: RECEIVE_NOTIFICATION_ERRORS,
+  errors
+});
+
+export const clearNotificationErrors = () => ({
+  type: CLEAR_NOTIFICATION_ERRORS,
 });

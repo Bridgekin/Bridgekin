@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_20_195223) do
+ActiveRecord::Schema.define(version: 2019_03_21_194827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,21 @@ ActiveRecord::Schema.define(version: 2019_03_20_195223) do
     t.string "subtitle", default: ""
     t.integer "parent_id"
     t.integer "workspace_id"
+  end
+
+  create_table "notification_settings", force: :cascade do |t|
+    t.integer "user_id"
+    t.boolean "opps_shared_direct", default: true
+    t.boolean "opps_shared_contacts", default: true
+    t.boolean "opps_shared_communities", default: true
+    t.boolean "invites_requested", default: true
+    t.boolean "opps_acknowledged", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "email_opps_shared_direct", default: true
+    t.boolean "email_invites_requested", default: true
+    t.string "email_opps_shared_contacts", default: "Weekly"
+    t.string "email_opps_shared_communities", default: "Weekly"
   end
 
   create_table "notifications", force: :cascade do |t|

@@ -93,6 +93,18 @@ class User < ApplicationRecord
 
   has_one_attached :profile_pic
 
+  has_many :notifications,
+    foreign_key: :recipient_id,
+    class_name: :Notification
+
+  has_many :notifications_acted,
+    foreign_key: :actor_id,
+    class_name: :Notification
+
+  has_one :notification_setting,
+    foreign_key: :user_id,
+    class_name: :NotificationSetting
+
   def connections
     Connection.where("user_id = ? OR friend_id = ?", self.id, self.id)
       .includes(:requestor, :recipient)
