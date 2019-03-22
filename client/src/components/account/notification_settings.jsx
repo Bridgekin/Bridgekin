@@ -32,7 +32,7 @@ const styles = theme => ({
   },
   notificationHeader:{ fontSize: 13, fontWeight: 600},
   notificationItem: { fontSize: 13, fontWeight: 400},
-  switchIcon: {backgroundColor: 'white'},
+  // switchIcon: {backgroundColor: 'white'},
   // switchBar: { backgroundColor: 'black'}
 })
 
@@ -41,7 +41,8 @@ class NotificationSettings extends React.Component {
     super(props)
     this.state = {
       loaded: false,
-      sending: false
+      sending: false,
+      changed: false
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleMenuChange = this.handleMenuChange.bind(this);
@@ -59,7 +60,7 @@ class NotificationSettings extends React.Component {
 
   handleChange(field){
     return e => {
-      this.setState({ [field]: e.target.checked})
+      this.setState({ [field]: e.target.checked, changed: true})
     }
   }
 
@@ -101,7 +102,7 @@ class NotificationSettings extends React.Component {
 
   render(){
     const { classes } = this.props;
-    const { loaded, sending } = this.state;
+    const { loaded, sending, changed } = this.state;
 
     if (loaded){
       let inAppOptions = [
@@ -212,7 +213,7 @@ class NotificationSettings extends React.Component {
           <Grid container justify='flex-end'
             style={{ marginTop: 20 }}>
             <Button variant='contained' color='primary'
-              disabled={sending} onClick={this.handleSubmit}>
+              disabled={!changed || sending} onClick={this.handleSubmit}>
               Save
             </Button>
           </Grid>

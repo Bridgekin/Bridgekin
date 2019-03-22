@@ -17,6 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import Badge from '@material-ui/core/Badge';
 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -32,6 +33,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import Img from 'react-image';
 import PersonIcon from '@material-ui/icons/Person';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
@@ -50,6 +52,8 @@ import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 import { fetchSearchResults } from '../../actions/user_actions';
 
+import { fetchNotifications, updateAsRead } from '../../actions/notification_actions';
+
 const mapStateToProps = (state, ownProps) => {
   const siteTemplate = state.siteTemplate;
   return ({
@@ -59,7 +63,8 @@ const mapStateToProps = (state, ownProps) => {
     workspaces: Object.values(state.workspaces),
     searchResults: state.entities.searchResults,
     users: state.users,
-    siteTemplate
+    siteTemplate,
+    notifications: state.entities.notifications
   })
 };
 
@@ -70,7 +75,9 @@ const mapDispatchToProps = dispatch => ({
   receiveUser: (user) => dispatch(receiveUser(user)),
   fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
   addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId)),
-  fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput))
+  fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput)),
+  fetchNotifications: () => dispatch(fetchNotifications()),
+  updateAsRead: (ids) => dispatch(updateAsRead(ids)),
 });
 
 let styles = (theme) => ({
@@ -162,7 +169,9 @@ let styles = (theme) => ({
   },
   buttonText: { color: theme.palette.text.tertiary},
   navButtonText: { color: theme.palette.text.tertiary},
-  listItemText: { fontSize: 12 }
+  listItemText: { fontSize: 12 },
+  badge: { backgroundColor: 'red', color: 'white'},
+  unread: { backgroundColor: theme.palette.base4 }
 });
 
 class HomeNav extends React.Component {
@@ -176,21 +185,34 @@ class HomeNav extends React.Component {
       searchInput: '',
       searchLoading: true,
       searchAnchorEl: null,
+      notificationsAnchorEl: null
     };
 
     this.timeout = null;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleProfileMenuOpen = this.handleProfileMenuOpen.bind(this);
-    this.handleProfileMenuClose = this.handleProfileMenuClose.bind(this);
-    this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
-    this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
-    this.handleLogoMenuClick = this.handleLogoMenuClick.bind(this);
     this.handleLogoMenuChangeTemplate = this.handleLogoMenuChangeTemplate.bind(this);
     this.redirectToLogin = this.redirectToLogin.bind(this);
-    this.handleClickAwayClose = this.handleClickAwayClose.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.countNotifications = this.countNotifications.bind(this);
+    this.openNotifications = this.openNotifications.bind(this);
+    this.handleNotificationMenuOpen = this.handleNotificationMenuOpen.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.fetchNotifications()
+  }
+
+  countNotifications(){
+    const { notifications } = this.props;
+    let unread = Object.values(notifications).filter(x => !x.readAt)
+    return unread.length
+  }
+
+  openNotifications(){
+    this.setState({ notificationsAnchorEl: null },
+    () => this.props.history.push("/account/notifications"))
   }
 
   handleSubmit(e){
@@ -228,25 +250,19 @@ class HomeNav extends React.Component {
     }
   }
 
-  handleProfileMenuOpen = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
+  handleMenuToggle(anchor){
+    return e => {
+      const anchorEl = this.state[anchor]
+      this.setState({ [anchor]: anchorEl ? null : e.currentTarget})
+    }
+  }
 
-  handleMobileMenuOpen = event => {
-    this.setState({ mobileMoreAnchorEl: event.currentTarget });
-  };
-
-  handleProfileMenuClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
-  };
-
-  handleLogoMenuClick(e){
-    const {logoAnchorEl} = this.state;
-    this.setState({ logoAnchorEl: logoAnchorEl ? null : e.currentTarget });
+  handleNotificationMenuOpen(e){
+    this.setState({ notificationsAnchorEl: e.currentTarget })
+    const { notifications } = this.props;
+    let notificationIds = Object.values(notifications).filter(x => !x.readAt)
+      .map(notification => notification.id)
+    this.props.updateAsRead(notificationIds)
   }
 
   handleLogoMenuChangeTemplate(network_id){
@@ -262,12 +278,6 @@ class HomeNav extends React.Component {
       if(field === 'findandconnect'){
         this.props.history.push('/findandconnect')
       }
-    }
-  }
-
-  handleClickAwayClose(anchorEl) {
-    return e => {
-      this.setState({ [anchorEl]: null });
     }
   }
 
@@ -332,16 +342,21 @@ class HomeNav extends React.Component {
   render(){
     const { classes, currentUser, sessionErrors,
       siteTemplate, workspaces, users,
-      searchResults } = this.props;
+      searchResults, notifications } = this.props;
 
     const { auth, anchorEl, mobileMoreAnchorEl,
     logoAnchorEl, searchAnchorEl,
-    searchLoading, searchOutput, searchInput } = this.state;
+    searchLoading, searchOutput, searchInput,
+    notificationsAnchorEl} = this.state;
 
     const searchOpen = Boolean(searchAnchorEl);
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logoMenuOpen = Boolean(logoAnchorEl);
+
+    let sortedNotifications = Object.values(notifications).sort((a,b) => (
+      a.createdAt - b.createdAt
+    ))
 
     let pathName = this.props.location.pathname//split('/').pop();
 
@@ -352,15 +367,16 @@ class HomeNav extends React.Component {
         id="menu-appbar"
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
           horizontal: 'right',
         }}
+        getContentAnchorEl={null}
         open={isMenuOpen}
-        onClose={this.handleProfileMenuClose}
+        onClose={this.handleMenuToggle('anchorEl')}
       >
         <MenuItem onClick={this.handleLinkClose('account')}>
           <Typography variant="body1" align='left' color="textPrimary" >
@@ -394,7 +410,7 @@ class HomeNav extends React.Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={isMobileMenuOpen}
-        onClose={this.handleMobileMenuClose}
+        onClose={this.handleMenuToggle('mobileMoreAnchorEl')}
       >
         {siteTemplate.testFeature &&
         <MenuItem onClick={this.handleLinkClose('testfeature')}>
@@ -434,6 +450,37 @@ class HomeNav extends React.Component {
         <MenuItem onClick={this.handleLinkClose('logout')}>
           <Typography variant="body1" align='left' color="textPrimary" >
             Logout
+          </Typography>
+        </MenuItem>
+      </Menu>
+    )
+
+    let notificationsMenu = (
+      <Menu
+        anchorEl={notificationsAnchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        getContentAnchorEl={null}
+        open={Boolean(notificationsAnchorEl)}
+        onClose={this.handleMenuToggle('notificationsAnchorEl')}
+      >
+        {sortedNotifications.map(notification => (
+          <MenuItem
+            className={!notification.readAt ? classes.unread : ''}>
+            <Typography variant="body1" align='left' color="textPrimary" >
+              {`${notification.message}`}
+            </Typography>
+          </MenuItem>
+        ))}
+        <MenuItem onClick={this.openNotifications}>
+          <Typography variant="body1" align='left' color="textPrimary" >
+            {`See all notifications`}
           </Typography>
         </MenuItem>
       </Menu>
@@ -535,11 +582,21 @@ class HomeNav extends React.Component {
               My Trusted Network
             </Typography>
           </Button>}
+
+          {currentUser && currentUser.isAdmin &&
+            <IconButton color="inherit"
+              onClick={this.handleNotificationMenuOpen}>
+              <Badge badgeContent={this.countNotifications()}
+                classes={{ badge: classes.badge}}>
+                <NotificationsIcon color='primary' />
+              </Badge>
+            </IconButton>
+          }
           <div>
             <IconButton
               aria-owns={isMenuOpen ? 'material-appbar' : undefined}
               aria-haspopup="true"
-              onClick={this.handleProfileMenuOpen}
+              onClick={this.handleMenuToggle('anchorEl')}
               className={classes.navButtonText}
             >
               {currentUser.profilePicUrl ? (
@@ -554,8 +611,17 @@ class HomeNav extends React.Component {
         </div>
 
         <div className={classes.sectionMobile}>
+          {currentUser && currentUser.isAdmin &&
+            <IconButton color="inherit"
+              onClick={this.handleNotificationMenuOpen}>
+              <Badge badgeContent={this.countNotifications()}
+                classes={{ badge: classes.badge}}>
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          }
           <IconButton aria-haspopup="true" color="inherit"
-            onClick={this.handleMobileMenuOpen}
+            onClick={this.handleMenuToggle('mobileMoreAnchorEl')}
             classes={{ label: classes.buttonText }}
             style={{ padding: 0 }}>
             <MenuIcon className={classes.menuIcon}/>
@@ -563,6 +629,7 @@ class HomeNav extends React.Component {
         </div>
         {renderMenu}
         {renderMobileMenu}
+        {notificationsMenu}
       </Grid>
     )
 
@@ -581,7 +648,7 @@ class HomeNav extends React.Component {
           currentUser &&
           <IconButton
             aria-haspopup="true"
-            onClick={this.handleLogoMenuClick}
+            onClick={this.handleMenuToggle('logoAnchorEl')}
             style={{ padding: 3}}
             classes={{ label: classes.buttonText}}>
             <KeyboardArrowDownIcon />
@@ -605,7 +672,7 @@ class HomeNav extends React.Component {
             >
               <Paper>
                 <ClickAwayListener
-                  onClickAway={this.handleClickAwayClose('logoAnchorEl')}>
+                  onClickAway={this.handleMenuToggle('logoAnchorEl')}>
                   <MenuList>
                     {workspaces.map(workspace => (
                       <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}>

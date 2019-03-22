@@ -23,7 +23,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchNotifications: () => dispatch(fetchNotifications()),
-  updateAsRead: () => dispatch(updateAsRead()),
+  updateAsRead: (ids) => dispatch(updateAsRead(ids)),
 });
 
 const styles = theme => ({

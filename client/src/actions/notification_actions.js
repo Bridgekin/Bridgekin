@@ -1,7 +1,7 @@
 import * as NotificationApiUtil from '../util/notifications_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveNotificationErrors } from './error_actions';
-// import { receiveUsers } from './user_actions';
+import { receiveUsers } from './user_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
@@ -27,7 +27,10 @@ export const removeNotification = notificationID => ({
 export const fetchNotifications = () => dispatch => (
   NotificationApiUtil.fetchNotifications()
     .then(handleErrors)
-    .then(data => dispatch(receiveNotifications(data.notifications)))
+    .then(data => {
+      dispatch(receiveNotifications(data.notifications))
+      dispatch(receiveUsers(data.users))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];

@@ -6,7 +6,8 @@ class Api::Users::SessionsController < ApiController
   # acts_as_token_authentication_handler_for User, only: [:destroy]
 
   def create
-    @user = User.find_by(email: sign_in_params[:email].downcase)
+    @user = User.includes(:notifications)
+      .find_by(email: sign_in_params[:email].downcase)
 
     if @user && @user.valid_password?(sign_in_params[:password]) #&& @user.confirmed?
       @token = get_login_token!(@user)
