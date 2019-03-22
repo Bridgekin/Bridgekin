@@ -581,7 +581,7 @@ class AccountSetting extends React.Component {
                   color="textPrimary" className={classes.fieldLabel}>
                   Location
                 </Typography>
-                <Grid container justify="center" alignItems="center"
+                <Grid container justify="center" alignItems="flex-end"
                   spacing={24}>
                   <Grid item xs={10} sm={6}>
                     <TextField
@@ -590,19 +590,24 @@ class AccountSetting extends React.Component {
                       className={classes.textField}
                       margin="normal"
                       value={this.state.city}
+                      fullWidth
                       onChange={this.handleInfoChange('city')}
                     />
                   </Grid>
-                  <Grid item xs={10} sm={6} className={classes.countryWrapper}>
+                  <Grid item xs={10} sm={6} className={classes.countryWrapper}
+                    direction="column">
                     <InputLabel htmlFor="country-simple"
                       className={classes.selectLabel}>Country</InputLabel>
                     <Select
+                      label='Country'
                       value={this.state.country}
                       onChange={this.handleInfoChange('country')}
+                      fullWidth
                       inputProps={{
                         name: 'country',
                         id: 'country-simple',
                       }}
+                      style={{ marginBottom: 8}}
                     >
                       <MenuItem value="">
                         <em>None</em>
