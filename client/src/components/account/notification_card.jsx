@@ -55,7 +55,7 @@ class NotificationCard extends React.Component {
         </Avatar>
 
         <Typography align='left' color='textPrimary'
-          style={{ fontSize: 14 }}>
+          style={{ fontSize: 14, fontWeight: 600 }}>
           {`${notification.message}`}
         </Typography>
       </Grid>

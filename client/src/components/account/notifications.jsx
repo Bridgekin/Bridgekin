@@ -43,7 +43,14 @@ class Notifications extends React.Component {
 
   componentDidMount(){
     this.props.fetchNotifications()
-    .then(() => this.setState({ loaded: true }))
+    .then(() => {
+      const { notifications } = this.props;
+      let unreadIds = Object.values(notifications).filter(x => !x.readAt)
+        .map(notification => notification.id);
+
+      this.props.updateAsRead(unreadIds)
+      .then(() => this.setState({ loaded: true }))
+    })
 
     // this.setState({ loaded: true });
   }
