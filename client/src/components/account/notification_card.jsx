@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -34,7 +35,24 @@ const styles = theme => ({
 class NotificationCard extends React.Component {
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {};
+    this.handleNotificationRedirect = this.handleNotificationRedirect.bind(this);
+  }
+
+  handleNotificationRedirect(e){
+    e.stopPropagation();
+    const { notification } = this.props;
+    if(notification.actedWithType === "Opportunity"){
+      if(notification.action !== "posted"){
+        this.props.history.push('/findandconnect/direct-connections')
+      } else {
+        this.props.history.push('/findandconnect')
+      }
+    } else if(notification.actedWithType === "Connection"){
+      if(notification.action === "invited"){
+        this.props.history.push('/mynetwork/invitations')
+      }
+    }
   }
 
   render(){
@@ -42,7 +60,8 @@ class NotificationCard extends React.Component {
     let actor = users[notification.actorId]
 
     let card = (
-      <Grid container alignItems="center">
+      <Grid container alignItems="center"
+        onClick={this.handleNotificationRedirect}>
         <Avatar
           style={{ marginRight: 15}}>
           {actor.profilePicUrl ? (
@@ -65,4 +84,4 @@ class NotificationCard extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NotificationCard));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(NotificationCard)));

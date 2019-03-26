@@ -18,4 +18,8 @@ class Connection < ApplicationRecord
 
   has_many :notifications, as: :acted_with
   has_many :notifications, as: :targetable
+
+  has_many :notifications,
+    as: :origin,
+    dependent: :destroy
 end

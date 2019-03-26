@@ -73,6 +73,8 @@ class ContactsFeed extends React.Component {
     const { contactAnchorEl } = this.state;
     const pathName = this.props.location.pathname;
 
+    let page = pages.find(x => x.dest === pathName)
+
     let mobileFilter = (
       <Grid container justify='flex-end' alignItems='center'
         className={classes.mobileFilterCard}>
@@ -83,7 +85,7 @@ class ContactsFeed extends React.Component {
           onClick={this.handleMenuClick('contactAnchorEl')}
           style={{ textTransform: 'capitalize'}}
         >
-          {pages.find(x => x.dest === pathName).title}
+          {page && page.title}
           <KeyboardArrowDownIcon />
         </Button>
         <Menu
@@ -104,7 +106,7 @@ class ContactsFeed extends React.Component {
     return (
       <div style={{ paddingBottom:30, width: '100%'}}>
         {mobileFilter}
-        <Contacts pathName={pathName}/>
+        {page && <Contacts pathName={pathName}/>}
         <div className={classes.mobileWaitlist}>
           {waitlistCard}
         </div>

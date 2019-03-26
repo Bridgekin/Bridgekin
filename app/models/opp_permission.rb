@@ -7,4 +7,8 @@ class OppPermission < ApplicationRecord
 
   belongs_to :shareable, polymorphic: true,
     optional: true
+
+  has_many :notifications,
+    as: :origin,
+    dependent: :destroy
 end

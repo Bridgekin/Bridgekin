@@ -171,7 +171,12 @@ let styles = (theme) => ({
   navButtonText: { color: theme.palette.text.tertiary},
   listItemText: { fontSize: 12 },
   badge: { backgroundColor: 'red', color: 'white'},
-  unread: { backgroundColor: theme.palette.base4 }
+  unread: { backgroundColor: theme.palette.base4 },
+  profilePic: {
+    height: 'auto',
+    width: '100%',
+    objectFit: 'cover'
+  },
 });
 
 class HomeNav extends React.Component {
@@ -189,6 +194,7 @@ class HomeNav extends React.Component {
     };
 
     this.timeout = null;
+    this.notificationsShown = 5;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -198,6 +204,7 @@ class HomeNav extends React.Component {
     this.countNotifications = this.countNotifications.bind(this);
     this.openNotifications = this.openNotifications.bind(this);
     this.handleNotificationMenuOpen = this.handleNotificationMenuOpen.bind(this);
+    this.handleNotificationRedirect = this.handleNotificationRedirect.bind(this);
   }
 
   componentDidMount(){
@@ -261,8 +268,32 @@ class HomeNav extends React.Component {
     this.setState({ notificationsAnchorEl: e.currentTarget })
     const { notifications } = this.props;
     let notificationIds = Object.values(notifications).filter(x => !x.readAt)
+      .sort((a,b) => (
+        (new Date(b.createdAt)) - (new Date(a.createdAt))
+      ))
+      .slice(0, 4)
       .map(notification => notification.id)
     this.props.updateAsRead(notificationIds)
+  }
+
+  handleNotificationRedirect(notification){
+    return e => {
+      e.stopPropagation();
+      this.setState({ notificationsAnchorEl: null },
+      () => {
+        if(notification.actedWithType === "Opportunity"){
+          if(notification.action !== "posted"){
+            this.props.history.push('/findandconnect/direct-connections')
+          } else {
+            this.props.history.push('/findandconnect')
+          }
+        } else if(notification.actedWithType === "Connection"){
+          if(notification.action === "invited"){
+            this.props.history.push('/mynetwork/invitations')
+          }
+        }
+      })
+    }
   }
 
   handleLogoMenuChangeTemplate(network_id){
@@ -355,8 +386,8 @@ class HomeNav extends React.Component {
     const logoMenuOpen = Boolean(logoAnchorEl);
 
     let sortedNotifications = Object.values(notifications).sort((a,b) => (
-      a.createdAt - b.createdAt
-    ))
+      (new Date(b.createdAt)) - (new Date(a.createdAt))
+    )).slice(0,5)
 
     let pathName = this.props.location.pathname//split('/').pop();
 
@@ -470,14 +501,30 @@ class HomeNav extends React.Component {
         open={Boolean(notificationsAnchorEl)}
         onClose={this.handleMenuToggle('notificationsAnchorEl')}
       >
-        {sortedNotifications.map(notification => (
-          <MenuItem
-            className={!notification.readAt ? classes.unread : ''}>
-            <Typography variant="body1" align='left' color="textPrimary" >
-              {`${notification.message}`}
-            </Typography>
+        {sortedNotifications.map(notification => {
+          let actor = users[notification.actorId];
+          return <MenuItem
+            className={!notification.readAt ? classes.unread : ''}
+            onClick={this.handleNotificationRedirect(notification)}>
+            <Grid container alignItems="center">
+              <Avatar
+                style={{ marginRight: 10}}>
+                {actor && actor.profilePicUrl ? (
+                  <VisibilitySensor>
+                    <Img src={users[notification.actorId].profilePicUrl}
+                      className={classes.profilePic}
+                      />
+                  </VisibilitySensor>
+                ):<PersonIcon />}
+              </Avatar>
+
+              <Typography align='left' color='textPrimary'
+                style={{ fontSize: 13 }}>
+                {`${notification.message}`}
+              </Typography>
+            </Grid>
           </MenuItem>
-        ))}
+        })}
         <MenuItem onClick={this.openNotifications}>
           <Typography variant="body1" align='left' color="textPrimary" >
             {`See all notifications`}
@@ -553,7 +600,8 @@ class HomeNav extends React.Component {
         item xs={2} sm={2} md={5} lg={5}
         container justify='flex-end' alignItems='center'>
 
-        <div className={classes.sectionDesktop}>
+        <Grid container alignItems="center" justify="flex-end"
+          className={classes.sectionDesktop}>
           {siteTemplate.testFeature &&
             <Button color='secondary'
               onClick={this.handleLinkClose('testfeature')}
@@ -564,33 +612,33 @@ class HomeNav extends React.Component {
                 Test Feature
               </Typography>
             </Button>}
-          <Button color='secondary'
-            onClick={this.handleLinkClose('findandconnect')}>
-            <Typography variant="h4" align='left'
-              style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
-              className={classes.navButtonText}>
-              Find & Connect
-            </Typography>
-          </Button>
+            <Button color='secondary'
+              onClick={this.handleLinkClose('findandconnect')}>
+              <Typography variant="h4" align='left'
+                style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
+                className={classes.navButtonText}>
+                Find & Connect
+              </Typography>
+            </Button>
           {currentUser && currentUser.isAdmin &&
             <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
-            <Typography variant="h4" align='left'
-              style={(pathName.includes('mynetwork')) ? { fontWeight: 600} : {}}
-              className={classes.navButtonText}>
-              My Trusted Network
-            </Typography>
-          </Button>}
+              <Typography variant="h4" align='left'
+                style={(pathName.includes('mynetwork')) ? { fontWeight: 600} : {}}
+                className={classes.navButtonText}>
+                My Trusted Network
+              </Typography>
+            </Button>
+          }
 
           {currentUser && currentUser.isAdmin &&
-            <IconButton color="inherit"
-              onClick={this.handleNotificationMenuOpen}>
-              <Badge badgeContent={this.countNotifications()}
-                classes={{ badge: classes.badge}}>
-                <NotificationsIcon color='primary' />
-              </Badge>
-            </IconButton>
+            <Badge badgeContent={this.countNotifications()}
+              classes={{ badge: classes.badge}}
+              onClick={this.handleNotificationMenuOpen}
+              style={{ marginRight: 10}}>
+              <NotificationsIcon color='primary' />
+            </Badge>
           }
           <div>
             <IconButton
@@ -608,17 +656,16 @@ class HomeNav extends React.Component {
               )}
             </IconButton>
           </div>
-        </div>
+        </Grid>
 
         <div className={classes.sectionMobile}>
           {currentUser && currentUser.isAdmin &&
-            <IconButton color="inherit"
-              onClick={this.handleNotificationMenuOpen}>
-              <Badge badgeContent={this.countNotifications()}
-                classes={{ badge: classes.badge}}>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Badge badgeContent={this.countNotifications()}
+              classes={{ badge: classes.badge}}
+              onClick={this.handleNotificationMenuOpen}
+              style={{ marginRight: 5 }}>
+              <NotificationsIcon />
+            </Badge>
           }
           <IconButton aria-haspopup="true" color="inherit"
             onClick={this.handleMenuToggle('mobileMoreAnchorEl')}

@@ -11,36 +11,32 @@ class Notification < ApplicationRecord
     foreign_key: :actor_id,
     class_name: :User
 
+  belongs_to :origin, polymorphic: true
+
   belongs_to :acted_with, polymorphic: true
 
   belongs_to :targetable, polymorphic: true,
     optional: true
 
+
   #Actions: posted, shared, invited, sent, acknowledged
 
   def set_notification_message
-    debugger
-    case @acted_with_type
+    case self.acted_with_type
     when "Opportunity"
-      if @targetable_type == 'Network'
-        targetable = notification.targetable
-        msg = "#{self.actor.fname.capitalize} #{@action} an opp in #{targetable.title.capitalize}"
-        msg
-      elsif @action == 'acknowledged'
-        msg = "#{self.actor.fname.capitalize} has #{@action} your opportunity"
-        msg
-      # elsif
-      #   msg = "#{self.actor.fname.capitalize} {@action} you an opportunity"
-      #   msg += " directly" if @action == 'sent'
+      if self.targetable_type == 'Network'
+        self.message = "#{self.actor.fname.capitalize} #{self.action} an opportunity within #{self.targetable.title.capitalize}"
+      elsif self.action == 'acknowledged'
+        self.message = "#{self.actor.fname.capitalize} has #{self.action} your opportunity"
+      elsif self.action == 'sent'
+        self.message= "#{self.actor.fname.capitalize} #{self.action} you an opportunity"
+        self.message += " directly" if self.action == 'sent'
       else
-        msg = "#{self.actor.fname.capitalize} has #{@action} an opportunity"
-        msg += " directly" if @action == 'sent'
-        msg
+        self.message= "#{self.actor.fname.capitalize} #{self.action} an opportunity"
       end
     when "Connection"
-      msg = "#{self.actor.fname.capitalize} has #{@action} you to connect"
+      self.message = "#{self.actor.fname.capitalize} has #{self.action} you to connect"
     else
-      ''
     end
   end
 

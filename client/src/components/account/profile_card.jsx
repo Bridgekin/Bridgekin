@@ -242,23 +242,25 @@ class Profile extends React.Component {
                 Default Network
               </Typography>
             </Grid>
-            <Grid container justify="flex-start" alignItems="center"
-              direction='column'>
-              <Select
-                value={this.state.defaultNetworkId}
-                onChange={this.handleDefaultWorkspaceChange}
-                inputProps={{
-                  name: 'defaultNetworkId',
-                  id: 'defaultNetworkId-simple',
-                }}
-                renderValue={selected => workspaces[selected].title}
-                >
-                {Object.values(workspaces).map(workspace => (
-                  <MenuItem value={workspace.id}>
-                    {workspace.title}
-                  </MenuItem>
-                ))}
-              </Select>
+            <Grid container alignItems="center">
+              <Grid item xs={8}>
+                <Select
+                  fullWidth
+                  value={this.state.defaultNetworkId}
+                  onChange={this.handleDefaultWorkspaceChange}
+                  inputProps={{
+                    name: 'defaultNetworkId',
+                    id: 'defaultNetworkId-simple',
+                  }}
+                  renderValue={selected => workspaces[selected].title}
+                  >
+                  {Object.values(workspaces).map(workspace => (
+                    <MenuItem value={workspace.id}>
+                      {workspace.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
             </Grid>
 
             {false && <Typography variant="subtitle1" align='left'

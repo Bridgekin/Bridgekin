@@ -1,4 +1,7 @@
+# require "NotificationRouter"
+require_relative './concerns/notification_router.rb'
 class Opportunity < ApplicationRecord
+  include NotificationRouter
   validates :owner_id, :status, presence: true
   # validates :owner_id, :title, :opportunity_need, :industries,
   #   :geography, :value, :status, presence: true
@@ -120,15 +123,20 @@ class Opportunity < ApplicationRecord
   end
 
   def update_permissions(add_perms, remove_perms, massBoolean)
+    added_perm_ids = []
+
     add_perms.each do |perm|
       perm = perm.split('-')
-      OppPermission.create(
+      oppPerm = OppPermission.create(
         opportunity_id: self.id,
         shareable_id: perm.first,
         shareable_type: perm.last,
         mass: (massBoolean && perm.last == 'Connection')
       )
+      added_perm_ids << oppPerm.id
     end
+
+    send_opportunity_notifications(self, added_perm_ids)
 
     remove_perms.each do |perm|
       perm = perm.split('-')

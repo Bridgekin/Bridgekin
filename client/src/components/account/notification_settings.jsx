@@ -96,7 +96,7 @@ class NotificationSettings extends React.Component {
     this.setState({ sending: true },
     () => {
       this.props.updateNotificationSetting(notificationSetting)
-      .then(() => this.setState({ sending: false }))
+      .then(() => this.setState({ sending: false, changed: false }))
     })
   }
 

@@ -1,6 +1,8 @@
 require_relative '../concerns/devise_controller_patch.rb'
+require_relative '../../models/concerns/notification_router.rb'
 class Api::ConnectionsController < ApiController
   include DeviseControllerPatch
+  include NotificationRouter
   before_action :authenticate_user
   before_action :set_connection, only: [:show, :update, :destroy]
   # after_action :verify_authorized, except: :show
@@ -25,6 +27,7 @@ class Api::ConnectionsController < ApiController
         .merge({ user_id: @user.id}))
       # debugger
       if @connection.save
+        send_connection_notification(@connection, @user, friend)
         render :show
       else
         render json: @connection.errors.full_messages, status: 422

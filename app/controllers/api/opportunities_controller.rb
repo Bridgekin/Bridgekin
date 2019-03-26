@@ -17,25 +17,25 @@ class Api::OpportunitiesController < ApiController
       @opportunities = opps_all_networks + opps_direct_connections +
       opps_all_connections
     else
-      if option.first == 'All'
+      if option.first == 'all'
         case option.last
-        when 'Network'
+        when 'networks'
           @opportunities = opps_all_networks
-        when 'Connection'
+        when 'connections'
           @opportunities = opps_all_connections
-        when 'Circle'
+        when 'circles'
           @opportunities = opps_all_circles
         else
           render json: ["Houston, we have a problem"], status: 422
         end
-      elsif option.first == 'Direct'
+      elsif option.first == 'direct'
         # Only for Direct Connections
         @opportunities = opps_direct_connections
       else
-        if option.last == 'Network'
+        if option.last == 'network'
           # For Networks by ID
           @opportunities = opps_network_id(option.first)
-        elsif option.last == 'Circle'
+        elsif option.last == 'circle'
           @opportunities = opps_circle_id(option.first)
         end
       end
@@ -104,6 +104,7 @@ class Api::OpportunitiesController < ApiController
     @opportunity[:deal_status] = "Deleted"
     authorize @opportunity
     if @opportunity.save
+      @opportunity.opp_permissions.destroy_all
       render json: ['Opportunity was destroyed'], status: :ok
     else
       render json: @opportunity.errors.full_messages, status: :unprocessable_entity
