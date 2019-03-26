@@ -154,7 +154,9 @@ class InviteModal extends React.Component {
       let invitePage = (
         <Grid container justify='center' alignItems='center'
           style={{ padding: '46px 30px'}} spacing={16}>
-          <Grid item sm={3} container justify='center' alignItems='flex-start'>
+          <Grid item sm={3} container justify='center'
+            alignItems='flex-start'
+            style={{ marginBottom: "10%"}}>
             {profilePic}
           </Grid>
 
