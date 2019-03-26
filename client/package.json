@@ -16,6 +16,7 @@
     "canvas-to-image": "^2.0.0",
     "copy-to-clipboard": "^3.0.8",
     "country-list": "^2.1.0",
+    "datetime-difference": "^1.0.1",
     "file-base64": "^1.0.0",
     "jimp": "^0.6.0",
     "lodash": "^4.17.11",
@@ -35,7 +36,8 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "save-file": "^2.2.1"
+    "save-file": "^2.2.1",
+    "time-between-dates": "^1.0.4"
   },
   "scripts": {
     "start": "PORT=5000 react-scripts start",

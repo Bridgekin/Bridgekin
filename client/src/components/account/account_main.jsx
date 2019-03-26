@@ -106,6 +106,7 @@ const styles = theme => ({
   mobileNavigation:{
     padding: "15px 25px",
     borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     backgroundColor: theme.palette.base3,
     [theme.breakpoints.up('sm')]: {
       display: 'none'

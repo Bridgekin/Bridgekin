@@ -53,6 +53,8 @@ import { handleAuthErrors } from '../../actions/fetch_error_handler';
 import { fetchSearchResults } from '../../actions/user_actions';
 
 import { fetchNotifications, updateAsRead } from '../../actions/notification_actions';
+// import timeBetweenDates from 'time-between-dates';
+import datetimeDifference from "datetime-difference";
 
 const mapStateToProps = (state, ownProps) => {
   const siteTemplate = state.siteTemplate;
@@ -132,7 +134,7 @@ let styles = (theme) => ({
     marginLeft: 10,
     marginRight: 10,
     width: '40%',
-    border: `1px solid ${theme.palette.secondary}`,
+    border: `1px solid ${theme.palette.border.secondary}`,
   },
   button:{
     marginTop: 20,
@@ -177,6 +179,11 @@ let styles = (theme) => ({
     width: '100%',
     objectFit: 'cover'
   },
+  menuItem: {
+    borderBottom: `1px solid ${theme.palette.border.primary}`
+  },
+  menuFont: { fontSize: 14 },
+  menu: { padding: 0}
 });
 
 class HomeNav extends React.Component {
@@ -205,6 +212,7 @@ class HomeNav extends React.Component {
     this.openNotifications = this.openNotifications.bind(this);
     this.handleNotificationMenuOpen = this.handleNotificationMenuOpen.bind(this);
     this.handleNotificationRedirect = this.handleNotificationRedirect.bind(this);
+    this.handleNotificationDate = this.handleNotificationDate.bind(this);
   }
 
   componentDidMount(){
@@ -220,6 +228,14 @@ class HomeNav extends React.Component {
   openNotifications(){
     this.setState({ notificationsAnchorEl: null },
     () => this.props.history.push("/account/notifications"))
+  }
+
+  handleNotificationDate(createdAt){
+    let then = new Date(createdAt)
+    const result = datetimeDifference(then, new Date());
+    const resultKey = Object.keys(result)
+      .filter(k => !!result[k])[0]
+    return `${result[resultKey]}${resultKey.slice(0,1)}`
   }
 
   handleSubmit(e){
@@ -284,6 +300,8 @@ class HomeNav extends React.Component {
         if(notification.actedWithType === "Opportunity"){
           if(notification.action !== "posted"){
             this.props.history.push('/findandconnect/direct-connections')
+          } else if(notification.targetableType === "Network"){
+            this.props.history.push(`/findandconnect/${notification.targetableId}-${notification.targetableType.toLowerCase()}`)
           } else {
             this.props.history.push('/findandconnect')
           }
@@ -363,10 +381,7 @@ class HomeNav extends React.Component {
   };
 
   capitalize(str){
-    if(str){
-      return str[0].toUpperCase() + str.slice(1)
-    }
-    return ''
+    return str ? (str[0].toUpperCase() + str.slice(1)) : ''
   }
 
 
@@ -408,27 +423,40 @@ class HomeNav extends React.Component {
         getContentAnchorEl={null}
         open={isMenuOpen}
         onClose={this.handleMenuToggle('anchorEl')}
+        MenuListProps={{
+          classes:{
+            root: classes.menu
+          }
+        }}
       >
-        <MenuItem onClick={this.handleLinkClose('account')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+        <MenuItem onClick={this.handleLinkClose('account')}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
             My Account
           </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
-        <MenuItem onClick={this.handleLinkClose('managenetworks')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+        <MenuItem onClick={this.handleLinkClose('managenetworks')}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
             Manage Networks
           </Typography>
         </MenuItem>}
         {currentUser && currentUser.isAdmin &&
-          <MenuItem onClick={this.handleLinkClose('admin')}>
-            <Typography variant="body1" align='left' color="textPrimary" >
+          <MenuItem onClick={this.handleLinkClose('admin')}
+            className={classes.menuItem}>
+            <Typography variant="body1" align='left' color="textPrimary"
+              className={classes.menuFont}>
               Admin
             </Typography>
           </MenuItem>
         }
-        <MenuItem onClick={this.handleLinkClose('logout')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+        <MenuItem onClick={this.handleLinkClose('logout')}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
             Logout
           </Typography>
         </MenuItem>
@@ -442,44 +470,56 @@ class HomeNav extends React.Component {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={isMobileMenuOpen}
         onClose={this.handleMenuToggle('mobileMoreAnchorEl')}
+        MenuListProps={{
+          classes:{
+            root: classes.menu
+          }
+        }}
       >
         {siteTemplate.testFeature &&
         <MenuItem onClick={this.handleLinkClose('testfeature')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Test Feature
           </Typography>
         </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('findandconnect')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Find & Connect
           </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('mynetwork')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             My Trusted Network
           </Typography>
         </MenuItem>}
         {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('managenetworks')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Manage Networks
           </Typography>
         </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('account')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             My Account
           </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
           <MenuItem onClick={this.handleLinkClose('admin')}>
-            <Typography variant="body1" align='left' color="textPrimary" >
+            <Typography variant="body1" align='left' color="textPrimary"
+              className={classes.menuItem}>
               Admin
             </Typography>
           </MenuItem>
         }
         <MenuItem onClick={this.handleLinkClose('logout')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Logout
           </Typography>
         </MenuItem>
@@ -500,33 +540,48 @@ class HomeNav extends React.Component {
         getContentAnchorEl={null}
         open={Boolean(notificationsAnchorEl)}
         onClose={this.handleMenuToggle('notificationsAnchorEl')}
+        MenuListProps={{
+          classes:{
+            root: classes.menu
+          }
+        }}
       >
         {sortedNotifications.map(notification => {
           let actor = users[notification.actorId];
           return <MenuItem
-            className={!notification.readAt ? classes.unread : ''}
+            className={[classes.menuItem,(!notification.readAt ? classes.unread : '')].join(' ')}
             onClick={this.handleNotificationRedirect(notification)}>
             <Grid container alignItems="center">
-              <Avatar
-                style={{ marginRight: 10}}>
-                {actor && actor.profilePicUrl ? (
-                  <VisibilitySensor>
-                    <Img src={users[notification.actorId].profilePicUrl}
-                      className={classes.profilePic}
-                      />
-                  </VisibilitySensor>
-                ):<PersonIcon />}
-              </Avatar>
+              <Grid item xs={3}>
+                <Avatar
+                  style={{ marginRight: 10}}>
+                  {actor && actor.profilePicUrl ? (
+                    <VisibilitySensor>
+                      <Img src={users[notification.actorId].profilePicUrl}
+                        className={classes.profilePic}
+                        />
+                    </VisibilitySensor>
+                  ):<PersonIcon />}
+                </Avatar>
+              </Grid>
 
-              <Typography align='left' color='textPrimary'
-                style={{ fontSize: 13 }}>
-                {`${notification.message}`}
-              </Typography>
+              <Grid item xs={6} container direction='column'>
+                <Typography align='left' color='textPrimary'
+                  style={{ fontSize: 13 }}>
+                  {`${notification.message}`}
+                </Typography>
+                <Typography align='left' color='textPrimary'
+                  style={{ fontSize: 11,  textTransform: 'capitalize'}}>
+                  {this.handleNotificationDate(notification.createdAt)}
+                </Typography>
+              </Grid>
             </Grid>
           </MenuItem>
         })}
-        <MenuItem onClick={this.openNotifications}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+        <MenuItem onClick={this.openNotifications}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
             {`See all notifications`}
           </Typography>
         </MenuItem>
@@ -646,6 +701,7 @@ class HomeNav extends React.Component {
               aria-haspopup="true"
               onClick={this.handleMenuToggle('anchorEl')}
               className={classes.navButtonText}
+              style={{ padding: 0, margin: "0px 12px" }}
             >
               {currentUser.profilePicUrl ? (
                 <Avatar alt="profile-pic"

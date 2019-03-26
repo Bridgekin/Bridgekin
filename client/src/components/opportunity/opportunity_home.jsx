@@ -50,6 +50,7 @@ import { registerWaitlistFromReferral } from '../../actions/waitlist_user_action
 import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchWorkspaceOptions } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
+import { clearOpportunityErrors } from '../../actions/error_actions';
 import OpportunityChangeModal from './opportunity_change_modal';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
@@ -68,6 +69,7 @@ import FeedCard from '../feed_card';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
+  opportunityErrors: state.errors.opportunities,
   opportunities: state.entities.opportunities,
   networkOpps: state.entities.networkOpps,
   networks: state.entities.networks,
@@ -83,7 +85,8 @@ const mapDispatchToProps = dispatch => ({
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
   fetchOpportunities: (workspaceId, option) => dispatch(fetchOpportunities(workspaceId, option)),
   fetchWorkspaceOptions: (workspaceId) => dispatch(fetchWorkspaceOptions(workspaceId)),
-  createReferral: (referral) => dispatch(createReferral(referral))
+  createReferral: (referral) => dispatch(createReferral(referral)),
+  clearOpportunityErrors: () => dispatch(clearOpportunityErrors())
 });
 
 const styles = theme => ({
@@ -240,9 +243,12 @@ const styles = theme => ({
     }
   },
   emptyOppsText:{
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: 500,
-    margin: 20
+    margin: 10,
+    [theme.breakpoints.up('sm')]: {
+      margin: 40,
+    },
   }
 });
 
@@ -339,6 +345,7 @@ class OpportunityHome extends React.Component {
           });
       }
     })
+    this.props.clearOpportunityErrors();
   }
 
   getFilter(){
@@ -410,6 +417,7 @@ class OpportunityHome extends React.Component {
           animateScroll.scrollTo(0);
         })
       })
+      this.props.clearOpportunityErrors();
     }
   }
 
@@ -543,7 +551,7 @@ class OpportunityHome extends React.Component {
   render (){
     const { classes, opportunities, networks, workspaceOptions,
       referral, currentUser, networkOpps, siteTemplate,
-      workspaces } = this.props;
+      workspaces, opportunityErrors } = this.props;
 
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
@@ -727,11 +735,17 @@ class OpportunityHome extends React.Component {
           currentUser={currentUser}
           opportunity={opportunity}/>
       ))
-    ) : (
-      <Typography variant="h3" gutterBottom color="textSecondary"
-        align='center' className={classes.emptyOppsText}>
-        {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
-      </Typography>
+    ) : (opportunityErrors.length > 0 ? (
+        <Typography variant="h3" color="textSecondary" align='center'
+          className={classes.emptyOppsText} gutterBottom>
+          {opportunityErrors[0]}
+        </Typography>
+      ) : (
+        <Typography variant="h3" color="textSecondary" align='center'
+          className={classes.emptyOppsText} gutterBottom>
+          {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
+        </Typography>
+      )
     )
 
     const feed = (

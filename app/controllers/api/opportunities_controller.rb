@@ -26,26 +26,31 @@ class Api::OpportunitiesController < ApiController
         when 'circles'
           @opportunities = opps_all_circles
         else
-          render json: ["Houston, we have a problem"], status: 422
         end
       elsif option.first == 'direct'
         # Only for Direct Connections
         @opportunities = opps_direct_connections
       else
         if option.last == 'network'
-          # For Networks by ID
-          @opportunities = opps_network_id(option.first)
+          if @user.member_networks.pluck(:id).include?(option.first.to_i)
+            # For Networks by ID
+            @opportunities = opps_network_id(option.first)
+          end
         elsif option.last == 'circle'
           @opportunities = opps_circle_id(option.first)
         end
       end
     end
 
-    # Sory by DESC
-    @opportunities = @opportunities.sort{|a,b| b.created_at <=> a.created_at}
-    @networkOpps = @opportunities.pluck(:id)
+    if @opportunities.length > 0
+      # Sory by DESC
+      @opportunities = @opportunities.sort{|a,b| b.created_at <=> a.created_at}
+      @networkOpps = @opportunities.pluck(:id)
+      render :index
+    else
+      render json: ["You don't have access to this resource"], status: 422
+    end
 
-    render :index
   end
 
   def userIndex

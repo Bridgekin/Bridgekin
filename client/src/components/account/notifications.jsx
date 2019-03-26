@@ -60,9 +60,11 @@ class Notifications extends React.Component {
     const { loaded } = this.state;
 
     if (loaded){
-      let notificationCards = Object.values(notifications).map(notification => (
-        <NotificationCard notification={notification} />
-      ))
+      let notificationCards = Object.values(notifications).sort((a,b) => (
+          (new Date(b.createdAt)) - (new Date(a.createdAt))
+        )).map(notification => (
+          <NotificationCard notification={notification} />
+        ))
 
       let notificationsPage = (
         <div>
