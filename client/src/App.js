@@ -63,7 +63,7 @@ export default ()=> (
 
     {/* General Modals */}
     <Switch>
-      <ProtectedRoute path="/findandconnect" component={OpportunityHome} />
+      <ProtectedRoute path="/findandconnect/:filter?" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
       <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
       <AdminProtectedRoute path="/mynetwork" component={MyTrustedNetwork} />

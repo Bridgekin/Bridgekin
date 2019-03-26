@@ -1,6 +1,6 @@
 import {
   RECEIVE_EMAIL_NOTIFICATION,
-  REMOVE_EMAIL_NOTIFICATION} from '../../actions/email_notification_actions';
+  REMOVE_EMAIL_NOTIFICATION} from '../../../actions/email_notification_actions';
 import merge from 'lodash/merge';
 
 export default(state = {}, action) => {

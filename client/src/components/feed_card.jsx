@@ -7,7 +7,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   feedCard:{
-    padding: "10px 8px 12px 8px",
+    padding: "10px 8px 12px",
     backgroundColor: `${theme.palette.base3}`,
     borderTop: `1px solid ${theme.palette.lightGrey}`,
     borderBottom: `1px solid ${theme.palette.lightGrey}`,

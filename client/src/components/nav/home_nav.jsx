@@ -17,6 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import Badge from '@material-ui/core/Badge';
 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -32,6 +33,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import Img from 'react-image';
 import PersonIcon from '@material-ui/icons/Person';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
@@ -50,6 +52,10 @@ import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 import { fetchSearchResults } from '../../actions/user_actions';
 
+import { fetchNotifications, updateAsRead } from '../../actions/notification_actions';
+// import timeBetweenDates from 'time-between-dates';
+import datetimeDifference from "datetime-difference";
+
 const mapStateToProps = (state, ownProps) => {
   const siteTemplate = state.siteTemplate;
   return ({
@@ -59,7 +65,8 @@ const mapStateToProps = (state, ownProps) => {
     workspaces: Object.values(state.workspaces),
     searchResults: state.entities.searchResults,
     users: state.users,
-    siteTemplate
+    siteTemplate,
+    notifications: state.entities.notifications
   })
 };
 
@@ -70,7 +77,9 @@ const mapDispatchToProps = dispatch => ({
   receiveUser: (user) => dispatch(receiveUser(user)),
   fetchSiteTemplate: (networkId) => dispatch(fetchSiteTemplate(networkId)),
   addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId)),
-  fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput))
+  fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput)),
+  fetchNotifications: () => dispatch(fetchNotifications()),
+  updateAsRead: (ids) => dispatch(updateAsRead(ids)),
 });
 
 let styles = (theme) => ({
@@ -125,7 +134,7 @@ let styles = (theme) => ({
     marginLeft: 10,
     marginRight: 10,
     width: '40%',
-    border: `1px solid ${theme.palette.secondary}`,
+    border: `1px solid ${theme.palette.border.secondary}`,
   },
   button:{
     marginTop: 20,
@@ -162,7 +171,19 @@ let styles = (theme) => ({
   },
   buttonText: { color: theme.palette.text.tertiary},
   navButtonText: { color: theme.palette.text.tertiary},
-  listItemText: { fontSize: 12 }
+  listItemText: { fontSize: 12 },
+  badge: { backgroundColor: 'red', color: 'white'},
+  unread: { backgroundColor: theme.palette.base4 },
+  profilePic: {
+    height: 'auto',
+    width: '100%',
+    objectFit: 'cover'
+  },
+  menuItem: {
+    borderBottom: `1px solid ${theme.palette.border.primary}`
+  },
+  menuFont: { fontSize: 14 },
+  menu: { padding: 0}
 });
 
 class HomeNav extends React.Component {
@@ -176,21 +197,45 @@ class HomeNav extends React.Component {
       searchInput: '',
       searchLoading: true,
       searchAnchorEl: null,
+      notificationsAnchorEl: null
     };
 
     this.timeout = null;
+    this.notificationsShown = 5;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleProfileMenuOpen = this.handleProfileMenuOpen.bind(this);
-    this.handleProfileMenuClose = this.handleProfileMenuClose.bind(this);
-    this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
-    this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
-    this.handleLogoMenuClick = this.handleLogoMenuClick.bind(this);
     this.handleLogoMenuChangeTemplate = this.handleLogoMenuChangeTemplate.bind(this);
     this.redirectToLogin = this.redirectToLogin.bind(this);
-    this.handleClickAwayClose = this.handleClickAwayClose.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.countNotifications = this.countNotifications.bind(this);
+    this.openNotifications = this.openNotifications.bind(this);
+    this.handleNotificationMenuOpen = this.handleNotificationMenuOpen.bind(this);
+    this.handleNotificationRedirect = this.handleNotificationRedirect.bind(this);
+    this.handleNotificationDate = this.handleNotificationDate.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.fetchNotifications()
+  }
+
+  countNotifications(){
+    const { notifications } = this.props;
+    let unread = Object.values(notifications).filter(x => !x.readAt)
+    return unread.length
+  }
+
+  openNotifications(){
+    this.setState({ notificationsAnchorEl: null },
+    () => this.props.history.push("/account/notifications"))
+  }
+
+  handleNotificationDate(createdAt){
+    let then = new Date(createdAt)
+    const result = datetimeDifference(then, new Date());
+    const resultKey = Object.keys(result)
+      .filter(k => !!result[k])[0]
+    return `${result[resultKey]}${resultKey.slice(0,1)}`
   }
 
   handleSubmit(e){
@@ -228,25 +273,45 @@ class HomeNav extends React.Component {
     }
   }
 
-  handleProfileMenuOpen = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
+  handleMenuToggle(anchor){
+    return e => {
+      const anchorEl = this.state[anchor]
+      this.setState({ [anchor]: anchorEl ? null : e.currentTarget})
+    }
+  }
 
-  handleMobileMenuOpen = event => {
-    this.setState({ mobileMoreAnchorEl: event.currentTarget });
-  };
+  handleNotificationMenuOpen(e){
+    this.setState({ notificationsAnchorEl: e.currentTarget })
+    const { notifications } = this.props;
+    let notificationIds = Object.values(notifications).filter(x => !x.readAt)
+      .sort((a,b) => (
+        (new Date(b.createdAt)) - (new Date(a.createdAt))
+      ))
+      .slice(0, 4)
+      .map(notification => notification.id)
+    this.props.updateAsRead(notificationIds)
+  }
 
-  handleProfileMenuClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
-  };
-
-  handleLogoMenuClick(e){
-    const {logoAnchorEl} = this.state;
-    this.setState({ logoAnchorEl: logoAnchorEl ? null : e.currentTarget });
+  handleNotificationRedirect(notification){
+    return e => {
+      e.stopPropagation();
+      this.setState({ notificationsAnchorEl: null },
+      () => {
+        if(notification.actedWithType === "Opportunity"){
+          if(notification.action !== "posted"){
+            this.props.history.push('/findandconnect/direct-connections')
+          } else if(notification.targetableType === "Network"){
+            this.props.history.push(`/findandconnect/${notification.targetableId}-${notification.targetableType.toLowerCase()}`)
+          } else {
+            this.props.history.push('/findandconnect')
+          }
+        } else if(notification.actedWithType === "Connection"){
+          if(notification.action === "invited"){
+            this.props.history.push('/mynetwork/invitations')
+          }
+        }
+      })
+    }
   }
 
   handleLogoMenuChangeTemplate(network_id){
@@ -262,12 +327,6 @@ class HomeNav extends React.Component {
       if(field === 'findandconnect'){
         this.props.history.push('/findandconnect')
       }
-    }
-  }
-
-  handleClickAwayClose(anchorEl) {
-    return e => {
-      this.setState({ [anchorEl]: null });
     }
   }
 
@@ -322,26 +381,28 @@ class HomeNav extends React.Component {
   };
 
   capitalize(str){
-    if(str){
-      return str[0].toUpperCase() + str.slice(1)
-    }
-    return ''
+    return str ? (str[0].toUpperCase() + str.slice(1)) : ''
   }
 
 
   render(){
     const { classes, currentUser, sessionErrors,
       siteTemplate, workspaces, users,
-      searchResults } = this.props;
+      searchResults, notifications } = this.props;
 
     const { auth, anchorEl, mobileMoreAnchorEl,
     logoAnchorEl, searchAnchorEl,
-    searchLoading, searchOutput, searchInput } = this.state;
+    searchLoading, searchOutput, searchInput,
+    notificationsAnchorEl} = this.state;
 
     const searchOpen = Boolean(searchAnchorEl);
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const logoMenuOpen = Boolean(logoAnchorEl);
+
+    let sortedNotifications = Object.values(notifications).sort((a,b) => (
+      (new Date(b.createdAt)) - (new Date(a.createdAt))
+    )).slice(0,5)
 
     let pathName = this.props.location.pathname//split('/').pop();
 
@@ -352,36 +413,50 @@ class HomeNav extends React.Component {
         id="menu-appbar"
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
           horizontal: 'right',
         }}
+        getContentAnchorEl={null}
         open={isMenuOpen}
-        onClose={this.handleProfileMenuClose}
+        onClose={this.handleMenuToggle('anchorEl')}
+        MenuListProps={{
+          classes:{
+            root: classes.menu
+          }
+        }}
       >
-        <MenuItem onClick={this.handleLinkClose('account')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+        <MenuItem onClick={this.handleLinkClose('account')}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
             My Account
           </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
-        <MenuItem onClick={this.handleLinkClose('managenetworks')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+        <MenuItem onClick={this.handleLinkClose('managenetworks')}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
             Manage Networks
           </Typography>
         </MenuItem>}
         {currentUser && currentUser.isAdmin &&
-          <MenuItem onClick={this.handleLinkClose('admin')}>
-            <Typography variant="body1" align='left' color="textPrimary" >
+          <MenuItem onClick={this.handleLinkClose('admin')}
+            className={classes.menuItem}>
+            <Typography variant="body1" align='left' color="textPrimary"
+              className={classes.menuFont}>
               Admin
             </Typography>
           </MenuItem>
         }
-        <MenuItem onClick={this.handleLinkClose('logout')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+        <MenuItem onClick={this.handleLinkClose('logout')}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
             Logout
           </Typography>
         </MenuItem>
@@ -394,46 +469,120 @@ class HomeNav extends React.Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={isMobileMenuOpen}
-        onClose={this.handleMobileMenuClose}
+        onClose={this.handleMenuToggle('mobileMoreAnchorEl')}
+        MenuListProps={{
+          classes:{
+            root: classes.menu
+          }
+        }}
       >
         {siteTemplate.testFeature &&
         <MenuItem onClick={this.handleLinkClose('testfeature')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Test Feature
           </Typography>
         </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('findandconnect')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Find & Connect
           </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('mynetwork')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             My Trusted Network
           </Typography>
         </MenuItem>}
         {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('managenetworks')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Manage Networks
           </Typography>
         </MenuItem>}
         <MenuItem onClick={this.handleLinkClose('account')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             My Account
           </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
           <MenuItem onClick={this.handleLinkClose('admin')}>
-            <Typography variant="body1" align='left' color="textPrimary" >
+            <Typography variant="body1" align='left' color="textPrimary"
+              className={classes.menuItem}>
               Admin
             </Typography>
           </MenuItem>
         }
         <MenuItem onClick={this.handleLinkClose('logout')}>
-          <Typography variant="body1" align='left' color="textPrimary" >
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuItem}>
             Logout
+          </Typography>
+        </MenuItem>
+      </Menu>
+    )
+
+    let notificationsMenu = (
+      <Menu
+        anchorEl={notificationsAnchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        getContentAnchorEl={null}
+        open={Boolean(notificationsAnchorEl)}
+        onClose={this.handleMenuToggle('notificationsAnchorEl')}
+        MenuListProps={{
+          classes:{
+            root: classes.menu
+          }
+        }}
+      >
+        {sortedNotifications.map(notification => {
+          let actor = users[notification.actorId];
+          return <MenuItem
+            className={[classes.menuItem,(!notification.readAt ? classes.unread : '')].join(' ')}
+            onClick={this.handleNotificationRedirect(notification)}>
+            <Grid container alignItems="center">
+              <Grid item xs={3}>
+                <Avatar
+                  style={{ marginRight: 10}}>
+                  {actor && actor.profilePicUrl ? (
+                    <VisibilitySensor>
+                      <Img src={users[notification.actorId].profilePicUrl}
+                        className={classes.profilePic}
+                        />
+                    </VisibilitySensor>
+                  ):<PersonIcon />}
+                </Avatar>
+              </Grid>
+
+              <Grid item xs={6} container direction='column'>
+                <Typography align='left' color='textPrimary'
+                  style={{ fontSize: 13 }}>
+                  {`${notification.message}`}
+                </Typography>
+                <Typography align='left' color='textPrimary'
+                  style={{ fontSize: 11,  textTransform: 'capitalize'}}>
+                  {this.handleNotificationDate(notification.createdAt)}
+                </Typography>
+              </Grid>
+            </Grid>
+          </MenuItem>
+        })}
+        <MenuItem onClick={this.openNotifications}
+          className={classes.menuItem}>
+          <Typography variant="body1" align='left' color="textPrimary"
+            className={classes.menuFont}>
+            {`See all notifications`}
           </Typography>
         </MenuItem>
       </Menu>
@@ -506,7 +655,8 @@ class HomeNav extends React.Component {
         item xs={2} sm={2} md={5} lg={5}
         container justify='flex-end' alignItems='center'>
 
-        <div className={classes.sectionDesktop}>
+        <Grid container alignItems="center" justify="flex-end"
+          className={classes.sectionDesktop}>
           {siteTemplate.testFeature &&
             <Button color='secondary'
               onClick={this.handleLinkClose('testfeature')}
@@ -517,30 +667,41 @@ class HomeNav extends React.Component {
                 Test Feature
               </Typography>
             </Button>}
-          <Button color='secondary'
-            onClick={this.handleLinkClose('findandconnect')}>
-            <Typography variant="h4" align='left'
-              style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
-              className={classes.navButtonText}>
-              Find & Connect
-            </Typography>
-          </Button>
+            <Button color='secondary'
+              onClick={this.handleLinkClose('findandconnect')}>
+              <Typography variant="h4" align='left'
+                style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
+                className={classes.navButtonText}>
+                Find & Connect
+              </Typography>
+            </Button>
           {currentUser && currentUser.isAdmin &&
             <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
-            <Typography variant="h4" align='left'
-              style={(pathName.includes('mynetwork')) ? { fontWeight: 600} : {}}
-              className={classes.navButtonText}>
-              My Trusted Network
-            </Typography>
-          </Button>}
+              <Typography variant="h4" align='left'
+                style={(pathName.includes('mynetwork')) ? { fontWeight: 600} : {}}
+                className={classes.navButtonText}>
+                My Trusted Network
+              </Typography>
+            </Button>
+          }
+
+          {currentUser && currentUser.isAdmin &&
+            <Badge badgeContent={this.countNotifications()}
+              classes={{ badge: classes.badge}}
+              onClick={this.handleNotificationMenuOpen}
+              style={{ marginRight: 10}}>
+              <NotificationsIcon color='primary' />
+            </Badge>
+          }
           <div>
             <IconButton
               aria-owns={isMenuOpen ? 'material-appbar' : undefined}
               aria-haspopup="true"
-              onClick={this.handleProfileMenuOpen}
+              onClick={this.handleMenuToggle('anchorEl')}
               className={classes.navButtonText}
+              style={{ padding: 0, margin: "0px 12px" }}
             >
               {currentUser.profilePicUrl ? (
                 <Avatar alt="profile-pic"
@@ -551,11 +712,19 @@ class HomeNav extends React.Component {
               )}
             </IconButton>
           </div>
-        </div>
+        </Grid>
 
         <div className={classes.sectionMobile}>
+          {currentUser && currentUser.isAdmin &&
+            <Badge badgeContent={this.countNotifications()}
+              classes={{ badge: classes.badge}}
+              onClick={this.handleNotificationMenuOpen}
+              style={{ marginRight: 5 }}>
+              <NotificationsIcon />
+            </Badge>
+          }
           <IconButton aria-haspopup="true" color="inherit"
-            onClick={this.handleMobileMenuOpen}
+            onClick={this.handleMenuToggle('mobileMoreAnchorEl')}
             classes={{ label: classes.buttonText }}
             style={{ padding: 0 }}>
             <MenuIcon className={classes.menuIcon}/>
@@ -563,6 +732,7 @@ class HomeNav extends React.Component {
         </div>
         {renderMenu}
         {renderMobileMenu}
+        {notificationsMenu}
       </Grid>
     )
 
@@ -581,7 +751,7 @@ class HomeNav extends React.Component {
           currentUser &&
           <IconButton
             aria-haspopup="true"
-            onClick={this.handleLogoMenuClick}
+            onClick={this.handleMenuToggle('logoAnchorEl')}
             style={{ padding: 3}}
             classes={{ label: classes.buttonText}}>
             <KeyboardArrowDownIcon />
@@ -605,7 +775,7 @@ class HomeNav extends React.Component {
             >
               <Paper>
                 <ClickAwayListener
-                  onClickAway={this.handleClickAwayClose('logoAnchorEl')}>
+                  onClickAway={this.handleMenuToggle('logoAnchorEl')}>
                   <MenuList>
                     {workspaces.map(workspace => (
                       <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}>

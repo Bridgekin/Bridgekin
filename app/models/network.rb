@@ -52,4 +52,7 @@ class Network < ApplicationRecord
     class_name: :SiteTemplate
 
   has_one_attached :picture
+
+  has_many :notifications, as: :acted_with
+  has_many :notifications, as: :targetable
 end

@@ -19,13 +19,15 @@ import Button from '@material-ui/core/Button';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { animateScroll } from 'react-scroll';
 
-import FeedContainer from '../feed_container';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton';
 
+import FeedContainer from '../feed_container';
 import ProfileCard from './profile_card';
 import AccountSettings from './account_settings';
 import AccountOpportunities from './account_opportunities';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import IconButton from '@material-ui/core/IconButton';
+import NotificationSettings from './notification_settings';
+import Notifications from './notifications'
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -104,6 +106,7 @@ const styles = theme => ({
   mobileNavigation:{
     padding: "15px 25px",
     borderTop: `1px solid ${theme.palette.border.primary}`,
+    borderBottom: `1px solid ${theme.palette.border.primary}`,
     backgroundColor: theme.palette.base3,
     [theme.breakpoints.up('sm')]: {
       display: 'none'
@@ -221,7 +224,8 @@ class AccountMain extends React.Component {
     let pages = [
       {title: 'My Profile', dest: '/account/profile'},
       {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
-      {title: 'Settings', dest: '/account/settings'}
+      {title: 'Settings', dest: '/account/settings'},
+      {title: 'Notifications', dest: '/account/notifications'},
     ]
 
     let navigation = (
@@ -363,6 +367,7 @@ class AccountMain extends React.Component {
         {mobileNavigation}
         {pathName === '/account/opportunities' && oppFiltersMobile}
         <Switch>
+          <ProtectedRoute path="/account/settings/notifications" component={NotificationSettings} />
           <ProtectedRoute path="/account/settings" component={AccountSettings} />
           <ProtectedRoute
             path="/account/opportunities"
@@ -374,6 +379,7 @@ class AccountMain extends React.Component {
             component={ProfileCard}
             passedProps={{ user: currentUser }}
           />
+          <ProtectedRoute path="/account/notifications" component={Notifications} />
         </Switch>
       </div>
     )

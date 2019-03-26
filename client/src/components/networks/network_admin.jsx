@@ -155,12 +155,17 @@ class NetworkAdmin extends React.Component {
   componentDidMount(){
     this.props.fetchManagedNetworks()
     .then(() => {
-      let firstNetwork = Object.values(this.props.managedNetworks)[0]
-      this.props.fetchMemberUsers(firstNetwork.id)
-      .then(() => this.setState({
-        loaded: true,
-        currentNetworkId: firstNetwork.id
-      }))
+      let managedNetworks = Object.values(this.props.managedNetworks)
+      if(managedNetworks.length > 0){
+        let firstNetwork = managedNetworks[0]
+        this.props.fetchMemberUsers(firstNetwork.id)
+        .then(() => this.setState({
+          loaded: true,
+          currentNetworkId: firstNetwork.id
+        }))
+      } else {
+        this.setState({ loaded: true })
+      }
     })
   }
 
@@ -236,8 +241,9 @@ class NetworkAdmin extends React.Component {
       users } = this.props;
     const { loaded, networkAnchorEl, currentNetworkId,
     userSortAnchorEl, userSortSetting } = this.state;
+    const countNetworks = Object.values(managedNetworks).length
 
-    if (loaded) {
+    if (loaded && countNetworks > 0) {
       const memberUsers = [...memberUserIds].map(id => users[id]);
 
       let networkFilter = (
@@ -401,6 +407,21 @@ class NetworkAdmin extends React.Component {
             />
         </div>
       )
+    } else if (loaded && countNetworks === 0){
+      let message = (
+        <Typography variant="body1" align='left'
+          color="textPrimary"
+          style={{ fontSize: 18 }}>
+          {`You are not currently a network admin. If you would like to use this
+            feature, please reach out to the admins of the network you're
+            intrested in managing.`}
+        </Typography>
+      )
+      return <div className={classes.root}>
+        <FeedContainer
+          feed={message}
+          />
+      </div>
     } else {
       return <div> Loading </div>
     }

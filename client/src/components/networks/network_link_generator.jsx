@@ -122,7 +122,7 @@ class OpportunityReferral extends React.Component{
             style={{ marginRight: 10, padding: "6px 10px"}}>
             Create Link
           </Button>
-          <Button variant="contained" disabled={!referralLink}
+          <Button variant="contained" disabled={!referralLink || !currentNetworkId}
             onClick={this.handleCopy(referralLink)}
             style={{ padding: "6px 10px"}}>
             { copied ? 'Copied!' : 'Copy'}

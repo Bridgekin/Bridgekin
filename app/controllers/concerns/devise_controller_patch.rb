@@ -14,7 +14,7 @@ module DeviseControllerPatch
         token = request.headers['Authorization'].split('"').last
         jwt_decoded = JwtService.decode(token)
         user_id = jwt_decoded['sub']
-        @user = User.find(user_id)
+        @user = User.includes(:notifications).find(user_id)
 
         #set current_user
         # @current_user = @user

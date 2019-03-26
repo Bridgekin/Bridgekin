@@ -655,19 +655,25 @@ class AccountSetting extends React.Component {
                       </Button>}
                   </Grid>
                   <Grid container justify='flex-start' alignItems='center'>
-                  {width === 'xs' &&
+                    {width === 'xs' &&
+                      <Typography variant="body2" align='left'
+                        style={{ fontSize: 11, marginTop: 20 }}>
+                        {`*Image cropping currently only available on desktop`}
+                      </Typography>
+                    }
                     <Typography variant="body2" align='left'
                       style={{ fontSize: 11, marginTop: 20 }}>
-                      {`*Image cropping currently only available on desktop`}
+                      {`*We recommend uploading images with a width at least 600px`}
                     </Typography>
-                  }
-                  <Typography variant="body2" align='left'
-                    style={{ fontSize: 11, marginTop: 20 }}>
-                    {`*We recommend uploading images with a width at least 600px`}
-                  </Typography>
                   </Grid>
                 </Grid>
 
+                <Grid container>
+                  <Button color='default' variant='contained'
+                    onClick={() => this.props.history.push("/account/settings/notifications")}>
+                    {`Edit Notification Settings`}
+                  </Button>
+                </Grid>
 
                 <div className={classes.buttonWrapper}>
                   <Button className={classes.submitButton}

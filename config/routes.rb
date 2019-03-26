@@ -24,11 +24,14 @@ Rails.application.routes.draw do
       post 'add_member/:member_id', :to => 'circles#add_member'
       delete 'remove_member/:member_id', :to => 'circles#remove_member'
     end
+    resources :notifications, only: [:index]
+    resource :notification_settings, only: [:show, :update]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
     # get 'profile/:id', :to => 'users#profile'
+    patch 'read_all', :to => 'notifications#read_all'
     get 'search_bar', :to => 'users#search_bar'
     get 'opp_permissions/share_options', :to => 'opp_permissions#shareOptions'
     post 'waitlist_user/create_with_referral', :to => 'waitlist_users#create_with_referral'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_20_170854) do
+ActiveRecord::Schema.define(version: 2019_03_25_181200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,13 +133,39 @@ ActiveRecord::Schema.define(version: 2019_03_20_170854) do
     t.integer "workspace_id"
   end
 
-  create_table "notifications", force: :cascade do |t|
+  create_table "notification_settings", force: :cascade do |t|
     t.integer "user_id"
-    t.string "subjects", array: true
-    t.string "type"
+    t.boolean "opps_shared_direct", default: true
+    t.boolean "opps_shared_contacts", default: true
+    t.boolean "opps_shared_communities", default: true
+    t.boolean "invites_requested", default: true
+    t.boolean "opps_acknowledged", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_notifications_on_user_id"
+    t.boolean "email_opps_shared_direct", default: true
+    t.boolean "email_invites_requested", default: true
+    t.string "email_opps_shared_contacts", default: "Weekly"
+    t.string "email_opps_shared_communities", default: "Weekly"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "recipient_id"
+    t.integer "actor_id"
+    t.string "action"
+    t.string "acted_with_type"
+    t.bigint "acted_with_id"
+    t.string "targetable_type"
+    t.bigint "targetable_id"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "message", default: ""
+    t.string "origin_type"
+    t.bigint "origin_id"
+    t.index ["acted_with_type", "acted_with_id"], name: "index_notifications_on_acted_with_type_and_acted_with_id"
+    t.index ["origin_type", "origin_id"], name: "index_notifications_on_origin_type_and_origin_id"
+    t.index ["recipient_id"], name: "index_notifications_on_recipient_id"
+    t.index ["targetable_type", "targetable_id"], name: "index_notifications_on_targetable_type_and_targetable_id"
   end
 
   create_table "opp_permissions", force: :cascade do |t|

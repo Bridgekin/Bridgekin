@@ -1,6 +1,6 @@
 import * as EmailNotificationApiUtil from '../util/email_notification_api_util';
 import { handleErrors } from './fetch_error_handler';
-import { receiveNotificationErrors } from './error_actions';
+import { receiveEmailNotificationErrors } from './error_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
@@ -25,7 +25,7 @@ export const fetchEmailNotification = () => dispatch => (
       if (!(errors instanceof Array)){
         errors = [genericError];
       }
-      dispatch(receiveNotificationErrors(errors))
+      dispatch(receiveEmailNotificationErrors(errors))
     })
 );
 
@@ -37,6 +37,6 @@ export const createEmailNotification = (notification) => dispatch => (
       if (!(errors instanceof Array)){
         errors = [genericError];
       }
-      dispatch(receiveNotificationErrors(errors))
+      dispatch(receiveEmailNotificationErrors(errors))
     })
 );
