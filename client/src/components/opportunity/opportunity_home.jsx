@@ -561,6 +561,8 @@ class OpportunityHome extends React.Component {
       .filter(x => x.includes('Network'))
       .map(x => networks[x.split('-')[0]])
 
+    // debugger
+
     // const workspaceId = siteTemplate.networkId;
     // const formattedNetworks = networksArray.map(network => (
     //   Object.assign({}, network, {type: 'network'})
@@ -572,12 +574,12 @@ class OpportunityHome extends React.Component {
     //     <CircularProgress className={classes.progress} />
     //   </Grid>
     // )
-
-    let filter = this.getFilter()
-    const column1 = (
-      <Grid container justify='center' alignItems='center'
-        style={{ padding: 0, width: '100%' }}>
-        <FeedCard contents={
+    if(networksLoaded){
+      let filter = this.getFilter()
+      const column1 = (
+        <Grid container justify='center' alignItems='center'
+          style={{ padding: 0, width: '100%' }}>
+          <FeedCard contents={
             <div>
               <Typography gutterBottom align='left' color='textPrimary'
                 className={classes.cardHeader}
@@ -595,268 +597,275 @@ class OpportunityHome extends React.Component {
           }/>
 
         <FeedCard contents={
-          <div>
-            <Typography gutterBottom align='left'
-              className={classes.cardHeader} color='textSecondary'
-              style={{ marginBottom: 20}}>
-              Invite your trusted business contacts
-            </Typography>
+            <div>
+              <Typography gutterBottom align='left'
+                className={classes.cardHeader} color='textSecondary'
+                style={{ marginBottom: 20}}>
+                Invite your trusted business contacts
+              </Typography>
 
-            <OpportunityWaitlist
-              currentUser={currentUser}
-              />
-          </div>
-        }/>
-      </Grid>
-    )
-
-    const genericDropdownOptions = currentUser.isAdmin ? [
-      {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
-        value: '', disabled: false},
-      {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
-        value: 'all-networks', disabled: false},
-      {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
-        value: 'all-connections',disabled: false},
-      // {header: 'All Circles' , subHeader: 'Opportunities posted within my circles',
-      //   value: 'All-Circle',disabled: false},
-      {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
-        value: 'direct-connections', disabled: false},
-    ] : [
-      {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
-        value: '', disabled: false},
-      // {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
-      //   value: 'All-Network',disabled: false}
-    ]
-
-    const filterMobile = (
-      <Grid container justify='flex-end'
-        className={classes.filterMobile}>
-        <Button
-          aria-owns={filterMobileAnchorEl ? 'simple-menu' : undefined}
-          aria-haspopup="true"
-          onClick={this.handleDropdownClick('filterMobileAnchorEl')}
-          >
-          <Typography variant="subtitle1" align='left'
-            color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
-            {"View By:"}
-          </Typography>
-          <Typography variant="subtitle1" align='left'
-            color="textPrimary"
-            style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
-            {this.getSelectedTitle(filter)}
-          </Typography>
-          <KeyboardArrowDownIcon />
-        </Button>
-
-        {opportunitiesLoaded &&
-          <Menu
-            id="simple-menu"
-            anchorEl={filterMobileAnchorEl}
-            open={Boolean(filterMobileAnchorEl)}
-            onClose={this.handleDropdownClose('filterMobileAnchorEl')}
-            style={{ padding: 0 }}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            >
-            {genericDropdownOptions.map(other => (
-              <MenuItem
-                onClick={this.handleDropdownChange('filterMobileAnchorEl', other.value)}
-                className={classes.dropdownMenuItem}
-                disabled={other.disabled}
-                style={{ paddingLeft: 0}}>
-                <Grid container alignItems='center'>
-                  <Checkbox checked={filter === other.value}/>
-                  <div style={{ display: 'inline'}}>
-                    <Typography variant="h6" align='left'
-                      color="textPrimary" className={classes.filterMobileHeader}>
-                      {other.header}
-                    </Typography>
-                    <Typography variant="body2" align='left'
-                      color="textPrimary" className={classes.filterMobileSubtext}>
-                      {other.subHeader}
-                    </Typography>
-                  </div>
-                </Grid>
-              </MenuItem>
-            ))}
-            {this.setFilters('Menu')}
-
-          </Menu>}
-      </Grid>
-    )
-
-    const filterDesktop = (
-      <Grid container justify='center' alignItems='center'
-        className={classes.filter}>
-        <div className={classes.filterCard}>
-          <Typography align='left'
-            className={classes.cardHeader}
-            style={{ margin: "10px 20px 0px"}}>
-            {`Whose opportunities would you like to see?`}
-          </Typography>
-
-          <List component="nav">
-            {genericDropdownOptions.map(other => (
-              <ListItem button value={other.value}
-                className={classes.filterItem}
-                onClick={this.handleDropdownChange('anchorEl', other.value)}
-                disabled={other.disabled}
-                selected={filter === other.value}>
-                <div>
-                  <Typography variant="h6" align='left'
-                    color="textPrimary" className={classes.filterHeader}>
-                    {other.header}
-                  </Typography>
-                  <Typography variant="body2" align='left'
-                    color="textPrimary" className={classes.filterSubtext}>
-                    {other.subHeader}
-                  </Typography>
-                </div>
-              </ListItem>
-            ))}
-            {networksLoaded && this.setFilters('List')}
-          </List>
-        </div>
-      </Grid>
-    )
-
-    const filteredOpps = [...networkOpps].map(id => opportunities[id])
-      .filter(o => o.status === "Approved")
-
-    const opportunityCards = filteredOpps.length > 0 ? (
-        filteredOpps.map((opportunity, idx) => (
-        <OpportunityCardFeed
-          currentUser={currentUser}
-          opportunity={opportunity}/>
-      ))
-    ) : (opportunityErrors.length > 0 ? (
-        <Typography variant="h3" color="textSecondary" align='center'
-          className={classes.emptyOppsText} gutterBottom>
-          {opportunityErrors[0]}
-        </Typography>
-      ) : (
-        <Typography variant="h3" color="textSecondary" align='center'
-          className={classes.emptyOppsText} gutterBottom>
-          {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
-        </Typography>
-      )
-    )
-
-    const feed = (
-      <Grid container justify='center' alignItems='center'>
-        <div style={{ overflow: 'scroll', paddingBottom:50,
-          width: '100%'}}>
-          <CardActionArea className={classes.feedCard}
-            style={{ paddingBottom: 9}}
-            onClick={this.handleOpportunityChangeModalOpen}>
-            <Typography align='left' gutterBottom
-              className={classes.cardHeader}>
-              Create Opportunity
-            </Typography>
-
-            <Grid container alignItems='center'
-              className={classes.createFilterMain}>
-              {currentUser.profilePicUrl ? (
-                <Avatar alt="profile-pic"
-                  src={currentUser.profilePicUrl}
-                  className={classes.avatar} />
-              ) : (
-                <AccountCircle className={classes.avatar}/>
-              )}
-
-              <Grid container style={{ flexGrow: 1, width: '75%', marginLeft: 10}}
-                alignItems='center'>
-                <Typography align='left' color="textSecondary"
-                  className={classes.cardHeader}
-                  style={{ padding: "15px 0px"}}>
-                  {`What's your most pressing business need or opportunity?`}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Grid container style={{ paddingTop: 17}}>
-              <Button className={classes.createFilterButton}>
-                <img src={PictureIconSVG} alt='pic-icon'
-                  className={classes.filterButtonIcon}/>
-                Image
-              </Button>
-              <Button className={classes.createFilterButton}>
-                <PersonIcon className={classes.filterButtonIcon}/>
-                Privacy
-              </Button>
-              <Button className={classes.createFilterButton}>
-                <img src={ShareIconSVG} alt='share-icon'
-                  className={classes.filterButtonIcon}/>
-                {/*`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`*/}
-                {`Share`}
-              </Button>
-            </Grid>
-          </CardActionArea>
-
-          <Grid container justify='flex-end'
-            className={classes.filterMobileCard}>
-            {filterMobile}
-          </Grid>
-
-          {opportunitiesLoaded ? opportunityCards :
-            (<div style={{ marginTop: 50 }}>
-              <Loading/>
-            </div>)}
-
-
-          <div className={classes.waitlistMobileCard}>
-            <Typography gutterBottom align='left'
-              className={classes.cardHeader} color='textSecondary'
-              style={{ marginBottom: 20 }}>
-              Invite your trusted business contacts
-            </Typography>
-
-            <OpportunityWaitlist
-              handleSubmit={this.handleWaitlistSubmit}
-              loading={loading}
-              currentUser={currentUser}
-              />
-          </div>
-
-          {opportunitiesLoaded &&
-            this.props.currentUser.isAdmin &&
-            <div className={classes.referralCard}>
-              <OpportunityReferral
-                referralNetwork={referralNetwork}
-                networks={networksArray}
-                referral={referral}
-                handleChange={this.handleReferralChange}
-                handleSubmit={this.handleReferralSubmit}
+              <OpportunityWaitlist
+                currentUser={currentUser}
                 />
             </div>
-          }
-        </div>
-      </Grid>
-    )
+          }/>
+        </Grid>
+      )
 
-    return (
-      <div style={{flexGrow: 1}}>
-        <FeedContainer
-          column1={column1}
-          feed={feed}
-          column2={filterDesktop} />
 
-        <OpportunityChangeModal
-          open={changeModalOpen}
-          handleClose={this.handleModalClose('changeModalOpen')}
-          updateNetworkOpps={this.updateNetworkOpps}
-          currentUser={currentUser}
-          opportunity={DEFAULTSTATE}
-          type={'create'} />
+      const genericDropdownOptions = currentUser.isAdmin ? [
+        {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
+          value: '', disabled: false},
+        {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
+          value: 'all-networks', disabled: false},
+        {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
+          value: 'all-connections',disabled: false},
+        // {header: 'All Circles' , subHeader: 'Opportunities posted within my circles',
+        //   value: 'All-Circle',disabled: false},
+        {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
+          value: 'direct-connections', disabled: false},
+        ] : [
+        {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
+        value: '', disabled: false},
+        // {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
+        //   value: 'All-Network',disabled: false}
+        ]
 
-      </div>
-    )
+      const filterMobile = (
+        <Grid container justify='flex-end'
+          className={classes.filterMobile}>
+          <Button
+            aria-owns={filterMobileAnchorEl ? 'simple-menu' : undefined}
+            aria-haspopup="true"
+            onClick={this.handleDropdownClick('filterMobileAnchorEl')}
+            >
+            <Typography variant="subtitle1" align='left'
+              color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
+              {"View By:"}
+            </Typography>
+            <Typography variant="subtitle1" align='left'
+              color="textPrimary"
+              style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
+              {this.getSelectedTitle(filter)}
+            </Typography>
+            <KeyboardArrowDownIcon />
+          </Button>
+
+          {opportunitiesLoaded &&
+            <Menu
+              id="simple-menu"
+              anchorEl={filterMobileAnchorEl}
+              open={Boolean(filterMobileAnchorEl)}
+              onClose={this.handleDropdownClose('filterMobileAnchorEl')}
+              style={{ padding: 0 }}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              >
+              {genericDropdownOptions.map(other => (
+                <MenuItem
+                  onClick={this.handleDropdownChange('filterMobileAnchorEl', other.value)}
+                  className={classes.dropdownMenuItem}
+                  disabled={other.disabled}
+                  style={{ paddingLeft: 0}}>
+                  <Grid container alignItems='center'>
+                    <Checkbox checked={filter === other.value}/>
+                    <div style={{ display: 'inline'}}>
+                      <Typography variant="h6" align='left'
+                        color="textPrimary" className={classes.filterMobileHeader}>
+                        {other.header}
+                      </Typography>
+                      <Typography variant="body2" align='left'
+                        color="textPrimary" className={classes.filterMobileSubtext}>
+                        {other.subHeader}
+                      </Typography>
+                    </div>
+                  </Grid>
+                </MenuItem>
+              ))}
+              {this.setFilters('Menu')}
+
+            </Menu>}
+          </Grid>
+        )
+
+        const filterDesktop = (
+          <Grid container justify='center' alignItems='center'
+            className={classes.filter}>
+            <div className={classes.filterCard}>
+              <Typography align='left'
+                className={classes.cardHeader}
+                style={{ margin: "10px 20px 0px"}}>
+                {`Whose opportunities would you like to see?`}
+              </Typography>
+
+              <List component="nav">
+                {genericDropdownOptions.map(other => (
+                  <ListItem button value={other.value}
+                    className={classes.filterItem}
+                    onClick={this.handleDropdownChange('anchorEl', other.value)}
+                    disabled={other.disabled}
+                    selected={filter === other.value}>
+                    <div>
+                      <Typography variant="h6" align='left'
+                        color="textPrimary" className={classes.filterHeader}>
+                        {other.header}
+                      </Typography>
+                      <Typography variant="body2" align='left'
+                        color="textPrimary" className={classes.filterSubtext}>
+                        {other.subHeader}
+                      </Typography>
+                    </div>
+                  </ListItem>
+                ))}
+                {networksLoaded && this.setFilters('List')}
+              </List>
+            </div>
+          </Grid>
+        )
+
+        const filteredOpps = [...networkOpps].map(id => opportunities[id])
+        .filter(o => o.status === "Approved")
+
+        const opportunityCards = filteredOpps.length > 0 ? (
+          filteredOpps.map((opportunity, idx) => (
+            <OpportunityCardFeed
+              currentUser={currentUser}
+              opportunity={opportunity}/>
+          ))
+        ) : (opportunityErrors.length > 0 ? (
+            <Typography variant="h3" color="textSecondary" align='center'
+              className={classes.emptyOppsText} gutterBottom>
+              {opportunityErrors[0]}
+            </Typography>
+          ) : (
+            <Typography variant="h3" color="textSecondary" align='center'
+              className={classes.emptyOppsText} gutterBottom>
+              {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
+            </Typography>
+          )
+        )
+
+      const feed = (
+        <Grid container justify='center' alignItems='center'>
+          <div style={{ overflow: 'scroll', paddingBottom:50,
+            width: '100%'}}>
+            <CardActionArea className={classes.feedCard}
+              style={{ paddingBottom: 9}}
+              onClick={this.handleOpportunityChangeModalOpen}>
+              <Typography align='left' gutterBottom
+                className={classes.cardHeader}>
+                Create Opportunity
+              </Typography>
+
+              <Grid container alignItems='center'
+                className={classes.createFilterMain}>
+                {currentUser.profilePicUrl ? (
+                  <Avatar alt="profile-pic"
+                    src={currentUser.profilePicUrl}
+                    className={classes.avatar} />
+                ) : (
+                  <AccountCircle className={classes.avatar}/>
+                )}
+
+                <Grid container style={{ flexGrow: 1, width: '75%', marginLeft: 10}}
+                  alignItems='center'>
+                  <Typography align='left' color="textSecondary"
+                    className={classes.cardHeader}
+                    style={{ padding: "15px 0px"}}>
+                    {`What's your most pressing business need or opportunity?`}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container style={{ paddingTop: 17}}>
+                <Button className={classes.createFilterButton}>
+                  <img src={PictureIconSVG} alt='pic-icon'
+                    className={classes.filterButtonIcon}/>
+                  Image
+                </Button>
+                <Button className={classes.createFilterButton}>
+                  <PersonIcon className={classes.filterButtonIcon}/>
+                  Privacy
+                </Button>
+                <Button className={classes.createFilterButton}>
+                  <img src={ShareIconSVG} alt='share-icon'
+                    className={classes.filterButtonIcon}/>
+                  {/*`Share with: ${formattedNetworks.length > 0 ? formattedNetworks[0].title : ''}`*/}
+                  {`Share`}
+                </Button>
+              </Grid>
+            </CardActionArea>
+
+            <Grid container justify='flex-end'
+              className={classes.filterMobileCard}>
+              {filterMobile}
+            </Grid>
+
+            {opportunitiesLoaded ? opportunityCards :
+              (<div style={{ marginTop: 50 }}>
+                <Loading/>
+              </div>)}
+
+
+              <div className={classes.waitlistMobileCard}>
+                <Typography gutterBottom align='left'
+                  className={classes.cardHeader} color='textSecondary'
+                  style={{ marginBottom: 20 }}>
+                  Invite your trusted business contacts
+                </Typography>
+
+                <OpportunityWaitlist
+                  handleSubmit={this.handleWaitlistSubmit}
+                  loading={loading}
+                  currentUser={currentUser}
+                  />
+              </div>
+
+            {opportunitiesLoaded &&
+              this.props.currentUser.isAdmin &&
+              <div className={classes.referralCard}>
+                <OpportunityReferral
+                  referralNetwork={referralNetwork}
+                  networks={networksArray}
+                  referral={referral}
+                  handleChange={this.handleReferralChange}
+                  handleSubmit={this.handleReferralSubmit}
+                  />
+              </div>}
+            </div>
+          </Grid>
+        )
+
+        return (
+          <div style={{flexGrow: 1}}>
+            <FeedContainer
+              column1={column1}
+              feed={feed}
+              column2={filterDesktop} />
+
+            <OpportunityChangeModal
+              open={changeModalOpen}
+              handleClose={this.handleModalClose('changeModalOpen')}
+              updateNetworkOpps={this.updateNetworkOpps}
+              currentUser={currentUser}
+              opportunity={DEFAULTSTATE}
+              type={'create'} />
+          </div>
+        )
+    } else {
+      return (
+        <Grid container justify='center' alignItems='flex-start'
+          className={classes.loader}>
+          <CircularProgress className={classes.progress} />
+        </Grid>
+      )
+    }
   }
 }
 
