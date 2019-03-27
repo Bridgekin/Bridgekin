@@ -49,19 +49,14 @@ class Api::UsersController < ApiController
         .where("LOWER(lname) LIKE ?" , "%" + lname.downcase + "%")
         .or(User.where("LOWER(fname) LIKE ?" , "%" + lname.downcase + "%")
           .where("LOWER(lname) LIKE ?" , "%" + fname.downcase + "%"))
-      # @users = User.where(User.arel_table[:fname].lower.matches("%?%", fname.downcase))
-      # .where(User.arel_table[:lname].lower.matches("%?%", lname.downcase))
-      # .or(User.where(User.arel_table[:fname].lower.matches("%?%", lname.downcase))
-      #   .where(User.arel_table[:lname].lower.matches("%?%", fname.downcase)))
     else
       # debugger
       @users = User.where("LOWER(fname) LIKE ?" , "%" + input[0].downcase + "%")
         .or(User.where("LOWER(lname) LIKE ?" , "%" + input[0].downcase + "%"))
-      # @users = User.where(User.arel_table[:fname].lower.matches("%?%", input[0].downcase))
-      # .or(User.where(User.arel_table[:lname].lower.matches("%?%", input[0].downcase)))
     end
 
     @search_users = @users.pluck(:id)
+    # @search_users = @opportunities.pluck(:id)
     render :searchBar
   end
 

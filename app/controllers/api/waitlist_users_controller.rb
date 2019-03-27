@@ -17,26 +17,40 @@ class Api::WaitlistUsersController < ApiController
     end
   end
 
+  def anticipate_waitlist_referral
+    @type = ""
+    existing_user = User.find_by(email: waitlist_user_params[:email])
+    existing_waitlist_user = WaitlistUser.find_by(email: waitlist_user_params[:email])
+
+    if existing_user
+      @type = "existing_user"
+    elsif existing_waitlist_user
+      @type = "existing_waitlist_user"
+    end
+
+    render :anticipate_waitlist_referral
+  end
+
   def create_with_referral
     existing_user = User.find_by(email: waitlist_user_params[:email])
-    waitlist_user = WaitlistUser.find_by(email: waitlist_user_params[:email])
+    existing_waitlist_user = WaitlistUser.find_by(email: waitlist_user_params[:email])
     @user = User.find(waitlist_user_params[:from_referral_id]) if waitlist_user_params[:from_referral_id]
 
     if existing_user
       render json: ["That email is already associated with an existing Bridgekin member"], status: 422
     elsif @user
-      if waitlist_user
-        waitlist_user[:from_referral_id] = @user.id
-        if waitlist_user.save
+      if existing_waitlist_user
+        existing_waitlist_user[:from_referral_id] = @user.id
+        if existing_waitlist_user.save
           WaitlistUserReferral.create(
-            waitlist_user_id: waitlist_user.id,
+            waitlist_user_id: existing_waitlist_user.id,
             from_referral_id: @user.id
           )
-          WaitlistUserMailer.register_referred_email_existing(waitlist_user, @user).deliver_now
+          WaitlistUserMailer.register_referred_email_existing(existing_waitlist_user, @user).deliver_now
           # render json: ['User has already been a waitlist user'], status: 201
           render :show
         else
-          render json: waitlist_user.errors.full_messages, status: 422
+          render json: existing_waitlist_user.errors.full_messages, status: 422
         end
       else
         waitlist_user = WaitlistUser.new(waitlist_user_params)

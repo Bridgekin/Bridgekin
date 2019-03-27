@@ -1,3 +1,4 @@
+// INVITE MODAL
 export const OPEN_INVITE_MODAL = 'OPEN_INVITE_MODAL';
 export const CLOSE_INVITE_MODAL = "CLOSE_INVITE_MODAL";
 
@@ -10,6 +11,7 @@ export const closeInvite = () => ({
   type: CLOSE_INVITE_MODAL,
 });
 
+// CREATE CIRCLE MODAL
 export const OPEN_CREATE_CIRCLE_MODAL = 'OPEN_CREATE_CIRCLE_MODAL';
 export const CLOSE_CREATE_CIRCLE_MODAL = "CLOSE_CREATE_CIRCLE_MODAL";
 
@@ -21,6 +23,7 @@ export const closeCreateCircle = () => ({
   type: CLOSE_CREATE_CIRCLE_MODAL,
 });
 
+// CIRCLE MODAL
 export const OPEN_CIRCLE_MODAL = 'OPEN_CIRCLE_MODAL';
 export const CLOSE_CIRCLE_MODAL = "CLOSE_CIRCLE_MODAL";
 
@@ -31,4 +34,16 @@ export const openCircle = circleId => ({
 
 export const closeCircle = () => ({
   type: CLOSE_CIRCLE_MODAL,
+});
+
+// CUSTOM EMAIL MODAL
+export const OPEN_CUSTOM_EMAIL_MODAL = 'OPEN_CUSTOM_EMAIL_MODAL';
+export const CLOSE_CUSTOM_EMAIL_MODAL = "CLOSE_CUSTOM_EMAIL_MODAL";
+
+export const openCustomEmail = () => ({
+  type: OPEN_CUSTOM_EMAIL_MODAL,
+});
+
+export const closeCustomEmail = () => ({
+  type: CLOSE_CUSTOM_EMAIL_MODAL,
 });
