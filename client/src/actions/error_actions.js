@@ -39,6 +39,8 @@ export const RECEIVE_NOTIFICATION_SETTING_ERRORS = 'RECEIVE_NOTIFICATION_SETTING
 export const CLEAR_NOTIFICATION_SETTING_ERRORS = 'CLEAR_NOTIFICATION_SETTING_ERRORS';
 export const RECEIVE_NOTIFICATION_ERRORS = 'RECEIVE_NOTIFICATION_ERRORS';
 export const CLEAR_NOTIFICATION_ERRORS = 'CLEAR_NOTIFICATION_ERRORS';
+export const RECEIVE_EMAIL_TEMPLATE_ERRORS = 'RECEIVE_EMAIL_TEMPLATE_ERRORS';
+export const CLEAR_EMAIL_TEMPLATE_ERRORS = 'CLEAR_EMAIL_TEMPLATE_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -200,4 +202,13 @@ export const receiveNotificationErrors = errors => ({
 
 export const clearNotificationErrors = () => ({
   type: CLEAR_NOTIFICATION_ERRORS,
+});
+
+export const receiveEmailTemplateErrors = errors => ({
+  type: RECEIVE_EMAIL_TEMPLATE_ERRORS,
+  errors
+});
+
+export const clearEmailTemplateErrors = () => ({
+  type: CLEAR_EMAIL_TEMPLATE_ERRORS,
 });

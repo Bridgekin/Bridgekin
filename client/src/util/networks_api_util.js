@@ -38,10 +38,10 @@ export const fetchNetwork = id => (
   })
 )
 
-export const createNetwork = opportunity => (
+export const createNetwork = network => (
   fetch(`${window.location.origin}/api/networks`, {
     method: 'POST',
-    body: JSON.stringify({ opportunity }),
+    body: JSON.stringify({ network }),
     headers:{
     	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
@@ -49,10 +49,10 @@ export const createNetwork = opportunity => (
   })
 )
 
-export const updateNetwork = opportunity => (
+export const updateNetwork = network => (
   fetch(`${window.location.origin}/api/networks`, {
     method: 'PATCH',
-    body: JSON.stringify({ opportunity }),
+    body: JSON.stringify({ network }),
     headers:{
     	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')

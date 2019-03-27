@@ -17,19 +17,42 @@ class Api::WaitlistUsersController < ApiController
     end
   end
 
-  def anticipate_waitlist_referral
-    @type = ""
-    existing_user = User.find_by(email: waitlist_user_params[:email])
-    existing_waitlist_user = WaitlistUser.find_by(email: waitlist_user_params[:email])
+  # def anticipate_waitlist_referral
+  #   @type = ""
+  #   existing_user = User.find_by(email: waitlist_user_params[:email])
+  #   existing_waitlist_user = WaitlistUser.find_by(email: waitlist_user_params[:email])
+  #
+  #   if existing_user
+  #     @type = "existing_user"
+  #   elsif existing_waitlist_user
+  #     @type = "existing_waitlist_user"
+  #     @template = EmailTemplate.find("waitlist_user")
+  #       - subject: string "asdfasdfsdf {{asdfasdf}}"
+  #       - body: string
+  #   end
+  #
+  #   render :anticipate_waitlist_referral
+  # end
 
-    if existing_user
-      @type = "existing_user"
-    elsif existing_waitlist_user
-      @type = "existing_waitlist_user"
-    end
-
-    render :anticipate_waitlist_referral
-  end
+  # def create_with_referral_template
+  #   @user = User.find(waitlist_user_params[:from_referral_id]) if waitlist_user_params[:from_referral_id]
+  #   if params[:type] == "waitlist_referral_existing"
+  #     existing_waitlist_user[:from_referral_id] = @user.id
+  #     if existing_waitlist_user.save
+  #       WaitlistUserReferral.create(
+  #         waitlist_user_id: existing_waitlist_user.id,
+  #         from_referral_id: @user.id
+  #       )
+  #       WaitlistUserMailer.register_referred_email_existing(existing_waitlist_user, @user).deliver_now
+  #       # render json: ['User has already been a waitlist user'], status: 201
+  #       render :show
+  #     else
+  #       render json: existing_waitlist_user.errors.full_messages, status: 422
+  #     end
+  #   elsif params[:type] == "waitlist_referral_new"
+  #
+  #   end
+  # end
 
   def create_with_referral
     existing_user = User.find_by(email: waitlist_user_params[:email])
@@ -40,14 +63,26 @@ class Api::WaitlistUsersController < ApiController
       render json: ["That email is already associated with an existing Bridgekin member"], status: 422
     elsif @user
       if existing_waitlist_user
+        #Track latest referral
         existing_waitlist_user[:from_referral_id] = @user.id
         if existing_waitlist_user.save
+          #Track list of referrals for existing users
           WaitlistUserReferral.create(
             waitlist_user_id: existing_waitlist_user.id,
             from_referral_id: @user.id
           )
-          WaitlistUserMailer.register_referred_email_existing(existing_waitlist_user, @user).deliver_now
-          # render json: ['User has already been a waitlist user'], status: 201
+
+          #Send Email
+          if waitlist_user_params[:subject]
+            subject = waitlist_user_params[:subject]
+            body = waitlist_user_params[:body]
+            WaitlistUserMailer.register_referred_existing_template(
+              existing_waitlist_user, @user, subject, body ).deliver_now
+          else
+            WaitlistUserMailer.register_referred_existing(
+              existing_waitlist_user, @user).deliver_now
+          end
+
           render :show
         else
           render json: existing_waitlist_user.errors.full_messages, status: 422
@@ -55,12 +90,23 @@ class Api::WaitlistUsersController < ApiController
       else
         waitlist_user = WaitlistUser.new(waitlist_user_params)
         if waitlist_user.save
+          #Track list of referrals for existing users
           WaitlistUserReferral.create(
             waitlist_user_id: waitlist_user.id,
             from_referral_id: @user.id
           )
-          WaitlistUserMailer.register_referred_email(waitlist_user, @user).deliver_now
-          # render json: ['User has already been a waitlist user'], status: 201
+
+          #Send Email
+          if waitlist_user_params[:subject]
+            subject = waitlist_user_params[:subject]
+            body = waitlist_user_params[:body]
+            WaitlistUserMailer.register_referred_new_template(
+              existing_waitlist_user, @user, subject, body ).deliver_now
+          else
+            WaitlistUserMailer.register_referred_new(
+              existing_waitlist_user, @user).deliver_now
+          end
+
           render :show
         else
           render json: waitlist_user.errors.full_messages, status: 422
@@ -74,7 +120,8 @@ class Api::WaitlistUsersController < ApiController
   private
 
   def waitlist_user_params
-    waitlist_params = params.require(:user).permit(:email, :fname, :lname, :from_referral_id)
+    waitlist_params = params.require(:user).permit(:email, :fname, :lname,
+      :from_referral_id, :subject, :body)
     waitlist_params[:email].downcase!
     waitlist_params
   end

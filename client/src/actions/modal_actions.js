@@ -38,10 +38,17 @@ export const closeCircle = () => ({
 
 // CUSTOM EMAIL MODAL
 export const OPEN_CUSTOM_EMAIL_MODAL = 'OPEN_CUSTOM_EMAIL_MODAL';
+export const OPEN_CUSTOM_EMAIL_WAITLIST_REFERRAL_MODAL = 'OPEN_CUSTOM_EMAIL_WAITLIST_REFERRAL_MODAL';
 export const CLOSE_CUSTOM_EMAIL_MODAL = "CLOSE_CUSTOM_EMAIL_MODAL";
 
-export const openCustomEmail = () => ({
+export const openCustomEmail = (templateType) => ({
   type: OPEN_CUSTOM_EMAIL_MODAL,
+  templateType
+});
+
+export const openCustomEmailWaitlistReferral = (templateType, email, fname) => ({
+  type: OPEN_CUSTOM_EMAIL_WAITLIST_REFERRAL_MODAL,
+  templateType, email, fname
 });
 
 export const closeCustomEmail = () => ({

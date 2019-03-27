@@ -1,5 +1,6 @@
 import {
   OPEN_CUSTOM_EMAIL_MODAL,
+  OPEN_CUSTOM_EMAIL_WAITLIST_REFERRAL_MODAL,
   CLOSE_CUSTOM_EMAIL_MODAL } from '../../actions/modal_actions';
 import merge from 'lodash/merge';
 
@@ -8,7 +9,10 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case OPEN_CUSTOM_EMAIL_MODAL:
-      return merge({}, {open: true});
+      return merge({}, {open: true, type: action.templateType});
+    case OPEN_CUSTOM_EMAIL_WAITLIST_REFERRAL_MODAL:
+      return merge({}, {open: true, type: action.templateType,
+        email: action.email, fname: action.fname});
     case CLOSE_CUSTOM_EMAIL_MODAL:
       return {};
     default:

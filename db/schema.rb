@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_25_181200) do
+ActiveRecord::Schema.define(version: 2019_03_27_155016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,15 @@ ActiveRecord::Schema.define(version: 2019_03_25_181200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_email_notifications_on_user_id", unique: true
+  end
+
+  create_table "email_templates", force: :cascade do |t|
+    t.string "type", null: false
+    t.string "subject", default: ""
+    t.text "body", default: ""
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["type"], name: "index_email_templates_on_type"
   end
 
   create_table "finalized_opportunities", force: :cascade do |t|

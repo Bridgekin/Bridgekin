@@ -16,15 +16,24 @@ import TextField from '@material-ui/core/TextField';
 
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
+
+import Loading from '../loading';
 import { closeCustomEmail } from '../../actions/modal_actions';
+import { fetchWaitlistReferralTemplate,
+  fetchEmailTemplate } from '../../actions/email_template_actions';
+import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
-  customEmailModal: state.modals.customEmail
+  customEmailModal: state.modals.customEmail,
+  emailTemplates: state.entities.emailTemplates
 });
 
 const mapDispatchToProps = dispatch => ({
   closeCustomEmail: () => dispatch(closeCustomEmail()),
+  fetchEmailTemplate: (type) => dispatch(fetchEmailTemplate(type)),
+  fetchWaitlistReferralTemplate: (email) => dispatch(fetchWaitlistReferralTemplate(email)),
+  registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user))
 });
 
 const styles = theme => ({
@@ -63,9 +72,66 @@ class CustomEmailModal extends React.Component {
     this.state = {
       subject: '',
       body: '',
+      templateLoaded: false,
       loading: false,
       responsePage: false
     }
+
+    this.saveTemplateLocally = this.saveTemplateLocally.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    let next = nextProps.customEmailModal
+    let current = this.props.customEmailModal
+    if(next.open && next.open !== current.open){
+      switch(next.type){
+        case "waitlist_referral":
+          this.props.fetchWaitlistReferralTemplate(next.email)
+          .then(() => this.saveTemplateLocally(next.type))
+          break;
+        default:
+          this.props.fetchEmailTemplate(next.type)
+          .then(() => this.saveTemplateLocally(next.type))
+          break;
+      }
+    }
+    return true
+  }
+
+  saveTemplateLocally(type){
+    const { template } = this.props.emailTemplates[type];
+    this.setState({
+      templateLoaded: true,
+      subject: template.subject,
+      body: template.body
+    })
+  }
+
+  handleChange(field){
+    return e => {
+      this.setState({ [field]: e.target.value})
+    }
+  }
+
+  handleSubmit(){
+    const { customEmailModal } = this.props;
+
+    switch(customEmailModal.type){
+      case "waitlist_referral":
+        let payload = {
+          type: customEmailModal.type,
+          email: customEmailModal.email,
+          fname: customEmailModal.fname,
+          fromReferralId: this.props.currentUser.id,
+          subject: this.state.subject,
+          body: this.state.body,
+        }
+        this.props.registerWaitlistFromReferral(payload)
+        break;
+      default:
+        return;
+    }
+
   }
 
   capitalize(str){
@@ -78,10 +144,14 @@ class CustomEmailModal extends React.Component {
 
   render(){
     const { classes, customEmailModal, template} = this.props;
-    // const { loading, email, responsePage } = this.state;
+    const { templateLoaded } = this.state;
     // let result = mustache(template.string, context)
 
-    let modalContent = (<div>Custom Email Modal</div>)
+    let modalContent = templateLoaded ? (
+      <div>Custom Email Modal</div>
+    ) : (<div style={{ height: 200, width: 200 }}>
+      <Loading />
+    </div>)
 
     return (
       <Dialog

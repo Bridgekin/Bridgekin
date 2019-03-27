@@ -26,11 +26,12 @@ Rails.application.routes.draw do
     end
     resources :notifications, only: [:index]
     resource :notification_settings, only: [:show, :update]
+    resource :email_templates, only: [:show]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
-    # get 'profile/:id', :to => 'users#profile'
+    get 'waitlist_referral', :to => 'email_templates#waitlist_referral'
     patch 'read_all', :to => 'notifications#read_all'
     get 'search_bar', :to => 'users#search_bar'
     get 'opp_permissions/share_options', :to => 'opp_permissions#shareOptions'

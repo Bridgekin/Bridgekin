@@ -7,6 +7,7 @@ import connectedOpportunityErrorsReducer from './connected_opportunity_errors_re
 import siteTemplateErrorsReducer from './site_template_errors_reducer';
 import connectionErrorsReducer from './connection_errors_reducer';
 import circleErrorsReducer from './circle_errors_reducer';
+import emailTemplateErrorsReducer from './email_template_errors_reducer';
 
 export default combineReducers({
   login: loginErrorsReducer,
@@ -17,4 +18,5 @@ export default combineReducers({
   siteTemplate: siteTemplateErrorsReducer,
   connection: connectionErrorsReducer,
   circle: circleErrorsReducer,
+  emailTemplate: emailTemplateErrorsReducer
 });
