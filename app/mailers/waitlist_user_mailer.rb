@@ -8,7 +8,7 @@ class WaitlistUserMailer < ApplicationMailer
   def register_referred_new(waitlist_user, user)
     @waitlist_user = waitlist_user
     @user = user
-    mail(to: waitlist_user.email, subject: "#{@user.fname} #{@user.lname} referral - Bridgekin private network")
+    mail(to: waitlist_user.email, subject: "#{@user.fname.capitalize} #{@user.lname.capitalize} referral - Bridgekin private network")
     @user.decrement_invite_count
     @waitlist_user.track_email
   end
@@ -25,7 +25,7 @@ class WaitlistUserMailer < ApplicationMailer
   def register_referred_existing(waitlist_user, user)
     @waitlist_user = waitlist_user
     @user = user
-    mail(to: waitlist_user.email, subject: "#{@user.fname} #{@user.lname} referral - Bridgekin private network")
+    mail(to: waitlist_user.email, subject: "#{@user.fname.capitalize} #{@user.lname.capitalize} referral - Bridgekin private network")
     @user.decrement_invite_count
     @waitlist_user.track_email
   end

@@ -29,13 +29,22 @@ import Typography from '@material-ui/core/Typography';
 
 import { connect } from 'react-redux';
 import { clearConnectedOpportunityErrors } from '../../actions/error_actions';
+import { closeOppCard } from '../../actions/modal_actions';
+import { fetchProfile } from '../../actions/user_actions';
+import { openCustomEmailOppCard } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  connectedOpportunityErrors: state.errors.connectedOpportunities
+  opportunities: state.entities.opportunities,
+  connectedOpportunityErrors: state.errors.connectedOpportunities,
+  oppCardModal: state.modals.oppCard
 });
 
 const mapDispatchToProps = dispatch => ({
+  closeOppCard: () => dispatch(closeOppCard()),
+  fetchProfile: (userId) => dispatch(fetchProfile(userId)),
+  openCustomEmailOppCard:(templateType, connectBool, oppId) => (
+    dispatch(openCustomEmailOppCard(templateType, connectBool, oppId))),
   createConnectedOpportunity: (opportunity) => dispatch(createConnectedOpportunity(opportunity)),
   clearConnectedOpportunityErrors: () => dispatch(clearConnectedOpportunityErrors())
 });
@@ -157,51 +166,63 @@ class CardModal extends React.Component {
     this.getContent = this.getContent.bind(this);
     this.handleConnection = this.handleConnection.bind(this);
     this.handleBack = this.handleBack.bind(this);
+    this.handleConnectionTemplate = this.handleConnectionTemplate.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState){
-    // if((prevProps.page !== this.props.page ||
-    //   prevProps.connectBool !== this.props.connectBool ) &&
-    //   (this.state.page !== this.props.page ||
-    //   prevProps.connectBool !== this.props.connectBool)) {
-    //     this.setState({
-    //       page: this.props.page,
-    //       connectBool: this.props.connectBool
-    //     })
-    //   }
-    if (prevProps.open !== this.props.open){
+  // componentDidUpdate(prevProps, prevState){
+  //   // if((prevProps.page !== this.props.page ||
+  //   //   prevProps.connectBool !== this.props.connectBool ) &&
+  //   //   (this.state.page !== this.props.page ||
+  //   //   prevProps.connectBool !== this.props.connectBool)) {
+  //   //     this.setState({
+  //   //       page: this.props.page,
+  //   //       connectBool: this.props.connectBool
+  //   //     })
+  //   //   }
+  //   if (prevProps.open !== this.props.open){
+  //     this.setState({
+  //       page: this.props.page,
+  //       connectBool: this.props.connectBool
+  //     })
+  //   }
+  // }
+
+  shouldComponentUpdate(nextProps, nextState){
+    let nextModal = nextProps.oppCardModal;
+    if (nextModal.open && nextModal.open !== this.props.oppCardModal.open){
       this.setState({
-        page: this.props.page,
-        connectBool: this.props.connectBool
+        page: nextModal.page,
+        connectBool: nextModal.connectBool
       })
+      this.props.fetchProfile(this.props.opportunities[nextModal.oppId].ownerId)
     }
+    return true
   }
 
   handleClose(field){
     return e => {
       e.preventDefault();
-
       if(this.props.connectedOpportunityErrors){
         this.props.clearConnectedOpportunityErrors();
       }
 
-      this.setState({ page: 'opportunity' },
-        () => {
-          this.props.handleClose();
-          if(field === 'post'){
-            this.props.history.push('/postopportunity');
-          }
-        }
-      );
+      this.props.closeOppCard();
+      this.setState({ page: 'opportunity' })
+
+      if(field === 'post'){
+        this.props.history.push('/postopportunity');
+      }
     }
   };
 
   handleBack(){
-    if (this.props.viewType === 'card'){
-      this.setState({page: 'opportunity'})
-    } else {
-      this.props.handleClose();
-    }
+    // if (this.props.viewType === 'card'){
+    //   this.setState({page: 'opportunity'})
+    // } else {
+    //   this.props.closeOppCard();
+    //   this.setState({ })
+    // }
+
   }
 
   handleConnection(){
@@ -209,25 +230,35 @@ class CardModal extends React.Component {
       e.preventDefault()
       this.setState({ connectLoading: true},
       () => {
-        const { connectBool } = this.state;
-
-        if(!this.props.demo){
-          let opportunity = {
-            opportunityId: this.props.opportunity.id,
-            connectBool
-          }
-          this.props.createConnectedOpportunity(opportunity)
-          .then(() => {
-            this.setState({
-              sent: true,
-              page: 'sent',
-              connectLoading: false,
-              connectBool
-            })
-          });
+        let opportunity = {
+          opportunityId: this.props.oppCardModal.oppId,
+          connectBool: this.state.connectBool
         }
+
+        this.props.createConnectedOpportunity(opportunity)
+        .then(() => {
+          this.setState({
+            sent: true,
+            page: 'sent',
+            connectLoading: false,
+            connectBool: this.state.connectBool
+          })
+        });
+        // if(!this.props.demo){
+        // }
       })
     }
+  }
+
+  handleConnectionTemplate(e){
+    const { connectBool } = this.state;
+    this.props.closeOppCard();
+
+    this.props.openCustomEmailOppCard(
+      "connection",
+      connectBool,
+      this.props.oppCardModal.oppId
+    )
   }
 
   handleConfirm(connectBool){
@@ -237,8 +268,11 @@ class CardModal extends React.Component {
   }
 
   getContent(){
-    const { classes, opportunity } = this.props;
+    const { classes, opportunities,
+      oppCardModal } = this.props;
     const { connectBool, page, connectLoading } = this.state;
+
+    const opportunity = opportunities[oppCardModal.oppId];
 
     let { title, description, industries, opportunityNeed, geography,
       value, networks, pictureUrl, viewType } = opportunity;
@@ -386,6 +420,10 @@ class CardModal extends React.Component {
 
               <Grid container justify='flex-end'
                 style={{ margin: "25px 0px"}}>
+                <Button onClick={this.handleConnectionTemplate}
+                  style={{ fontSize: 12, textTransform: "capitalize"}}>
+                  Preview Email
+                </Button>
                 <Button onClick={this.handleConnection()}
                   variant='contained' color='primary'
                   disabled={connectLoading}
@@ -400,9 +438,9 @@ class CardModal extends React.Component {
       default:
         return (
           <Grid container justify="center" alignItems='center'>
-            {viewType === 'card' && <Grid item xs={12}>
+            <Grid item xs={12}>
               {picture}
-            </Grid>}
+            </Grid>
             <Grid item xs={11} sm={10} md={8} className={classes.cardContent}
               container justify='center' spacing={16}>
               <Grid item xs={12}>
@@ -410,13 +448,13 @@ class CardModal extends React.Component {
                   color="textPrimary">
                   {title}
                 </Typography>
-                {viewType === 'card' && <Typography variant="body2" gutterBottom align='left'
+                <Typography variant="body2" gutterBottom align='left'
                   color="textPrimary">
                   {description}
-                </Typography>}
+                </Typography>
               </Grid>
 
-              {viewType === 'card' && <Grid container justify='flex-start' spacing={24}>
+              <Grid container justify='flex-start' spacing={24}>
                 <Grid item xs={4}>
                   <Typography variant="h6" gutterBottom align='left'
                     color="textPrimary"
@@ -452,7 +490,7 @@ class CardModal extends React.Component {
                     {value}
                   </Typography>
                 </Grid>
-              </Grid>}
+              </Grid>
 
               <Grid container justify='flex-start'
                 style={{ margin: "10px 0px"}}>
@@ -482,12 +520,13 @@ class CardModal extends React.Component {
   }
 
   render () {
-    const { open, classes, opportunity } = this.props;
+    const { classes, opportunities,
+      oppCardModal } = this.props;
 
-    if (!_.isEmpty(opportunity)){
+    if (!_.isEmpty(opportunities[oppCardModal.oppId])){
       return (
         <Dialog
-          open={open}
+          open={oppCardModal.open}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           onClose={this.handleClose('find')}

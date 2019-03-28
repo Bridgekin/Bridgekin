@@ -1,3 +1,3 @@
 json.template do
-  json.extract! @template, :id, :type, :subject, :body
+  json.extract! @template, :id, :template_type, :subject, :body
 end

@@ -8,9 +8,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-import WaitlistModal from '../waitlist_modal';
+// import WaitlistModal from '../waitlist_modal';
 
+import { openWaitlist } from '../../actions/modal_actions';
 import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
+import { openCustomEmailWaitlistReferral } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -18,7 +20,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user))
+  openWaitlist: (referralBool) => dispatch(openWaitlist(referralBool)),
+  registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
+  openCustomEmailWaitlistReferral:(templateType, email, fname) => (
+    dispatch(openCustomEmailWaitlistReferral(templateType, email, fname)))
 });
 
 const styles = theme => ({
@@ -67,7 +72,7 @@ class OpportunityWaitlist extends React.Component{
     this.state={
       email: '',
       fname: '',
-      open: false,
+      // open: false,
       success: false,
       loading: false
     }
@@ -75,6 +80,7 @@ class OpportunityWaitlist extends React.Component{
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleSubmitTemplate = this.handleSubmitTemplate.bind(this);
   }
 
   handleChange(field){
@@ -98,16 +104,24 @@ class OpportunityWaitlist extends React.Component{
       () => {
         this.props.registerWaitlistFromReferral(user)
           .then(res => {
+            this.props.openWaitlist(true);
             this.setState({
               loading: false,
               success: true,
-              open: true,
               email: '',
               fname: ''
             })
           })
       })
     }
+  }
+
+  handleSubmitTemplate(e){
+    this.props.openCustomEmailWaitlistReferral(
+      "waitlist_referral",
+      this.state.email,
+      this.state.fname,
+    )
   }
 
   handleClose(){
@@ -165,6 +179,14 @@ class OpportunityWaitlist extends React.Component{
             className={classes.buttonProgress} />}
           </Button>
         </Grid>
+
+        {currentUser.invitesRemaining > 0 && <Grid item xs={12} container justify='flex-end'>
+          <Button onClick={this.handleSubmitTemplate}
+            style={{ fontSize: 12, textTransform: "capitalize"}}>
+            Preview Email
+          </Button>
+        </Grid>}
+
         <Grid item xs={12} container justify='flex-end'>
           <Typography align='right' color='textSecondary' variant='body1'
             className={classes.inviteCounter}>
@@ -174,11 +196,6 @@ class OpportunityWaitlist extends React.Component{
             }
           </Typography>
         </Grid>
-
-        <WaitlistModal
-          open={open}
-          handleClose={this.handleClose}
-          referred={true}/>
       </Grid>
     )
   }

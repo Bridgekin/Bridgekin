@@ -33,38 +33,50 @@ class Api::ConnectedOpportunitiesController < ApiController
   # POST /opportunities
   def create
     opportunity = Opportunity.find(params[:connected_opportunity][:opportunity_id])
-
     newConnectedOpportunity = {
-        opportunity_id: params[:connected_opportunity][:opportunity_id],
-        network_id: params[:connected_opportunity][:network_id]
+      opportunity_id: params[:connected_opportunity][:opportunity_id],
+      network_id: params[:connected_opportunity][:network_id]
     }
 
     if params[:connected_opportunity][:connect_bool]
       newConnectedOpportunity[:user_id] = @user.id
-
       @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
       authorize @connected_opportunity
 
       if opportunity.owner == @user
         render json: ["You can't connect to your own opportunity"], status: 422
       elsif @connected_opportunity.save
-        ConnectedOpportunityMailer.make_connection(@connected_opportunity).deliver_now
+        #Send Email
+        if params[:connected_opportunity][:subject]
+          subject = params[:connected_opportunity][:subject]
+          body = params[:connected_opportunity][:body]
+          ConnectedOpportunityMailer.make_connection_template(
+            @connected_opportunity, subject, body).deliver_now
+        else
+          ConnectedOpportunityMailer.make_connection(@connected_opportunity).deliver_now
+        end
         render :show
       else
         # render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
         render json: ["You've already connected to this opportunity"], status: :unprocessable_entity
       end
-
-    elsif
+    else
       newConnectedOpportunity[:facilitator_id] = @user.id
-
       @connected_opportunity = ConnectedOpportunity.new(newConnectedOpportunity)
       authorize @connected_opportunity
 
       if opportunity.owner == @user
         render json: ["You can't connect to your own opportunity"], status: 422
       elsif @connected_opportunity.save
-        ConnectedOpportunityMailer.make_facilitated_connection(@connected_opportunity).deliver_now
+        #Send Email
+        if params[:connected_opportunity][:subject]
+          subject = params[:connected_opportunity][:subject]
+          body = params[:connected_opportunity][:body]
+          ConnectedOpportunityMailer.make_facilitated_connection_template(
+            @connected_opportunity, subject, body).deliver_now
+        else
+          ConnectedOpportunityMailer.make_facilitated_connection(@connected_opportunity).deliver_now
+        end
         render :show
       else
         render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity

@@ -38,6 +38,7 @@ export const closeCircle = () => ({
 
 // CUSTOM EMAIL MODAL
 export const OPEN_CUSTOM_EMAIL_MODAL = 'OPEN_CUSTOM_EMAIL_MODAL';
+export const OPEN_CUSTOM_EMAIL_OPP_CARD_MODAL = 'OPEN_CUSTOM_EMAIL_OPP_CARD_MODAL';
 export const OPEN_CUSTOM_EMAIL_WAITLIST_REFERRAL_MODAL = 'OPEN_CUSTOM_EMAIL_WAITLIST_REFERRAL_MODAL';
 export const CLOSE_CUSTOM_EMAIL_MODAL = "CLOSE_CUSTOM_EMAIL_MODAL";
 
@@ -51,6 +52,37 @@ export const openCustomEmailWaitlistReferral = (templateType, email, fname) => (
   templateType, email, fname
 });
 
+export const openCustomEmailOppCard = (templateType, connectBool, oppId) => ({
+  type: OPEN_CUSTOM_EMAIL_OPP_CARD_MODAL,
+  templateType, connectBool, oppId
+});
+
 export const closeCustomEmail = () => ({
   type: CLOSE_CUSTOM_EMAIL_MODAL,
+});
+
+// WAITLIST MODAL
+export const OPEN_WAITLIST_MODAL = 'OPEN_WAITLIST_MODAL';
+export const CLOSE_WAITLIST_MODAL = "CLOSE_WAITLIST_MODAL";
+
+export const openWaitlist = (referred) => ({
+  type: OPEN_WAITLIST_MODAL,
+  referred: (!!referred)
+});
+
+export const closeWaitlist = () => ({
+  type: CLOSE_WAITLIST_MODAL,
+});
+
+// OPPORTUNITY CARD MODAL
+export const OPEN_OPP_CARD_MODAL = 'OPEN_OPP_CARD_MODAL';
+export const CLOSE_OPP_CARD_MODAL = "CLOSE_OPP_CARD_MODAL";
+
+export const openOppCard = ({ oppId, page, connectBool }) => ({
+  type: OPEN_OPP_CARD_MODAL,
+  oppId, page, connectBool
+});
+
+export const closeOppCard = () => ({
+  type: CLOSE_OPP_CARD_MODAL,
 });

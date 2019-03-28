@@ -31,7 +31,9 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
-    get 'waitlist_referral', :to => 'email_templates#waitlist_referral'
+
+    get 'connection_template', :to => 'email_templates#connection_template'
+    get 'waitlist_referral_template', :to => 'email_templates#waitlist_referral'
     patch 'read_all', :to => 'notifications#read_all'
     get 'search_bar', :to => 'users#search_bar'
     get 'opp_permissions/share_options', :to => 'opp_permissions#shareOptions'

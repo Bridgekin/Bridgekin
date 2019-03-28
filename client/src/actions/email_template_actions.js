@@ -12,13 +12,12 @@ export const receiveEmailTemplate = template => ({
   template,
 });
 
-export const removeEmailTemplate = templateType => ({
-  type: REMOVE_EMAIL_TEMPLATE,
-  templateType
+export const removeEmailTemplate = () => ({
+  type: REMOVE_EMAIL_TEMPLATE
 });
 
-export const fetchEmailTemplate = (type) => dispatch => (
-  EmailTemplateApiUtil.fetchEmailTemplate(type)
+export const fetchEmailTemplate = (templateType) => dispatch => (
+  EmailTemplateApiUtil.fetchEmailTemplate(templateType)
     .then(handleErrors)
     .then(data => dispatch(receiveEmailTemplate(data.template)))
     .catch(errors => {
@@ -28,6 +27,18 @@ export const fetchEmailTemplate = (type) => dispatch => (
       dispatch(receiveEmailTemplateErrors(errors))
     })
 );
+
+// export const fetchConnectionTemplate = (connectBool) => dispatch => (
+//   EmailTemplateApiUtil.fetchConnectionTemplate(connectBool)
+//     .then(handleErrors)
+//     .then(data => dispatch(receiveEmailTemplate(data.template)))
+//     .catch(errors => {
+//       if (!(errors instanceof Array)){
+//         errors = [genericError];
+//       }
+//       dispatch(receiveEmailTemplateErrors(errors))
+//     })
+// );
 
 export const fetchWaitlistReferralTemplate = (email) => dispatch => (
   EmailTemplateApiUtil.fetchWaitlistReferralTemplate(email)

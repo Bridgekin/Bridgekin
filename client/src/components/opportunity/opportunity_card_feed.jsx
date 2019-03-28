@@ -38,13 +38,14 @@ import Img from 'react-image'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import VisibilitySensor from 'react-visibility-sensor';
 
-import CardModal from './card_modal';
+// import CardModal from './card_modal';
 
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 import _ from 'lodash';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { fetchUserOpportunities,
   updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
+import { openOppCard } from '../../actions/modal_actions';
 import theme from '../theme';
 
 import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
@@ -57,6 +58,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  openOppCard: (payload) => dispatch(openOppCard(payload)),
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
@@ -183,7 +185,14 @@ class OpportunityCard extends React.Component {
       e.preventDefault();
       e.stopPropagation();
       // this.props.handleCardOpen(this.props.opportunity)
-      this.setState({ cardOpen: true, cardModalPage, connectBool })
+      // this.setState({ cardOpen: true, cardModalPage, connectBool })
+      const { opportunity } = this.props;
+      let payload = {
+        oppId: opportunity.id,
+        page: cardModalPage,
+        connectBool
+      }
+      this.props.openOppCard(payload);
     }
   }
 
@@ -337,10 +346,6 @@ class OpportunityCard extends React.Component {
       //   </VisibilitySensor>
       // )
 
-      // {viewType === 'card' && <img src={PagePeel} className={classes.pagePeel}
-      //   onClick={this.handleCardOpen('none', undefined)}
-      //   alt='pagepeel'/>}
-
       return (
         <div className={classes.opportunityCard}>
           <Grid container className={classes.oppCardGrid}>
@@ -424,11 +429,11 @@ class OpportunityCard extends React.Component {
           <Grid container justify='center'>
             <Grid item xs={10} style={{ paddingTop: 14}}>
               {opportunity.title &&
-                opportunity.viewType === 'card' &&
+                viewType === 'card' &&
                 <div className={classes.cardHeaderWrapper}>
                   <Typography variant="h5" align='left'
                     color="textPrimary"
-                    className={opportunity.viewType === 'card' ?
+                    className={viewType === 'card' ?
                       classes.titleCard : classes.titlePost} >
                     <LinesEllipsis
                       text={title}
@@ -457,7 +462,7 @@ class OpportunityCard extends React.Component {
               <Grid container justify='flex-start' spacing={16}
                 style={{ margin: "10px 0px 10px 0px" }}>
                 {opportunity.geography.length > 0 &&
-                  opportunity.viewType === 'card' &&
+                  viewType === 'card' &&
                   <Grid item xs={4} md={4}>
                     <Typography variant="h6" gutterBottom align='left'
                       color="textSecondary" noWrap
@@ -477,7 +482,7 @@ class OpportunityCard extends React.Component {
                   </Grid>}
 
                 {opportunity.industries.length > 0 &&
-                  opportunity.viewType === 'card' &&
+                  viewType === 'card' &&
                   <Grid item xs={4} md={4}>
                     <Typography variant="h6" gutterBottom align='left'
                       color="textSecondary"
@@ -499,7 +504,7 @@ class OpportunityCard extends React.Component {
                   </Grid>}
 
                 {opportunity.value &&
-                  opportunity.viewType === 'card' &&
+                  viewType === 'card' &&
                   <Grid item xs={3}>
                     <Typography variant="h6" gutterBottom align='left'
                       color="textSecondary"
@@ -540,14 +545,13 @@ class OpportunityCard extends React.Component {
             {editable && deleteDialog}
           </Grid>
 
-          <CardModal
+          {/*<CardModal
             open={cardOpen}
             page={cardModalPage}
             connectBool={connectBool}
-            handleClose={this.handleCardClose}
             opportunity={opportunity}
             demo={demo}
-            viewType={viewType}/>
+            viewType={viewType}/>*/}
         </div>
       )
     } else {

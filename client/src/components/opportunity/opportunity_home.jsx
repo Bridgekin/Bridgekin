@@ -36,7 +36,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import OpportunityCardFeed from './opportunity_card_feed';
 import OpportunityReferral from './opportunity_referral';
 import OpportunityWaitlist from './opportunity_waitlist';
-import WaitlistModal from '../waitlist_modal';
+// import WaitlistModal from '../waitlist_modal';
 import Loading from '../loading';
 import Checkbox from '@material-ui/core/Checkbox';
 

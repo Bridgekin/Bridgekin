@@ -8,7 +8,7 @@ export const fetchSearchResults = searchInput => (
   })
 )
 
-export const fetchProfile = userId => (
+export const fetchUser = userId => (
   fetch(`${window.location.origin}/api/users/${userId}`, {
     method: 'GET',
     headers:{

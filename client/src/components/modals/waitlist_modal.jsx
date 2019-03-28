@@ -15,15 +15,18 @@ import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
-import { clearWaitlistUserErrors } from '../actions/error_actions';
+import { closeWaitlist } from '../../actions/modal_actions';
+import { clearWaitlistUserErrors } from '../../actions/error_actions';
 // import theme from './theme';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  waitlistErrors: state.errors.waitlistUsers
+  waitlistErrors: state.errors.waitlistUsers,
+  waitlistModal: state.modals.waitlist
 });
 
 const mapDispatchToProps = dispatch => ({
+  closeWaitlist: () => dispatch(closeWaitlist()),
   clearWaitlistUserErrors: () => dispatch(clearWaitlistUserErrors())
 });
 
@@ -72,15 +75,16 @@ class WaitlistModal extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClose = () => {
+  handleClose(){
     if(this.props.waitlistErrors){
       this.props.clearWaitlistUserErrors();
     }
-    this.props.handleClose();
+    this.props.closeWaitlist();
   };
 
-  render () {
-    const { open, classes, referred } = this.props;
+  render() {
+    const { open, classes, referred,
+      waitlistModal } = this.props;
 
     let waitlistErrors = this.props.waitlistErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
@@ -95,7 +99,7 @@ class WaitlistModal extends React.Component {
       )
     })
 
-    let modalSuccessText = referred ? (
+    let modalSuccessText = waitlistModal.referred ? (
       <Grid item xs={11} sm={10} md={8} className={classes.grid}
         container justify='flex-start'>
         <Typography variant="h2" id="modal-title" color='textPrimary'
@@ -133,7 +137,7 @@ class WaitlistModal extends React.Component {
       </Grid>
     )
 
-    let modalErrorText = referred ? (
+    let modalErrorText = waitlistModal.referred ? (
       <Grid item xs={11} sm={10} md={8} className={classes.grid}
         container justify='flex-start'>
         <Typography variant="h2" id="modal-title" color='textPrimary'
@@ -186,7 +190,7 @@ class WaitlistModal extends React.Component {
 
     return (
       <Dialog
-        open={open}
+        open={waitlistModal.open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         onClose={this.handleClose}

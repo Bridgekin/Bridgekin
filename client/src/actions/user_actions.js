@@ -55,7 +55,7 @@ export const fetchSearchResults = (searchInput, bool) => dispatch => (
 );
 
 export const fetchProfile = (userId) => dispatch => (
-  UserApiUtil.fetchProfile(userId)
+  UserApiUtil.fetchUser(userId)
     .then(handleErrors)
     .then(data => dispatch(receiveUser(data)))
     .catch(errors => {

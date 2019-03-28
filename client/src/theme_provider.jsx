@@ -10,6 +10,9 @@ import getTheme from './components/theme';
 import InviteModal from './components/modals/invite_modal';
 import CreateCircleModal from './components/modals/create_circle_modal';
 import CircleModal from './components/modals/circle_modal';
+import CustomEmailModal from './components/modals/custom_email_modal';
+import WaitlistModal from './components/modals/waitlist_modal';
+import OppCardModal from './components/modals/card_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -24,10 +27,15 @@ class ThemeProvider extends React.Component{
         <BrowserRouter>
           <GAListener>
             <App />
+
             {/* MODALS */}
             {currentUser && <InviteModal/>}
             {currentUser && <CreateCircleModal/>}
             {currentUser && <CircleModal/>}
+            {currentUser && <CustomEmailModal/>}
+            {currentUser && <OppCardModal/>}
+            <WaitlistModal/>
+
           </GAListener>
         </BrowserRouter>
       </MuiThemeProvider>

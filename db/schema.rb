@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_155016) do
+ActiveRecord::Schema.define(version: 2019_03_27_190432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,12 +101,12 @@ ActiveRecord::Schema.define(version: 2019_03_27_155016) do
   end
 
   create_table "email_templates", force: :cascade do |t|
-    t.string "type", null: false
+    t.string "template_type", null: false
     t.string "subject", default: ""
     t.text "body", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["type"], name: "index_email_templates_on_type"
+    t.index ["template_type"], name: "index_email_templates_on_template_type"
   end
 
   create_table "finalized_opportunities", force: :cascade do |t|

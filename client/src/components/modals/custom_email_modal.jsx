@@ -16,24 +16,39 @@ import TextField from '@material-ui/core/TextField';
 
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
+import SendIcon from '@material-ui/icons/SendSharp';
 
 import Loading from '../loading';
-import { closeCustomEmail } from '../../actions/modal_actions';
+import { closeCustomEmail, openWaitlist,
+  openOppCard} from '../../actions/modal_actions';
 import { fetchWaitlistReferralTemplate,
-  fetchEmailTemplate } from '../../actions/email_template_actions';
+  fetchEmailTemplate,
+  // fetchConnectionTemplate,
+  removeEmailTemplate } from '../../actions/email_template_actions';
 import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
+import { clearEmailTemplateErrors } from '../../actions/error_actions';
+import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   customEmailModal: state.modals.customEmail,
-  emailTemplates: state.entities.emailTemplates
+  emailTemplate: state.entities.emailTemplate,
+  emailTemplateErrors: state.errors.emailTemplate,
+  opportunities: state.entities.opportunities,
+  users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
   closeCustomEmail: () => dispatch(closeCustomEmail()),
+  openWaitlist: (referredBool) => dispatch(openWaitlist(referredBool)),
+  clearEmailTemplateErrors: () => dispatch(clearEmailTemplateErrors()),
   fetchEmailTemplate: (type) => dispatch(fetchEmailTemplate(type)),
   fetchWaitlistReferralTemplate: (email) => dispatch(fetchWaitlistReferralTemplate(email)),
-  registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user))
+  // fetchConnectionTemplate: (connectBool) => dispatch(fetchConnectionTemplate(connectBool)),
+  registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
+  removeEmailTemplate: () => dispatch(removeEmailTemplate()),
+  createConnectedOpportunity: (opportunity) => dispatch(createConnectedOpportunity(opportunity)),
+  openOppCard: (payload) => dispatch(openOppCard(payload)),
 });
 
 const styles = theme => ({
@@ -63,7 +78,18 @@ const styles = theme => ({
   pic: { width: 135, height: 135},
   thanksHeader: {
     marginBottom: 20
-  }
+  },
+  closeBar:{
+    backgroundColor: theme.palette.base4,
+    height: 33,
+    padding: "0px 10px",
+    [theme.breakpoints.up('sm')]: {
+      minWidth: 400,
+    }
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
 })
 
 class CustomEmailModal extends React.Component {
@@ -71,40 +97,92 @@ class CustomEmailModal extends React.Component {
     super(props)
     this.state = {
       subject: '',
+      subjectFName: '',
       body: '',
       templateLoaded: false,
       loading: false,
       responsePage: false
     }
 
+    this.resetTemplate = this.resetTemplate.bind(this);
     this.saveTemplateLocally = this.saveTemplateLocally.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     let next = nextProps.customEmailModal
     let current = this.props.customEmailModal
     if(next.open && next.open !== current.open){
-      switch(next.type){
-        case "waitlist_referral":
-          this.props.fetchWaitlistReferralTemplate(next.email)
-          .then(() => this.saveTemplateLocally(next.type))
-          break;
-        default:
-          this.props.fetchEmailTemplate(next.type)
-          .then(() => this.saveTemplateLocally(next.type))
-          break;
-      }
+      this.resetTemplate(next)();
     }
     return true
   }
 
-  saveTemplateLocally(type){
-    const { template } = this.props.emailTemplates[type];
-    this.setState({
-      templateLoaded: true,
-      subject: template.subject,
-      body: template.body
-    })
+  resetTemplate(customEmailModal){
+    return e => {
+      switch(customEmailModal.type){
+        case "waitlist_referral":
+          this.props.fetchWaitlistReferralTemplate(customEmailModal.email)
+          .then(() => this.saveTemplateLocally(customEmailModal.type))
+          break;
+        // case "connection":
+        //   this.props.fetchConnectionTemplate(customEmailModal.connectBool)
+        //   .then(() => this.saveTemplateLocally(customEmailModal.type))
+        //   break;
+        case "connection":
+          let templateType = customEmailModal.connectBool ? "connection_direct" : "connection_referral"
+          this.props.fetchEmailTemplate(templateType)
+            .then(() => this.saveTemplateLocally(customEmailModal.type))
+            break;
+        default:
+          this.props.fetchEmailTemplate(customEmailModal.type)
+            .then(() => this.saveTemplateLocally(customEmailModal.type))
+          break;
+      }
+    }
+  }
+
+  saveTemplateLocally(templateType){
+    if (this.props.emailTemplateErrors.length === 0){
+      const { emailTemplate, currentUser, opportunities, users,
+        customEmailModal } = this.props;
+      const templateVars = {
+        currentUser:{
+          fname: currentUser.fname,
+          lname: currentUser.lname,
+        }
+      }
+      // debugger
+      let subjectFName = '';
+      switch(templateType){
+        case "waitlist_referral":
+          subjectFName = customEmailModal.fname;
+          break;
+        case "connection":
+          const { opportunities, customEmailModal } = this.props;
+          let opp = opportunities[customEmailModal.oppId];
+          let owner = users[opp.ownerId];
+          subjectFName = owner.fname
+          templateVars['opportunity'] = opp;
+          templateVars['owner'] = owner
+          break;
+        default:
+          break;
+      }
+
+      this.setState({
+        subjectFName,
+        templateLoaded: true,
+        subject: this.fillTemplate(emailTemplate.subject, templateVars),
+        body: this.fillTemplate(emailTemplate.body, templateVars)
+      })
+    } else { this.setState({ templateLoaded: true}) }
+  }
+
+  fillTemplate(templateString, templateVars){
+    return new Function("return `"+templateString +"`;").call(templateVars);
   }
 
   handleChange(field){
@@ -115,23 +193,53 @@ class CustomEmailModal extends React.Component {
 
   handleSubmit(){
     const { customEmailModal } = this.props;
+    if (customEmailModal.type === "waitlist_referral"){
+      let payloadRef = {
+        type: customEmailModal.type,
+        email: customEmailModal.email,
+        fname: customEmailModal.fname,
+        fromReferralId: this.props.currentUser.id,
+        subject: this.state.subject,
+        body: this.state.body,
+      }
+      this.props.registerWaitlistFromReferral(payloadRef)
+      .then(() => {
+        this.handleClose();
+        this.props.removeEmailTemplate();
+        this.props.openWaitlist(true);
+      })
+    } else if (customEmailModal.type === "connection"){
+      const { opportunities, customEmailModal } = this.props;
+      let opp = opportunities[customEmailModal.oppId];
 
-    switch(customEmailModal.type){
-      case "waitlist_referral":
-        let payload = {
-          type: customEmailModal.type,
-          email: customEmailModal.email,
-          fname: customEmailModal.fname,
-          fromReferralId: this.props.currentUser.id,
-          subject: this.state.subject,
-          body: this.state.body,
-        }
-        this.props.registerWaitlistFromReferral(payload)
-        break;
-      default:
-        return;
+      let payloadOpp = {
+        opportunityId: customEmailModal.oppId,
+        connectBool: customEmailModal.connectBool,
+        subject: this.state.subject,
+        body: this.state.body
+      }
+
+      this.props.createConnectedOpportunity(payloadOpp)
+        .then(() => {
+          this.handleClose();
+          this.props.removeEmailTemplate();
+          let response = {
+            oppId: customEmailModal.oppId,
+            page: 'sent',
+            connectBool: customEmailModal.connectBool
+          }
+          this.props.openOppCard(response);
+        })
     }
+  }
 
+  handleClose(){
+    if(this.props.emailTemplateErrors.length > 0){
+      this.props.clearEmailTemplateErrors();
+    }
+    this.props.removeEmailTemplate();
+    this.props.closeCustomEmail();
+    this.setState({ subject: '', body: ''});
   }
 
   capitalize(str){
@@ -143,12 +251,128 @@ class CustomEmailModal extends React.Component {
   }
 
   render(){
-    const { classes, customEmailModal, template} = this.props;
-    const { templateLoaded } = this.state;
+    const { classes, customEmailModal, emailTemplate,
+      currentUser} = this.props;
+    const { templateLoaded, email, userName,
+      subjectFName } = this.state;
     // let result = mustache(template.string, context)
 
-    let modalContent = templateLoaded ? (
-      <div>Custom Email Modal</div>
+    let emailTemplateErrors = this.props.emailTemplateErrors.map(error => {
+      error = error.replace(/(Fname|Lname)/g, (ex) => {
+        return ex === 'Fname' ? 'First name' : 'Last name';
+      });
+
+      return (
+        <ListItem >
+          <ListItemText primary={error}
+            classes={{ primary: classes.listText }}/>
+        </ListItem>
+      )
+    })
+
+    let closeBar = (
+      <Grid container justify='space-between' alignItems='center'
+        className={classes.closeBar}>
+        {`Edit Email`}
+        <CloseIcon
+          onClick={this.handleClose}
+          style={{ cursor: 'pointer'}}/>
+      </Grid>
+    )
+
+    let submit = (
+      <Grid container justify='space-between' alignItems='center'
+        className={classes.submitContainer}>
+        <Button onClick={this.resetTemplate(customEmailModal)}
+          style={{ textTransform: 'capitalize'}}>
+          Reset Template
+        </Button>
+
+        <div>
+          <Button variant='contained'
+            onClick={this.handleClose}
+            classes={{ root: classes.actionButton}}
+            style={{ marginRight: 10 }}>
+            {`Cancel`}
+          </Button>
+          <Button variant='contained' color='primary'
+            onClick={this.handleSubmit}>
+            Send
+            <SendIcon className={classes.rightIcon} />
+          </Button>
+        </div>
+      </Grid>
+    )
+
+    let updateEmail = (
+      <div>
+        {closeBar}
+        <Grid container
+          style={{ padding: 20 }}>
+          <Typography align='center' fullWidth
+            style={{ fontSize: 13 }}>
+            {`We'll add greetings and salutations ("Hi, ${subjectFName}" and
+            "From, ${this.capitalize(currentUser.fname)}"). Change what you'd
+            like and we'll send the email exacty as you've instructed.`}
+          </Typography>
+
+          <Grid container>
+            <TextField
+              fullWidth
+              multiline
+              label="Email Subject"
+              value={this.state.subject}
+              onChange={this.handleChange("subject")}
+              className={classes.textField}
+              margin="normal"
+              variant="outlined"
+            />
+          </Grid>
+
+          <Grid container>
+            <TextField
+              fullWidth
+              label="Email Body"
+              value={this.state.body}
+              onChange={this.handleChange("body")}
+              multiline
+              className={classes.textField}
+              margin="normal"
+              variant="outlined"
+            />
+          </Grid>
+          {submit}
+        </Grid>
+      </div>
+    )
+
+    let modalContent = this.props.emailTemplateErrors.length === 0 ? (
+      updateEmail
+    ) : (
+      <Grid item xs={11} sm={10} md={8} className={classes.grid}
+        container justify='flex-start'>
+        <Typography variant="h2" id="modal-title" color='textPrimary'
+          className={classes.thanksHeader} align='left'>
+          You're almost there!
+        </Typography>
+        <Typography variant="body1" id="simple-modal-description"
+          align='left' color='textPrimary'>
+          Unfortunately, we weren't able to complete this action because:
+        </Typography>
+        <List>
+          {emailTemplateErrors}
+        </List>
+        <Grid item xs={12}>
+          <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            onClick={this.handleClose} color='primary'>
+            Close
+          </Button>
+        </Grid>
+      </Grid>
+    )
+
+    let modalSetup = templateLoaded ? (
+      modalContent
     ) : (<div style={{ height: 200, width: 200 }}>
       <Loading />
     </div>)
@@ -166,8 +390,7 @@ class CustomEmailModal extends React.Component {
           classes={{ badge: classes.badge }}
           style={{ width: '100%'}}
           >
-          {modalContent}
-          {`asdfasdfasdf`}
+          {modalSetup}
         </Badge>
       </Dialog>
     )

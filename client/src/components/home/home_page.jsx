@@ -11,10 +11,11 @@ import HomeImage from '../../static/Login_Background_Image.jpg'
 
 import { connect } from 'react-redux';
 import { registerWaitlistUser } from '../../actions/waitlist_user_actions';
+import { openWaitlist } from '../../actions/modal_actions';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
-import WaitlistModal from '../waitlist_modal'
+// import WaitlistModal from '../waitlist_modal'
 import BottomFade from '../../static/bottom-fade.png';
 
 const mapStateToProps = state => ({
@@ -22,6 +23,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  openWaitlist: () => dispatch(openWaitlist()),
   registerWaitlistUser: (user) => dispatch(registerWaitlistUser(user))
 });
 
@@ -129,10 +131,10 @@ class HomePage extends React.Component{
         () => {
           this.props.registerWaitlistUser(user)
             .then(res => {
+              this.props.openWaitlist();
               this.setState({
                 loading: false,
                 success: true,
-                open: true,
                 email: '',
                 fname: '',
                 lname: ''
@@ -216,7 +218,7 @@ class HomePage extends React.Component{
     )
 
     return (
-      <MuiThemeProvider theme={theme} className={classes.root}>
+      <div className={classes.root}>
         <Grid container className={classes.homeGridDesktop}
           justify="flex-start" alignItems="center"
           style={{ top: 64, position: 'relative'}}>
@@ -263,11 +265,7 @@ class HomePage extends React.Component{
           </Grid>
           <div className={classes.bottomFade} />
         </Grid>
-
-        <WaitlistModal open={open}
-          handleClose={this.handleClose}
-          referred={false}/>
-      </MuiThemeProvider>
+      </div>
     );
   }
 }

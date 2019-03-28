@@ -9,10 +9,9 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case RECEIVE_EMAIL_TEMPLATE:
-      return merge({}, state, {[action.template.type]: action.template });
+      return merge({}, action.template);
     case REMOVE_EMAIL_TEMPLATE:
-      delete newState[action.templateType]
-      return newState;
+      return {};
     default:
       return state;
   }

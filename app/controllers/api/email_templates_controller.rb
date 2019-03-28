@@ -2,32 +2,41 @@ require_relative '../concerns/devise_controller_patch.rb'
 class Api::EmailTemplatesController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user
-  before_action :set_notifications
+  # before_action :set_notifications
   # after_action :verify_authorized, except: :show
 
   def show
     # @notifications = Notification.retrieve_notifications(@user)
-    if params[:type] == "waitlist_referral"
-
-    if params[:type] == "waitlist_referral"
-    @template = EmailTemplate.find_by(type: params[:type])
+    @template = EmailTemplate.find_by(template_type: params[:template_type])
     render :show
   end
 
   def waitlist_referral
-    existing_user = User.find_by(email: waitlist_user_params[:email])
-    existing_waitlist_user = WaitlistUser.find_by(email: waitlist_user_params[:email])
+    existing_user = User.find_by(email: params[:email])
+    existing_waitlist_user = WaitlistUser.find_by(email: params[:email])
 
-    if existing_user
+    if params[:email] == ''
+      render json: ["Email is blank"], status: 422
+    elsif existing_user
       render json: ["That email is already associated with an existing Bridgekin member"], status: 422
     elsif existing_waitlist_user
-      @template = EmailTemplate.find_by(type: "waitlist_referral_existing")
+      @template = EmailTemplate.find_by(template_type: "waitlist_referral_existing")
       render :show
     else
-      @template = EmailTemplate.find_by(type: "waitlist_referral_new")
+      @template = EmailTemplate.find_by(template_type: "waitlist_referral_new")
       render :show
     end
   end
+
+  # def connection_template
+  #   if params[:connect_bool]
+  #     @template = EmailTemplate.find_by(template_type: "connection_direct")
+  #     render :show
+  #   else
+  #     @template = EmailTemplate.find_by(template_type: "connection_")
+  #     render :show
+  #   end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
