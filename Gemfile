@@ -35,7 +35,7 @@ gem 'jquery-rails'
 gem "aws-sdk-s3"
 
 # APM
-gem 'newrelic_rpm'
+gem 'newrelic_rpm', '~> 6.0.0'
 
 # ActiveAdmin
 gem 'devise'
