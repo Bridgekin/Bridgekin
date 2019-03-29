@@ -47,12 +47,16 @@ class Api::UsersController < ApiController
       lname = input[1]
       @users = User.where("LOWER(fname) LIKE ?" , "%" + fname.downcase + "%")
         .where("LOWER(lname) LIKE ?" , "%" + lname.downcase + "%")
+        .where(searchable: true)
         .or(User.where("LOWER(fname) LIKE ?" , "%" + lname.downcase + "%")
-          .where("LOWER(lname) LIKE ?" , "%" + fname.downcase + "%"))
+          .where("LOWER(lname) LIKE ?" , "%" + fname.downcase + "%")
+          .where(searchable: true))
     else
       # debugger
       @users = User.where("LOWER(fname) LIKE ?" , "%" + input[0].downcase + "%")
-        .or(User.where("LOWER(lname) LIKE ?" , "%" + input[0].downcase + "%"))
+        .where(searchable: true)
+        .or(User.where("LOWER(lname) LIKE ?" , "%" + input[0].downcase + "%")
+          .where(searchable: true))
     end
 
     @search_users = @users.pluck(:id)
@@ -73,5 +77,8 @@ class Api::UsersController < ApiController
         :membership_type, :password_confirmation,
         :password_digest, :title, :company, :profile_pic,
         :default_network_id)
+
+      user[:searchable] = params[:user][:searchable] == 'true' unless params[:user][:searchable].nil?
+      user
     end
 end

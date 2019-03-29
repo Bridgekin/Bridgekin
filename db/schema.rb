@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_190432) do
+ActiveRecord::Schema.define(version: 2019_03_29_172141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -309,6 +309,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_190432) do
     t.string "company", default: "", null: false
     t.integer "default_network_id"
     t.integer "invites_remaining", default: 3
+    t.boolean "searchable", default: true
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

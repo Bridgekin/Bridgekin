@@ -32,6 +32,8 @@ import MenuList from '@material-ui/core/MenuList';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleSharp';
 import CachedSharpIcon from '@material-ui/icons/CachedSharp';
 import ErrorSharpIcon from '@material-ui/icons/ErrorSharp';
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 import LinesEllipsis from 'react-lines-ellipsis';
 
 import Img from 'react-image'
@@ -45,6 +47,8 @@ import _ from 'lodash';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { fetchUserOpportunities,
   updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
+import { createSavedOppportunity,
+  deleteSavedOppportunity  } from '../../actions/saved_opportunity_actions';
 import { openOppCard } from '../../actions/modal_actions';
 import theme from '../theme';
 
@@ -55,6 +59,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
+  savedOpportunities: state.entities.savedOpportunities
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -62,6 +67,8 @@ const mapDispatchToProps = dispatch => ({
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
+  createSavedOppportunity: (opportunityId) => dispatch(createSavedOppportunity(opportunityId)),
+  deleteSavedOppportunity: (savedOpportunity) => dispatch(deleteSavedOppportunity(savedOpportunity)),
 });
 
 const styles = theme => ({
@@ -178,6 +185,7 @@ class OpportunityCard extends React.Component {
     this.handleDealStatusToggle = this.handleDealStatusToggle.bind(this);
     this.handleDealStatusSend = this.handleDealStatusSend.bind(this);
     this.handleDetailsClick = this.handleDetailsClick.bind(this);
+    this.toggleSavedOpportunity = this.toggleSavedOpportunity.bind(this);
   }
 
   handleCardOpen(cardModalPage, connectBool){
@@ -238,6 +246,17 @@ class OpportunityCard extends React.Component {
     }
   }
 
+  toggleSavedOpportunity(e){
+    e.stopPropagation();
+    const { savedOpportunities, opportunity } = this.props;
+    let savedOpportunity = savedOpportunities[opportunity.id];
+    if (savedOpportunity){
+      this.props.deleteSavedOppportunity(savedOpportunity)
+    } else {
+      this.props.createSavedOppportunity(opportunity.id)
+    }
+  }
+
   handleDealStatusToggle(e){
     e.stopPropagation();
     const { dealStatusAnchorEl } = this.state;
@@ -280,7 +299,7 @@ class OpportunityCard extends React.Component {
 
   render(){
     const { classes, opportunity, editable, demo,
-      currentUser }= this.props;
+      currentUser, savedOpportunities }= this.props;
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
     dealStatusProgress, dealStatusAnchorEl,
@@ -394,6 +413,15 @@ class OpportunityCard extends React.Component {
                   </MenuItem>
                 ))}
               </Menu>}
+
+              {!editable && savedOpportunities[opportunity.id] ?
+                <BookmarkIcon
+                  onClick={this.toggleSavedOpportunity}
+                  className={classes.bookmark}/> :
+                <BookmarkBorderIcon
+                  onClick={this.toggleSavedOpportunity}
+                  className={classes.bookmark}/>
+              }
 
               {(viewType === 'card' || (viewType === 'post' && editable)) &&
                 <IconButton

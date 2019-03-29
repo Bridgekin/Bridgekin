@@ -23,9 +23,12 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import Switch from '@material-ui/core/Switch';
 
 import FeedCard from '../feed_card';
-import { openInvite } from '../../actions/modal_actions';
+import { openInvite, openUpdateUser }
+  from '../../actions/modal_actions';
+import { updateUser } from '../../actions/user_actions';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const mapStateToProps = state => ({
@@ -35,7 +38,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  openInvite: userId => dispatch(openInvite(userId))
+  openUpdateUser: (settingsType) => dispatch(openUpdateUser(settingsType)),
+  openInvite: userId => dispatch(openInvite(userId)),
+  updateUser: user => dispatch(updateUser(user))
 })
 
 const styles = theme => ({
@@ -106,6 +111,7 @@ class Profile extends React.Component {
     this.openInvite = this.openInvite.bind(this);
     this.sendToAccountSettings = this.sendToAccountSettings.bind(this);
     this.getInviteText = this.getInviteText.bind(this);
+    this.handleUpdateUserChange = this.handleUpdateUserChange.bind(this);
   }
 
   capitalize(str){
@@ -120,6 +126,26 @@ class Profile extends React.Component {
     const { user, currentUser }= this.props;
     if(currentUser.id === user.id){
       this.props.history.push('/account/settings/general')
+    }
+  }
+
+  handleUpdateUserChange(field){
+    return e => {
+      const formData = new FormData();
+      if (field === 'searchable'){
+        let option = e.target.checked;
+        formData.append(`user[${field}]`, option)
+        formData.append('user[id]', this.props.currentUser.id)
+      } else {
+        let option = e.target.value;
+        formData.append(`user[${field}]`,option)
+        formData.append('user[id]', this.props.currentUser.id)
+      }
+
+      this.props.updateUser(formData)
+      .then(() => {
+        this.props.openUpdateUser('general');
+      })
     }
   }
 
@@ -271,16 +297,17 @@ class Profile extends React.Component {
 
             <Grid container>
               <Typography variant="h6" align='left'
-                color='textSecondary' className={classes.fieldLabel}>
+                color='textSecondary'>
                 Default Network
               </Typography>
             </Grid>
-            <Grid container alignItems="center">
+            <Grid container alignItems="center"
+              style={{ marginBottom: 15}}>
               <Grid item xs={8}>
                 <Select
                   fullWidth
-                  value={this.state.defaultNetworkId}
-                  onChange={this.handleDefaultWorkspaceChange}
+                  value={currentUser.defaultNetworkId}
+                  onChange={this.handleUpdateUserChange('defaultNetworkId')}
                   inputProps={{
                     name: 'defaultNetworkId',
                     id: 'defaultNetworkId-simple',
@@ -293,6 +320,31 @@ class Profile extends React.Component {
                     </MenuItem>
                   ))}
                 </Select>
+              </Grid>
+            </Grid>
+
+            <Grid container>
+              <Grid item xs={8}>
+                <Typography variant="h6" align='left'
+                  color='textSecondary'
+                  style={{ fontSize: 16}}>
+                  {`Searchable:`}
+                </Typography>
+                <Typography variant="body1" align='left'
+                  color='textSecondary'
+                  style={{ fontSize: 14 }}>
+                  {`Can other users search for you on Bridgekin?`}
+                </Typography>
+                {/*`Setting this to false will remove users ability to search
+                  for you within Bridgekin. No one will be able to connect
+                  with you unless they are a personal contact (know your email).`*/}
+              </Grid>
+
+              <Grid item xs={4}>
+                <Switch
+                  checked={user.searchable}
+                  onChange={this.handleUpdateUserChange('searchable')}
+                />
               </Grid>
             </Grid>
 

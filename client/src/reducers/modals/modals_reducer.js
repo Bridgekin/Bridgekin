@@ -5,6 +5,7 @@ import circleReducer from './circle_reducer';
 import customEmailReducer from './custom_email_reducer';
 import waitlistReducer from './waitlist_reducer';
 import oppCardReducer from './opp_card_reducer';
+import updateUserReducer from './update_user_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   circle: circleReducer,
   customEmail: customEmailReducer,
   waitlist: waitlistReducer,
-  oppCard: oppCardReducer
+  oppCard: oppCardReducer,
+  updateUser: updateUserReducer
 });

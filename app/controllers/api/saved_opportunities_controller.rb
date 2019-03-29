@@ -1,6 +1,7 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::SavedOpportunitiesController < ApiController
-  # include DeviseControllerPatch
+  include DeviseControllerPatch
+  before_action :authenticate_user
   before_action :set_saved_opportunity, only: [:show, :update, :destroy]
 
   after_action :verify_authorized, except: :index
@@ -8,7 +9,7 @@ class Api::SavedOpportunitiesController < ApiController
 
   def index
     @saved_opportunities = policy_scope(SavedOpportunity)
-
+      .includes(:opportunity)
     render :index
   end
 
@@ -20,22 +21,14 @@ class Api::SavedOpportunitiesController < ApiController
 
   # POST /opportunities
   def create
-    @saved_opportunity = SavedOpportunity.new(saved_opportunity_params)
+    @saved_opportunity = SavedOpportunity.new(
+      opportunity_id: params[:opportunity_id],
+      user_id: @user.id
+    )
     authorize @saved_opportunity
 
     if @saved_opportunity.save
       # render json: @saved_opportunity, status: :created, location: @saved_opportunity
-      render :show
-    else
-      render json: @saved_opportunity.errors.full_messages, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /opportunities/1
-  def update
-    authorize @saved_opportunity
-    if @saved_opportunity.update(saved_opportunity_params)
-      # render json: @saved_opportunity
       render :show
     else
       render json: @saved_opportunity.errors.full_messages, status: :unprocessable_entity
@@ -59,8 +52,18 @@ class Api::SavedOpportunitiesController < ApiController
     end
 
     # Only allow a trusted parameter "white list" through.
-    def saved_opportunity_params
-      params.permit(:opportunity_id, :user_id, :facilitator_id,
-        :network_id)
-    end
+    # def saved_opportunity_params
+    #   params.require(:saved_opportunity).permit(:opportunity_id, :user_id)
+    # end
 end
+
+# # PATCH/PUT /opportunities/1
+# def update
+#   authorize @saved_opportunity
+#   if @saved_opportunity.update(saved_opportunity_params)
+#     # render json: @saved_opportunity
+#     render :show
+#   else
+#     render json: @saved_opportunity.errors.full_messages, status: :unprocessable_entity
+#   end
+# end

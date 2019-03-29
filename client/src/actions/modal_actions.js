@@ -86,3 +86,16 @@ export const openOppCard = ({ oppId, page, connectBool }) => ({
 export const closeOppCard = () => ({
   type: CLOSE_OPP_CARD_MODAL,
 });
+
+// UPDATE USER MODAL
+export const OPEN_UPDATE_USER_MODAL = 'OPEN_UPDATE_USER_MODAL';
+export const CLOSE_UPDATE_USER_MODAL = "CLOSE_UPDATE_USER_MODAL";
+
+export const openUpdateUser = (settingsType) => ({
+  type: OPEN_UPDATE_USER_MODAL,
+  settingsType
+});
+
+export const closeUpdateUser = () => ({
+  type: CLOSE_UPDATE_USER_MODAL,
+});

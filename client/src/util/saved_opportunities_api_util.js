@@ -8,10 +8,10 @@ export const fetchSavedOpportunities = () => (
   })
 )
 
-export const createSavedOpportunity = savedOpportunity => (
+export const createSavedOpportunity = opportunityId => (
   fetch(`${window.location.origin}/api/saved_opportunities`, {
     method: 'POST',
-    body: JSON.stringify({ savedOpportunity }),
+    body: JSON.stringify({ opportunityId }),
     headers:{
     	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
