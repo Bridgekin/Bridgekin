@@ -1,43 +1,34 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
+
 import Dialog from '@material-ui/core/Dialog';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
-
 import Typography from '@material-ui/core/Typography';
-// import theme from '../theme';
 import Grid from '@material-ui/core/Grid';
-
 import Badge from '@material-ui/core/Badge';
+
 import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
+import { closeUpdateUser } from '../../actions/modal_actions';
 import { clearUserErrors } from '../../actions/error_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  userErrors: state.errors.users
+  userErrors: state.errors.users,
+  updateUserModal: state.modals.updateUser
 });
 
 const mapDispatchToProps = dispatch => ({
+  closeUpdateUser: () => dispatch(closeUpdateUser()),
   clearUserErrors: () => dispatch(clearUserErrors())
 });
 
 const styles = theme => ({
-  // paper: {
-  //   // position: 'absolute',
-  //   // width: '40%',
-  //   height: 350,
-  //   backgroundColor: theme.palette.background.paper,
-  //   boxShadow: theme.shadows[5],
-  //   padding: theme.spacing.unit * 4,
-  //   display: 'flex',
-  //   direction: 'column',
-  //   alignItems: 'flex-start',
-  //   justifyContent: 'center'
-  // },
   thanksHeader:{
     marginBottom: 30,
     color: theme.palette.darkGrey
@@ -78,16 +69,18 @@ class UpdateUserModal extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClose = () => {
-    this.props.handleClose();
+  handleClose(){
+    this.props.closeUpdateUser();
 
-    if(this.props.userErrors){
+    if(this.props.userErrors.length > 0){
       this.props.clearUserErrors();
+    } else {
+      this.props.history.push('/account/profile')
     }
   };
 
   getText(){
-    const { classes, modalType } = this.props;
+    const { classes, updateUserModal } = this.props;
 
     let userErrors = this.props.userErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
@@ -218,7 +211,7 @@ class UpdateUserModal extends React.Component {
       </Grid>
     )
 
-    switch(modalType){
+    switch(updateUserModal.settingsType){
       case 'email':
         return modalTextEmail;
       case 'password':
@@ -229,13 +222,12 @@ class UpdateUserModal extends React.Component {
   }
 
   render () {
-    const { open, classes } = this.props;
-
-    // let modalText = {modalType === 'password' ? {modalTextPassword} : {modalTextGeneral}}
+    const { updateUserModal, classes } = this.props;
+    // let modalText = {updateUserModal.settingsType === 'password' ? {modalTextPassword} : {modalTextGeneral}}
 
     return (
       <Dialog
-        open={open}
+        open={updateUserModal.open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         onClose={this.handleClose}
@@ -254,4 +246,4 @@ class UpdateUserModal extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UpdateUserModal));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(UpdateUserModal)));

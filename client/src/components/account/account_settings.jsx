@@ -26,7 +26,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import withWidth from '@material-ui/core/withWidth';
 
-import UpdateUserModal from './update_user_modal';
+// import UpdateUserModal from './update_user_modal';
 import ImageCropModal from '../image_upload_modal';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -36,6 +36,7 @@ import countryList from 'country-list';
 import { fetchEmailNotification, createEmailNotification }
   from '../../actions/email_notification_actions';
 import { updateUser } from '../../actions/user_actions';
+import { openUpdateUser } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -45,6 +46,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  openUpdateUser: (settingsType) => dispatch(openUpdateUser(settingsType)),
   fetchEmailNotification: () => dispatch(fetchEmailNotification()),
   createEmailNotification: (notification) => dispatch(createEmailNotification(notification)),
   updateUser: user => dispatch(updateUser(user))
@@ -157,12 +159,12 @@ class AccountSetting extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      notificationSetting: 'Never',
+      // notificationSetting: 'Never',
       settingState: "General",
       currentPassword: '',
       password: '',
       passwordConfirmation: '',
-      modalOpen: false,
+      // modalOpen: false,
       email: this.props.currentUser.email,
       fname: this.props.currentUser.fname,
       lname: this.props.currentUser.lname,
@@ -170,7 +172,7 @@ class AccountSetting extends React.Component {
       company: this.props.currentUser.company,
       city: this.props.currentUser.city,
       state: this.props.currentUser.state,
-      defaultNetworkId: this.props.currentUser.defaultNetworkId,
+      // defaultNetworkId: this.props.currentUser.defaultNetworkId,
       country: countryList.getName(this.props.currentUser.country) || '',
       profilePicFile: null,
       previewUrl: null,
@@ -184,37 +186,37 @@ class AccountSetting extends React.Component {
     this.changePassword = this.changePassword.bind(this);
     this.changeEmail = this.changeEmail.bind(this);
     this.changeGeneralInformation = this.changeGeneralInformation.bind(this);
-    this.handleDefaultWorkspaceChange = this.handleDefaultWorkspaceChange.bind(this);
+    // this.handleDefaultWorkspaceChange = this.handleDefaultWorkspaceChange.bind(this);
   }
 
   componentDidMount(){
-    this.props.fetchEmailNotification()
-    .then(() => {
-      this.setState({ notificationSetting: this.props.notification.notificationSetting })
-    })
+    // this.props.fetchEmailNotification()
+    // .then(() => {
+    //   this.setState({ notificationSetting: this.props.notification.notificationSetting })
+    // })
   }
 
   capitalize(str){
     return str[0].toUpperCase() + str.slice(1)
   }
 
-  handleNotificationChange = event => {
-    let notificationSetting = event.target.value;
-    this.props.createEmailNotification({ notificationSetting })
-    .then(() => {
-      this.setState({ notificationSetting });
-    })
-  }
+  // handleNotificationChange = event => {
+  //   let notificationSetting = event.target.value;
+  //   this.props.createEmailNotification({ notificationSetting })
+  //   .then(() => {
+  //     this.setState({ notificationSetting });
+  //   })
+  // }
 
-  handleDefaultWorkspaceChange(e){
-    let workspaceId = e.target.value;
-    const formData = new FormData();
-    formData.append('user[defaultNetworkId]', workspaceId)
-    formData.append('user[id]', this.props.currentUser.id)
-
-    this.props.updateUser(formData)
-    .then(()=> this.setState({ modalOpen: true, defaultNetworkId: workspaceId}))
-  }
+  // handleDefaultWorkspaceChange(e){
+  //   let workspaceId = e.target.value;
+  //   const formData = new FormData();
+  //   formData.append('user[defaultNetworkId]', workspaceId)
+  //   formData.append('user[id]', this.props.currentUser.id)
+  //
+  //   this.props.updateUser(formData)
+  //   .then(()=> this.setState({ modalOpen: true, defaultNetworkId: workspaceId}))
+  // }
 
   handleChangeFill(path){
     return () => {
@@ -233,32 +235,32 @@ class AccountSetting extends React.Component {
     }
   }
 
-  handleModalClose = () => {
-    if(this.props.userErrors.length > 0){
-      this.setState({
-        modalOpen: false
-      })
-    } else {
-      this.setState({
-        modalOpen: false,
-        currentPassword: '',
-        password: '',
-        passwordConfirmation: '',
-        email: this.props.currentUser.email,
-        fname: this.props.currentUser.fname,
-        lname: this.props.currentUser.lname,
-        title: this.props.currentUser.title,
-        company: this.props.currentUser.company,
-        city: this.props.currentUser.city,
-        state: this.props.currentUser.state,
-        country: countryList.getName(this.props.currentUser.country) || '',
-        mobileImageCropPending: false
-      },
-      ()=> {
-        this.props.history.push('/account/profile')
-      })
-    }
-  };
+  // handleModalClose = () => {
+  //   if(this.props.userErrors.length > 0){
+  //     this.setState({
+  //       modalOpen: false
+  //     })
+  //   } else {
+  //     this.setState({
+  //       // modalOpen: false,
+  //       // currentPassword: '',
+  //       // password: '',
+  //       // passwordConfirmation: '',
+  //       email: this.props.currentUser.email,
+  //       fname: this.props.currentUser.fname,
+  //       lname: this.props.currentUser.lname,
+  //       title: this.props.currentUser.title,
+  //       company: this.props.currentUser.company,
+  //       city: this.props.currentUser.city,
+  //       state: this.props.currentUser.state,
+  //       country: countryList.getName(this.props.currentUser.country) || '',
+  //       // mobileImageCropPending: false
+  //     },
+  //     ()=> {
+  //       this.props.history.push('/account/profile')
+  //     })
+  //   }
+  // };
 
   changePassword(){
     const passwords = ['password', 'passwordConfirmation', 'currentPassword'];
@@ -269,7 +271,14 @@ class AccountSetting extends React.Component {
     formData.append('user[id]', this.props.currentUser.id)
 
     this.props.updateUser(formData)
-    .then(()=> this.setState({ modalOpen: true }))
+    .then(()=> {
+      this.props.openUpdateUser('password');
+      this.setState({
+        currentPassword: '',
+        password: '',
+        passwordConfirmation: ''
+      })
+    })
   }
 
   changeEmail(){
@@ -278,7 +287,7 @@ class AccountSetting extends React.Component {
     formData.append('user[id]', this.props.currentUser.id)
 
     this.props.updateUser(formData)
-    .then(()=> this.setState({ modalOpen: true }))
+    .then(()=> this.props.openUpdateUser('email'))
   }
 
   changeGeneralInformation(e){
@@ -297,7 +306,19 @@ class AccountSetting extends React.Component {
     formData.append('user[country]', countryList.getCode(country))
 
     this.props.updateUser(formData)
-    .then(()=> this.setState({ modalOpen: true }))
+    .then(() => {
+      this.props.openUpdateUser('general');
+      this.setState({
+        email: this.props.currentUser.email,
+        fname: this.props.currentUser.fname,
+        lname: this.props.currentUser.lname,
+        title: this.props.currentUser.title,
+        company: this.props.currentUser.company,
+        city: this.props.currentUser.city,
+        state: this.props.currentUser.state,
+        mobileImageCropPending: false
+      });
+    })
   }
 
   //#######################
@@ -355,8 +376,8 @@ class AccountSetting extends React.Component {
 
   getContent(){
     const { classes, currentUser, width }= this.props;
-    const { settingState, modalOpen, previewUrl,
-      imageModalOpen, profilePicFile, mobileImageCropPending } = this.state;
+    const { settingState, previewUrl, imageModalOpen,
+      profilePicFile, mobileImageCropPending } = this.state;
 
     const pictureUploaded = Boolean(previewUrl)
 
@@ -427,11 +448,6 @@ class AccountSetting extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-
-            <UpdateUserModal
-              open={modalOpen}
-              modalType={'email'}
-              handleClose={this.handleModalClose}/>
           </Card>
         );
       case "password":
@@ -489,11 +505,6 @@ class AccountSetting extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-
-            <UpdateUserModal
-              open={modalOpen}
-              modalType={'password'}
-              handleClose={this.handleModalClose}/>
           </Card>
         );
       default:
@@ -697,11 +708,6 @@ class AccountSetting extends React.Component {
                 fileUrl={previewUrl}
                 ratio={1}/>
             </Grid>
-
-            <UpdateUserModal
-              open={modalOpen}
-              modalType={'general'}
-              handleClose={this.handleModalClose}/>
           </Card>
         );
       // default:

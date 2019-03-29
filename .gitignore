@@ -38,3 +38,5 @@ server_wd.csr
 /docker
 docker-compose.yml
 heroku.yml
+
+/nrdiag 2
