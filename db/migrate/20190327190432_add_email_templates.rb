@@ -30,7 +30,7 @@ class AddEmailTemplates < ActiveRecord::Migration[5.2]
     body = "We’re excited to introduce you to ${this.currentUser.fname} ${this.currentUser.lname}," +
       " who is interested in connecting with you about your opportunity: ${this.opportunity.title}." +
       "\n\nIt would probably be best for you two to jump on a quick phone call" +
-      " to get to know each other and discuss this opportunity further."
+      " to get to know each other and discuss this opportunity further." +
       "\n\nWe’ll let you both take it from here!"
 
     EmailTemplate.create(
@@ -42,9 +42,9 @@ class AddEmailTemplates < ActiveRecord::Migration[5.2]
     subject = "Intro ${this.owner.fname} <> ${this.currentUser.fname}"
     body = "We’re excited to introduce you to ${this.currentUser.fname} ${this.currentUser.lname}," +
       " who has a person in their network that may be a good fit for" +
-      " your opportunity: <%= @opportunity.title%>." +
+      " your opportunity: ${this.opportunity.title}." +
       "\n\nIt’s probably best to jump on a quick call to get to know each other" +
-      " or loop in your contact directly <%= @facilitator.fname.capitalize%> to discuss" +
+      " or loop in your contact directly ${this.currentUser.fname} to discuss" +
       " further." +
       "\n\nWe’ll let you both take it from here!"
 

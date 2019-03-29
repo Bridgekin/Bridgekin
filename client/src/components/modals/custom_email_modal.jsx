@@ -150,23 +150,24 @@ class CustomEmailModal extends React.Component {
         customEmailModal } = this.props;
       const templateVars = {
         currentUser:{
-          fname: currentUser.fname,
-          lname: currentUser.lname,
+          fname: this.capitalize(currentUser.fname),
+          lname: this.capitalize(currentUser.lname),
         }
       }
       // debugger
       let subjectFName = '';
       switch(templateType){
         case "waitlist_referral":
-          subjectFName = customEmailModal.fname;
+          subjectFName = this.capitalize(customEmailModal.fname);
           break;
         case "connection":
           const { opportunities, customEmailModal } = this.props;
           let opp = opportunities[customEmailModal.oppId];
           let owner = users[opp.ownerId];
-          subjectFName = owner.fname
-          templateVars['opportunity'] = opp;
-          templateVars['owner'] = owner
+          let title = opp.viewType === 'card' ? opp.title : opp.description
+          subjectFName = this.capitalize(owner.fname);
+          templateVars['opportunity']= { title: this.capitalize(title) } ;
+          templateVars['owner'] = { fname : this.capitalize(owner.fname)}
           break;
         default:
           break;
