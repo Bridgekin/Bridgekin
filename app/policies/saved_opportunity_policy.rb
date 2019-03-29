@@ -6,15 +6,15 @@ class SavedOpportunityPolicy < ApplicationPolicy
   end
 
   def create?
-    record.user == user || user.is_admin
+    record.user == user
   end
 
   def update?
-    record.user == user || user.is_admin
+    record.user == user
   end
 
   def destroy?
-    record.user == user || user.is_admin
+    record.user == user
   end
 
 end

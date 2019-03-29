@@ -50,6 +50,7 @@ import { registerWaitlistFromReferral } from '../../actions/waitlist_user_action
 import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchWorkspaceOptions } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
+import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
 import { clearOpportunityErrors } from '../../actions/error_actions';
 import OpportunityChangeModal from './opportunity_change_modal';
 
@@ -86,7 +87,8 @@ const mapDispatchToProps = dispatch => ({
   fetchOpportunities: (workspaceId, option) => dispatch(fetchOpportunities(workspaceId, option)),
   fetchWorkspaceOptions: (workspaceId) => dispatch(fetchWorkspaceOptions(workspaceId)),
   createReferral: (referral) => dispatch(createReferral(referral)),
-  clearOpportunityErrors: () => dispatch(clearOpportunityErrors())
+  clearOpportunityErrors: () => dispatch(clearOpportunityErrors()),
+  fetchSavedOpportunities: () => dispatch(fetchSavedOpportunities())
 });
 
 const styles = theme => ({
@@ -308,8 +310,9 @@ class OpportunityHome extends React.Component {
 
   componentDidMount(){
     const workspaceId = this.props.siteTemplate.networkId
-    //||Object.values(this.props.workspaces)[0].id
     if(workspaceId){this.resetWorkspace(workspaceId)}
+
+    this.props.fetchSavedOpportunities();
   }
 
   shouldComponentUpdate(nextProps, nextState){

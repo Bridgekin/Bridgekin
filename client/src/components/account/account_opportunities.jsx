@@ -17,6 +17,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportunity_actions';
 // import { fetchNetworks } from '../../actions/network_actions';
 import { fetchConnectedOpportunities } from '../../actions/connected_opportunity_actions';
+import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
 import OpportunityCardFeed from '../opportunity/opportunity_card_feed';
 import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
 
@@ -26,11 +27,13 @@ const mapStateToProps = state => ({
   userOpps: state.entities.userOpportunities,
   connectedOpps: state.entities.connectedOpportunities,
   facilitatedOpps: state.entities.facilitatedOpportunities,
+  savedOpportunities: state.entities.savedOpportunities,
   networks: Object.values(state.entities.networks),
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
+  fetchSavedOpportunities: () => dispatch(fetchSavedOpportunities()),
   // fetchNetworks: () => dispatch(fetchNetworks()),
   fetchConnectedOpportunities: () => dispatch(fetchConnectedOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id))
@@ -96,9 +99,10 @@ class AccountOpportunities extends React.Component {
 
   componentDidMount(){
     this.props.fetchUserOpportunities()
-    .then(() => this.setState({ loaded: true}))
-
-    // this.props.fetchNetworks()
+    .then(() => {
+      this.props.fetchSavedOpportunities()
+      .then(() => this.setState({ loaded: true}))
+    })
   }
 
   componentDidUpdate(prevProps){
@@ -132,6 +136,10 @@ class AccountOpportunities extends React.Component {
         return [...facilitatedOpps].map(id => opportunities[id]);
       case 'posted':
         return [...userOpps].map(id => opportunities[id])
+      case 'saved':
+        const { savedOpportunities } = this.props;
+        return Object.values(savedOpportunities)
+          .map(x => opportunities[x.opportunityId])
       default:
         return [];
     }
