@@ -28,17 +28,17 @@ export const fetchEmailTemplate = (templateType) => dispatch => (
     })
 );
 
-// export const fetchConnectionTemplate = (connectBool) => dispatch => (
-//   EmailTemplateApiUtil.fetchConnectionTemplate(connectBool)
-//     .then(handleErrors)
-//     .then(data => dispatch(receiveEmailTemplate(data.template)))
-//     .catch(errors => {
-//       if (!(errors instanceof Array)){
-//         errors = [genericError];
-//       }
-//       dispatch(receiveEmailTemplateErrors(errors))
-//     })
-// );
+export const fetchConnectedOpportunityTemplate = (connectBool, oppId) => dispatch => (
+  EmailTemplateApiUtil.fetchConnectedOpportunityTemplate(connectBool, oppId)
+    .then(handleErrors)
+    .then(data => dispatch(receiveEmailTemplate(data.template)))
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveEmailTemplateErrors(errors))
+    })
+);
 
 export const fetchWaitlistReferralTemplate = (email) => dispatch => (
   EmailTemplateApiUtil.fetchWaitlistReferralTemplate(email)

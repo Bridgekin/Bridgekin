@@ -25,6 +25,11 @@ class Opportunity < ApplicationRecord
     source: :shareable,
     source_type: 'Network'
 
+  has_many :connections,
+    through: :opp_permissions,
+    source: :shareable,
+    source_type: 'Connection'
+
   ###########
 
   # has_many :opportunity_networks,
@@ -55,6 +60,35 @@ class Opportunity < ApplicationRecord
 
   # serialize       :industries, Array
   # attr_accessor   :industries_raw
+
+  def self.profile_index(profileId, user)
+    opportunities = Opportunity.includes(:owner, :connections, :networks)
+      .where(owner_id: params[:profileId])
+      .where.not(deal_status: 'Deleted')
+
+    opportunities.reduce([]) do |acc, opp|
+      #Find all members (networks)
+      #Find all friends
+      #Combine lists
+      #If user.id in list, add to result
+    end
+  end
+
+  def all_people_shared()
+
+  end
+
+  def get_title
+    if self.title.empty?
+      if self.description.length > 30
+        self.description.slice(0,30) + "..."
+      else
+        self.description
+      end
+    else
+      self.title
+    end
+  end
 
   def industries_raw
     self.industries.join(",") unless self.industries.nil?

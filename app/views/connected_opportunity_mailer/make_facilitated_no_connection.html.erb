@@ -1,14 +1,14 @@
 <p>Hi <%= @owner.fname.capitalize %>,</p>
 
-<p>We’re excited to introduce you to <%= @facilitator.fname.capitalize %> <%= @facilitator.lname.capitalize %>,
-  who has a person in their network that may be a good fit for
-  your opportunity: <%= @opportunity.title%>.</p>
+<% if @body.nil?%>
+  <p>We’re excited to introduce you to <%= @facilitator.fname.capitalize %>
+    <%= @facilitator.lname.capitalize %>, who has a person in their network
+    that may be a good fit for your opportunity: "<%= @title %>."</p>
 
-<p>It’s probably best to jump on a quick call to get to know each other
-  or loop in your contact directly <%= @facilitator.fname.capitalize%> to discuss
-  further.</p>
-
-<p>We’ll let you both take it from here!</p>
+  <p>We’ll let you both take it from here!</p>
+<% else %>
+  <p><%= @body %></p>
+<% end %>
 
 <p>Cheers,<br>
 The Bridgekin Team</p>

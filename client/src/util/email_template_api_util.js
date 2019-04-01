@@ -18,12 +18,12 @@ export const fetchWaitlistReferralTemplate = email => (
   })
 )
 
-// export const fetchConnectionTemplate = connectBool => (
-//   fetch(`${window.location.origin}/api/connection_template?connectBool=${connectBool}`, {
-//     method: 'GET',
-//     headers:{
-//     	'Content-Type': 'application/json',
-//       "Authorization": localStorage.getItem('bridgekinToken')
-//   	}
-//   })
-// )
+export const fetchConnectedOpportunityTemplate = (connect_bool, opp_id) => (
+  fetch(`${window.location.origin}/api/connected_opportunity_template?connect_bool=${connect_bool}&opp_id=${opp_id}`, {
+    method: 'GET',
+    headers:{
+    	'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+  	}
+  })
+)

@@ -61,9 +61,13 @@ class Api::OpportunitiesController < ApiController
 
     @userOpportunities = @opportunities.pluck(:id)
     render :userIndex
-    # .includes(:networks)
-    # .includes(:opp_permissions)
   end
+
+  # def profileIndex
+  #   #params[profileId]
+  #   @opportunities = Opportunity.profile_index(params[:profileId])
+  #
+  # end
 
   def show
     authorize @opportunity

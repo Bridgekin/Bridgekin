@@ -255,7 +255,7 @@ class CardModal extends React.Component {
     this.props.closeOppCard();
 
     this.props.openCustomEmailOppCard(
-      "connection",
+      "connected_opportunity",
       connectBool,
       this.props.oppCardModal.oppId
     )

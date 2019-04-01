@@ -587,7 +587,7 @@ class OpportunityHome extends React.Component {
               <Typography gutterBottom align='left' color='textPrimary'
                 className={classes.cardHeader}
                 style={{ marginBottom: 20}}>
-                Over $71M in opportunities connected
+                Over $72M in opportunities connected
               </Typography>
 
               <div className={classes.oppNotification}>

@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     # end
     # resource :session, only: [:create, :destroy]
 
-    get 'connection_template', :to => 'email_templates#connection_template'
+    get 'connected_opportunity_template', :to => 'email_templates#connected_opportunity'
     get 'waitlist_referral_template', :to => 'email_templates#waitlist_referral'
     patch 'read_all', :to => 'notifications#read_all'
     get 'search_bar', :to => 'users#search_bar'

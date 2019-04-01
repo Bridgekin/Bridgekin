@@ -130,7 +130,7 @@ class OpportunityWaitlist extends React.Component{
 
   render(){
     const { classes, currentUser, largeForSearch } = this.props;
-    const { loading, open } = this.state;
+    const { loading, open, fname, email } = this.state;
 
     return(
       <Grid container className={classes.root}
@@ -144,7 +144,7 @@ class OpportunityWaitlist extends React.Component{
           fullWidth
           variant="outlined"
           onChange={this.handleChange('fname')}
-          value={this.state.fname}
+          value={fname}
           InputProps={{
             classes:{
               input: classes.textfieldInput
@@ -161,7 +161,7 @@ class OpportunityWaitlist extends React.Component{
           fullWidth
           variant="outlined"
           onChange={this.handleChange('email')}
-          value={this.state.email}
+          value={email}
           InputProps={{
             classes:{
               input: classes.textfieldInput
@@ -173,15 +173,17 @@ class OpportunityWaitlist extends React.Component{
           <Button variant="contained" color='primary'
             className={classes.refButton}
             onClick={this.handleSubmit}
-            disabled={loading || currentUser.invitesRemaining === 0}>
+            disabled={loading || currentUser.invitesRemaining === 0 || (fname.length === 0 || email.length === 0)}>
             Invite Now
             {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
           </Button>
         </Grid>
 
-        {currentUser.invitesRemaining > 0 && <Grid item xs={12} container justify='flex-end'>
+        {currentUser.invitesRemaining > 0 &&
+          <Grid item xs={12} container justify='flex-end'>
           <Button onClick={this.handleSubmitTemplate}
+            disabled={fname.length === 0 || email.length === 0}
             style={{ fontSize: 12, textTransform: "capitalize"}}>
             Preview Email
           </Button>

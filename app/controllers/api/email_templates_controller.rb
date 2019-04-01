@@ -28,15 +28,22 @@ class Api::EmailTemplatesController < ApiController
     end
   end
 
-  # def connection_template
-  #   if params[:connect_bool]
-  #     @template = EmailTemplate.find_by(template_type: "connection_direct")
-  #     render :show
-  #   else
-  #     @template = EmailTemplate.find_by(template_type: "connection_")
-  #     render :show
-  #   end
-  # end
+  def connected_opportunity
+    owner = Opportunity.find(params[:opp_id]).owner
+    connection = Connection.where(user_id: @user.id, friend_id: owner.id)
+      .or(Connection.where(user_id: owner.id, friend_id: @user.id))
+
+    if params[:connect_bool] && connection
+      @template = EmailTemplate.find_by(template_type: "connected_opportunity_with_connection")
+    elsif params[:connect_bool] && !connection
+      @template = EmailTemplate.find_by(template_type: "connected_opportunity_no_connection")
+    elsif !params[:connect_bool] && connection
+      @template = EmailTemplate.find_by(template_type: "facilitated_opportunity_with_connection")
+    elsif !params[:connect_bool] && !connection
+      @template = EmailTemplate.find_by(template_type: "facilitated_opportunity_no_connection")
+    end
+    render :show
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

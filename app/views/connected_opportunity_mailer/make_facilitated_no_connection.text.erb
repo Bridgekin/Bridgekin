@@ -1,17 +1,18 @@
 ==================================
 Hi <%= @owner.fname.capitalize %>,
 
-We’re excited to introduce you to <%= @user.fname.capitalize %> <%= @user.lname.capitalize %>,
-  who is interested in connecting with you about your opportunity: <%= @opportunity.title%>.
+<% if @body.nil?%>
+  We’re excited to introduce you to <%= @facilitator.fname.capitalize %>
+    <%= @facilitator.lname.capitalize %>, who has a person in their network
+    that may be a good fit for your opportunity: "<%= @title %>."
 
-It would probably be best for you two to jump on a quick phone call
-  to get to know each other and discuss this opportunity further.
-
-We’ll let you both take it from here!
+  We’ll let you both take it from here!
+<% else %>
+  <%= @body %>
+<% end %>
 
 Cheers,
 The Bridgekin Team
-
 
 Important Legal Notice: Bridgekin does not research or warrant the truthfulness or accuracy of any its listings or information from or about its users.  We provide the platform “as is” and without warranties of any kind, including warranties of merchantability or fitness of purpose. Users and all others involved in opportunities from our platform are solely responsible for verifying the truthfulness, accuracy, value and any other terms and conditions associated with the opportunity and its counterparties.  For additional disclaimers, please review the user agreement here (https://bridgekin.com/useragreement). It is important you do your own due diligence and consult professional advisors before investing in any listed opportunities.
 ==================================

@@ -282,6 +282,13 @@ class OpportunityCard extends React.Component {
     }
   }
 
+  handleProfilePage(id){
+    return e => {
+      e.stopPropagation();
+      // this.props.history.push(`/mynetwork/profile/${id}`)
+    }
+  }
+
   getStatusColor(status){
     switch(status) {
       case 'Active':
@@ -300,16 +307,18 @@ class OpportunityCard extends React.Component {
   render(){
     const { classes, opportunity, editable, demo,
       currentUser, savedOpportunities }= this.props;
+
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
     dealStatusProgress, dealStatusAnchorEl,
     detailsAnchorEl } = this.state;
+
     const detailsOpen = Boolean(detailsAnchorEl);
 
     if (!_.isEmpty(opportunity)){
       let { title, description, industries, opportunityNeed, geography,
         value, status, pictureUrl, dealStatus, anonymous, viewType,
-        ownerPictureUrl, ownerFirstName, ownerLastName } = opportunity;
+        ownerPictureUrl, ownerFirstName, ownerLastName, ownerId } = opportunity;
 
       let deleteDialog = editable ? (
         <Dialog
@@ -372,9 +381,12 @@ class OpportunityCard extends React.Component {
               {ownerPictureUrl && !anonymous ? (
                 <Avatar alt="profile-pic"
                   src={ownerPictureUrl}
-                  className={classes.avatar} />
+                  className={classes.avatar}
+                  onClick={this.handleProfilePage(ownerId)}/>
               ) : (
-                <AccountCircle className={classes.avatar} />
+                <AccountCircle
+                  className={classes.avatar}
+                  onClick={this.handleProfilePage(ownerId)}/>
               )}
               <Typography gutterBottom align='left'
                 className={classes.cardHeader} color="textPrimary"
@@ -414,13 +426,15 @@ class OpportunityCard extends React.Component {
                 ))}
               </Menu>}
 
-              {!editable && savedOpportunities[opportunity.id] ?
+              {!editable &&
+                currentUser.isAdmin &&
+                (savedOpportunities[opportunity.id] ?
                 <BookmarkIcon
                   onClick={this.toggleSavedOpportunity}
                   className={classes.bookmark}/> :
                 <BookmarkBorderIcon
                   onClick={this.toggleSavedOpportunity}
-                  className={classes.bookmark}/>
+                  className={classes.bookmark}/>)
               }
 
               {(viewType === 'card' || (viewType === 'post' && editable)) &&

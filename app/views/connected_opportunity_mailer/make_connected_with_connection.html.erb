@@ -1,0 +1,16 @@
+<p>Hi <%= @owner.fname.capitalize %>,</p>
+
+<% if @body.nil?%>
+  <p><%= @user.fname.capitalize %> <%= @user.lname.capitalize %> is interested
+    in connecting with you about your opportunity: "<%= @title %>."</p>
+
+  <p>We’ll let you both take it from here!</p>
+<% else %>
+  <p><%= @body %></p>
+<% end %>
+
+<p>Cheers,<br>
+The Bridgekin Team</p>
+
+
+<p style="font-size:9px;"><b>Important Legal Notice:</b> Bridgekin does not research or warrant the truthfulness or accuracy of any its listings or information from or about its users.  We provide the platform “as is” and without warranties of any kind, including warranties of merchantability or fitness of purpose. Users and all others involved in opportunities from our platform are solely responsible for verifying the truthfulness, accuracy, value and any other terms and conditions associated with the opportunity and its counterparties.  For additional disclaimers, please review the user agreement <a href='https://bridgekin.com/useragreement'>here</a>. It is important you do your own due diligence and consult professional advisors before investing in any listed opportunities.</p>

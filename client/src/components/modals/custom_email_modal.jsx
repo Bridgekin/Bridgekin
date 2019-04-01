@@ -23,7 +23,7 @@ import { closeCustomEmail, openWaitlist,
   openOppCard} from '../../actions/modal_actions';
 import { fetchWaitlistReferralTemplate,
   fetchEmailTemplate,
-  // fetchConnectionTemplate,
+  fetchConnectedOpportunityTemplate,
   removeEmailTemplate } from '../../actions/email_template_actions';
 import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
 import { clearEmailTemplateErrors } from '../../actions/error_actions';
@@ -44,7 +44,8 @@ const mapDispatchToProps = dispatch => ({
   clearEmailTemplateErrors: () => dispatch(clearEmailTemplateErrors()),
   fetchEmailTemplate: (type) => dispatch(fetchEmailTemplate(type)),
   fetchWaitlistReferralTemplate: (email) => dispatch(fetchWaitlistReferralTemplate(email)),
-  // fetchConnectionTemplate: (connectBool) => dispatch(fetchConnectionTemplate(connectBool)),
+  fetchConnectedOpportunityTemplate: (connectBool, oppId) =>
+    dispatch(fetchConnectedOpportunityTemplate(connectBool, oppId)),
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
   removeEmailTemplate: () => dispatch(removeEmailTemplate()),
   createConnectedOpportunity: (opportunity) => dispatch(createConnectedOpportunity(opportunity)),
@@ -131,9 +132,11 @@ class CustomEmailModal extends React.Component {
         //   this.props.fetchConnectionTemplate(customEmailModal.connectBool)
         //   .then(() => this.saveTemplateLocally(customEmailModal.type))
         //   break;
-        case "connection":
+        case "connected_opportunity":
           let templateType = customEmailModal.connectBool ? "connection_direct" : "connection_referral"
-          this.props.fetchEmailTemplate(templateType)
+          this.props.fetchConnectedOpportunityTemplate(
+            customEmailModal.connectBool,
+            customEmailModal.oppId)
             .then(() => this.saveTemplateLocally(customEmailModal.type))
             break;
         default:
@@ -148,6 +151,8 @@ class CustomEmailModal extends React.Component {
     if (this.props.emailTemplateErrors.length === 0){
       const { emailTemplate, currentUser, opportunities, users,
         customEmailModal } = this.props;
+
+      // debugger
       const templateVars = {
         currentUser:{
           fname: this.capitalize(currentUser.fname),
@@ -156,22 +161,33 @@ class CustomEmailModal extends React.Component {
       }
       // debugger
       let subjectFName = '';
-      switch(templateType){
-        case "waitlist_referral":
-          subjectFName = this.capitalize(customEmailModal.fname);
-          break;
-        case "connection":
-          const { opportunities, customEmailModal } = this.props;
-          let opp = opportunities[customEmailModal.oppId];
-          let owner = users[opp.ownerId];
-          let title = opp.viewType === 'card' ? opp.title : opp.description
-          subjectFName = this.capitalize(owner.fname);
-          templateVars['opportunity']= { title: this.capitalize(title) } ;
-          templateVars['owner'] = { fname : this.capitalize(owner.fname)}
-          break;
-        default:
-          break;
+      if (templateType === "waitlist_referral"){
+        subjectFName = this.capitalize(customEmailModal.fname);
+      } else if (templateType === "connected_opportunity") {
+        let opp = opportunities[customEmailModal.oppId];
+        let owner = users[opp.ownerId];
+        let title = opp.viewType === 'card' ? opp.title : opp.description
+        subjectFName = this.capitalize(owner.fname);
+        templateVars['title']= this.capitalize(title);
+        templateVars['owner'] = { fname : this.capitalize(owner.fname)}
       }
+      // switch(templateType){
+      //   case "waitlist_referral":
+      //     const { customEmailModal } = this.props;
+      //     subjectFName = this.capitalize(customEmailModal.fname || "");
+      //     break;
+      //   case "connection":
+      //     const { opportunities, customEmailModal } = this.props;
+      //     let opp = opportunities[customEmailModal.oppId];
+      //     let owner = users[opp.ownerId];
+      //     let title = opp.viewType === 'card' ? opp.title : opp.description
+      //     subjectFName = this.capitalize(owner.fname);
+      //     templateVars['title']= this.capitalize(title);
+      //     templateVars['owner'] = { fname : this.capitalize(owner.fname)}
+      //     break;
+      //   default:
+      //     break;
+      // }
 
       this.setState({
         subjectFName,
@@ -209,7 +225,7 @@ class CustomEmailModal extends React.Component {
         this.props.removeEmailTemplate();
         this.props.openWaitlist(true);
       })
-    } else if (customEmailModal.type === "connection"){
+    } else if (customEmailModal.type === "connected_opportunity"){
       const { opportunities, customEmailModal } = this.props;
       let opp = opportunities[customEmailModal.oppId];
 
