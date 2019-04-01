@@ -221,11 +221,15 @@ class AccountMain extends React.Component {
 
     const mobileNavOpen = Boolean(mobileNavAnchorEl);
 
-    let pages = [
+    let pages = currentUser.isAdmin ? [
       {title: 'My Profile', dest: '/account/profile'},
       {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
       {title: 'Settings', dest: '/account/settings'},
       {title: 'Notifications', dest: '/account/notifications'},
+    ] : [
+      {title: 'My Profile', dest: '/account/profile'},
+      {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
+      {title: 'Settings', dest: '/account/settings'}
     ]
 
     let navigation = (
@@ -292,9 +296,13 @@ class AccountMain extends React.Component {
       </Grid>
     )
 
-    let filtersDesktop = [
+    let filtersDesktop = currentUser.isAdmin ? [
       {title: "Opportunities You've Posted", name: 'posted'},
       {title: "Opportunities You've Bookmarked", name: 'saved'},
+      {title: "Opportunities You've Connected To", name: 'connected'},
+      {title: "Opportunities You've Referred", name: 'referred'},
+    ] : [
+      {title: "Opportunities You've Posted", name: 'posted'},
       {title: "Opportunities You've Connected To", name: 'connected'},
       {title: "Opportunities You've Referred", name: 'referred'},
     ]

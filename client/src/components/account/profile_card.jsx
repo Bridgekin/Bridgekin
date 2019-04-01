@@ -323,7 +323,7 @@ class Profile extends React.Component {
               </Grid>
             </Grid>
 
-            <Grid container>
+            {currentUser.isAdmin && <Grid container>
               <Grid item xs={8}>
                 <Typography variant="h6" align='left'
                   color='textSecondary'
@@ -346,7 +346,7 @@ class Profile extends React.Component {
                   onChange={this.handleUpdateUserChange('searchable')}
                 />
               </Grid>
-            </Grid>
+            </Grid>}
 
             {false && <Typography variant="subtitle1" align='left'
               color="textPrimary" style={{ marginTop: 15}}>

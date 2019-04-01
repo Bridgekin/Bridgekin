@@ -55,8 +55,8 @@ class Api::ConnectedOpportunitiesController < ApiController
       render json: ["You can't connect to your own opportunity"], status: 422
     elsif @connected_opportunity.save
       owner = @connected_opportunity.opportunity.owner
-      connection = Connection.where(user_id: @user.id, friend_id: owner.id)
-        .or(Connection.where(user_id: owner.id, friend_id: @user.id))
+      connection = Connection.where(user_id: @user.id, friend_id: owner.id, status: "Accepted")
+        .or(Connection.where(user_id: owner.id, friend_id: @user.id, status: "Accepted"))
 
       subject = params[:connected_opportunity][:subject]
       body = params[:connected_opportunity][:body]

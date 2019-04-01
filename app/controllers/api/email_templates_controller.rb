@@ -30,16 +30,16 @@ class Api::EmailTemplatesController < ApiController
 
   def connected_opportunity
     owner = Opportunity.find(params[:opp_id]).owner
-    connection = Connection.where(user_id: @user.id, friend_id: owner.id)
-      .or(Connection.where(user_id: owner.id, friend_id: @user.id))
+    connection = Connection.where(user_id: @user.id, friend_id: owner.id, status: "Accepted")
+      .or(Connection.where(user_id: owner.id, friend_id: @user.id, status: "Accepted"))
 
-    if params[:connect_bool] && connection
+    if params[:connect_bool] && !connection.empty?
       @template = EmailTemplate.find_by(template_type: "connected_opportunity_with_connection")
-    elsif params[:connect_bool] && !connection
+    elsif params[:connect_bool] && connection.empty?
       @template = EmailTemplate.find_by(template_type: "connected_opportunity_no_connection")
-    elsif !params[:connect_bool] && connection
+    elsif !params[:connect_bool] && !connection.empty?
       @template = EmailTemplate.find_by(template_type: "facilitated_opportunity_with_connection")
-    elsif !params[:connect_bool] && !connection
+    elsif !params[:connect_bool] && connection.empty?
       @template = EmailTemplate.find_by(template_type: "facilitated_opportunity_no_connection")
     end
     render :show
