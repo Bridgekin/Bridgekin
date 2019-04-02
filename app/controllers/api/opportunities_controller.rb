@@ -7,7 +7,8 @@ class Api::OpportunitiesController < ApiController
   before_action :authenticate_user
   before_action :set_workspace_networks, only: [:index]
 
-  after_action :verify_authorized, except: [:index, :userIndex]
+  after_action :verify_authorized, except: [:index, :user_index,
+    :profile_index]
   # after_action :verify_policy_scoped, only: :index
 
   def index
@@ -45,7 +46,7 @@ class Api::OpportunitiesController < ApiController
     if @opportunities.length > 0
       # Sory by DESC
       @opportunities = @opportunities.sort{|a,b| b.created_at <=> a.created_at}
-      @networkOpps = @opportunities.pluck(:id)
+      @filteredOpps = @opportunities.pluck(:id)
       render :index
     else
       render json: ["You don't have access to this resource"], status: 422
@@ -53,21 +54,22 @@ class Api::OpportunitiesController < ApiController
 
   end
 
-  def userIndex
+  def user_index
     @opportunities = @user.opportunities
       .includes(:owner)
       .where.not(deal_status: 'Deleted')
       .order(created_at: :desc)
 
-    @userOpportunities = @opportunities.pluck(:id)
-    render :userIndex
+    @filteredOpps = @opportunities.pluck(:id)
+    render :index
   end
 
-  # def profileIndex
-  #   #params[profileId]
-  #   @opportunities = Opportunity.profile_index(params[:profileId])
-  #
-  # end
+  def profile_index
+    #params[profileId]
+    @opportunities = Opportunity.profile_index(params[:profile_id], @user)
+    @filteredOpps = @opportunities.pluck(:id)
+    render :index
+  end
 
   def show
     authorize @opportunity

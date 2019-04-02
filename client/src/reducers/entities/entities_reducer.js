@@ -24,6 +24,7 @@ import circlesReducer from './circles_reducer.js';
 import circlesMembersReducer from './circles_members_reducer.js';
 import emailTemplateReducer from './email_template_reducer.js';
 import savedOpportunityReducer from './saved_opportunities_reducer.js';
+import profileOpportunityReducer from './opportunities/profile_opportunities_reducer.js';
 
 export default combineReducers({
   opportunities: opportuntiesReducer,
@@ -47,5 +48,6 @@ export default combineReducers({
   notifications: notificationsReducer,
   notificationSettings: notificationSettingsReducer,
   emailTemplate: emailTemplateReducer,
-  savedOpportunities: savedOpportunityReducer
+  savedOpportunities: savedOpportunityReducer,
+  profileOpportunities: profileOpportunityReducer
 });

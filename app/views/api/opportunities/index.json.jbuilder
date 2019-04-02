@@ -6,4 +6,4 @@ json.opportunities do
   end
 end
 
-json.networkOpps @networkOpps
+json.filteredOpps @filteredOpps

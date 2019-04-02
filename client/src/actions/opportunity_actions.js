@@ -4,6 +4,7 @@ import { receiveNetworks } from './network_actions';
 import { receiveNetworkOpps } from './network_opp_actions';
 import { receiveOppPermissions } from './opp_permission_actions';
 import { receiveUserOpportunities } from './user_opportunity_actions';
+import { receiveProfileOpportunities } from './profile_opportunity_actions';
 import { receiveOpportunityErrors } from './error_actions';
 
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
@@ -32,7 +33,7 @@ export const fetchOpportunities = (workspaceId, option) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));
-      dispatch(receiveNetworkOpps(data.networkOpps));
+      dispatch(receiveNetworkOpps(data.filteredOpps));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
@@ -47,9 +48,22 @@ export const fetchUserOpportunities = () => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));
-      dispatch(receiveUserOpportunities(data.userOpportunities));
-      // dispatch(receiveOppPermissions(data.oppPermissions));
-      // dispatch(receiveNetworks(data.networks));
+      dispatch(receiveUserOpportunities(data.filteredOpps));
+    })
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveOpportunityErrors(errors))
+    })
+);
+
+export const fetchProfileOpportunities = (profileId) => dispatch => (
+  OpportunityApiUtil.fetchProfileOpportunities(profileId)
+    .then(handleErrors)
+    .then(data => {
+      dispatch(receiveOpportunities(data.opportunities));
+      dispatch(receiveProfileOpportunities(data.filteredOpps));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

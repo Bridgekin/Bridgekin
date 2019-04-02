@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     # end
     # resource :session, only: [:create, :destroy]
 
+    get 'profile_index', :to => 'opportunities#profile_index'
     get 'connected_opportunity_template', :to => 'email_templates#connected_opportunity'
     get 'waitlist_referral_template', :to => 'email_templates#waitlist_referral'
     patch 'read_all', :to => 'notifications#read_all'
@@ -41,7 +42,7 @@ Rails.application.routes.draw do
     post 'member_users/:id/referral/:referral_code', :to => 'member_users#add_by_referral'
     get 'workspace_networks/:network_id', :to => 'networks#workspaceIndex'
     get 'site_templates/:network_id', :to => 'site_templates#show'
-    get 'userOpportunities', :to => 'opportunities#userIndex'
+    get 'userOpportunities', :to => 'opportunities#user_index'
     get 'authorization', :to => 'users/sessions#authorize'
     get 'show', :to => 'users/sessions#show'
     get 'referral_links/:referral_code', :to => 'referral_links#reveal'

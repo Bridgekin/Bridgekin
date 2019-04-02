@@ -738,7 +738,6 @@ class OpportunityHome extends React.Component {
         const opportunityCards = filteredOpps.length > 0 ? (
           filteredOpps.map((opportunity, idx) => (
             <OpportunityCardFeed
-              currentUser={currentUser}
               opportunity={opportunity}/>
           ))
         ) : (opportunityErrors.length > 0 ? (

@@ -61,21 +61,38 @@ class Opportunity < ApplicationRecord
   # serialize       :industries, Array
   # attr_accessor   :industries_raw
 
-  def self.profile_index(profileId, user)
+  def self.profile_index(profile_id, user)
     opportunities = Opportunity.includes(:owner, :connections, :networks)
-      .where(owner_id: params[:profileId])
+      .where(owner_id: profile_id)
       .where.not(deal_status: 'Deleted')
 
     opportunities.reduce([]) do |acc, opp|
-      #Find all members (networks)
-      #Find all friends
-      #Combine lists
-      #If user.id in list, add to result
+      users_shared = Opportunity.all_people_shared(opp)
+      acc << opp if users_shared.include?(user.id)
+      acc
     end
   end
 
-  def all_people_shared()
+  def self.all_people_shared(opportunity)
+    owner = opportunity.owner
+    connections = opportunity.connections
+    users_shared = connections.reduce([]) do |acc, connection|
+      if connection.user_id == owner.id
+        acc << connection.friend_id
+      else
+        acc << connection.user_id
+      end
+    end
 
+    networks = Network.includes(:members)
+      .where(id: opportunity.networks.pluck(:id))
+
+    networks.each do |network|
+      members = network.members.pluck(:id)
+      users_shared += members
+    end
+
+    users_shared.uniq
   end
 
   def get_title

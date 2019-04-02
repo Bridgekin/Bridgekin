@@ -18,6 +18,16 @@ export const fetchUserOpportunities = () => (
   })
 )
 
+export const fetchProfileOpportunities = (profile_id) => (
+  fetch(`${window.location.origin}/api/profile_index?profile_id=${profile_id}`, {
+    method: 'GET',
+    headers:{
+    	'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+  	}
+  })
+)
+
 export const fetchOpportunity = id => (
   fetch(`${window.location.origin}/api/opportunities/${id}`, {
     method: 'GET',

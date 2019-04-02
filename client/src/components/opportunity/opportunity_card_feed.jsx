@@ -285,7 +285,9 @@ class OpportunityCard extends React.Component {
   handleProfilePage(id){
     return e => {
       e.stopPropagation();
-      // this.props.history.push(`/mynetwork/profile/${id}`)
+      if(this.props.currentUser.isAdmin){
+        this.props.history.push(`/mynetwork/profile/${id}`)
+      }
     }
   }
 
