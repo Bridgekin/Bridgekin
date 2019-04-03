@@ -15,7 +15,7 @@ const styles = theme => ({
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
       border: `1px solid ${theme.palette.border.primary}`,
-      borderRadius: 5,
+      // borderRadius: 5,
       padding: "10px 17px 12px",
     },
   },

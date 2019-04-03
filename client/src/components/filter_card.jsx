@@ -18,7 +18,7 @@ const styles = theme => ({
     // marginTop: 18,
     backgroundColor: theme.palette.base3,
     width: '100%',
-    borderRadius: 5,
+    // borderRadius: 5,
     border: `1px solid ${theme.palette.border.primary}`
   },
   filterItem:{

@@ -108,7 +108,7 @@ const styles = theme => ({
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
       border: `1px solid ${theme.palette.border.primary}`,
-      borderRadius: 5,
+      // borderRadius: 5,
       padding: "9px 17px 20px",
     },
   },
@@ -116,7 +116,7 @@ const styles = theme => ({
     // marginTop: 18,
     backgroundColor: `${theme.palette.base3}`,
     width: '100%',
-    borderRadius: 5,
+    // borderRadius: 5,
     border: `1px solid ${theme.palette.border.primary}`
   },
   filter:{
@@ -136,7 +136,7 @@ const styles = theme => ({
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
       border: `1px solid ${theme.palette.border.primary}`,
-      borderRadius: 5,
+      // borderRadius: 5,
     },
     [theme.breakpoints.up('md')]: {
       display: 'none'
@@ -151,7 +151,7 @@ const styles = theme => ({
     // marginTop: 9,
     [theme.breakpoints.up('sm')]: {
       padding: "10px 17px",
-      borderRadius: 5,
+      // borderRadius: 5,
       border: `1px solid ${theme.palette.border.primary}`,
     },
   },

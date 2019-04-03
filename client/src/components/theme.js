@@ -93,7 +93,7 @@ let theme = (siteTemplate) => createMuiTheme({
     MuiButton: { // Name of the component ⚛️ / style sheet
       root: { // Name of the rule
         // color: 'white', // Some CSS
-        fontSize: '14px',
+        fontSize: '12px',
         fontWeight: 600,
         fontFamily: "'Muli', sans-serif",
         color: (siteTemplate && siteTemplate.button1) || "#000000"

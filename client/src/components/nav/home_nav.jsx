@@ -147,8 +147,8 @@ let styles = (theme) => ({
     // border: `1px solid ${theme.palette.border.secondary}`,
   },
   button:{
-    marginTop: 20,
-    height: 40,
+    // marginTop: 20,
+    height: 35,
     color: theme.palette.text.tertiary,
     backgroundColor: 'none',
     border: `1px solid ${theme.palette.text.tertiary}`
@@ -163,7 +163,7 @@ let styles = (theme) => ({
     }
   },
   textfieldResize:{
-    padding: 14,
+    padding: "8px 12px",
     color: theme.palette.text.tertiary,
     borderColor: `${theme.palette.text.tertiary} !important`
   },
@@ -172,6 +172,7 @@ let styles = (theme) => ({
     color: theme.palette.text.tertiary
   },
   textFieldRoot:{
+    // padding: "2px 5px",
     '&$cssFocused $notchedOutline': {
       borderColor: `${theme.palette.text.tertiary} !important`
     }
@@ -645,7 +646,6 @@ class HomeNav extends React.Component {
             id='email'
             label="Email"
             className={classes.textField}
-            margin="normal"
             onChange={this.handleChange('email')}
             variant="outlined"
             InputLabelProps={{
@@ -672,7 +672,6 @@ class HomeNav extends React.Component {
             className={classes.textField}
             type="password"
             autoComplete="current-password"
-            margin="normal"
             onChange={this.handleChange('password')}
             variant="outlined"
             InputLabelProps={{

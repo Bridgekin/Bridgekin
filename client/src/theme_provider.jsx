@@ -30,11 +30,12 @@ const mapDispatchToProps = dispatch => ({
 class ThemeProvider extends React.Component{
   constructor(props) {
     super(props);
-    this.state = { windowHeight: window.innerHeight };
+    // this.state = { windowHeight: window.innerHeight };
     this.resizer = this.resizer.bind(this)
   }
 
   componentDidMount(){
+    this.props.receiveHeight(window.innerHeight)
     let resizeFn = debounce(this.resizer, 400)
     window.addEventListener('resize', resizeFn);
   }

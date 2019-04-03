@@ -71,7 +71,7 @@ const styles = theme => ({
   inputRoot: {
     // color: theme.palette.text.tertiary, //theme.palette.darkGrey,
     width: '100%',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 500,
   },
   inputPlaceholder:{

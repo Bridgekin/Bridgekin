@@ -19,7 +19,8 @@ import theme from '../theme';
 import BottomFade from '../../static/bottom-fade.png';
 
 const mapStateToProps = state => ({
-  currentUser: state.users[state.session.id]
+  currentUser: state.users[state.session.id],
+  windowHeight: state.window
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -99,7 +100,6 @@ const styles = theme => ({
   }
 });
 
-
 class HomePage extends React.Component{
   constructor(props){
     super(props)
@@ -156,7 +156,7 @@ class HomePage extends React.Component{
   }
 
   render(){
-    let classes = this.props.classes;
+    const { classes, windowHeight } = this.props;
     const { loading, open } = this.state;
 
     let mui = true;
@@ -221,7 +221,7 @@ class HomePage extends React.Component{
       <div className={classes.root}>
         <Grid container className={classes.homeGridDesktop}
           justify="flex-start" alignItems="center"
-          style={{ top: 64, position: 'relative'}}>
+          style={{ top: 45, position: 'relative'}}>
           <Grid item xs={10} sm={7} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >
@@ -240,7 +240,6 @@ class HomePage extends React.Component{
             </Grid>
           </Grid>
           <div className={classes.bottomFade} />
-
         </Grid>
 
         <Grid container className={classes.homeGridMobile}

@@ -75,14 +75,14 @@ class FeedContainer extends React.Component{
         <Grid xs={12} sm={11} md={10} container
           className={classes.feedContainer}
           style={{ height: windowHeight }}>
-          <Grid item xs={3}
+          <Grid item xs={4}
             style={{ position: 'relative'}}>
             <div className={classes.sideColumnContent}
               style={{ height: windowHeight-45-18 }}>
               {column1}
             </div>
           </Grid>
-          <Grid item xs={5} className={classes.mainColumn}>
+          <Grid item xs={4} className={classes.mainColumn}>
             {feed}
           </Grid>
           <Grid item xs={4}
