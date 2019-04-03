@@ -15,6 +15,7 @@ import HomeNav from './components/nav/home_nav';
 import Footer from './components/nav/footer';
 
 import OpportunityHome from './components/opportunity/opportunity_home';
+import DirectLinkPage from './components/opportunity/direct_link_page';
 import HomePage from './components/home/home_page';
 // // import AccountRoute from './components/account/account_route';
 import AccountMain from './components/account/account_main';
@@ -77,6 +78,7 @@ export default ()=> (
       <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
       <Route path="/useragreement" component={UserAgreement} />
       <Route path="/privacypolicy" component={PrivacyPolicy} />
+      <Route path="/shareopportunities/:linkCode" component={DirectLinkPage} />
       <Route component={NotFound} />
     </Switch>
 

@@ -47,9 +47,10 @@ import _ from 'lodash';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { fetchUserOpportunities,
   updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
-import { createSavedOppportunity,
-  deleteSavedOppportunity  } from '../../actions/saved_opportunity_actions';
-import { openOppCard } from '../../actions/modal_actions';
+import { createSavedOppportunity, deleteSavedOppportunity}
+  from '../../actions/saved_opportunity_actions';
+import { openOppCard, openDirectLink } from '../../actions/modal_actions';
+import { createDirectLink } from '../../actions/direct_link_actions';
 import theme from '../theme';
 
 import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
@@ -69,6 +70,8 @@ const mapDispatchToProps = dispatch => ({
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
   createSavedOppportunity: (opportunityId) => dispatch(createSavedOppportunity(opportunityId)),
   deleteSavedOppportunity: (savedOpportunity) => dispatch(deleteSavedOppportunity(savedOpportunity)),
+  createDirectLink: (oppIds) => dispatch(createDirectLink(oppIds)),
+  openDirectLink: (opp) => dispatch(openDirectLink(opp)),
 });
 
 const styles = theme => ({
@@ -241,6 +244,9 @@ class OpportunityCard extends React.Component {
           this.handleEdit();
         } else if (option && option === 'Delete'){
           this.handleDeleteOpen();
+        } else if (option && option === 'Share'){
+          this.props.createDirectLink([this.props.opportunity.id])
+          .then(() => this.props.openDirectLink())
         }
       })
     }
@@ -428,7 +434,7 @@ class OpportunityCard extends React.Component {
                 ))}
               </Menu>}
 
-              {!editable &&
+              {!editable && currentUser &&
                 currentUser.isAdmin &&
                 (savedOpportunities[opportunity.id] ?
                 <BookmarkIcon
@@ -439,14 +445,16 @@ class OpportunityCard extends React.Component {
                   className={classes.bookmark}/>)
               }
 
-              {(viewType === 'card' || (viewType === 'post' && editable)) &&
+              {(viewType === 'card' ||
+                (viewType === 'post' && editable)) &&
                 <IconButton
                 aria-label="More"
                 aria-owns={detailsOpen ? 'long-menu' : undefined}
                 aria-haspopup="true"
                 classes={{ label: classes.moreIcon}}
-                onClick={(editable ? this.handleDetailsClick():
-                  this.handleCardOpen('opportunity', true))}
+                onClick={( (editable) ?
+                  this.handleDetailsClick() :
+                  this.handleCardOpen('opportunity', true) )}
                 style={{ padding: 6}}
               >
                 <MoreVertIcon />
@@ -458,12 +466,13 @@ class OpportunityCard extends React.Component {
                 open={detailsOpen}
                 onClose={this.handleDetailsClick()}
               >
-                {['Edit', 'Delete'].map(option => (
+                {['Edit', 'Delete', 'Share'].map(option => (
                   <MenuItem key={option} color="textPrimary"
                     onClick={this.handleDetailsClick(option)}>
                     {option}
                   </MenuItem>
                 ))}
+
               </Menu>
             </Grid>
           </Grid>

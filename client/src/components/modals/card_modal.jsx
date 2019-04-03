@@ -167,6 +167,7 @@ class CardModal extends React.Component {
     this.handleConnection = this.handleConnection.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleConnectionTemplate = this.handleConnectionTemplate.bind(this);
+    this.handleSignup = this.handleSignup.bind(this);
   }
 
   // componentDidUpdate(prevProps, prevState){
@@ -223,6 +224,11 @@ class CardModal extends React.Component {
     //   this.setState({ })
     // }
 
+  }
+
+  handleSignup(){
+    this.props.closeOppCard();
+    this.props.history.push('/');
   }
 
   handleConnection(){
@@ -521,9 +527,39 @@ class CardModal extends React.Component {
 
   render () {
     const { classes, opportunities,
-      oppCardModal } = this.props;
+      oppCardModal, currentUser } = this.props;
 
     if (!_.isEmpty(opportunities[oppCardModal.oppId])){
+      let externalUserMessage = (
+        <Grid container justify="center" alignItems='center'>
+          <Grid item xs={10} container justify='flex-start'
+            style={{ margin: "40px 0px 25px"}}>
+            <Typography variant="h5" gutterBottom align='left'
+              color="textPrimary" className={classes.submitHeader}>
+              {`Members Only Action`}
+            </Typography>
+            <Typography variant="body1" gutterBottom align='left'
+              color="textPrimary" className={classes.section}>
+              {`Only Bridgekin members are able to connect or refer
+                opportunities. SignUp to join our waitlist below!`}
+            </Typography>
+
+            <Grid container justify='space-between'
+              style={{ margin: "25px 0px"}}>
+              <Button variant="contained" color='default'
+                onClick={this.handleClose('')}
+                className={classes.button}>
+                Close
+              </Button>
+              <Button variant="contained" color='primary'
+                onClick={this.handleSignup}
+                className={classes.button}>
+                Signup!
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      )
       return (
         <Dialog
           open={oppCardModal.open}
@@ -538,7 +574,7 @@ class CardModal extends React.Component {
             style={{ width: '100%'}}
             >
             <div className={classes.container}>
-              {this.getContent()}
+              {currentUser ? this.getContent() : externalUserMessage}
             </div>
           </Badge>
         </Dialog>
@@ -551,4 +587,4 @@ class CardModal extends React.Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CardModal)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(CardModal))));

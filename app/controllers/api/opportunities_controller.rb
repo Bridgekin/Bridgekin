@@ -154,7 +154,7 @@ class Api::OpportunitiesController < ApiController
           :deal_status, :industries, :geography)
       end
 
-      [:geography, :industries ].each do |field|
+      [:geography, :industries].each do |field|
         opp_params[field] = opp_params[field].split(',') unless opp_params[field].nil?
       end
       opp_params[:anonymous] = params[:opportunity][:anonymous] == 'true' unless params[:opportunity][:anonymous].nil?

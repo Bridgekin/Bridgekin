@@ -14,6 +14,7 @@ import CustomEmailModal from './components/modals/custom_email_modal';
 import WaitlistModal from './components/modals/waitlist_modal';
 import OppCardModal from './components/modals/card_modal';
 import UpdateUserModal from './components/modals/update_user_modal';
+import DirectLinkModal from './components/modals/direct_link_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -35,9 +36,10 @@ class ThemeProvider extends React.Component{
               <CreateCircleModal/>
               <CircleModal/>
               <CustomEmailModal/>
-              <OppCardModal/>
               <UpdateUserModal/>
+              <DirectLinkModal/>
             </div>}
+            <OppCardModal/>
             <WaitlistModal/>
 
           </GAListener>

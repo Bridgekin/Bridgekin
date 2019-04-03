@@ -6,6 +6,7 @@ import customEmailReducer from './custom_email_reducer';
 import waitlistReducer from './waitlist_reducer';
 import oppCardReducer from './opp_card_reducer';
 import updateUserReducer from './update_user_reducer';
+import directLinkReducer from './direct_link_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   customEmail: customEmailReducer,
   waitlist: waitlistReducer,
   oppCard: oppCardReducer,
-  updateUser: updateUserReducer
+  updateUser: updateUserReducer,
+  directLink: directLinkReducer
 });

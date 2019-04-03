@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     resources :notifications, only: [:index]
     resource :notification_settings, only: [:show, :update]
     resource :email_templates, only: [:show]
+    resource :direct_links, only: [:create, :show]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end

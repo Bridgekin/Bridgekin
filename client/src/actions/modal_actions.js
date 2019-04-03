@@ -99,3 +99,15 @@ export const openUpdateUser = (settingsType) => ({
 export const closeUpdateUser = () => ({
   type: CLOSE_UPDATE_USER_MODAL,
 });
+
+// DIRECT LINK MODAL
+export const OPEN_DIRECT_LINK_MODAL = 'OPEN_DIRECT_LINK_MODAL';
+export const CLOSE_DIRECT_LINK_MODAL = "CLOSE_DIRECT_LINK_MODAL";
+
+export const openDirectLink = () => ({
+  type: OPEN_DIRECT_LINK_MODAL
+});
+
+export const closeDirectLink = () => ({
+  type: CLOSE_DIRECT_LINK_MODAL,
+});

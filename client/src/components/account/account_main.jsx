@@ -386,7 +386,7 @@ class AccountMain extends React.Component {
           <ProtectedRoute
             path="/account/profile"
             component={ProfileCard}
-            passedProps={{ user: currentUser }}
+            passedProps={{ user: currentUser, detailed: false }}
           />
           <ProtectedRoute path="/account/notifications" component={Notifications} />
         </Switch>

@@ -151,15 +151,12 @@ class CustomEmailModal extends React.Component {
     if (this.props.emailTemplateErrors.length === 0){
       const { emailTemplate, currentUser, opportunities, users,
         customEmailModal } = this.props;
-
-      // debugger
       const templateVars = {
         currentUser:{
           fname: this.capitalize(currentUser.fname),
           lname: this.capitalize(currentUser.lname),
         }
       }
-      // debugger
       let subjectFName = '';
       if (templateType === "waitlist_referral"){
         subjectFName = this.capitalize(customEmailModal.fname);
@@ -171,23 +168,6 @@ class CustomEmailModal extends React.Component {
         templateVars['title']= this.capitalize(title);
         templateVars['owner'] = { fname : this.capitalize(owner.fname)}
       }
-      // switch(templateType){
-      //   case "waitlist_referral":
-      //     const { customEmailModal } = this.props;
-      //     subjectFName = this.capitalize(customEmailModal.fname || "");
-      //     break;
-      //   case "connection":
-      //     const { opportunities, customEmailModal } = this.props;
-      //     let opp = opportunities[customEmailModal.oppId];
-      //     let owner = users[opp.ownerId];
-      //     let title = opp.viewType === 'card' ? opp.title : opp.description
-      //     subjectFName = this.capitalize(owner.fname);
-      //     templateVars['title']= this.capitalize(title);
-      //     templateVars['owner'] = { fname : this.capitalize(owner.fname)}
-      //     break;
-      //   default:
-      //     break;
-      // }
 
       this.setState({
         subjectFName,

@@ -216,7 +216,16 @@ class HomeNav extends React.Component {
   }
 
   componentDidMount(){
-    this.props.fetchNotifications()
+    if(this.props.currentUser){
+      this.props.fetchNotifications()
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(this.props.currentUser !== nextProps.currentUser){
+      this.props.fetchNotifications()
+    }
+    return true
   }
 
   countNotifications(){

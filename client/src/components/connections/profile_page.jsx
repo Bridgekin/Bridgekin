@@ -87,7 +87,7 @@ class ProfilePage extends React.Component {
 
       return (
         <div style={{ paddingBottom: 30 }}>
-          <ProfileCard user={profile}/>
+          <ProfileCard user={profile} detailed={true}/>
           {opportunityCards}
         </div>
       )

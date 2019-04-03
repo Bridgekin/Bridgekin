@@ -8,26 +8,3 @@ json.opportunities do
     end
   end
 end
-#
-# debugger
-
-# json.networks do
-#   @opportunities.each do |opportunity|
-#     opportunity.networks do |network|
-#       json.set! network.id do
-#         json.partial! 'api/networks/network', network: network
-#       end
-#     end
-#   end
-# end
-
-# json.oppPermissions do
-#   @opportunities.each do |opportunity|
-#     opportunity.opp_permissions do |opp_permission|
-#       json.set! opp_permission.id do
-#         json.partial! 'api/opp_permissions/permission',
-#         opp_permission: opp_permission
-#       end
-#     end
-#   end
-# end

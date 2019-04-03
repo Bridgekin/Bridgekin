@@ -171,7 +171,10 @@ class Profile extends React.Component {
   }
 
   render(){
-    const { classes, user, currentUser, workspaces }= this.props;
+    const { classes, user, currentUser,
+      workspaces, detailed }= this.props;
+
+    // debugger
 
     let profilePic = user.profilePicUrl ? (
       <Avatar
@@ -186,7 +189,7 @@ class Profile extends React.Component {
         onClick={this.sendToAccountSettings}/>
     )
 
-    let inviteUserText = this.getInviteText();
+    let inviteUserText = currentUser ? this.getInviteText() : '';
 
     let profile = (
       <Grid container justify="center" alignItems="flex-start"
@@ -211,7 +214,7 @@ class Profile extends React.Component {
               color="textSecondary" align='left'>
               {`${user.fname} ${user.lname}`.toUpperCase()}
             </Typography>
-            {currentUser.id === user.id && <IconButton className={classes.button}
+            {currentUser && currentUser.id === user.id && <IconButton className={classes.button}
               onClick={() => this.props.history.push('/account/settings/general')}
               style={{ marginLeft: 10 }}>
               <EditIcon className={classes.moreIcon}/>
@@ -247,7 +250,7 @@ class Profile extends React.Component {
               "Unknown"
             }
           </Typography>
-          {currentUser.id !== user.id &&
+          {currentUser && currentUser.id !== user.id &&
             <Button variant='contained' color='primary'
               onClick={this.openInvite}
               disabled={inviteUserText !== "Add Contact"}
@@ -256,7 +259,9 @@ class Profile extends React.Component {
             </Button>
           }
 
-          {currentUser.id === user.id && <Grid container>
+          {currentUser &&
+            currentUser.id === user.id && detailed &&
+          <Grid container>
             <Grid container>
               <Typography variant="h6" align='left'
                 color='textSecondary'>

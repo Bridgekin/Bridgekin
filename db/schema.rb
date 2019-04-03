@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_170750) do
+ActiveRecord::Schema.define(version: 2019_04_02_160618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,15 @@ ActiveRecord::Schema.define(version: 2019_04_01_170750) do
     t.datetime "updated_at", null: false
     t.index ["friend_id"], name: "index_connections_on_friend_id"
     t.index ["user_id"], name: "index_connections_on_user_id"
+  end
+
+  create_table "direct_links", force: :cascade do |t|
+    t.string "link_code", null: false
+    t.string "opportunity_ids", array: true
+    t.integer "profile_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["link_code"], name: "index_direct_links_on_link_code"
   end
 
   create_table "email_notifications", force: :cascade do |t|
