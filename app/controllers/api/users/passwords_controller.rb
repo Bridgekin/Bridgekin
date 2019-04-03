@@ -20,7 +20,7 @@ class Api::Users::PasswordsController < Devise::PasswordsController
     user = User.find_by(reset_password_token: params[:payload][:reset_token])
 
     if user && user.update(password_params)
-      AuthMailer.password_change(user).deliver_now
+      AuthMailer.password_change(user).deliver_later
       render json: ["Updated password"], status: 200
     else user.nil?
       render json: ["Recovery link has expired or is invalid"], status: 401

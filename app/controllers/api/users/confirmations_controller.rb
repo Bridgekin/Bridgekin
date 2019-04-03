@@ -21,7 +21,7 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
     # yield resource if block_given?
     if resource.errors.empty?
-      AuthMailer.email_changed(resource).deliver_now
+      AuthMailer.email_changed(resource).deliver_later
       @user = resource
       @token = get_login_token!(@user)
       # render json: ['Account confirmed! Navigate back to the home page to login.'], status: 200

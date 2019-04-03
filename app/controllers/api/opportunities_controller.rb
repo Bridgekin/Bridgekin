@@ -86,7 +86,7 @@ class Api::OpportunitiesController < ApiController
       @opportunity.set_permissions(params[:opportunity][:permissions])
 
       # Send email to joe
-      OpportunityMailer.flag_opportunity_creation(@opportunity, @user).deliver_now
+      OpportunityMailer.flag_opportunity_creation(@opportunity, @user).deliver_later
       # render json: @opportunity, status: :created, location: @opportunity
       render :show
     else
