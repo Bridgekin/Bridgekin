@@ -6,6 +6,8 @@ import App from './App';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import getTheme from './components/theme';
+import { receiveHeight } from './actions/util_actions';
+import debounce from 'lodash/debounce';
 
 import InviteModal from './components/modals/invite_modal';
 import CreateCircleModal from './components/modals/create_circle_modal';
@@ -21,9 +23,31 @@ const mapStateToProps = state => ({
   currentUser: state.users[state.session.id]
 });
 
+const mapDispatchToProps = dispatch => ({
+  receiveHeight: height => dispatch(receiveHeight(height))
+});
+
 class ThemeProvider extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = { windowHeight: window.innerHeight };
+    this.resizer = this.resizer.bind(this)
+  }
+
+  componentDidMount(){
+    let resizeFn = debounce(this.resizer, 400)
+    window.addEventListener('resize', resizeFn);
+  }
+
+  resizer(){
+    this.props.receiveHeight(window.innerHeight)
+    // this.setState({ windowHeight: window.innerHeight })
+  }
+
   render(){
     const { currentUser, siteTemplate } = this.props;
+    // const { windowHeight } = this.state;
+
     return (
       <MuiThemeProvider theme={getTheme(siteTemplate)}>
         <BrowserRouter>
@@ -49,4 +73,4 @@ class ThemeProvider extends React.Component{
   }
 }
 
-export default connect(mapStateToProps, {})(ThemeProvider);
+export default connect(mapStateToProps, mapDispatchToProps)(ThemeProvider);

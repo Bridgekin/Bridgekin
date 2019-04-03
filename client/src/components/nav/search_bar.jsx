@@ -65,13 +65,20 @@ const styles = theme => ({
     color: theme.palette.darkGrey,
     top: 0, right: 0
   },
+  inputLabel:{
+    color: theme.palette.text.tertiary
+  },
   inputRoot: {
-    color: theme.palette.darkGrey,
+    // color: theme.palette.text.tertiary, //theme.palette.darkGrey,
     width: '100%',
     fontSize: 15,
     fontWeight: 500,
   },
+  inputPlaceholder:{
+    color: theme.palette.text.tertiary
+  },
   inputInput: {
+    color: theme.palette.text.tertiary,
     paddingTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit,
@@ -254,6 +261,11 @@ class SearchBar extends React.Component {
             classes={{
               root: classes.inputRoot,
               input: classes.inputInput,
+            }}
+            InputProps={{
+              classes:{
+                input: classes.inputPlaceholder
+              }
             }}
             />
           <div className={classes.searchIcon}>

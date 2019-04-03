@@ -39,6 +39,8 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 // import logo from '../../static/castle.jpg';
 import logo from '../../static/Bridgekin_Logo.png';
+import whiteLogo from '../../static/bridgekin_white.png';
+import whiteLogoMobile from '../../static/white_mobile.png';
 import logoMobile from '../../static/apple-touch-icon.png';
 import LoginModal from './login_modal';
 import SearchBar from './search_bar';
@@ -130,6 +132,14 @@ let styles = (theme) => ({
     position: 'fixed',
     top: 0
   },
+  toolbar:{
+    // display: 'flex',
+    // justifyContent: 'space-between',
+    height: 45,
+    minHeight: 0,
+    paddingRight: 5,
+    paddingLeft: 5
+  },
   textField:{
     marginLeft: 10,
     marginRight: 10,
@@ -138,21 +148,37 @@ let styles = (theme) => ({
   },
   button:{
     marginTop: 20,
-    height: 40
-  },
-  toolbar:{
-    // display: 'flex',
-    // justifyContent: 'space-between',
-    height: 64,
-    paddingRight: 5,
-    paddingLeft: 5
+    height: 40,
+    color: theme.palette.text.tertiary,
+    backgroundColor: 'none',
+    border: `1px solid ${theme.palette.text.tertiary}`
   },
   navMenu:{
     display: 'flex',
     justifyContent: 'flex-end'
   },
+  textFieldLabel:{
+    '&$cssFocused': {
+      color: theme.palette.text.tertiary
+    }
+  },
   textfieldResize:{
-    padding: 14
+    padding: 14,
+    color: theme.palette.text.tertiary,
+    borderColor: `${theme.palette.text.tertiary} !important`
+  },
+  textFieldShrink:{
+    fontSize: 14,
+    color: theme.palette.text.tertiary
+  },
+  textFieldRoot:{
+    '&$cssFocused $notchedOutline': {
+      borderColor: `${theme.palette.text.tertiary} !important`
+    }
+  },
+  cssFocused: {},
+  notchedOutline: {
+    borderColor: `${theme.palette.text.tertiary} !important`
   },
   sectionDesktop: {
     display: 'none',
@@ -166,13 +192,19 @@ let styles = (theme) => ({
       display: 'none',
     },
   },
-  textFieldLabel:{
-    fontSize: 14
-  },
   buttonText: { color: theme.palette.text.tertiary},
-  navButtonText: { color: theme.palette.text.tertiary},
+  navButtonText: {
+    color: theme.palette.text.tertiary,
+    fontSize: 12
+  },
   listItemText: { fontSize: 12 },
-  badge: { backgroundColor: 'red', color: 'white'},
+  badge: {
+    backgroundColor: 'red',
+    color: 'white'
+  },
+  notificationLogo:{
+    color: theme.palette.text.tertiary
+  },
   unread: { backgroundColor: theme.palette.base4 },
   profilePic: {
     height: 'auto',
@@ -183,7 +215,12 @@ let styles = (theme) => ({
     borderBottom: `1px solid ${theme.palette.border.primary}`
   },
   menuFont: { fontSize: 14 },
-  menu: { padding: 0}
+  menu: { padding: 0},
+  avatar: {
+    height: 35,
+    width: 35,
+    border: `1px solid ${theme.palette.text.tertiary}`
+  }
 });
 
 class HomeNav extends React.Component {
@@ -614,11 +651,16 @@ class HomeNav extends React.Component {
             InputLabelProps={{
               shrink: true,
               classes: {
-                shrink: classes.textFieldLabel
+                root: classes.textFieldLabel,
+                focused: classes.cssFocused,
+                shrink: classes.textFieldShrink
               }
             }}
             InputProps={{
               classes: {
+                root: classes.textFieldRoot,
+                focused: classes.cssFocused,
+                notchedOutline: classes.notchedOutline,
                 input: classes.textfieldResize
               },
             }}
@@ -636,11 +678,16 @@ class HomeNav extends React.Component {
             InputLabelProps={{
               shrink: true,
               classes: {
-                shrink: classes.textFieldLabel
+                root: classes.textFieldLabel,
+                focused: classes.cssFocused,
+                shrink: classes.textFieldShrink
               }
             }}
             InputProps={{
               classes: {
+                root: classes.textFieldRoot,
+                focused: classes.cssFocused,
+                notchedOutline: classes.notchedOutline,
                 input: classes.textfieldResize
               },
             }}
@@ -702,7 +749,7 @@ class HomeNav extends React.Component {
               classes={{ badge: classes.badge}}
               onClick={this.handleNotificationMenuOpen}
               style={{ marginRight: 10}}>
-              <NotificationsIcon color='primary' />
+              <NotificationsIcon className={classes.notificationLogo}/>
             </Badge>
           }
           <div>
@@ -752,9 +799,9 @@ class HomeNav extends React.Component {
           className={classes.logoLink}
           onClick={() => this.props.history.push('/')}>
           <img alt='logo' className={classes.logoDesktop}
-            src={siteTemplate.navLogo || logo} />
+            src={siteTemplate.navLogo || whiteLogo} />
           <img alt='logo' className={classes.logoMobile}
-            src={siteTemplate.navLogoMobile || logoMobile} />
+            src={siteTemplate.navLogoMobile || whiteLogoMobile} />
         </IconButton>
 
         {workspaces.length > 1 &&

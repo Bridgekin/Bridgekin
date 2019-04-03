@@ -17,7 +17,7 @@ let theme = (siteTemplate) => createMuiTheme({
       // main: '#4067B2',
     },
     // Nav Bar Color
-    base1: (siteTemplate && siteTemplate.base1) || '#FFFFFF', // 'brown'
+    base1: (siteTemplate && siteTemplate.base1) || '#000000', // 'brown'
     // Site Background
     base2: (siteTemplate && siteTemplate.base2) || '#f4f4f4', //`rgba(0,0,0,0.05)`, //'blue',
     // All Cards/Inside Backgrounds
@@ -33,7 +33,8 @@ let theme = (siteTemplate) => createMuiTheme({
     text: {
       primary: (siteTemplate && siteTemplate.font1) || "#000000" , //"#551A8B", //black
       secondary: (siteTemplate && siteTemplate.font2) || "#616161", //'yellow', //grey
-      tertiary: (siteTemplate && siteTemplate.font3) || "#000000", //black
+      // Nav Bar Font
+      tertiary: (siteTemplate && siteTemplate.font3) || "#FFFFFF", //black
     },
     border: {
       primary: (siteTemplate && siteTemplate.border1) || "#E2E2E2", //'#000000'

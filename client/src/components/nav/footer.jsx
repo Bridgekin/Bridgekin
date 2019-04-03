@@ -17,7 +17,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 // import UserAgreementText from './legal_text';
 
 const mapStateToProps = (state, ownProps) => ({
-  currentUser: state.users[state.session.id]
+  currentUser: state.users[state.session.id],
+  windowHeight: state.window
 });
 
 const styles = theme => ({
@@ -39,12 +40,11 @@ const styles = theme => ({
 
 class Footer extends Component {
   render () {
-    const {classes, currentUser} = this.props;
+    const {classes, currentUser, windowHeight } = this.props;
     if(currentUser){
       return (
-        <div style={{ position: 'absolute', bottom: 0, width: '100%'}}>
-          <Grid container justify='flex-end' alignItems="center"
-            className={classes.grid}>
+        <div style={{ position: 'absolute', top: windowHeight-30 , width: '100%'}}>
+          <Grid container justify='flex-end' alignItems="center">
 
             <Button onClick={()=> this.props.history.push('/useragreement')}
               className={ classes.button}>

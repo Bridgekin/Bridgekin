@@ -58,7 +58,7 @@ import CircleModal from './components/modals/circle_modal';
 // }
 
 export default ()=> (
-  <div style={{ position: 'relative', minHeight: window.innerHeight}}>
+  <div style={{ position: 'relative' }}>
     <ScrollToTop />
     <Route path="/" component={HomeNav} />
 
