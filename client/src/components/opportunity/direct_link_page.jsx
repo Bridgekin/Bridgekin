@@ -43,11 +43,11 @@ class DirectLinkPage extends React.Component {
     const { opportunities, users, directLink } = this.props;
     const { loaded } = this.state;
 
-    if (loaded){
+    if (directLink.opportunityIds && loaded){
       // debugger
       let profile = users[directLink.profileId];
 
-      let profileOpps = directLink.opportunityIds.length > 0 ?
+      let profileOpps = (directLink.opportunityIds.length > 0) ?
       directLink.opportunityIds.map(id =>
         <OpportunityCardFeed
           opportunity={opportunities[id]}/>

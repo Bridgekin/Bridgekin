@@ -134,7 +134,7 @@ let styles = (theme) => ({
     marginLeft: 10,
     marginRight: 10,
     width: '40%',
-    border: `1px solid ${theme.palette.border.secondary}`,
+    // border: `1px solid ${theme.palette.border.secondary}`,
   },
   button:{
     marginTop: 20,
@@ -221,12 +221,13 @@ class HomeNav extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    if(this.props.currentUser !== nextProps.currentUser){
-      this.props.fetchNotifications()
-    }
-    return true
-  }
+  // componentDidUpdate(prevProps, prevState, snapshot)
+  // shouldComponentUpdate(nextProps, nextState){
+  //   if(this.props.currentUser !== nextProps.currentUser){
+  //     this.props.fetchNotifications()
+  //   }
+  //   return true
+  // }
 
   countNotifications(){
     const { notifications } = this.props;
