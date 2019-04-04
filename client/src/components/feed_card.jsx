@@ -9,12 +9,12 @@ const styles = theme => ({
   feedCard:{
     padding: "10px 8px 12px",
     backgroundColor: `${theme.palette.base3}`,
-    borderTop: `1px solid ${theme.palette.lightGrey}`,
-    borderBottom: `1px solid ${theme.palette.lightGrey}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
     // width: '100%',
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.border.primary}`,
+      border: `1px solid ${theme.palette.border.secondary}`,
       // borderRadius: 5,
       padding: "10px 17px 12px",
     },

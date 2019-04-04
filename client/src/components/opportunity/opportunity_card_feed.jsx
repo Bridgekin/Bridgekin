@@ -77,8 +77,8 @@ const mapDispatchToProps = dispatch => ({
 
 const styles = theme => ({
   feedCardActionContainer:{
-    marginTop: 10,
-    borderTop: `1px solid ${theme.palette.border.primary}`,
+    // marginTop: 10,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
     padding: 0
   },
   statusIndicator:{
@@ -89,10 +89,10 @@ const styles = theme => ({
   opportunityCard:{
     backgroundColor: `${theme.palette.base3}`,
     marginBottom: 9,
-    borderTop: `1px solid ${theme.palette.border.primary}`,
-    borderBottom: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.border.primary}`,
+      border: `1px solid ${theme.palette.border.secondary}`,
       // borderRadius: 5,
     }
   },
@@ -101,7 +101,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       padding: "0px 17px"
     },
-    marginBottom: 10
+    // marginBottom: 10
   },
   oppStatus:{
     // height: 40,
@@ -116,7 +116,9 @@ const styles = theme => ({
   pictureCover:{
     height: 140,
     width: '100%',
-    objectFit: 'cover'
+    objectFit: 'cover',
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`
   },
   avatar:{
     width: 40,
@@ -132,13 +134,19 @@ const styles = theme => ({
     fontSize: 12,
     fontWeight: 400
   },
+  need:{
+    textTransform: 'capitalize',
+    fontSize: 13,
+    fontWeight: 400,
+    marginRight: 20
+  },
   cardSubHeader:{
     fontSize: 11,
     fontWeight: 600
   },
   cardSubContent:{
     fontSize: 13,
-    fontWeight: 600
+    fontWeight: 500
   },
   buttonGrid:{
     borderRight: `1px solid ${theme.palette.border.secondary}`
@@ -409,8 +417,14 @@ class OpportunityCard extends React.Component {
               </Typography>
             </Grid>
 
-            <Grid item xs={5} container alignItems='center' justify='flex-end'>
-              <Button className={classes.oppStatus}
+            <Grid item xs={5} container
+              alignItems='center' justify='flex-end'>
+              <Typography variant="body1" align='left'
+                color="textSecondary" noWrap
+                className={classes.need}>
+                {opportunityNeed}
+              </Typography>
+              {/*<Button className={classes.oppStatus}
                 aria-owns={dealStatusAnchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
                 onClick={this.handleDealStatusToggle}
@@ -422,7 +436,7 @@ class OpportunityCard extends React.Component {
                   style={{ fontSize: 14, fontWeight: 600 }}>
                   {dealStatus}
                 </Typography>
-              </Button>
+              </Button>*/}
 
               {editable && <Menu
                 id="simple-menu"
@@ -478,7 +492,7 @@ class OpportunityCard extends React.Component {
             <Grid item xs={10}>
               {opportunity.title &&
                 viewType === 'card' &&
-                <div style={{ margin: 10}}>
+                <div style={{ margin: "10px 0px"}}>
                   <Typography variant="h5" align='left'
                     color="textPrimary"
                     className={classes.title} >
@@ -492,7 +506,7 @@ class OpportunityCard extends React.Component {
                   </Typography>
                 </div>}
               {opportunity.description &&
-                <div style={{ margin: 10}}>
+                <div style={{ margin: "10px 0px 30px"}}>
                   <Typography variant="body2" align='left'
                     color="textPrimary"
                     className={viewType === 'card' ?
@@ -507,67 +521,64 @@ class OpportunityCard extends React.Component {
                   </Typography>
                 </div>}
 
-              <Grid container justify='flex-start'
-                style={{ margin: "10px 0px 10px 0px" }}>
-                {opportunity.geography.length > 0 &&
-                  viewType === 'card' &&
-                  <div>
-                    <Typography variant="h6" gutterBottom align='left'
-                      color="textSecondary" noWrap
-                      className={classes.cardSubHeader}>
-                      Geography
-                    </Typography>
-                    <Typography variant="subtitle1" gutterBottom align='left'
-                      color="textPrimary" className={classes.cardSubContent}>
-                      <LinesEllipsis
-                        text={geography.join(", ")}
-                        maxLine='3'
-                        ellipsis='...'
-                        trimRight
-                        basedOn='letters'
-                        />
-                    </Typography>
-                  </div>}
+              {opportunity.geography.length > 0 &&
+                viewType === 'card' &&
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textSecondary" noWrap
+                    className={classes.cardSubHeader}>
+                    Geography
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom align='left'
+                    color="textPrimary" className={classes.cardSubContent}>
+                    <LinesEllipsis
+                      text={geography.join(", ")}
+                      maxLine='3'
+                      ellipsis='...'
+                      trimRight
+                      basedOn='letters'
+                      />
+                  </Typography>
+                </div>}
 
-                {opportunity.industries.length > 0 &&
-                  viewType === 'card' &&
-                  <div>
-                    <Typography variant="h6" gutterBottom align='left'
-                      color="textSecondary"
-                      className={classes.cardSubHeader}
-                      noWrap>
-                      Industry
-                    </Typography>
-                    <Typography variant="subtitle1" gutterBottom align='left'
-                      color="textPrimary" className={classes.cardSubContent}
-                      >
-                      <LinesEllipsis
-                        text={opportunity.industries.join(", ")}
-                        maxLine='3'
-                        ellipsis='...'
-                        trimRight
-                        basedOn='letters'
-                        />
-                    </Typography>
-                  </div>}
+              {opportunity.industries.length > 0 &&
+                viewType === 'card' &&
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textSecondary"
+                    className={classes.cardSubHeader}
+                    noWrap>
+                    Industry
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom align='left'
+                    color="textPrimary" className={classes.cardSubContent}
+                    >
+                    <LinesEllipsis
+                      text={opportunity.industries.join(", ")}
+                      maxLine='3'
+                      ellipsis='...'
+                      trimRight
+                      basedOn='letters'
+                      />
+                  </Typography>
+                </div>}
 
-                {opportunity.value &&
-                  viewType === 'card' &&
-                  <div>
-                    <Typography variant="h6" gutterBottom align='left'
-                      color="textSecondary"
-                      className={classes.cardSubHeader}
-                      noWrap>
-                      Value
-                    </Typography>
-                    <Typography variant="subtitle1" gutterBottom align='left'
-                      color="textPrimary" className={classes.cardSubContent}
-                      >
-                      {opportunity.value}
-                    </Typography>
-                  </div>}
+              {opportunity.value &&
+                viewType === 'card' &&
+                <div>
+                  <Typography variant="h6" align='left'
+                    color="textSecondary"
+                    className={classes.cardSubHeader}
+                    noWrap>
+                    Value
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom align='left'
+                    color="textPrimary" className={classes.cardSubContent}
+                    >
+                    {opportunity.value}
+                  </Typography>
+                </div>}
               </Grid>
-            </Grid>
 
             {/*<Grid container justify='flex-start'
               className={classes.feedCardActionContainer}>

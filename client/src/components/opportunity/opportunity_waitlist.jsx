@@ -39,9 +39,8 @@ const styles = theme => ({
   refButton:{
     fontSize: 14,
     fontWeight: 500,
-    // marginTop: 25,
-    // height: 26,
-    // width: 180
+    backgroundColor: 'transparent',
+    border: `1px solid ${theme.palette.text.tertiary}`
   },
   buttonProgress: {
     color: '#4067B2',
@@ -52,17 +51,38 @@ const styles = theme => ({
   },
   textField:{
     margin: 3
-    // padding: "10px 14px"
   },
   textfieldInput:{
-    padding: "10px 14px"
+    padding: "10px 14px",
+    color: theme.palette.text.tertiary,
   },
+  textfieldUnderline:{
+    '&:before': {
+      borderBottomColor: 'white',
+    },
+    '&:after': {
+      borderBottomColor: 'white',
+    },
+    '&:hover:not($disabled):not($error):not($focused):before': {
+      borderBottomColor: 'white',
+    },
+  },
+  disabled: {},
+  error: {},
+  focused: {},
   fieldLabel:{
     fontSize: 14,
     fontWeight: 600
   },
   inviteCounter:{
-    fontSize: 12
+    fontSize: 12,
+    color: theme.palette.text.tertiary,
+    margin: "10px 0px 15px"
+  },
+  preview:{
+    fontSize: 12,
+    textTransform: "capitalize",
+    color: theme.palette.text.tertiary
   }
 });
 
@@ -129,75 +149,78 @@ class OpportunityWaitlist extends React.Component{
   }
 
   render(){
-    const { classes, currentUser, largeForSearch } = this.props;
+    const { classes, currentUser, largeForSearch, color } = this.props;
     const { loading, open, fname, email } = this.state;
 
     return(
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={8}>
-        <Grid item xs={5} sm={largeForSearch ? 5 : 12} container direction='column'>
-          <TextField
-          required
-          id="outlined-required"
-          placeholder="First Name"
-          className={classes.textField}
-          fullWidth
-          variant="outlined"
-          onChange={this.handleChange('fname')}
-          value={fname}
-          InputProps={{
-            classes:{
-              input: classes.textfieldInput
-            }
-          }}
-          />
-        </Grid>
-        <Grid item xs={7} sm={largeForSearch ? 7 : 12} container direction='column'>
-          <TextField
-          required
-          id="outlined-required"
-          placeholder="Email"
-          className={classes.textField}
-          fullWidth
-          variant="outlined"
-          onChange={this.handleChange('email')}
-          value={email}
-          InputProps={{
-            classes:{
-              input: classes.textfieldInput
-            }
-          }}
-          />
-        </Grid>
-        <Grid item xs={12} container justify='flex-end'>
-          <Button variant="contained" color='primary'
-            className={classes.refButton}
-            onClick={this.handleSubmit}
-            disabled={loading || currentUser.invitesRemaining === 0 || (fname.length === 0 || email.length === 0)}>
-            Invite Now
-            {loading && <CircularProgress size={24}
+        <Typography align='right'
+          variant='body1' fullWidth
+          className={classes.inviteCounter}>
+          {currentUser.invitesRemaining > 0 ?
+            `You have ${currentUser.invitesRemaining} remaining invitations` :
+            `You're currently out of invites!`
+          }
+        </Typography>
+
+        <TextField
+        required
+        id="outlined-required"
+        placeholder="First Name"
+        className={classes.textField}
+        fullWidth
+        onChange={this.handleChange('fname')}
+        value={fname}
+        InputProps={{
+          classes:{
+            input: classes.textfieldInput,
+            underline: classes.textfieldUnderline,
+            disabled: classes.disabled,
+            focused: classes.focused,
+            error: classes.error
+          }
+        }}
+        style={{ marginBottom: 20, color: 'white' }}
+        />
+        <TextField
+        required
+        id="outlined-required"
+        placeholder="Email"
+        className={classes.textField}
+        fullWidth
+        onChange={this.handleChange('email')}
+        value={email}
+        InputProps={{
+          classes:{
+            input: classes.textfieldInput,
+            underline: classes.textfieldUnderline,
+            disabled: classes.disabled,
+            focused: classes.focused,
+            error: classes.error
+          }
+        }}
+        style={{ marginBottom: 20 }}
+        />
+        <Button variant="contained" color='primary' fullWidth
+          className={classes.refButton}
+          onClick={this.handleSubmit}
+          disabled={loading || currentUser.invitesRemaining === 0 ||
+            (fname.length === 0 || email.length === 0)}
+          >
+          {`Send Invitation`}
+          {loading && <CircularProgress size={24}
             className={classes.buttonProgress} />}
-          </Button>
-        </Grid>
+        </Button>
 
         {currentUser.invitesRemaining > 0 &&
           <Grid item xs={12} container justify='flex-end'>
           <Button onClick={this.handleSubmitTemplate}
             disabled={fname.length === 0 || email.length === 0}
-            style={{ fontSize: 12, textTransform: "capitalize"}}>
+            className={classes.preview}>
             Preview Email
           </Button>
         </Grid>}
-
-        <Grid item xs={12} container justify='flex-end'>
-          <Typography align='right' color='textSecondary' variant='body1'
-            className={classes.inviteCounter}>
-            {currentUser.invitesRemaining > 0 ?
-              `Remaining: ${currentUser.invitesRemaining}` :
-              `You're currently out of invites!`
-            }
-          </Typography>
-        </Grid>
       </Grid>
     )
   }

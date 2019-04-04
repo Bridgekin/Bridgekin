@@ -1,10 +1,9 @@
 export const needsChoices = [
   'Find',
   'Sell',
-  'Discover',
   'Raise Capital',
   'Invest Capital',
-  'Other'
+  'Hiring'
 ];
 
 export const industryChoices = [

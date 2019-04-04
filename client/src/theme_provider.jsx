@@ -6,7 +6,7 @@ import App from './App';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import getTheme from './components/theme';
-import { receiveHeight } from './actions/util_actions';
+import { receiveDimensions } from './actions/util_actions';
 import debounce from 'lodash/debounce';
 
 import InviteModal from './components/modals/invite_modal';
@@ -24,7 +24,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  receiveHeight: height => dispatch(receiveHeight(height))
+  receiveDimensions: (width, height) => dispatch(receiveDimensions(width, height))
 });
 
 class ThemeProvider extends React.Component{
@@ -35,13 +35,13 @@ class ThemeProvider extends React.Component{
   }
 
   componentDidMount(){
-    this.props.receiveHeight(window.innerHeight)
+    this.props.receiveDimensions(window.innerWidth, window.innerHeight)
     let resizeFn = debounce(this.resizer, 400)
     window.addEventListener('resize', resizeFn);
   }
 
   resizer(){
-    this.props.receiveHeight(window.innerHeight)
+    this.props.receiveDimensions(window.innerWidth, window.innerHeight)
     // this.setState({ windowHeight: window.innerHeight })
   }
 

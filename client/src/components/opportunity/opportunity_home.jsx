@@ -65,6 +65,7 @@ import PersonIcon from '@material-ui/icons/PersonSharp';
 
 import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
+import FilterBar from './filter_bar';
 // import Loading from '../loading';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -100,16 +101,16 @@ const styles = theme => ({
   },
   feedCard:{
     // height: 118,
-    padding: "9px 8px 20px 8px",
+    padding: "10px 8px 12px",
     backgroundColor: `${theme.palette.base3}`,
-    borderTop: `1px solid ${theme.palette.border.primary}`,
-    borderBottom: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
     width: '100%',
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.border.primary}`,
+      border: `1px solid ${theme.palette.border.secondary}`,
       // borderRadius: 5,
-      padding: "9px 17px 20px",
+      padding: "10px 17px 12px",
     },
   },
   filterCard:{
@@ -117,7 +118,7 @@ const styles = theme => ({
     backgroundColor: `${theme.palette.base3}`,
     width: '100%',
     // borderRadius: 5,
-    border: `1px solid ${theme.palette.border.primary}`
+    border: `1px solid ${theme.palette.border.secondary}`
   },
   filter:{
     display: 'none',
@@ -131,11 +132,11 @@ const styles = theme => ({
     padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.base3}`,
     borderRadius:0,
-    borderTop: `1px solid ${theme.palette.border.primary}`,
-    borderBottom: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.border.primary}`,
+      border: `1px solid ${theme.palette.border.secondary}`,
       // borderRadius: 5,
     },
     [theme.breakpoints.up('md')]: {
@@ -146,13 +147,13 @@ const styles = theme => ({
     padding: "9px 8px 20px 8px",
     backgroundColor: `${theme.palette.base3}`,
     borderRadius:0,
-    borderTop: `1px solid ${theme.palette.border.primary}`,
-    borderBottom: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
     // marginTop: 9,
     [theme.breakpoints.up('sm')]: {
       padding: "10px 17px",
       // borderRadius: 5,
-      border: `1px solid ${theme.palette.border.primary}`,
+      border: `1px solid ${theme.palette.border.secondary}`,
     },
   },
   oppNotification:{
@@ -165,7 +166,7 @@ const styles = theme => ({
     backgroundColor: `${theme.palette.base1}`,
     width: '100%',
     borderRadius: 5,
-    border: `1px solid ${theme.palette.border.primary}`
+    border: `1px solid ${theme.palette.border.secondary}`
   },
   cover:{
     height: 140,
@@ -288,7 +289,13 @@ class OpportunityHome extends React.Component {
       dropdownOpen: false,
       // dropdownFocus: '',
       referralNetwork: null,
-      anchorEl: null
+      anchorEl: null,
+      filters: {
+        opportunityNeed: new Set(),
+        industries: new Set(),
+        geography: new Set(),
+        value: new Set()
+      }
     };
 
     this.handleModalClose = this.handleModalClose.bind(this);
@@ -306,6 +313,8 @@ class OpportunityHome extends React.Component {
     this.createListItem = this.createListItem.bind(this);
     this.getSelectedTitle = this.getSelectedTitle.bind(this);
     this.getFilter = this.getFilter.bind(this);
+    this.updateFilter = this.updateFilter.bind(this);
+    this.filterOpportunities = this.filterOpportunities.bind(this);
   }
 
   componentDidMount(){
@@ -365,62 +374,33 @@ class OpportunityHome extends React.Component {
     // return filter ? 'Direct-Connection' : ''
   }
 
-  handleModalClose(modal){
-    return e => {
-      this.setState({ [modal]: false });
+  filterOpportunities(opp){
+    const { filters } = this.state;
+    let keys = Object.keys(filters);
+
+    for(let i = 0; i < keys.length; i++){
+      let key = keys[i];
+      let params = filters[key];
+
+      if (key === "geography" || key === "industries"){
+        if (params.size !== 0 &&
+          new Set(opp[key].filter(x => params.has(x))).size === 0){
+          return false
+        }
+      } else {
+        if (params.size !== 0 && !params.has(opp[key])){
+          return false
+        }
+      }
     }
+    return true
   }
 
-  handleOpportunityChangeModalOpen(e){
-    e.preventDefault();
-    this.setState({ changeModalOpen: true });
-  }
-
-  handleReferralChange(e){
-    this.setState({ referralNetwork: e.target.value})
-  }
-
-  handleReferralSubmit(){
-    this.props.createReferral({
-      network_id: this.state.referralNetwork
-    })
-  }
-
-  handleDropdownClick(anchor){
-    return e => {
-      e.stopPropagation();
-      this.setState({ [anchor]: e.currentTarget });
-    }
-  };
-
-  handleDropdownClose(anchor){
-    return e => {
-      e.stopPropagation();
-      this.setState({ [anchor]: null });
-    }
-  };
-
-  handleDropdownChange(anchor, value){
-    return e => {
-      e.stopPropagation();
-      this.setState({ opportunitiesLoaded: false },
-      () => {
-        const workspaceId = this.props.siteTemplate.networkId
-        this.props.fetchOpportunities(workspaceId, value)
-        .then(() => {
-          if(value !== ''){
-            this.props.history.push(`/findandconnect/${value}`)
-          } else {
-            this.props.history.push('/findandconnect')
-          }
-          this.setState({
-            [anchor]: null,
-            opportunitiesLoaded: true
-          });
-          animateScroll.scrollTo(0);
-        })
-      })
-      this.props.clearOpportunityErrors();
+  updateFilter(key){
+    return (params) => {
+      let filters = { ...this.state.filters };
+      filters[key] = new Set([...params]);
+      this.setState({ filters })
     }
   }
 
@@ -430,10 +410,6 @@ class OpportunityHome extends React.Component {
     let filter = this.getFilter();
     this.props.fetchOpportunities(workspaceId, filter)
     .then(() => animateScroll.scrollTo(0) );
-  }
-
-  capitalize(str){
-    return str[0].toUpperCase() + str.slice(1)
   }
 
   createMenuItem(item, type){
@@ -551,6 +527,69 @@ class OpportunityHome extends React.Component {
     }
   }
 
+  handleModalClose(modal){
+    return e => {
+      this.setState({ [modal]: false });
+    }
+  }
+
+  handleOpportunityChangeModalOpen(e){
+    e.preventDefault();
+    this.setState({ changeModalOpen: true });
+  }
+
+  handleReferralChange(e){
+    this.setState({ referralNetwork: e.target.value})
+  }
+
+  handleReferralSubmit(){
+    this.props.createReferral({
+      network_id: this.state.referralNetwork
+    })
+  }
+
+  handleDropdownClick(anchor){
+    return e => {
+      e.stopPropagation();
+      this.setState({ [anchor]: e.currentTarget });
+    }
+  };
+
+  handleDropdownClose(anchor){
+    return e => {
+      e.stopPropagation();
+      this.setState({ [anchor]: null });
+    }
+  };
+
+  handleDropdownChange(anchor, value){
+    return e => {
+      e.stopPropagation();
+      this.setState({ opportunitiesLoaded: false },
+      () => {
+        const workspaceId = this.props.siteTemplate.networkId
+        this.props.fetchOpportunities(workspaceId, value)
+        .then(() => {
+          if(value !== ''){
+            this.props.history.push(`/findandconnect/${value}`)
+          } else {
+            this.props.history.push('/findandconnect')
+          }
+          this.setState({
+            [anchor]: null,
+            opportunitiesLoaded: true
+          });
+          animateScroll.scrollTo(0);
+        })
+      })
+      this.props.clearOpportunityErrors();
+    }
+  }
+
+  capitalize(str){
+    return str[0].toUpperCase() + str.slice(1)
+  }
+
   render (){
     const { classes, opportunities, networks, workspaceOptions,
       referral, currentUser, networkOpps, siteTemplate,
@@ -558,7 +597,8 @@ class OpportunityHome extends React.Component {
 
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
-        filterMobileAnchorEl, networksLoaded } = this.state;
+        filterMobileAnchorEl, networksLoaded,
+        filters} = this.state;
 
     const networksArray = [...workspaceOptions]
       .filter(x => x.includes('Network'))
@@ -599,7 +639,7 @@ class OpportunityHome extends React.Component {
             </div>
           }/>
 
-        <FeedCard contents={
+        {/*<FeedCard contents={
             <div>
               <Typography gutterBottom align='left'
                 className={classes.cardHeader} color='textSecondary'
@@ -611,10 +651,9 @@ class OpportunityHome extends React.Component {
                 currentUser={currentUser}
                 />
             </div>
-          }/>
+          }/>*/}
         </Grid>
       )
-
 
       const genericDropdownOptions = currentUser.isAdmin ? [
         {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
@@ -697,61 +736,80 @@ class OpportunityHome extends React.Component {
           </Grid>
         )
 
-        const filterDesktop = (
-          <Grid container justify='center' alignItems='center'
-            className={classes.filter}>
-            <div className={classes.filterCard}>
-              <Typography align='left'
-                className={classes.cardHeader}
-                style={{ margin: "10px 20px 0px"}}>
-                {`Whose opportunities would you like to see?`}
-              </Typography>
-
-              <List component="nav">
-                {genericDropdownOptions.map(other => (
-                  <ListItem button value={other.value}
-                    className={classes.filterItem}
-                    onClick={this.handleDropdownChange('anchorEl', other.value)}
-                    disabled={other.disabled}
-                    selected={filter === other.value}>
-                    <div>
-                      <Typography variant="h6" align='left'
-                        color="textPrimary" className={classes.filterHeader}>
-                        {other.header}
-                      </Typography>
-                      <Typography variant="body2" align='left'
-                        color="textPrimary" className={classes.filterSubtext}>
-                        {other.subHeader}
-                      </Typography>
-                    </div>
-                  </ListItem>
-                ))}
-                {networksLoaded && this.setFilters('List')}
-              </List>
-            </div>
-          </Grid>
-        )
-
-        const filteredOpps = [...networkOpps].map(id => opportunities[id])
-        .filter(o => o.status === "Approved")
-
-        const opportunityCards = filteredOpps.length > 0 ? (
-          filteredOpps.map((opportunity, idx) => (
-            <OpportunityCardFeed
-              opportunity={opportunity}/>
-          ))
-        ) : (opportunityErrors.length > 0 ? (
-            <Typography variant="h3" color="textSecondary" align='center'
-              className={classes.emptyOppsText} gutterBottom>
-              {opportunityErrors[0]}
+      const filterDesktop = (
+        <Grid container justify='center' alignItems='center'
+          className={classes.filter}>
+          <div className={classes.filterCard}>
+            <Typography align='left'
+              className={classes.cardHeader}
+              style={{ margin: "10px 20px 0px"}}>
+              {`Whose opportunities would you like to see?`}
             </Typography>
-          ) : (
-            <Typography variant="h3" color="textSecondary" align='center'
-              className={classes.emptyOppsText} gutterBottom>
-              {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
-            </Typography>
-          )
+
+            <List component="nav">
+              {genericDropdownOptions.map(other => (
+                <ListItem button value={other.value}
+                  className={classes.filterItem}
+                  onClick={this.handleDropdownChange('anchorEl', other.value)}
+                  disabled={other.disabled}
+                  selected={filter === other.value}>
+                  <div>
+                    <Typography variant="h6" align='left'
+                      color="textPrimary" className={classes.filterHeader}>
+                      {other.header}
+                    </Typography>
+                    <Typography variant="body2" align='left'
+                      color="textPrimary" className={classes.filterSubtext}>
+                      {other.subHeader}
+                    </Typography>
+                  </div>
+                </ListItem>
+              ))}
+              {networksLoaded && this.setFilters('List')}
+            </List>
+          </div>
+        </Grid>
+      )
+
+      const filteredOpps = [...networkOpps].map(id => opportunities[id])
+        .filter(this.filterOpportunities)
+
+      const opportunityCards = filteredOpps.length > 0 ? (
+        filteredOpps.map((opportunity, idx) => (
+          <OpportunityCardFeed
+            opportunity={opportunity}/>
+        ))
+      ) : (opportunityErrors.length > 0 ? (
+          <Typography variant="h3" color="textSecondary" align='center'
+            className={classes.emptyOppsText} gutterBottom>
+            {opportunityErrors[0]}
+          </Typography>
+        ) : (
+          <Typography variant="h3" color="textSecondary" align='center'
+            className={classes.emptyOppsText} gutterBottom>
+            {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
+          </Typography>
         )
+      )
+
+      const column2 = (
+        <Grid container justify='center' alignItems='center'
+          style={{ padding: 0, width: '100%' }}>
+          <div className={classes.feedCard}
+            style={{ backgroundColor: 'grey', padding: 30 }}>
+            <Typography gutterBottom align='left'
+              className={classes.cardHeader} color='textSecondary'
+              style={{ marginBottom: 20, color: 'white' }}>
+              {`Brigekin is an invitation only community of creators, investors, and connectors`}
+            </Typography>
+
+            <OpportunityWaitlist
+              currentUser={currentUser}
+              color={'white'}
+              />
+          </div>
+        </Grid>
+      )
 
       const feed = (
         <Grid container justify='center' alignItems='center'>
@@ -846,10 +904,14 @@ class OpportunityHome extends React.Component {
 
         return (
           <div style={{flexGrow: 1}}>
+            <FilterBar
+              updateFilter={this.updateFilter}
+              filters={filters}/>
             <FeedContainer
               column1={column1}
               feed={feed}
-              column2={filterDesktop} />
+              column2={column2}
+              home={true}/>
 
             <OpportunityChangeModal
               open={changeModalOpen}

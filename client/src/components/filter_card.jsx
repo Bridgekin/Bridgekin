@@ -19,7 +19,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.base3,
     width: '100%',
     // borderRadius: 5,
-    border: `1px solid ${theme.palette.border.primary}`
+    border: `1px solid ${theme.palette.border.secondary}`
   },
   filterItem:{
     borderTop: `1px solid ${theme.palette.border.secondary}`,

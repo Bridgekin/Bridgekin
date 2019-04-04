@@ -776,7 +776,7 @@ class HomeNav extends React.Component {
               classes={{ badge: classes.badge}}
               onClick={this.handleNotificationMenuOpen}
               style={{ marginRight: 5 }}>
-              <NotificationsIcon />
+              <NotificationsIcon className={classes.notificationLogo}/>
             </Badge>
           }
           <IconButton aria-haspopup="true" color="inherit"

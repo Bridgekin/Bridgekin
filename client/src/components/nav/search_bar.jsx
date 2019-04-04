@@ -42,8 +42,8 @@ const styles = theme => ({
   },
   search: {
     position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.grey1}`,
+    // borderRadius: theme.shape.borderRadius,
+    borderBottom: `2px solid ${theme.palette.text.tertiary}`,
     // marginRight: theme.spacing.unit * 2,
     // marginLeft: 0,
     width: '100%',
@@ -55,15 +55,15 @@ const styles = theme => ({
     // },
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing.unit * 4,
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: theme.palette.darkGrey,
-    top: 0, right: 0
+    color: theme.palette.text.tertiary,
+    top: 0, left: 0
   },
   inputLabel:{
     color: theme.palette.text.tertiary
@@ -80,9 +80,9 @@ const styles = theme => ({
   inputInput: {
     color: theme.palette.text.tertiary,
     paddingTop: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 5,
     paddingBottom: theme.spacing.unit,
-    paddingRight: theme.spacing.unit * 10,
+    paddingRight: theme.spacing.unit * 2,
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -253,6 +253,9 @@ class SearchBar extends React.Component {
         <div onKeyDown={this.keyPress}
           className={classes.search}>
 
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
           <InputBase
             onClick={this.handleSearchChange}
             autoFocus={true}
@@ -268,9 +271,6 @@ class SearchBar extends React.Component {
               }
             }}
             />
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
           {searchResultContainer}
         </div>
       )
