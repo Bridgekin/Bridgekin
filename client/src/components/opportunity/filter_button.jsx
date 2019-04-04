@@ -26,9 +26,11 @@ const styles = theme => ({
   filterButton:{
     color: 'black',
     backgroundColor: 'white',
-    border: '2px solid black',
+    border: '1px solid black',
+    // borderColor: 'black'
     margin: '0px 15px',
-    padding: "3px 5px"
+    padding: "3px 5px",
+    textTransform: 'capitalize'
   },
   menu: { padding: 0 },
   menuItem:{
@@ -37,6 +39,9 @@ const styles = theme => ({
   checkbox:{
     fontSize: 16
   },
+  submitButton:{
+    textTransform: 'capitalize',
+  },
   submitBar: {
     marginBottom: 5,
     padding: 5,
@@ -44,7 +49,7 @@ const styles = theme => ({
   }
 })
 
-class Template extends React.Component {
+class FilterButton extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -85,10 +90,17 @@ class Template extends React.Component {
     }
   }
 
-  handleSave(e){
-    const { params } = this.state;
-    this.setState({ anchorEl: null });
-    this.props.updateFilter(params)
+  handleSave(type){
+    return e => {
+      this.setState({ anchorEl: null });
+
+      if (type === 'save'){
+        const { params } = this.state;
+        this.props.updateFilter(params)
+      } else {
+        this.props.updateFilter([])
+      }
+    }
   }
 
   render(){
@@ -98,7 +110,8 @@ class Template extends React.Component {
       <div>
         <Button
           onClick={this.openMenu}
-          className={classes.filterButton}>
+          className={classes.filterButton}
+          style={{ border: (this.props.params.size > 0 ? '2px solid black' : '1px solid black') }}>
           {name}
         </Button>
         <Menu
@@ -136,10 +149,15 @@ class Template extends React.Component {
               </Typography>
             </MenuItem>
           ))}
-          <Grid container justify='flex-end'
+          <Grid container justify='space-between'
             className={classes.submitBar}>
+            <Button className={classes.submitButton}
+              onClick={this.handleSave('clear')}>
+              Clear
+            </Button>
             <Button variant='contained' color='primary'
-              onClick={this.handleSave}>
+              className={classes.submitButton}
+              onClick={this.handleSave('save')}>
               Save
             </Button>
           </Grid>
@@ -150,4 +168,4 @@ class Template extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Template));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FilterButton));

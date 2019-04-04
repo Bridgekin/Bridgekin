@@ -54,6 +54,7 @@ const styles = theme => ({
   },
   textfieldInput:{
     padding: "10px 14px",
+    fontSize: 14,
     color: theme.palette.text.tertiary,
   },
   textfieldUnderline:{

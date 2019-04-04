@@ -80,7 +80,7 @@ const mapStateToProps = (state, ownProps) => ({
   referral: state.entities.referral,
   siteTemplate: state.siteTemplate,
   workspaces: state.workspaces,
-  filter: ownProps.match.params.filter,
+  source: ownProps.match.params.source,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -796,10 +796,10 @@ class OpportunityHome extends React.Component {
         <Grid container justify='center' alignItems='center'
           style={{ padding: 0, width: '100%' }}>
           <div className={classes.feedCard}
-            style={{ backgroundColor: 'grey', padding: 30 }}>
-            <Typography gutterBottom align='left'
+            style={{ backgroundColor: 'grey', padding: "30px 25px" }}>
+            <Typography gutterBottom align='center'
               className={classes.cardHeader} color='textSecondary'
-              style={{ marginBottom: 20, color: 'white' }}>
+              style={{ marginBottom: 20, color: 'white', fontSize: 13 }}>
               {`Brigekin is an invitation only community of creators, investors, and connectors`}
             </Typography>
 
