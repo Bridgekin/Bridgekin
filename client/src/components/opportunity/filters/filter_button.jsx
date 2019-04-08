@@ -27,10 +27,17 @@ const styles = theme => ({
     color: 'black',
     backgroundColor: 'white',
     border: '1px solid black',
-    // borderColor: 'black'
-    margin: '0px 15px',
+    margin: '0px 10px',
     padding: "3px 5px",
     textTransform: 'capitalize'
+  },
+  selectedButton:{
+    color: 'white',
+    background: 'black',
+    '&:hover':{
+      color: 'white',
+      background: '#505050',
+    }
   },
   menu: { padding: 0 },
   menuItem:{
@@ -93,12 +100,11 @@ class FilterButton extends React.Component {
   handleSave(type){
     return e => {
       this.setState({ anchorEl: null });
-
       if (type === 'save'){
         const { params } = this.state;
-        this.props.updateFilter(params)
+        this.props.updateFilters(params)
       } else {
-        this.props.updateFilter([])
+        this.props.updateFilters([])
       }
     }
   }
@@ -110,8 +116,10 @@ class FilterButton extends React.Component {
       <div>
         <Button
           onClick={this.openMenu}
-          className={classes.filterButton}
-          style={{ border: (this.props.params.size > 0 ? '2px solid black' : '1px solid black') }}>
+          className={this.props.params.size > 0 ?
+            ([classes.filterButton, classes.selectedButton].join(' ')) :
+            (classes.filterButton)
+          }>
           {name}
         </Button>
         <Menu
@@ -155,10 +163,10 @@ class FilterButton extends React.Component {
               onClick={this.handleSave('clear')}>
               Clear
             </Button>
-            <Button variant='contained' color='primary'
+            <Button
               className={classes.submitButton}
               onClick={this.handleSave('save')}>
-              Save
+              Apply
             </Button>
           </Grid>
         </Menu>

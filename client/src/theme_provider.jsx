@@ -17,10 +17,14 @@ import WaitlistModal from './components/modals/waitlist_modal';
 import OppCardModal from './components/modals/card_modal';
 import UpdateUserModal from './components/modals/update_user_modal';
 import DirectLinkModal from './components/modals/direct_link_modal';
+import OppChangeModal from './components/modals/opportunity_change_modal';
+import ImageCropModal from './components/modals/image_upload_modal';
+import SubmitOppModal from './components/modals/submit_opp_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
-  currentUser: state.users[state.session.id]
+  currentUser: state.users[state.session.id],
+  dimensions: state.window
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -46,14 +50,16 @@ class ThemeProvider extends React.Component{
   }
 
   render(){
-    const { currentUser, siteTemplate } = this.props;
+    const { currentUser, siteTemplate, dimensions } = this.props;
     // const { windowHeight } = this.state;
 
     return (
       <MuiThemeProvider theme={getTheme(siteTemplate)}>
         <BrowserRouter>
           <GAListener>
-            <App />
+            <div style={{ position: 'relative', minHeight: dimensions.height  }}>
+              <App />
+            </div>
 
             {/* MODALS */}
             {currentUser && <div>
@@ -63,6 +69,9 @@ class ThemeProvider extends React.Component{
               <CustomEmailModal/>
               <UpdateUserModal/>
               <DirectLinkModal/>
+              <OppChangeModal/>
+              <ImageCropModal />
+              <SubmitOppModal />
             </div>}
             <OppCardModal/>
             <WaitlistModal/>

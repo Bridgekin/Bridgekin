@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 
 const mapStateToProps = state => ({
-  windowHeight: state.window
+  dimensions: state.window
 });
 
 const styles = theme => ({
@@ -39,7 +39,7 @@ const styles = theme => ({
     margin: '0 auto',
     [theme.breakpoints.up('md')]: {
       position: 'relative',
-      width: 930, //1040,
+      width: 980, //1040,
       height: '100%'
     },
   },
@@ -69,7 +69,7 @@ class FeedContainer extends React.Component{
   // getWi
   render () {
     const { column1, feed, column2, classes,
-      home, windowHeight } = this.props;
+      home, dimensions } = this.props;
 
     let adjustment = home ? 45 : 0
 
@@ -97,9 +97,10 @@ class FeedContainer extends React.Component{
             </div>
           </Grid>
         </Grid>*/}
-        <div className={classes.feedContainer}>
+        <div className={classes.feedContainer}
+          style={{ minHeight: dimensions.height}}>
           <div className={classes.sideColumn}
-            style={{ position: 'fixed', top: 45+adjustment ,width: 300}}>
+            style={{ position: 'fixed', top: 45+adjustment, width: 300}}>
             {column1}
           </div>
           <div className={classes.mainColumn}>
@@ -107,7 +108,7 @@ class FeedContainer extends React.Component{
           </div>
           <div className={classes.sideColumn}
             style={{ position: 'fixed', top: 45+adjustment, marginLeft: 15, width: 300,
-            maxHeight: window.innerHeight-100, overflow: 'scroll' }}>
+            maxHeight: dimensions.height-100, overflow: 'scroll' }}>
             {column2}
           </div>
         </div>

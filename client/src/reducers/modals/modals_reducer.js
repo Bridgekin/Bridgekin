@@ -7,6 +7,9 @@ import waitlistReducer from './waitlist_reducer';
 import oppCardReducer from './opp_card_reducer';
 import updateUserReducer from './update_user_reducer';
 import directLinkReducer from './direct_link_reducer';
+import oppChangeReducer from './opp_change_reducer';
+import imageCropReducer from './image_crop_reducer';
+import submitOppReducer from './submit_opp_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -16,5 +19,8 @@ export default combineReducers({
   waitlist: waitlistReducer,
   oppCard: oppCardReducer,
   updateUser: updateUserReducer,
-  directLink: directLinkReducer
+  directLink: directLinkReducer,
+  oppChange: oppChangeReducer,
+  imageCrop: imageCropReducer,
+  submitOpp: submitOppReducer
 });

@@ -50,7 +50,7 @@ import { fetchUserOpportunities,
   updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
 import { createSavedOppportunity, deleteSavedOppportunity}
   from '../../actions/saved_opportunity_actions';
-import { openOppCard, openDirectLink } from '../../actions/modal_actions';
+import { openOppCard, openDirectLink, openOppChange } from '../../actions/modal_actions';
 import { createDirectLink } from '../../actions/direct_link_actions';
 import theme from '../theme';
 
@@ -66,13 +66,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   openOppCard: (payload) => dispatch(openOppCard(payload)),
+  openDirectLink: (opp) => dispatch(openDirectLink(opp)),
+  openOppChange: (payload) => dispatch(openDirectLink(payload)),
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
   createSavedOppportunity: (opportunityId) => dispatch(createSavedOppportunity(opportunityId)),
   deleteSavedOppportunity: (savedOpportunity) => dispatch(deleteSavedOppportunity(savedOpportunity)),
   createDirectLink: (oppIds) => dispatch(createDirectLink(oppIds)),
-  openDirectLink: (opp) => dispatch(openDirectLink(opp)),
 });
 
 const styles = theme => ({
@@ -185,10 +186,10 @@ class OpportunityCard extends React.Component {
     super(props)
     this.state = {
       deleteOpen: false,
-      cardOpen: false,
+      // cardOpen: false,
       connectBool: null,
       cardModalPage: 'sent',
-      changeModalOpen: false,
+      // changeModalOpen: false,
       // dealStatusMenuOpen: false,
       dealStatusProgress: false,
       dealStatusAnchorEl: null
@@ -222,6 +223,14 @@ class OpportunityCard extends React.Component {
     }
   }
 
+  handleEdit(e){
+    let payload = {
+      opportunity: this.props.opportunity,
+      mode: 'update',
+    }
+    this.props.openOppChange(payload);
+  }
+
   handleCardClose(e){
     this.setState({ cardOpen: false })
   }
@@ -243,11 +252,6 @@ class OpportunityCard extends React.Component {
     }
   };
 
-  handleEdit(e){
-    // e.stopPropagation();
-    // this.setState({ changeModalOpen: true})
-    this.props.handleEditOpen();
-  }
 
   handleDetailsClick(option){
     return e => {
@@ -454,8 +458,7 @@ class OpportunityCard extends React.Component {
                 ))}
               </Menu>}
 
-              {(viewType === 'card' ||
-                (viewType === 'post' && editable)) &&
+              {(currentUser.id === ownerId && editable) &&
                 <IconButton
                 aria-label="More"
                 aria-owns={detailsOpen ? 'long-menu' : undefined}
@@ -491,7 +494,6 @@ class OpportunityCard extends React.Component {
           <Grid container justify='center'>
             <Grid item xs={10}>
               {opportunity.title &&
-                viewType === 'card' &&
                 <div style={{ margin: "10px 0px"}}>
                   <Typography variant="h5" align='left'
                     color="textPrimary"

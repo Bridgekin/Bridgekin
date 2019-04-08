@@ -19,7 +19,7 @@ import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportu
 import { fetchConnectedOpportunities } from '../../actions/connected_opportunity_actions';
 import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
 import OpportunityCardFeed from '../opportunity/opportunity_card_feed';
-import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
+// import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -89,7 +89,7 @@ class AccountOpportunities extends React.Component {
     super(props);
     this.state = {
       loaded: false,
-      changModalOpen: false,
+      // changModalOpen: false,
       focusedOpportunity: null
     };
 
@@ -115,15 +115,15 @@ class AccountOpportunities extends React.Component {
     }
   }
 
-  handleEditOpen(opportunity){
-    return () => {
-      this.setState({ changeModalOpen: true, focusedOpportunity: opportunity })
-    }
-  }
-
-  handleEditClose(){
-    this.setState({ changeModalOpen: false })
-  }
+  // handleEditOpen(opportunity){
+  //   return () => {
+  //     this.setState({ changeModalOpen: true, focusedOpportunity: opportunity })
+  //   }
+  // }
+  //
+  // handleEditClose(){
+  //   this.setState({ changeModalOpen: false })
+  // }
 
   getOpportunities(){
     const { oppFilter, connectedOpps, facilitatedOpps, opportunities,
@@ -160,7 +160,6 @@ class AccountOpportunities extends React.Component {
         currentUser={currentUser}
         opportunity={opportunity}
         editable={oppFilter === 'posted'}
-        handleEditOpen={this.handleEditOpen(opportunity)}
         />
     ));
 
@@ -179,13 +178,13 @@ class AccountOpportunities extends React.Component {
               ) }
           </div>
 
-          <OpportunityChangeModal
+          {/*<OpportunityChangeModal
             open={changeModalOpen}
             handleClose={this.handleEditClose}
             currentUser={currentUser}
             opportunity={focusedOpportunity}
             type={'update'}
-            />
+            />*/}
         </Grid>
       )
     } else {

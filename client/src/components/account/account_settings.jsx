@@ -27,7 +27,7 @@ import IconButton from '@material-ui/core/IconButton';
 import withWidth from '@material-ui/core/withWidth';
 
 // import UpdateUserModal from './update_user_modal';
-import ImageCropModal from '../image_upload_modal';
+// import ImageCropModal from '../image_upload_modal';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 // import countryList from 'react-select-country-list';
@@ -700,13 +700,13 @@ class AccountSetting extends React.Component {
                 </div>
               </Grid>
 
-              <ImageCropModal
+              {/*<ImageCropModal
                 handleClose={this.handleCloseImageModal.bind(this)}
                 handleDelete={this.handleRemoveFile.bind(this)}
                 open={imageModalOpen}
                 file={profilePicFile}
                 fileUrl={previewUrl}
-                ratio={1}/>
+                ratio={1}/>*/}
             </Grid>
           </Card>
         );

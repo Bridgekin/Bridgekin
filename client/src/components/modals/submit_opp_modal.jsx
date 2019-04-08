@@ -17,14 +17,17 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
 import { clearOpportunityErrors } from '../../actions/error_actions';
+import { closeSubmitOpp } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  opportunityErrors: state.errors.opportunities
+  opportunityErrors: state.errors.opportunities,
+  submitOppModal: state.modals.submitOpp
 });
 
 const mapDispatchToProps = dispatch => ({
-  clearOpportunityErrors: () => dispatch(clearOpportunityErrors())
+  clearOpportunityErrors: () => dispatch(clearOpportunityErrors()),
+  closeSubmitOpp: () => dispatch(closeSubmitOpp())
 });
 
 const styles = theme => ({
@@ -70,19 +73,16 @@ const styles = theme => ({
 class SubmitModal extends React.Component {
   constructor(props){
     super(props)
-
     this.handleClose = this.handleClose.bind(this);
   }
 
   handleClose(){
+    this.props.closeSubmitOpp()
     if(this.props.opportunityErrors.length > 0){
       this.props.clearOpportunityErrors();
-      this.props.handleClose(false)();
+      this.props.submitOppModal.handleClose(false)();
     } else {
-      this.props.handleClose(true)();
-      // if (this.props.modalType === 'create'){
-      //   this.props.clearFields();
-      // }
+      this.props.submitOppModal.handleClose(true)();
     }
 
 
@@ -95,7 +95,8 @@ class SubmitModal extends React.Component {
   };
 
   render () {
-    const { open, classes, modalType } = this.props;
+    const { classes, submitOppModal } = this.props;
+    const { open, modalType } = submitOppModal
 
     let opportunityErrors = this.props.opportunityErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {

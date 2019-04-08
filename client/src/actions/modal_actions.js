@@ -111,3 +111,42 @@ export const openDirectLink = () => ({
 export const closeDirectLink = () => ({
   type: CLOSE_DIRECT_LINK_MODAL,
 });
+
+// OPPORTUNITY CHANGE MODAL
+export const OPEN_OPP_CHANGE_MODAL = 'OPEN_OPP_CHANGE_MODAL';
+export const CLOSE_OPP_CHANGE_MODAL = "CLOSE_OPP_CHANGE_MODAL";
+
+export const openOppChange = (payload) => ({
+  type: OPEN_OPP_CHANGE_MODAL,
+  payload
+});
+
+export const closeOppChange = () => ({
+  type: CLOSE_OPP_CHANGE_MODAL,
+});
+
+// Image Crop Modal
+export const OPEN_IMAGE_CROP_MODAL = 'OPEN_IMAGE_CROP_MODAL';
+export const CLOSE_IMAGE_CROP_MODAL = "CLOSE_IMAGE_CROP_MODAL";
+
+export const openImageCrop = (payload) => ({
+  type: OPEN_IMAGE_CROP_MODAL,
+  payload
+});
+
+export const closeImageCrop = () => ({
+  type: CLOSE_IMAGE_CROP_MODAL,
+});
+
+// Submit Opportunity Modal
+export const OPEN_SUBMIT_OPP_MODAL = 'OPEN_SUBMIT_OPP_MODAL';
+export const CLOSE_SUBMIT_OPP_MODAL = "CLOSE_SUBMIT_OPP_MODAL";
+
+export const openSubmitOpp = (payload) => ({
+  type: OPEN_SUBMIT_OPP_MODAL,
+  payload
+});
+
+export const closeSubmitOpp = () => ({
+  type: CLOSE_SUBMIT_OPP_MODAL,
+});

@@ -39,8 +39,10 @@ const styles = theme => ({
   refButton:{
     fontSize: 14,
     fontWeight: 500,
-    backgroundColor: 'transparent',
-    border: `1px solid ${theme.palette.text.tertiary}`
+    color: 'white',
+    backgroundColor: '#696969',
+    borderRadius: 0
+    // border: `1px solid ${theme.palette.text.tertiary}`
   },
   buttonProgress: {
     color: '#4067B2',
@@ -55,18 +57,18 @@ const styles = theme => ({
   textfieldInput:{
     padding: "10px 14px",
     fontSize: 14,
-    color: theme.palette.text.tertiary,
+    color: theme.palette.text.primary,
   },
   textfieldUnderline:{
-    '&:before': {
-      borderBottomColor: 'white',
-    },
-    '&:after': {
-      borderBottomColor: 'white',
-    },
-    '&:hover:not($disabled):not($error):not($focused):before': {
-      borderBottomColor: 'white',
-    },
+    // '&:before': {
+    //   borderBottomColor: 'white',
+    // },
+    // '&:after': {
+    //   borderBottomColor: 'white',
+    // },
+    // '&:hover:not($disabled):not($error):not($focused):before': {
+    //   borderBottomColor: 'white',
+    // },
   },
   disabled: {},
   error: {},
@@ -77,20 +79,20 @@ const styles = theme => ({
   },
   inviteCounter:{
     fontSize: 12,
-    color: theme.palette.text.tertiary,
+    color: theme.palette.text.primary,
     margin: "10px 0px 15px"
   },
   preview:{
     fontSize: 12,
     textTransform: "capitalize",
-    color: theme.palette.text.tertiary
+    color: theme.palette.text.secondary
   }
 });
 
 class OpportunityWaitlist extends React.Component{
   constructor(props){
     super(props);
-    this.state={
+    this.state = {
       email: '',
       fname: '',
       // open: false,
@@ -150,7 +152,7 @@ class OpportunityWaitlist extends React.Component{
   }
 
   render(){
-    const { classes, currentUser, largeForSearch, color } = this.props;
+    const { classes, currentUser, largeForSearch } = this.props;
     const { loading, open, fname, email } = this.state;
 
     return(

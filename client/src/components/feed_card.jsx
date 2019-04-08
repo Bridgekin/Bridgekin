@@ -18,6 +18,7 @@ const styles = theme => ({
       // borderRadius: 5,
       padding: "10px 17px 12px",
     },
+    width: '100%'
   },
   mobileFeedCard:{
     padding: "9px 8px 9px 8px",

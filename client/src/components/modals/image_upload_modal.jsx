@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -11,40 +12,44 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-// import { MuiThemeProvider } from '@material-ui/core/styles';
-// import theme from './theme';
-
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import withWidth from '@material-ui/core/withWidth';
-
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-
 import {Cropper} from 'react-image-cropper'
-
 // import saveFile from 'save-file';
 // import saveSync from 'save-file/sync';
 // const saveSync = require('save-file/sync')
 // import base64ToFile from 'base64-to-file'
 import base64 from 'file-base64';
 import { dataURLToBlob } from 'blob-util'
-
 // import sharp from 'sharp';
 import Jimp from 'jimp';
+
+import { closeImageCrop } from '../../actions/modal_actions';
+
+const mapStateToProps = (state, ownProps) => ({
+  currentUser: state.users[state.session.id],
+  imageCropModal: state.modals.imageCrop
+});
+
+const mapDispatchToProps = dispatch => ({
+  closeImageCrop: () => dispatch(closeImageCrop())
+});
 
 const styles = theme => ({
   root: {
     flexGrow: 1
   },
   grid:{
-    margin: '30px 0px 30px 0px'
+    // margin: '30px 0px 30px 0px'
   },
   modalPaper:{
     margin: 0,
     minWidth: 290,
-    width: '50%',
+    // width: '50%',
     backgroundColor: theme.palette.base3
   },
   badge: {
@@ -104,9 +109,10 @@ class NotFound extends Component {
   // }
 
   componentDidUpdate(prevProps) {
+    const prevModal = prevProps.imageCropModal;
+    const currentModal = this.props.imageCropModal;
     if (this.props.width === 'xs' &&
-        prevProps.fileUrl !== this.props.fileUrl){
-          // debugger
+        prevModal.fileUrl !== currentModal.fileUrl){
       this.handleCloseMobile();
     }
   }
@@ -136,7 +142,7 @@ class NotFound extends Component {
     // .catch(err=>{
     //   console.log(err)
     // })
-    this.urlToFile(this.props.fileUrl)
+    this.urlToFile(this.props.imageCropModal.fileUrl)
   }
 
   handleClose(){
@@ -153,7 +159,7 @@ class NotFound extends Component {
   }
 
   urlToFile(fileUrl){
-    let width = 346*this.props.ratio;
+    let width = (346 * this.props.imageCropModal.ratio);
 
     Jimp.read(fileUrl)
     .then(image => {
@@ -166,7 +172,8 @@ class NotFound extends Component {
       let newFile = new File([blob], "my-image.png");
       this.setState({ loading: false },
       () => {
-        this.props.handleClose(newFile);
+        this.props.imageCropModal.handleSave(newFile);
+        this.props.closeImageCrop();
       })
     })
     .catch(err=>{
@@ -175,18 +182,20 @@ class NotFound extends Component {
   }
 
   handleDelete(){
-    this.props.handleDelete();
-    this.props.handleClose('');
+    this.props.imageCropModal.handleDelete();
+    this.props.imageCropModal.handleSave('');
+    this.props.closeImageCrop();
+    // this.props.imageCropModal.handleClose('');
   }
 
   render () {
-    const {classes, open, fileUrl, ratio} = this.props;
+    const {classes, ratio, imageCropModal} = this.props;
     const { loading } = this.state;
     // let height = this.cropper.width/4;
 
     return (
       <Dialog
-        open={open}
+        open={imageCropModal.open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         onClose={this.handleDelete}
@@ -202,12 +211,12 @@ class NotFound extends Component {
             className={classes.grid}>
             <Grid item xs={11} sm={10} md={8}>
               <Typography variant="h2" align='left' color='textPrimary'
-                style={{ margin:'30px 0px'}}>
+                style={{ margin:'15px 0px'}}>
                 {"Crop your image"}
               </Typography>
               <Cropper
-                src={fileUrl}
-                ratio={ratio || 1}
+                src={imageCropModal.fileUrl}
+                ratio={imageCropModal.ratio || 1}
                 ref={ ref => { this.cropper = ref }}
                 width={200}
                 height={50}
@@ -354,4 +363,4 @@ class NotFound extends Component {
   // }
 }
 
-export default withStyles(styles)(withWidth()(NotFound));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withWidth()(NotFound)));
