@@ -40,3 +40,6 @@ docker-compose.yml
 heroku.yml
 
 /nrdiag 2
+
+/config/initializers/bugsnag.rb
+/config/skylight.yml

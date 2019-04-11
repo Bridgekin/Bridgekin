@@ -3,6 +3,9 @@ require "jwt_service"
 class ApiController < ActionController::API
   # include ActionController::HttpAuthentication::Token::ControllerMethods
   # acts_as_token_authentication_handler_for User, fallback: :none
+  # before_bugsnag_notify :add_diagnostics_to_bugsnag
+  # before_bugsnag_notify :add_user_info_to_bugsnag
+  before_action :set_raven_context
 
   include Pundit
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -46,6 +49,25 @@ class ApiController < ActionController::API
 
   def user_not_authorized
     render json: ["You are not authorized to perform this action."], status: 401
+  end
+
+  def set_raven_context
+    Raven.user_context(id: 'test') # session[:current_user_id]) # or anything else in session
+    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  end
+
+  def add_diagnostics_to_bugsnag(report)
+    report.add_tab(:diagnostics, {
+      product: current_product.name
+    })
+  end
+
+  def add_user_info_to_bugsnag(report)
+    report.user = {
+      email: @user.email,
+      name: @user.name,
+      id: @user.id
+    }
   end
 
 end

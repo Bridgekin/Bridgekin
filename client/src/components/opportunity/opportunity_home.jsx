@@ -615,7 +615,6 @@ class OpportunityHome extends React.Component {
         </Grid>
       )
 
-
       const genericDropdownOptions = currentUser.isAdmin ? [
         {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
           value: '', disabled: false},
@@ -633,7 +632,7 @@ class OpportunityHome extends React.Component {
         // {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
         //   value: 'All-Network',disabled: false}
         ]
-
+      // asdfasdfa
       const filterMobile = (
         <Grid container justify='flex-end'
           className={classes.filterMobile}>

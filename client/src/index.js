@@ -11,8 +11,9 @@ import { getAuthUserId } from './util/session_api_util';
 import { receiveCurrentUser } from './actions/session_actions';
 import { receiveUser } from './actions/user_actions';
 import getTheme from './components/theme.js';
-
 import BridgekinLogo from './static/Bridgekin_Logo.png';
+import * as Sentry from '@sentry/browser';
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // theme: getTheme(siteTemplate)
       };
       let store = configureStore(preloadedState);
-      console.log('Rendering site');
+      // console.log('Rendering site');
       ReactDOM.render(
         <Root store={store}/>, root);
     })
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   } else {
     let store = configureStore(preloadedState);
-    console.log('Rendering site');
+    // console.log('Rendering site');
     ReactDOM.render(
       <Root store={store}/>, root);
   }

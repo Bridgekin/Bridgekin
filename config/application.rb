@@ -38,5 +38,9 @@ module Bridgekin
     config.middleware.use ActionDispatch::Flash
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
+
+    Raven.configure do |config|
+      config.dsn = 'https://045adca147814c2ebbb61f41dfa72206:87e9f62cf90142399b2bdc018e4fc53f@sentry.io/1437234'
+    end
   end
 end

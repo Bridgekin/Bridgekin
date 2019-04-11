@@ -131,7 +131,7 @@ class OpportunityWaitlist extends React.Component{
   render(){
     const { classes, currentUser, largeForSearch } = this.props;
     const { loading, open, fname, email } = this.state;
-
+    let testV2 = true.isAdmin.isAdmin && <div>asdf</div>
     return(
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={8}>
