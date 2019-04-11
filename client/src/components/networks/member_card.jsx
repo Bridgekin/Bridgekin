@@ -42,7 +42,14 @@ const styles = theme => ({
     width: '100%',
     objectFit: 'cover'
   },
-  listItemText: { color: theme.palette.text.primary },
+  listItemPrimary: {
+    color: theme.palette.text.primary,
+    fontSize: 13
+  },
+  listItemSecondary: {
+    color: theme.palette.text.primary,
+    fontSize: 12
+  },
   horizIcon: { color: theme.palette.text.primary}
 });
 
@@ -92,8 +99,8 @@ class MemberCard extends React.Component{
 
           <ListItemText
             classes={{
-              primary: classes.listItemText,
-              secondary: classes.listItemText}}
+              primary: classes.listItemPrimary,
+              secondary: classes.listItemSecondary}}
             primary={`${this.capitalize(user.fname)} ${this.capitalize(user.lname)}`}
             secondary={`${user.email}`}
           />

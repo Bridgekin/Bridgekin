@@ -44,6 +44,11 @@ export const CLEAR_EMAIL_TEMPLATE_ERRORS = 'CLEAR_EMAIL_TEMPLATE_ERRORS';
 export const RECEIVE_DIRECT_LINK_ERRORS = 'RECEIVE_DIRECT_LINK_ERRORS';
 export const CLEAR_DIRECT_LINK_ERRORS = 'CLEAR_DIRECT_LINK_ERRORS';
 
+export const RECEIVE_PASSED_OPPORTUNITY_ERRORS = 'RECEIVE_PASSED_OPPORTUNITY_ERRORS';
+export const CLEAR_PASSED_OPPORTUNITY_ERRORS = 'CLEAR_PASSED_OPPORTUNITY_ERRORS';
+export const RECEIVE_USER_METRIC_ERRORS = 'RECEIVE_USER_METRIC_ERRORS';
+export const CLEAR_USER_METRIC_ERRORS = 'CLEAR_USER_METRIC_ERRORS';
+
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
   errors
@@ -222,4 +227,22 @@ export const receiveDirectLinkErrors = errors => ({
 
 export const clearDirectLinkErrors = () => ({
   type: CLEAR_DIRECT_LINK_ERRORS,
+});
+
+export const receivePassedOpportunityErrors = errors => ({
+  type: RECEIVE_PASSED_OPPORTUNITY_ERRORS,
+  errors
+});
+
+export const clearPassedOpportunityErrors = () => ({
+  type: CLEAR_PASSED_OPPORTUNITY_ERRORS,
+});
+
+export const receiveUserMetricErrors = errors => ({
+  type: RECEIVE_USER_METRIC_ERRORS,
+  errors
+});
+
+export const clearUserMetricErrors = () => ({
+  type: CLEAR_USER_METRIC_ERRORS,
 });

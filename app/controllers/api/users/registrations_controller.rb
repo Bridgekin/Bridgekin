@@ -10,7 +10,6 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
   def create
     @referralLink = ReferralLink.find_link_by_code(params[:code])
-
     @user = User.new(user_params)
 
     if @referralLink && @referralLink[:status] == 'Active' && @user.save
@@ -30,6 +29,10 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
       #Remove waitlist user from waitlist by changing status
       @user.update_waitlist
+
+      #Connect new user with any people who's referred them, incluing
+      #the referral link owner
+      @user.set_connections(@referralLink)
 
       @user[:referred_by_id] = @referralLink[:member_id]
       @user[:current_sign_in_at] = DateTime.now

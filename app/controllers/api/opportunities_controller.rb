@@ -8,7 +8,7 @@ class Api::OpportunitiesController < ApiController
   before_action :set_workspace_networks, only: [:index]
 
   after_action :verify_authorized, except: [:index, :user_index,
-    :profile_index]
+    :profile_index, :all_touched_index]
   # after_action :verify_policy_scoped, only: :index
 
   def index
@@ -44,7 +44,7 @@ class Api::OpportunitiesController < ApiController
     end
 
     if @opportunities.length > 0
-      # Sory by DESC
+      # Sort by DESC
       @opportunities = @opportunities.sort{|a,b| b.created_at <=> a.created_at}
       @filteredOpps = @opportunities.pluck(:id)
       render :index
@@ -58,10 +58,35 @@ class Api::OpportunitiesController < ApiController
     @opportunities = @user.opportunities
       .includes(:owner)
       .where.not(deal_status: 'Deleted')
-      .order(created_at: :desc)
 
     @filteredOpps = @opportunities.pluck(:id)
     render :index
+  end
+
+  def all_touched_index
+    user_opportunities = @user.opportunities
+      .includes(:owner)
+      .where.not(deal_status: 'Deleted')
+    @user_opportunity_ids = user_opportunities.pluck(:id)
+
+    connected_opportunities = @user.opportunity_connections
+      .where(status: 'Approved')
+    @connected_opportunity_ids = connected_opportunities.pluck(:id)
+
+    facilitated_opportunities = @user.opportunity_connections_facilitated
+      .where(status: 'Approved')
+    @facilitated_opportunity_ids = facilitated_opportunities.pluck(:id)
+
+    @passed_opportunity_ids = PassedOpportunity.where(user_id: @user.id).pluck(:opportunity_id)
+    passed_opportunities = Opportunity.where(id: @passed_opportunity_ids)
+
+    @saved_opportunity_ids = SavedOpportunity.where(user_id: @user.id)
+    saved_opportunities = Opportunity.where(id: @passed_opportunity_ids)
+
+    @opportunities = connected_opportunities | facilitated_opportunities |
+      user_opportunities | passed_opportunities | saved_opportunities
+
+    render :all_touched_index
   end
 
   def profile_index

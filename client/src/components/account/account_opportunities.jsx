@@ -14,7 +14,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 // import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
-import { fetchUserOpportunities, deleteOpportunity } from '../../actions/opportunity_actions';
+import { fetchUserOpportunities,
+  deleteOpportunity,
+  fetchAllTouchedOpportunities } from '../../actions/opportunity_actions';
 // import { fetchNetworks } from '../../actions/network_actions';
 import { fetchConnectedOpportunities } from '../../actions/connected_opportunity_actions';
 import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
@@ -25,6 +27,7 @@ const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   opportunities: state.entities.opportunities,
   userOpps: state.entities.userOpportunities,
+  passedOpps: state.entities.passedOpportunities,
   connectedOpps: state.entities.connectedOpportunities,
   facilitatedOpps: state.entities.facilitatedOpportunities,
   savedOpportunities: state.entities.savedOpportunities,
@@ -32,6 +35,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  fetchAllTouchedOpportunities: () => dispatch(fetchAllTouchedOpportunities()),
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   fetchSavedOpportunities: () => dispatch(fetchSavedOpportunities()),
   // fetchNetworks: () => dispatch(fetchNetworks()),
@@ -93,26 +97,32 @@ class AccountOpportunities extends React.Component {
       focusedOpportunity: null
     };
 
-    this.handleEditOpen = this.handleEditOpen.bind(this);
-    this.handleEditClose = this.handleEditClose.bind(this);
+    this.getOpportunities = this.getOpportunities.bind(this);
+    // this.handleEditOpen = this.handleEditOpen.bind(this);
+    // this.handleEditClose = this.handleEditClose.bind(this);
   }
 
   componentDidMount(){
-    this.props.fetchUserOpportunities()
-    .then(() => {
-      this.props.fetchSavedOpportunities()
-      .then(() => this.setState({ loaded: true}))
-    })
+    // this.props.fetchUserOpportunities()
+    // .then(() => {
+    //   this.props.fetchSavedOpportunities()
+    //   .then(() => this.setState({ loaded: true}))
+    // })
+    this.props.fetchAllTouchedOpportunities()
+    .then(() => this.setState({ loaded: true}))
   }
 
   componentDidUpdate(prevProps){
-    if(prevProps.oppFilter === 'posted' &&
-      prevProps.oppFilter !== this.props.oppFilter){
-      this.props.fetchConnectedOpportunities()
-    } else if (this.props.oppFilter === 'posted' &&
-      prevProps.oppFilter !== this.props.oppFilter){
-      this.props.fetchUserOpportunities();
-    }
+    // if(this.props.oppFilter === 'connected' &&
+    //   prevProps.oppFilter !== this.props.oppFilter){
+    //   this.props.fetchConnectedOpportunities()
+    // } else if (this.props.oppFilter === 'referred' &&
+    //   prevProps.oppFilter !== this.props.oppFilter){
+    //   this.props.fetchUserOpportunities();
+    // } else if (this.props.oppFilter === 'posted' &&
+    //   prevProps.oppFilter !== this.props.oppFilter){
+    //   this.props.fetchUserOpportunities();
+    // }
   }
 
   // handleEditOpen(opportunity){
@@ -127,7 +137,7 @@ class AccountOpportunities extends React.Component {
 
   getOpportunities(){
     const { oppFilter, connectedOpps, facilitatedOpps, opportunities,
-      userOpps } = this.props;
+      userOpps, passedOpps } = this.props;
 
     switch(oppFilter){
       case 'connected':
@@ -136,6 +146,8 @@ class AccountOpportunities extends React.Component {
         return [...facilitatedOpps].map(id => opportunities[id]);
       case 'posted':
         return [...userOpps].map(id => opportunities[id])
+      case 'passed':
+        return [...passedOpps].map(id => opportunities[id])
       case 'saved':
         const { savedOpportunities } = this.props;
         return Object.values(savedOpportunities)

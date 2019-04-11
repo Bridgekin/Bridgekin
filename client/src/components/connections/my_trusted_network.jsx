@@ -78,6 +78,9 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     },
+  },
+  cardHeader:{
+    fontSize: 16
   }
 })
 
@@ -121,7 +124,7 @@ class MyTrustedNetwork extends React.Component {
         <FeedCard contents={
           <div>
             <Typography gutterBottom align='left'
-              className={classes.cardHeader} color='textSecondary'
+              className={classes.cardHeader} color='textPrimary'
               style={{ marginBottom: 20}}>
               Invite your trusted business contacts
             </Typography>

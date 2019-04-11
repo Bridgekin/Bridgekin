@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     resource :notification_settings, only: [:show, :update]
     resource :email_templates, only: [:show]
     resource :direct_links, only: [:create, :show]
+    resources :passed_opportunities, only: [:index, :create]
+    resources :user_metrics, only: [:index]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
@@ -43,7 +45,8 @@ Rails.application.routes.draw do
     post 'member_users/:id/referral/:referral_code', :to => 'member_users#add_by_referral'
     get 'workspace_networks/:network_id', :to => 'networks#workspaceIndex'
     get 'site_templates/:network_id', :to => 'site_templates#show'
-    get 'userOpportunities', :to => 'opportunities#user_index'
+    get 'all_touched_opportunities', :to => 'opportunities#all_touched_index'
+    get 'user_opportunities', :to => 'opportunities#user_index'
     get 'authorization', :to => 'users/sessions#authorize'
     get 'show', :to => 'users/sessions#show'
     get 'referral_links/:referral_code', :to => 'referral_links#reveal'

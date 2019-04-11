@@ -58,19 +58,19 @@ const styles = theme => ({
     // marginTop: 18,
     backgroundColor: theme.palette.base3,
     width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.border.primary}`
+    // borderRadius: 5,
+    border: `1px solid ${theme.palette.border.secondary}`
   },
   filterItem:{
     borderTop: `1px solid ${theme.palette.border.secondary}`,
   },
   cardHeader: {
-    fontSize: 14,
-    fontWeight: 900
+    fontSize: 13,
+    fontWeight: 600
   },
   filterHeader:{
-    fontSize: 13,
-    fontWeight: 500
+    fontSize: 12,
+    fontWeight: 400
   },
   rightColumn:{
     paddingLeft: 0,
@@ -224,8 +224,9 @@ class AccountMain extends React.Component {
     let pages = currentUser.isAdmin ? [
       {title: 'My Profile', dest: '/account/profile'},
       {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
-      {title: 'Settings', dest: '/account/settings'},
       {title: 'Notifications', dest: '/account/notifications'},
+      {title: 'Settings', dest: '/account/settings'},
+      // {title: 'Notification Settings', dest: '/account/settings/notifications'},
     ] : [
       {title: 'My Profile', dest: '/account/profile'},
       {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
@@ -238,11 +239,11 @@ class AccountMain extends React.Component {
         <div className={classes.filterCard}>
           <Typography align='left'
             className={classes.cardHeader}
-            style={{ margin: "10px 15px 0px"}}>
+            style={{ margin: "10px 15px"}}>
             My Account
           </Typography>
 
-          <List component="nav">
+          <List component="nav" disablePadding>
             {pages.map(item => (
               <ListItem button className={classes.filterItem}
                 onClick={() => this.props.history.push(item.dest)}
@@ -255,6 +256,12 @@ class AccountMain extends React.Component {
             ))}
           </List>
         </div>
+
+        <Button variant='contained'
+          onClick={() => this.props.history.push("/account/settings/notifications")}
+          style={{ marginTop: 20 }}>
+          {`Notification Settings`}
+        </Button>
       </Grid>
     )
 
@@ -301,8 +308,10 @@ class AccountMain extends React.Component {
       {title: "Opportunities You've Bookmarked", name: 'saved'},
       {title: "Opportunities You've Connected To", name: 'connected'},
       {title: "Opportunities You've Referred", name: 'referred'},
+      {title: "Opportunities You've Passed", name: 'passed'},
     ] : [
       {title: "Opportunities You've Posted", name: 'posted'},
+      {title: "Opportunities You've Bookmarked", name: 'saved'},
       {title: "Opportunities You've Connected To", name: 'connected'},
       {title: "Opportunities You've Referred", name: 'referred'},
     ]
@@ -313,11 +322,11 @@ class AccountMain extends React.Component {
         <div className={classes.filterCard}>
           <Typography align='left' color="textPrimary"
             className={classes.cardHeader}
-            style={{ margin: "10px 15px 0px"}}>
+            style={{ margin: "10px 15px"}}>
             Connected Opportunities
           </Typography>
 
-          <List component="nav">
+          <List component="nav" disablePadding>
             {filtersDesktop.map(item => (
               <ListItem button className={classes.filterItem}
                 onClick={this.handleFilter(item.name)}
@@ -386,7 +395,7 @@ class AccountMain extends React.Component {
           <ProtectedRoute
             path="/account/profile"
             component={ProfileCard}
-            passedProps={{ user: currentUser, detailed: false }}
+            passedProps={{ user: currentUser, detailed: true }}
           />
           <ProtectedRoute path="/account/notifications" component={Notifications} />
         </Switch>

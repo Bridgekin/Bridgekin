@@ -85,19 +85,20 @@ const styles = theme => ({
     // marginTop: 18,
     // width: '100%',
     borderRadius: 0,
-    borderTop: `1px solid ${theme.palette.border.primary}`,
-    borderBottom: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.border.primary}`,
-      borderRadius: 5,
-      padding: '30px 0px',
+      border: `1px solid ${theme.palette.border.secondary}`,
+      // borderRadius: 5,
+      padding: '40px 0px 15px',
+      // paddingBottom: 15
     },
   },
   cardSection:{
     marginTop: 10
   },
   content:{
-    margin: 20,
+    // margin: ,
     padding: "0px 15px"
   },
   passwordContent:{
@@ -130,7 +131,8 @@ const styles = theme => ({
     marginTop: 15
   },
   fieldLabel:{
-    marginTop: 15
+    marginTop: 15,
+    fontSize: 15
   },
   // iconWrapper:{
   //   backgroundColor: theme.palette.grey1
@@ -419,7 +421,7 @@ class AccountSetting extends React.Component {
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="center">
 
-              <Grid item xs={8} sm={6} container
+              <Grid item xs={11} sm={10} container
                 justify="center" alignItems="center"
                 className={classes.content}>
                 <Typography variant="h5" align='left'
@@ -525,10 +527,10 @@ class AccountSetting extends React.Component {
           <Card className={classes.card}>
             <Grid container justify="center" alignItems="center">
 
-              <Grid item xs={12} sm={8} className={classes.content}>
+              <Grid item xs={12} sm={10} className={classes.content}>
                 <Typography variant="h5" align='left'
                   color="textPrimary" gutterBottom
-                  style={{marginBottom: 20}}>
+                  style={{marginBottom: 20, fontSize: 18}}>
                   Change your profile information
                 </Typography>
                 <Typography variant="h6" align='left'
@@ -542,7 +544,6 @@ class AccountSetting extends React.Component {
                       id="standard-name"
                       label="First Name"
                       className={classes.textField}
-                      margin="normal"
                       value={this.state.fname}
                       onChange={this.handleInfoChange('fname')}
                       />
@@ -553,7 +554,6 @@ class AccountSetting extends React.Component {
                       id="standard-name"
                       label="Last Name"
                       className={classes.textField}
-                      margin="normal"
                       value={this.state.lname}
                       onChange={this.handleInfoChange('lname')}
                       />
@@ -571,7 +571,6 @@ class AccountSetting extends React.Component {
                       id="standard-name"
                       label="Title"
                       className={classes.textField}
-                      margin="normal"
                       value={this.state.title}
                       onChange={this.handleInfoChange('title')}
                     />
@@ -581,7 +580,6 @@ class AccountSetting extends React.Component {
                       id="standard-name"
                       label="Company"
                       className={classes.textField}
-                      margin="normal"
                       value={this.state.company}
                       onChange={this.handleInfoChange('company')}
                     />
@@ -679,14 +677,15 @@ class AccountSetting extends React.Component {
                   </Grid>
                 </Grid>
 
-                <Grid container>
+                {/*<Grid container>
                   <Button color='default' variant='contained'
                     onClick={() => this.props.history.push("/account/settings/notifications")}>
                     {`Edit Notification Settings`}
                   </Button>
-                </Grid>
+                </Grid>*/}
 
-                <div className={classes.buttonWrapper}>
+                <Grid container justify='space-between'
+                  className={classes.buttonWrapper}>
                   <Button className={classes.submitButton}
                     onClick={this.handleChangeFill('')} variant='contained'>
                     Back
@@ -695,9 +694,9 @@ class AccountSetting extends React.Component {
                   <Button color="primary" className={classes.submitButton}
                     onClick={this.changeGeneralInformation}
                     variant='contained'>
-                    Update Information
+                    Update
                   </Button>
-                </div>
+                </Grid>
               </Grid>
 
               {/*<ImageCropModal

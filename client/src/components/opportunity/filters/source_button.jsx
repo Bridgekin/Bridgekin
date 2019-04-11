@@ -35,9 +35,12 @@ const styles = theme => ({
     color: 'black',
     backgroundColor: 'white',
     border: '1px solid black',
-    margin: '0px 15px',
-    padding: "3px 5px",
-    textTransform: 'capitalize'
+    marginRight: 4,
+    padding: "2px 3px",
+    textTransform: 'capitalize',
+    [theme.breakpoints.up('sm')]: {
+      padding: "3px 5px"
+    }
   },
   selectedButton:{
     color: 'white',

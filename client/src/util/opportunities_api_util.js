@@ -8,8 +8,20 @@ export const fetchOpportunities = (workspaceId, option) => (
   })
 )
 
+//All Opps posted, connected, saved, passed,
+export const fetchAllTouchedOpportunities = () => (
+  fetch(`${window.location.origin}/api/all_touched_opportunities`, {
+    method: 'GET',
+    headers:{
+    	'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+  	}
+  })
+)
+
+//Opps Posted
 export const fetchUserOpportunities = () => (
-  fetch(`${window.location.origin}/api/userOpportunities`, {
+  fetch(`${window.location.origin}/api/user_opportunities`, {
     method: 'GET',
     headers:{
     	'Content-Type': 'application/json',

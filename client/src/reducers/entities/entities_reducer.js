@@ -26,6 +26,8 @@ import emailTemplateReducer from './email_template_reducer.js';
 import savedOpportunityReducer from './saved_opportunities_reducer.js';
 import profileOpportunityReducer from './opportunities/profile_opportunities_reducer.js';
 import directLinkReducer from './direct_links_reducer.js';
+import passedOpportunityReducer from './opportunities/passed_opportunities_reducer.js';
+import userMetricsReducer from './users/user_metrics_reducer.js';
 
 export default combineReducers({
   opportunities: opportuntiesReducer,
@@ -52,4 +54,6 @@ export default combineReducers({
   savedOpportunities: savedOpportunityReducer,
   profileOpportunities: profileOpportunityReducer,
   directLink: directLinkReducer,
+  passedOpportunities: passedOpportunityReducer,
+  userMetrics: userMetricsReducer
 });

@@ -10,6 +10,7 @@ import directLinkReducer from './direct_link_reducer';
 import oppChangeReducer from './opp_change_reducer';
 import imageCropReducer from './image_crop_reducer';
 import submitOppReducer from './submit_opp_reducer';
+import deleteOppReducer from './delete_opp_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -22,5 +23,6 @@ export default combineReducers({
   directLink: directLinkReducer,
   oppChange: oppChangeReducer,
   imageCrop: imageCropReducer,
-  submitOpp: submitOppReducer
+  submitOpp: submitOppReducer,
+  deleteOpp: deleteOppReducer
 });

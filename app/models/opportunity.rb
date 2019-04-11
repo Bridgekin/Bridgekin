@@ -53,6 +53,10 @@ class Opportunity < ApplicationRecord
     foreign_key: :opportunity_id,
     class_name: :SavedOpportunity
 
+  # has_many :passed_opportunities,
+  #   foreign_key: :opportunity_id,
+  #   class_name: :PassedOpportunity
+
   has_one_attached :picture
 
   has_many :notifications, as: :acted_with

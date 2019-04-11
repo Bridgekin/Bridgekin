@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_05_230932) do
+ActiveRecord::Schema.define(version: 2019_04_11_010509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -221,6 +221,14 @@ ActiveRecord::Schema.define(version: 2019_04_05_230932) do
     t.index ["network_id", "opportunity_id"], name: "index_opportunity_networks_on_network_id_and_opportunity_id", unique: true
   end
 
+  create_table "passed_opportunities", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "opportunity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_passed_opportunities_on_user_id"
+  end
+
   create_table "referral_links", force: :cascade do |t|
     t.string "referral_code", null: false
     t.integer "member_id", null: false
@@ -230,6 +238,7 @@ ActiveRecord::Schema.define(version: 2019_04_05_230932) do
     t.integer "recipient_id"
     t.string "status", default: "Active", null: false
     t.string "usage_type", default: "Single", null: false
+    t.boolean "is_friendable", default: true
     t.index ["member_id"], name: "index_referral_links_on_member_id"
     t.index ["recipient_id"], name: "index_referral_links_on_recipient_id"
     t.index ["referral_code"], name: "index_referral_links_on_referral_code"

@@ -54,15 +54,25 @@ const styles = theme => ({
       display: 'inline-block'
     },
   },
-  sideColumn:{
+  sideColumnAll:{
     paddingTop: 18,
     paddingLeft: 0,
     paddingRight: 0,
     display: 'none',
+    // [theme.breakpoints.up('sm')]: {
+    //   display: 'inline-block'
+    // }
+  },
+  sideColumn1:{
     [theme.breakpoints.up('sm')]: {
       display: 'inline-block'
     }
   },
+  sideColumn2:{
+    [theme.breakpoints.up('md')]: {
+      display: 'inline-block'
+    }
+  }
 });
 
 class FeedContainer extends React.Component{
@@ -99,14 +109,14 @@ class FeedContainer extends React.Component{
         </Grid>*/}
         <div className={classes.feedContainer}
           style={{ minHeight: dimensions.height}}>
-          <div className={classes.sideColumn}
+          <div className={[classes.sideColumnAll, classes.sideColumn1].join(' ')}
             style={{ position: 'fixed', top: 45+adjustment, width: 300}}>
             {column1}
           </div>
           <div className={classes.mainColumn}>
             {feed}
           </div>
-          <div className={classes.sideColumn}
+          <div className={[classes.sideColumnAll, classes.sideColumn2].join(' ')}
             style={{ position: 'fixed', top: 45+adjustment, marginLeft: 15, width: 300,
             maxHeight: dimensions.height-100, overflow: 'scroll' }}>
             {column2}

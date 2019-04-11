@@ -51,6 +51,7 @@ import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchWorkspaceOptions } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
+import { fetchCurrentUserMetrics } from '../../actions/user_metric_actions';
 import { clearOpportunityErrors } from '../../actions/error_actions';
 // import OpportunityChangeModal from './opportunity_change_modal';
 
@@ -63,6 +64,7 @@ import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
 import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
 import PersonIcon from '@material-ui/icons/PersonSharp';
 import CreateOppButton from './create_opp_button';
+import HomeImage from '../../static/Login_Background_Image.jpg'
 
 import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
@@ -82,13 +84,15 @@ const mapStateToProps = (state, ownProps) => ({
   siteTemplate: state.siteTemplate,
   workspaces: state.workspaces,
   source: ownProps.match.params.source,
+  userMetrics: state.entities.userMetrics
 });
 
 const mapDispatchToProps = dispatch => ({
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
   fetchOpportunities: (workspaceId, option) => dispatch(fetchOpportunities(workspaceId, option)),
   fetchWorkspaceOptions: (workspaceId) => dispatch(fetchWorkspaceOptions(workspaceId)),
-  createReferral: (referral) => dispatch(createReferral(referral)),
+  fetchCurrentUserMetrics: () => dispatch(fetchCurrentUserMetrics()),
+  // createReferral: (referral) => dispatch(createReferral(referral)),
   clearOpportunityErrors: () => dispatch(clearOpportunityErrors()),
   fetchSavedOpportunities: () => dispatch(fetchSavedOpportunities())
 });
@@ -177,11 +181,6 @@ const styles = theme => ({
   filterItem:{
     borderTop: `1px solid ${theme.palette.border.secondary}`,
   },
-  // avatar:{
-  //   height: 55,
-  //   width: 55,
-  //   color: theme.palette.text.primary
-  // },
   loader:{
     padding: "164px 0px 0px 0px",
     position: 'relative',
@@ -191,21 +190,6 @@ const styles = theme => ({
   progress:{
     color: `${theme.palette.primary.main}`
   },
-  // createFilterMain:{
-  //   borderBottom: `1px solid ${theme.palette.border.primary}`,
-  //   height: 85
-  // },
-  // createFilterButton:{
-  //   textTransform: 'none',
-  //   backgroundColor: theme.palette.base4,
-  //   margin: "5px 10px 5px 0px",
-  //   fontSize: 12
-  // },
-  // filterButtonIcon:{
-  //   width: 14,
-  //   marginRight: 3,
-  //   color: '#000000'
-  // },
   cardHeader: {
     fontSize: 14,
     fontWeight: 600
@@ -261,11 +245,40 @@ const styles = theme => ({
     textTransform: 'capitalize'
   },
   avatar:{
-    height: 'auto',
-    width: '100%',
-    objectFit: 'cover'
+    height: 64,
+    width: 64,
+    objectFit: 'cover',
+    border: `1px solid white`,
+    boxShadow: `0px 1px 5px 0px rgba(0,0,0,0.2),
+      0px 2px 2px 0px rgba(0,0,0,0.14),
+      0px 3px 1px -2px rgba(0,0,0,0.12)`
   },
-  userName:{ fontSize: 18 }
+  column1:{
+    padding: 0, width: '100%'
+  },
+  accountCard:{
+    border: `1px solid ${theme.palette.border.secondary}`, backgroundColor: 'white'
+  },
+  userMetrics:{
+    padding: 20, borderTop: `1px solid ${theme.palette.border.secondary}`
+  },
+  userName:{ fontSize: 16, fontWeight: 600, textTransform: 'capitalize' },
+  profileHeader:{
+    padding: 20,
+    height: 150,
+    backgroundImage: `url(${HomeImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    position: 'relative'
+  },
+  divider: {
+    position: 'absolute',
+    height: 75,
+    top: 0,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
+    width: 298,
+    backgroundImage: "linear-gradient(rgb(128,128,128,0.4),rgb(255,255,255,0.4))"
+  }
 });
 
 // const DEFAULTSTATE = {
@@ -313,8 +326,8 @@ class OpportunityHome extends React.Component {
 
     this.handleModalClose = this.handleModalClose.bind(this);
     // this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
-    this.handleReferralChange = this.handleReferralChange.bind(this);
-    this.handleReferralSubmit = this.handleReferralSubmit.bind(this);
+    // this.handleReferralChange = this.handleReferralChange.bind(this);
+    // this.handleReferralSubmit = this.handleReferralSubmit.bind(this);
     this.handleDropdownClick = this.handleDropdownClick.bind(this);
     this.handleDropdownClose = this.handleDropdownClose.bind(this);
     // this.handleDropdownChange = this.handleDropdownChange.bind(this);
@@ -336,6 +349,7 @@ class OpportunityHome extends React.Component {
     if(workspaceId){this.resetWorkspace(workspaceId)}
 
     this.props.fetchSavedOpportunities();
+    this.props.fetchCurrentUserMetrics();
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -585,15 +599,15 @@ class OpportunityHome extends React.Component {
   //   this.setState({ changeModalOpen: true });
   // }
 
-  handleReferralChange(e){
-    this.setState({ referralNetwork: e.target.value})
-  }
+  // handleReferralChange(e){
+  //   this.setState({ referralNetwork: e.target.value})
+  // }
 
-  handleReferralSubmit(){
-    this.props.createReferral({
-      network_id: this.state.referralNetwork
-    })
-  }
+  // handleReferralSubmit(){
+  //   this.props.createReferral({
+  //     network_id: this.state.referralNetwork
+  //   })
+  // }
 
   handleDropdownClick(anchor){
     return e => {
@@ -616,7 +630,7 @@ class OpportunityHome extends React.Component {
   render (){
     const { classes, opportunities, networks, workspaceOptions,
       referral, currentUser, networkOpps, siteTemplate,
-      workspaces, opportunityErrors } = this.props;
+      workspaces, opportunityErrors, userMetrics } = this.props;
 
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
@@ -643,76 +657,67 @@ class OpportunityHome extends React.Component {
       let source = this.getSource();
       const column1 = (
         <Grid container justify='center' alignItems='center'
-          style={{ padding: 0, width: '100%' }}>
-          <FeedCard contents={
-            <div>
-              <Grid container justify='space-between'>
-                <Grid item xs={3}>
-                  {currentUser.profilePicUrl ? (
-                    <Avatar alt="profile-pic"
-                      src={currentUser.profilePicUrl}
-                      className={classes.avatar} />
-                  ) : (
-                    <AccountCircle className={classes.avatar}/>
-                  )}
-                </Grid>
-                <Grid itm xs={8} container alignItems='center'>
+          className={classes.column1}>
+          <Grid container className={classes.accountCard}>
+
+            <Grid container justify='center'
+              className={classes.profileHeader}>
+
+              <div className={classes.divider} />
+
+              <Grid container direction='column' alignItems='center'
+                style={{ width: 300, position: 'absolute', top: 30}}>
+                {currentUser.profilePicUrl ? (
+                  <Avatar alt="profile-pic"
+                    src={currentUser.profilePicUrl}
+                    className={classes.avatar} />
+                ) : (
+                  <AccountCircle className={classes.avatar}/>
+                )}
+                <Grid item xs={8} container justify='center'>
                   <Typography align='center' color='textPrimary'
                     className={classes.userName}>
                     {`${currentUser.fname} ${currentUser.lname}`}
                   </Typography>
                 </Grid>
-              </Grid>
-
-              <Grid container
-                style={{ marginTop: 10}}>
-                <Grid item xs={4} container direction='column'>
-                  <Typography align='center' color='textPrimary'
-                    className={classes.metric}>
-                    {`4`}
-                  </Typography>
-                  <Typography align='center' color='textSecondary'
-                    className={classes.metricName}>
-                    {`Posted`}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4} container direction='column'>
-                  <Typography align='center' color='textPrimary'
-                    className={classes.metric}>
-                    {`13`}
-                  </Typography>
-                  <Typography align='center' color='textSecondary'
-                    className={classes.metricName}>
-                    {`Connected`}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4} container direction='column'>
-                  <Typography align='center' color='textPrimary'
-                    className={classes.metric}>
-                    {`4`}
-                  </Typography>
-                  <Typography align='center' color='textSecondary'
-                    className={classes.metricName}>
-                    {`Referred`}
+                <Grid item xs={8} container justify='center'>
+                  <Typography variant="body1" align='left' color="textSecondary"
+                    style={{ fontSize: 10, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
+                    {currentUser.title && `${currentUser.title} @ `}
+                    {currentUser.company && `${currentUser.company}`}
                   </Typography>
                 </Grid>
               </Grid>
-            </div>
-          }/>
 
-        {/*<FeedCard contents={
-            <div>
-              <Typography gutterBottom align='left'
-                className={classes.cardHeader} color='textSecondary'
-                style={{ marginBottom: 20}}>
-                Invite your trusted business contacts
-              </Typography>
+            </Grid>
 
-              <OpportunityWaitlist
-                currentUser={currentUser}
-                />
-            </div>
-          }/>*/}
+            <Grid container justify='space-between'
+              className={classes.userMetrics}>
+              <Grid item xs={12} container justify='space-between'
+                alignItems='center'>
+                <Typography align='center' color='textSecondary'
+                  style={{ fontSize: 12, textTransform: 'uppercase'}}>
+                  {`Opportunities sent to you`}
+                </Typography>
+                <Typography align='center' color='textPrimary'
+                  style={{ fontSize: 16, fontWeight: 600}}>
+                  {`${userMetrics.receivedOpps}`}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} container justify='space-between'
+                alignItems='center'>
+                <Typography align='center' color='textSecondary'
+                  style={{ fontSize: 12, textTransform: 'uppercase'}}>
+                  {`Opportunity connections made`}
+                </Typography>
+                <Typography align='center' color='textPrimary'
+                  style={{ fontSize: 16, fontWeight: 600}}>
+                  {`${userMetrics.connectedOpps}`}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
         </Grid>
       )
 
@@ -868,6 +873,13 @@ class OpportunityHome extends React.Component {
               currentUser={currentUser}
               />
           </div>
+
+          {this.props.currentUser.isAdmin &&
+            <div className={classes.feedCard}>
+              <OpportunityReferral />
+            </div>}
+
+          <div style={{ height: 50, width: '100%'}}/>
         </Grid>
       )
 
@@ -903,14 +915,15 @@ class OpportunityHome extends React.Component {
 
             {opportunitiesLoaded &&
               this.props.currentUser.isAdmin &&
-              <div className={classes.referralCard}>
-              <OpportunityReferral
-                referralNetwork={referralNetwork}
-                networks={networksArray}
-                referral={referral}
-                handleChange={this.handleReferralChange}
-                handleSubmit={this.handleReferralSubmit}
-                />
+              <div className={classes.waitlistMobileCard}>
+                <OpportunityReferral />
+                {/*<OpportunityReferral
+                  referralNetwork={referralNetwork}
+                  referral={referral}
+                  networks={networksArray}
+                  handleChange={this.handleReferralChange}
+                  handleSubmit={this.handleReferralSubmit}
+                  />*/}
               </div>}
             </div>
           </Grid>

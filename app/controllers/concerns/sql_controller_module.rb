@@ -5,6 +5,7 @@ module SQLControllerModule
       .where(opp_permissions: { shareable_id: @workspace_networks.pluck(:id)})
       .where(status: 'Approved')
       .where.not(deal_status: 'Deleted')
+      .where.not(id: @user.passed_opportunities.pluck(:opportunity_id))
       .order(created_at: :desc)
   end
 
@@ -14,6 +15,7 @@ module SQLControllerModule
       .where(opp_permissions: { shareable_id: network_id })
       .where(status: 'Approved')
       .where.not(deal_status: 'Deleted')
+      .where.not(id: @user.passed_opportunities.pluck(:opportunity_id))
       .order(created_at: :desc)
   end
 
@@ -30,6 +32,7 @@ module SQLControllerModule
       .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
       .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
       .where(opp_permissions: { shareable_id: connections.pluck(:id) })
+      .where.not(id: @user.passed_opportunities.pluck(:opportunity_id))
   end
 
   def opps_circle_id(circle_id)
@@ -42,6 +45,7 @@ module SQLControllerModule
       .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
       .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
       .where(opp_permissions: { shareable_id: connections.pluck(:id) })
+      .where.not(id: @user.passed_opportunities.pluck(:opportunity_id))
   end
 
   def opps_direct_connections
@@ -54,6 +58,7 @@ module SQLControllerModule
       .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
       .where(opp_permissions: { shareable_id: connections.pluck(:id) })
       .where(opp_permissions: { mass: false })
+      .where.not(id: @user.passed_opportunities.pluck(:opportunity_id))
   end
 
   def opps_all_connections
@@ -65,6 +70,7 @@ module SQLControllerModule
       .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
       .where(opp_permissions: { shareable_id: connections.pluck(:id) })
       .where(opp_permissions: { mass: true })
+      .where.not(id: @user.passed_opportunities.pluck(:opportunity_id))
   end
 end
 

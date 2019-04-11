@@ -534,7 +534,7 @@ class HomeNav extends React.Component {
         <MenuItem onClick={this.handleLinkClose('findandconnect')}>
           <Typography variant="body1" align='left' color="textPrimary"
             className={classes.menuItem}>
-            Find & Connect
+            Opportunities
           </Typography>
         </MenuItem>
         {currentUser && currentUser.isAdmin &&
@@ -723,14 +723,14 @@ class HomeNav extends React.Component {
                 Test Feature
               </Typography>
             </Button>}
-            <Button color='secondary'
-              onClick={this.handleLinkClose('findandconnect')}>
-              <Typography variant="h4" align='left'
-                style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
-                className={classes.navButtonText}>
-                Find & Connect
-              </Typography>
-            </Button>
+          <Button color='secondary'
+            onClick={this.handleLinkClose('findandconnect')}>
+            <Typography variant="h4" align='left'
+              style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
+              className={classes.navButtonText}>
+              Opportunities
+            </Typography>
+          </Button>
           {currentUser && currentUser.isAdmin &&
             <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}

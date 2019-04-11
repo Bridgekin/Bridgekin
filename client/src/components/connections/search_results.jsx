@@ -70,7 +70,7 @@ class SearchResults extends React.Component {
       return <div style={{ paddingBottom: 30}}>
         <FeedCard contents={
           <Typography align='left' color='textSecondary'
-            style={{ fontSize: 20 }}>
+            style={{ fontSize: 16 }}>
             {`Search Results (${searchResultsPage.length})`}
           </Typography>
         } />
@@ -81,13 +81,13 @@ class SearchResults extends React.Component {
           <div style={{ padding: 30}}>
             <Typography variant="h3" gutterBottom
               color="textSecondary" align='left'
-              style={{ fontSize: 36, fontWeight: 600}}>
+              style={{ fontSize: 24, fontWeight: 600}}>
               {`No Results Found`}
             </Typography>
             <Typography variant="bod1" gutterBottom
-              color="textSecondary" align='left'
-              style={{ fontSize: 13, margin: "20px 0px" }}>
-              {`Looking for someone not yet on Bridgekin? You have 3 invitations for your trusted business contacts.`}
+              color="textPrimary" align='left'
+              style={{ fontSize: 12, margin: "20px 0px" }}>
+              {`Looking for someone not yet on Bridgekin?  You have 3 invitations for your trusted business contacts.`}
             </Typography>
             <OpportunityWaitlist
               currentUser={currentUser}

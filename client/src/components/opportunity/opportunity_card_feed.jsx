@@ -50,14 +50,22 @@ import { fetchUserOpportunities,
   updateOpportunity, deleteOpportunity } from '../../actions/opportunity_actions';
 import { createSavedOppportunity, deleteSavedOppportunity}
   from '../../actions/saved_opportunity_actions';
-import { openOppCard, openDirectLink, openOppChange } from '../../actions/modal_actions';
+import { openOppCard, openDirectLink,
+  openOppChange, openDeleteOpp } from '../../actions/modal_actions';
 import { createDirectLink } from '../../actions/direct_link_actions';
+import { createPassedOpportunity } from '../../actions/passed_opportunity_actions';
 import theme from '../theme';
 
 import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
 import ReferIcon from '../../static/opp_feed_icons/refer.png'
 import PagePeel from '../../static/opp_feed_icons/page_peel.jpeg'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ShareIcon from '@material-ui/icons/Share';
+import EditIcon from '@material-ui/icons/EditSharp';
+
+import ReadMoreReact from 'read-more-react';
+import ReadMoreAndLess from 'react-read-more-less';
+import datetimeDifference from "datetime-difference";
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -65,11 +73,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  createPassedOpportunity: (oppId) => dispatch(createPassedOpportunity(oppId)),
   openOppCard: (payload) => dispatch(openOppCard(payload)),
   openDirectLink: (opp) => dispatch(openDirectLink(opp)),
-  openOppChange: (payload) => dispatch(openDirectLink(payload)),
+  openOppChange: (payload) => dispatch(openOppChange(payload)),
+  openDeleteOpp: (oppId) => dispatch(openDeleteOpp(oppId)),
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
-  deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
+  // deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
   createSavedOppportunity: (opportunityId) => dispatch(createSavedOppportunity(opportunityId)),
   deleteSavedOppportunity: (savedOpportunity) => dispatch(deleteSavedOppportunity(savedOpportunity)),
@@ -139,7 +149,7 @@ const styles = theme => ({
     textTransform: 'capitalize',
     fontSize: 13,
     fontWeight: 400,
-    marginRight: 20
+    marginRight: 5
   },
   cardSubHeader:{
     fontSize: 11,
@@ -192,19 +202,22 @@ class OpportunityCard extends React.Component {
       // changeModalOpen: false,
       // dealStatusMenuOpen: false,
       dealStatusProgress: false,
-      dealStatusAnchorEl: null
+      dealStatusAnchorEl: null,
+      passedOppLoading: false
     }
 
     this.handleCardOpen = this.handleCardOpen.bind(this);
-    this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
-    this.handleDeleteClose = this.handleDeleteClose.bind(this);
+    // this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
+    // this.handleDeleteClose = this.handleDeleteClose.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleCardOpen = this.handleCardOpen.bind(this);
     this.handleCardClose = this.handleCardClose.bind(this);
     this.handleDealStatusToggle = this.handleDealStatusToggle.bind(this);
     this.handleDealStatusSend = this.handleDealStatusSend.bind(this);
-    this.handleDetailsClick = this.handleDetailsClick.bind(this);
+    this.handleFeedActions = this.handleFeedActions.bind(this);
     this.toggleSavedOpportunity = this.toggleSavedOpportunity.bind(this);
+    this.handlePass = this.handlePass.bind(this);
+    this.getNotificationDate = this.getNotificationDate.bind(this);
   }
 
   handleCardOpen(cardModalPage, connectBool){
@@ -223,11 +236,21 @@ class OpportunityCard extends React.Component {
     }
   }
 
+  handlePass(e){
+    this.setState({ passedOppLoading: true }
+    ,() => {
+      e.stopPropagation()
+      this.props.createPassedOpportunity(this.props.opportunity.id)
+      .then(() => this.setState({ passedOppLoading: false }))
+    })
+  }
+
   handleEdit(e){
     let payload = {
       opportunity: this.props.opportunity,
       mode: 'update',
     }
+    // debugger
     this.props.openOppChange(payload);
   }
 
@@ -235,39 +258,55 @@ class OpportunityCard extends React.Component {
     this.setState({ cardOpen: false })
   }
 
-  handleDeleteOpen(e){
-    // e.stopPropagation();
-    console.log('open delete');
-    this.setState({ deleteOpen: true });
-  };
+  // handleDeleteOpen(e){
+  //   // e.stopPropagation();
+  //   // console.log('open delete');
+  //   // this.setState({ deleteOpen: true });
+  //   this.props.openDeleteOpp(this.props.opportunity.id)
+  // };
 
-  handleDeleteClose(deleteBool){
-    return (e) => {
-      e.stopPropagation();
-      if (deleteBool){
-        this.props.deleteOpportunity(this.props.opportunity.id)
-        .then(() => this.props.fetchUserOpportunities())
-      }
-      this.setState({ deleteOpen: false });
-    }
-  };
+  // handleDeleteClose(deleteBool){
+  //   return (e) => {
+  //     e.stopPropagation();
+  //     if (deleteBool){
+  //       this.props.deleteOpportunity(this.props.opportunity.id)
+  //       .then(() => this.props.fetchUserOpportunities())
+  //     }
+  //     this.setState({ deleteOpen: false });
+  //   }
+  // };
 
 
-  handleDetailsClick(option){
+  // handleDetailsClick(option){
+  //   return e => {
+  //     e.stopPropagation();
+  //     const { detailsAnchorEl } = this.state;
+  //     this.setState({ detailsAnchorEl: detailsAnchorEl ? null : e.currentTarget},
+  //     () => {
+  //       if (option && option === 'Edit'){
+  //         this.handleEdit();
+  //       } else if (option && option === 'Delete'){
+  //         this.handleDeleteOpen();
+  //       } else if (option && option === 'Share'){
+  //         this.props.createDirectLink([this.props.opportunity.id])
+  //         .then(() => this.props.openDirectLink())
+  //       }
+  //     })
+  //   }
+  // }
+
+  handleFeedActions(option){
     return e => {
       e.stopPropagation();
-      const { detailsAnchorEl } = this.state;
-      this.setState({ detailsAnchorEl: detailsAnchorEl ? null : e.currentTarget},
-      () => {
-        if (option && option === 'Edit'){
-          this.handleEdit();
-        } else if (option && option === 'Delete'){
-          this.handleDeleteOpen();
-        } else if (option && option === 'Share'){
-          this.props.createDirectLink([this.props.opportunity.id])
-          .then(() => this.props.openDirectLink())
-        }
-      })
+      if (option && option === 'Edit'){
+        this.handleEdit();
+      } else if (option && option === 'Delete'){
+        // this.handleDeleteOpen();
+        this.props.openDeleteOpp(this.props.opportunity.id)
+      } else if (option && option === 'Share'){
+        this.props.createDirectLink([this.props.opportunity.id])
+        .then(() => this.props.openDirectLink())
+      }
     }
   }
 
@@ -316,6 +355,15 @@ class OpportunityCard extends React.Component {
     }
   }
 
+  getNotificationDate(){
+    let then = new Date(this.props.opportunity.createdAt);
+    const result = datetimeDifference(then, new Date());
+    const resultKey = Object.keys(result)
+      .filter(k => !!result[k])[0]
+    // debugger
+    return `${result[resultKey]}${resultKey.slice(0,1)}`
+  }
+
   getStatusColor(status){
     switch(status) {
       case 'Active':
@@ -338,7 +386,7 @@ class OpportunityCard extends React.Component {
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
     dealStatusProgress, dealStatusAnchorEl,
-    detailsAnchorEl } = this.state;
+    detailsAnchorEl, passedOppLoading } = this.state;
 
     const detailsOpen = Boolean(detailsAnchorEl);
 
@@ -404,24 +452,33 @@ class OpportunityCard extends React.Component {
       return (
         <div className={classes.opportunityCard}>
           <Grid container className={classes.oppCardGrid}>
-            <Grid item xs={7} container alignItems='center'>
-              {ownerPictureUrl && !anonymous ? (
-                <Avatar alt="profile-pic"
-                  src={ownerPictureUrl}
-                  className={classes.avatar}
-                  onClick={this.handleProfilePage(ownerId)}/>
-              ) : (
-                <AccountCircle
-                  className={classes.avatar}
-                  onClick={this.handleProfilePage(ownerId)}/>
-              )}
-              <Typography gutterBottom align='left' color="textPrimary"
-                style={{ textTransform: 'capitalize', fontSize: 14}}>
-                {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
-              </Typography>
+            <Grid item xs={6} container alignItems='center'>
+              <Grid item xs={4}>
+                {ownerPictureUrl && !anonymous ? (
+                  <Avatar alt="profile-pic"
+                    src={ownerPictureUrl}
+                    className={classes.avatar}
+                    onClick={this.handleProfilePage(ownerId)}/>
+                ) : (
+                  <AccountCircle
+                    className={classes.avatar}
+                    onClick={this.handleProfilePage(ownerId)}/>
+                )}
+              </Grid>
+              <Grid container item xs={8} direction='column'
+                justify='flex-end'>
+                <Typography align='left' color="textPrimary"
+                  style={{ textTransform: 'capitalize', fontSize: 14}}>
+                  {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
+                </Typography>
+                <Typography align='left' color="textSecondary"
+                  style={{ textTransform: 'capitalize', fontSize: 10}}>
+                  {this.getNotificationDate()}
+                </Typography>
+              </Grid>
             </Grid>
 
-            <Grid item xs={5} container
+            <Grid item xs={6} container
               alignItems='center' justify='flex-end'>
               <Typography variant="body1" align='left'
                 color="textSecondary" noWrap
@@ -458,7 +515,7 @@ class OpportunityCard extends React.Component {
                 ))}
               </Menu>}
 
-              {(currentUser.id === ownerId && editable) &&
+              {/*(currentUser.id === ownerId && editable) &&
                 <IconButton
                 aria-label="More"
                 aria-owns={detailsOpen ? 'long-menu' : undefined}
@@ -470,7 +527,7 @@ class OpportunityCard extends React.Component {
                 style={{ padding: 6}}
               >
                 <MoreVertIcon />
-              </IconButton>}
+              </IconButton>
 
               <Menu
                 id="long-menu"
@@ -485,7 +542,7 @@ class OpportunityCard extends React.Component {
                   </MenuItem>
                 ))}
 
-              </Menu>
+              </Menu>*/}
             </Grid>
           </Grid>
 
@@ -511,15 +568,20 @@ class OpportunityCard extends React.Component {
                 <div style={{ margin: "10px 0px 30px"}}>
                   <Typography variant="body2" align='left'
                     color="textPrimary"
-                    className={viewType === 'card' ?
-                      classes.description : classes.title}>
-                    <LinesEllipsis
+                    className={classes.description}>
+                    <ReadMoreAndLess
+                      charLimit={200}
+                      readMoreText="Read more"
+                      readLessText="Read less">
+                      {description}
+                    </ReadMoreAndLess>
+                    {/*<LinesEllipsis
                       text={description}
                       maxLine='3'
                       ellipsis='...'
                       trimRight
                       basedOn='letters'
-                      />
+                      />*/}
                   </Typography>
                 </div>}
 
@@ -604,48 +666,76 @@ class OpportunityCard extends React.Component {
               </Grid>
             </Grid>*/}
 
-            <Grid container justify='space-around'
+            {currentUser.id !== ownerId ? (
+              <Grid container justify='space-around'
               className={classes.feedCardActionContainer}>
-              <Button onClick={this.handleCardOpen('confirm', true)}
-                classes={{ label: classes.oppActionButton }}>
-                <img alt='connect' src={ConnectIcon}
-                  className={classes.oppActionIconPic}/>
-                Connect
-              </Button>
-
-              <Button onClick={this.handleCardOpen('confirm', false)}
-                classes={{ label: classes.oppActionButton }}>
-                <img src={ReferIcon} alt=''
-                  className={classes.oppActionIconPic}/>
-                Refer
-              </Button>
-
-              {!editable && currentUser &&
-                currentUser.isAdmin &&
-                (savedOpportunities[opportunity.id] ?
-                <Button
+                <Button onClick={this.handleCardOpen('confirm', true)}
                   classes={{ label: classes.oppActionButton }}>
-                  <BookmarkIcon
-                    onClick={this.toggleSavedOpportunity}
-                    className={classes.bookmark}/>
-                  Save
-                </Button> :
-                <Button
-                  classes={{ label: classes.oppActionButton }}>
-                  <BookmarkBorderIcon
-                    onClick={this.toggleSavedOpportunity}
-                    className={classes.bookmark}/>
-                  Save
-                </Button>)
-              }
+                  <img alt='connect' src={ConnectIcon}
+                    className={classes.oppActionIconPic}/>
+                  Connect
+                </Button>
 
-              <Button
-                classes={{ label: classes.oppActionButton }}>
-                <CloseIcon
-                  className={classes.oppActionIcon}/>
-                Pass
-              </Button>
-            </Grid>
+                <Button onClick={this.handleCardOpen('confirm', false)}
+                  classes={{ label: classes.oppActionButton }}>
+                  <img src={ReferIcon} alt=''
+                    className={classes.oppActionIconPic}/>
+                  Refer
+                </Button>
+
+                {!editable && currentUser &&
+                  currentUser.isAdmin &&
+                  (savedOpportunities[opportunity.id] ?
+                  <Button
+                    classes={{ label: classes.oppActionButton }}>
+                    <BookmarkIcon
+                      onClick={this.toggleSavedOpportunity}
+                      className={classes.bookmark}/>
+                    Save
+                  </Button> :
+                  <Button
+                    classes={{ label: classes.oppActionButton }}>
+                    <BookmarkBorderIcon
+                      onClick={this.toggleSavedOpportunity}
+                      className={classes.bookmark}/>
+                    Save
+                  </Button>)
+                }
+
+                {!editable &&
+                  opportunity.ownerId !== currentUser.id &&
+                  <Button onClick={this.handlePass}
+                    disabled={passedOppLoading}
+                    classes={{ label: classes.oppActionButton }}>
+                    {passedOppLoading ? <CircularProgress className={classes.oppActionIcon}/> :
+                      <CloseIcon className={classes.oppActionIcon}/>}
+                    Pass
+                  </Button>}
+              </Grid> ) : (
+              <Grid container justify='space-around'
+              className={classes.feedCardActionContainer}>
+                <Button onClick={this.handleFeedActions('Share')}
+                  classes={{ label: classes.oppActionButton }}>
+                  <ShareIcon
+                    className={classes.oppActionIconPic}/>
+                  Share
+                </Button>
+
+                <Button onClick={this.handleFeedActions('Edit')}
+                  classes={{ label: classes.oppActionButton }}>
+                  <EditIcon
+                    className={classes.oppActionIconPic}/>
+                  Edit
+                </Button>
+
+                <Button onClick={this.handleFeedActions('Delete')}
+                  classes={{ label: classes.oppActionButton }}>
+                  <CloseIcon
+                    className={classes.oppActionIconPic}/>
+                  Delete
+                </Button>
+
+              </Grid> )}
 
             {editable && deleteDialog}
           </Grid>

@@ -38,6 +38,7 @@ class NotificationCard extends React.Component {
     super(props)
     this.state = {};
     this.handleNotificationRedirect = this.handleNotificationRedirect.bind(this);
+    this.getNotificationDate = this.getNotificationDate.bind(this);
   }
 
   handleNotificationRedirect(e){
@@ -56,7 +57,7 @@ class NotificationCard extends React.Component {
     }
   }
 
-  handleNotificationDate(){
+  getNotificationDate(){
     let then = new Date(this.props.notification.createdAt);
     const result = datetimeDifference(then, new Date());
     const resultKey = Object.keys(result)
@@ -84,14 +85,14 @@ class NotificationCard extends React.Component {
           </Avatar>
         </Grid>
 
-        <Grid item xs={9} sm={8} md={6} container direction='column'>
+        <Grid item xs={9} sm={10} container direction='column'>
           <Typography align='left' color='textPrimary'
             style={{ fontSize: 14, fontWeight: 600 }}>
             {`${notification.message}`}
           </Typography>
           <Typography align='left' color='textPrimary'
             style={{ fontSize: 11, textTransform: 'capitalize' }}>
-            {this.handleNotificationDate()}
+            {this.getNotificationDate()}
           </Typography>
         </Grid>
       </Grid>

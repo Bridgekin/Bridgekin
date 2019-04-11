@@ -100,15 +100,16 @@ class CircleCard extends React.Component {
                 {circle.add ? <AddIcon /> : `${this.capitalize(circle.title[0])}`}
               </Avatar>
             </Grid>
-            <Grid item xs={9} container direction='column'>
+            <Grid item xs={9} container direction='column'
+              style={{ paddingLeft: 10}}>
               <Typography variant="body1" align='left' color="textPrimary"
                 noWrap
-                style={{ fontSize: 15, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
+                style={{ fontSize: 13, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
                 {`${circle.title}`}
               </Typography>
               {!(circle.add) && circleMembers[circle.id] && <Typography variant="body1" align='left' color="textPrimary"
                 noWrap
-                style={{ fontSize: 12, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
+                style={{ fontSize: 13, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
                 {circleMembers[circle.id].length === 1 ? `1 member` :
                   `${circleMembers[circle.id].length} Members`}
               </Typography>}

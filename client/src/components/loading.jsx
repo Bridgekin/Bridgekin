@@ -20,7 +20,7 @@ const styles = theme => ({
   },
   progress: {
     fontSize: 48,
-    color: theme.palette.grey2
+    color: theme.palette.text.primary
   }
 });
 

@@ -105,6 +105,10 @@ class User < ApplicationRecord
     foreign_key: :user_id,
     class_name: :NotificationSetting
 
+  has_many :passed_opportunities,
+    foreign_key: :user_id,
+    class_name: :PassedOpportunity
+
   def connections
     Connection.where("user_id = ? OR friend_id = ?", self.id, self.id)
       .includes(:requestor, :recipient)
@@ -171,9 +175,51 @@ class User < ApplicationRecord
     end
   end
 
+  def set_connections(referral_link)
+    waitlist_user = WaitlistUser.includes(:referrals)
+      .find_by(email: self.email)
+    if waitlist_user
+      referral_ids = waitlist_user.referrals.pluck(:from_referral_id)
+      connection_array = referral_ids.map do |referral_id|
+        { user_id: referral_id, friend_id: self.id, status: 'Accepted'}
+      end
+      if referral_link.is_friendable
+        connection_array << { user_id: self.id, status: 'Accepted',
+          friend_id: referral_link.member_id }
+      end
+      Connection.create(connection_array)
+    end
+  end
+
   def decrement_invite_count
     self.invites_remaining -= 1
     self.save
+  end
+
+  def opportunities_received
+    connections = self.requested_connections.includes(:opportunities) +
+      self.received_connections.includes(:opportunities)
+    networks = self.member_networks
+
+    opps_from_networks = Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
+      .where(opp_permissions: { shareable_id: networks.pluck(:id)})
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted', owner_id: self.id)
+
+    opps_from_connections = Opportunity.includes(:owner)
+      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
+      .where(opp_permissions: { shareable_id: connections.pluck(:id)})
+      .where(status: 'Approved')
+      .where.not(deal_status: 'Deleted', owner_id: self.id)
+
+    opps_from_networks + opps_from_connections
+  end
+
+  def opportunities_connected
+    ConnectedOpportunity.where(user_id: self.id)
+      .or(ConnectedOpportunity.where(facilitator_id: self.id))
+      .or(ConnectedOpportunity.where(opportunity_id: self.opportunities.pluck(:id)))
   end
 
   #notifications

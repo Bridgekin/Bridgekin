@@ -1,0 +1,17 @@
+import {
+  OPEN_DELETE_OPP_MODAL,
+  CLOSE_DELETE_OPP_MODAL } from '../../actions/modal_actions';
+import merge from 'lodash/merge';
+
+export default(state = {}, action) => {
+  Object.freeze(state);
+
+  switch(action.type){
+    case OPEN_DELETE_OPP_MODAL:
+      return merge({}, {open: true, oppId: action.oppId});
+    case CLOSE_DELETE_OPP_MODAL:
+      return {};
+    default:
+      return state;
+  }
+};

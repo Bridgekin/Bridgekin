@@ -37,6 +37,9 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     }
+  },
+  noShareMessage:{
+    fontSize: 15
   }
 })
 
@@ -59,6 +62,14 @@ class ProfilePage extends React.Component {
     // this.props.fetchProfileOpportunities()
   }
 
+  capitalize(str){
+    let strArray = str.split(' ');
+    for (let i = 0; i < strArray.length; i++) {
+      strArray[i] = strArray[i][0].toUpperCase() + strArray[i].slice(1)
+    }
+    return strArray.join(' ')
+  }
+
   render(){
     const { loaded, oppsLoaded } = this.state;
     const { classes, users, userId, waitlistCard,
@@ -72,10 +83,10 @@ class ProfilePage extends React.Component {
         <OpportunityCardFeed
           opportunity={opportunities[id]}/>
       ) : (
-        <Typography variant="h6" align='left'
-          color="textPrimary" className={classes.filterHeader}>
-          {`${profile.fname} hasn't shared any opportunities in your mutual
-          communities or dirctly with you.`}
+        <Typography variant="h6" align='Center'
+          color="textPrimary" className={classes.noShareMessage}>
+          {/*`${this.capitalize(profile.fname)} hasn't shared any opportunities in your mutual
+          communities or directly with you.`*/}
         </Typography>
       )
 

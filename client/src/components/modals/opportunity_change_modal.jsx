@@ -80,6 +80,7 @@ import { closeOppChange, openImageCrop, openSubmitOpp } from '../../actions/moda
 
 // import SubmitModal from '../opportunity/submit_modal';
 // import ShareModal from '../opportunity/share_modal';
+import RSelect from 'react-select'
 import merge from 'lodash/merge';
 import { animateScroll } from 'react-scroll';
 
@@ -227,6 +228,23 @@ const styles = theme => ({
     textTransform: 'capitalize',
     height: 32
   },
+  selectFilterButton:{
+    padding: "10px 8px",
+    fontSize: 12,
+    // width: '100%'
+  },
+  selectSelect:{
+    "&:focus": {
+      background: 'white'
+    }
+  },
+  // selectRoot:{
+  //   width: '100%'
+  // },
+  notchedOutline:{
+    border: '1px solid black',
+  },
+  selectFocused:{ backgroundColor: 'white'},
   selectedButton:{
     color: 'white',
     background: 'black',
@@ -235,6 +253,7 @@ const styles = theme => ({
       background: '#505050',
     }
   },
+  textListPrimary: { fontSize: 12 },
   submitBar:{
     padding: 12,
     borderTop:  `1px solid ${theme.palette.border.secondary}`
@@ -450,7 +469,7 @@ class OpportunityChangeModal extends React.Component {
 
   handleChange(field){
     return e => {
-      e.preventDefault();
+      // e.preventDefault();
       let option = e.target.value;
 
       if ((['industries', 'geography'].includes(field) &&
@@ -694,6 +713,21 @@ class OpportunityChangeModal extends React.Component {
     return str[0].toUpperCase() + str.slice(1)
   }
 
+  handleSelectChange(field){
+    return optionSelected => {
+      // e.preventDefault();
+      let option = optionSelected.value;
+      this.setState({ [field]: option})
+
+      // if ((['industries', 'geography'].includes(field) &&
+      //   option.length <= 3) ||
+      //   (field === 'title' && option.length <= 90) ||
+      //   !['industries', 'geography','title'].includes(field)) {
+      //     this.setState({ [field]: option})
+      // }
+    }
+  }
+
   render () {
     const { open, classes,
       availNetworks, flow, currentUser,
@@ -732,7 +766,7 @@ class OpportunityChangeModal extends React.Component {
           </Grid>
           <Grid item xs={10} alignItems='center'>
             <Typography align='left' color="textPrimary"
-              variant='body1' style={{ fontSize: 15, marginLeft: 10 }}>
+              variant='body1' style={{ fontSize: 15, marginLeft: 10, textTransform: 'capitalize' }}>
               {`${currentUser.fname} ${currentUser.lname}`}
             </Typography>
           </Grid>
@@ -765,6 +799,25 @@ class OpportunityChangeModal extends React.Component {
       )
 
       let filterOptions = ['opportunityNeed','geography', 'industries', 'value']
+
+      // const options = [
+      //   { value: 'chocolate', label: 'Chocolate' },
+      //   { value: 'strawberry', label: 'Strawberry' },
+      //   { value: 'vanilla', label: 'Vanilla' }
+      // ]
+
+      const options = needsChoices.map(choice => ({
+        value: choice, label: choice
+      }))
+
+      let customSelectStyles = {
+        container: (base, state) => ({
+          ...base,
+          width: '90%',
+          border: '1px solid black',
+          borderRadius: 5
+        })
+      }
 
       let filters = (
         <Grid container>
@@ -834,11 +887,17 @@ class OpportunityChangeModal extends React.Component {
           </Button>
           {/*showFilters && filterOptions.map(option => this.getFilterButton(option))*/}
           {showFilters &&
-          <Grid container justify='space-between' alignItems='center'>
-            <Grid item xs={6} container justify='center'>
+          <Grid container justify='space-between' alignItems='center'
+            spacing={8}>
+            <Grid item xs={6} container justify='flex-start' direction='column'>
+              <Typography variant='body1' align='left'
+                color="textSecondary"
+                style={{ fontSize: 10}}>
+                {`Business Need`}
+              </Typography>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="age-required">Business Need</InputLabel>
                 <Select
+                  fullWidth
                   value={this.state.opportunityNeed}
                   onChange={this.handleChange('opportunityNeed')}
                   name="opportunityNeed"
@@ -848,7 +907,19 @@ class OpportunityChangeModal extends React.Component {
                   }}
                   renderValue={selected => selected}
                   className={classes.fieldSelectNeed}
-                  >
+                  input={
+                    <OutlinedInput
+                      inputProps={{
+                        root: classes.filterButton
+                      }}
+                      classes={{
+                        //notchedOutline: classes.notchedOutline,
+                        // root: classes.selectRoot,
+                        focuse: classes.selectSelect,
+                        input: classes.selectFilterButton
+                      }}
+                    />
+                  }>
                   {needsChoices.map(choice => (
                     <MenuItem value={choice} key={choice}
                       style={{ textTransform: 'capitalize'}}>
@@ -865,56 +936,101 @@ class OpportunityChangeModal extends React.Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={6} container justify='center'>
+            <Grid item xs={6} container justify='flex-start'
+              direction='column'>
+              <Typography variant='body1' align='left'
+                color="textSecondary"
+                style={{ fontSize: 10}}>
+                {`Industries`}
+              </Typography>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="age-required">Industry</InputLabel>
                 <Select
                   multiple
+                  fullWidth
                   value={this.state.industries}
                   onChange={this.handleChange('industries')}
                   name="industries"
-                  input={<Input id="select-multiple-chip" />}
                   renderValue={selected => selected.join(', ')}
                   className={classes.fieldSelectIndustry}
-                  >
+                  input={
+                    <OutlinedInput
+                      inputProps={{
+                        root: classes.filterButton
+                      }}
+                      classes={{
+                        //notchedOutline: classes.notchedOutline,
+                        // root: classes.selectRoot,
+                        focuse: classes.selectSelect,
+                        input: classes.selectFilterButton
+                      }}
+                    />
+                  }>
                   {industryChoices.map(choice => (
                     <MenuItem value={choice} key={choice}
                       style={{ textTransform: 'capitalize'}}>
                       <Checkbox checked={this.state.industries.indexOf(choice) > -1} />
-                      <ListItemText primary={choice} />
+                      <ListItemText primary={choice}
+                        classes={{
+                          primary: classes.textListPrimary
+                        }}/>
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            <Grid item xs={6} container justify='center'>
+            <Grid item xs={6} container justify='flex-start'
+              direction='column'>
+              <Typography variant='body1' align='left'
+                color="textSecondary"
+                style={{ fontSize: 10}}>
+                {`Location`}
+              </Typography>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="age-required">Geography</InputLabel>
                 <Select
                   multiple
+                  fullWidth
                   value={this.state.geography}
                   onChange={this.handleChange('geography')}
                   name="geography"
-                  input={<Input id="select-multiple-chip" />}
                   renderValue={selected => selected.join(', ')}
                   className={classes.fieldSelectIndustry}
-                  >
+                  input={
+                    <OutlinedInput
+                      inputProps={{
+                        root: classes.filterButton
+                      }}
+                      classes={{
+                        //notchedOutline: classes.notchedOutline,
+                        // root: classes.selectRoot,
+                        focuse: classes.selectSelect,
+                        input: classes.selectFilterButton
+                      }}
+                    />
+                  }>
                   {geographyChoices.map(choice => (
                     <MenuItem value={choice} key={choice}
                       style={{ textTransform: 'capitalize'}}>
                       <Checkbox checked={this.state.geography.indexOf(choice) > -1} />
-                      <ListItemText primary={choice} />
+                      <ListItemText primary={choice}
+                        classes={{
+                          primary: classes.textListPrimary
+                        }}/>
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            <Grid item xs={6} container justify='center'>
+            <Grid item xs={6} container justify='flex-start' direction='column'>
+              <Typography variant='body1' align='left'
+                color="textSecondary"
+                style={{ fontSize: 10}}>
+                {`Value`}
+              </Typography>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="age-required">Deal Value</InputLabel>
                 <Select
+                  fullWidth
                   value={this.state.value}
                   onChange={this.handleChange('value')}
                   name="value"
@@ -923,11 +1039,26 @@ class OpportunityChangeModal extends React.Component {
                     name: 'value'
                   }}
                   className={classes.fieldSelectIndustry}
-                  >
+                  input={
+                    <OutlinedInput
+                      inputProps={{
+                        root: classes.filterButton
+                      }}
+                      classes={{
+                        //notchedOutline: classes.notchedOutline,
+                        // root: classes.selectRoot,
+                        focuse: classes.selectSelect,
+                        input: classes.selectFilterButton
+                      }}
+                    />
+                  }>
                   {valueChoices.map(choice => (
                     <MenuItem value={choice}
                       style={{ textTransform: 'capitalize'}}>
                       {choice}
+                      <ListItemText
+                        primary={choice}
+                        classes={{ primary: classes.textListPrimary }}/>
                     </MenuItem>
                   ))}
                 </Select>

@@ -28,7 +28,10 @@ const styles = theme => ({
     position: 'fixed',
     top: 45,
     zIndex: 1,
-    padding: "0px 40px"
+    padding: "0px 5px",
+    [theme.breakpoints.up('sm')]: {
+      padding: "0px 40px"
+    }
   }
 })
 
@@ -46,8 +49,7 @@ class FilterBar extends React.Component {
         {/*<Grid item xs={9} sm={7} md={5} lg={4} container
           alignItems='center' justify='space-between'>*/}
         <SourceButton
-          updateSource={this.props.updateSource}
-          />
+          updateSource={this.props.updateSource} />
 
         <FilterButton
           name='Need'

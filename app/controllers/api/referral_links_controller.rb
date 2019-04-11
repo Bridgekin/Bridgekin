@@ -18,7 +18,8 @@ class Api::ReferralLinksController < ApiController
     # else
     @link = ReferralLink.new(
       member_id: @user.id,
-      network_id: params[:referral][:network_id]
+      network_id: params[:referral][:network_id],
+      is_friendable: params[:referral][:is_friendable]
     )
     authorize @link
     if @link.save
@@ -42,6 +43,6 @@ class Api::ReferralLinksController < ApiController
   private
 
   def referral_params
-    params.permit(:member_id, :network_id, :referral_code)
+    params.permit(:member_id, :network_id, :referral_code, :is_friendable)
   end
 end

@@ -11,13 +11,13 @@ const styles = theme => ({
     flexGrow: 1,
   },
   cardHeader:{
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 600
   },
   filterCard:{
     // marginTop: 18,
     backgroundColor: theme.palette.base3,
-    width: '100%',
+    width: '80%',
     // borderRadius: 5,
     border: `1px solid ${theme.palette.border.secondary}`
   },
@@ -25,7 +25,7 @@ const styles = theme => ({
     borderTop: `1px solid ${theme.palette.border.secondary}`,
   },
   filterHeader:{
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 500
   },
 })

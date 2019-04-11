@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
@@ -10,8 +11,21 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Switch from '@material-ui/core/Switch';
 
 import copy from 'copy-to-clipboard';
+import { createReferral } from '../../actions/referral_actions';
+
+const mapStateToProps = (state, ownProps) => ({
+  currentUser: state.users[state.session.id],
+  workspaceOptions: state.entities.workspaceOptions,
+  referral: state.entities.referral,
+  networks: state.entities.networks,
+});
+
+const mapDispatchToProps = dispatch => ({
+  createReferral: (referral) => dispatch(createReferral(referral)),
+});
 
 const styles = theme => ({
   root: {
@@ -47,17 +61,25 @@ const styles = theme => ({
   textfieldInput:{
     padding: "10px 14px",
   },
+  switchBase:{
+    height: 30
+  }
 });
 
 class OpportunityReferral extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      referralNetwork: '',
       getLink: false,
-      copied: false
+      copied: false,
+      friendable: false,
+      usageType: false
     }
 
     this.handleCopy = this.handleCopy.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleCopy(link){
@@ -67,18 +89,36 @@ class OpportunityReferral extends React.Component{
     }
   }
 
+  handleChange(field){
+    return e => {
+      if (field === 'friendable'){
+        this.setState({ [field]: e.target.checked})
+      } else {
+        this.setState({ [field]: e.target.value})
+      }
+    }
+  }
+
   handleSubmit(){
-    // const { getLink } = this.state;
-    this.props.handleSubmit();
-    this.setState({ getLink: true, copied: false })
+
+    this.props.createReferral({
+      network_id: this.state.referralNetwork,
+      is_friendable: this.state.friendable,
+      usage_type: this.state.usageType ? 'Multi' : 'Single'
+    },
+    () => this.setState({ getLink: true, copied: false }))
   }
 
   render(){
     const { loading, classes, networks,
-            referralNetwork, referral } = this.props;
-    const { copied } = this.state;
+      referral, workspaceOptions } = this.props;
+    const { copied, referralNetwork, friendable } = this.state;
 
-    let options = networks.map(network => (
+    const networksArray = [...workspaceOptions]
+      .filter(x => x.includes('Network'))
+      .map(x => networks[x.split('-')[0]])
+
+    let options = networksArray.map(network => (
       <MenuItem value={network.id}>{network.title}</MenuItem>
     ));
 
@@ -89,16 +129,52 @@ class OpportunityReferral extends React.Component{
       <Grid container className={classes.root}
         justify="flex-start" alignItems="center" >
 
-        <Typography variant="h6" gutterBottom align='left'
-          color="textSecondary" className={classes.cardHeader}>
-          {`Create a referral link for your network`}
-        </Typography>
+        <Grid item xs={12}>
+          <Typography variant="h6" align='left'
+            color="textSecondary" className={classes.cardHeader}>
+            {`Create a referral link for your network`}
+          </Typography>
+        </Grid>
+
+        <Grid item xs={12} container alignItems='center'>
+          <Grid item xs={9}>
+            <Typography variant="h6" align='left'
+              color="textSecondary"
+              style={{ fontSize: 12}}>
+              {`Connect to user on signup`}
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Switch
+              checked={friendable}
+              onChange={this.handleChange('friendable')}
+              classes={{ switchBase: classes.switchBase}}
+              />
+          </Grid>
+        </Grid>
+        <Grid item xs={12} container alignItems='center'>
+          <Grid item xs={9}>
+            <Typography variant="h6" align='left'
+              color="textSecondary"
+              style={{ fontSize: 12}}>
+              {`Single-Use vs Multi-Use`}
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Switch
+              checked={friendable}
+              onChange={this.handleChange('usageType')}
+              classes={{ switchBase: classes.switchBase}}
+              />
+          </Grid>
+        </Grid>
         <Grid container justify='flex-start' spacing={16}>
-          <Grid item xs={12} sm={5} container alignItems='center'>
+          <Grid item xs={12} container alignItems='center'>
             <FormControl className={classes.formControl} fullWidth>
               <Select
+                placeholder="Choose a network"
                 value={referralNetwork}
-                onChange={this.props.handleChange}
+                onChange={this.handleChange('referralNetwork')}
                 name="age"
                 displayEmpty
                 className={classes.selectEmpty}>
@@ -106,12 +182,11 @@ class OpportunityReferral extends React.Component{
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} >
             <TextField
               id="outlined-read-only-input"
               placeholder='Link displays here'
               className={classes.textField}
-              margin="normal"
               fullWidth
               value={referralLink}
               variant='outlined'
@@ -141,4 +216,4 @@ class OpportunityReferral extends React.Component{
   }
 };
 
-export default withRouter((withStyles(styles)(OpportunityReferral)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter((withStyles(styles)(OpportunityReferral))));

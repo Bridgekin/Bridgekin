@@ -194,7 +194,7 @@ class ContactCard extends React.Component {
         return (
           <div>
             <Typography align='left' color='textPrimary'
-              style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}
+              style={{ fontSize: 13, fontWeight: 600, marginRight: 20}}
               className={classes.desktopOptions}>
               {`My Contact`}
             </Typography>
@@ -206,7 +206,7 @@ class ContactCard extends React.Component {
         return (
           <div>
             <Typography align='left' color='textPrimary'
-              style={{ fontSize: 14, fontWeight: 600, marginRight: 20}}
+              style={{ fontSize: 13, fontWeight: 600, marginRight: 20}}
               className={classes.desktopOptions}>
               {`Pending Invite`}
             </Typography>
@@ -442,7 +442,7 @@ class ContactCard extends React.Component {
             <Grid item xs={9} container direction='column'>
               <Typography variant="body1" align='left' color="textPrimary"
                 noWrap
-                style={{ fontSize: 15, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
+                style={{ fontSize: 13, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
                 {`${user.fname} ${user.lname}`}
               </Typography>
               <Typography variant="body1" align='left' color="textPrimary"

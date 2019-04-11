@@ -68,13 +68,13 @@ class Notifications extends React.Component {
 
       let notificationsPage = (
         <div>
-          <Grid container justify='flex-end'
+          {/*<Grid container justify='flex-end'
             style={{ marginBottom: 20 }}>
             <Button color='default' variant='contained'
               onClick={() => this.props.history.push("/account/settings/notifications")}>
               {`Edit Notification Settings`}
             </Button>
-          </Grid>
+          </Grid>*/}
 
           {notificationCards}
         </div>

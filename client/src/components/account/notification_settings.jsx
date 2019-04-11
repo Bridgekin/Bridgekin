@@ -133,20 +133,24 @@ class NotificationSettings extends React.Component {
 
             {inAppOptions.map(option => (
               <Grid container justify='space-between' alignItems='center'>
-                <Typography align='left' color='textPrimary'
-                  className={classes.notificationItem}>
-                  {option.string}
-                </Typography>
-                <Switch
-                  checked={this.state[option.value]}
-                  onChange={this.handleChange(option.value)}
-                  color="primary"
-                  style={{ height: 32}}
-                  classes={{
-                    icon: classes.switchIcon,
-                    bar: classes.switchBar
-                  }}
-                />
+                <Grid item xs={10}>
+                  <Typography align='left' color='textPrimary'
+                    className={classes.notificationItem}>
+                    {option.string}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Switch
+                    checked={this.state[option.value]}
+                    onChange={this.handleChange(option.value)}
+                    color="primary"
+                    style={{ height: 32}}
+                    classes={{
+                      icon: classes.switchIcon,
+                      bar: classes.switchBar
+                    }}
+                    />
+                </Grid>
               </Grid>
             ))}
           </Grid>
@@ -161,51 +165,59 @@ class NotificationSettings extends React.Component {
 
             {emailSwitchOptions.map(option => (
               <Grid container justify='space-between' alignItems='center'>
-                <Typography align='left' color='textPrimary'
-                  className={classes.notificationItem}>
-                  {option.string}
-                </Typography>
-                <Switch
-                  checked={this.state[option.value]}
-                  onChange={this.handleChange(option.value)}
-                  color="primary"
-                  style={{ height: 32}}
-                />
+                <Grid item xs={10}>
+                  <Typography align='left' color='textPrimary'
+                    className={classes.notificationItem}>
+                    {option.string}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Switch
+                    checked={this.state[option.value]}
+                    onChange={this.handleChange(option.value)}
+                    color="primary"
+                    style={{ height: 32}}
+                    />
+                </Grid>
               </Grid>
             ))}
 
             {emailSelectOptions.map(option => (
               <Grid container justify='space-between' alignItems='center'>
-                <Typography align='left' color='textPrimary'
-                  className={classes.notificationItem}>
-                  {option.string}
-                </Typography>
-                <Button style={{ textTransform: 'capitalize'}}
-                  onClick={this.handleMenuClick(option.anchor)}>
-                  {this.state[option.value] }
-                </Button>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={this.state[option.anchor]}
-                  open={Boolean(this.state[option.anchor])}
-                  onClose={this.handleMenuClick(option.anchor)}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                  }}
-                  getContentAnchorEl={null}
-                  >
-                  {cadence.map(cad => (
-                    <MenuItem onClick={this.handleMenuChange(option, cad)}
-                      value={cad}>
-                      {cad}
-                    </MenuItem>
-                  ))}
-                </Menu>
+                <Grid item xs={10}>
+                  <Typography align='left' color='textPrimary'
+                    className={classes.notificationItem}>
+                    {option.string}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Button style={{ textTransform: 'capitalize'}}
+                    onClick={this.handleMenuClick(option.anchor)}>
+                    {this.state[option.value] }
+                  </Button>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={this.state[option.anchor]}
+                    open={Boolean(this.state[option.anchor])}
+                    onClose={this.handleMenuClick(option.anchor)}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                    getContentAnchorEl={null}
+                    >
+                    {cadence.map(cad => (
+                      <MenuItem onClick={this.handleMenuChange(option, cad)}
+                        value={cad}>
+                        {cad}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Grid>
               </Grid>
             ))}
           </Grid>

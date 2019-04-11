@@ -48,13 +48,13 @@ const styles = theme => ({
   feedCard:{
     padding: "9px 8px 9px 8px",
     backgroundColor: theme.palette.base3,
-    borderTop: `1px solid ${theme.palette.border.primary}`,
-    borderBottom: `1px solid ${theme.palette.border.primary}`,
+    borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
     // width: '100%',
     [theme.breakpoints.up('sm')]: {
-      border: `1px solid ${theme.palette.border.primary}`,
+      border: `1px solid ${theme.palette.border.secondary}`,
       marginBottom: 9,
-      borderRadius: 5,
+      // borderRadius: 5,
       padding: "9px 17px 9px",
     }
   },
@@ -62,7 +62,7 @@ const styles = theme => ({
     padding: "9px 8px 9px 8px",
     backgroundColor: `${theme.palette.base3}`,
     // borderTop: `1px solid ${theme.palette.border.primary}`,
-    border: `1px solid ${theme.palette.border.primary}`,
+    border: `1px solid ${theme.palette.border.secondary}`,
     // width: '100%',
     marginBottom: 9,
     [theme.breakpoints.up('sm')]: {
@@ -70,48 +70,50 @@ const styles = theme => ({
     }
   },
   cardHeader:{
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 600
   },
   search: {
     position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.border.secondary}`,
+    // borderRadius: theme.shape.borderRadius,
+    // border: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid black`,
     width: '100%',
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'flex'
     },
+    height: 40
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing.unit * 4,
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     top: 0, right: 0
   },
   inputRoot: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     width: '100%',
     fontSize: 15,
     fontWeight: 500,
   },
   inputInput: {
     paddingTop: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingRight: theme.spacing.unit * 10,
+    paddingRight: theme.spacing.unit * 4,
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: 200,
     },
   },
-  sortBy: { fontSize: 14, fontWeight: 400, marginRight: 6},
+  sortBy: { fontSize: 13, fontWeight: 400, marginRight: 6},
   filter:{
     display: 'none',
     [theme.breakpoints.up('md')]: {
@@ -124,13 +126,14 @@ const styles = theme => ({
     // marginTop: 18,
     backgroundColor: `${theme.palette.base3}`,
     width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.border.primary}`
+    // borderRadius: 5,
+    border: `1px solid ${theme.palette.border.secondary}`
   },
-  filterHeader:{ fontSize: 14, fontWeight: 600 },
-  filterItem: { fontSize: 14, fontWeight: 400 },
+  filterHeader:{ fontSize: 13, fontWeight: 600 },
+  filterItem: { fontSize: 13, fontWeight: 400 },
   listSelected: { backgroundColor: '#E5DBDB'},
-  buttonText: { color: theme.palette.text.primary },
+  buttonLabel: { color: theme.palette.text.primary },
+  buttonText: { padding: "0px 8px 6px" }
 });
 
 class NetworkAdmin extends React.Component {
@@ -322,7 +325,7 @@ class NetworkAdmin extends React.Component {
       let userSortOptions = ['Recently Added', 'First Name', 'Last Name'];
 
       let search = (
-        <Grid item sm={7}
+        <Grid item sm={7} container alignItems={'center'}
           className={classes.search}>
           <InputBase
             placeholder="Search by name"
@@ -348,19 +351,23 @@ class NetworkAdmin extends React.Component {
               {`Our Contacts (${memberUserIds.size})`}
             </Typography>
           </Grid>
-          <Grid container justify='space-between'
+          <Grid container justify='space-between' alignItems='flex-end'
             className={classes.feedCard}>
             <Grid item xs={12} sm={5}>
+              <Typography align='left' color="textSecondary" fullWidth
+                className={classes.sortBy}>
+                {`Sort by:`}
+              </Typography>
               <Button color="primary"
                 style={{ paddingLeft: 0, textTransform: 'capitalize'}}
                 aria-owns={userSortAnchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
-                classes={{ label: classes.buttonText }}
+                classes={{
+                  label: classes.buttonLabel,
+                  root: classes.buttonText
+                }}
                 onClick={this.handleMenuOpen('userSortAnchorEl')}
                 >
-                <Typography align='left' className={classes.sortBy}>
-                  {`Sort by:`}
-                </Typography>
                 {userSortSetting}
                 <KeyboardArrowDownIcon style={{ fontSize: 20}}/>
               </Button>
