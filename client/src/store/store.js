@@ -15,18 +15,25 @@ const prod = process.env.NODE_ENV === 'production';
 //  environment: process.env.NODE_ENV,
 // });
 
-// const stateTransformer = state => {
-//   // make sure you don't change state tree
-//   const stateCopy = Object.assign({}, state);
-//   // make sure you don't change billing object (by reference)
-//   const billingCopy = Object.assign({}, stateCopy.billing);
-//   // override number in billing copy
-//   billingCopy.number = '######';
-//   // pass billing copy to state copy
-//   stateCopy.billing = billingCopy;
-//   // return sanitized state
-//   return stateCopy;
-// }
+const stateTransformer = state => {
+  // make sure you don't change state tree
+  const stateCopy = Object.assign({}, state);
+  // make sure you don't change billing object (by reference)
+  const usersCopy = Object.assign({}, stateCopy.users);
+  let usersKeys = Object.keys(usersCopy)
+  for(let i = 0; i < usersKeys.length; i++){
+    let key = usersKeys[i];
+    let user = Object.assign({}, usersCopy[key]);
+    user.email = '######';
+    user.fname = '######';
+    user.lname = '######';
+    usersCopy[key] = user;
+  }
+  // pass users copy to state copy
+  stateCopy.users = usersCopy
+  // return sanitized state
+  return stateCopy;
+}
 
 export default (preloadedState = {}) => {
   if(prod){
@@ -43,7 +50,9 @@ export default (preloadedState = {}) => {
       rootReducer,
       preloadedState,
       applyMiddleware(
-        createSentryMiddleware(Sentry),
+        createSentryMiddleware(Sentry, {
+          stateTransformer
+        }),
         thunk,
         logger,
       )
