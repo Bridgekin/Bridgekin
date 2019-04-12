@@ -12,9 +12,11 @@ import ThemeProvider from './theme_provider';
 import bugsnag from '@bugsnag/js'
 import bugsnagReact from '@bugsnag/plugin-react'
 
-let bugsnagClient = bugsnag('d8bce99bd337612bba15fa627e999afd');
+// let bugsnagClient = bugsnag('d8bce99bd337612bba15fa627e999afd');
+let bugsnagClient = bugsnag('60b52254c678957f441260927879d7fa');
 bugsnagClient.use(bugsnagReact, React);
 let BugsnagBoundary = bugsnagClient.getPlugin('react');
+// bugsnagClient.notify(new Error('Test error'))
 
 class Root extends React.Component{
   render(){
