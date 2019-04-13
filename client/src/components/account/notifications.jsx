@@ -30,6 +30,14 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  emptyOppsText:{
+    fontSize: 20,
+    fontWeight: 500,
+    margin: 10,
+    [theme.breakpoints.up('sm')]: {
+      margin: 30,
+    },
+  },
   // switchBar: { backgroundColor: 'black'}
 })
 
@@ -76,7 +84,11 @@ class Notifications extends React.Component {
             </Button>
           </Grid>*/}
 
-          {notificationCards}
+          {notificationCards.length > 0 ? notificationCards :
+            (<Typography variant="h3" color="textSecondary" align='center'
+                className={classes.emptyOppsText} gutterBottom>
+                {`You don’t have any new notifications`}
+              </Typography>)}
         </div>
       )
 

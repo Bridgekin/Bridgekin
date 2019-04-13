@@ -69,7 +69,8 @@ import datetimeDifference from "datetime-difference";
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  savedOpportunities: state.entities.savedOpportunities
+  savedOpportunities: state.entities.savedOpportunities,
+  networks: state.entities.networks
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -218,6 +219,7 @@ class OpportunityCard extends React.Component {
     this.toggleSavedOpportunity = this.toggleSavedOpportunity.bind(this);
     this.handlePass = this.handlePass.bind(this);
     this.getNotificationDate = this.getNotificationDate.bind(this);
+    this.getPermissionLabel = this.getPermissionLabel.bind(this);
   }
 
   handleCardOpen(cardModalPage, connectBool){
@@ -379,9 +381,26 @@ class OpportunityCard extends React.Component {
     }
   }
 
+  getPermissionLabel(){
+    const { permission, networks } = this.props;
+    // debugger
+    if (permission && permission.shareableType === 'Connection'){
+      if(permission.mass){
+        return 'Connections - '
+      } else {
+        return 'Direct - '
+      }
+    } else if(permission && permission.shareableType === 'Network'){
+      let networkTitle = networks[permission.shareableId].title
+      return `${networkTitle} - `
+    }
+    return ''
+  }
+
   render(){
-    const { classes, opportunity, editable, demo,
-      currentUser, savedOpportunities }= this.props;
+    const { classes, opportunity, editable,
+      demo, currentUser, savedOpportunities,
+      permType }= this.props;
 
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
@@ -473,6 +492,7 @@ class OpportunityCard extends React.Component {
                 </Typography>
                 <Typography align='left' color="textSecondary"
                   style={{ textTransform: 'capitalize', fontSize: 10}}>
+                  {this.getPermissionLabel()}
                   {this.getNotificationDate()}
                 </Typography>
               </Grid>

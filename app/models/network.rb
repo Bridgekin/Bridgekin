@@ -23,7 +23,9 @@ class Network < ApplicationRecord
   #   foreign_key: :network_id,
   #   class_name: :OpportunityNetwork
 
-  has_many :opp_permissions, as: :shareable
+  has_many :opp_permissions,
+    as: :shareable,
+    dependent: :destroy
 
   has_many :opportunities,
     through: :opp_permissions,

@@ -51,6 +51,7 @@ import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchWorkspaceOptions } from '../../actions/network_actions';
 import { createReferral } from '../../actions/referral_actions';
 import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
+import { fetchPassedOpportunities } from '../../actions/passed_opportunity_actions';
 import { fetchCurrentUserMetrics } from '../../actions/user_metric_actions';
 import { clearOpportunityErrors } from '../../actions/error_actions';
 // import OpportunityChangeModal from './opportunity_change_modal';
@@ -76,7 +77,8 @@ const mapStateToProps = (state, ownProps) => ({
   waitlistErrors: state.errors.waitlistUsers,
   opportunityErrors: state.errors.opportunities,
   opportunities: state.entities.opportunities,
-  networkOpps: state.entities.networkOpps,
+  // networkOpps: state.entities.networkOpps,
+  networkOppPerms: state.entities.networkOppPermissions,
   networks: state.entities.networks,
   circles: state.entities.circles,
   workspaceOptions: state.entities.workspaceOptions,
@@ -84,7 +86,8 @@ const mapStateToProps = (state, ownProps) => ({
   siteTemplate: state.siteTemplate,
   workspaces: state.workspaces,
   source: ownProps.match.params.source,
-  userMetrics: state.entities.userMetrics
+  userMetrics: state.entities.userMetrics,
+  passedOpps: state.entities.passedOpportunities,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -94,7 +97,8 @@ const mapDispatchToProps = dispatch => ({
   fetchCurrentUserMetrics: () => dispatch(fetchCurrentUserMetrics()),
   // createReferral: (referral) => dispatch(createReferral(referral)),
   clearOpportunityErrors: () => dispatch(clearOpportunityErrors()),
-  fetchSavedOpportunities: () => dispatch(fetchSavedOpportunities())
+  fetchSavedOpportunities: () => dispatch(fetchSavedOpportunities()),
+  fetchPassedOpportunities: () => dispatch(fetchPassedOpportunities())
 });
 
 const styles = theme => ({
@@ -231,11 +235,11 @@ const styles = theme => ({
     }
   },
   emptyOppsText:{
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: 500,
     margin: 10,
     [theme.breakpoints.up('sm')]: {
-      margin: 40,
+      margin: 30,
     },
   },
   metric: { fontSize: 20, fontWeight: 600, color: '#404040'},
@@ -342,6 +346,7 @@ class OpportunityHome extends React.Component {
     this.updateFilters = this.updateFilters.bind(this);
     this.filterOpportunities = this.filterOpportunities.bind(this);
     this.updateSource = this.updateSource.bind(this);
+    this.getOpportunities = this.getOpportunities.bind(this);
   }
 
   componentDidMount(){
@@ -350,6 +355,7 @@ class OpportunityHome extends React.Component {
 
     this.props.fetchSavedOpportunities();
     this.props.fetchCurrentUserMetrics();
+    this.props.fetchPassedOpportunities();
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -400,7 +406,6 @@ class OpportunityHome extends React.Component {
     for(let i = 0; i < keys.length; i++){
       let key = keys[i];
       let params = filters[key];
-
       if (key === "geography" || key === "industries"){
         if (params.size !== 0 &&
           new Set(opp[key].filter(x => params.has(x))).size === 0){
@@ -413,6 +418,114 @@ class OpportunityHome extends React.Component {
       }
     }
     return true
+  }
+
+  getDivider(type){
+    switch(type){
+      case "direct":
+        return;
+      default:
+        return;
+    }
+  }
+
+  getOpportunities(){
+    const { networkOppPerms, opportunities,
+      passedOpps, opportunityErrors, classes } = this.props;
+
+    let direct_perms = Object.values(networkOppPerms)
+      .filter(perm => (
+        perm.shareableType === "Connection" && !perm.mass &&
+        !passedOpps.has(perm.opportunityId)
+      ))
+
+    let indirect_perms = Object.values(networkOppPerms)
+      .filter(perm => (
+        perm.shareableType === "Connection" && perm.mass &&
+        !passedOpps.has(perm.opportunityId)
+      ))
+
+    let network_perms = Object.values(networkOppPerms)
+      .filter(perm => (
+        perm.shareableType === "Network" &&
+        !passedOpps.has(perm.opportunityId)
+      ))
+
+    let dividerMessages = {
+      'direct':'Shared Directly With You',
+      'indirect':'From Your Connections',
+      'network':'Shared To The Bridgekin Network',
+    }
+
+    let results = [{perms: direct_perms, type: 'direct'},
+      {perms: indirect_perms, type: 'indirect'},
+      {perms: network_perms, type: 'network'}]
+      .filter(({perms, type}) => perms.length > 0)
+      .map(({perms, type}) => {
+        let divider = <Grid container alignItems='center'
+          style={{ marginBottom: 5}}>
+          <Typography variant="body" color="textPrimary" align='center'
+            style={{ fontSize: 11, textTransform:'uppercase', marginRight: 10 }}>
+            {dividerMessages[type]}
+          </Typography>
+          <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
+        </Grid>
+
+        let cards = perms.map(perm => ({
+            opp: opportunities[perm.opportunityId],
+            perm
+          }))
+          .sort((a,b) => (new Date(b.opp.createdAt)) - (new Date(a.opp.createdAt)))
+          .map(({ opp, perm }) => <OpportunityCardFeed
+            opportunity={opp}
+            permission={perm}/>)
+
+        return (
+          <div>
+            {divider}
+            {cards}
+          </div>
+        )
+      })
+
+    if (results.length > 0){
+      return results
+    } else {
+      let noOppMessage = opportunityErrors.length > 0 ? (
+        <Typography variant="h3" color="textSecondary" align='center'
+          className={classes.emptyOppsText} gutterBottom>
+          {opportunityErrors[0]}
+        </Typography>
+      ) : (
+        <Typography variant="h3" color="textSecondary" align='center'
+          className={classes.emptyOppsText} gutterBottom>
+          {`There are no new opportunities for you to view`}
+        </Typography>
+      )
+      return noOppMessage
+    }
+
+    // Object.values(networkOppPerms).map(perm => perm.opportunityId)
+    // const filteredOpps = [...networkOpps].map(id => opportunities[id])
+    //   .filter(this.filterOpportunities)
+    //
+    // const opportunityCards = filteredOpps.length > 0 ? (
+    //   filteredOpps.map((opportunity, idx) => (
+    //     <OpportunityCardFeed
+    //       opportunity={opportunity}/>
+    //   ))
+    // ) : (opportunityErrors.length > 0 ? (
+    //     <Typography variant="h3" color="textSecondary" align='center'
+    //       className={classes.emptyOppsText} gutterBottom>
+    //       {opportunityErrors[0]}
+    //     </Typography>
+    //   ) : (
+    //     <Typography variant="h3" color="textSecondary" align='center'
+    //       className={classes.emptyOppsText} gutterBottom>
+    //       {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
+    //     </Typography>
+    //   )
+    // )
   }
 
   updateFilters(key){
@@ -717,7 +830,6 @@ class OpportunityHome extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-
         </Grid>
       )
 
@@ -837,27 +949,6 @@ class OpportunityHome extends React.Component {
       //   </Grid>
       // )
 
-      const filteredOpps = [...networkOpps].map(id => opportunities[id])
-        .filter(this.filterOpportunities)
-
-      const opportunityCards = filteredOpps.length > 0 ? (
-        filteredOpps.map((opportunity, idx) => (
-          <OpportunityCardFeed
-            opportunity={opportunity}/>
-        ))
-      ) : (opportunityErrors.length > 0 ? (
-          <Typography variant="h3" color="textSecondary" align='center'
-            className={classes.emptyOppsText} gutterBottom>
-            {opportunityErrors[0]}
-          </Typography>
-        ) : (
-          <Typography variant="h3" color="textSecondary" align='center'
-            className={classes.emptyOppsText} gutterBottom>
-            {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
-          </Typography>
-        )
-      )
-
       const column2 = (
         <Grid container justify='center' alignItems='center'
           style={{ padding: 0, width: '100%' }}>
@@ -882,6 +973,8 @@ class OpportunityHome extends React.Component {
           <div style={{ height: 50, width: '100%'}}/>
         </Grid>
       )
+
+      const opportunityCards = this.getOpportunities();
 
       const feed = (
         <Grid container justify='center' alignItems='center'>

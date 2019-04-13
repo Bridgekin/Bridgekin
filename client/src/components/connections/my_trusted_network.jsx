@@ -39,7 +39,7 @@ import IconButton from '@material-ui/core/IconButton';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
-  connections: state.connections,
+  // connections: state.connections,
   searchResultsPage: state.entities.searchResultsPage,
 });
 

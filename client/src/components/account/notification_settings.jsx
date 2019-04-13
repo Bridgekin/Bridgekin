@@ -31,7 +31,16 @@ const styles = theme => ({
     flexGrow: 1,
   },
   notificationHeader:{ fontSize: 13, fontWeight: 600},
+  notificationSubHeader:{ fontSize: 11, fontWeight: 400, marginRight: 5},
   notificationItem: { fontSize: 13, fontWeight: 400},
+  button:{
+    color: 'black',
+    backgroundColor: 'white',
+    border: '1px solid black',
+    padding: "3px 5px",
+    textTransform: 'capitalize',
+  },
+  menu: { padding: 0 },
   // switchIcon: {backgroundColor: 'white'},
   // switchBar: { backgroundColor: 'black'}
 })
@@ -106,25 +115,26 @@ class NotificationSettings extends React.Component {
 
     if (loaded){
       let inAppOptions = [
-        {value: 'oppsSharedDirect', string: 'Opportunities sent to you directly'},
-        {value: 'oppsSharedContacts', string: 'Opportunities posted by your contacts'},
-        {value: 'oppsSharedCommunities', string: 'Opportunities posted within you communities'},
-        {value: 'invitesRequested', string: 'Invitation requests'}
+        {value: 'oppsSharedDirect', string: 'Opportunities sent to you directly from a contact'},
+        {value: 'oppsSharedContacts', string: 'Opportunities posted by one of your contacts'},
+        {value: 'oppsSharedCommunities', string: 'Opportunities posted within The Bridgekin Network'},
+        {value: 'invitesRequested', string: 'Contact invitation requests'}
       ]
       let emailSwitchOptions = [
-        {value: 'emailOppsSharedDirect', string: 'When a user sends you an opportunity directly'},
-        {value: 'emailInvitesRequested', string: 'Invitation requests'}
+        {value: 'emailOppsSharedDirect', string: 'Opportunities sent to you directly from a contact'},
+        {value: 'emailOppsSharedContacts', string: 'Opportunities posted by one of your contacts'},
+        {value: 'emailInvitesRequested', string: 'Contact Invitation requests'}
       ]
-      let emailSelectOptions = [
-        {value: 'emailOppsSharedContacts', anchor: `contactsAnchorEl`,string: 'Opportunities posted by your contacts'},
-        {value: 'emailOppsSharedCommunities', anchor: `communitiesAnchorEl`, string: 'Opportunities posted within you communities'}
+      let emailRecapSelectOptions = [
+        {value: 'emailRecapSharedContacts', anchor: `contactsAnchorEl`, string: 'Summary of opportunities posted by your contacts'},
+        {value: 'emailRecapSharedCommunities', anchor: `communitiesAnchorEl`, string: 'Summary of opportunities posted within The Bridgekin Network'}
       ]
-      let cadence = ['Weekly', 'Monthly', 'Never']
+      let cadence = ['Daily', 'Weekly', 'Monthly', 'Never']
 
       let notificationCard = (
         <div>
           <Grid container>
-            <Grid item xs={12} >
+            <Grid item xs={12} style={{ marginBottom: 10}}>
               <Typography align='left' color='textPrimary'
                 className={classes.notificationHeader}>
                 {`In-App Notifications`}
@@ -155,8 +165,8 @@ class NotificationSettings extends React.Component {
             ))}
           </Grid>
 
-          <Grid container style={{ marginTop: 30}}>
-            <Grid item xs={12} >
+          <Grid container style={{ marginTop: 20}}>
+            <Grid item xs={12} style={{ marginBottom: 10}}>
               <Typography align='left' color='textPrimary'
                 className={classes.notificationHeader}>
                 {`Email Notifications`}
@@ -181,17 +191,28 @@ class NotificationSettings extends React.Component {
                 </Grid>
               </Grid>
             ))}
+          </Grid>
 
-            {emailSelectOptions.map(option => (
+          <Grid container style={{ marginTop: 20 }}>
+            <Grid item xs={12} style={{ marginBottom: 10}}>
+              <Typography align='left' color='textPrimary'
+                className={classes.notificationHeader}>
+                {`Email Recap Notifications`}
+              </Typography>
+            </Grid>
+
+            {emailRecapSelectOptions.map(option => (
               <Grid container justify='space-between' alignItems='center'>
-                <Grid item xs={10}>
+                <Grid item xs={9}>
                   <Typography align='left' color='textPrimary'
                     className={classes.notificationItem}>
                     {option.string}
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
-                  <Button style={{ textTransform: 'capitalize'}}
+                <Grid item xs={3} container justify='center'>
+                  <Button
+                    className={classes.button}
+                    style={{ textTransform: 'capitalize'}}
                     onClick={this.handleMenuClick(option.anchor)}>
                     {this.state[option.value] }
                   </Button>
@@ -206,7 +227,12 @@ class NotificationSettings extends React.Component {
                     }}
                     transformOrigin={{
                       vertical: 'top',
-                      horizontal: 'center',
+                      horizontal: 'left',
+                    }}
+                    MenuListProps={{
+                      classes:{
+                        root: classes.menu
+                      }
                     }}
                     getContentAnchorEl={null}
                     >

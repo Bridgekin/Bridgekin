@@ -15,43 +15,49 @@ class Api::OpportunitiesController < ApiController
     option = params[:option].split('-')
     @opportunities = []
     if option.empty?
-      @opportunities = opps_all_networks + opps_direct_connections +
-      opps_all_connections
+      # @opportunities = opps_all_networks + opps_direct_connections +
+      # opps_all_connections
+      direct_opp_perms,
+      indirect_opp_perms,
+      network_opp_perms,
+      @opportunities = fetch_all_opp_permissions
+      @opp_permissions = direct_opp_perms +
+        indirect_opp_perms + network_opp_perms
     else
       if option.first == 'all'
         case option.last
         when 'networks'
-          @opportunities = opps_all_networks
+          @opp_permissions = opps_all_networks
         when 'connections'
-          @opportunities = opps_all_connections
+          @opp_permissions = opps_all_connections
         when 'circles'
-          @opportunities = opps_all_circles
+          @opp_permissions = opps_all_circles
         else
         end
       elsif option.first == 'direct'
         # Only for Direct Connections
-        @opportunities = opps_direct_connections
+        @opp_permissions = opps_direct_connections
       else
         if option.last == 'network'
           if @user.member_networks.pluck(:id).include?(option.first.to_i)
             # For Networks by ID
-            @opportunities = opps_network_id(option.first)
+            @opp_permissions = opps_network_id(option.first)
           end
         elsif option.last == 'circle'
-          @opportunities = opps_circle_id(option.first)
+          @opp_permissions = opps_circle_id(option.first)
         end
       end
+      # @opportunities = @opportunities.sort{|a,b| b.created_at <=> a.created_at}
+      # @filteredOpps = @opportunities.pluck(:id)
+      @opportunities = @opp_permissions.map{|perm| perm.opportunity}
     end
 
-    if @opportunities.length > 0
-      # Sort by DESC
-      @opportunities = @opportunities.sort{|a,b| b.created_at <=> a.created_at}
-      @filteredOpps = @opportunities.pluck(:id)
-      render :index
-    else
-      render json: ["You don't have access to this resource"], status: 422
-    end
-
+    render :index
+    # if @opportunities.length === 0
+    #   render :index
+    # else
+    #   render json: ["You don't have access to this resource"], status: 422
+    # end
   end
 
   def user_index
@@ -60,7 +66,7 @@ class Api::OpportunitiesController < ApiController
       .where.not(deal_status: 'Deleted')
 
     @filteredOpps = @opportunities.pluck(:id)
-    render :index
+    render :personal_index
   end
 
   def all_touched_index
@@ -93,7 +99,7 @@ class Api::OpportunitiesController < ApiController
     #params[profileId]
     @opportunities = Opportunity.profile_index(params[:profile_id], @user)
     @filteredOpps = @opportunities.pluck(:id)
-    render :index
+    render :personal_index
   end
 
   def show

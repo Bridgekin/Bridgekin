@@ -292,7 +292,8 @@ const DEFAULTSTATE = {
   shareModalOpen: false,
   permissions: [],
   showFilters: false,
-  sharePanelExpanded: false
+  sharePanelExpanded: false,
+  contextLoaded: false
   // share: []
 }
 
@@ -357,17 +358,20 @@ class OpportunityChangeModal extends React.Component {
       // }
       if(nextModal.mode === 'create'){
         this.setState(merge({}, DEFAULTSTATE,
-          nextModal.opportunity, { permissions: ["-Network"]}));
+          nextModal.opportunity, { permissions: ["-Network"], contextLoaded: true}));
+        return true;
       } else {
         this.props.fetchOppPermissions(nextModal.opportunity.id)
         .then(() => {
           const { permissions } = this.props;
           this.setState(merge({}, DEFAULTSTATE,
-            nextModal.opportunity,{ permissions }))
+            nextModal.opportunity,{ permissions, contextLoaded: true}))
+          return true;
         })
       }
+    } else {
+      return true
     }
-    return true;
   }
 
   getSource(){
@@ -701,6 +705,7 @@ class OpportunityChangeModal extends React.Component {
     } else if (type === 'Circle'){
       return circles[typeId].title;
     } else if (type === 'Connection'){
+      // debugger
       let connection = connections[typeId]
       let friendId = (currentUser.id !== connection.userId) ?
       connection.userId : connection.friendId
@@ -739,7 +744,8 @@ class OpportunityChangeModal extends React.Component {
       mobileImageCropPending, imageModalOpen, picture,
       pictureUrl, title, submitModalOpen, anonymous,
       sendingProgress, shareModalOpen, permissions,
-      showFilters, sharePanelExpanded } = this.state;
+      showFilters, sharePanelExpanded,
+      contextLoaded } = this.state;
 
     const infoOpen = Boolean(infoAnchorEl);
     let opportunity = oppChangeModal.opportunity;
@@ -750,7 +756,7 @@ class OpportunityChangeModal extends React.Component {
       {title: 'Custom', type: 'other'}]
 
     // debugger
-    if(opportunity){
+    if(opportunity && contextLoaded){
       const isError = this.checkErrors();
 
       let oppForm = (

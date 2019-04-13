@@ -1,8 +1,11 @@
 import * as OpportunityApiUtil from '../util/opportunities_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveNetworks } from './network_actions';
-import { receiveNetworkOpps } from './network_opp_actions';
-import { receiveOppPermissions } from './opp_permission_actions';
+// import { receiveNetworkOpps } from './network_opp_actions';
+import { receiveOppPermissions,
+  receiveNetworkOppPermissions,
+  receiveNetworkOppPermission,
+  removeNetworkOppPermission } from './opp_permission_actions';
 import { receiveUserOpportunities } from './user_opportunity_actions';
 import { receiveProfileOpportunities } from './profile_opportunity_actions';
 import { receiveOpportunityErrors } from './error_actions';
@@ -38,7 +41,7 @@ export const fetchOpportunities = (workspaceId, option) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));
-      dispatch(receiveNetworkOpps(data.filteredOpps));
+      dispatch(receiveNetworkOppPermissions(data.oppPermissions));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

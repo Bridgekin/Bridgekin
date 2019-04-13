@@ -10,7 +10,9 @@ class Connection < ApplicationRecord
     foreign_key: :friend_id,
     class_name: :User
 
-  has_many :opp_permissions, as: :shareable
+  has_many :opp_permissions,
+    as: :shareable,
+    dependent: :destroy
 
   has_many :opportunities,
     through: :opp_permissions,

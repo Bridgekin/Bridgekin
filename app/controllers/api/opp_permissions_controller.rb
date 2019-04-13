@@ -8,7 +8,21 @@ class Api::OppPermissionsController < ApiController
 
   def index
     opp_perms = @opportunity.opp_permissions
-    @constructed_perms = createOppPermissions(opp_perms)
+    @networks = Network.where(
+      id: opp_perms.where(shareable_type: 'Network')
+      .pluck(:shareable_id))
+    @connections = Connection.where(
+      id: opp_perms.where(shareable_type: 'Connection')
+      .pluck(:shareable_id))
+
+    #make sure that we aren't passing perms for nonexistent targets
+    confirmed_perms = opp_perms.where(
+      shareable_id: @networks.pluck(:id),
+      shareable_type: 'Network')
+      .or(opp_perms.where(
+        shareable_id: @connections.pluck(:id),
+        shareable_type: 'Connection'))
+    @constructed_perms = createOppPermissions(confirmed_perms)
 
     render :index
   end

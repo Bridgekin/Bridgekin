@@ -33,10 +33,33 @@ export const receiveShareOptions = shareOptions => ({
 //   oppPermission
 // });
 
+export const RECEIVE_NETWORK_OPP_PERMISSIONS = 'RECEIVE_NETWORK_OPP_PERMISSIONS';
+export const RECEIVE_NETWORK_OPP_PERMISSION = 'RECEIVE_NETWORK_OPP_PERMISSION';
+export const REMOVE_NETWORK_OPP_PERMISSION = "REMOVE_NETWORK_OPP_PERMISSION";
+
+export const receiveNetworkOppPermissions = oppPerms => ({
+  type: RECEIVE_NETWORK_OPP_PERMISSIONS,
+  oppPerms,
+});
+
+export const receiveNetworkOppPermission = oppPerm => ({
+  type: RECEIVE_NETWORK_OPP_PERMISSION,
+  oppPerm,
+});
+
+export const removeNetworkOppPermission = oppPermId => ({
+  type: REMOVE_NETWORK_OPP_PERMISSION,
+  oppPermId
+});
+
 export const fetchOppPermissions = (opportunityId) => dispatch => (
   OppPermissionApiUtil.fetchOppPermissions(opportunityId)
     .then(handleErrors)
-    .then(data => dispatch(receiveOppPermissions(data.constructedPerms)))
+    .then(data => {
+      dispatch(receiveOppPermissions(data.constructedPerms))
+      dispatch(receiveNetworks(data.networks))
+      dispatch(receiveConnections(data.connections))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];

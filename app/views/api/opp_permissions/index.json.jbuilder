@@ -1,8 +1,17 @@
-# @opp_permissions.each do |opp_permission|
-#   json.set! opp_permission.id do
-#     json.partial! 'api/opp_permissions/permission',
-#     opp_permission: opp_permission
-#   end
-# end
-
 json.constructedPerms @constructed_perms
+
+json.networks do
+  @networks.each do |network|
+    json.set! network.id do
+      json.partial! 'api/networks/network', network: network
+    end
+  end
+end
+
+json.connections do
+  @connections.each do |connection|
+    json.set! connection.id do
+      json.partial! 'api/connections/connection', connection: connection
+    end
+  end
+end

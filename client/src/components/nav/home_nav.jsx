@@ -164,6 +164,8 @@ let styles = (theme) => ({
   },
   textfieldResize:{
     padding: "8px 12px",
+    fontSize: 14,
+    // padding: "4px 12px",
     color: theme.palette.text.tertiary,
     borderColor: `${theme.palette.text.tertiary} !important`
   },
@@ -645,9 +647,9 @@ class HomeNav extends React.Component {
             required
             id='email'
             label="Email"
+            variant='outlined'
             className={classes.textField}
             onChange={this.handleChange('email')}
-            variant="outlined"
             InputLabelProps={{
               shrink: true,
               classes: {
@@ -669,11 +671,11 @@ class HomeNav extends React.Component {
             required
             id="standard-password-input"
             label="Password"
-            className={classes.textField}
             type="password"
+            variant='outlined'
+            className={classes.textField}
             autoComplete="current-password"
             onChange={this.handleChange('password')}
-            variant="outlined"
             InputLabelProps={{
               shrink: true,
               classes: {

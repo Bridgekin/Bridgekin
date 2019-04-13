@@ -259,7 +259,7 @@ class SharePanel extends Component{
             </Grid>
           )
         case 'Connection':
-          let connection = connections[typeId]
+          let connection = connections[typeId];
           let friendId = (currentUser.id !== connection.userId) ?
           connection.userId : connection.friendId
           let friend = users[friendId];

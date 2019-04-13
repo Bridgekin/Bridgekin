@@ -21,6 +21,14 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  emptyOppsText:{
+    fontSize: 20,
+    fontWeight: 500,
+    margin: 10,
+    [theme.breakpoints.up('sm')]: {
+      margin: 30,
+    },
+  },
 })
 
 class Contacts extends React.Component {
@@ -50,6 +58,7 @@ class Contacts extends React.Component {
   }
 
   render(){
+    const { classes, pathName } = this.props;
     let connections = this.filterConnections();
     let connectionCards = connections.map(contact => (
       <FeedCard
@@ -57,9 +66,19 @@ class Contacts extends React.Component {
         />
     ))
 
+    let noContactMessage = {
+      '/mynetwork/invitations': 'You don’t have any new invitations',
+      '/mynetwork/pending': 'You don’t have any outstanding invitations sent',
+      '/mynetwork': 'You don’t have any trusted contacts yet'
+    }
+
     return (
       <div style={{ paddingBottom: 30}}>
-        {connectionCards}
+        {connectionCards.length > 0 ? connectionCards :
+          (<Typography variant="h3" color="textSecondary" align='center'
+              className={classes.emptyOppsText} gutterBottom>
+              {noContactMessage[pathName]}
+            </Typography>)}
       </div>
     )
   }
