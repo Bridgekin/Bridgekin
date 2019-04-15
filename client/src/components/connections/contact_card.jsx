@@ -315,7 +315,7 @@ class ContactCard extends React.Component {
         if(currentUser.id === contact.friendId){
           return (
             <div>
-              <Grid container justify='flex-end'
+              {/*<Grid container justify='flex-end'
                 className={classes.desktopOptions}>
                 <Button color='primary' variant='contained'
                   style={{ marginRight: 10 }}
@@ -326,10 +326,9 @@ class ContactCard extends React.Component {
                   onClick={this.removeConnection}>
                   Decline
                 </Button>
-              </Grid>
+              </Grid>*/}
 
-              <Grid container justify='flex-end'
-                className={classes.mobileOptions}>
+              <Grid container justify='flex-end'>
                 <IconButton aria-label="More"
                   onClick={this.handleMenuClick('inviteAnchorEl')}>
                   <MoreHorizIcon className={classes.horizIcon}/>

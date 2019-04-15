@@ -145,21 +145,24 @@ class FilterButton extends React.Component {
           }}
           getContentAnchorEl={null}
           >
-          {options.map(option => (
-            <MenuItem className={classes.menuItem}
-              onClick={this.handleChoice(option)}>
-              <Checkbox
-                checked={params.has(option)}
-                className={classes.size}
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-              />
-              <Typography variant='body1' color='textPrimary'
-                style={{ textTransform: 'capitalize', fontSize: 13}}>
-                {option}
-              </Typography>
-            </MenuItem>
-          ))}
+          <div
+            style={{ maxHeight: 280, overflow:'scroll'}}>
+            {options.map(option => (
+              <MenuItem className={classes.menuItem}
+                onClick={this.handleChoice(option)}>
+                <Checkbox
+                  checked={params.has(option)}
+                  className={classes.size}
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  />
+                <Typography variant='body1' color='textPrimary'
+                  style={{ textTransform: 'capitalize', fontSize: 13}}>
+                  {option}
+                </Typography>
+              </MenuItem>
+            ))}
+          </div>
           <Grid container justify='space-between'
             className={classes.submitBar}>
             <Button className={classes.submitButton}
