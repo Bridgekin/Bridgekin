@@ -67,7 +67,7 @@ export default ()=> (
       <ProtectedRoute path="/findandconnect/:source?" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
       <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
-      <AdminProtectedRoute path="/mynetwork" component={MyTrustedNetwork} />
+      <ProtectedRoute path="/mynetwork" component={MyTrustedNetwork} />
       <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
       <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
