@@ -783,7 +783,7 @@ class OpportunityChangeModal extends React.Component {
               rowsMax="3"
               fullWidth
               required
-              placeholder={ `Your business need or opportunity`}
+              placeholder={ `Your business need or opportunity?`}
               value={this.state.title}
               onChange={this.handleChange('title')}
               className={classes.descriptionTextField}
