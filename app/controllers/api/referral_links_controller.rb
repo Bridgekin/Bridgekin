@@ -19,12 +19,14 @@ class Api::ReferralLinksController < ApiController
     @link = ReferralLink.new(
       member_id: @user.id,
       network_id: params[:referral][:network_id],
-      is_friendable: params[:referral][:is_friendable]
+      is_friendable: params[:referral][:is_friendable],
+      usage_type: params[:referral][:usage_type]
     )
     authorize @link
     if @link.save
       render :show
     else
+      debugger
       render json: @link.errors.full_messages, status: 422
     end
     # end

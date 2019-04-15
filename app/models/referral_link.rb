@@ -1,6 +1,6 @@
 class ReferralLink< ApplicationRecord
   validates :member_id, :network_id, :referral_code, :status, :usage_type,
-    :is_friendable, presence: true
+    presence: true
   validates :referral_code, uniqueness: true
 
   after_initialize :ensure_referral_code

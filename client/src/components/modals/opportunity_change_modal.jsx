@@ -77,6 +77,7 @@ import { needsChoices, industryChoices, geographyChoices,
 import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchShareOptions } from '../../actions/opp_permission_actions';
 import { closeOppChange, openImageCrop, openSubmitOpp } from '../../actions/modal_actions';
+import { fetchConnections } from '../../actions/connection_actions';
 // import { clearConnectionErrors } from '../../actions/error_actions';
 
 // import SubmitModal from '../opportunity/submit_modal';
@@ -100,6 +101,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchShareOptions: () => dispatch(fetchShareOptions()),
+  fetchConnections: () => dispatch(fetchConnections()),
   closeOppChange: () => dispatch(closeOppChange()),
   openSubmitOpp: mode => dispatch(openSubmitOpp(mode)),
   openImageCrop: payload => dispatch(openImageCrop(payload)),
@@ -337,6 +339,7 @@ class OpportunityChangeModal extends React.Component {
   // }
   componentDidMount(){
     this.props.fetchShareOptions()
+    this.props.fetchConnections()
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -1097,7 +1100,7 @@ class OpportunityChangeModal extends React.Component {
                         .join(', ')}</b>
                     </Typography>
                     {sharePanelExpanded ?
-                      <KeyboardArrowDownIcon 
+                      <KeyboardArrowDownIcon
                         style={{ fontSize: 20 }}/> :
                       <KeyboardArrowUpIcon
                         style={{ fontSize: 20 }}/>}
