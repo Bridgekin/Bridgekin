@@ -408,7 +408,7 @@ class OpportunityHome extends React.Component {
     let opp = opportunities[perm.opportunityId]
     let keys = Object.keys(filters);
 
-    if(passedOpps.has(opp.id)){
+    if(!opp || passedOpps.has(opp.id)){
       return false
     }
 
