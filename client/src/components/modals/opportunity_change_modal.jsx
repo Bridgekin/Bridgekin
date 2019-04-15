@@ -407,7 +407,8 @@ class OpportunityChangeModal extends React.Component {
         }
       }
 
-      let mode = this.props.oppChangeModal.mode;
+      const { oppChangeModal } = this.props;
+      let mode = oppChangeModal.mode;
       let openSubmitModal = () => {
         let payload = {
           modalType: mode,
@@ -434,7 +435,7 @@ class OpportunityChangeModal extends React.Component {
           // this.handleClose();
         })
       } else {
-        formData.append(`opportunity[id]`, this.props.opportunity.id);
+        formData.append(`opportunity[id]`, oppChangeModal.opportunity.id);
         this.props.updateOpportunity(formData)
         .then(() => {
           if(this.props.opportunityErrors.length !== 0){
@@ -554,15 +555,18 @@ class OpportunityChangeModal extends React.Component {
   }
 
   handleSaveCroppedImage(newFile){
-    if(newFile && this.props.width !== 'xs'){
-      // normal screens
+    if(newFile){
       this.handleFileHelper(newFile, false, false)
-    } else if (newFile && this.props.width === 'xs'){
-      //mobile screens
-      this.handleFileHelper(newFile, false, false)
-    } else {
-      this.setState({ imageModalOpen: false})
     }
+    // if(newFile && this.props.width !== 'xs'){
+    //   // normal screens
+    //   this.handleFileHelper(newFile, false, false)
+    // } else if (newFile && this.props.width === 'xs'){
+    //   //mobile screens
+    //   this.handleFileHelper(newFile, false, false)
+    // } else {
+    //   this.setState({ imageModalOpen: false})
+    // }
   }
 
   handleFileHelper(file, bool, mobilePendingBool){
@@ -572,7 +576,6 @@ class OpportunityChangeModal extends React.Component {
       this.setState({
         picture: file,
         pictureUrl: fileReader.result,
-        // imageModalOpen: bool,
         mobileImageCropPending: mobilePendingBool
       },
       () => {

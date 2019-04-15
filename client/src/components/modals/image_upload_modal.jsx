@@ -49,7 +49,7 @@ const styles = theme => ({
   modalPaper:{
     margin: 0,
     minWidth: 290,
-    // width: '50%',
+    width: '50%',
     backgroundColor: theme.palette.base3
   },
   badge: {

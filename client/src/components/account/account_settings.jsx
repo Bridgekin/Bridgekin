@@ -36,7 +36,7 @@ import countryList from 'country-list';
 import { fetchEmailNotification, createEmailNotification }
   from '../../actions/email_notification_actions';
 import { updateUser } from '../../actions/user_actions';
-import { openUpdateUser } from '../../actions/modal_actions';
+import { openUpdateUser, openImageCrop } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -49,7 +49,8 @@ const mapDispatchToProps = dispatch => ({
   openUpdateUser: (settingsType) => dispatch(openUpdateUser(settingsType)),
   fetchEmailNotification: () => dispatch(fetchEmailNotification()),
   createEmailNotification: (notification) => dispatch(createEmailNotification(notification)),
-  updateUser: user => dispatch(updateUser(user))
+  updateUser: user => dispatch(updateUser(user)),
+  openImageCrop: payload => dispatch(openImageCrop(payload)),
 });
 
 const styles = theme => ({
@@ -334,31 +335,40 @@ class AccountSetting extends React.Component {
     }
   }
 
-  handleCloseImageModal(newFile){
-    if(newFile && this.props.width !== 'xs'){
-      // normal screens
+  handleSaveCroppedImage(newFile){
+    if(newFile){
       this.handleFileHelper(newFile, false, false)
-    } else if (newFile && this.props.width === 'xs'){
-      //mobile screens
-      this.handleFileHelper(newFile, false, false)
-    } else {
-      this.setState({
-        imageModalOpen: false,
-        profilePicFile: null,
-        previewUrl: null,
-      })
     }
+    // if(newFile && this.props.width !== 'xs'){
+    //   // normal screens
+    //   this.handleFileHelper(newFile, false, false)
+    // } else if (newFile && this.props.width === 'xs'){
+    //   //mobile screens
+    //   this.handleFileHelper(newFile, false, false)
+    // } else {
+    //   this.setState({ imageModalOpen: false })
+    // }
   }
 
-  handleFileHelper(file, bool, mobilePendingBool){
+  handleFileHelper(file, modalOpenBool, mobilePendingBool){
     let fileReader = new FileReader();
 
     fileReader.onloadend = () => {
       this.setState({
         profilePicFile: file,
         previewUrl: fileReader.result,
-        imageModalOpen: bool,
         mobileImageCropPending: mobilePendingBool
+      },
+      () => {
+        if(modalOpenBool){
+          let payload = {
+            ratio: (2.3/1),
+            fileUrl: fileReader.result,
+            handleDelete: this.handleRemoveFile.bind(this),
+            handleSave: this.handleSaveCroppedImage.bind(this)
+          }
+          this.props.openImageCrop(payload);
+        }
       })
     }
 

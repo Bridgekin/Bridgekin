@@ -180,7 +180,8 @@ const styles = theme => ({
   oppActionButton:{
     textTransform: 'capitalize',
     height: 30,
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
+    flexGrow: 1
   },
   pagePeel:{
     position: 'absolute',
@@ -669,13 +670,7 @@ class OpportunityCard extends React.Component {
                   <Typography variant="h5" align='left'
                     color="textPrimary"
                     className={classes.title} >
-                    <LinesEllipsis
-                      text={title}
-                      maxLine='2'
-                      ellipsis='...'
-                      trimRight
-                      basedOn='letters'
-                      />
+                    {title}
                   </Typography>
                 </div>}
               {opportunity.description &&
@@ -689,18 +684,10 @@ class OpportunityCard extends React.Component {
                       readLessText="Read less">
                       {description}
                     </ReadMoreAndLess>
-                    {/*<LinesEllipsis
-                      text={description}
-                      maxLine='3'
-                      ellipsis='...'
-                      trimRight
-                      basedOn='letters'
-                      />*/}
                   </Typography>
                 </div>}
 
               {opportunity.geography.length > 0 &&
-                viewType === 'card' &&
                 <div>
                   <Typography variant="h6" align='left'
                     color="textSecondary" noWrap
@@ -720,7 +707,6 @@ class OpportunityCard extends React.Component {
                 </div>}
 
               {opportunity.industries.length > 0 &&
-                viewType === 'card' &&
                 <div>
                   <Typography variant="h6" align='left'
                     color="textSecondary"
@@ -742,7 +728,6 @@ class OpportunityCard extends React.Component {
                 </div>}
 
               {opportunity.value &&
-                viewType === 'card' &&
                 <div>
                   <Typography variant="h6" align='left'
                     color="textSecondary"
@@ -783,70 +768,87 @@ class OpportunityCard extends React.Component {
             {currentUser.id !== ownerId ? (
               <Grid container justify='space-around'
               className={classes.feedCardActionContainer}>
-                <Button onClick={this.handleCardOpen('confirm', true)}
-                  classes={{ label: classes.oppActionButton }}>
-                  <img alt='connect' src={ConnectIcon}
-                    className={classes.oppActionIconPic}/>
-                  Connect
-                </Button>
-
-                <Button onClick={this.handleCardOpen('confirm', false)}
-                  classes={{ label: classes.oppActionButton }}>
-                  <img src={ReferIcon} alt=''
-                    className={classes.oppActionIconPic}/>
-                  Refer
-                </Button>
-
-                {!editable && currentUser &&
-                  (savedOpportunities[opportunity.id] ?
-                  <Button
+                <Grid item xs={3}>
+                  <Button fullWidth
+                    onClick={this.handleCardOpen('confirm', true)}
                     classes={{ label: classes.oppActionButton }}>
-                    <BookmarkIcon
-                      onClick={this.toggleSavedOpportunity}
-                      className={classes.bookmark}/>
-                    Save
-                  </Button> :
-                  <Button
-                    classes={{ label: classes.oppActionButton }}>
-                    <BookmarkBorderIcon
-                      onClick={this.toggleSavedOpportunity}
-                      className={classes.bookmark}/>
-                    Save
-                  </Button>)
-                }
+                    <img alt='connect' src={ConnectIcon}
+                      className={classes.oppActionIconPic}/>
+                    Connect
+                  </Button>
+                </Grid>
 
-                {!editable && currentUser &&
-                  opportunity.ownerId !== currentUser.id &&
-                  <Button onClick={this.handlePass}
-                    disabled={passedOppLoading}
+                <Grid item xs={3}>
+                  <Button fullWidth
+                    onClick={this.handleCardOpen('confirm', false)}
                     classes={{ label: classes.oppActionButton }}>
+                    <img src={ReferIcon} alt=''
+                      className={classes.oppActionIconPic}/>
+                    Refer
+                  </Button>
+                </Grid>
+
+                <Grid item xs={3}>
+                  {(savedOpportunities[opportunity.id] ?
+                    <Button fullWidth
+                      disabled={!currentUser || editable}
+                      classes={{ label: classes.oppActionButton }}>
+                      <BookmarkIcon
+                        onClick={this.toggleSavedOpportunity}
+                        className={classes.bookmark}/>
+                      Save
+                    </Button> :
+                    <Button fullWidth
+                      classes={{ label: classes.oppActionButton }}>
+                      <BookmarkBorderIcon
+                        onClick={this.toggleSavedOpportunity}
+                        className={classes.bookmark}/>
+                      Save
+                    </Button>)}
+                </Grid>
+
+                <Grid item xs={3}>
+                  <Button fullWidth
+                    onClick={this.handlePass}
+                    disabled={!currentUser || passedOppLoading}
+                      classes={{ label: classes.oppActionButton }}>
                     {passedOppLoading ? <CircularProgress className={classes.oppActionIcon}/> :
-                      <CloseIcon className={classes.oppActionIcon}/>}
-                    Pass
-                  </Button>}
+                    <CloseIcon className={classes.oppActionIcon}/>}
+                    {`Pass`}
+                  </Button>
+                </Grid>
               </Grid> ) : (
               <Grid container justify='space-around'
               className={classes.feedCardActionContainer}>
-                <Button onClick={this.handleFeedActions('Share')}
-                  classes={{ label: classes.oppActionButton }}>
-                  <ShareIcon
-                    className={classes.oppActionIconPic}/>
-                  Share
-                </Button>
+                <Grid item xs={4}>
+                  <Button fullWidth
+                    onClick={this.handleFeedActions('Share')}
+                    classes={{ label: classes.oppActionButton }}>
+                    <ShareIcon
+                      className={classes.oppActionIconPic}/>
+                    Share
+                  </Button>
+                </Grid>
 
-                <Button onClick={this.handleFeedActions('Edit')}
-                  classes={{ label: classes.oppActionButton }}>
-                  <EditIcon
-                    className={classes.oppActionIconPic}/>
-                  Edit
-                </Button>
+                <Grid item xs={4}>
+                  <Button fullWidth
+                    onClick={this.handleFeedActions('Edit')}
+                    classes={{ label: classes.oppActionButton }}>
+                    <EditIcon
+                      className={classes.oppActionIconPic}/>
+                    Edit
+                  </Button>
+                </Grid>
 
-                <Button onClick={this.handleFeedActions('Delete')}
-                  classes={{ label: classes.oppActionButton }}>
-                  <CloseIcon
-                    className={classes.oppActionIconPic}/>
-                  Delete
-                </Button>
+                <Grid item xs={4}>
+                  <Button fullWidth
+                    onClick={this.handleFeedActions('Delete')}
+                    classes={{ label: classes.oppActionButton }}>
+                    <CloseIcon
+                      className={classes.oppActionIconPic}/>
+                    Delete
+                  </Button>
+                </Grid>
 
               </Grid> )}
 
