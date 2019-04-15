@@ -44,7 +44,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchConnections: () => dispatch(fetchConnections()),
+  // fetchConnections: () => dispatch(fetchConnections()),
   updateConnection: connection => dispatch(updateConnection(connection)),
   deleteConnection: (id) => dispatch(deleteConnection(id)),
   fetchCircles: () => dispatch(fetchCircles()),
