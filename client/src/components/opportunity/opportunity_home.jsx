@@ -1049,7 +1049,7 @@ class OpportunityHome extends React.Component {
         <Grid container justify='center' alignItems='center'
           style={{ padding: 0, width: '100%' }}>
           <div className={classes.feedCard}
-            style={{ padding: "30px 25px" }}>
+            style={{ padding: "10px 17px" }}>
             <OpportunityWaitlist
               currentUser={currentUser}
               />

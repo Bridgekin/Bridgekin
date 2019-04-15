@@ -192,10 +192,11 @@ const styles = theme => ({
     position: 'fixed',
     borderRadius: 0,
     top: 64, //64,
+    width: '95%',
     [theme.breakpoints.up('sm')]: {
       top: 108,
+      width: 425 //350
     },
-    width: 350
   },
   postErrorText:{
     fontSize: 10,
@@ -787,14 +788,18 @@ class OpportunityChangeModal extends React.Component {
             style={{ padding: 20}}>
             <TextField
               multiline
+              rows={this.props.width === 'xs' ? "2" : "1" }
               rowsMax="3"
               fullWidth
               required
-              placeholder={ `Your business need or opportunity?`}
+              placeholder={ `What’s your business opportunity or need?`}
               value={this.state.title}
               onChange={this.handleChange('title')}
               className={classes.descriptionTextField}
               style={{ marginBottom: 20 }}
+              InputLabelProps={{
+                shrink: true
+              }}
               />
             <TextField
               id="outlined-multiline-static"

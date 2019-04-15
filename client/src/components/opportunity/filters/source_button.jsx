@@ -223,10 +223,16 @@ class SourceButton extends React.Component {
                 icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                 checkedIcon={<CheckBoxIcon fontSize="small" />}
               />
+            <div>
               <Typography variant='body1' color='textPrimary'
                 style={{ textTransform: 'capitalize', fontSize: 13}}>
                 {option.header}
               </Typography>
+              <Typography variant='body1' color='textSecondary'
+                style={{ textTransform: 'capitalize', fontSize: 9}}>
+                {option.subHeader}
+              </Typography>
+            </div>
               {option.value === 'all-networks' &&
                 networks.length > 1 &&
                 <Grid container justify='flex-end' style={{ flexGrow: 1 }}>
