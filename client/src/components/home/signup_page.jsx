@@ -269,7 +269,7 @@ class SignupPage extends React.Component{
       <div>
         <Grid container className={classes.homeGridDesktop}
           justify="flex-start" alignItems="center"
-          style={{ top: 64, position: 'relative'}}>
+          style={{ top: 45, position: 'relative'}}>
           <Grid item xs={11} sm={9} md={6} container justify="flex-start" alignItems="center"
             style={{ marginLeft: 50, marginTop: 20}}>
             <Grid item xs={10} >

@@ -308,8 +308,8 @@ class CustomEmailModal extends React.Component {
           style={{ padding: 20 }}>
           <Typography align='center' fullWidth
             style={{ fontSize: 13 }}>
-            {`We'll add greetings and salutations ("Hi, ${subjectFName}" and
-            "From, ${this.capitalize(currentUser.fname)}"). Change what you'd
+            {`We'll add greetings and salutations ("Hi, ${subjectFName}") and
+            it will come from "The Bridgekin Team". Change what you'd
             like and we'll send the email exacty as you've instructed.`}
           </Typography>
 

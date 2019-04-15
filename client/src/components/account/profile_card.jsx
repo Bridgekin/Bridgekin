@@ -321,36 +321,38 @@ class Profile extends React.Component {
                 {"********"}
               </Typography>
 
-              <Grid container>
-                <Typography variant="h6" align='left'
-                  color='textSecondary' className={classes.cardSection}
-                  style={{ margin: 0}}>
-                  Default Network
-                </Typography>
-              </Grid>
-              <Grid container alignItems="center"
-                style={{ marginBottom: 15}}>
-                <Grid item xs={8}>
-                  <Select
-                    fullWidth
-                    value={currentUser.defaultNetworkId}
-                    onChange={this.handleUpdateUserChange('defaultNetworkId')}
-                    inputProps={{
-                      name: 'defaultNetworkId',
-                      id: 'defaultNetworkId-simple',
-                      input: classes.selectDefault
-                    }}
-                    classes={{ root: classes.selectDefault }}
-                    renderValue={selected => workspaces[selected].title}
-                    >
-                    {Object.values(workspaces).map(workspace => (
-                      <MenuItem value={workspace.id}>
-                        {workspace.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
+              {Object.values(workspaces).length > 1 && <div>
+                <Grid container>
+                  <Typography variant="h6" align='left'
+                    color='textSecondary' className={classes.cardSection}
+                    style={{ margin: 0}}>
+                    Default Network
+                  </Typography>
                 </Grid>
-              </Grid>
+                <Grid container alignItems="center"
+                  style={{ marginBottom: 15}}>
+                  <Grid item xs={8}>
+                    <Select
+                      fullWidth
+                      value={currentUser.defaultNetworkId}
+                      onChange={this.handleUpdateUserChange('defaultNetworkId')}
+                      inputProps={{
+                        name: 'defaultNetworkId',
+                        id: 'defaultNetworkId-simple',
+                        input: classes.selectDefault
+                      }}
+                      classes={{ root: classes.selectDefault }}
+                      renderValue={selected => (workspaces[selected] && workspaces[selected].title)}
+                      >
+                      {Object.values(workspaces).map(workspace => (
+                        <MenuItem value={workspace.id}>
+                          {workspace.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                </Grid>
+              </div>}
 
               {currentUser.isAdmin && <Grid container>
                 <Grid item xs={8}>

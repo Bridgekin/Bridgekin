@@ -91,10 +91,10 @@ class OpportunityReferral extends React.Component{
 
   handleChange(field){
     return e => {
-      if (field === 'friendable'){
-        this.setState({ [field]: e.target.checked})
-      } else {
+      if (field === 'referralNetwork'){
         this.setState({ [field]: e.target.value})
+      } else {
+        this.setState({ [field]: e.target.checked})
       }
     }
   }
@@ -112,7 +112,8 @@ class OpportunityReferral extends React.Component{
   render(){
     const { loading, classes, networks,
       referral, workspaceOptions } = this.props;
-    const { copied, referralNetwork, friendable } = this.state;
+    const { copied, referralNetwork, friendable,
+      usageType } = this.state;
 
     const networksArray = [...workspaceOptions]
       .filter(x => x.includes('Network'))
@@ -162,7 +163,7 @@ class OpportunityReferral extends React.Component{
           </Grid>
           <Grid item xs={3}>
             <Switch
-              checked={friendable}
+              checked={usageType}
               onChange={this.handleChange('usageType')}
               classes={{ switchBase: classes.switchBase}}
               />

@@ -25,6 +25,7 @@ import Menu from '@material-ui/core/Menu';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
+import Popover from '@material-ui/core/Popover';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
@@ -70,7 +71,9 @@ import datetimeDifference from "datetime-difference";
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   savedOpportunities: state.entities.savedOpportunities,
-  networks: state.entities.networks
+  networks: state.entities.networks,
+  connections: state.entities.connections,
+  users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -188,9 +191,23 @@ const styles = theme => ({
     cursor: 'pointer'
   },
   moreIcon: { color: theme.palette.text.primary},
-  progress: { color: theme.palette.text.primary}
+  progress: { color: theme.palette.text.primary},
+  popover: {
+    pointerEvents: 'none', // very important aspect
+  },
+  paper: {
+    padding: theme.spacing.unit,
+  },
 });
 
+const abbrevDateName = {
+  'seconds': 'sec',
+  'minutes': 'min',
+  'hours': 'h',
+  'days': 'd',
+  'months': 'mo',
+  'years': 'yr'
+}
 
 class OpportunityCard extends React.Component {
   constructor(props){
@@ -204,6 +221,7 @@ class OpportunityCard extends React.Component {
       // dealStatusMenuOpen: false,
       dealStatusProgress: false,
       dealStatusAnchorEl: null,
+      permissionsAnchorEl: null,
       passedOppLoading: false
     }
 
@@ -220,6 +238,9 @@ class OpportunityCard extends React.Component {
     this.handlePass = this.handlePass.bind(this);
     this.getNotificationDate = this.getNotificationDate.bind(this);
     this.getPermissionLabel = this.getPermissionLabel.bind(this);
+    this.handlePermissionsOpen = this.handlePermissionsOpen.bind(this);
+    this.handlePermissionsClose = this.handlePermissionsClose.bind(this);
+    this.getPermissionsPopover = this.getPermissionsPopover.bind(this);
   }
 
   handleCardOpen(cardModalPage, connectBool){
@@ -363,7 +384,7 @@ class OpportunityCard extends React.Component {
     const resultKey = Object.keys(result)
       .filter(k => !!result[k])[0]
     // debugger
-    return `${result[resultKey]}${resultKey.slice(0,1)}`
+    return `${result[resultKey]}${abbrevDateName[resultKey]}`
   }
 
   getStatusColor(status){
@@ -382,30 +403,81 @@ class OpportunityCard extends React.Component {
   }
 
   getPermissionLabel(){
-    const { permission, networks } = this.props;
-    // debugger
-    if (permission && permission.shareableType === 'Connection'){
-      if(permission.mass){
-        return 'Connections - '
-      } else {
-        return 'Direct - '
-      }
-    } else if(permission && permission.shareableType === 'Network'){
-      let networkTitle = networks[permission.shareableId].title
-      return `${networkTitle} - `
+    const { permission, permType, networks } = this.props;
+
+    let shareLength = Object.values(permission.sharePerms).reduce((acc, opts) => (
+      acc + opts.length), 0);
+    if(permType === 'direct'){
+      return `Direct ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
+    } else if(permType === 'indirect'){
+      return `Connections ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
+    } else if(permType === 'network'){
+      let networkTitle = networks[permission.sharePerms.network[0]].title
+      return `Bridgekin ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
     }
     return ''
+  }
+
+  handlePermissionsOpen(e){
+    e.stopPropagation()
+    console.log('open Permissions')
+    this.setState({ permissionsAnchorEl: e.currentTarget})
+  }
+
+  handlePermissionsClose(e){
+    e.stopPropagation()
+    console.log('close Permissions')
+    this.setState({ permissionsAnchorEl: null})
+  }
+
+  getPermissionsPopover(){
+    const { networks, connections, permission,
+      currentUser, users } = this.props;
+
+    let content = ['direct', 'indirect', 'network'].filter(perm => permission.sharePerms[perm].length > 0)
+      .map(type => {
+        let label = type === 'direct' ? 'direct' :
+          (type === 'indirect' ? 'Connections' : 'Bridgekin')
+        let title = <Typography color='textSecondary' gutterBottom
+          style={{ textTransform: 'capitalize', fontSize: 9}}>
+          <u>{label}</u>
+        </Typography>
+
+        let shares = permission.sharePerms[type].map(id => {
+          let name = ''
+          if (type === 'network'){
+            name = networks[id].title;
+          } else {
+            let connection = connections[id];
+            let friendId = (currentUser.id !== connection.userId) ?
+            connection.userId : connection.friendId
+            let friend = users[friendId];
+            name = `${friend.fname} ${friend.lname}`
+          }
+          return <Typography color='textPrimary' gutterBottom
+            style={{ textTransform: 'capitalize', fontSize: 9}}>
+            {name}
+          </Typography>
+        })
+        return <Grid container direction='column'>
+          {title}
+          {shares}
+        </Grid>
+      })
+
+    return content
   }
 
   render(){
     const { classes, opportunity, editable,
       demo, currentUser, savedOpportunities,
-      permType }= this.props;
+      permType, home }= this.props;
 
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
     dealStatusProgress, dealStatusAnchorEl,
-    detailsAnchorEl, passedOppLoading } = this.state;
+    detailsAnchorEl, passedOppLoading,
+    permissionsAnchorEl } = this.state;
 
     const detailsOpen = Boolean(detailsAnchorEl);
 
@@ -414,32 +486,32 @@ class OpportunityCard extends React.Component {
         value, status, pictureUrl, dealStatus, anonymous, viewType,
         ownerPictureUrl, ownerFirstName, ownerLastName, ownerId } = opportunity;
 
-      let deleteDialog = editable ? (
-        <Dialog
-          open={this.state.deleteOpen}
-          onClose={this.handleDeleteClose(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Delete Your Opportunity"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {`You about to delete your opportunity permanently.
-                You can not undo this action. Do you still want to continue?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleDeleteClose(false)}>
-              Cancel
-            </Button>
-            <Button autoFocus variant='contained'
-              className={classes.delete}
-              onClick={this.handleDeleteClose(true)}>
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-      ) : (<div></div>)
+      // let deleteDialog = editable ? (
+      //   <Dialog
+      //     open={this.state.deleteOpen}
+      //     onClose={this.handleDeleteClose(false)}
+      //     aria-labelledby="alert-dialog-title"
+      //     aria-describedby="alert-dialog-description"
+      //   >
+      //     <DialogTitle id="alert-dialog-title">{"Delete Your Opportunity"}</DialogTitle>
+      //     <DialogContent>
+      //       <DialogContentText id="alert-dialog-description">
+      //         {`You about to delete your opportunity permanently.
+      //           You can not undo this action. Do you still want to continue?`}
+      //       </DialogContentText>
+      //     </DialogContent>
+      //     <DialogActions>
+      //       <Button onClick={this.handleDeleteClose(false)}>
+      //         Cancel
+      //       </Button>
+      //       <Button autoFocus variant='contained'
+      //         className={classes.delete}
+      //         onClick={this.handleDeleteClose(true)}>
+      //         Delete
+      //       </Button>
+      //     </DialogActions>
+      //   </Dialog>
+      // ) : (<div></div>)
 
       // let cardIcon = this.getCardIcon(status);
 
@@ -485,16 +557,38 @@ class OpportunityCard extends React.Component {
                 )}
               </Grid>
               <Grid container item xs={8} direction='column'
-                justify='flex-end'>
+                justify='flex-start'>
                 <Typography align='left' color="textPrimary"
                   style={{ textTransform: 'capitalize', fontSize: 14}}>
                   {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
                 </Typography>
-                <Typography align='left' color="textSecondary"
+                {home && <Typography align='left' color="textSecondary"
+                  onMouseEnter={this.handlePermissionsOpen}
+                  onMouseLeave={this.handlePermissionsClose}
                   style={{ textTransform: 'capitalize', fontSize: 10}}>
                   {this.getPermissionLabel()}
                   {this.getNotificationDate()}
-                </Typography>
+                </Typography>}
+                {home && <Popover
+                  className={classes.popover}
+                  classes={{
+                    paper: classes.paper,
+                  }}
+                  anchorEl={permissionsAnchorEl}
+                  open={Boolean(permissionsAnchorEl)}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  onClose={this.handlePermissionsClose}
+                  disableRestoreFocus
+                >
+                  {this.getPermissionsPopover()}
+                </Popover>}
               </Grid>
             </Grid>
 
@@ -704,7 +798,6 @@ class OpportunityCard extends React.Component {
                 </Button>
 
                 {!editable && currentUser &&
-                  currentUser.isAdmin &&
                   (savedOpportunities[opportunity.id] ?
                   <Button
                     classes={{ label: classes.oppActionButton }}>
@@ -722,7 +815,7 @@ class OpportunityCard extends React.Component {
                   </Button>)
                 }
 
-                {!editable &&
+                {!editable && currentUser &&
                   opportunity.ownerId !== currentUser.id &&
                   <Button onClick={this.handlePass}
                     disabled={passedOppLoading}
@@ -757,7 +850,7 @@ class OpportunityCard extends React.Component {
 
               </Grid> )}
 
-            {editable && deleteDialog}
+            {/*editable && deleteDialog*/}
           </Grid>
 
           {/*<CardModal

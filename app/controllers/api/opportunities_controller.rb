@@ -17,12 +17,13 @@ class Api::OpportunitiesController < ApiController
     if option.empty?
       # @opportunities = opps_all_networks + opps_direct_connections +
       # opps_all_connections
-      direct_opp_perms,
-      indirect_opp_perms,
-      network_opp_perms,
+      # direct_opp_perms,
+      # indirect_opp_perms,
+      # network_opp_perms,
+      @opp_permissions,
       @opportunities = fetch_all_opp_permissions
-      @opp_permissions = direct_opp_perms +
-        indirect_opp_perms + network_opp_perms
+      # @opp_permissions = direct_opp_perms +
+      #   indirect_opp_perms + network_opp_perms
     else
       if option.first == 'all'
         case option.last
@@ -51,7 +52,7 @@ class Api::OpportunitiesController < ApiController
       # @filteredOpps = @opportunities.pluck(:id)
       @opportunities = @opp_permissions.map{|perm| perm.opportunity}
     end
-
+    # debugger
     render :index
     # if @opportunities.length === 0
     #   render :index

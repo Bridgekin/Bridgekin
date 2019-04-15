@@ -70,6 +70,7 @@ import HomeImage from '../../static/Login_Background_Image.jpg'
 import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
 import FilterBar from './filters/filter_bar';
+import merge from 'lodash/merge';
 // import Loading from '../loading';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -255,7 +256,9 @@ const styles = theme => ({
     border: `1px solid white`,
     boxShadow: `0px 1px 5px 0px rgba(0,0,0,0.2),
       0px 2px 2px 0px rgba(0,0,0,0.14),
-      0px 3px 1px -2px rgba(0,0,0,0.12)`
+      0px 3px 1px -2px rgba(0,0,0,0.12)`,
+    backgroundColor: 'white',
+    borderRadius: '50%'
   },
   column1:{
     padding: 0, width: '100%'
@@ -399,9 +402,14 @@ class OpportunityHome extends React.Component {
     return source ? source : '';
   }
 
-  filterOpportunities(opp){
+  filterOpportunities(perm){
     const { filters } = this.state;
+    const { opportunities } = this.props;
+    let opp = opportunities[perm.opportunityId]
     let keys = Object.keys(filters);
+    // if(!opp){
+    //   debugger
+    // }
 
     for(let i = 0; i < keys.length; i++){
       let key = keys[i];
@@ -433,22 +441,45 @@ class OpportunityHome extends React.Component {
     const { networkOppPerms, opportunities,
       passedOpps, opportunityErrors, classes } = this.props;
 
-    let direct_perms = Object.values(networkOppPerms)
-      .filter(perm => (
-        perm.shareableType === "Connection" && !perm.mass &&
-        !passedOpps.has(perm.opportunityId)
+    let uniqPerms = Object.values(networkOppPerms).reduce((acc, perm) => {
+      if (acc[perm.opportunityId]){
+        let hash = acc[perm.opportunityId];
+        if (perm.shareableType === 'Connection' && !perm.mass){
+          hash.sharePerms.direct.push(perm.shareableId)
+        } else if (perm.shareableType === 'Connection' && perm.mass){
+          hash.sharePerms.indirect.push(perm.shareableId)
+        } else if (perm.shareableType === 'Network'){
+          hash.sharePerms.network.push(perm.shareableId)
+        }
+
+      } else {
+        let value = merge({}, perm);
+        if (perm.shareableType === 'Connection' && !perm.mass){
+          value.sharePerms = merge({},{'direct':[value.shareableId], 'indirect':[], 'network':[] });
+        } else if (perm.shareableType === 'Connection' && perm.mass){
+          value.sharePerms = merge({}, {'indirect':[value.shareableId], 'direct':[], 'network':[] });
+        } else if (perm.shareableType === 'Network'){
+          value.sharePerms = merge({}, {'network':[value.shareableId], 'indirect':[], 'direct':[] });
+        }
+        acc[perm.opportunityId] = value;
+      }
+      return acc
+    },{})
+
+    let direct_perms = Object.values(uniqPerms)
+      .filter(uniqPerm => uniqPerm.sharePerms.direct.length > 0 )
+
+    let indirect_perms = Object.values(uniqPerms)
+      .filter(uniqPerm => (
+        uniqPerm.sharePerms.direct.length === 0 &&
+        uniqPerm.sharePerms.indirect.length > 0
       ))
 
-    let indirect_perms = Object.values(networkOppPerms)
-      .filter(perm => (
-        perm.shareableType === "Connection" && perm.mass &&
-        !passedOpps.has(perm.opportunityId)
-      ))
-
-    let network_perms = Object.values(networkOppPerms)
-      .filter(perm => (
-        perm.shareableType === "Network" &&
-        !passedOpps.has(perm.opportunityId)
+    let network_perms = Object.values(uniqPerms)
+      .filter(uniqPerm => (
+        uniqPerm.sharePerms.direct.length === 0 &&
+        uniqPerm.sharePerms.indirect.length === 0 &&
+        uniqPerm.sharePerms.network.length > 0
       ))
 
     let dividerMessages = {
@@ -460,6 +491,10 @@ class OpportunityHome extends React.Component {
     let results = [{perms: direct_perms, type: 'direct'},
       {perms: indirect_perms, type: 'indirect'},
       {perms: network_perms, type: 'network'}]
+      .map(({perms, type}) => {
+        perms = perms.filter(this.filterOpportunities)
+        return {perms, type}
+      })
       .filter(({perms, type}) => perms.length > 0)
       .map(({perms, type}) => {
         let divider = <Grid container alignItems='center'
@@ -478,11 +513,14 @@ class OpportunityHome extends React.Component {
           .sort((a,b) => (new Date(b.opp.createdAt)) - (new Date(a.opp.createdAt)))
           .map(({ opp, perm }) => <OpportunityCardFeed
             opportunity={opp}
-            permission={perm}/>)
+            permission={perm}
+            permType={type}
+            home={true}/>
+          )
 
         return (
           <div>
-            {divider}
+            {cards.length > 0 && divider}
             {cards}
           </div>
         )
@@ -504,6 +542,22 @@ class OpportunityHome extends React.Component {
       )
       return noOppMessage
     }
+
+    // .map(({perms, type}) => {
+    //   let uniqHash = perms.reduce((acc, perm) => {
+    //     if (acc[perm.opportunityId]){
+    //       // debugger
+    //       let value = acc[perm.opportunityId];
+    //       value.shareableId.push(perm.shareableId)
+    //     } else {
+    //       let value = merge({}, perm);
+    //       value.shareableId = [value.shareableId];
+    //       acc[perm.opportunityId] = value;
+    //     }
+    //     return acc
+    //   },{})
+    //   return { uniqHash, type }
+    // })
 
     // Object.values(networkOppPerms).map(perm => perm.opportunityId)
     // const filteredOpps = [...networkOpps].map(id => opportunities[id])
@@ -956,8 +1010,9 @@ class OpportunityHome extends React.Component {
             style={{ padding: "30px 25px" }}>
             <Typography gutterBottom align='center'
               className={classes.cardHeader} color='textPrimary'
-              style={{ marginBottom: 20, fontSize: 13 }}>
-              {`Brigekin is an invitation only community of creators, investors, and connectors`}
+              style={{ marginBottom: 20, fontSize: 13, fontWeight: 600 }}>
+              {`Invite your top business contacts to privately send and
+                connect to opportunities with the ones you trust`}
             </Typography>
 
             <OpportunityWaitlist

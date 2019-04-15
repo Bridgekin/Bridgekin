@@ -178,16 +178,18 @@ class User < ApplicationRecord
   def set_connections(referral_link)
     waitlist_user = WaitlistUser.includes(:referrals)
       .find_by(email: self.email)
+
     if waitlist_user
       referral_ids = waitlist_user.referrals.pluck(:from_referral_id)
       connection_array = referral_ids.map do |referral_id|
         { user_id: referral_id, friend_id: self.id, status: 'Accepted'}
       end
-      if referral_link.is_friendable
-        connection_array << { user_id: self.id, status: 'Accepted',
-          friend_id: referral_link.member_id }
-      end
       Connection.create(connection_array)
+    end
+
+    if referral_link.is_friendable
+      Connection.create( user_id: self.id, status: 'Accepted',
+        friend_id: referral_link.member_id )
     end
   end
 

@@ -773,7 +773,7 @@ class OpportunityChangeModal extends React.Component {
           <Grid item xs={10} alignItems='center'>
             <Typography align='left' color="textPrimary"
               variant='body1' style={{ fontSize: 15, marginLeft: 10, textTransform: 'capitalize' }}>
-              {`${currentUser.fname} ${currentUser.lname}`}
+              {anonymous ? 'Anonymous' : `${currentUser.fname} ${currentUser.lname}`}
             </Typography>
           </Grid>
           <Grid container
@@ -795,7 +795,7 @@ class OpportunityChangeModal extends React.Component {
               fullWidth
               required
               helperText="Optional"
-              placeholder={"Describe your most pressing business need or opportunity?"}
+              placeholder={`Additional details`}
               value={this.state.description}
               onChange={this.handleChange('description')}
               className={classes.descriptionTextField}
@@ -1061,7 +1061,6 @@ class OpportunityChangeModal extends React.Component {
                   {valueChoices.map(choice => (
                     <MenuItem value={choice}
                       style={{ textTransform: 'capitalize'}}>
-                      {choice}
                       <ListItemText
                         primary={choice}
                         classes={{ primary: classes.textListPrimary }}/>

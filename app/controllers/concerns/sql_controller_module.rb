@@ -22,8 +22,8 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunity_id: direct_opp_perms.pluck(:opportunity_id),
         opportunities: {deal_status: 'Deleted'})
+        # opportunity_id: direct_opp_perms.pluck(:opportunity_id),
 
     network_opp_perms = OppPermission.includes(:opportunity)
       .joins("INNER JOIN opportunities on opp_permissions.opportunity_id = opportunities.id")
@@ -32,18 +32,19 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunity_id: direct_opp_perms.pluck(:opportunity_id),
-        opportunity_id: indirect_opp_perms.pluck(:opportunity_id),
         opportunities: {deal_status: 'Deleted'})
+        # opportunity_id: direct_opp_perms.pluck(:opportunity_id),
+        # opportunity_id: indirect_opp_perms.pluck(:opportunity_id),
 
     #Pull out opportunities
     all_perms = direct_opp_perms + indirect_opp_perms + network_opp_perms
     all_opportunities = all_perms.map{|perm| perm.opportunity}
 
-    return direct_opp_perms,
-      indirect_opp_perms,
-      network_opp_perms,
-      all_opportunities
+    return all_perms, all_opportunities
+    # return direct_opp_perms,
+    #   indirect_opp_perms,
+    #   network_opp_perms,
+    #   all_opportunities
   end
 
   def opps_all_networks
