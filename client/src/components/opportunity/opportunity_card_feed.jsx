@@ -674,7 +674,7 @@ class OpportunityCard extends React.Component {
                   </Typography>
                 </div>}
               {opportunity.description &&
-                <div style={{ margin: "10px 0px 30px"}}>
+                <div style={{ margin: "10px 0px"}}>
                   <Typography variant="body2" align='left'
                     color="textPrimary"
                     className={classes.description}>
@@ -767,7 +767,8 @@ class OpportunityCard extends React.Component {
 
             {currentUser.id !== ownerId ? (
               <Grid container justify='space-around'
-              className={classes.feedCardActionContainer}>
+              className={classes.feedCardActionContainer}
+              style={{ marginTop: 10}}>
                 <Grid item xs={3}>
                   <Button fullWidth
                     onClick={this.handleCardOpen('confirm', true)}

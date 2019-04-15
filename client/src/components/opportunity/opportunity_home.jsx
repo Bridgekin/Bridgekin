@@ -910,7 +910,7 @@ class OpportunityHome extends React.Component {
                 </Typography>
                 <Typography align='center' color='textPrimary'
                   style={{ fontSize: 16, fontWeight: 600}}>
-                  {`${userMetrics.receivedOpps}`}
+                  {`${userMetrics.receivedOpps || 'n/a'}`}
                 </Typography>
               </Grid>
               <Grid item xs={12} container justify='space-between'
@@ -921,7 +921,7 @@ class OpportunityHome extends React.Component {
                 </Typography>
                 <Typography align='center' color='textPrimary'
                   style={{ fontSize: 16, fontWeight: 600}}>
-                  {`${userMetrics.connectedOpps}`}
+                  {`${userMetrics.connectedOpps || 'n/a'}`}
                 </Typography>
               </Grid>
             </Grid>
