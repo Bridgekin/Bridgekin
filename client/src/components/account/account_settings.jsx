@@ -362,7 +362,7 @@ class AccountSetting extends React.Component {
       () => {
         if(modalOpenBool){
           let payload = {
-            ratio: (2.3/1),
+            ratio: (1),
             fileUrl: fileReader.result,
             handleDelete: this.handleRemoveFile.bind(this),
             handleSave: this.handleSaveCroppedImage.bind(this)

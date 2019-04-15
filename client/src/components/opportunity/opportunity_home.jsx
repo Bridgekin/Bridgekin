@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 //Import Material Components
 import { withStyles } from '@material-ui/core/styles';
@@ -64,6 +65,7 @@ import PictureIconSVG from '../../static/opp_feed_icons/picture.svg'
 import ShareIconSVG from '../../static/opp_feed_icons/share.svg'
 import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
 import PersonIcon from '@material-ui/icons/PersonSharp';
+import EditIcon from '@material-ui/icons/EditSharp';
 import CreateOppButton from './create_opp_button';
 import HomeImage from '../../static/Login_Background_Image.jpg'
 
@@ -285,6 +287,19 @@ const styles = theme => ({
     borderBottom: `1px solid ${theme.palette.border.secondary}`,
     width: 298,
     backgroundImage: "linear-gradient(rgb(128,128,128,0.4),rgb(255,255,255,0.4))"
+  },
+  editHover:{
+    position: 'absolute',
+    top: 1, left: 1,
+    width: 64, height: 64,
+    backgroundColor: "rgb(128,128,128,0.4)",
+    borderRadius: '50%'
+  },
+  editHoverIcon:{
+    color: 'white', width: 22, height: 22,
+    borderRadius: '50%',
+    backgroundColor: 'grey',
+    padding: 8
   }
 });
 
@@ -323,6 +338,7 @@ class OpportunityHome extends React.Component {
       // dropdownFocus: '',
       referralNetwork: null,
       anchorEl: null,
+      editHover: false,
       filters: {
         opportunityNeed: new Set(),
         industries: new Set(),
@@ -350,6 +366,8 @@ class OpportunityHome extends React.Component {
     this.filterOpportunities = this.filterOpportunities.bind(this);
     this.updateSource = this.updateSource.bind(this);
     this.getOpportunities = this.getOpportunities.bind(this);
+    this.handleEditHover = this.handleEditHover.bind(this);
+    this.sendToAccountSettings = this.sendToAccountSettings.bind(this);
   }
 
   componentDidMount(){
@@ -791,6 +809,18 @@ class OpportunityHome extends React.Component {
     }
   };
 
+  handleEditHover(open){
+    return e => {
+      e.stopPropagation();
+      this.setState({ editHover: open})
+    }
+  }
+
+  sendToAccountSettings(e){
+    e.stopPropagation();
+    this.props.history.push('/account/settings');
+  }
+
   capitalize(str){
     return str[0].toUpperCase() + str.slice(1)
   }
@@ -803,7 +833,7 @@ class OpportunityHome extends React.Component {
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
         filterMobileAnchorEl, networksLoaded,
-        filters} = this.state;
+        filters, editHover} = this.state;
 
     const networksArray = [...workspaceOptions]
       .filter(x => x.includes('Network'))
@@ -835,13 +865,24 @@ class OpportunityHome extends React.Component {
 
               <Grid container direction='column' alignItems='center'
                 style={{ width: 300, position: 'absolute', top: 30}}>
-                {currentUser.profilePicUrl ? (
-                  <Avatar alt="profile-pic"
-                    src={currentUser.profilePicUrl}
-                    className={classes.avatar} />
-                ) : (
-                  <AccountCircle className={classes.avatar}/>
-                )}
+                <div
+                  style={{ position: 'relative'}}
+                  onMouseEnter={this.handleEditHover(true)}
+                  onMouseLeave={this.handleEditHover(false)}>
+                  {currentUser.profilePicUrl ? (
+                    <Avatar alt="profile-pic"
+                      src={currentUser.profilePicUrl}
+                      className={classes.avatar} />
+                  ) : (
+                    <AccountCircle className={classes.avatar}/>
+                  )}
+                  {editHover && <Grid container justify='center'
+                    alignItems='center'
+                    onClick={this.sendToAccountSettings}
+                    className={classes.editHover}>
+                    <EditIcon className={classes.editHoverIcon}/>
+                  </Grid>}
+                </div>
                 <Grid item xs={8} container justify='center'>
                   <Typography align='center' color='textPrimary'
                     className={classes.userName}>
@@ -1103,7 +1144,7 @@ class OpportunityHome extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(OpportunityHome));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(OpportunityHome)));
 
 // <WaitlistModal
 //   open={waitlistOpen}

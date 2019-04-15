@@ -169,7 +169,7 @@ class SourceButton extends React.Component {
     const genericDropdownOptions = currentUser.isAdmin ? [
       {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
         value: '', disabled: false},
-      {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
+      {header: 'Bridgekin Network' , subHeader: 'Opportunities posted within my networks',
         value: 'all-networks', disabled: false},
       {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
         value: 'all-connections',disabled: false},
@@ -180,9 +180,11 @@ class SourceButton extends React.Component {
       ] : [
       {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
       value: '', disabled: false},
-      {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
+      {header: 'Bridgekin Network' , subHeader: 'Opportunities posted within my networks',
         value: 'all-networks', disabled: false}
       ]
+
+    let networks = [...workspaceOptions].filter(x => x.includes('Network'))
 
     return (
       <div>
@@ -226,6 +228,7 @@ class SourceButton extends React.Component {
                 {option.header}
               </Typography>
               {option.value === 'all-networks' &&
+                networks.length > 1 &&
                 <Grid container justify='flex-end' style={{ flexGrow: 1 }}>
                   <IconButton onClick={this.toggleNetworksMenu}
                     className={classes.expand}>
