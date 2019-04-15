@@ -158,6 +158,13 @@ class OpportunityWaitlist extends React.Component{
     return(
       <Grid container className={classes.root}
         justify="center" alignItems="center" spacing={8}>
+        <Typography gutterBottom align='center'
+          className={classes.cardHeader} color='textPrimary'
+          style={{ margin: '10px 0px 15px', fontSize: 13, fontWeight: 600 }}>
+          {`Invite your top business contacts to privately send and
+            connect to opportunities with the ones you trust`}
+        </Typography>
+
         <Typography align='right'
           variant='body1' fullWidth
           className={classes.inviteCounter}>

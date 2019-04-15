@@ -123,11 +123,6 @@ class MyTrustedNetwork extends React.Component {
       let waitlistCard = (
         <FeedCard contents={
           <div>
-            <Typography gutterBottom align='left'
-              className={classes.cardHeader} color='textPrimary'
-              style={{ marginBottom: 20}}>
-              Invite your trusted business contacts
-            </Typography>
             <OpportunityWaitlist
               currentUser={currentUser} />
           </div>

@@ -39,7 +39,7 @@ const styles = theme => ({
     margin: '0 auto',
     [theme.breakpoints.up('md')]: {
       position: 'relative',
-      width: 980, //1040,
+      width: 1055, // 980 //1040,
       height: '100%'
     },
   },
@@ -47,7 +47,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       marginLeft: 315,
       // marginLeft: 15,
-      width: 350,
+      width: 425,
       position: 'relative',
       paddingLeft: 0,
       paddingRight: 0,

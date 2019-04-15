@@ -404,12 +404,13 @@ class OpportunityHome extends React.Component {
 
   filterOpportunities(perm){
     const { filters } = this.state;
-    const { opportunities } = this.props;
+    const { opportunities, passedOpps } = this.props;
     let opp = opportunities[perm.opportunityId]
     let keys = Object.keys(filters);
-    // if(!opp){
-    //   debugger
-    // }
+
+    if(passedOpps.has(opp.id)){
+      return false
+    }
 
     for(let i = 0; i < keys.length; i++){
       let key = keys[i];
@@ -848,7 +849,7 @@ class OpportunityHome extends React.Component {
                   </Typography>
                 </Grid>
                 <Grid item xs={8} container justify='center'>
-                  <Typography variant="body1" align='left' color="textSecondary"
+                  <Typography variant="body1" align='center' color="textSecondary"
                     style={{ fontSize: 10, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
                     {currentUser.title && `${currentUser.title} @ `}
                     {currentUser.company && `${currentUser.company}`}
@@ -1008,13 +1009,6 @@ class OpportunityHome extends React.Component {
           style={{ padding: 0, width: '100%' }}>
           <div className={classes.feedCard}
             style={{ padding: "30px 25px" }}>
-            <Typography gutterBottom align='center'
-              className={classes.cardHeader} color='textPrimary'
-              style={{ marginBottom: 20, fontSize: 13, fontWeight: 600 }}>
-              {`Invite your top business contacts to privately send and
-                connect to opportunities with the ones you trust`}
-            </Typography>
-
             <OpportunityWaitlist
               currentUser={currentUser}
               />

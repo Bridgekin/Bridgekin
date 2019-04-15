@@ -486,7 +486,7 @@ class HomeNav extends React.Component {
             My Account
           </Typography>
         </MenuItem>
-        {currentUser && currentUser.isAdmin &&
+        {currentUser &&
         <MenuItem onClick={this.handleLinkClose('managenetworks')}
           className={classes.menuItem}>
           <Typography variant="body1" align='left' color="textPrimary"
@@ -539,7 +539,7 @@ class HomeNav extends React.Component {
             Opportunities
           </Typography>
         </MenuItem>
-        {currentUser && currentUser.isAdmin &&
+        {currentUser &&
         <MenuItem onClick={this.handleLinkClose('mynetwork')}>
           <Typography variant="body1" align='left' color="textPrimary"
             className={classes.menuItem}>
@@ -733,7 +733,7 @@ class HomeNav extends React.Component {
               Opportunities
             </Typography>
           </Button>
-          {currentUser && currentUser.isAdmin &&
+          {currentUser &&
             <Button color='secondary'
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
@@ -745,7 +745,7 @@ class HomeNav extends React.Component {
             </Button>
           }
 
-          {currentUser && currentUser.isAdmin &&
+          {currentUser &&
             <Badge badgeContent={this.countNotifications()}
               classes={{ badge: classes.badge}}
               onClick={this.handleNotificationMenuOpen}

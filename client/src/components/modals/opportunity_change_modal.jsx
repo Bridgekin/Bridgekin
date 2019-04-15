@@ -54,6 +54,7 @@ import InfoIcon from '@material-ui/icons/InfoSharp';
 import SendIcon from '@material-ui/icons/SendSharp';
 import PersonIcon from '@material-ui/icons/PersonSharp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUpSharp';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeftSharp';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRightSharp';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -1087,13 +1088,20 @@ class OpportunityChangeModal extends React.Component {
                   style={{ fontSize: 12}}>
                   {`Share with:`}
                 </Typography>
-                <Typography variant='body1' align='left'
-                  color="textPrimary"
-                  style={{ fontSize: 13}}>
-                  {`Everyone in `}
-                  <b>{[...permissions].map(perm => this.capitalize(this.getTitle(perm)))
-                    .join(', ')}</b>
-                </Typography>
+                <Grid container alignItems='flex-end'>
+                  <Typography variant='body1' align='left'
+                    color="textPrimary"
+                    style={{ fontSize: 13}}>
+                    {`Everyone in `}
+                    <b>{[...permissions].map(perm => this.capitalize(this.getTitle(perm)))
+                        .join(', ')}</b>
+                    </Typography>
+                    {sharePanelExpanded ?
+                      <KeyboardArrowDownIcon 
+                        style={{ fontSize: 20 }}/> :
+                      <KeyboardArrowUpIcon
+                        style={{ fontSize: 20 }}/>}
+                </Grid>
               </Grid>
               <Grid item xs={5} container justify='flex-end'
                 alignItems='center'>
