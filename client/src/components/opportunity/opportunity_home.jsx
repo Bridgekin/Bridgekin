@@ -534,7 +534,7 @@ class OpportunityHome extends React.Component {
             opportunity={opp}
             permission={perm}
             permType={type}
-            home={true}/>
+            showPerms={true}/>
           )
 
         return (

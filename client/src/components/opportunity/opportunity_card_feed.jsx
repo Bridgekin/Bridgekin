@@ -54,7 +54,7 @@ import { createSavedOppportunity, deleteSavedOppportunity}
 import { openOppCard, openDirectLink,
   openOppChange, openDeleteOpp } from '../../actions/modal_actions';
 import { createDirectLink } from '../../actions/direct_link_actions';
-import { createPassedOpportunity } from '../../actions/passed_opportunity_actions';
+import { createPassedOpportunity, deletePassedOpportunity } from '../../actions/passed_opportunity_actions';
 import theme from '../theme';
 
 import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
@@ -73,11 +73,12 @@ const mapStateToProps = state => ({
   savedOpportunities: state.entities.savedOpportunities,
   networks: state.entities.networks,
   connections: state.entities.connections,
-  users: state.users
+  users: state.users,
 });
 
 const mapDispatchToProps = dispatch => ({
   createPassedOpportunity: (oppId) => dispatch(createPassedOpportunity(oppId)),
+  deletePassedOpportunity: (oppId) => dispatch(deletePassedOpportunity(oppId)),
   openOppCard: (payload) => dispatch(openOppCard(payload)),
   openDirectLink: (opp) => dispatch(openDirectLink(opp)),
   openOppChange: (payload) => dispatch(openOppChange(payload)),
@@ -264,8 +265,14 @@ class OpportunityCard extends React.Component {
     this.setState({ passedOppLoading: true }
     ,() => {
       e.stopPropagation()
-      this.props.createPassedOpportunity(this.props.opportunity.id)
-      .then(() => this.setState({ passedOppLoading: false }))
+      const { passed } = this.props;
+      if(!passed){
+        this.props.createPassedOpportunity(this.props.opportunity.id)
+        .then(() => this.setState({ passedOppLoading: false }))
+      } else {
+        this.props.deletePassedOpportunity(this.props.opportunity.id)
+        .then(() => this.setState({ passedOppLoading: false }))
+      }
     })
   }
 
@@ -405,18 +412,18 @@ class OpportunityCard extends React.Component {
 
   getPermissionLabel(){
     const { permission, permType, networks } = this.props;
-
     let shareLength = Object.values(permission.sharePerms).reduce((acc, opts) => (
       acc + opts.length), 0);
+    // debugger
     if(permType === 'direct'){
       return `Direct ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
     } else if(permType === 'indirect'){
       return `Connections ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
     } else if(permType === 'network'){
       let networkTitle = networks[permission.sharePerms.network[0]].title
-      return `Bridgekin ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
+      return `Bridgekin - `
     }
-    return ''
+    return 'Shared - '
   }
 
   handlePermissionsOpen(e){
@@ -433,12 +440,12 @@ class OpportunityCard extends React.Component {
 
   getPermissionsPopover(){
     const { networks, connections, permission,
-      currentUser, users } = this.props;
+      currentUser, opportunity, users } = this.props;
 
     let content = ['direct', 'indirect', 'network'].filter(perm => permission.sharePerms[perm].length > 0)
       .map(type => {
         let label = type === 'direct' ? 'direct' :
-          (type === 'indirect' ? 'Connections' : 'Bridgekin')
+          (type === 'indirect' ? 'Connections' : 'Network')
         let title = <Typography color='textSecondary' gutterBottom
           style={{ textTransform: 'capitalize', fontSize: 9}}>
           <u>{label}</u>
@@ -450,6 +457,9 @@ class OpportunityCard extends React.Component {
             name = networks[id].title;
           } else {
             let connection = connections[id];
+            if(!connection){
+              debugger
+            }
             let friendId = (currentUser.id !== connection.userId) ?
             connection.userId : connection.friendId
             let friend = users[friendId];
@@ -472,7 +482,7 @@ class OpportunityCard extends React.Component {
   render(){
     const { classes, opportunity, editable,
       demo, currentUser, savedOpportunities,
-      permType, home }= this.props;
+      permType, showPerms, passed }= this.props;
 
     const { cardOpen, cardModalPage, connectBool,
     changeModalOpen, dealStatusMenuOpen,
@@ -563,14 +573,14 @@ class OpportunityCard extends React.Component {
                   style={{ textTransform: 'capitalize', fontSize: 14}}>
                   {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
                 </Typography>
-                {home && <Typography align='left' color="textSecondary"
+                <Typography align='left' color="textSecondary"
                   onMouseEnter={this.handlePermissionsOpen}
                   onMouseLeave={this.handlePermissionsClose}
                   style={{ textTransform: 'capitalize', fontSize: 10}}>
-                  {this.getPermissionLabel()}
+                  {showPerms ? this.getPermissionLabel() : 'Shared'}
                   {this.getNotificationDate()}
-                </Typography>}
-                {home && <Popover
+                </Typography>
+                {showPerms && <Popover
                   className={classes.popover}
                   classes={{
                     paper: classes.paper,
@@ -815,7 +825,7 @@ class OpportunityCard extends React.Component {
                       classes={{ label: classes.oppActionButton }}>
                     {passedOppLoading ? <CircularProgress className={classes.oppActionIcon}/> :
                     <CloseIcon className={classes.oppActionIcon}/>}
-                    {`Pass`}
+                    {passed ? `Unpass` : `Pass`}
                   </Button>
                 </Grid>
               </Grid> ) : (

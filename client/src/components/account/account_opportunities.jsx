@@ -22,6 +22,7 @@ import { fetchConnectedOpportunities } from '../../actions/connected_opportunity
 import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
 import OpportunityCardFeed from '../opportunity/opportunity_card_feed';
 // import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
+import merge from 'lodash/merge';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -32,6 +33,7 @@ const mapStateToProps = state => ({
   facilitatedOpps: state.entities.facilitatedOpportunities,
   savedOpportunities: state.entities.savedOpportunities,
   networks: Object.values(state.entities.networks),
+  userOppPermissions: state.entities.userOppPermissions
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -144,8 +146,6 @@ class AccountOpportunities extends React.Component {
         return [...connectedOpps].map(id => opportunities[id]);
       case 'referred':
         return [...facilitatedOpps].map(id => opportunities[id]);
-      case 'posted':
-        return [...userOpps].map(id => opportunities[id])
       case 'passed':
         return [...passedOpps].map(id => opportunities[id])
       case 'saved':
@@ -157,6 +157,46 @@ class AccountOpportunities extends React.Component {
     }
   }
 
+  getUserOpps(){
+    const { userOppPermissions, opportunities } = this.props;
+
+    let uniqPerms = Object.values(userOppPermissions).reduce((acc, perm) => {
+      if (acc[perm.opportunityId]){
+        let hash = acc[perm.opportunityId];
+        if (perm.shareableType === 'Connection' && !perm.mass){
+          hash.sharePerms.direct.push(perm.shareableId)
+        } else if (perm.shareableType === 'Connection' && perm.mass){
+          hash.sharePerms.indirect.push(perm.shareableId)
+        } else if (perm.shareableType === 'Network'){
+          hash.sharePerms.network.push(perm.shareableId)
+        }
+
+      } else {
+        let value = merge({}, perm);
+        if (perm.shareableType === 'Connection' && !perm.mass){
+          value.sharePerms = merge({},{'direct':[value.shareableId], 'indirect':[], 'network':[] });
+        } else if (perm.shareableType === 'Connection' && perm.mass){
+          value.sharePerms = merge({}, {'indirect':[value.shareableId], 'direct':[], 'network':[] });
+        } else if (perm.shareableType === 'Network'){
+          value.sharePerms = merge({}, {'network':[value.shareableId], 'indirect':[], 'direct':[] });
+        }
+        acc[perm.opportunityId] = value;
+      }
+      return acc
+    },{})
+
+    return Object.values(uniqPerms).map(perm => ({
+        opp: opportunities[perm.opportunityId],
+        perm
+      }))
+      .sort((a,b) => (new Date(b.opp.createdAt)) - (new Date(a.opp.createdAt)))
+      .map(({ opp, perm }) => <OpportunityCardFeed
+        opportunity={opp}
+        permission={perm}
+        showPerms={true}/>
+      )
+  }
+
   render (){
     const { classes, currentUser, oppFilter } = this.props;
     const { loaded, focusedOpportunity, changeModalOpen } = this.state;
@@ -165,24 +205,35 @@ class AccountOpportunities extends React.Component {
     //   Object.assign({}, network, {type: 'network'})
     // ))
 
-    let filteredOpportunities = this.getOpportunities();
 
-    let opportunityCards = filteredOpportunities.map(opportunity => (
-      <OpportunityCardFeed
-        currentUser={currentUser}
-        opportunity={opportunity}
-        editable={oppFilter === 'posted'}
-        />
-    ));
+    // let opportunityCards = filteredOpportunities.map(opportunity => (
+    //   <OpportunityCardFeed
+    //     currentUser={currentUser}
+    //     opportunity={opportunity}
+    //     editable={oppFilter === 'posted'}
+    //     />
+    // ));
 
     if (loaded){
+      let opportunityCards = oppFilter === 'posted' ? (
+        this.getUserOpps()
+      ) : (
+        this.getOpportunities().map(opportunity => (
+          <OpportunityCardFeed
+            currentUser={currentUser}
+            opportunity={opportunity}
+            passed={oppFilter === 'passed'}
+            editable={oppFilter === 'posted'}
+            />
+        ))
+      )
+
       return (
         <Grid container justify='center' alignItems='center'
           className={classes.oppFeedContainer}>
           <div style={{ overflow: 'scroll', paddingBottom: 50,
             width: '100%'}}>
-            {filteredOpportunities.length > 0 &&
-              opportunityCards.length > 0 ? opportunityCards : (
+            {opportunityCards.length > 0 ? opportunityCards : (
                 <Typography variant="h3" gutterBottom color="textSecondary"
                   align='center' className={classes.emptyOppsText}>
                   {`You haven't ${oppFilter} any opportunities yet`}

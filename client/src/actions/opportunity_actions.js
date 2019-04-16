@@ -5,7 +5,9 @@ import { receiveNetworks } from './network_actions';
 import { receiveOppPermissions,
   receiveNetworkOppPermissions,
   receiveNetworkOppPermission,
-  removeNetworkOppPermission } from './opp_permission_actions';
+  removeNetworkOppPermission,
+  receiveUserOppPermissions,
+  receiveProfileOppPermissions } from './opp_permission_actions';
 import { receiveUserOpportunities } from './user_opportunity_actions';
 import { receiveProfileOpportunities } from './profile_opportunity_actions';
 import { receiveOpportunityErrors } from './error_actions';
@@ -56,7 +58,7 @@ export const fetchAllTouchedOpportunities = () => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));
-      dispatch(receiveUserOpportunities(data.userOpportunityIds));
+      dispatch(receiveUserOppPermissions(data.userOppPermissions));
       dispatch(receiveConnectedOpportunities(data.connectedOpportunityIds))
       dispatch(receiveFacilitatedOpportunities(data.facilitatedOpportunityIds))
       dispatch(receivePassedOpportunities(data.passedOpportunityIds));
@@ -75,7 +77,7 @@ export const fetchUserOpportunities = () => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunities(data.opportunities));
-      dispatch(receiveUserOpportunities(data.filteredOpps));
+      dispatch(receiveUserOppPermissions(data.oppPermissions));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

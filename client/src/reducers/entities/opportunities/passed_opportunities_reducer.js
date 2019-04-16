@@ -13,7 +13,7 @@ import {
       return new Set([...state, action.opportunityId])
     case REMOVE_PASSED_OPPORTUNITY:
       let newState = new Set([...state]);
-      newState.delete(action.opportunityId)
+      newState.delete(action.oppId)
       return newState;
     default:
       return state;

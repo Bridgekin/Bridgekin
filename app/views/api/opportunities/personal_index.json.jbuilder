@@ -7,3 +7,11 @@ json.opportunities do
 end
 
 json.filteredOpps @filteredOpps
+#
+# json.opp_permissions do
+#   @opp_permissions.each do |opp_permission|
+#     json.set! opp_permission.id do
+#       json.partial! 'api/opp_permissions/permission', opp_permission: opp_permission
+#     end
+#   end
+# end

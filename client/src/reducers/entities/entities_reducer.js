@@ -29,6 +29,7 @@ import directLinkReducer from './direct_links_reducer.js';
 import passedOpportunityReducer from './opportunities/passed_opportunities_reducer.js';
 import userMetricsReducer from './users/user_metrics_reducer.js';
 import networkOppPermissionsReducer from './opp_permissions/network_opp_permissions_reducer.js';
+import userIndexOppPermissionsReducer from './opp_permissions/user_index_opp_permissions_reducer.js';
 
 export default combineReducers({
   opportunities: opportuntiesReducer,
@@ -57,5 +58,6 @@ export default combineReducers({
   directLink: directLinkReducer,
   passedOpportunities: passedOpportunityReducer,
   userMetrics: userMetricsReducer,
-  networkOppPermissions: networkOppPermissionsReducer
+  networkOppPermissions: networkOppPermissionsReducer,
+  userOppPermissions: userIndexOppPermissionsReducer
 });

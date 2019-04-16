@@ -20,8 +20,9 @@ export const receivePassedOpportunity = opportunityId => ({
   opportunityId,
 });
 
-export const removePassedOpportunity = () => ({
+export const removePassedOpportunity = (oppId) => ({
   type: REMOVE_PASSED_OPPORTUNITY,
+  oppId
 });
 
 export const fetchPassedOpportunities = () => dispatch => (

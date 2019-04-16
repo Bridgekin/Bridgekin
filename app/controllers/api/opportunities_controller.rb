@@ -63,8 +63,16 @@ class Api::OpportunitiesController < ApiController
 
   def user_index
     @opportunities = @user.opportunities
-      .includes(:owner)
+      .includes(:owner, :opp_permissions)
       .where.not(deal_status: 'Deleted')
+
+    @opp_permissions = OppPermissions.where(opportunity_id: @opportunities.pluck(:id))
+    render :index
+  end
+
+  def profile_index
+    #params[profileId]
+    @opportunities = Opportunity.profile_index(params[:profile_id], @user)
 
     @filteredOpps = @opportunities.pluck(:id)
     render :personal_index
@@ -74,7 +82,9 @@ class Api::OpportunitiesController < ApiController
     user_opportunities = @user.opportunities
       .includes(:owner)
       .where.not(deal_status: 'Deleted')
-    @user_opportunity_ids = user_opportunities.pluck(:id)
+
+    @user_opp_permissions = OppPermission.where(
+      opportunity_id: user_opportunities.pluck(:id))
 
     connected_opportunities = @user.opportunity_connections
       .where(status: 'Approved')
@@ -94,13 +104,6 @@ class Api::OpportunitiesController < ApiController
       user_opportunities | passed_opportunities | saved_opportunities
 
     render :all_touched_index
-  end
-
-  def profile_index
-    #params[profileId]
-    @opportunities = Opportunity.profile_index(params[:profile_id], @user)
-    @filteredOpps = @opportunities.pluck(:id)
-    render :personal_index
   end
 
   def show

@@ -52,6 +52,44 @@ export const removeNetworkOppPermission = oppPermId => ({
   oppPermId
 });
 
+export const RECEIVE_USER_OPP_PERMISSIONS = 'RECEIVE_USER_OPP_PERMISSIONS';
+export const RECEIVE_USER_OPP_PERMISSION = 'RECEIVE_USER_OPP_PERMISSION';
+export const REMOVE_USER_OPP_PERMISSION = "REMOVE_USER_OPP_PERMISSION";
+
+export const receiveUserOppPermissions = oppPerms => ({
+  type: RECEIVE_USER_OPP_PERMISSIONS,
+  oppPerms,
+});
+
+export const receiveUserOppPermission = oppPerm => ({
+  type: RECEIVE_USER_OPP_PERMISSION,
+  oppPerm,
+});
+
+export const removeUserOppPermission = oppPermId => ({
+  type: REMOVE_USER_OPP_PERMISSION,
+  oppPermId
+});
+
+export const RECEIVE_PROFILE_OPP_PERMISSIONS = 'RECEIVE_PROFILE_OPP_PERMISSIONS';
+export const RECEIVE_PROFILE_OPP_PERMISSION = 'RECEIVE_PROFILE_OPP_PERMISSION';
+export const REMOVE_PROFILE_OPP_PERMISSION = "REMOVE_PROFILE_OPP_PERMISSION";
+
+export const receiveProfileOppPermissions = oppPerms => ({
+  type: RECEIVE_PROFILE_OPP_PERMISSIONS,
+  oppPerms,
+});
+
+export const receiveProfileOppPermission = oppPerm => ({
+  type: RECEIVE_PROFILE_OPP_PERMISSION,
+  oppPerm,
+});
+
+export const removeProfileOppPermission = oppPermId => ({
+  type: REMOVE_PROFILE_OPP_PERMISSION,
+  oppPermId
+});
+
 export const fetchOppPermissions = (opportunityId) => dispatch => (
   OppPermissionApiUtil.fetchOppPermissions(opportunityId)
     .then(handleErrors)
