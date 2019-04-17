@@ -294,7 +294,7 @@ class ContactCard extends React.Component {
                   )) }
                   <MenuItem onClick={this.handleToggleCircleMenu}
                     className={classes.borderBelow}>
-                    {`Add to Another Circle`}
+                    {`Add to Network Circle`}
                   </MenuItem>
                   <MenuItem onClick={this.removeConnection}>
                     {`Remove User`}
@@ -324,7 +324,7 @@ class ContactCard extends React.Component {
                   <MenuItem onClick={this.openCreateModal}>
                     <AddIcon
                       style={{ marginRight: 4 }}/>
-                    {`Add another circle...`}
+                    {`Add circle...`}
                   </MenuItem>
                 </div>
               )}
@@ -482,7 +482,7 @@ class ContactCard extends React.Component {
             />*/}
 
             <Grid item xs={3} sm={5} container justify='flex-end'>
-              {this.getSecondaryAction()}
+              {currentUser.id !== user.id && this.getSecondaryAction()}
             </Grid>
 
           </Grid>

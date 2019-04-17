@@ -169,7 +169,7 @@ class SourceButton extends React.Component {
     const genericDropdownOptions = currentUser.isAdmin ? [
       {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
         value: '', disabled: false},
-      {header: 'Bridgekin Network' , subHeader: 'Opportunities posted within my networks',
+      {header: 'Bridgekin Network' , subHeader: 'Opportunities posted within the Bridgekin Network',
         value: 'all-networks', disabled: false},
       {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
         value: 'all-connections',disabled: false},
@@ -178,10 +178,12 @@ class SourceButton extends React.Component {
       // {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
       //   value: 'direct-connections', disabled: false},
       ] : [
-      {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
-      value: '', disabled: false},
-      {header: 'Bridgekin Network' , subHeader: 'Opportunities posted within my networks',
-        value: 'all-networks', disabled: false}
+        {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
+          value: '', disabled: false},
+        {header: 'Bridgekin Network' , subHeader: 'Opportunities posted within the Bridgekin Network',
+          value: 'all-networks', disabled: false},
+        {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
+          value: 'all-connections',disabled: false},
       ]
 
     let networks = [...workspaceOptions].filter(x => x.includes('Network'))

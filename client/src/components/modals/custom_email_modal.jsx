@@ -163,8 +163,9 @@ class CustomEmailModal extends React.Component {
       } else if (templateType === "connected_opportunity") {
         let opp = opportunities[customEmailModal.oppId];
         let owner = users[opp.ownerId];
-        let title = opp.viewType === 'card' ? opp.title : opp.description
+        let title = opp.title;
         subjectFName = this.capitalize(owner.fname);
+        // debugger
         templateVars['title']= this.capitalize(title);
         templateVars['owner'] = { fname : this.capitalize(owner.fname)}
       }

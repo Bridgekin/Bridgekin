@@ -48,9 +48,11 @@ class Api::UsersController < ApiController
       @users = User.where("LOWER(fname) LIKE ?" , "%" + fname.downcase + "%")
         .where("LOWER(lname) LIKE ?" , "%" + lname.downcase + "%")
         .where(searchable: true)
+        .where.not(id: @user)
         .or(User.where("LOWER(fname) LIKE ?" , "%" + lname.downcase + "%")
           .where("LOWER(lname) LIKE ?" , "%" + fname.downcase + "%")
-          .where(searchable: true))
+          .where(searchable: true)
+          .where.not(id: @user))
     else
       # debugger
       @users = User.where("LOWER(fname) LIKE ?" , "%" + input[0].downcase + "%")

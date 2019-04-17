@@ -22,7 +22,9 @@ class Api::ConnectionsController < ApiController
     inputted_email = params[:connection][:email].downcase
     # Check if provided email is the same (downcased)
 
-    if friend.email.downcase == inputted_email
+    if (params[:connection][:friend_id] === @user.id)
+      render json: ["Can't invite yourself"], status: 422
+    elsif friend.email.downcase == inputted_email
       @connection = Connection.new(connection_params
         .merge({ user_id: @user.id}))
       # debugger

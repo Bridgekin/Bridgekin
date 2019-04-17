@@ -391,7 +391,9 @@ class OpportunityCard extends React.Component {
     const result = datetimeDifference(then, new Date());
     const resultKey = Object.keys(result)
       .filter(k => !!result[k])[0]
-    // debugger
+    if (!resultKey){
+      return ''
+    }
     return `${result[resultKey]}${abbrevDateName[resultKey]}`
   }
 
@@ -809,17 +811,17 @@ class OpportunityCard extends React.Component {
                 <Grid item xs={3}>
                   {(savedOpportunities[opportunity.id] ?
                     <Button fullWidth
+                      onClick={this.toggleSavedOpportunity}
                       disabled={!currentUser || editable}
                       classes={{ label: classes.oppActionButton }}>
                       <BookmarkIcon
-                        onClick={this.toggleSavedOpportunity}
                         className={classes.bookmark}/>
                       Save
                     </Button> :
                     <Button fullWidth
+                      onClick={this.toggleSavedOpportunity}
                       classes={{ label: classes.oppActionButton }}>
                       <BookmarkBorderIcon
-                        onClick={this.toggleSavedOpportunity}
                         className={classes.bookmark}/>
                       Save
                     </Button>)}

@@ -130,7 +130,8 @@ class Profile extends React.Component {
     this.getInviteText = this.getInviteText.bind(this);
     this.handleUpdateUserChange = this.handleUpdateUserChange.bind(this);
     this.getConnection = this.getConnection.bind(this);
-    this.removeConnection = this.removeConnection.bind(this);
+    this.updateConnection = this.updateConnection.bind(this);
+    this.getConnectionButton = this.getConnectionButton.bind(this);
   }
 
   capitalize(str){
@@ -141,16 +142,33 @@ class Profile extends React.Component {
     this.props.openInvite(this.props.user.id)
   }
 
-  removeConnection(e){
-    e.stopPropagation();
-    this.setState({ connectionLoading: true },
-    () => {
-      let connection = this.getConnection()[0];
-      this.props.deleteConnection(connection.id)
-      .then(() => this.setState({ connectionLoading: false }))
-    })
+  updateConnection(bool){
+    return e => {
+      e.stopPropagation();
+      this.setState({ connectionLoading: true },
+        () => {
+          let connection = this.getConnection();
+          if (bool){
+            this.props.updateConnection({
+              status: 'Accepted',
+              id: this.props.contact.id
+            })
+            .then(() => this.setState({ connectionLoading: false }))
+          } else {
+            this.props.deleteConnection(connection.id)
+            .then(() => this.setState({ connectionLoading: false }))
+          }
+        })
+    }
   }
 
+  // acceptConnection(e){
+  //   e.stopPropagation();
+  //   this.props.updateConnection({
+  //     status: 'Accepted',
+  //     id: this.props.contact.id
+  //   })
+  // }
 
   sendToAccountSettings(){
     const { user, currentUser }= this.props;
@@ -181,7 +199,7 @@ class Profile extends React.Component {
 
   getConnection(){
     const { user, currentUser, connections } = this.props;
-    return Object.values(connections).filter( x => (
+    return Object.values(connections).find( x => (
       (x.userId === user.id && x.friendId === currentUser.id) ||
       (x.userId === currentUser.id && x.friendId === user.id)
     ))
@@ -190,8 +208,8 @@ class Profile extends React.Component {
   getInviteText(){
     let connection = this.getConnection();
 
-    if (connection.length > 0){
-      switch(connection[0].status){
+    if (connection){
+      switch(connection.status){
         case "Accepted":
         return "Remove Contact";
         case "Pending":
@@ -202,6 +220,71 @@ class Profile extends React.Component {
     } else {
       return 'Add Contact';
     }
+  }
+
+  getConnectionButton(){
+    const { connectionLoading } = this.state;
+    let connection = this.getConnection();
+
+    if (connection){
+      if (connection.status === 'Accepted'){
+        return <Button variant='contained' color='primary'
+          onClick={this.updateConnection(false)}
+          disabled={connectionLoading}
+          style={{ margin: "10px 0px"}}>
+          {"Remove Contact"}
+        </Button>
+      } else if (connection.status === 'Pending'){
+        return <div>
+          <Button variant='contained' color='primary'
+            onClick={this.updateConnection(true)}
+            disabled={connectionLoading}
+            style={{ margin: "10px 0px"}}>
+            {`Accept`}
+          </Button>
+          <Button variant='contained' color='default'
+            onClick={this.updateConnection(false)}
+            disabled={connectionLoading}
+            style={{ margin: "10px 0px"}}>
+            {`Decline`}
+          </Button>
+        </div>
+      }
+
+    } else {
+      return <Button variant='contained' color='primary'
+        onClick={this.openInvite}
+        disabled={connectionLoading}
+        style={{ margin: "10px 0px"}}>
+        {'Add Contact'}
+      </Button>
+    }
+
+    // inviteUserText === "Pending" ? (
+    //   <div>
+    //     <Button variant='contained' color='primary'
+    //       onClick={this.updateConnection(false)}
+    //       disabled={connectionLoading}
+    //       style={{ margin: "10px 0px"}}>
+    //       {Accept}
+    //     </Button>
+    //     <Button variant='contained' color='primary'
+    //       onClick={this.updateConnection(true)}
+    //       disabled={connectionLoading}
+    //       style={{ margin: "10px 0px"}}>
+    //       {Decline}
+    //     </Button>
+    //   </div>
+    // ) : (
+    //
+    // )
+    // <Button variant='contained' color='primary'
+    //   onClick={inviteUserText === "Remove Contact" ?
+    //     this.removeConnection(false) : this.openInvite}
+    //   disabled={inviteUserText === "Pending" || connectionLoading}
+    //   style={{ margin: "10px 0px"}}>
+    //   {inviteUserText}
+    // </Button>
   }
 
   render(){
@@ -292,13 +375,7 @@ class Profile extends React.Component {
               }
             </Typography>
             {currentUser && currentUser.id !== user.id &&
-              <Button variant='contained' color='primary'
-                onClick={inviteUserText === "Remove Contact" ?
-                  this.removeConnection : this.openInvite}
-                disabled={inviteUserText === "Pending" || connectionLoading}
-                style={{ margin: "10px 0px"}}>
-                {inviteUserText}
-              </Button>
+              this.getConnectionButton()
             }
 
             {currentUser &&
