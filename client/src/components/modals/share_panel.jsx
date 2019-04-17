@@ -86,13 +86,13 @@ const styles = theme => ({
   listItemHeader: {
     textTransform: 'capitalize',
     height: 30,
-    padding: "5px 16px 5px 0px",
+    padding: "5px 16px 5px 5px",
     color: theme.palette.text.primary
   },
   listItem: {
     textTransform: 'capitalize',
     height: 30,
-    padding: "5px 16px",
+    padding: "5px 16px 5px 5px",
     color: theme.palette.text.primary,
     borderTop: `1px solid ${theme.palette.border.primary}`
   },
@@ -163,27 +163,29 @@ class SharePanel extends Component{
       let { permissions } = this.state;
       if(permissions.has(value)){
         permissions.delete(value);
-      } else if (value.includes('Network')){
+      } else if (!permissions.has('-Everyone') && value.includes('Network')){
         if(value === "-Network" && [...permissions].filter(x => x.includes('Network')).length > 0){
           // Do nothing
         } else if((!permissions.has("-Network") && value.includes("Network"))
           || (permissions.has("-Network") && !value.includes("Network")) ) {
           permissions.add(value);
         }
-      } else if (value.includes('Connection')){
+      } else if (!permissions.has('-Everyone') && value.includes('Connection')){
         if(value === "-Connection" && [...permissions].filter(x => x.includes('Connection')).length > 0){
           // Do nothing
         } else if((!permissions.has("-Connection") && value.includes("Connection"))
           || (permissions.has("-Connection") && !value.includes("Connection")) ) {
           permissions.add(value);
         }
-      } else if (value.includes('Circle')){
+      } else if (!permissions.has('-Everyone') && value.includes('Circle')){
         if(value === "-Circle" && [...permissions].filter(x => x.includes('Circle')).length > 0){
           // Do nothing
         } else if((!permissions.has("-Circle") && value.includes("Circle"))
           || (permissions.has("-Circle") && !value.includes("Circle")) ) {
           permissions.add(value);
         }
+      } else if (value.includes('Everyone') && [...permissions].length === 0){
+        permissions.add(value);
       }
 
       // } else if(value === "-Network" && [...permissions].filter(x => x.includes('Network')).length > 0){
@@ -216,6 +218,9 @@ class SharePanel extends Component{
       users, currentUser } = this.props;
     let [typeId, type] = perm.split('-');
     if(typeId === ''){
+      if(type === 'Everyone'){
+        return `Everyone`
+      }
       return `All ${type}s`
     } else if (type === 'Network'){
       return networks[typeId].title;
@@ -238,7 +243,7 @@ class SharePanel extends Component{
       return (<Grid container alignItems='center' style={{ flexGrow: 1}}>
         <Typography align='left'
           className={classes.shareItemHeader}>
-          {`All ${type}s`}
+          {type === 'Everyone' ? `Everyone in Bridgekin` : `Your ${type}s`}
         </Typography>
       </Grid>)
     } else {
@@ -267,8 +272,9 @@ class SharePanel extends Component{
             <Grid container alignItems='center' style={{ flexGrow: 1}}>
               {friend.profilePicUrl ?
                 <Img src={friend.profilePicUrl}
-                  className={classes.shareIcon}/> :
-                  <PersonIcon className={classes.shareIcon}/>}
+                  className={classes.shareIcon}
+                  style={{ borderRadius: '50%'}}/> :
+                <PersonIcon className={classes.shareIcon}/>}
               <Typography align='left'
                 className={classes.shareItemText}>
                 {`${friend.fname} ${friend.lname}`}
@@ -394,24 +400,68 @@ class SharePanel extends Component{
     //       Share your opportunity with any options below
     //     </Typography>
     //   </Grid>
-
+    // debugger
     let choices = (
       <Grid item xs={12}
         className={classes.resultsGrid}>
         <Grid container justify='flex-start'
           style={{ marginTop: 10 }}>
 
-          <ListItem key={'-Network'}
-            disabled={[...permissions].filter(x => x.includes('Network')).length > 0 && !permissions.has('-Network')}
+          <ListItem key={'-'}
+            disabled={
+              ['Network','Circle','Connection'].some(opt => (
+                Boolean([...permissions].find(x => x.includes(opt)))
+              ))
+            }
             className={classes.listItemHeader}
-            onClick={this.handleUpdate('-Network')}>
-            {this.getItem('-Network')}
-            <Checkbox checked={permissions.has('-Network')} />
+            onClick={this.handleUpdate('-Everyone')}>
+            {this.getItem('-Everyone')}
+            <Checkbox checked={permissions.has('-Everyone')} />
           </ListItem>
+          {[...filteredOptions].filter(x => x.includes('Network'))
+            .length > 1 &&
+            <ListItem key={'-Network'}
+              disabled={permissions.has('-Everyone') ||
+                (!['Network','Everyone'].some(opt => (
+                  Boolean([...permissions].find(x => x.includes(opt)))
+                )) && !permissions.has('-Network'))
+              }
+              className={classes.listItemHeader}
+              onClick={this.handleUpdate('-Network')}>
+              {this.getItem('-Network')}
+              <Checkbox checked={permissions.has('-Network')} />
+            </ListItem>}
+          {[...filteredOptions].filter(x => x.includes('Circle'))
+            .length > 1 &&
+            <ListItem key={'-Circle'}
+              disabled={permissions.has('-Everyone') ||
+                (!['Circle','Everyone'].some(opt => (
+                  Boolean([...permissions].find(x => x.includes(opt)))
+                )) && !permissions.has('-Circle'))
+              }
+              className={classes.listItemHeader}
+              onClick={this.handleUpdate('-Circle')}>
+              {this.getItem('-Circle')}
+              <Checkbox checked={permissions.has('-Circle')} />
+            </ListItem>}
+          {[...filteredOptions].filter(x => x.includes('Connection'))
+            .length > 1 &&
+            <ListItem key={'-Connection'}
+              disabled={permissions.has('-Everyone') ||
+                (!['Connection','Everyone'].some(opt => (
+                  Boolean([...permissions].find(x => x.includes(opt)))
+                )) && !permissions.has('-Connection'))
+              }
+              className={classes.listItemHeader}
+              onClick={this.handleUpdate('-Connection')}>
+              {this.getItem('-Connection')}
+              <Checkbox checked={permissions.has('-Connection')} />
+            </ListItem>}
+
           {[...filteredOptions].filter(x => x.includes('Network'))
             .map(option => (
             <ListItem key={option} className={classes.listItem}
-              disabled={permissions.has('-Network')}
+              disabled={permissions.has('-Everyone') || permissions.has('-Network')}
               onClick={this.handleUpdate(option)}>
               {this.getItem(option)}
               <Checkbox
@@ -420,18 +470,9 @@ class SharePanel extends Component{
           ))}
 
           {[...filteredOptions].filter(x => x.includes('Circle'))
-            .length > 0 &&
-            <ListItem key={'-Circle'}
-              disabled={[...permissions].filter(x => x.includes('Circle')).length > 0 && !permissions.has('-Circle')}
-              className={classes.listItemHeader}
-              onClick={this.handleUpdate('-Circle')}>
-              {this.getItem('-Circle')}
-              <Checkbox checked={permissions.has('-Circle')} />
-            </ListItem>}
-          {[...filteredOptions].filter(x => x.includes('Circle'))
             .map(option => (
             <ListItem key={option} className={classes.listItem}
-              disabled={permissions.has('-Circle')}
+              disabled={permissions.has('-Everyone') || permissions.has('-Circle')}
               onClick={this.handleUpdate(option)}>
               {this.getItem(option)}
               <Checkbox checked={permissions.has(option)} />
@@ -439,18 +480,9 @@ class SharePanel extends Component{
           ))}
 
           {[...filteredOptions].filter(x => x.includes('Connection'))
-            .length > 0 &&
-            <ListItem key={'-Connection'}
-              disabled={[...permissions].filter(x => x.includes('Connection')).length > 0 && !permissions.has('-Connection')}
-              className={classes.listItemHeader}
-              onClick={this.handleUpdate('-Connection')}>
-              {this.getItem('-Connection')}
-              <Checkbox checked={permissions.has('-Connection')} />
-            </ListItem>}
-          {[...filteredOptions].filter(x => x.includes('Connection'))
             .map(option => (
             <ListItem key={option} className={classes.listItem}
-              disabled={permissions.has('-Connection')}
+              disabled={permissions.has('-Everyone') || permissions.has('-Connection')}
               onClick={this.handleUpdate(option)}>
               {this.getItem(option)}
               <Checkbox checked={permissions.has(option)} />

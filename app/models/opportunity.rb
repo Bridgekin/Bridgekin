@@ -166,6 +166,9 @@ class Opportunity < ApplicationRecord
 
   def find_for_all_perms(type, user)
     case type
+    when 'Everyone'
+      network_ids = user.member_networks.pluck(:id)
+      network_ids.reduce([]){|acc, id| acc << "#{id}-Network"}
     when 'Network'
       network_ids = user.member_networks.pluck(:id)
       network_ids.reduce([]){|acc, id| acc << "#{id}-Network"}

@@ -352,7 +352,7 @@ class OpportunityChangeModal extends React.Component {
 
       if(nextModal.mode === 'create'){
         this.setState(merge({}, DEFAULTSTATE,
-          nextModal.opportunity, { permissions: ["-Network"], contextLoaded: true}));
+          nextModal.opportunity, { permissions: ["-Everyone"], contextLoaded: true}));
         return true;
       } else {
         this.props.fetchOppPermissions(nextModal.opportunity.id)
@@ -696,12 +696,15 @@ class OpportunityChangeModal extends React.Component {
       users, currentUser } = this.props;
     let [typeId, type] = perm.split('-');
     if(typeId === ''){
+      if (type === 'Everyone'){
+        return 'Bridgekin'
+      }
       return `All ${type}s`
     } else if (type === 'Network'){
       return networks[typeId].title;
     } else if (type === 'Circle'){
       return circles[typeId].title;
-    } else if (type === 'Connection'){
+    } else if (type === 'Connecteion'){
       // debugger
       let connection = connections[typeId]
       let friendId = (currentUser.id !== connection.userId) ?
