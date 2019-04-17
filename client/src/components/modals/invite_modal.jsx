@@ -175,7 +175,7 @@ class InviteModal extends React.Component {
             <Typography variant="body1" gutterBottom
               color="textPrimary" align='left'
               style={{ fontSize: 18 }}>
-              {`If John is a trusted contact of yours, enter their email  below to send them a connection request.`}
+              {`If ${this.capitalize(user.fname)} is a trusted contact of yours, enter their email  below to send them a connection request.`}
             </Typography>
             <TextField
               fullWidth

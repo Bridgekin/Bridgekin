@@ -30,7 +30,7 @@ import { openInvite, openUpdateUser }
   from '../../actions/modal_actions';
 import { updateUser } from '../../actions/user_actions';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import { deleteConnection } from '../../actions/connection_actions';
+import { updateConnection, deleteConnection } from '../../actions/connection_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -42,6 +42,7 @@ const mapDispatchToProps = dispatch => ({
   openUpdateUser: (settingsType) => dispatch(openUpdateUser(settingsType)),
   deleteConnection: (id) => dispatch(deleteConnection(id)),
   openInvite: userId => dispatch(openInvite(userId)),
+  updateConnection: connection => dispatch(updateConnection(connection)),
   updateUser: user => dispatch(updateUser(user))
 })
 
@@ -151,7 +152,7 @@ class Profile extends React.Component {
           if (bool){
             this.props.updateConnection({
               status: 'Accepted',
-              id: this.props.contact.id
+              id: connection.id
             })
             .then(() => this.setState({ connectionLoading: false }))
           } else {
@@ -224,6 +225,7 @@ class Profile extends React.Component {
 
   getConnectionButton(){
     const { connectionLoading } = this.state;
+    const { currentUser } = this.props;
     let connection = this.getConnection();
 
     if (connection){
@@ -234,7 +236,8 @@ class Profile extends React.Component {
           style={{ margin: "10px 0px"}}>
           {"Remove Contact"}
         </Button>
-      } else if (connection.status === 'Pending'){
+      } else if (connection.status === 'Pending' &&
+        connection.friendId === currentUser.id) {
         return <div>
           <Button variant='contained' color='primary'
             onClick={this.updateConnection(true)}
@@ -245,11 +248,19 @@ class Profile extends React.Component {
           <Button variant='contained' color='default'
             onClick={this.updateConnection(false)}
             disabled={connectionLoading}
-            style={{ margin: "10px 0px"}}>
+            style={{ margin: 10}}>
             {`Decline`}
           </Button>
         </div>
-      }
+      } else if (connection.status === 'Pending' &&
+        connection.userId === currentUser.id) {
+        return <Button variant='contained' color='primary'
+          onClick={this.updateConnection(false)}
+          disabled={connectionLoading}
+          style={{ margin: "10px 0px"}}>
+          {"Revoke Invite"}
+        </Button>
+    }
 
     } else {
       return <Button variant='contained' color='primary'
@@ -455,12 +466,12 @@ class Profile extends React.Component {
                   </Grid>
                 </Grid>}
 
-              {currentUser.isAdmin && <Grid container>
+              <Grid container>
                 <Grid item xs={8}>
                   <Typography variant="h6" align='left'
                     color='textSecondary'
                     style={{ fontSize: 14}}>
-                    {`Searchable:`}
+                    {`Profile Searchability:`}
                   </Typography>
                   <Typography variant="body1" align='left'
                     color='textSecondary'
@@ -473,12 +484,18 @@ class Profile extends React.Component {
                   </Grid>
 
                   <Grid item xs={4}>
-                    <Switch
-                      checked={user.searchable}
-                      onChange={this.handleUpdateUserChange('searchable')}
-                      />
+                    <Typography variant="body1" align='left'
+                      color='textSecondary'
+                      style={{ fontSize: 11 }}>
+                      {`Yes`}
+                      <Switch
+                        checked={user.searchable}
+                        onChange={this.handleUpdateUserChange('searchable')}
+                        />
+                      {`No`}
+                    </Typography>
                   </Grid>
-                </Grid>}
+                </Grid>
 
                 {false && <Typography variant="subtitle1" align='left'
                   color="textPrimary" style={{ marginTop: 15}}>

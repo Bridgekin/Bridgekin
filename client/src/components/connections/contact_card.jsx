@@ -310,7 +310,7 @@ class ContactCard extends React.Component {
                   {Object.values(circles).map(circle => {
                     let user = this.getUser();
                     let isMember = transformedCircleConnections[circle.id] ?
-                      transformedCircleConnections[circle.id].includes(contact.id) :
+                      transformedCircleConnections[circle.id].has(contact.id) :
                       false
                     return <MenuItem onClick={this.handleToggleMembership(circle.id, contact.id, isMember)}>
                       {isMember ?

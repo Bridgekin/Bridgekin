@@ -93,7 +93,7 @@ class ErrorBoundary extends React.Component {
               color={this.state.sent && 'primary'}
               onClick={this.sendSentryDiagnostic}
               style={{ marginTop: 50}}>
-              { this.state.sent ? `Report Sent` : `Report feedback` }
+              { `Report Feedback` }
             </Button>
           </Grid>
         </MuiThemeProvider>

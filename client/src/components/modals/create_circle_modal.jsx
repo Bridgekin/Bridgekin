@@ -189,8 +189,8 @@ class CreateCircleModal extends React.Component {
     return strArray.join(' ')
   }
 
-  filterSearch(user){
-    if(this.state.connectionsToAdd.has(user.id)){
+  filterSearch(user, connection){
+    if(this.state.connectionsToAdd.has(connection.id)){
       return false
     }
 
@@ -305,7 +305,7 @@ class CreateCircleModal extends React.Component {
                         <Paper style={{ minWidth: 300 }}>
                           <ClickAwayListener
                             onClickAway={this.handleMenuClose}>
-                            {connections.filter(x => this.filterSearch(x))
+                            {connections.filter(({user, connection}) => this.filterSearch(user, connection))
                               .map(({user, connection}) => (
                                 <Grid container alignItems='center'
                                   onClick={this.handleMembersChange(connection.id)}
@@ -354,8 +354,9 @@ class CreateCircleModal extends React.Component {
             <Grid container justify='flex-end'>
               <Grid item xs={7}
                 style={{ height: 100, overflow: 'scroll'}}>
-                {[...connectionsToAdd].map(memberId => {
-                  let user = users[memberId];
+                {[...connectionsToAdd].map(connectionId => {
+                  let connection = this.props.connections[connectionId];
+                  let user = this.getUser(connection).user;
                   return <Grid item xs={12}
                     container justify='space-between'>
                     <Typography variant="body1" gutterBottom
@@ -363,7 +364,7 @@ class CreateCircleModal extends React.Component {
                       style={{ fontSize: 13, marginRight: 18, textTransform: 'capitalize' }}>
                       {`${user.fname} ${user.lname}`}
                     </Typography>
-                    <CloseIcon onClick={this.handleMembersChange(memberId)}/>
+                    <CloseIcon onClick={this.handleMembersChange(connection.id)}/>
                   </Grid>
                 })}
               </Grid>
