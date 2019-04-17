@@ -1,7 +1,5 @@
 class ChangeUserCirlcesName < ActiveRecord::Migration[5.2]
   def change
-    drop_table :user_circles
-
     create_table :circle_connections do |t|
       t.integer :circle_id
       t.integer :connection_id
