@@ -203,6 +203,7 @@ const styles = theme => ({
 });
 
 const abbrevDateName = {
+  'milliseconds': 'ms',
   'seconds': 'sec',
   'minutes': 'min',
   'hours': 'h',
@@ -391,8 +392,8 @@ class OpportunityCard extends React.Component {
     const result = datetimeDifference(then, new Date());
     const resultKey = Object.keys(result)
       .filter(k => !!result[k])[0]
-    if (!resultKey){
-      return ''
+    if (resultKey === 'milliseconds'){
+      return '0sec'
     }
     return `${result[resultKey]}${abbrevDateName[resultKey]}`
   }
