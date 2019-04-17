@@ -252,14 +252,14 @@ class SharePanel extends Component{
           let network = networks[typeId]
           return (
             <Grid container alignItems='center' style={{ flexGrow: 1}}>
-              {false && network.pictureUrl ?
+              {/*false && network.pictureUrl ?
                 <Img src={network.pictureUrl}
                   className={classes.shareIcon}/> :
                   <Img src={defaultNetworkIcon}
-                    className={classes.shareIcon}/>}
+                    className={classes.shareIcon}/>*/}
               <Typography align='left'
                 className={classes.shareItemText}>
-                {network.title}
+                {`The ${network.title} Network`}
               </Typography>
             </Grid>
           )
@@ -430,18 +430,6 @@ class SharePanel extends Component{
               {this.getItem('-Network')}
               <Checkbox checked={permissions.has('-Network')} />
             </ListItem>}
-          {[...filteredOptions].filter(x => x.includes('Circle'))
-            .length > 1 &&
-            <ListItem key={'-Circle'}
-              disabled={permissions.has('-Everyone') ||
-                ([...permissions].find(x => x.includes('Circle'))
-                  && !permissions.has('-Circle'))
-              }
-              className={classes.listItemHeader}
-              onClick={this.handleUpdate('-Circle')}>
-              {this.getItem('-Circle')}
-              <Checkbox checked={permissions.has('-Circle')} />
-            </ListItem>}
           {[...filteredOptions].filter(x => x.includes('Connection'))
             .length > 1 &&
             <ListItem key={'-Connection'}
@@ -454,6 +442,29 @@ class SharePanel extends Component{
               {this.getItem('-Connection')}
               <Checkbox checked={permissions.has('-Connection')} />
             </ListItem>}
+          {[...filteredOptions].filter(x => x.includes('Circle'))
+            .length > 1 &&
+            <ListItem key={'-Circle'}
+              disabled={permissions.has('-Everyone') ||
+                ([...permissions].find(x => x.includes('Circle'))
+                && !permissions.has('-Circle'))
+              }
+              className={classes.listItemHeader}
+              onClick={this.handleUpdate('-Circle')}>
+              {this.getItem('-Circle')}
+              <Checkbox checked={permissions.has('-Circle')} />
+            </ListItem>}
+
+
+          {[...filteredOptions].filter(x => x.includes('Circle'))
+            .map(option => (
+            <ListItem key={option} className={classes.listItem}
+              disabled={permissions.has('-Everyone') || permissions.has('-Circle')}
+              onClick={this.handleUpdate(option)}>
+              {this.getItem(option)}
+              <Checkbox checked={permissions.has(option)} />
+            </ListItem>
+          ))}
 
           {[...filteredOptions].filter(x => x.includes('Network'))
             .map(option => (
@@ -463,16 +474,6 @@ class SharePanel extends Component{
               {this.getItem(option)}
               <Checkbox
                 checked={permissions.has(option)} />
-            </ListItem>
-          ))}
-
-          {[...filteredOptions].filter(x => x.includes('Circle'))
-            .map(option => (
-            <ListItem key={option} className={classes.listItem}
-              disabled={permissions.has('-Everyone') || permissions.has('-Circle')}
-              onClick={this.handleUpdate(option)}>
-              {this.getItem(option)}
-              <Checkbox checked={permissions.has(option)} />
             </ListItem>
           ))}
 
