@@ -228,9 +228,6 @@ class AccountOpportunities extends React.Component {
             />
         ))
       )
-      console.log(this.getOpportunities())
-      console.log(opportunityCards)
-      // debugger
       return (
         <Grid container justify='center' alignItems='center'
           className={classes.oppFeedContainer}>

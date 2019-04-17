@@ -14,6 +14,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 // import { MuiThemeProvider } from '@material-ui/core/styles';
 // import theme from '../theme';
@@ -127,7 +129,7 @@ const styles = theme => ({
   oppFiltersMobile:{
     padding: 0,
     width: '100%',
-    height: 84,
+    height: 95,
     display: 'flex',
     // backgroundColor: `${theme.palette.lightGrey}`,
     backgroundColor: theme.palette.base3,
@@ -198,7 +200,8 @@ class AccountMain extends React.Component {
     this.state = {
       loaded: false,
       oppFilter: 'posted',
-      mobileNavAnchorEl: null
+      mobileNavAnchorEl: null,
+      tabVal: 0
     };
 
     // this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
@@ -206,6 +209,7 @@ class AccountMain extends React.Component {
     // this.handleNav = this.handleNav.bind(this);
     this.handleChoice = this.handleChoice.bind(this);
     this.menuToggle = this.menuToggle.bind(this);
+    this.handleTab = this.handleTab.bind(this);
   }
 
   // shouldComponentUpdate(nextProps, nextState){
@@ -235,6 +239,10 @@ class AccountMain extends React.Component {
     }
   }
 
+  handleTab(e, tabVal){
+    this.setState({ tabVal })
+  }
+
   // handleMobileNavClick(path){
   //   return e => {
   //     const { mobileNavAnchorEl } = this.state;
@@ -262,7 +270,7 @@ class AccountMain extends React.Component {
   render (){
     let { classes, currentUser } = this.props;
     let pathName = this.props.location.pathname;
-    let { oppFilter, mobileNavAnchorEl } = this.state;
+    let { oppFilter, mobileNavAnchorEl, tabVal } = this.state;
 
     const mobileNavOpen = Boolean(mobileNavAnchorEl);
 
@@ -442,7 +450,21 @@ class AccountMain extends React.Component {
             Opportunities You've
           </Typography>
         </div>
-        <Grid container justify='space-around' >
+        <Grid container justify='center'>
+          <Tabs
+            value={tabVal}
+            onChange={this.handleTab}
+            fullWidth
+            >
+            {filtersDesktop.map(item => {
+              let option = item.name;
+              return <Tab label={option}
+                onClick={() => this.setState({ oppFilter: option })}
+                style={{ textTransform: 'capitalize'}}/>
+            })}
+          </Tabs>
+        </Grid>
+        {/*<Grid container justify='space-around' >
           {filtersDesktop.map(item => {
             let option = item.name;
             return <Button
@@ -458,7 +480,7 @@ class AccountMain extends React.Component {
               </Typography>
             </Button>
           })}
-        </Grid>
+        </Grid>*/}
       </Grid>
     )
 

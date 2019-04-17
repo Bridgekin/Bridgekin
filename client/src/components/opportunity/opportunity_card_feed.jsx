@@ -582,7 +582,7 @@ class OpportunityCard extends React.Component {
                   onMouseEnter={this.handlePermissionsOpen}
                   onMouseLeave={this.handlePermissionsClose}
                   style={{ textTransform: 'capitalize', fontSize: 10}}>
-                  {showPerms ? this.getPermissionLabel() : 'Shared'}
+                  {showPerms ? this.getPermissionLabel() : 'Shared - '}
                   {this.getNotificationDate()}
                 </Typography>
                 {showPerms && <Popover
