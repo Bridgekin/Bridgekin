@@ -161,7 +161,8 @@ class ContactCard extends React.Component {
         const circleConnection = Object.values(this.props.circleConnections)
           .find(conn => conn.circleId === circleId &&
             conn.connectionId === connectionId)
-        this.props.removeMember(circleConnection.id)
+        this.setState({ contactAnchorEl: null },
+        () => this.props.removeMember(circleConnection.id));
       } else {
         this.props.addMember(circleId, connectionId)
       }
@@ -287,14 +288,14 @@ class ContactCard extends React.Component {
               { !circleMenu ? (
                 <div>
                   {/*List all Circles this user is a part of */}
-                  {Object.values(circles).filter(x => (
+                  {/*Object.values(circles).filter(x => (
                     transformedCircleConnections[x.id] &&
                     transformedCircleConnections[x.id].has(contact.id)
                   )).map(circle => (
                     <MenuItem onClick={this.openCircle(circle.id)}>
                       {`${this.capitalize(circle.title)}`}
                     </MenuItem>
-                  )) }
+                  )) */}
                   <MenuItem onClick={this.handleToggleCircleMenu}
                     className={classes.borderBelow}>
                     {`Add to Network Circle`}

@@ -75,7 +75,7 @@ import { needsChoices, industryChoices, geographyChoices,
   valueChoices } from '../../util/choices';
 
 import { fetchOpportunities } from '../../actions/opportunity_actions';
-import { fetchShareOptions } from '../../actions/opp_permission_actions';
+import { fetchShareOptions, removeShareOptions } from '../../actions/opp_permission_actions';
 import { closeOppChange, openImageCrop, openSubmitOpp } from '../../actions/modal_actions';
 import { fetchConnections } from '../../actions/connection_actions';
 // import { clearConnectionErrors } from '../../actions/error_actions';
@@ -109,6 +109,7 @@ const mapDispatchToProps = dispatch => ({
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
   fetchOppPermissions: (id) => dispatch(fetchOppPermissions(id)),
   fetchOpportunities: (workspaceId, option) => dispatch(fetchOpportunities(workspaceId, option)),
+  removeShareOptions: () => dispatch(removeShareOptions())
 });
 
 const styles = theme => ({
@@ -348,21 +349,23 @@ class OpportunityChangeModal extends React.Component {
     const currentModal = this.props.oppChangeModal
     if(nextModal.open && nextModal.open !== currentModal.open){
       // Refresh Share Options
+      // this.props.removeShareOptions();
       this.props.fetchShareOptions()
-
-      if(nextModal.mode === 'create'){
-        this.setState(merge({}, DEFAULTSTATE,
-          nextModal.opportunity, { permissions: ["-Everyone"], contextLoaded: true}));
-        return true;
-      } else {
-        this.props.fetchOppPermissions(nextModal.opportunity.id)
-        .then(() => {
-          const { permissions } = this.props;
+      .then(() => {
+        if(nextModal.mode === 'create'){
           this.setState(merge({}, DEFAULTSTATE,
-            nextModal.opportunity,{ permissions, contextLoaded: true}))
-          return true;
-        })
-      }
+            nextModal.opportunity, { permissions: ["-Everyone"], contextLoaded: true}));
+            return true;
+          } else {
+            this.props.fetchOppPermissions(nextModal.opportunity.id)
+            .then(() => {
+              const { permissions } = this.props;
+              this.setState(merge({}, DEFAULTSTATE,
+                nextModal.opportunity,{ permissions, contextLoaded: true}))
+                return true;
+              })
+            }
+      })
     } else {
       return true
     }
@@ -704,7 +707,7 @@ class OpportunityChangeModal extends React.Component {
       return networks[typeId].title;
     } else if (type === 'Circle'){
       return circles[typeId].title;
-    } else if (type === 'Connecteion'){
+    } else if (type === 'Connection'){
       // debugger
       let connection = connections[typeId]
       let friendId = (currentUser.id !== connection.userId) ?

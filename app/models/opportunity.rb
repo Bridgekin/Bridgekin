@@ -156,12 +156,12 @@ class Opportunity < ApplicationRecord
   end
 
   def find_for_circle(circle_id, user)
-    circle_members_ids = Circle.find(circle_id).members
+    circle_connections = Circle.find(circle_id).connections
 
-    connections = Connection.where(user_id: circle_members_ids, friend_id: user.id)
-      .or(Connection.where(friend_id: circle_members_ids, user_id: user.id))
-
-    connections.pluck(:id).reduce([]){|acc, id| acc << "#{id}-Connection"}
+    # connections = Connection.where(user_id: circle_members_ids, friend_id: user.id)
+    #   .or(Connection.where(friend_id: circle_members_ids, user_id: user.id))
+    # debugger
+    circle_connections.pluck(:id).reduce([]){|acc, id| acc << "#{id}-Connection"}
   end
 
   def find_for_all_perms(type, user)
@@ -176,15 +176,16 @@ class Opportunity < ApplicationRecord
       connection_ids = user.connections.where(status: 'Accepted').pluck(:id)
       connection_ids.reduce([]){|acc, id| acc << "#{id}-Connection"}
     when 'Circle'
-      circle_members_ids = user.circles.includes(:members)
-        .reduce(Set.new()) do |acc, circle|
-          Set.new((acc.to_a) | circle.members.pluck(:id))
-        end.to_a
+      # circle_members_ids = user.circles.includes(:members)
+      #   .reduce(Set.new()) do |acc, circle|
+      #     Set.new((acc.to_a) | circle.members.pluck(:id))
+      #   end.to_a
+      circle_connections = user.connections_for_circles
 
-      connections = Connection.where(user_id: circle_members_ids, friend_id: user.id)
-        .or(Connection.where(friend_id: circle_members_ids, user_id: user.id))
-
-      connections.pluck(:id).reduce([]){|acc, id| acc << "#{id}-Connection"}
+      # connections = Connection.where(user_id: circle_members_ids, friend_id: user.id)
+      #   .or(Connection.where(friend_id: circle_members_ids, user_id: user.id))
+      # debugger
+      circle_connections.pluck(:id).reduce([]){|acc, id| acc << "#{id}-Connection"}
     else
       puts "Error: Something went wrong!!!!"
     end

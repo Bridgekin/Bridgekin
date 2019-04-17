@@ -201,7 +201,7 @@ class InviteModal extends React.Component {
           container justify='flex-start'>
           <Typography variant="h2" id="modal-title" color='textPrimary'
             className={classes.thanksHeader} align='left'>
-            {`Awesome - You've sent ${this.capitalize(user.fname)} a connection request!`}
+            {`You've sent ${this.capitalize(user.fname)} a connection request!`}
           </Typography>
           <Typography variant="body1" id="simple-modal-description"
             align='left' color='textPrimary'>

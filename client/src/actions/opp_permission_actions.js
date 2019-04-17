@@ -9,6 +9,7 @@ import { receiveUsers } from './user_actions';
 const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_SHARE_OPTIONS = 'RECEIVE_SHARE_OPTIONS';
+export const REMOVE_SHARE_OPTIONS = 'REMOVE_SHARE_OPTIONS';
 export const RECEIVE_OPP_PERMISSIONS = 'RECEIVE_OPP_PERMISSIONS';
 // export const RECEIVE_OPP_PERMISSION = 'RECEIVE_OPP_PERMISSION';
 // export const REMOVE_OPP_PERMISSION = "REMOVE_OPP_PERMISSION";
@@ -21,6 +22,10 @@ export const receiveOppPermissions = oppPermissions => ({
 export const receiveShareOptions = shareOptions => ({
   type: RECEIVE_SHARE_OPTIONS,
   shareOptions,
+});
+
+export const removeShareOptions = () => ({
+  type: REMOVE_SHARE_OPTIONS
 });
 
 // export const receiveOppPermission = oppPermission => ({

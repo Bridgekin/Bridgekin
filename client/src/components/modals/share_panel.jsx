@@ -422,9 +422,8 @@ class SharePanel extends Component{
             .length > 1 &&
             <ListItem key={'-Network'}
               disabled={permissions.has('-Everyone') ||
-                (!['Network','Everyone'].some(opt => (
-                  Boolean([...permissions].find(x => x.includes(opt)))
-                )) && !permissions.has('-Network'))
+                ([...permissions].find(x => x.includes('Network'))
+                  && !permissions.has('-Network'))
               }
               className={classes.listItemHeader}
               onClick={this.handleUpdate('-Network')}>
@@ -435,9 +434,8 @@ class SharePanel extends Component{
             .length > 1 &&
             <ListItem key={'-Circle'}
               disabled={permissions.has('-Everyone') ||
-                (!['Circle','Everyone'].some(opt => (
-                  Boolean([...permissions].find(x => x.includes(opt)))
-                )) && !permissions.has('-Circle'))
+                ([...permissions].find(x => x.includes('Circle'))
+                  && !permissions.has('-Circle'))
               }
               className={classes.listItemHeader}
               onClick={this.handleUpdate('-Circle')}>
@@ -448,9 +446,8 @@ class SharePanel extends Component{
             .length > 1 &&
             <ListItem key={'-Connection'}
               disabled={permissions.has('-Everyone') ||
-                (!['Connection','Everyone'].some(opt => (
-                  Boolean([...permissions].find(x => x.includes(opt)))
-                )) && !permissions.has('-Connection'))
+                ([...permissions].find(x => x.includes('Connection'))
+                  && !permissions.has('-Connection'))
               }
               className={classes.listItemHeader}
               onClick={this.handleUpdate('-Connection')}>
