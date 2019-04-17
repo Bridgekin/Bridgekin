@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -98,7 +99,7 @@ class CreateCircleModal extends React.Component {
       name: '',
       search: '',
       responsePage: false,
-      members: new Set(),
+      connectionsToAdd: new Set(),
       searchAnchorEl: null,
       loaded: false
     }
@@ -132,17 +133,17 @@ class CreateCircleModal extends React.Component {
     }
   }
 
-  handleMembersChange(memberId){
+  handleMembersChange(connectionId){
     return e => {
       e.stopPropagation();
       // Close menu
-      const { members } = this.state;
-      if(members.has(memberId)){
-        members.delete(memberId);
+      const { connectionsToAdd } = this.state;
+      if(connectionsToAdd.has(connectionId)){
+        connectionsToAdd.delete(connectionId);
       } else {
-        members.add(memberId);
+        connectionsToAdd.add(connectionId);
       }
-      this.setState({ members, searchAnchorEl: null, search: '' })
+      this.setState({ connectionsToAdd, searchAnchorEl: null, search: '' })
     }
   }
 
@@ -155,14 +156,14 @@ class CreateCircleModal extends React.Component {
     if(this.props.connectionErrors){
       this.props.clearConnectionErrors();
     }
-    this.setState({ name: '', search: '', responsePage: false, members: new Set()},
+    this.setState({ name: '', search: '', responsePage: false, connectionsToAdd: new Set()},
     () => this.props.closeCreateCircle());
   };
 
   handleSubmit(e){
-    const { members, name } = this.state;
+    const { connectionsToAdd, name } = this.state;
     let circle = {
-      members: [...members],
+      connectionIds: [...connectionsToAdd],
       title: name
     }
     this.props.createCircle(circle)
@@ -171,8 +172,11 @@ class CreateCircleModal extends React.Component {
         let errors = this.props.connectionErrors;
         debugger
       } else {
-        this.setState({ name: '', responsePage: false, members: new Set()},
-        () => this.props.closeCreateCircle());
+        this.setState({ name: '', responsePage: false, connectionsToAdd: new Set()},
+        () => {
+          this.props.history.push('/mynetwork/circles');
+          this.props.closeCreateCircle();
+        });
       }
     })
   }
@@ -186,7 +190,7 @@ class CreateCircleModal extends React.Component {
   }
 
   filterSearch(user){
-    if(this.state.members.has(user.id)){
+    if(this.state.connectionsToAdd.has(user.id)){
       return false
     }
 
@@ -205,13 +209,13 @@ class CreateCircleModal extends React.Component {
     const { users, currentUser } = this.props;
     let friend = (currentUser.id !== connection.userId) ?
     connection.userId : connection.friendId
-    return users[friend];
+    return { user: users[friend], connection };
   }
 
   render(){
     const { classes, createCircleModal, users,
       circleErrors } = this.props;
-    const { loaded, name, responsePage, members,
+    const { loaded, name, responsePage, connectionsToAdd,
       searchAnchorEl } = this.state;
 
     let connections = Object.values(this.props.connections)
@@ -226,7 +230,7 @@ class CreateCircleModal extends React.Component {
         </ListItem>
       ));
 
-      let creatCirclePage = (
+      let createCirclePage = (
         <Grid container justify='center' alignItems='center'>
           <Grid container justify='flex-start' alignItems='center'
             className={classes.closeBar}>
@@ -302,9 +306,9 @@ class CreateCircleModal extends React.Component {
                           <ClickAwayListener
                             onClickAway={this.handleMenuClose}>
                             {connections.filter(x => this.filterSearch(x))
-                              .map(user => (
+                              .map(({user, connection}) => (
                                 <Grid container alignItems='center'
-                                  onClick={this.handleMembersChange(user.id)}
+                                  onClick={this.handleMembersChange(connection.id)}
                                   style={{ minWidth: 250}}>
                                   <Avatar>
                                     {user.profilePicUrl ? (
@@ -350,7 +354,7 @@ class CreateCircleModal extends React.Component {
             <Grid container justify='flex-end'>
               <Grid item xs={7}
                 style={{ height: 100, overflow: 'scroll'}}>
-                {[...members].map(memberId => {
+                {[...connectionsToAdd].map(memberId => {
                   let user = users[memberId];
                   return <Grid item xs={12}
                     container justify='space-between'>
@@ -374,7 +378,7 @@ class CreateCircleModal extends React.Component {
               {`Cancel`}
             </Button>
             <Button variant='contained' color="primary"
-              disabled={members.size === 0}
+              disabled={connectionsToAdd.size === 0}
               style={{ marginLeft: 20 }}
               onClick={this.handleSubmit}>
               {`Create`}
@@ -424,7 +428,7 @@ class CreateCircleModal extends React.Component {
         </Grid>
       )
 
-      let modalContent = responsePage ? response : creatCirclePage
+      let modalContent = responsePage ? response : createCirclePage
 
       return (
         <Dialog
@@ -447,4 +451,4 @@ class CreateCircleModal extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CreateCircleModal));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(CreateCircleModal)));

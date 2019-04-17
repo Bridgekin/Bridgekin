@@ -139,7 +139,7 @@ class AccountOpportunities extends React.Component {
 
   getOpportunities(){
     const { oppFilter, connectedOpps, facilitatedOpps, opportunities,
-      userOpps, passedOpps } = this.props;
+      passedOpps } = this.props;
 
     switch(oppFilter){
       case 'connected':
@@ -150,8 +150,9 @@ class AccountOpportunities extends React.Component {
         return [...passedOpps].map(id => opportunities[id])
       case 'saved':
         const { savedOpportunities } = this.props;
-        return Object.values(savedOpportunities)
+        let opps = Object.values(savedOpportunities)
           .map(x => opportunities[x.opportunityId])
+        return opps
       default:
         return [];
     }
@@ -227,18 +228,20 @@ class AccountOpportunities extends React.Component {
             />
         ))
       )
-
+      console.log(this.getOpportunities())
+      console.log(opportunityCards)
+      // debugger
       return (
         <Grid container justify='center' alignItems='center'
           className={classes.oppFeedContainer}>
-          <div style={{ overflow: 'scroll', paddingBottom: 50,
-            width: '100%'}}>
-            {opportunityCards.length > 0 ? opportunityCards : (
+          <div style={{ overflow: 'scroll', paddingBottom: 50, width: '100%'}}>
+            {opportunityCards}
+            {/*opportunityCards.length > 0 ? opportunityCards : (
                 <Typography variant="h3" gutterBottom color="textSecondary"
                   align='center' className={classes.emptyOppsText}>
                   {`You haven't ${oppFilter} any opportunities yet`}
                 </Typography>
-              ) }
+              )*/}
           </div>
 
           {/*<OpportunityChangeModal

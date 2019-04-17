@@ -30,6 +30,7 @@ import { openInvite, openUpdateUser }
   from '../../actions/modal_actions';
 import { updateUser } from '../../actions/user_actions';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { deleteConnection } from '../../actions/connection_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -39,6 +40,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   openUpdateUser: (settingsType) => dispatch(openUpdateUser(settingsType)),
+  deleteConnection: (id) => dispatch(deleteConnection(id)),
   openInvite: userId => dispatch(openInvite(userId)),
   updateUser: user => dispatch(updateUser(user))
 })
@@ -119,12 +121,16 @@ const styles = theme => ({
 class Profile extends React.Component {
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {
+      connectionLoading: false
+    }
 
     this.openInvite = this.openInvite.bind(this);
     this.sendToAccountSettings = this.sendToAccountSettings.bind(this);
     this.getInviteText = this.getInviteText.bind(this);
     this.handleUpdateUserChange = this.handleUpdateUserChange.bind(this);
+    this.getConnection = this.getConnection.bind(this);
+    this.removeConnection = this.removeConnection.bind(this);
   }
 
   capitalize(str){
@@ -134,6 +140,17 @@ class Profile extends React.Component {
   openInvite(e){
     this.props.openInvite(this.props.user.id)
   }
+
+  removeConnection(e){
+    e.stopPropagation();
+    this.setState({ connectionLoading: true },
+    () => {
+      let connection = this.getConnection()[0];
+      this.props.deleteConnection(connection.id)
+      .then(() => this.setState({ connectionLoading: false }))
+    })
+  }
+
 
   sendToAccountSettings(){
     const { user, currentUser }= this.props;
@@ -162,17 +179,21 @@ class Profile extends React.Component {
     }
   }
 
-  getInviteText(){
+  getConnection(){
     const { user, currentUser, connections } = this.props;
-    let connection = Object.values(connections).filter( x => (
+    return Object.values(connections).filter( x => (
       (x.userId === user.id && x.friendId === currentUser.id) ||
       (x.userId === currentUser.id && x.friendId === user.id)
     ))
+  }
+
+  getInviteText(){
+    let connection = this.getConnection();
 
     if (connection.length > 0){
       switch(connection[0].status){
         case "Accepted":
-        return "Connected";
+        return "Remove Contact";
         case "Pending":
         return "Pending";
         default:
@@ -186,6 +207,7 @@ class Profile extends React.Component {
   render(){
     const { classes, user, currentUser,
       workspaces, detailed }= this.props;
+    const { connectionLoading } = this.state;
 
     // debugger
 
@@ -271,8 +293,9 @@ class Profile extends React.Component {
             </Typography>
             {currentUser && currentUser.id !== user.id &&
               <Button variant='contained' color='primary'
-                onClick={this.openInvite}
-                disabled={inviteUserText !== "Add Contact"}
+                onClick={inviteUserText === "Remove Contact" ?
+                  this.removeConnection : this.openInvite}
+                disabled={inviteUserText === "Pending" || connectionLoading}
                 style={{ margin: "10px 0px"}}>
                 {inviteUserText}
               </Button>

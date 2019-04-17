@@ -62,7 +62,7 @@ export const fetchAllTouchedOpportunities = () => dispatch => (
       dispatch(receiveConnectedOpportunities(data.connectedOpportunityIds))
       dispatch(receiveFacilitatedOpportunities(data.facilitatedOpportunityIds))
       dispatch(receivePassedOpportunities(data.passedOpportunityIds));
-      dispatch(receiveSavedOpportunities(data.savedOpportunityIds))
+      dispatch(receiveSavedOpportunities(data.savedOpportunities))
     })
     .catch(errors => {
       if (!(errors instanceof Array)){

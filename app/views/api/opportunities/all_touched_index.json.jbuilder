@@ -2,7 +2,16 @@
 json.connected_opportunity_ids @connected_opportunity_ids
 json.facilitated_opportunity_ids @facilitated_opportunity_ids
 json.passed_opportunity_ids @passed_opportunity_ids
-json.saved_opportunity_ids @saved_opportunity_ids
+# json.saved_opportunity_ids @saved_opportunity_ids
+
+json.saved_opportunities do
+  @saved_opportunities.each do |saved_opportunity|
+    json.set! saved_opportunity.opportunity_id do
+      json.partial! 'api/saved_opportunities/saved_opportunity',
+      saved_opportunity: saved_opportunity
+    end
+  end
+end
 
 json.opportunities do
   @opportunities.each do |opportunity|

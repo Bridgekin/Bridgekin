@@ -340,27 +340,16 @@ class OpportunityChangeModal extends React.Component {
   // }
   componentDidMount(){
     this.props.fetchShareOptions()
-    this.props.fetchConnections()
+    // this.props.fetchConnections()
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const nextModal = nextProps.oppChangeModal
     const currentModal = this.props.oppChangeModal
     if(nextModal.open && nextModal.open !== currentModal.open){
-      // if(nextProps.opportunity.id){
-      //   this.props.fetchOppPermissions(nextProps.opportunity.id)
-      //   .then(() => {
-      //     const { permissions, type } = this.props;
-      //     // let new_state = merge({}, DEFAULTSTATE,
-      //     //   nextProps.opportunity,{ permissions })
-      //
-      //     this.setState(merge({}, DEFAULTSTATE,
-      //       nextProps.opportunity,{ permissions }))
-      //   });
-      // } else {
-      //   this.setState(merge({}, DEFAULTSTATE,
-      //     nextProps.opportunity))
-      // }
+      // Refresh Share Options
+      this.props.fetchShareOptions()
+
       if(nextModal.mode === 'create'){
         this.setState(merge({}, DEFAULTSTATE,
           nextModal.opportunity, { permissions: ["-Network"], contextLoaded: true}));

@@ -419,47 +419,43 @@ class SharePanel extends Component{
             </ListItem>
           ))}
 
-          {currentUser.isAdmin &&
-            [...filteredOptions].filter(x => x.includes('Circle'))
-              .length > 0 &&
+          {[...filteredOptions].filter(x => x.includes('Circle'))
+            .length > 0 &&
             <ListItem key={'-Circle'}
               disabled={[...permissions].filter(x => x.includes('Circle')).length > 0 && !permissions.has('-Circle')}
               className={classes.listItemHeader}
               onClick={this.handleUpdate('-Circle')}>
-            {this.getItem('-Circle')}
-            <Checkbox checked={permissions.has('-Circle')} />
-          </ListItem>}
-          {currentUser.isAdmin &&
-            [...filteredOptions].filter(x => x.includes('Circle'))
-              .map(option => (
-              <ListItem key={option} className={classes.listItem}
-                disabled={permissions.has('-Circle')}
-                onClick={this.handleUpdate(option)}>
-                {this.getItem(option)}
-                <Checkbox checked={permissions.has(option)} />
-              </ListItem>
-            ))}
+              {this.getItem('-Circle')}
+              <Checkbox checked={permissions.has('-Circle')} />
+            </ListItem>}
+          {[...filteredOptions].filter(x => x.includes('Circle'))
+            .map(option => (
+            <ListItem key={option} className={classes.listItem}
+              disabled={permissions.has('-Circle')}
+              onClick={this.handleUpdate(option)}>
+              {this.getItem(option)}
+              <Checkbox checked={permissions.has(option)} />
+            </ListItem>
+          ))}
 
-          {currentUser.isAdmin &&
-            [...filteredOptions].filter(x => x.includes('Connection'))
-              .length > 0 &&
+          {[...filteredOptions].filter(x => x.includes('Connection'))
+            .length > 0 &&
             <ListItem key={'-Connection'}
               disabled={[...permissions].filter(x => x.includes('Connection')).length > 0 && !permissions.has('-Connection')}
               className={classes.listItemHeader}
               onClick={this.handleUpdate('-Connection')}>
-            {this.getItem('-Connection')}
-            <Checkbox checked={permissions.has('-Connection')} />
-          </ListItem>}
-          {currentUser.isAdmin &&
-            [...filteredOptions].filter(x => x.includes('Connection'))
-              .map(option => (
-              <ListItem key={option} className={classes.listItem}
-                disabled={permissions.has('-Connection')}
-                onClick={this.handleUpdate(option)}>
-                {this.getItem(option)}
-                <Checkbox checked={permissions.has(option)} />
-              </ListItem>
-            ))}
+              {this.getItem('-Connection')}
+              <Checkbox checked={permissions.has('-Connection')} />
+            </ListItem>}
+          {[...filteredOptions].filter(x => x.includes('Connection'))
+            .map(option => (
+            <ListItem key={option} className={classes.listItem}
+              disabled={permissions.has('-Connection')}
+              onClick={this.handleUpdate(option)}>
+              {this.getItem(option)}
+              <Checkbox checked={permissions.has(option)} />
+            </ListItem>
+          ))}
         </Grid>
       </Grid>
     )

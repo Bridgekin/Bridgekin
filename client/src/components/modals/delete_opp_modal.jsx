@@ -105,7 +105,8 @@ class DeleteModal extends React.Component {
         <Grid container justify='center'
           style={{ padding: "20px 0px"}}>
           <Grid item xs={10} container justify='flex-end'>
-            <CloseIcon style={{ color: 'grey'}}/>
+            <CloseIcon onClick={this.handleClose(false)}
+              style={{ color: 'grey', pointer: 'cursor'}}/>
           </Grid>
           <Grid item xs={10} container direction='column'>
             <Typography variant="body1" align='center'

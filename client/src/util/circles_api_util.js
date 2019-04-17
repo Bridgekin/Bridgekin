@@ -50,8 +50,8 @@ export const deleteCircle = id => (
   })
 )
 
-export const addMember = (circleId, memberId) => (
-  fetch(`${window.location.origin}/api/circles/${circleId}/add_member/${memberId}`, {
+export const addMember = (circleId, connectionId) => (
+  fetch(`${window.location.origin}/api/circles/${circleId}/add_member/${connectionId}`, {
     method: 'POST',
     headers:{
     	'Content-Type': 'application/json',
@@ -60,8 +60,8 @@ export const addMember = (circleId, memberId) => (
   })
 )
 
-export const removeMember = (circleId, memberId) => (
-  fetch(`${window.location.origin}/api/circles/${circleId}/remove_member/${memberId}`, {
+export const removeMember = (circleConnectionId) => (
+  fetch(`${window.location.origin}/api/circle_connections/${circleConnectionId}`, {
     method: 'DELETE',
     headers:{
     	'Content-Type': 'application/json',

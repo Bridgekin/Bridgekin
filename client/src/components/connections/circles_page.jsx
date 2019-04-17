@@ -72,7 +72,7 @@ class CirclesFeed extends React.Component {
 
   render(){
     const { classes, pages, currentUser,
-      circles} = this.props;
+      circles, waitlistCard} = this.props;
     const { circleAnchorEl } = this.state;
 
     // let mobileFilter = (
@@ -109,10 +109,6 @@ class CirclesFeed extends React.Component {
       } />
     ))
 
-    // <div className={classes.mobileWaitlist}>
-    //   {waitlistCard}
-    // </div>
-    // <Contacts pathName={pathName}/>
     return (
       <div style={{ paddingBottom:30, width: '100%'}}>
         {/*mobileFilter*/}
@@ -120,6 +116,9 @@ class CirclesFeed extends React.Component {
           <CircleCard circle={{title: 'Add Network Circle', add: true}} />
         } />
         {circleCards}
+        <div className={classes.mobileWaitlist}>
+          {waitlistCard}
+        </div>
       </div>
     )
   }

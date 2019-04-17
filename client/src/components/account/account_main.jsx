@@ -13,6 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 // import { MuiThemeProvider } from '@material-ui/core/styles';
 // import theme from '../theme';
@@ -131,13 +132,15 @@ const styles = theme => ({
     // backgroundColor: `${theme.palette.lightGrey}`,
     backgroundColor: theme.palette.base3,
     borderTop: `1px solid ${theme.palette.border.secondary}`,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
+    marginBottom: 10,
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     },
     // marginTop: 20
   },
   mobileFilterButton:{
-    margin: "0px 10px"
+    // margin: "0px 5px"
   },
   mobileFilterTypo: {
     textTransform: 'capitalize',
@@ -157,7 +160,35 @@ const styles = theme => ({
       display: 'flex'
     }
   },
-  moreIcon: { color: theme.palette.text.primary}
+  moreIcon: { color: theme.palette.text.primary},
+  mobileAdjustFeed:{
+    paddingTop: 45,
+    paddingBottom: 30,
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: 0
+    },
+  },
+  filterBar: {
+    flexGrow: 1,
+    backgroundColor: "rgb(255,255,255,0.8)",
+    height: 45,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
+    position: 'fixed',
+    top: 45,
+    zIndex: 1,
+    padding: "0px 5px",
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  },
+  filterButton:{
+    color: 'black',
+    backgroundColor: 'white',
+    border: '1px solid black',
+    margin: '0px 4px',
+    padding: "3px 5px",
+    textTransform: 'capitalize',
+  },
 });
 
 
@@ -170,9 +201,11 @@ class AccountMain extends React.Component {
       mobileNavAnchorEl: null
     };
 
-    this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
+    // this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
     // this.handleNav = this.handleNav.bind(this);
+    this.handleChoice = this.handleChoice.bind(this);
+    this.menuToggle = this.menuToggle.bind(this);
   }
 
   // shouldComponentUpdate(nextProps, nextState){
@@ -183,6 +216,18 @@ class AccountMain extends React.Component {
   //   return true;
   // }
 
+  handleChoice(optionUrl){
+    return e => {
+      this.setState({ mobileNavAnchorEl: null },
+      () => this.props.history.push(optionUrl));
+    }
+  }
+
+  menuToggle(e){
+    const { mobileNavAnchorEl } = this.state;
+    this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget})
+  }
+
   handleFilter(name){
     return e => {
       this.setState({ oppFilter: name });
@@ -190,17 +235,17 @@ class AccountMain extends React.Component {
     }
   }
 
-  handleMobileNavClick(path){
-    return e => {
-      const { mobileNavAnchorEl } = this.state;
-      this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget },
-      () => {
-        if(path){
-          this.props.history.push(path)
-        }
-      })
-    }
-  }
+  // handleMobileNavClick(path){
+  //   return e => {
+  //     const { mobileNavAnchorEl } = this.state;
+  //     this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget },
+  //     () => {
+  //       if(path){
+  //         this.props.history.push(path)
+  //       }
+  //     })
+  //   }
+  // }
 
   // handleNav(path){
   //   return e => {
@@ -232,6 +277,8 @@ class AccountMain extends React.Component {
       {title: 'Connected/Posted Opportunities', dest: '/account/opportunities'},
       {title: 'Settings', dest: '/account/settings'}
     ]
+
+    let focusedPage = pages.find(x => x.dest === pathName)
 
     let navigation = (
       <Grid container justify='center' alignItems='center'
@@ -265,43 +312,86 @@ class AccountMain extends React.Component {
       </Grid>
     )
 
-    let mobileNavigation = (
-      <Grid container justify='flex-start' alignItems='center'
-        className={classes.mobileNavigation}>
-        <Typography align='left' color="textPrimary"
-          className={classes.mobileNavHeader}>
-          My Account
-          <IconButton
-            aria-label="More"
-            aria-owns={mobileNavOpen ? 'long-menu' : undefined}
-            aria-haspopup="true"
-            onClick={this.handleMobileNavClick()}
-            classes={{ label: classes.moreIcon }}
-            style={{ padding: 6}}
-            >
-            <MoreVertIcon />
-          </IconButton>
-        </Typography>
+    // let mobileNavigation = (
+    //   <Grid container justify='flex-start' alignItems='center'
+    //     className={classes.mobileNavigation}>
+    //     <Typography align='left' color="textPrimary"
+    //       className={classes.mobileNavHeader}>
+    //       My Account
+    //       <IconButton
+    //         aria-label="More"
+    //         aria-owns={mobileNavOpen ? 'long-menu' : undefined}
+    //         aria-haspopup="true"
+    //         onClick={this.handleMobileNavClick()}
+    //         classes={{ label: classes.moreIcon }}
+    //         style={{ padding: 6}}
+    //         >
+    //         <MoreVertIcon />
+    //       </IconButton>
+    //     </Typography>
+    //
+    //     <Menu
+    //       id="long-menu"
+    //       anchorEl={mobileNavAnchorEl}
+    //       open={mobileNavOpen}
+    //       onClose={this.handleMobileNavClick()}
+    //     >
+    //       {pages.map(item => (
+    //         <ListItem button className={classes.filterItem}
+    //           onClick={this.handleMobileNavClick(item.dest)}
+    //           selected={pathName === item.dest}>
+    //           <Typography variant="body1" align='left'
+    //             color="textPrimary" className={classes.filterHeader}>
+    //             {item.title}
+    //           </Typography>
+    //         </ListItem>
+    //       ))}
+    //     </Menu>
+    //   </Grid>
+    // )
 
+    let mobileFilterBar = (
+      <Grid container className={classes.filterBar}
+        justify='flex-end' alignItems='center'>
+        <Button
+          onClick={this.menuToggle}
+          className={classes.filterButton}>
+          {focusedPage && focusedPage.title}
+          <KeyboardArrowDownIcon />
+        </Button>
         <Menu
-          id="long-menu"
-          anchorEl={mobileNavAnchorEl}
-          open={mobileNavOpen}
-          onClose={this.handleMobileNavClick()}
-        >
-          {pages.map(item => (
-            <ListItem button className={classes.filterItem}
-              onClick={this.handleMobileNavClick(item.dest)}
-              selected={pathName === item.dest}>
-              <Typography variant="body1" align='left'
-                color="textPrimary" className={classes.filterHeader}>
-                {item.title}
+          id="simple-menu"
+          anchorEl= {mobileNavAnchorEl}
+          open={Boolean(mobileNavAnchorEl)}
+          onClose={this.menuToggle}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          MenuListProps={{
+            classes:{
+              root: classes.menu
+            }
+          }}
+          getContentAnchorEl={null}
+          >
+          {pages.map(page => (
+            <MenuItem className={classes.menuItem}
+              onClick={this.handleChoice(page.dest)}>
+              <Typography variant='body1' color='textPrimary'
+                style={{ textTransform: 'capitalize', fontSize: 13}}>
+                {page.title}
               </Typography>
-            </ListItem>
+            </MenuItem>
           ))}
         </Menu>
       </Grid>
     )
+
 
     let filtersDesktop = currentUser.isAdmin ? [
       {title: "Opportunities You've Posted", name: 'posted'},
@@ -352,9 +442,10 @@ class AccountMain extends React.Component {
             Opportunities You've
           </Typography>
         </div>
-        <Grid container justify='flex-start' >
-          {['connected', 'referred', 'posted'].map(option => (
-            <Button
+        <Grid container justify='space-around' >
+          {filtersDesktop.map(item => {
+            let option = item.name;
+            return <Button
               onClick={() => this.setState({ oppFilter: option })}
               className={classes.mobileFilterButton}>
               <Typography variant="h6" align='left'
@@ -366,7 +457,7 @@ class AccountMain extends React.Component {
                 {option}
               </Typography>
             </Button>
-          ))}
+          })}
         </Grid>
       </Grid>
     )
@@ -381,8 +472,9 @@ class AccountMain extends React.Component {
     )
 
     let feed = (
-      <div style={{ paddingBottom: 30 }}>
-        {mobileNavigation}
+      <div className={classes.mobileAdjustFeed}>
+        {/*mobileNavigation*/}
+        {mobileFilterBar}
         {pathName === '/account/opportunities' && oppFiltersMobile}
         <Switch>
           <ProtectedRoute path="/account/settings/notifications" component={NotificationSettings} />

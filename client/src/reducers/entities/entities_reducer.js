@@ -20,8 +20,6 @@ import shareOptionsReducer from './share_options_reducer.js';
 import connectionsReducer from './connections_reducer.js';
 import searchResultsReducer from './search_results_reducer.js';
 import searchResultsPageReducer from './search_results_page_reducer.js';
-import circlesReducer from './circles_reducer.js';
-import circlesMembersReducer from './circles_members_reducer.js';
 import emailTemplateReducer from './email_template_reducer.js';
 import savedOpportunityReducer from './saved_opportunities_reducer.js';
 import profileOpportunityReducer from './opportunities/profile_opportunities_reducer.js';
@@ -30,6 +28,9 @@ import passedOpportunityReducer from './opportunities/passed_opportunities_reduc
 import userMetricsReducer from './users/user_metrics_reducer.js';
 import networkOppPermissionsReducer from './opp_permissions/network_opp_permissions_reducer.js';
 import userIndexOppPermissionsReducer from './opp_permissions/user_index_opp_permissions_reducer.js';
+
+import circlesReducer from './circles/circles_reducer.js';
+import circleConnectionsReducer from './circles/circle_connections_reducer.js';
 
 export default combineReducers({
   opportunities: opportuntiesReducer,
@@ -48,8 +49,6 @@ export default combineReducers({
   connections: connectionsReducer,
   searchResults: searchResultsReducer,
   searchResultsPage: searchResultsPageReducer,
-  circles: circlesReducer,
-  circleMembers: circlesMembersReducer,
   notifications: notificationsReducer,
   notificationSettings: notificationSettingsReducer,
   emailTemplate: emailTemplateReducer,
@@ -59,5 +58,7 @@ export default combineReducers({
   passedOpportunities: passedOpportunityReducer,
   userMetrics: userMetricsReducer,
   networkOppPermissions: networkOppPermissionsReducer,
-  userOppPermissions: userIndexOppPermissionsReducer
+  userOppPermissions: userIndexOppPermissionsReducer,
+  circles: circlesReducer,
+  circleConnections: circleConnectionsReducer
 });

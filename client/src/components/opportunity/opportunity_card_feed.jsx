@@ -428,14 +428,18 @@ class OpportunityCard extends React.Component {
 
   handlePermissionsOpen(e){
     e.stopPropagation()
-    console.log('open Permissions')
-    this.setState({ permissionsAnchorEl: e.currentTarget})
+    const { currentUser, opportunity } = this.props;
+    if(currentUser.id === opportunity.ownerId){
+      this.setState({ permissionsAnchorEl: e.currentTarget})
+    }
   }
 
   handlePermissionsClose(e){
     e.stopPropagation()
-    console.log('close Permissions')
-    this.setState({ permissionsAnchorEl: null})
+    const { currentUser, opportunity } = this.props;
+    if(currentUser.id === opportunity.ownerId){
+      this.setState({ permissionsAnchorEl: null})
+    }
   }
 
   getPermissionsPopover(){
@@ -555,7 +559,8 @@ class OpportunityCard extends React.Component {
         <div className={classes.opportunityCard}>
           <Grid container className={classes.oppCardGrid}>
             <Grid item xs={6} container alignItems='center'>
-              <Grid item xs={4}>
+              <Grid item xs={4} container
+                justify='center' alignItems='center'>
                 {ownerPictureUrl && !anonymous ? (
                   <Avatar alt="profile-pic"
                     src={ownerPictureUrl}

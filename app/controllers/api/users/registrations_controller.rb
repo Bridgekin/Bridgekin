@@ -25,7 +25,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       @site_template = @user.get_template
 
       #set networks
-      @user.set_networks(@network)
+      @user.set_networks(@network) if @network
 
       #Remove waitlist user from waitlist by changing status
       @user.update_waitlist

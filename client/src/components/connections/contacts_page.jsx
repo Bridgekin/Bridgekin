@@ -74,38 +74,39 @@ class ContactsFeed extends React.Component {
     const pathName = this.props.location.pathname;
 
     let page = pages.find(x => x.dest === pathName)
+    // let pageTitle = pages.find(x => x.dest === pathName)[0].title}
 
-    let mobileFilter = (
-      <Grid container justify='flex-end' alignItems='center'
-        className={classes.mobileFilterCard}>
-        <Button
-          aria-owns={contactAnchorEl ? 'simple-menu' : undefined}
-          aria-haspopup="true"
-          classes={{ label: classes.buttonText}}
-          onClick={this.handleMenuClick('contactAnchorEl')}
-          style={{ textTransform: 'capitalize'}}
-        >
-          {page && page.title}
-          <KeyboardArrowDownIcon />
-        </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={contactAnchorEl}
-          open={Boolean(contactAnchorEl)}
-          onClose={this.handleMenuClick('contactAnchorEl')}
-        >
-          {pages.map(page => (
-            <MenuItem onClick={this.handleChangePage(page.dest)}>
-              {page.title}
-            </MenuItem>
-          ))}
-        </Menu>
-      </Grid>
-    )
+    // let mobileFilter = (
+    //   <Grid container justify='flex-end' alignItems='center'
+    //     className={classes.mobileFilterCard}>
+    //     <Button
+    //       aria-owns={contactAnchorEl ? 'simple-menu' : undefined}
+    //       aria-haspopup="true"
+    //       classes={{ label: classes.buttonText}}
+    //       onClick={this.handleMenuClick('contactAnchorEl')}
+    //       style={{ textTransform: 'capitalize'}}
+    //     >
+    //       {page && page.title}
+    //       <KeyboardArrowDownIcon />
+    //     </Button>
+    //     <Menu
+    //       id="simple-menu"
+    //       anchorEl={contactAnchorEl}
+    //       open={Boolean(contactAnchorEl)}
+    //       onClose={this.handleMenuClick('contactAnchorEl')}
+    //     >
+    //       {pages.map(page => (
+    //         <MenuItem onClick={this.handleChangePage(page.dest)}>
+    //           {page.title}
+    //         </MenuItem>
+    //       ))}
+    //     </Menu>
+    //   </Grid>
+    // )
 
     return (
       <div style={{ paddingBottom:30, width: '100%'}}>
-        {mobileFilter}
+        {/*mobileFilter*/}
         {page && <Contacts pathName={pathName}/>}
         <div className={classes.mobileWaitlist}>
           {waitlistCard}

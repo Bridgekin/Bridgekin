@@ -6,7 +6,8 @@ class Api::PassedOpportunitiesController < ApiController
   # after_action :verify_authorized, except: :show
 
   def index
-    @passed_opportunity_ids = PassedOpportunity.where(user_id: @user.id).pluck(:opportunity_id)
+    @passed_opportunity_ids = PassedOpportunity.where(user_id: @user.id)
+      .pluck(:opportunity_id)
     @opportunities = Opportunity.where(id: @passed_opportunity_ids)
     render :index
   end
@@ -24,7 +25,7 @@ class Api::PassedOpportunitiesController < ApiController
 
   def destroy
     @passed_opportunity = PassedOpportunity.where(
-      opportunity_id: params[:opportunity_id], user_id: @user.id) 
+      opportunity_id: params[:opportunity_id], user_id: @user.id)
     if @passed_opportunity.destroy_all
       render json: ['Success'], status: 200
     else

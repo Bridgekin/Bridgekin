@@ -57,7 +57,8 @@ class Api::ConnectionsController < ApiController
     # Use callbacks to share common setup or constraints between actions.
     def set_connection
       @connection = Connection.includes(:requestor, :recipient)
-        .where(id: params[:id]).first
+        .find(params[:id])
+        # .where(id: params[:id]).first
     end
 
     def connection_params

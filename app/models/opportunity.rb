@@ -170,7 +170,7 @@ class Opportunity < ApplicationRecord
       network_ids = user.member_networks.pluck(:id)
       network_ids.reduce([]){|acc, id| acc << "#{id}-Network"}
     when 'Connection'
-      connection_ids = user.connections.pluck(:id)
+      connection_ids = user.connections.where(status: 'Accepted').pluck(:id)
       connection_ids.reduce([]){|acc, id| acc << "#{id}-Connection"}
     when 'Circle'
       circle_members_ids = user.circles.includes(:members)

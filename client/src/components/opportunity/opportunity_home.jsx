@@ -518,8 +518,9 @@ class OpportunityHome extends React.Component {
       .map(({perms, type}) => {
         let divider = <Grid container alignItems='center'
           style={{ marginBottom: 5}}>
+          <div style={{ borderTop: `1px solid grey`, width: 10}}/>
           <Typography variant="body" color="textPrimary" align='center'
-            style={{ fontSize: 11, textTransform:'uppercase', marginRight: 10 }}>
+            style={{ fontSize: 11, textTransform:'uppercase', margin: "0px 7px" }}>
             {dividerMessages[type]}
           </Typography>
           <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
@@ -910,7 +911,7 @@ class OpportunityHome extends React.Component {
                 </Typography>
                 <Typography align='center' color='textPrimary'
                   style={{ fontSize: 16, fontWeight: 600}}>
-                  {`${userMetrics.receivedOpps || 'n/a'}`}
+                  {`${userMetrics.receivedOpps || 0}`}
                 </Typography>
               </Grid>
               <Grid item xs={12} container justify='space-between'
@@ -921,7 +922,7 @@ class OpportunityHome extends React.Component {
                 </Typography>
                 <Typography align='center' color='textPrimary'
                   style={{ fontSize: 16, fontWeight: 600}}>
-                  {`${userMetrics.connectedOpps || 'n/a'}`}
+                  {`${userMetrics.connectedOpps || 0}`}
                 </Typography>
               </Grid>
             </Grid>

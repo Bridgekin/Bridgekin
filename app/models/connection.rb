@@ -24,4 +24,9 @@ class Connection < ApplicationRecord
   has_many :notifications,
     as: :origin,
     dependent: :destroy
+
+  has_many :user_circles,
+    foreign_key: :connection_id,
+    class_name: :CircleConnection,
+    dependent: :destroy
 end

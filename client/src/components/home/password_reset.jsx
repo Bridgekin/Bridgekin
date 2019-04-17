@@ -34,10 +34,10 @@ const styles = theme => ({
   },
   grid:{
     flexGrow: 1,
-    top: 64,
+    top: 45,
     position: 'relative',
     backgroundColor: theme.palette.base2,
-    minHeight: window.innerHeight-64,
+    minHeight: window.innerHeight-45,
     paddingTop: 50
   },
   cover: {

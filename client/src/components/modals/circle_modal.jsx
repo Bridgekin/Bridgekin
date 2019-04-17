@@ -40,14 +40,14 @@ const mapStateToProps = (state, ownProps) => ({
   circleErrors: state.errors.circle,
   circleModal: state.modals.circle,
   connections: state.entities.connections,
-  circleMembers: state.entities.circleMembers
+  circleConnections: state.entities.circleConnections
 });
 
 const mapDispatchToProps = dispatch => ({
   closeCircle: () => dispatch(closeCircle()),
   clearCircleErrors: () => dispatch(clearCircleErrors()),
   addMember: (circleId, memberId) => dispatch(addMember(circleId, memberId)),
-  removeMember: (circleId, memberId) => dispatch(removeMember(circleId, memberId))
+  removeMember: (circleConnectionId) => dispatch(removeMember(circleConnectionId))
 });
 
 const styles = theme => ({
@@ -113,6 +113,7 @@ class CircleModal extends React.Component {
     this.updateMember = this.updateMember.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
     // this.handleClose = this.handleClose.bind(this);
+    this.transformCircleConnections = this.transformCircleConnections.bind(this);
   }
 
   componentDidMount(){
@@ -129,13 +130,18 @@ class CircleModal extends React.Component {
     }
   }
 
-  updateMember(memberId, addBool){
+  updateMember(connectionId, addBool){
     return e => {
       if (addBool){
-        this.props.addMember(this.props.circleModal.circleId, memberId)
+        this.props.addMember(this.props.circleModal.circleId, connectionId)
         .then(() => this.setState({ searchAnchorEl: null, search: '' }))
       } else {
-        this.props.removeMember(this.props.circleModal.circleId, memberId)
+        const { circleConnections } = this.props;
+        let circleId =this.props.circleModal.circleId
+        const circleConnection = Object.values(circleConnections)
+          .filter(conn => conn.circleId === circleId &&
+            conn.connectionId === connectionId)[0]
+        this.props.removeMember(circleConnection.id)
       }
     }
   }
@@ -162,36 +168,53 @@ class CircleModal extends React.Component {
     return strArray.join(' ')
   }
 
-  filterSearch(user){
-    // if(this.state.members.has(user.id)){
-    //   return false
-    // }
-    const{ circleMembers, circleModal } = this.props;
-    if(circleMembers[circleModal.circleId].includes(user.id)){
-      return false
-    }
+  transformCircleConnections(){
+    const { circleConnections } = this.props;
+    let transformedCircleConnections = Object.values(circleConnections)
+      .reduce((acc, circleConnection) => {
+        if(!acc[circleConnection.circleId]){
+          acc[circleConnection.circleId] = new Set()
+        }
+        // debugger
+        acc[circleConnection.circleId].add(circleConnection.connectionId)
+        return acc
+      }, {})
+    return transformedCircleConnections
+  }
 
-    let fname = user.fname.toLowerCase(),  lname = user.lname.toLowerCase()
-    const { search } = this.state;
-    let splitSearch = search.toLowerCase().split(' ');
-    if (splitSearch.length > 1){
-      return (fname.includes(splitSearch[0]) && lname.includes(splitSearch[1])) ||
+  filterSearch(user, connection){
+    const transformedCircleConnections = this.transformCircleConnections();
+    let circleId = this.props.circleModal.circleId
+    if(transformedCircleConnections[circleId]){
+      if(transformedCircleConnections[circleId].has(connection.id)){
+        return false
+      }
+      // debugger
+      // let user = this.getUser(connection);
+      let fname = user.fname.toLowerCase(),  lname = user.lname.toLowerCase()
+      const { search } = this.state;
+      let splitSearch = search.toLowerCase().split(' ');
+      if (splitSearch.length > 1){
+        return (fname.includes(splitSearch[0]) && lname.includes(splitSearch[1])) ||
         (fname.includes(splitSearch[1]) && lname.includes(splitSearch[0]))
-    } else {
-      return fname.includes(splitSearch[0]) || lname.includes(splitSearch[0])
+      } else {
+        return fname.includes(splitSearch[0]) || lname.includes(splitSearch[0])
+      }
     }
+    debugger
+    return true
   }
 
   getUser(connection){
     const { users, currentUser } = this.props;
     let friend = (currentUser.id !== connection.userId) ?
     connection.userId : connection.friendId
-    return users[friend];
+    return { user: users[friend], connection};
   }
 
   render(){
-    const { classes, circleModal, users, circleMembers,
-      circleErrors, currentUser } = this.props;
+    const { classes, circleModal, users,
+      circleErrors, currentUser, connections } = this.props;
     const { loaded, name, responsePage, members,
       searchAnchorEl } = this.state;
 
@@ -207,6 +230,8 @@ class CircleModal extends React.Component {
       //   </ListItem>
       // ));
 
+      const transformedCircleConnections = this.transformCircleConnections();
+      // debugger
       let circlePage = (
         <Grid container justify='center' alignItems='center'
           style={{ maxWidth: 640, minWidth: 310, paddingBottom: 40}}>
@@ -238,10 +263,11 @@ class CircleModal extends React.Component {
                     <Paper style={{ minWidth: 300, maxHeight: 160, overflow: 'scroll' }}>
                       <ClickAwayListener
                         onClickAway={this.handleMenuClose}>
-                        {connections.filter(x => this.filterSearch(x))
-                          .map(user => (
+                        {connections.filter(({user, connection}) => (
+                            this.filterSearch(user, connection)
+                          )).map(({user, connection}) => (
                             <Grid container alignItems='center'
-                              onClick={this.updateMember(user.id, true)}
+                              onClick={this.updateMember(connection.id, true)}
                               style={{ minWidth: 250}}>
                               <Avatar>
                                 {user.profilePicUrl ? (
@@ -269,7 +295,7 @@ class CircleModal extends React.Component {
           </Grid>
           <Grid container
             style={{ maxHeight: 380, overflow: 'scroll'}}>
-            {circleMembers[circleModal.circleId].length === 0 ? (
+            {!transformedCircleConnections[circleModal.circleId] ? (
               <Grid container justify='center'>
                 <Grid item xs={9} sm={7} md={6}>
                   <Typography variant="body1" align='center' color="textSecondary"
@@ -278,8 +304,9 @@ class CircleModal extends React.Component {
                   </Typography>
                 </Grid>
               </Grid>
-            ): (circleMembers[circleModal.circleId].map(userId => {
-              let user = users[userId];
+            ): ([...transformedCircleConnections[circleModal.circleId]].map(connectionId => {
+              let connection = this.props.connections[connectionId]
+              let user = this.getUser(connection).user
               return (
                 <Grid item xs={4} sm={3} container justify='center'
                   style={{ padding: 5 }}>
@@ -308,7 +335,7 @@ class CircleModal extends React.Component {
                   </Grid>
                   <Grid container justify='center'>
                     <Button variant="contained" color="primary"
-                      onClick={this.updateMember(user.id, false)}
+                      onClick={this.updateMember(connection.id, false)}
                       style={{ fontSize: 10, padding: "6px 10px", textTransform: "capitalize"}}>
                       {`Remove User`}
                     </Button>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_13_011136) do
+ActiveRecord::Schema.define(version: 2019_04_16_211836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,14 @@ ActiveRecord::Schema.define(version: 2019_04_13_011136) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "circle_connections", force: :cascade do |t|
+    t.integer "circle_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "connection_id"
+    t.index ["circle_id"], name: "index_circle_connections_on_circle_id"
   end
 
   create_table "circles", force: :cascade do |t|
@@ -275,14 +283,6 @@ ActiveRecord::Schema.define(version: 2019_04_13_011136) do
     t.string "base5"
     t.string "font3"
     t.index ["network_id"], name: "index_site_templates_on_network_id"
-  end
-
-  create_table "user_circles", force: :cascade do |t|
-    t.integer "circle_id"
-    t.integer "member_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["circle_id"], name: "index_user_circles_on_circle_id"
   end
 
   create_table "user_networks", force: :cascade do |t|

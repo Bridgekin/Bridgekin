@@ -35,7 +35,8 @@ const mapStateToProps = (state, ownProps) => ({
   users: state.users,
   connections: state.entities.connections,
   circles: state.entities.circles,
-  circleMembers: state.entities.circleMembers
+  circleConnections: state.entities.circleConnections,
+  // circleMembers: state.entities.circleMembers
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -99,6 +100,7 @@ class ContactCard extends React.Component {
     this.handleToggleCircleMenu = this.handleToggleCircleMenu.bind(this);
     this.openCircle = this.openCircle.bind(this);
     this.openCreateModal = this.openCreateModal.bind(this);
+    this.transformCircleConnections = this.transformCircleConnections.bind(this);
   }
 
   // handleRemoveUser(){
@@ -152,13 +154,13 @@ class ContactCard extends React.Component {
     this.setState({ circleMenu: !circleMenu })
   }
 
-  handleToggleMembership(circleId, memberId, isMember){
+  handleToggleMembership(circleId, connectionId, isMember){
     return e => {
       e.stopPropagation();
       if (isMember){
-        this.props.removeMember(circleId, memberId)
+        this.props.removeMember(circleId, connectionId)
       } else {
-        this.props.addMember(circleId, memberId)
+        this.props.addMember(circleId, connectionId)
       }
     }
   }
@@ -178,11 +180,26 @@ class ContactCard extends React.Component {
     this.setState({ contactAnchorEl: null });
   }
 
+  transformCircleConnections(){
+    const { circleConnections } = this.props;
+    let transformedCircleConnections = Object.values(circleConnections)
+      .reduce((acc, circleConnection) => {
+        if(!acc[circleConnection.circleId]){
+          acc[circleConnection.circleId] = new Set()
+        }
+        acc[circleConnection.circleId].add(circleConnection.connectionId)
+        return acc
+      }, {})
+    // debugger
+    return transformedCircleConnections
+  }
+
   getSecondaryAction(){
     const { classes, contact, currentUser,
-      search, connections, circles, circleMembers } = this.props;
+      search, connections, circles  } = this.props;
     const { contactAnchorEl, inviteAnchorEl,
       circleMenu } = this.state;
+    const transformedCircleConnections = this.transformCircleConnections();
 
     if(search){
       let connected = Object.values(connections).filter(x =>(
@@ -268,9 +285,10 @@ class ContactCard extends React.Component {
                 <div>
                   {/*List all Circles this user is a part of */}
                   {Object.values(circles).filter(x => (
-                    circleMembers[x.id].includes(this.getUser().id)
+                    transformedCircleConnections[x.id] &&
+                    transformedCircleConnections[x.id].has(contact.id)
                   )).map(circle => (
-                    <MenuItem onClick={this.openCircle}>
+                    <MenuItem onClick={this.openCircle(circle.id)}>
                       {`${this.capitalize(circle.title)}`}
                     </MenuItem>
                   )) }
@@ -291,8 +309,10 @@ class ContactCard extends React.Component {
                   {/*List all Circles you have */}
                   {Object.values(circles).map(circle => {
                     let user = this.getUser();
-                    let isMember = circleMembers[circle.id].includes(user.id);
-                    return <MenuItem onClick={this.handleToggleMembership(circle.id, user.id, isMember)}>
+                    let isMember = transformedCircleConnections[circle.id] ?
+                      transformedCircleConnections[circle.id].includes(contact.id) :
+                      false
+                    return <MenuItem onClick={this.handleToggleMembership(circle.id, contact.id, isMember)}>
                       {isMember ?
                         <CheckIcon
                           style={{ marginRight: 4 }}/> :

@@ -21,9 +21,9 @@ Rails.application.routes.draw do
     resources :opp_permissions, only: [:index, :create, :destroy]
     resources :connections
     resources :circles do
-      post 'add_member/:member_id', :to => 'circles#add_member'
-      delete 'remove_member/:member_id', :to => 'circles#remove_member'
+      post 'add_member/:connection_id', :to => 'circles#add_member'
     end
+    delete 'circle_connections/:circle_connection_id', :to => 'circles#remove_member'
     resources :notifications, only: [:index]
     resource :notification_settings, only: [:show, :update]
     resource :email_templates, only: [:show]

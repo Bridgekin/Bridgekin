@@ -1,7 +1,7 @@
 import {
   RECEIVE_CIRCLES,
   RECEIVE_CIRCLE,
-  REMOVE_CIRCLE} from '../../actions/circle_actions';
+  REMOVE_CIRCLE} from '../../../actions/circle_actions';
 import merge from 'lodash/merge';
 
 export default(state = {}, action) => {

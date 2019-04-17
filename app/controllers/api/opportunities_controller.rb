@@ -94,14 +94,15 @@ class Api::OpportunitiesController < ApiController
       .where(status: 'Approved')
     @facilitated_opportunity_ids = facilitated_opportunities.pluck(:id)
 
-    @passed_opportunity_ids = PassedOpportunity.where(user_id: @user.id).pluck(:opportunity_id)
-    passed_opportunities = Opportunity.where(id: @passed_opportunity_ids)
+    @passed_opportunity_ids = PassedOpportunity.where(user_id: @user.id)
+      .pluck(:opportunity_id)
+    opportunities_passed = Opportunity.where(id: @passed_opportunity_ids)
 
-    @saved_opportunity_ids = SavedOpportunity.where(user_id: @user.id)
-    saved_opportunities = Opportunity.where(id: @passed_opportunity_ids)
-
+    @saved_opportunities = SavedOpportunity.where(user_id: @user.id)
+    opportunities_saved = Opportunity.where(id: @saved_opportunities.pluck(:opportunity_id))
+    # debugger
     @opportunities = connected_opportunities | facilitated_opportunities |
-      user_opportunities | passed_opportunities | saved_opportunities
+      user_opportunities | opportunities_passed | opportunities_saved
 
     render :all_touched_index
   end

@@ -31,7 +31,7 @@ const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
   circles: state.entities.circles,
-  circleMembers: state.entities.circleMembers
+  circleConnections: state.entities.circleConnections
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -56,6 +56,7 @@ class CircleCard extends React.Component {
     this.addCircle = this.addCircle.bind(this);
     this.openCircle = this.openCircle.bind(this);
     this.deleteCircle = this.deleteCircle.bind(this);
+    this.transformCircleConnections = this.transformCircleConnections.bind(this);
   }
 
   capitalize(str){
@@ -83,6 +84,19 @@ class CircleCard extends React.Component {
     .then(() => this.setState({ anchorEl: null }))
   }
 
+  transformCircleConnections(){
+    const { circleConnections, circle } = this.props;
+    let transformedCircleConnections = Object.values(circleConnections)
+      .reduce((acc, circleConnection) => {
+        if(!acc[circleConnection.circleId]){
+          acc[circleConnection.circleId] = new Set()
+        }
+        acc[circleConnection.circleId].add(circleConnection.connectionId)
+        return acc
+      }, {})
+    return transformedCircleConnections
+  }
+
   render(){
     const { classes, circle,
       circleMembers} = this.props
@@ -90,6 +104,7 @@ class CircleCard extends React.Component {
     // let circle = circles[circleId]
 
     if(circle) {
+      const transformedCircleConnections = this.transformCircleConnections();
       return (
         <Grid container className={classes.userCard}
           justify="center" alignItems="center"
@@ -107,11 +122,12 @@ class CircleCard extends React.Component {
                 style={{ fontSize: 13, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
                 {`${circle.title}`}
               </Typography>
-              {!(circle.add) && circleMembers[circle.id] && <Typography variant="body1" align='left' color="textPrimary"
+              {!(circle.add) && transformedCircleConnections[circle.id] &&
+                <Typography variant="body1" align='left' color="textPrimary"
                 noWrap
                 style={{ fontSize: 13, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
-                {circleMembers[circle.id].length === 1 ? `1 member` :
-                  `${circleMembers[circle.id].length} Members`}
+                {transformedCircleConnections[circle.id].size === 1 ? `1 member` :
+                  `${transformedCircleConnections[circle.id].size} Members`}
               </Typography>}
             </Grid>
           </Grid>

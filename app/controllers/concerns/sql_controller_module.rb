@@ -1,7 +1,6 @@
 module SQLControllerModule
   def fetch_all_opp_permissions
-    connections = @user.requested_connections.includes(:opportunities) +
-      @user.received_connections.includes(:opportunities)
+    connections = @user.connections.where(status: 'Accepted')
 
     #Waterfalled Permissions
     direct_opp_perms = OppPermission.includes(:opportunity)
@@ -136,9 +135,7 @@ module SQLControllerModule
 
   def opps_direct_connections
     # Find all connections
-    connections = @user.requested_connections.includes(:opportunities) +
-      @user.received_connections.includes(:opportunities)
-
+    connections = @user.connections.where(status: 'Accepted')
     # Opportunity.includes(:owner)
     #   .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
     #   .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")
@@ -158,9 +155,7 @@ module SQLControllerModule
   end
 
   def opps_all_connections
-    connections = @user.requested_connections.includes(:opportunities) +
-      @user.received_connections.includes(:opportunities)
-
+    connections = @user.connections.where(status: 'Accepted')
     # Opportunity.includes(:owner)
     #   .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
     #   .joins("INNER JOIN connections on connections.id = opp_permissions.shareable_id")

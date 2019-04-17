@@ -79,17 +79,26 @@ class User < ApplicationRecord
     foreign_key: :friend_id,
     class_name: :Connection
 
-  has_many :user_circles,
-    foreign_key: :member_id,
-    class_name: :UserCircle
-
-  has_many :member_circles,
-    through: :user_circles,
-    source: :circle
+  # has_many :user_circles,
+  #   foreign_key: :member_id,
+  #   class_name: :UserCircle
+  #
+  # has_many :member_circles,
+  #   through: :user_circles,
+  #   source: :circle
 
   has_many :circles,
     foreign_key: :owner_id,
-    class_name: :Circle
+    class_name: :Circle,
+    dependent: :destroy
+
+  has_many :circle_connections,
+    through: :circles,
+    source: :circle_connections
+
+  has_many :connections_for_circles,
+    through: :circle_connections,
+    source: :connection
 
   has_one_attached :profile_pic
 
@@ -110,8 +119,8 @@ class User < ApplicationRecord
     class_name: :PassedOpportunity
 
   def connections
-    Connection.where("user_id = ? OR friend_id = ?", self.id, self.id)
-      .includes(:requestor, :recipient)
+    Connection.includes(:requestor, :recipient)
+    .where("user_id = ? OR friend_id = ?", self.id, self.id)
   end
 
   def friends

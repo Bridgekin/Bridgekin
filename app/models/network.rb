@@ -3,7 +3,8 @@ class Network < ApplicationRecord
 
   has_many :user_networks,
     foreign_key: :network_id,
-    class_name: :UserNetwork
+    class_name: :UserNetwork,
+    dependent: :destroy
 
   has_many :members,
     through: :user_networks,
@@ -11,7 +12,8 @@ class Network < ApplicationRecord
 
   has_many :network_admins,
     foreign_key: :network_id,
-    class_name: :NetworkAdmin
+    class_name: :NetworkAdmin,
+    dependent: :destroy
 
   has_many :admins,
     through: :network_admins,
@@ -43,11 +45,13 @@ class Network < ApplicationRecord
 
   has_many :connected_opportunities,
     foreign_key: :network_id,
-    class_name: :ConnectedOpportunity
+    class_name: :ConnectedOpportunity,
+    dependent: :destroy
 
   has_many :finalized_opportunities,
     foreign_key: :network_id,
-    class_name: :FinalizedOpportunity
+    class_name: :FinalizedOpportunity,
+    dependent: :destroy
 
   has_one :site_template,
     foreign_key: :network_id,
@@ -55,6 +59,11 @@ class Network < ApplicationRecord
 
   has_one_attached :picture
 
-  has_many :notifications, as: :acted_with
-  has_many :notifications, as: :targetable
+  has_many :notifications,
+    as: :acted_with,
+    dependent: :destroy
+
+  has_many :notifications,
+    as: :targetable,
+    dependent: :destroy
 end

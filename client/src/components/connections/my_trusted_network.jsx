@@ -32,15 +32,19 @@ import ProfilePage from './profile_page';
 import SearchResults from './search_results';
 import ContactsPage from './contacts_page';
 import CirclesPage from './circles_page';
+
+// import FilterBarButton from './filter_bar_button';
 // import Invitations from './invitations';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
+// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   users: state.users,
   // connections: state.connections,
   searchResultsPage: state.entities.searchResultsPage,
+  connections: state.entities.connections
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -61,15 +65,15 @@ const styles = theme => ({
   filterCard:{
     // marginTop: 18,
     backgroundColor: theme.palette.base3,
-    width: '100%',
-    borderRadius: 5,
-    border: `1px solid ${theme.palette.border.primary}`
+    // width: '100%',
+    // borderRadius: 5,
+    border: `1px solid ${theme.palette.border.secondary}`
   },
   filterItem:{
     borderTop: `1px solid ${theme.palette.border.secondary}`,
   },
   filterHeader:{
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 500
   },
   buttonText: { color: theme.palette.text.primary },
@@ -79,9 +83,37 @@ const styles = theme => ({
       display: 'none'
     },
   },
+  mobileAdjustFeed:{
+    paddingTop: 45,
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: 0
+    },
+  },
   cardHeader:{
-    fontSize: 16
-  }
+    fontSize: 13,
+    fontWeight: 600
+  },
+  filterBar: {
+    flexGrow: 1,
+    backgroundColor: "rgb(255,255,255,0.8)",
+    height: 45,
+    borderBottom: `1px solid ${theme.palette.border.secondary}`,
+    position: 'fixed',
+    top: 45,
+    zIndex: 1,
+    padding: "0px 5px",
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  },
+  filterButton:{
+    color: 'black',
+    backgroundColor: 'white',
+    border: '1px solid black',
+    margin: '0px 4px',
+    padding: "3px 5px",
+    textTransform: 'capitalize',
+  },
 })
 
 class MyTrustedNetwork extends React.Component {
@@ -91,7 +123,10 @@ class MyTrustedNetwork extends React.Component {
       loaded: false,
       mobileNavAnchorEl: null
     }
-    this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
+    // this.handleMobileNavClick = this.handleMobileNavClick.bind(this);
+    this.countFilter = this.countFilter.bind(this);
+    this.handleChoice = this.handleChoice.bind(this);
+    this.menuToggle = this.menuToggle.bind(this);
   }
 
   componentDidMount(){
@@ -102,20 +137,51 @@ class MyTrustedNetwork extends React.Component {
     })
   }
 
-  handleMobileNavClick(path){
+  // handleMobileNavClick(path){
+  //   return e => {
+  //     const { mobileNavAnchorEl } = this.state;
+  //     this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget },
+  //     () => {
+  //       if(path){
+  //         this.props.history.push(path)
+  //       }
+  //     })
+  //   }
+  // }
+
+  handleChoice(optionUrl){
     return e => {
-      const { mobileNavAnchorEl } = this.state;
-      this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget },
-      () => {
-        if(path){
-          this.props.history.push(path)
+      this.setState({ mobileNavAnchorEl: null },
+      () => this.props.history.push(optionUrl));
+    }
+  }
+
+  menuToggle(e){
+    const { mobileNavAnchorEl } = this.state;
+    this.setState({ mobileNavAnchorEl: mobileNavAnchorEl ? null : e.currentTarget})
+  }
+
+  countFilter(dest){
+    const { connections, currentUser } = this.props;
+    // const pathName = this.props.location.pathname;
+    let length = 0
+    switch (dest) {
+      case '/mynetwork/invitations':
+        length = Object.values(connections).filter(x => (
+          x.status === 'Pending' && x.friendId === currentUser.id))
+          .length
+        if (length > 0){
+          return ` (${length})`
         }
-      })
+        return '';
+      default:
+        return '';
     }
   }
 
   render(){
-    const{ classes, currentUser, searchResultsPage } = this.props;
+    const{ classes, currentUser, searchResultsPage,
+      history, location} = this.props;
     const { loaded, mobileNavAnchorEl } = this.state;
     const pathName = this.props.location.pathname;
 
@@ -137,51 +203,84 @@ class MyTrustedNetwork extends React.Component {
         // {title: 'Invitations Sent', dest: '/mynetwork/pending'},
       ]
 
+      let focusedPage = pages.find(x => x.dest === pathName)
+
+      // let pages = {
+      //   '/mynetwork': `My Contacts`,
+      //   '/mynetwork/invitations': 'Invitations',
+      //   '/mynetwork/pending': 'Invitations Sent',
+      //   '/mynetwork/circles': 'Network Circles'
+      // }
+
       let filter = (
-        <FilterCard
-          title={`My Trusted Network`}
-          pages={pages}
-          mobile={false}
-          />
+        <div className={classes.filterCard}>
+          <Typography align='left' color="textPrimary"
+            className={classes.cardHeader}
+            style={{ margin: "10px 15px 0px"}}>
+            {`My Trusted Network`}
+          </Typography>
+
+          <List component="nav">
+            {pages.map(page => (
+              <ListItem button className={classes.filterItem}
+                onClick={() => history.push(page.dest)}
+                selected={location.pathname === page.dest}>
+                <Typography variant="body1" align='left'
+                  color="textPrimary" className={classes.filterHeader}>
+                  {page.title}
+                  {`${this.countFilter(page.dest)}`}
+                </Typography>
+              </ListItem>
+            ))}
+          </List>
+        </div>
       )
 
-      // let mobileNavigation = (
-      //   <Grid container justify='flex-start' alignItems='center'
-      //     className={classes.mobileNavigation}>
-      //     <Typography align='left' color="textPrimary"
-      //       className={classes.mobileNavHeader}>
-      //       My Trusted Network
-      //       <IconButton
-      //         onClick={this.handleMobileNavClick()}
-      //         classes={{ label: classes.moreIcon }}
-      //         style={{ padding: 6}}
-      //         >
-      //         <MoreVertIcon />
-      //       </IconButton>
-      //     </Typography>
-      //
-      //     <Menu
-      //       id="long-menu"
-      //       anchorEl={mobileNavAnchorEl}
-      //       open={Boolean(mobileNavAnchorEl)}
-      //       onClose={this.handleMobileNavClick()}
-      //     >
-      //       {pages.map(item => (
-      //         <ListItem button className={classes.filterItem}
-      //           onClick={this.handleMobileNavClick(item.dest)}
-      //           selected={pathName === item.dest}>
-      //           <Typography variant="body1" align='left'
-      //             color="textPrimary" className={classes.filterHeader}>
-      //             {item.title}
-      //           </Typography>
-      //         </ListItem>
-      //       ))}
-      //     </Menu>
-      //   </Grid>
-      // )
+      let mobileFilterBar = (
+        <Grid container className={classes.filterBar}
+          justify='flex-end' alignItems='center'>
+          <Button
+            onClick={this.menuToggle}
+            className={classes.filterButton}>
+            {focusedPage && focusedPage.title}
+            <KeyboardArrowDownIcon />
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl= {mobileNavAnchorEl}
+            open={Boolean(mobileNavAnchorEl)}
+            onClose={this.menuToggle}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            MenuListProps={{
+              classes:{
+                root: classes.menu
+              }
+            }}
+            getContentAnchorEl={null}
+            >
+            {pages.map(page => (
+              <MenuItem className={classes.menuItem}
+                onClick={this.handleChoice(page.dest)}>
+                <Typography variant='body1' color='textPrimary'
+                  style={{ textTransform: 'capitalize', fontSize: 13}}>
+                  {page.title}
+                </Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Grid>
+      )
 
       let feed = (
-        <div>
+        <div className={classes.mobileAdjustFeed}>
+          {mobileFilterBar}
           <Switch>
             <ProtectedRoute path="/mynetwork/searchresults/:input" component={SearchResults} />
             <ProtectedRoute
@@ -190,7 +289,8 @@ class MyTrustedNetwork extends React.Component {
               passedProps={{ waitlistCard }} />
             <ProtectedRoute
               path="/mynetwork/circles"
-              component={CirclesPage}/>
+              component={CirclesPage}
+              passedProps={{ waitlistCard }} />
             <ProtectedRoute
               path="/mynetwork"
               component={ContactsPage}

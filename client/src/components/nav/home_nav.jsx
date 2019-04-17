@@ -710,7 +710,7 @@ class HomeNav extends React.Component {
       </Grid>
     ) : (
       <Grid className={classes.navSectionContainer}
-        item xs={2} sm={2} md={5} lg={5}
+        item xs={3} sm={2} md={5} lg={5}
         container justify='flex-end' alignItems='center'>
 
         <Grid container alignItems="center" justify="flex-end"
@@ -772,7 +772,8 @@ class HomeNav extends React.Component {
           </div>
         </Grid>
 
-        <div className={classes.sectionMobile}>
+        <Grid item container justify='space-around'
+          className={classes.sectionMobile}>
           {currentUser && currentUser.isAdmin &&
             <Badge badgeContent={this.countNotifications()}
               classes={{ badge: classes.badge}}
@@ -787,7 +788,7 @@ class HomeNav extends React.Component {
             style={{ padding: 0 }}>
             <MenuIcon className={classes.menuIcon}/>
           </IconButton>
-        </div>
+        </Grid>
         {renderMenu}
         {renderMobileMenu}
         {notificationsMenu}
@@ -862,7 +863,7 @@ class HomeNav extends React.Component {
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
               {logoChunk}
-              {currentUser ? <Grid item xs={8} sm={4} md={3} lg={3}>
+              {currentUser ? <Grid item xs={7} sm={4} md={3} lg={3}>
                 <SearchBar />
               </Grid> : <div style={{ flexGrow: 1}}/>}
               {navMenu}

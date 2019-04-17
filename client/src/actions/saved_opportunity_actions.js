@@ -19,9 +19,9 @@ export const receiveSavedOpportunity = savedOpportunity => ({
   savedOpportunity,
 });
 
-export const removeSavedOpportunity = savedOpportunityID => ({
+export const removeSavedOpportunity = savedOpportunityId => ({
   type: REMOVE_SAVED_OPPORTUNITY,
-  savedOpportunityID
+  savedOpportunityId
 });
 
 export const fetchSavedOpportunities = () => dispatch => (

@@ -81,7 +81,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    // padding: '30px 15px',
+    padding: 15,
     backgroundColor: theme.palette.base3,
     // marginTop: 18,
     // width: '100%',
@@ -151,8 +151,9 @@ const styles = theme => ({
   settingsContainer:{
     overflow: 'scroll',
     flexGrow: 1,
+    // paddingTop: 15,
     [theme.breakpoints.up('sm')]: {
-      // marginTop: 18
+      // paddingTop: 0
     },
   }
 });

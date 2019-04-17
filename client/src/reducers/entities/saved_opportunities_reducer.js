@@ -14,7 +14,7 @@ export default(state = {}, action) => {
     case RECEIVE_SAVED_OPPORTUNITY:
       return merge({}, state, {[action.savedOpportunity.opportunityId]: action.savedOpportunity });
     case REMOVE_SAVED_OPPORTUNITY:
-      delete newState[action.savedOpportunityID]
+      delete newState[action.savedOpportunityId]
       return newState;
     default:
       return state;
