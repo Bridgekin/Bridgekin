@@ -19,7 +19,7 @@ class Api::ConnectionsController < ApiController
   def create
     # Find target user, find current user
     friend = User.find(params[:connection][:friend_id])
-    inputted_email = params[:connection][:email].downcase
+    inputted_email = params[:connection][:email].downcase.strip
     # Check if provided email is the same (downcased)
 
     if (params[:connection][:friend_id] === @user.id)

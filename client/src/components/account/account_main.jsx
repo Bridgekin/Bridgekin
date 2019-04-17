@@ -412,6 +412,7 @@ class AccountMain extends React.Component {
       {title: "Opportunities You've Bookmarked", name: 'saved'},
       {title: "Opportunities You've Connected To", name: 'connected'},
       {title: "Opportunities You've Referred", name: 'referred'},
+      {title: "Opportunities You've Passed", name: 'passed'}
     ]
 
     let oppFiltersDesktop = (

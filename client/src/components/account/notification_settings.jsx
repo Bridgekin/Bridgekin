@@ -165,7 +165,7 @@ class NotificationSettings extends React.Component {
             ))}
           </Grid>
 
-          <Grid container style={{ marginTop: 20}}>
+          {false && <Grid container style={{ marginTop: 20}}>
             <Grid item xs={12} style={{ marginBottom: 10}}>
               <Typography align='left' color='textPrimary'
                 className={classes.notificationHeader}>
@@ -191,9 +191,9 @@ class NotificationSettings extends React.Component {
                 </Grid>
               </Grid>
             ))}
-          </Grid>
+          </Grid>}
 
-          <Grid container style={{ marginTop: 20 }}>
+          {false && <Grid container style={{ marginTop: 20 }}>
             <Grid item xs={12} style={{ marginBottom: 10}}>
               <Typography align='left' color='textPrimary'
                 className={classes.notificationHeader}>
@@ -246,7 +246,7 @@ class NotificationSettings extends React.Component {
                 </Grid>
               </Grid>
             ))}
-          </Grid>
+          </Grid>}
 
           <Grid container justify='flex-end'
             style={{ marginTop: 20 }}>

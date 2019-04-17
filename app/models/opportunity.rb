@@ -68,7 +68,7 @@ class Opportunity < ApplicationRecord
   def self.profile_index(profile_id, user)
     opportunities = Opportunity.includes(:owner, :connections, :networks)
       .where(owner_id: profile_id)
-      .where.not(deal_status: 'Deleted')
+      .where.not(deal_status: 'Deleted', anonymous: true)
 
     opportunities.reduce([]) do |acc, opp|
       users_shared = Opportunity.all_people_shared(opp)

@@ -702,9 +702,9 @@ class OpportunityChangeModal extends React.Component {
       if (type === 'Everyone'){
         return 'Everyone on Bridgekin'
       }
-      return `All ${type}s`
+      return `Your ${type}s`
     } else if (type === 'Network'){
-      return networks[typeId].title;
+      return `The ${networks[typeId].title} Network`;
     } else if (type === 'Circle'){
       return circles[typeId].title;
     } else if (type === 'Connection'){

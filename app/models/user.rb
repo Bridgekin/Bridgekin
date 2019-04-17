@@ -197,7 +197,7 @@ class User < ApplicationRecord
     end
 
     if referral_link.is_friendable
-      admin = User.find_by(email: 'joe@brigekin.com')
+      admin = User.find_by(email: 'joe@bridgekin.com')
       if admin
         # Connection.create( user_id: self.id, status: 'Accepted',
         #   friend_id: referral_link.member_id )

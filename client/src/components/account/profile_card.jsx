@@ -487,12 +487,12 @@ class Profile extends React.Component {
                     <Typography variant="body1" align='left'
                       color='textSecondary'
                       style={{ fontSize: 11 }}>
-                      {`Yes`}
+                      {`No`}
                       <Switch
                         checked={user.searchable}
                         onChange={this.handleUpdateUserChange('searchable')}
                         />
-                      {`No`}
+                      {`Yes`}
                     </Typography>
                   </Grid>
                 </Grid>

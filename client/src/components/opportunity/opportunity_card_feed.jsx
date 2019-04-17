@@ -469,10 +469,14 @@ class OpportunityCard extends React.Component {
             name = networks[id].title;
           } else {
             let connection = connections[id];
-            let friendId = (currentUser.id !== connection.userId) ?
-            connection.userId : connection.friendId
-            let friend = users[friendId];
-            name = `${friend.fname} ${friend.lname}`
+            if(!connection){
+              debugger
+            } else {
+              let friendId = (currentUser.id !== connection.userId) ?
+              connection.userId : connection.friendId
+              let friend = users[friendId];
+              name = `${friend.fname} ${friend.lname}`
+            }
           }
           return <Typography color='textPrimary' gutterBottom
             style={{ textTransform: 'capitalize', fontSize: 9}}>
@@ -570,11 +574,11 @@ class OpportunityCard extends React.Component {
                   <Avatar alt="profile-pic"
                     src={ownerPictureUrl}
                     className={classes.avatar}
-                    onClick={this.handleProfilePage(ownerId)}/>
+                    onClick={!anonymous && this.handleProfilePage(ownerId)}/>
                 ) : (
                   <AccountCircle
                     className={classes.avatar}
-                    onClick={this.handleProfilePage(ownerId)}/>
+                    onClick={!anonymous && this.handleProfilePage(ownerId)}/>
                 )}
               </Grid>
               <Grid container item xs={8} direction='column'
