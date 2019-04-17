@@ -46,7 +46,7 @@ const mapDispatchToProps = dispatch => ({
   updateConnection: connection => dispatch(updateConnection(connection)),
   deleteConnection: (id) => dispatch(deleteConnection(id)),
   addMember: (circleId, memberId) => dispatch(addMember(circleId, memberId)),
-  removeMember: (circleId, memberId) => dispatch(removeMember(circleId, memberId)),
+  removeMember: (circleConnectionId) => dispatch(removeMember(circleConnectionId)),
 });
 
 const styles = theme => ({
@@ -158,7 +158,10 @@ class ContactCard extends React.Component {
     return e => {
       e.stopPropagation();
       if (isMember){
-        this.props.removeMember(circleId, connectionId)
+        const circleConnection = Object.values(this.props.circleConnections)
+          .find(conn => conn.circleId === circleId &&
+            conn.connectionId === connectionId)
+        this.props.removeMember(circleConnection.id)
       } else {
         this.props.addMember(circleId, connectionId)
       }
