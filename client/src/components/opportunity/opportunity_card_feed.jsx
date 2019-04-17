@@ -411,14 +411,19 @@ class OpportunityCard extends React.Component {
   }
 
   getPermissionLabel(){
-    const { permission, permType, networks } = this.props;
+    const { permission, permType, networks,
+      currentUser, opportunity} = this.props;
     let shareLength = Object.values(permission.sharePerms).reduce((acc, opts) => (
       acc + opts.length), 0);
     // debugger
     if(permType === 'direct'){
-      return `Direct ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
+      return `Direct ` +
+        (((shareLength > 1) && (currentUser.id === opportunity.ownerId)) ?
+        `(${shareLength})` : ``) + `- `
     } else if(permType === 'indirect'){
-      return `Connections ` + (shareLength > 1 ? `(${shareLength})` : ``) + `- `
+      return `Connections ` +
+        (((shareLength > 1) && (currentUser.id === opportunity.ownerId)) ?
+        `(${shareLength})` : ``) + `- `
     } else if(permType === 'network'){
       let networkTitle = networks[permission.sharePerms.network[0]].title
       return `Bridgekin - `
@@ -461,9 +466,6 @@ class OpportunityCard extends React.Component {
             name = networks[id].title;
           } else {
             let connection = connections[id];
-            if(!connection){
-              debugger
-            }
             let friendId = (currentUser.id !== connection.userId) ?
             connection.userId : connection.friendId
             let friend = users[friendId];
