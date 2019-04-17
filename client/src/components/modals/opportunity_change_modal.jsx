@@ -700,7 +700,7 @@ class OpportunityChangeModal extends React.Component {
     let [typeId, type] = perm.split('-');
     if(typeId === ''){
       if (type === 'Everyone'){
-        return 'Bridgekin'
+        return 'Everyone on Bridgekin'
       }
       return `All ${type}s`
     } else if (type === 'Network'){
@@ -1098,7 +1098,6 @@ class OpportunityChangeModal extends React.Component {
                   <Typography variant='body1' align='left'
                     color="textPrimary"
                     style={{ fontSize: 13}}>
-                    {`Everyone in `}
                     <b>{[...permissions].map(perm => this.capitalize(this.getTitle(perm)))
                         .join(', ')}</b>
                     </Typography>
