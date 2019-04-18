@@ -104,11 +104,11 @@ class WaitlistModal extends React.Component {
         container justify='flex-start'>
         <Typography variant="h2" id="modal-title" color='textPrimary'
           className={classes.thanksHeader} align='left'>
-          Thanks for referring your trusted contact!
+          {`You’ve invited your trusted contact!`}
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
           align='left' color='textPrimary'>
-          We’ve sent them an email letting them know you referred them and they’ve been added to our waitlist.
+          {`We’ve sent them an email letting them know.`}
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}

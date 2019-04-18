@@ -274,7 +274,7 @@ class CustomEmailModal extends React.Component {
         {`Edit Email`}
         <CloseIcon
           onClick={this.handleClose}
-          style={{ cursor: 'pointer'}}/>
+          style={{ cursor: 'pointer', color: 'grey'}}/>
       </Grid>
     )
 
@@ -371,9 +371,10 @@ class CustomEmailModal extends React.Component {
 
     let modalSetup = templateLoaded ? (
       modalContent
-    ) : (<div style={{ height: 200, width: 200 }}>
+    ) : (<Grid container justify='center' alignItems='center'
+      style={{ height: 200, width: 200 }}>
       <Loading />
-    </div>)
+    </Grid>)
 
     return (
       <Dialog
@@ -383,13 +384,13 @@ class CustomEmailModal extends React.Component {
         onClose={this.handleClose}
         className={classes.cardModalWrapper}
         classes={{ paper: classes.modalPaper}}>
-        <Badge
+        {modalSetup}
+        {/*<Badge
           badgeContent={<CloseIcon onClick={this.handleClose}/>}
           classes={{ badge: classes.badge }}
           style={{ width: '100%'}}
           >
-          {modalSetup}
-        </Badge>
+        </Badge>*/}
       </Dialog>
     )
   }

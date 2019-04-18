@@ -816,39 +816,36 @@ class HomeNav extends React.Component {
             <KeyboardArrowDownIcon />
           </IconButton>}
 
-        <Popper open={logoMenuOpen} anchorEl={logoAnchorEl}
-          transition disablePortal
+        <Menu
+          id="simple-menu"
+          anchorEl={logoAnchorEl}
+          open={Boolean(logoAnchorEl)}
+          onClose={this.handleMenuToggle('logoAnchorEl')}
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'right',
+            horizontal: 'center',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'right',
-          }}>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              id="menu-list-grow"
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-            >
-              <Paper>
-                <ClickAwayListener
-                  onClickAway={this.handleMenuToggle('logoAnchorEl')}>
-                  <MenuList>
-                    {workspaces.map(workspace => (
-                      <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}>
-                        <Typography variant="body1" align='left' color="textPrimary" >
-                          {workspace.title}
-                        </Typography>
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+            horizontal: 'center',
+          }}
+          MenuListProps={{
+            classes:{
+              root: classes.menu
+            }
+          }}
+          getContentAnchorEl={null}
+          >
+          {workspaces.map(workspace => (
+            <MenuItem onClick={this.handleLogoMenuChangeTemplate(workspace.id)}
+              className={classes.menuItem}>
+              <Typography variant="body1" align='left' color="textPrimary"
+                className={classes.menuFont}>
+                {workspace.title}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
 
       </Grid>
     )

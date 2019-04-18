@@ -161,8 +161,8 @@ class OpportunityWaitlist extends React.Component{
         <Typography gutterBottom align='center'
           className={classes.cardHeader} color='textPrimary'
           style={{ margin: '10px 0px 15px', fontSize: 13, fontWeight: 600 }}>
-          {`Invite your top business contacts to privately send and
-            connect to opportunities with the ones you trust`}
+          {`Bridgekin is invite-only. Invite your top business contacts
+            and start connecting today.`}
         </Typography>
 
         <Typography align='right'

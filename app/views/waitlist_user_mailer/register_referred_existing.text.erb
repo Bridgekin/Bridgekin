@@ -2,10 +2,14 @@
 
 Hi <%= @waitlist_user.fname.capitalize %>,
 
-<%= @user.fname.capitalize %> is a member of our private Bridgekin network
-  and referred you to be a part of our community. We saw that you had signed up
-  for our waitlist, but since we’re currently invite-only, <%= @user.fname.capitalize %>
-  referring you is a good thing! We’ll let you know once we begin accepting referred users.
+<% if @body.nil? %>
+  <%= @user.fname.capitalize %> is a member of our private Bridgekin network
+    and referred you to be a part of our community. We saw that you had signed up
+    for our waitlist, but since we’re currently invite-only, <%= @user.fname.capitalize %>
+    referring you is a good thing! We’ll let you know once we begin accepting referred users.
+<% else %>
+  <%= @body %>
+<% end %>
 
 Have a great day!
 

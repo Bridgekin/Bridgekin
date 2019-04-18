@@ -1,9 +1,14 @@
 <p>Hi <%= @waitlist_user.fname.capitalize %>,</p>
 
-<p><%= @user.fname.capitalize %> has sent you a private invitation to be a
-part of their trusted network on Bridgekin, so he can share relevant business
-opportunities with you. We’ll be opening up the platform to invited members
-shortly, but in the meantime you’ve been added to our waitist.</p>
+<% if @body.nil? %>
+  <p><%= @user.fname.capitalize %> has sent you an exclusive invitation to
+    be a part of their trusted network on Bridgekin, so they can privately
+    share relevant business opportunities with you. We’re currently reviewing
+    your invitation request and you should receive an email with your private
+    link to join the platform shortly.</p>
+<% else %>
+  <p><%= @body %></p>
+<% end %>
 
 <p>Cheers,<br>
 The Bridgekin Team<br>

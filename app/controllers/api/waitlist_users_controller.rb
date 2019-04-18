@@ -9,7 +9,7 @@ class Api::WaitlistUsersController < ApiController
     else
       waitlist_user = WaitlistUser.new(waitlist_user_params)
       if waitlist_user.save
-        WaitlistUserMailer.register_email(waitlist_user).deliver_now
+        WaitlistUserMailer.register_email(waitlist_user).deliver_later
         render json: ['Successfully added user to waitlist'], status: 201
       else
         render json: waitlist_user.errors.full_messages, status: 422
@@ -39,12 +39,16 @@ class Api::WaitlistUsersController < ApiController
           if params[:user][:subject]
             subject = params[:user][:subject]
             body = params[:user][:body]
-            WaitlistUserMailer.register_referred_existing_template(
-              existing_waitlist_user, @user, subject, body ).deliver_now
+            WaitlistUserMailer.register_referred_existing(
+              existing_waitlist_user, @user, subject, body ).deliver_later
           else
             WaitlistUserMailer.register_referred_existing(
-              existing_waitlist_user, @user).deliver_now
+              existing_waitlist_user, @user).deliver_later
           end
+
+          #Track notable metrics
+          @user.decrement_invite_count
+          existing_waitlist_user.track_email
 
           render :show
         else
@@ -63,12 +67,16 @@ class Api::WaitlistUsersController < ApiController
           if params[:user][:subject]
             subject = params[:user][:subject]
             body = params[:user][:body]
-            WaitlistUserMailer.register_referred_new_template(
-              waitlist_user, @user, subject, body ).deliver_now
+            WaitlistUserMailer.register_referred_new(
+              waitlist_user, @user, subject, body ).deliver_later
           else
             WaitlistUserMailer.register_referred_new(
-              waitlist_user, @user).deliver_now
+              waitlist_user, @user).deliver_later
           end
+
+          #Track notable metrics
+          @user.decrement_invite_count
+          waitlist_user.track_email
 
           render :show
         else
