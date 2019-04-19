@@ -282,7 +282,7 @@ class SignupPage extends React.Component{
             <Grid item xs={10} sm={8} >
               <Typography className={classes.homeSubheader}
                 color="textPrimary" variant="body1" gutterBottom>
-                {"You’ve received a private invitation to join the Bridgekin network, an invite-only community that has connected over $71M in opportunities. Complete your registration and sign in below!"}
+                {"You’ve received a private invitation to join Bridgekin, an invite-only platform that has connected over $72M in opportunities. Complete your registration below to sign in."}
               </Typography>
               {form}
             </Grid>
@@ -306,7 +306,7 @@ class SignupPage extends React.Component{
             <Grid item xs={10} sm={8} >
               <Typography className={classes.homeSubheader}
                 color="textPrimary" variant="body1" gutterBottom>
-                {"You’ve received a private invitation to join the Bridgekin network, an invite-only community that has connected over $71M in opportunities. Complete your registration and sign in below!"}
+                {"You’ve received a private invitation to join Bridgekin, an invite-only platform that has connected over $72M in opportunities. Complete your registration below to sign in."}
               </Typography>
               {form}
             </Grid>

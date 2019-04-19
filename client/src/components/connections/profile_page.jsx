@@ -62,6 +62,21 @@ class ProfilePage extends React.Component {
     // this.props.fetchProfileOpportunities()
   }
 
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps.userId !== this.props.userId){
+      this.setState({ oppsLoaded: false },
+      () => {
+        this.props.fetchProfile(nextProps.userId)
+        .then(() => {
+          this.props.fetchProfileOpportunities(nextProps.userId)
+          .then(() => this.setState({ oppsLoaded: true}))
+          this.setState({ loaded: true })
+        })
+      })
+    }
+    return true
+  }
+
   capitalize(str){
     let strArray = str.split(' ');
     for (let i = 0; i < strArray.length; i++) {
