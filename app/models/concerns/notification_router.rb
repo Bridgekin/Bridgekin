@@ -14,7 +14,8 @@ module NotificationRouter
       notification_setting = NotificationSetting.find_by(user_id: recipient_id)
       action = perm.mass ? "shared" : "sent"
 
-      if (notification_setting.nil? || (perm.mass ? notification_setting.opps_shared_contacts : notification_setting.opps_shared_direct)) &&
+      if (notification_setting.nil? ||
+        (perm.mass ? notification_setting.opps_shared_contacts : notification_setting.opps_shared_direct)) &&
         !(sent_to.include?(recipient_id))
         Notification.create(
           recipient_id: recipient_id,
@@ -23,7 +24,8 @@ module NotificationRouter
           acted_with_type: 'Opportunity',
           acted_with_id: opportunity.id,
           origin_type: 'OppPermission',
-          origin_id: perm.id
+          origin_id: perm.id,
+          anonymous: opportunity.anonymous
         )
 
         sent_to.add(recipient_id)
@@ -49,7 +51,8 @@ module NotificationRouter
             targetable_type: 'Network',
             targetable_id: network.id,
             origin_type: 'OppPermission',
-            origin_id: perm.id
+            origin_id: perm.id,
+            anonymous: opportunity.anonymous
           )
 
           sent_to.add(member.id)

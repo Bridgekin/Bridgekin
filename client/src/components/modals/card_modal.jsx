@@ -238,7 +238,8 @@ class CardModal extends React.Component {
       () => {
         let opportunity = {
           opportunityId: this.props.oppCardModal.oppId,
-          connectBool: this.state.connectBool
+          connectBool: this.state.connectBool,
+          permType: this.props.oppCardModal.permType
         }
 
         this.props.createConnectedOpportunity(opportunity)

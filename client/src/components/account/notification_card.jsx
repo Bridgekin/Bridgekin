@@ -68,14 +68,16 @@ class NotificationCard extends React.Component {
   render(){
     const { notification, classes, users } = this.props;
     let actor = users[notification.actorId]
-
+    // if (notification.actedWithId === 143){
+      // debugger
+    // }
     let card = (
       <Grid container alignItems="center"
         onClick={this.handleNotificationRedirect}>
         <Grid item xs={3} sm={2}>
           <Avatar
             style={{ marginRight: 15}}>
-            {actor.profilePicUrl ? (
+            {(actor && !notification.anonymous && actor.profilePicUrl) ? (
               <VisibilitySensor>
                 <Img src={actor.profilePicUrl}
                   className={classes.profilePic}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_16_211836) do
+ActiveRecord::Schema.define(version: 2019_04_19_175324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,8 +84,8 @@ ActiveRecord::Schema.define(version: 2019_04_16_211836) do
     t.integer "facilitator_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "network_id"
     t.integer "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
+    t.string "perm_type"
     t.index ["opportunity_id"], name: "index_connected_opportunities_on_opportunity_id"
     t.index ["user_id"], name: "index_connected_opportunities_on_user_id"
   end
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(version: 2019_04_16_211836) do
     t.string "message", default: ""
     t.string "origin_type"
     t.bigint "origin_id"
+    t.boolean "anonymous", default: false
     t.index ["acted_with_type", "acted_with_id"], name: "index_notifications_on_acted_with_type_and_acted_with_id"
     t.index ["origin_type", "origin_id"], name: "index_notifications_on_origin_type_and_origin_id"
     t.index ["recipient_id"], name: "index_notifications_on_recipient_id"

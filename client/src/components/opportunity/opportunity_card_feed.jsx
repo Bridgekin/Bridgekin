@@ -246,7 +246,7 @@ class OpportunityCard extends React.Component {
     this.getPermissionsPopover = this.getPermissionsPopover.bind(this);
   }
 
-  handleCardOpen(cardModalPage, connectBool){
+  handleCardOpen(cardModalPage, connectBool, permType){
     return e => {
       e.preventDefault();
       e.stopPropagation();
@@ -256,7 +256,8 @@ class OpportunityCard extends React.Component {
       let payload = {
         oppId: opportunity.id,
         page: cardModalPage,
-        connectBool
+        connectBool,
+        permType
       }
       this.props.openOppCard(payload);
     }
@@ -437,7 +438,7 @@ class OpportunityCard extends React.Component {
   handlePermissionsOpen(e){
     e.stopPropagation()
     const { currentUser, opportunity } = this.props;
-    if(currentUser.id === opportunity.ownerId){
+    if(currentUser && currentUser.id === opportunity.ownerId){
       this.setState({ permissionsAnchorEl: e.currentTarget})
     }
   }
@@ -445,7 +446,7 @@ class OpportunityCard extends React.Component {
   handlePermissionsClose(e){
     e.stopPropagation()
     const { currentUser, opportunity } = this.props;
-    if(currentUser.id === opportunity.ownerId){
+    if(currentUser && currentUser.id === opportunity.ownerId){
       this.setState({ permissionsAnchorEl: null})
     }
   }
@@ -454,10 +455,11 @@ class OpportunityCard extends React.Component {
     const { networks, connections, permission,
       currentUser, opportunity, users } = this.props;
 
-    let content = ['direct', 'indirect', 'network'].filter(perm => permission.sharePerms[perm].length > 0)
+    if (currentUser){
+      let content = ['direct', 'indirect', 'network'].filter(perm => permission.sharePerms[perm].length > 0)
       .map(type => {
         let label = type === 'direct' ? 'direct' :
-          (type === 'indirect' ? 'Connections' : 'Network')
+        (type === 'indirect' ? 'Connections' : 'Network')
         let title = <Typography color='textSecondary' gutterBottom
           style={{ textTransform: 'capitalize', fontSize: 9}}>
           <u>{label}</u>
@@ -488,8 +490,9 @@ class OpportunityCard extends React.Component {
           {shares}
         </Grid>
       })
-
-    return content
+      return content
+    }
+    return ''
   }
 
   render(){
@@ -510,6 +513,9 @@ class OpportunityCard extends React.Component {
         value, status, pictureUrl, dealStatus, anonymous, viewType,
         ownerPictureUrl, ownerFirstName, ownerLastName, ownerId } = opportunity;
 
+      // if (currentUser.id === ownerId){
+      //   debugger
+      // }
       // let deleteDialog = editable ? (
       //   <Dialog
       //     open={this.state.deleteOpen}
@@ -789,13 +795,13 @@ class OpportunityCard extends React.Component {
               </Grid>
             </Grid>*/}
 
-            {currentUser.id !== ownerId ? (
+            {(!currentUser || currentUser.id !== ownerId) ? (
               <Grid container justify='space-around'
               className={classes.feedCardActionContainer}
               style={{ marginTop: 10}}>
                 <Grid item xs={3}>
                   <Button fullWidth
-                    onClick={this.handleCardOpen('confirm', true)}
+                    onClick={this.handleCardOpen('confirm', true, permType)}
                     classes={{ label: classes.oppActionButton }}>
                     <img alt='connect' src={ConnectIcon}
                       className={classes.oppActionIconPic}/>
@@ -805,7 +811,7 @@ class OpportunityCard extends React.Component {
 
                 <Grid item xs={3}>
                   <Button fullWidth
-                    onClick={this.handleCardOpen('confirm', false)}
+                    onClick={this.handleCardOpen('confirm', false, permType)}
                     classes={{ label: classes.oppActionButton }}>
                     <img src={ReferIcon} alt=''
                       className={classes.oppActionIconPic}/>

@@ -78,9 +78,9 @@ export const closeWaitlist = () => ({
 export const OPEN_OPP_CARD_MODAL = 'OPEN_OPP_CARD_MODAL';
 export const CLOSE_OPP_CARD_MODAL = "CLOSE_OPP_CARD_MODAL";
 
-export const openOppCard = ({ oppId, page, connectBool }) => ({
+export const openOppCard = ({ oppId, page, connectBool, permType }) => ({
   type: OPEN_OPP_CARD_MODAL,
-  oppId, page, connectBool
+  oppId, page, connectBool, permType
 });
 
 export const closeOppCard = () => ({

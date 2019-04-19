@@ -605,7 +605,7 @@ class HomeNav extends React.Component {
               <Grid item xs={3}>
                 <Avatar
                   style={{ marginRight: 10}}>
-                  {actor && actor.profilePicUrl ? (
+                  {(actor && !notification.anonymous && actor.profilePicUrl) ? (
                     <VisibilitySensor>
                       <Img src={users[notification.actorId].profilePicUrl}
                         className={classes.profilePic}

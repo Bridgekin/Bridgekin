@@ -24,7 +24,9 @@ class Notification < ApplicationRecord
   def set_notification_message
     case self.acted_with_type
     when "Opportunity"
-      if self.targetable_type == 'Network'
+      if self.anonymous
+        self.message = "An opportunity has been posted"
+      elsif self.targetable_type == 'Network'
         self.message = "#{self.actor.fname.capitalize} #{self.action} an opportunity"
         #within #{self.targetable.title.capitalize}"
       elsif self.action == 'acknowledged'

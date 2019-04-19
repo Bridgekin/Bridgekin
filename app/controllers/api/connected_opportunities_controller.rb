@@ -35,7 +35,7 @@ class Api::ConnectedOpportunitiesController < ApiController
     opportunity = Opportunity.find(params[:connected_opportunity][:opportunity_id])
     newConnectedOpportunity = {
       opportunity_id: params[:connected_opportunity][:opportunity_id],
-      network_id: params[:connected_opportunity][:network_id]
+      perm_type: params[:connected_opportunity][:perm_type]
     }
 
     #Set Connected Opportunity settings based on type(connect Bool)
