@@ -100,7 +100,6 @@ class OpportunityReferral extends React.Component{
   }
 
   handleSubmit(){
-
     this.props.createReferral({
       network_id: this.state.referralNetwork,
       is_friendable: this.state.friendable,

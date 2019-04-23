@@ -134,6 +134,19 @@ class User < ApplicationRecord
     end
   end
 
+  def circles_with_at_least_one_member
+    circles_hash = self.circle_connections.reduce({}) do |acc, circle_connection|
+      circle_id = circle_connection.circle_id
+      unless acc[circle_id]
+        acc[circle_id] = Array.new
+      end
+      acc[circle_id] << circle_connection.connection_id
+      acc
+    end
+
+    self.circles.where(id: circles_hash.keys)
+  end
+
   def confirmed?
     self.confirmed_at.present?
   end

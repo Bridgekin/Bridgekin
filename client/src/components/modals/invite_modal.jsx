@@ -57,8 +57,11 @@ const styles = theme => ({
     padding: 5,
     cursor: 'pointer'
   },
-  listText:{ color: theme.palette.text.primary},
-  pic: { width: 135, height: 135},
+  listText:{
+    color: theme.palette.text.secondary,
+    fontWeight: 400
+  },
+  pic: { width: 100, height: 100},
   thanksHeader: {
     marginBottom: 20
   }
@@ -153,28 +156,38 @@ class InviteModal extends React.Component {
 
       let invitePage = (
         <Grid container justify='center' alignItems='center'
-          style={{ padding: '46px 30px'}} spacing={16}>
-          <Grid item sm={3} container justify='center'
-            alignItems='flex-start'
-            style={{ marginBottom: "10%"}}>
-            {profilePic}
+          style={{ padding: "10px 0px 20px", maxWidth: 350}}>
+          <Grid item xs={10} container justify='flex-end'>
+            <CloseIcon onClick={this.handleClose}
+              style={{ color: 'grey', pointer: 'cursor'}}/>
+          </Grid>
+          <Grid container item xs={10}>
+            <Grid item sm={5} container justify='center'
+              alignItems='flex-start'>
+              {profilePic}
+            </Grid>
+            <Grid item sm={7} container direction='column'
+              justify='center'>
+              <Typography variant="h3" gutterBottom
+                color="textPrimary" align='left'
+                style={{ fontSize: 20, fontWeight: 600, textTransform: 'capitalize'}}>
+                {`${user.fname} ${user.lname}`}
+              </Typography>
+              <Typography variant="body1" align='left' color="textPrimary"
+                noWrap
+                style={{ fontSize: 14, fontWeight: 400, textTransform: 'capitalize'}}>
+                {user.title && `${user.title} @ `}
+                {user.company && `${user.company}`}
+              </Typography>
+            </Grid>
           </Grid>
 
-          <Grid item sm={9}>
-            <Typography variant="h3" gutterBottom
+
+          <Grid container item xs={10}
+            direction='column' alignItems='center'>
+            <Typography variant="body1" gutterBottom fullWidth
               color="textPrimary" align='left'
-              style={{ fontSize: 25, fontWeight: 600, textTransform: 'capitalize'}}>
-              {`${user.fname} ${user.lname}`}
-            </Typography>
-            <Typography variant="body1" align='left' color="textPrimary"
-              noWrap
-              style={{ fontSize: 25, fontWeight: 600, textTransform: 'capitalize'}}>
-              {user.title && `${user.title} @ `}
-              {user.company && `${user.company}`}
-            </Typography>
-            <Typography variant="body1" gutterBottom
-              color="textPrimary" align='left'
-              style={{ fontSize: 18 }}>
+              style={{ fontSize: 14 }}>
               {`If ${this.capitalize(user.fname)} is a trusted contact of yours, enter their email  below to send them a connection request.`}
             </Typography>
             <TextField
@@ -183,56 +196,77 @@ class InviteModal extends React.Component {
               className={classes.textField}
               value={email}
               onChange={this.handleEmailChange}
-              margin="normal"
               />
-            <Grid container justify='flex-end'>
-              <Button variant='contained' color='primary'
-                disabled={loading}
-                onClick={this.handleSendInvite}>
-                Invite Now
-              </Button>
-            </Grid>
+            <Button variant='contained' color='primary'
+              disabled={loading}
+              onClick={this.handleSendInvite}
+              style={{ margin: "15px 0px"}}>
+              Invite Now
+            </Button>
           </Grid>
         </Grid>
       )
 
       let response = connectionErrors.length === 0 ? (
-        <Grid item xs={11} sm={10} md={8} className={classes.grid}
-          container justify='flex-start'>
-          <Typography variant="h2" id="modal-title" color='textPrimary'
-            className={classes.thanksHeader} align='left'>
-            {`You've sent ${this.capitalize(user.fname)} a connection request!`}
-          </Typography>
-          <Typography variant="body1" id="simple-modal-description"
-            align='left' color='textPrimary'>
-            {`You can check your current, sent, and received friend requests in the "My Trusted Network" tab`}
-          </Typography>
-          <Grid item xs={12}>
-            <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-              onClick={this.handleClose} color='primary'>
-              Close
-            </Button>
+        <Grid container justify='center' alignItems='center'
+          style={{ padding: "20px 0px"}}>
+          <Grid item xs={10} container justify='flex-end'>
+            <CloseIcon onClick={this.handleClose}
+              style={{ color: 'grey', pointer: 'cursor'}}/>
+          </Grid>
+          <Grid item xs={10} container direction='column'>
+            <Typography variant="body1" align='center'
+              color="textPrimary" gutterBottom
+              style={{ fontSize: 20, fontWeight: 600}}>
+              {`You've sent ${this.capitalize(user.fname)} a
+              connection request!`}
+            </Typography>
+            <Typography variant="body1" align='center'
+              color="textSecondary" gutterBottom
+              style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
+              {`You can check your current, sent, and received friend
+                requests in the "My Trusted Network" tab`}
+            </Typography>
+            <Grid item xs={12} container justify='center'>
+              <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+                onClick={this.handleClose} color='primary'>
+                Close
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       ) : (
-        <Grid item xs={11} sm={10} md={8} className={classes.grid}
-          container justify='flex-start'>
-          <Typography variant="h2" id="modal-title" color='textPrimary'
-            className={classes.thanksHeader} align='left'>
-            You're almost there!
-          </Typography>
-          <Typography variant="body1" id="simple-modal-description"
-            align='left' color='textPrimary'>
-            It looks like we were unable to send your connection request because:
-          </Typography>
-          <List>
-            {connectionErrorsList}
-          </List>
-          <Grid item xs={12}>
-            <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-              onClick={this.handleClose} color='primary'>
-              Close
-            </Button>
+        <Grid container justify='center' alignItems='center'
+          style={{ padding: "20px 0px"}}>
+          <Grid item xs={10} container justify='flex-end'>
+            <CloseIcon onClick={this.handleClose}
+              style={{ color: 'grey', pointer: 'cursor'}}/>
+          </Grid>
+          <Grid item xs={10} container direction='column'>
+            <Typography variant="body1" align='center'
+              color="textPrimary" gutterBottom
+              style={{ fontSize: 20, fontWeight: 600}}>
+              {`You're almost there!`}
+            </Typography>
+            <Typography variant="body1" align='center'
+              color="textSecondary" gutterBottom
+              style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
+              {`It looks like we were unable to send your connection
+                request because:`}
+            </Typography>
+            <Grid container justify='flex-end'>
+              <Grid item xs={11}>
+                <List>
+                  {connectionErrorsList}
+                </List>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} container justify='center'>
+              <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+                onClick={this.handleClose} color='primary'>
+                Close
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       )
@@ -247,13 +281,7 @@ class InviteModal extends React.Component {
           onClose={this.handleClose}
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}>
-          <Badge
-            badgeContent={<CloseIcon onClick={this.handleClose}/>}
-            classes={{ badge: classes.badge }}
-            style={{ width: '100%'}}
-            >
-            {modalContent}
-          </Badge>
+          {modalContent}
         </Dialog>
       )
     } else {

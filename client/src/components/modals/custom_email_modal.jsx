@@ -269,44 +269,49 @@ class CustomEmailModal extends React.Component {
     })
 
     let closeBar = (
-      <Grid container justify='space-between' alignItems='center'
-        className={classes.closeBar}>
-        {`Edit Email`}
-        <CloseIcon
-          onClick={this.handleClose}
-          style={{ cursor: 'pointer', color: 'grey'}}/>
+      <Grid container justify='center'
+        style={{ padding: "10px 0px"}}>
+        <Grid item xs={11} container justify='flex-end'>
+          <CloseIcon onClick={this.handleClose}
+            style={{ color: 'grey', pointer: 'cursor'}}/>
+        </Grid>
+        <Grid item xs={10} container direction='column'>
+          <Typography variant="body1" align='center'
+            color="textPrimary" gutterBottom
+            style={{ fontSize: 20, fontWeight: 600}}>
+            {`Edit Email`}
+          </Typography>
+        </Grid>
       </Grid>
     )
 
     let submit = (
-      <Grid container justify='space-between' alignItems='center'
-        className={classes.submitContainer}>
-        <Button onClick={this.resetTemplate(customEmailModal)}
-          style={{ textTransform: 'capitalize'}}>
-          Reset Template
-        </Button>
-
-        <div>
-          <Button variant='contained'
-            onClick={this.handleClose}
-            classes={{ root: classes.actionButton}}
-            style={{ marginRight: 10 }}>
-            {`Cancel`}
+      <Grid container>
+        <Grid container>
+          <Button onClick={this.resetTemplate(customEmailModal)}
+            style={{ textTransform: 'capitalize'}}>
+            Reset Template
           </Button>
+        </Grid>
+
+        <Grid container justify='center' alignItems='center'
+          direction='column'
+          className={classes.submitContainer}>
           <Button variant='contained' color='primary'
-            onClick={this.handleSubmit}>
+            onClick={this.handleSubmit}
+            style={{ margin: 10}}>
             Send
             <SendIcon className={classes.rightIcon} />
           </Button>
-        </div>
+        </Grid>
       </Grid>
     )
 
     let updateEmail = (
       <div>
-        {closeBar}
         <Grid container
           style={{ padding: 20 }}>
+          {closeBar}
           <Typography align='center' fullWidth
             style={{ fontSize: 13 }}>
             {`We'll add greetings and salutations ("Hi, ${subjectFName}") and

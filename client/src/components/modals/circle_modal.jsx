@@ -201,7 +201,6 @@ class CircleModal extends React.Component {
         return fname.includes(splitSearch[0]) || lname.includes(splitSearch[0])
       }
     }
-    debugger
     return true
   }
 

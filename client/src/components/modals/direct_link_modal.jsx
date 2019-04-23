@@ -97,7 +97,8 @@ class DirectLinkModal extends React.Component {
     if(this.props.directLinkErrors){
       this.props.clearDirectLinkErrors();
     }
-    this.props.closeDirectLink()
+    this.props.closeDirectLink();
+    this.setState({ copied: false })
   };
 
   render(){
@@ -116,72 +117,105 @@ class DirectLinkModal extends React.Component {
       let link = directLink.linkCode ?
       (`${window.location.origin}/shareopportunities/${directLink.linkCode}`) : ('')
 
-      let closeBar = (
-        <Grid container justify='space-between' alignItems='center'
-          className={classes.closeBar}>
-          {`Direct Link`}
-          <CloseIcon
-            onClick={this.handleClose}
-            style={{ cursor: 'pointer'}}/>
-        </Grid>
-      )
-
       let submit = (
-        <Grid container justify='flex-end' alignItems='center'
+        <Grid container justify='center' alignItems='center'
+          direction='column'
           className={classes.submitContainer}>
-          <Button variant='contained'
-            onClick={this.handleClose}
-            classes={{ root: classes.actionButton}}
-            style={{ marginRight: 10 }}>
-            {`Close`}
-          </Button>
           <Button variant='contained'
             color={copied ? 'default' : 'primary'}
             onClick={this.handleCopy(link)}
             classes={{ root: classes.actionButton}}>
             {copied ? `Copied` : `Copy`}
           </Button>
+          <Button variant='contained'
+            onClick={this.handleClose}
+            classes={{ root: classes.actionButton}}
+            style={{ marginRight: 10 }}>
+            {`Close`}
+          </Button>
         </Grid>
       )
 
       let showLink = (
-        <div>
-          {closeBar}
-          <Grid container justify="center"
-            style={{ padding: "50px 20px" }}>
-            <TextField
-              fullWidth
-              multiline
-              label="Direct Link"
-              value={link}
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-            />
-            {submit}
+        <Grid container justify='center'
+          style={{ padding: "20px 0px"}}>
+          <Grid item xs={10} container justify='flex-end'>
+            <CloseIcon onClick={this.handleClose}
+              style={{ color: 'grey', pointer: 'cursor'}}/>
           </Grid>
-        </div>
+          <Grid item xs={10} container direction='column'>
+            <Typography variant="body1" align='center'
+              color="textPrimary" gutterBottom
+              style={{ fontSize: 20, fontWeight: 600}}>
+              {`Direct Link`}
+            </Typography>
+          </Grid>
+          <Grid container justify="center">
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                multiline
+                label="Direct Link"
+                value={link}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                />
+            </Grid>
+          </Grid>
+          <Grid container justify='center'
+            style={{ marginBottom: 10}}>
+            <Button variant='contained'
+              color={copied ? 'default' : 'primary'}
+              onClick={this.handleCopy(link)}
+              className={classes.button}>
+              {copied ? `Copied` : `Copy`}
+            </Button>
+          </Grid>
+          <Grid container justify='center'>
+            <Button variant='contained'
+              onClick={this.handleClose}
+              className={classes.button}>
+              {`Close`}
+            </Button>
+          </Grid>
+        </Grid>
       )
 
       let modalContent = directLinkErrors.length === 0 ? showLink : (
-        <Grid item xs={11} sm={10} md={8} className={classes.grid}
-          container justify='flex-start'>
-          <Typography variant="h2" id="modal-title" color='textPrimary'
-            className={classes.thanksHeader} align='left'>
-            You're almost there!
-          </Typography>
-          <Typography variant="body1" id="simple-modal-description"
-            align='left' color='textPrimary'>
-            It looks like we were unable to send your directLink request because:
-          </Typography>
-          <List>
-            {directLinkErrorsList}
-          </List>
-          <Grid item xs={12}>
-            <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-              onClick={this.handleClose} color='primary'>
-              Close
-            </Button>
+        <Grid container justify='center' alignItems='center'
+          style={{ padding: "20px 0px"}}>
+          <Grid item xs={10} container justify='flex-end'>
+            <CloseIcon onClick={this.handleClose}
+              style={{ color: 'grey', pointer: 'cursor'}}/>
+          </Grid>
+          <Grid item xs={10} container direction='column'>
+            <Typography variant="body1" align='center'
+              color="textPrimary" gutterBottom
+              style={{ fontSize: 20, fontWeight: 600}}>
+              {`You're almost there!`}
+            </Typography>
+            <Typography variant="body1" align='left'
+              color="textSecondary" gutterBottom
+              style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
+              {`It looks like we were unable to send your directLink
+                request because:`}
+            </Typography>
+            <Grid container justify='flex-end'>
+              <Grid item xs={11}>
+                <List>
+                  {directLinkErrorsList}
+                </List>
+              </Grid>
+            </Grid>
+            <Grid container justify='center'>
+              <Button variant="contained" color='primary'
+                onClick={this.handleClose}
+                className={classes.button}
+                style={{ textTransform: 'capitalize'}}>
+                {`Close`}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       )
@@ -194,13 +228,7 @@ class DirectLinkModal extends React.Component {
           onClose={this.handleClose}
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}>
-          <Badge
-            badgeContent={<CloseIcon onClick={this.handleClose}/>}
-            classes={{ badge: classes.badge }}
-            style={{ width: '100%'}}
-            >
-            {modalContent}
-          </Badge>
+          {modalContent}
         </Dialog>
       )
     } else {

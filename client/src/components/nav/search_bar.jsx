@@ -130,19 +130,23 @@ class SearchBar extends React.Component {
 
   handleSearchChange(e){
     let input = e.target.value;
-    this.setState({
-      searchLoading: true,
-      searchAnchorEl: (input.length > 0 ? e.currentTarget : null),
-      searchInput: input
-    }, () => {
-      if(input.length > 0){
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          this.props.fetchSearchResults(input, true)
-          .then(() => this.setState({ searchLoading: false }))
-        }, 500)
-      }
-    })
+    if(input){
+      this.setState({
+        searchLoading: true,
+        searchAnchorEl: (input.length > 0 ? e.currentTarget : null),
+        searchInput: input
+      }, () => {
+        if(input.length > 0){
+          clearTimeout(this.timeout);
+          this.timeout = setTimeout(() => {
+            this.props.fetchSearchResults(input, true)
+            .then(() => this.setState({ searchLoading: false }))
+          }, 400)
+        }
+      })
+    } else {
+      console.log('no input')
+    }
   }
 
   handleAllResultsPage(){

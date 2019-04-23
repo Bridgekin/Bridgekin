@@ -29,7 +29,7 @@ class Api::OppPermissionsController < ApiController
 
   def shareOptions
     @networks = @user.member_networks
-    @circles = @user.circles
+    @circles = @user.circles_with_at_least_one_member
     @connections = @user.connections.includes(:requestor, :recipient)
       .where(status: 'Accepted')
 

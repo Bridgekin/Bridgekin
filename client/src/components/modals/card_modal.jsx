@@ -149,7 +149,10 @@ const styles = theme => ({
     marginBottom: 25
   },
   container: { backgroundColor: theme.palette.base3},
-  listText:{ color: theme.palette.text.primary}
+  listText:{
+    color: theme.palette.text.secondary,
+    fontWeight: 400
+  }
 });
 
 class CardModal extends React.Component {
@@ -312,90 +315,76 @@ class CardModal extends React.Component {
 
     switch(page) {
       case "sent":
-        let typeOfSuccess = connectBool ? (
-          <Grid container justify='center' alignItems='center'
-            className={classes.grid}>
-            <Grid item xs={11} sm={10} md={8}
-              container justify='flex-start' alignItems='center'>
-              <Typography variant="h5" id="modal-title" align='left'
-                color="textPrimary"
-                className={classes.submitHeader}>
-                Time for business!
+        let typeOfSuccess = <Grid container justify='center'
+            style={{ padding: "20px 0px"}}>
+            <Grid item xs={10} container justify='flex-end'>
+              <CloseIcon onClick={this.handleClose(false)}
+                style={{ color: 'grey', pointer: 'cursor'}}/>
+            </Grid>
+            <Grid item xs={10} container direction='column'>
+              <Typography variant="body1" align='center'
+                color="textPrimary" gutterBottom
+                style={{ fontSize: 20, fontWeight: 600}}>
+                {`Time for business!`}
               </Typography>
-              <Typography variant="body2" id="simple-modal-description"
-                color="textPrimary"
-                className={classes.section} align='left'>
-                {`We're as excited about this opportunity as you are! We just sent
+              <Typography variant="body1" align='center'
+                color="textSecondary" gutterBottom
+                style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
+                {connectBool ? (`We're as excited about this opportunity as you are! We just sent
                   an email connecting you to the opportunity owner, so that should
-                  hit your inbox shortly. We'll let you take it from here.`}
+                  hit your inbox shortly. We'll let you take it from here.`
+                ) : (
+                  `We're as excited about this opportunity as you are!
+                    We just sent an email connecting you to the opportunity owner
+                    and then you can loop in your trusted contact from there.
+                    We'll let you take it from here.`
+                )}
               </Typography>
-              <Grid item xs={12} className={classes.postButtons}
-                style={{ marginBottom: 25 }}>
+              <Grid container justify='center'>
                 <Button variant="contained" color='primary'
                   onClick={this.handleClose('find')}
                   className={classes.button}
-                  style={{ marginRight: 20}}>
-                  Close
+                  style={{ textTransform: 'capitalize'}}>
+                  {`Close`}
                 </Button>
               </Grid>
             </Grid>
           </Grid>
-        ) : (
-          <Grid container justify='center' alignItems='center'
-            className={classes.grid}>
-            <Grid item xs={11} sm={10} md={8}
-              container justify='flex-start' alignItems='center'>
-              <Typography variant="h5" id="modal-title" align='left'
-                color="textPrimary"
-                className={classes.submitHeader}>
-                Time for business!
-              </Typography>
-              <Typography variant="body2" id="simple-modal-description"
-                color="textPrimary"
-                className={classes.section} align='left'>
-                {`We're as excited about this opportunity as you are!
-                  We just sent an email connecting you to the opportunity owner
-                  and then you can loop in your trusted contact from there.
-                  We'll let you take it from here.`}
-              </Typography>
-              <Grid item xs={12} className={classes.postButtons}>
-                <Button variant="contained" color='primary'
-                  onClick={this.handleClose('find')}
-                  className={classes.button}
-                  style={{ marginRight: 20}}>
-                  Close
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        )
 
         let responseText = this.props.connectedOpportunityErrors.length === 0 ? (
           typeOfSuccess
         ) : (
           <Grid container justify='center' alignItems='center'
-            className={classes.grid}>
-            <Grid item xs={11} sm={10} md={8}
-              container justify='flex-start' alignItems='center'>
-              <Typography variant="h1" id="modal-title" align='left'
-                color="textPrimary"
-                className={classes.errorHeader}>
-                Hold on there!
+            style={{ padding: "20px 0px"}}>
+            <Grid item xs={10} container justify='flex-end'>
+              <CloseIcon onClick={this.handleClose(false)}
+                style={{ color: 'grey', pointer: 'cursor'}}/>
+            </Grid>
+            <Grid item xs={10} container direction='column'>
+              <Typography variant="body1" align='center'
+                color="textPrimary" gutterBottom
+                style={{ fontSize: 20, fontWeight: 600}}>
+                {`Hold on there!`}
               </Typography>
-              <Typography variant="body2" id="simple-modal-description"
-                align='left' color="textPrimary">
-                Unfortunately, we weren't able to connect you to this opportunity because:
+              <Typography variant="body1" align='left'
+                color="textSecondary" gutterBottom
+                style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
+                {`Unfortunately, we weren't able to connect you to this
+                  opportunity because:`}
               </Typography>
-              <Grid item xs={12}>
-                <List>
-                  {connectedOpportunityErrors}
-                </List>
+              <Grid container justify='flex-end'>
+                <Grid item xs={11}>
+                  <List>
+                    {connectedOpportunityErrors}
+                  </List>
+                </Grid>
               </Grid>
-              <Grid item xs={12} container justify='flex-start'>
-                <Button variant="contained"
-                  onClick={this.handleClose('find')} color='primary'
-                  style={{ marginLeft: 20}}>
-                  Close
+              <Grid container justify='center'>
+                <Button variant="contained" color='primary'
+                  onClick={this.handleClose('find')}
+                  className={classes.button}
+                  style={{ textTransform: 'capitalize'}}>
+                  {`Close`}
                 </Button>
               </Grid>
             </Grid>
@@ -405,7 +394,49 @@ class CardModal extends React.Component {
       case "confirm":
         return (
           <Grid container justify="center" alignItems='center'>
-            <Grid item xs={10} container justify='flex-start'
+            <Grid container justify='center'
+              style={{ padding: "20px 0px"}}>
+              <Grid item xs={10} container justify='flex-end'>
+                <CloseIcon onClick={this.handleClose(false)}
+                  style={{ color: 'grey', pointer: 'cursor'}}/>
+              </Grid>
+              <Grid item xs={10} container direction='column'>
+                <Typography variant="body1" align='center'
+                  color="textPrimary" gutterBottom
+                  style={{ fontSize: 20, fontWeight: 600}}>
+                  {connectBool ?
+                    `Connect to this opportunity` :
+                    `Refer a trusted contact to this opportunity`}
+                </Typography>
+                <Typography variant="body1" align='center'
+                  color="textSecondary" gutterBottom
+                  style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
+                  {connectBool ?
+                    `Once you press the send button below you'll receive an
+                    email introducing you to the opportunity owner. We'll
+                    let you work your magic from there.` :
+                    `Once you press the send button below you'll receive an
+                    email introducing you to the opportunity owner. We'll
+                    let you take it from there and loop in your contact.`
+                  }
+                </Typography>
+                <Grid container justify='center'>
+                  <Button autoFocus variant='contained' color='primary'
+                    className={classes.button}
+                    onClick={this.handleConnection()}>
+                    {`Send`}
+                  </Button>
+                </Grid>
+                <Grid container justify='center'>
+                  <Button onClick={this.handleConnectionTemplate}
+                    className={classes.button}
+                    style={{ textTransform: 'capitalize'}}>
+                    {`Preview Email`}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            {/*<Grid item xs={10} container justify='flex-start'
               style={{ margin: "40px 0px 25px"}}>
               <Typography variant="h5" gutterBottom align='left'
                 color="textPrimary" className={classes.submitHeader}>
@@ -439,11 +470,11 @@ class CardModal extends React.Component {
                   <SendIcon className={classes.rightIcon} />
                 </Button>
               </Grid>
-            </Grid>
+            </Grid>*/}
           </Grid>
         );
       default:
-        return (
+        {/*return (
           <Grid container justify="center" alignItems='center'>
             <Grid item xs={12}>
               {picture}
@@ -522,7 +553,8 @@ class CardModal extends React.Component {
               </Typography>
             </Grid>
           </Grid>
-        )
+        )*/}
+        return ""
     }
   }
 
@@ -532,30 +564,36 @@ class CardModal extends React.Component {
 
     if (!_.isEmpty(opportunities[oppCardModal.oppId])){
       let externalUserMessage = (
-        <Grid container justify="center" alignItems='center'>
-          <Grid item xs={10} container justify='flex-start'
-            style={{ margin: "40px 0px 25px"}}>
-            <Typography variant="h5" gutterBottom align='left'
-              color="textPrimary" className={classes.submitHeader}>
+        <Grid container justify='center'
+          style={{ padding: "20px 0px"}}>
+          <Grid item xs={10} container justify='flex-end'>
+            <CloseIcon onClick={this.handleClose(false)}
+              style={{ color: 'grey', pointer: 'cursor'}}/>
+          </Grid>
+          <Grid item xs={10} container direction='column'>
+            <Typography variant="body1" align='center'
+              color="textPrimary" gutterBottom
+              style={{ fontSize: 20, fontWeight: 600}}>
               {`Members Only Action`}
             </Typography>
-            <Typography variant="body1" gutterBottom align='left'
-              color="textPrimary" className={classes.section}>
+            <Typography variant="body1" align='center'
+              color="textSecondary" gutterBottom
+              style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
               {`Only Bridgekin members are able to connect or refer
-                opportunities. SignUp to join our waitlist below!`}
+                opportunities. Sign up to join our waitlist below!`}
             </Typography>
-
-            <Grid container justify='space-between'
-              style={{ margin: "25px 0px"}}>
+            <Grid container justify='center'>
+              <Button variant="contained" color='primary'
+                onClick={this.handleSignup}
+                className={classes.button}>
+                Sign Up
+              </Button>
+            </Grid>
+            <Grid container justify='center'>
               <Button variant="contained" color='default'
                 onClick={this.handleClose('')}
                 className={classes.button}>
                 Close
-              </Button>
-              <Button variant="contained" color='primary'
-                onClick={this.handleSignup}
-                className={classes.button}>
-                Signup!
               </Button>
             </Grid>
           </Grid>
@@ -569,15 +607,9 @@ class CardModal extends React.Component {
           onClose={this.handleClose('find')}
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}>
-          <Badge
-            badgeContent={<CloseIcon onClick={this.handleClose('find')}/>}
-            classes={{ badge: classes.badge }}
-            style={{ width: '100%'}}
-            >
-            <div className={classes.container}>
-              {currentUser ? this.getContent() : externalUserMessage}
-            </div>
-          </Badge>
+          <div className={classes.container}>
+            {currentUser ? this.getContent() : externalUserMessage}
+          </div>
         </Dialog>
       )
     } else {

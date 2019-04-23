@@ -22,6 +22,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CheckIcon from '@material-ui/icons/Check';
 import LoopIcon from '@material-ui/icons/Loop';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 
 import { updateConnection, deleteConnection }
@@ -77,7 +78,14 @@ const styles = theme => ({
       display: 'none'
     },
   },
-  borderBelow: { borderBottom: `1px solid ${theme.palette.border.primary}`}
+  borderBelow: { borderBottom: `1px solid ${theme.palette.border.primary}`},
+  contactIcon: {
+    color: 'white',
+    borderRadius: '50%',
+    padding: 5,
+    margin: 5,
+    cursor: 'pointer'
+  }
 })
 
 class ContactCard extends React.Component {
@@ -352,7 +360,7 @@ class ContactCard extends React.Component {
                 </Button>
               </Grid>*/}
 
-              <Grid container justify='flex-end'>
+              {/*<Grid container justify='flex-end'>
                 <IconButton aria-label="More"
                   onClick={this.handleMenuClick('inviteAnchorEl')}>
                   <MoreHorizIcon className={classes.horizIcon}/>
@@ -380,6 +388,16 @@ class ContactCard extends React.Component {
                     {`Decline`}
                   </MenuItem>
                 </Menu>
+              </Grid>*/}
+              <Grid container justify='flex-end'>
+                <CheckIcon
+                  onClick={this.acceptConnection}
+                  style={{ backgroundColor: 'black'}}
+                  className={classes.contactIcon}/>
+                <CloseIcon
+                  onClick={this.removeConnection}
+                  style={{ backgroundColor: 'grey'}}
+                  className={classes.contactIcon}/>
               </Grid>
             </div>
           )

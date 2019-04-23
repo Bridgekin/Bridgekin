@@ -26,7 +26,6 @@ class Api::ReferralLinksController < ApiController
     if @link.save
       render :show
     else
-      debugger
       render json: @link.errors.full_messages, status: 422
     end
     # end
