@@ -3,7 +3,7 @@ import { handleErrors } from './fetch_error_handler';
 import { receiveSavedOpportunityErrors } from './error_actions';
 import { receiveOpportunities } from './opportunity_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_SAVED_OPPORTUNITIES = 'RECEIVE_SAVED_OPPORTUNITIES';
 export const RECEIVE_SAVED_OPPORTUNITY = 'RECEIVE_SAVED_OPPORTUNITY';

@@ -3,7 +3,7 @@ import { handleErrors } from './fetch_error_handler';
 import { receiveMemberUserErrors } from './error_actions';
 import { receiveUsers, receiveUser } from './user_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_MEMBER_USERS = 'RECEIVE_MEMBER_USERS';
 export const RECEIVE_MEMBER_USER = 'RECEIVE_MEMBER_USER';

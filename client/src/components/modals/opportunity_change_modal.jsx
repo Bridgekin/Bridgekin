@@ -78,6 +78,7 @@ import { fetchOpportunities } from '../../actions/opportunity_actions';
 import { fetchShareOptions, removeShareOptions } from '../../actions/opp_permission_actions';
 import { closeOppChange, openImageCrop, openSubmitOpp } from '../../actions/modal_actions';
 import { fetchConnections } from '../../actions/connection_actions';
+import { updateTutorialStep } from '../../actions/user_feature_actions';
 // import { clearConnectionErrors } from '../../actions/error_actions';
 
 // import SubmitModal from '../opportunity/submit_modal';
@@ -97,9 +98,11 @@ const mapStateToProps = (state, ownProps) => ({
   connections: state.entities.connections,
   users: state.users,
   siteTemplate: state.siteTemplate,
+  userFeature: state.entities.userFeature,
 });
 
 const mapDispatchToProps = dispatch => ({
+  updateTutorialStep: (index) => dispatch(updateTutorialStep(index)),
   fetchShareOptions: () => dispatch(fetchShareOptions()),
   fetchConnections: () => dispatch(fetchConnections()),
   closeOppChange: () => dispatch(closeOppChange()),
@@ -350,24 +353,47 @@ class OpportunityChangeModal extends React.Component {
     if(nextModal.open && nextModal.open !== currentModal.open){
       // Refresh Share Options
       // this.props.removeShareOptions();
+      // debugger
       this.props.fetchShareOptions()
       .then(() => {
         if(nextModal.mode === 'create'){
           this.setState(merge({}, DEFAULTSTATE,
-            nextModal.opportunity, { permissions: ["-Everyone"], contextLoaded: true}));
-            return true;
-          } else {
-            this.props.fetchOppPermissions(nextModal.opportunity.id)
-            .then(() => {
-              const { permissions } = this.props;
-              this.setState(merge({}, DEFAULTSTATE,
-                nextModal.opportunity,{ permissions, contextLoaded: true}))
-                return true;
-              })
-            }
+            nextModal.opportunity,
+            { permissions: ["-Everyone"], contextLoaded: true,
+              justOpened: true }
+            // sharePanelExpanded: Boolean(nextModal.sharePanelExpanded),
+          ));
+          return true;
+        } else {
+          this.props.fetchOppPermissions(nextModal.opportunity.id)
+          .then(() => {
+            const { permissions } = this.props;
+            this.setState(merge({}, DEFAULTSTATE,
+              nextModal.opportunity,
+              { permissions, contextLoaded: true }
+                // sharePanelExpanded: Boolean(nextModal.sharePanelExpanded)
+            ))
+              return true;
+            })
+        }
       })
     } else {
       return true
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    const prevModal = prevProps.oppChangeModal
+    const currentModal = this.props.oppChangeModal
+    const { userFeature } = this.props;
+    if(this.state.justOpened){
+      //If Tutorial Tour is Open,
+      if (!Boolean(userFeature.tutorialTourDate) &&
+        userFeature.tutorialTourStep === 4){
+        let newStep = userFeature.tutorialTourStep + 1
+        this.props.updateTutorialStep(newStep)
+      }
+      this.setState({ justOpened: false })
     }
   }
 
@@ -691,6 +717,12 @@ class OpportunityChangeModal extends React.Component {
   }
 
   handleExpandShare(){
+    const { userFeature } = this.props;
+    if (!Boolean(userFeature.tutorialTourDate) &&
+      userFeature.tutorialTourStep === 6){
+      let newStep = userFeature.tutorialTourStep + 1
+      this.props.updateTutorialStep(newStep)
+    }
     this.setState({ sharePanelExpanded: !this.state.sharePanelExpanded})
   }
 
@@ -1084,6 +1116,7 @@ class OpportunityChangeModal extends React.Component {
         <ExpansionPanel
           expanded={sharePanelExpanded}
           onChange={this.handleExpandShare}
+          className='share-panel-step-tutorial-tour'
           classes={{ root: classes.sharePanel}}
         >
           <ExpansionPanelSummary classes={{ content: classes.sharePanelSummary}}>
@@ -1120,6 +1153,7 @@ class OpportunityChangeModal extends React.Component {
             </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails
+            className='share-expanded-step-tutorial-tour'
             classes={{ root: classes.sharePanelDetails}}>
             <SharePanel
               permissions={permissions}
@@ -1131,6 +1165,7 @@ class OpportunityChangeModal extends React.Component {
 
       let formContainer = (
         <Grid container
+          className='create-details-step-tutorial-tour'
           style={{ padding: 12 }}>
           {oppForm}
           {filters}
@@ -1183,338 +1218,6 @@ class OpportunityChangeModal extends React.Component {
           </Grid>
         </Dialog>
       )
-
-      {/*return (
-        <Dialog
-          open={oppChangeModal.open}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          onClose={this.handleClose}
-          className={classes.cardModalWrapper}
-          classes={{ paper: classes.modalPaper}}>
-
-          <Grid container justify='space-between' alignItems='center'
-            className={classes.closeBar}>
-            <Typography align='left' color="textPrimary"
-              variant='body1' style={{ fontSize: 16 }}>
-              {type === 'create' ? `Create Opportunity` : `Update Opportunity`}
-            </Typography>
-            <CloseIcon
-              onClick={this.handleClose}
-              className={classes.xbutton}/>
-          </Grid>
-
-          <Grid container justify='center' alignItems='center'
-            className={classes.contentContainer}>
-            <Grid container justify='center' alignItems='center'
-              style={{ height: 95 }}>
-
-              {currentUser.profilePicUrl && !anonymous ? (
-                <Avatar alt="profile-pic"
-                  src={currentUser.profilePicUrl}
-                  className={classes.avatar} />
-              ) : (
-                <AccountCircle className={classes.avatar}/>
-              )}
-
-              <Grid container style={{ flexGrow: 1, width: 'auto'}}
-                alignItems='center'>
-                <TextField
-                  id="outlined-multiline-static"
-                  multiline
-                  rows='2'
-                  rowsMax="3"
-                  fullWidth
-                  required
-                  placeholder={
-                    viewType === 'card' ? "Opportunity title" :
-                    `What's your most pressing business need or opportunity?`
-                  }
-                  value={viewType === 'post' ? this.state.description : this.state.title}
-                  onChange={viewType === 'post' ? this.handleChange('description') : this.handleChange('title')}
-                  className={classes.descriptionTextField}
-                  />
-              </Grid>
-            </Grid>
-
-            {viewType === 'card' &&
-              <Grid container justify='flex-start' alignItems='flex-start'
-                className={ classes.descriptionField}>
-                <TextField
-                  id="outlined-multiline-static"
-                  multiline
-                  rows="4"
-                  rowsMax="8"
-                  fullWidth
-                  required
-                  placeholder={"Describe your most pressing business need or opportunity?"}
-                  value={this.state.description}
-                  onChange={this.handleChange('description')}
-                  className={classes.descriptionTextField}
-                  />
-              </Grid>}
-
-              {viewType === 'card' &&
-                <Grid container justify='space-around' alignItems='center'>
-
-                  <FormControl required className={classes.formControl}>
-                    <InputLabel htmlFor="age-required">Business Need</InputLabel>
-                    <Select
-                      value={this.state.opportunityNeed}
-                      onChange={this.handleChange('opportunityNeed')}
-                      name="opportunityNeed"
-                      inputProps={{
-                        id: 'opportunityNeed-required',
-                        name: 'opportunityNeed'
-                      }}
-                      renderValue={selected => selected}
-                      className={classes.fieldSelectNeed}
-                      >
-                      {needsChoices.map(choice => (
-                        <MenuItem value={choice} key={choice}
-                          style={{ textTransform: 'capitalize'}}>
-                          <ListItemText
-                            primary={choice}
-                            secondary={this.getSecondaryText(choice)}
-                            classes={{
-                              primary: classes.textListPrimary,
-                              secondary: classes.textListSecondary
-                            }}/>
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl required className={classes.formControl}>
-                      <InputLabel htmlFor="age-required">Industry</InputLabel>
-                      <Select
-                        multiple
-                        value={this.state.industries}
-                        onChange={this.handleChange('industries')}
-                        name="industries"
-                        input={<Input id="select-multiple-chip" />}
-                        renderValue={selected => selected.join(', ')}
-                        className={classes.fieldSelectIndustry}
-                        >
-                        {industryChoices.map(choice => (
-                          <MenuItem value={choice} key={choice}
-                            style={{ textTransform: 'capitalize'}}>
-                            <Checkbox checked={this.state.industries.indexOf(choice) > -1} />
-                            <ListItemText primary={choice} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl required className={classes.formControl}>
-                      <InputLabel htmlFor="age-required">Geography</InputLabel>
-                      <Select
-                        multiple
-                        value={this.state.geography}
-                        onChange={this.handleChange('geography')}
-                        name="geography"
-                        input={<Input id="select-multiple-chip" />}
-                        renderValue={selected => selected.join(', ')}
-                        className={classes.fieldSelectIndustry}
-                        >
-                        {geographyChoices.map(choice => (
-                          <MenuItem value={choice} key={choice}
-                            style={{ textTransform: 'capitalize'}}>
-                            <Checkbox checked={this.state.geography.indexOf(choice) > -1} />
-                            <ListItemText primary={choice} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    <FormControl required className={classes.formControl}>
-                      <InputLabel htmlFor="age-required">Deal Value</InputLabel>
-                      <Select
-                        value={this.state.value}
-                        onChange={this.handleChange('value')}
-                        name="value"
-                        inputProps={{
-                          id: 'value-required',
-                          name: 'value'
-                        }}
-                        className={classes.fieldSelectIndustry}
-                        >
-                        {valueChoices.map(choice => (
-                          <MenuItem value={choice}
-                            style={{ textTransform: 'capitalize'}}>
-                            {choice}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>}
-
-                  <Grid container justify='flex-end' alignItems='center'
-                    style={{ paddingTop: 17, margin: 0}}>
-                    <Grid item containr justify='flex-start' xs={12}>
-                      <input
-                        accept="image/*"
-                        style={{ display: 'none'}}
-                        id="contained-button-file"
-                        type="file"
-                        onChange={this.handleFile.bind(this)}
-                        onClick={(event)=> {
-                          event.target.value = null
-                        }}
-                        />
-                      <label htmlFor="contained-button-file">
-                        <Button
-                          color='primary'
-                          variant={pictureUrl ? 'contained' : undefined }
-                          className={ pictureUrl ?
-                            classes.createFilterSelectedButton :
-                            classes.createFilterButton}
-                            component="span">
-                            { !pictureUrl && <img src={PictureIconSVG} alt='pic-icon'
-                            className={classes.filterButtonIcon}/>}
-                            Image
-                            { pictureUrl &&
-                              <IconButton
-                                onClick={this.handleRemoveFile.bind(this)}
-                                classes={{ root: classes.infoIconButton}}>
-                                <CloseIcon style={{ color: 'white', fontSize: 20}}/>
-                              </IconButton>
-                            }
-                          </Button>
-                        </label>
-                        <Button
-                          className={classes.createFilterButton }
-                          style={{ padding: "6px 8px"}}
-                          onClick={this.handleMenuClick('privacyAnchorEl')}>
-                          {this.state.anonymous ?
-                            <img src={PrivacyIconSVG} alt='privacy-icon'
-                              className={classes.filterButtonIcon}/> :
-                              <PersonIcon className={classes.filterButtonIcon}/>
-                            }
-                            Privacy
-                          </Button>
-                          <Menu
-                            id="simple-menu"
-                            anchorEl={privacyAnchorEl}
-                            open={Boolean(privacyAnchorEl)}
-                            onClose={this.handleMenuClose('privacyAnchorEl')}
-                            >
-                            <MenuItem onClick={this.handlePrivacyClose(false)}>
-                              <Checkbox checked={!this.state.anonymous} />
-                              <ListItemText primary={`Post with Name & Picture`} />
-                            </MenuItem>
-                            <MenuItem onClick={this.handlePrivacyClose(true)}>
-                              <Checkbox checked={this.state.anonymous} />
-                              <ListItemText primary={`Post anonymously`} />
-                            </MenuItem>
-                          </Menu>
-                            <Menu
-                              id="simple-menu"
-                              anchorEl={shareAnchorEl}
-                              open={Boolean(shareAnchorEl)}
-                              onClose={this.handleMenuClose('shareAnchorEl')}
-                              >
-                              {/*availNetworks.map((network, idx) => (
-                              <MenuItem
-                              value={network}
-                              key={idx}
-                              style={{ textTransform: 'capitalize'}}
-                              onClick={this.handleShareClose(network)}>
-                              <Checkbox checked={this.state.share.indexOf(network) > -1} />
-                              <ListItemText primary={network.title} />
-                            </MenuItem>
-                          ))}
-
-                          {currentUser.isAdmin && otherConnectionOptions.map(choice => (
-                          <MenuItem value={choice} key={choice.title}
-                          style={{ textTransform: 'capitalize'}}
-                          onClick={this.handleShareClose(choice)}
-                          disabled>
-                          <Checkbox checked={this.state.share.indexOf(choice) > -1} />
-                          <ListItemText primary={choice.title} />
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </Grid>
-                </Grid>
-
-                <Grid container justify='space-between' alignItems='center'
-                  style={{ paddingTop: 20, paddingBottom: 10}}>
-                  <Button onClick={this.toggleOpp}
-                    style={{ position: 'relative', paddingLeft: 0}}>
-                    <Typography align='left' color="textSecondary"
-                      variant='subtitle1'>
-                      {viewType === 'post' ? `OPPORTUNITY CARD` : `OPPORTUNITY POST`}
-                    </Typography>
-
-                    <IconButton className={classes.infoButton}
-                      aria-owns={open ? 'simple-popper' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleMenuClick('infoAnchorEl')}
-                      classes={{ root: classes.infoIconButton}}>
-                      <InfoIcon/>
-                    </IconButton>
-
-                    <Popover
-                      id="simple-popper"
-                      open={infoOpen}
-                      anchorEl={infoAnchorEl}
-                      onClose={this.handleMenuClose('infoAnchorEl')}
-                      anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                      transformOrigin={{
-                        vertical: 'center',
-                        horizontal: 'left',
-                      }}
-                      classes={{ paper: classes.popoverPaper}}
-                      >
-                      <Typography align='left' color="textSecondary"
-                        variant='body2' style={{ fontSize: 10 }}>
-                        {viewType === 'post' ?
-                          `An opportunity card allows you to add more details and tags` :
-                          `An opportunity post allows you to share a quick business need or opportunity`}
-                      </Typography>
-                    </Popover>
-                  </Button>
-
-                  <Button className={classes.postButton}
-                    color='primary' variant='contained'
-                    onClick={this.handleSubmit}
-                    disabled={
-                      (viewType === 'card' && isError) ||
-                      (viewType === 'post' && isError) ||
-                      sendingProgress}>
-                      {type === 'create' ? `Post` : `Update`}
-                  </Button>
-                </Grid>
-              </Grid>
-
-              <ImageCropModal
-                handleClose={this.handleCloseImageModal.bind(this)}
-                open={imageModalOpen}
-                handleDelete={this.handleRemoveFile.bind(this)}
-                fileUrl={pictureUrl}
-                file={picture}
-                ratio={2.3/1}
-                innerRef={(ref) => this.cropperModal = ref} />
-
-              <SubmitModal
-                open={submitModalOpen}
-                modalType={type}
-                handleClose={this.handleSubmitModalClose}
-                clearFields={this.clearFields}/>
-
-              <ShareModal
-                type={type}
-                open={shareModalOpen}
-                permissions={permissions}
-                handleClose={this.handleShareClick}
-                handleChange={this.handleUpdatePermissions}/>
-            </Dialog>
-          )*/}
-
     } else {
       return <div></div>
     }
@@ -1522,33 +1225,3 @@ class OpportunityChangeModal extends React.Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withWidth()(OpportunityChangeModal))));
-
-// <Badge
-//   badgeContent={<CloseIcon onClick={this.props.handleClose}/>}
-//   classes={{ badge: classes.badge }}
-//   style={{ width: '100%'}}
-//   >
-//   Hello
-// </Badge>
-
-// {viewType === 'card' && isError &&
-//   <Typography align='center' color="textSecondary"
-//     variant='body2'
-//     className={classes.postErrorText}>
-//     {viewType === 'card' ?
-//       `Fill in all fields before submitting` :
-//       `Fill in title and share settings before submitting`}
-//   </Typography>
-// }
-
-// <Grid item xs={3} container justify='center' alignItems='center'>
-//   <Button className={classes.postButton}
-//     color='primary' variant='contained'
-//     onClick={this.handleSubmit}
-//     disabled={
-//       (viewType === 'card' && isError) ||
-//       (viewType === 'post' && isError) ||
-//       sendingProgress}>
-//     Post
-//   </Button>
-// </Grid>

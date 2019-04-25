@@ -48,6 +48,8 @@ export const RECEIVE_PASSED_OPPORTUNITY_ERRORS = 'RECEIVE_PASSED_OPPORTUNITY_ERR
 export const CLEAR_PASSED_OPPORTUNITY_ERRORS = 'CLEAR_PASSED_OPPORTUNITY_ERRORS';
 export const RECEIVE_USER_METRIC_ERRORS = 'RECEIVE_USER_METRIC_ERRORS';
 export const CLEAR_USER_METRIC_ERRORS = 'CLEAR_USER_METRIC_ERRORS';
+export const RECEIVE_USER_FEATURE_ERRORS = 'RECEIVE_USER_FEATURE_ERRORS';
+export const CLEAR_USER_FEATURE_ERRORS = 'CLEAR_USER_FEATURE_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -245,4 +247,13 @@ export const receiveUserMetricErrors = errors => ({
 
 export const clearUserMetricErrors = () => ({
   type: CLEAR_USER_METRIC_ERRORS,
+});
+
+export const receiveUserFeatureErrors = errors => ({
+  type: RECEIVE_USER_FEATURE_ERRORS,
+  errors
+});
+
+export const clearUserFeatureErrors = () => ({
+  type: CLEAR_USER_FEATURE_ERRORS,
 });

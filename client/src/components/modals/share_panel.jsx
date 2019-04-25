@@ -516,7 +516,7 @@ class SharePanel extends Component{
     )
 
     return (
-      <Grid container>
+      <Grid container className='share-expanded-step-tutorial-tour'>
         <Grid container justify='center'
           className={classes.contentContainer}>
           <Grid container justify='center' alignItems='flex-start'

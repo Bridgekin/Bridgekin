@@ -2,7 +2,7 @@ import * as EmailTemplateApiUtil from '../util/email_template_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveEmailTemplateErrors } from './error_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_EMAIL_TEMPLATE = 'RECEIVE_EMAIL_TEMPLATE';
 export const REMOVE_EMAIL_TEMPLATE = "REMOVE_EMAIL_TEMPLATE";

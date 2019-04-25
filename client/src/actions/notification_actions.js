@@ -3,7 +3,7 @@ import { handleErrors } from './fetch_error_handler';
 import { receiveNotificationErrors } from './error_actions';
 import { receiveUsers } from './user_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_NOTIFICATIONS = 'RECEIVE_NOTIFICATIONS';
 export const RECEIVE_NOTIFICATION = 'RECEIVE_NOTIFICATION';

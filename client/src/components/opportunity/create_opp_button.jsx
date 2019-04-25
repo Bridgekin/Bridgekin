@@ -110,7 +110,8 @@ class CreateOppButton extends React.Component {
     const { classes, currentUser } = this.props;
 
     let button = (
-      <CardActionArea className={classes.feedCard}
+      <CardActionArea
+        className={classes.feedCard}
         style={{ paddingBottom: 9}}
         onClick={this.handleOpen}>
 
@@ -151,7 +152,7 @@ class CreateOppButton extends React.Component {
     )
 
     return (
-      <div>
+      <div className='create-open-step-tutorial-tour'>
         {button}
       </div>
     )

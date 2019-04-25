@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_19_175324) do
+ActiveRecord::Schema.define(version: 2019_04_23_203557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,6 +284,16 @@ ActiveRecord::Schema.define(version: 2019_04_19_175324) do
     t.string "base5"
     t.string "font3"
     t.index ["network_id"], name: "index_site_templates_on_network_id"
+  end
+
+  create_table "user_features", force: :cascade do |t|
+    t.integer "user_id"
+    t.datetime "tutorial_tour_date"
+    t.integer "tutorial_tour_step", default: 0
+    t.datetime "user_onboarding"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_features_on_user_id"
   end
 
   create_table "user_networks", force: :cascade do |t|

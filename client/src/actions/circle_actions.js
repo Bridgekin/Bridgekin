@@ -6,7 +6,7 @@ import { receiveConnections } from './connection_actions';
 import { receiveCircleConnections,
  receiveCircleConnection, removeCircleConnection} from './circle_connection_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 // export const RECEIVE_CIRCLE_MEMBER_SETS = 'RECEIVE_CIRCLE_MEMBER_SETS';
 // export const RECEIVE_CIRCLE_MEMBER_SET = 'RECEIVE_CIRCLE_MEMBER_SET';

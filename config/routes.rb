@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     resource :passed_opportunities, only: [:create, :destroy]
     get 'passed_opportunities', :to => 'passed_opportunities#index'
     resources :user_metrics, only: [:index]
+    resources :user_features, only: [:update]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end

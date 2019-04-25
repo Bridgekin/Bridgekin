@@ -4,7 +4,7 @@ import { receivePassedOpportunityErrors } from './error_actions';
 import { receiveOpportunities, receiveOpportunity } from './opportunity_actions';
 import { removeNetworkOppId } from './network_opp_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_PASSED_OPPORTUNITIES = 'RECEIVE_PASSED_OPPORTUNITIES';
 export const RECEIVE_PASSED_OPPORTUNITY = 'RECEIVE_PASSED_OPPORTUNITY';

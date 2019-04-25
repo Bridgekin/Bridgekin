@@ -2,7 +2,7 @@ import * as UserApiUtil from '../util/user_api_util';
 import { receiveUserErrors } from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_SEARCH_RESULTS_PAGE = 'RECEIVE_SEARCH_RESULTS_PAGE';
 export const RECEIVE_SEARCH_RESULTS = 'RECEIVE_SEARCH_RESULTS';

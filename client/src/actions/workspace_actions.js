@@ -2,7 +2,7 @@
 // import { handleErrors } from './fetch_error_handler';
 // import { receiveSiteTemplateErrors } from './error_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_WORKSPACES = 'RECEIVE_WORKSPACES';
 export const REMOVE_WORKSPACE = "REMOVE_WORKSPACE";

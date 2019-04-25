@@ -2,7 +2,7 @@ import * as EmailNotificationApiUtil from '../util/email_notification_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveEmailNotificationErrors } from './error_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_EMAIL_NOTIFICATION = 'RECEIVE_EMAIL_NOTIFICATION';
 export const REMOVE_EMAIL_NOTIFICATION = "REMOVE_EMAIL_NOTIFICATION";

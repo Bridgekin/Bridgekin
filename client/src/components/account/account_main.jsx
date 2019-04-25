@@ -403,13 +403,13 @@ class AccountMain extends React.Component {
 
     let filtersDesktop = currentUser.isAdmin ? [
       {title: "Opportunities You've Posted", name: 'posted'},
-      {title: "Opportunities You've Bookmarked", name: 'saved'},
+      {title: "Opportunities You've Saved", name: 'saved'},
       {title: "Opportunities You've Connected To", name: 'connected'},
       {title: "Opportunities You've Referred", name: 'referred'},
       {title: "Opportunities You've Passed", name: 'passed'},
     ] : [
       {title: "Opportunities You've Posted", name: 'posted'},
-      {title: "Opportunities You've Bookmarked", name: 'saved'},
+      {title: "Opportunities You've Saved", name: 'saved'},
       {title: "Opportunities You've Connected To", name: 'connected'},
       {title: "Opportunities You've Referred", name: 'referred'},
       {title: "Opportunities You've Passed", name: 'passed'}

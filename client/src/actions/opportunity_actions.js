@@ -17,7 +17,7 @@ import { receiveFacilitatedOpportunities } from './facilitated_opportunity_actio
 import { receivePassedOpportunities } from './passed_opportunity_actions';
 import { receiveSavedOpportunities } from './saved_opportunity_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_OPPORTUNITIES = 'RECEIVE_OPPORTUNITIES';
 export const RECEIVE_OPPORTUNITY = 'RECEIVE_OPPORTUNITY';

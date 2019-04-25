@@ -4,7 +4,7 @@ import { receiveNetworkErrors } from './error_actions';
 import { receiveWorkspaceOptions } from './workspace_actions';
 import { receiveCircles } from './circle_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 // export const RECEIVE_USER_NETWORKS = 'RECEIVE_USER_NETWORKS';
 export const RECEIVE_NETWORKS = 'RECEIVE_NETWORKS';

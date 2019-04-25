@@ -5,7 +5,8 @@ end
 json.token variables[:token]
 
 json.siteTemplate do
-  json.partial! 'api/site_templates/site_template', site_template: variables[:site_template]
+  json.partial! 'api/site_templates/site_template',
+  site_template: variables[:site_template]
 end if variables[:site_template]
 
 json.workspaces do
@@ -15,3 +16,8 @@ json.workspaces do
     end
   end
 end
+
+json.user_feature do
+  json.partial! 'api/user_features/user_feature',
+  user_feature: variables[:user_feature]
+end if variables[:user_feature]

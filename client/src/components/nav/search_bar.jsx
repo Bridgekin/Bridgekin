@@ -255,7 +255,7 @@ class SearchBar extends React.Component {
 
       return (
         <div onKeyDown={this.keyPress}
-          className={classes.search}>
+          className={[classes.search, 'search-bar-step-tutorial-tour'].join(' ')}>
 
           <div className={classes.searchIcon}>
             <SearchIcon />

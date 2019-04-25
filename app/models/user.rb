@@ -118,6 +118,10 @@ class User < ApplicationRecord
     foreign_key: :user_id,
     class_name: :PassedOpportunity
 
+  has_one :user_feature,
+    foreign_key: :user_id,
+    class_name: :UserFeature
+
   def connections
     Connection.includes(:requestor, :recipient)
     .where("user_id = ? OR friend_id = ?", self.id, self.id)

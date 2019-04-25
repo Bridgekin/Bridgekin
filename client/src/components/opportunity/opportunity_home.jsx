@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import withWidth from '@material-ui/core/withWidth';
 
 //Import Material Components
 import { withStyles } from '@material-ui/core/styles';
@@ -54,7 +55,9 @@ import { createReferral } from '../../actions/referral_actions';
 import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions';
 import { fetchPassedOpportunities } from '../../actions/passed_opportunity_actions';
 import { fetchCurrentUserMetrics } from '../../actions/user_metric_actions';
+import { updateUserFeature, updateTutorialStep } from '../../actions/user_feature_actions';
 import { clearOpportunityErrors } from '../../actions/error_actions';
+import { openOppChange, closeOppChange } from '../../actions/modal_actions';
 // import OpportunityChangeModal from './opportunity_change_modal';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
@@ -73,6 +76,11 @@ import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
 import FilterBar from './filters/filter_bar';
 import merge from 'lodash/merge';
+
+import Tour from 'reactour';
+import Joyride, { ACTIONS, EVENTS, LIFECYCLE, STATUS } from 'react-joyride';
+import ExampleCard from './example_card';
+import BridgekinLogo from '../../static/Bridgekin_Logo.png'
 // import Loading from '../loading';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -90,10 +98,18 @@ const mapStateToProps = (state, ownProps) => ({
   workspaces: state.workspaces,
   source: ownProps.match.params.source,
   userMetrics: state.entities.userMetrics,
+  userFeature: state.entities.userFeature,
   passedOpps: state.entities.passedOpportunities,
+  oppChangeModal: state.modals.oppChange,
 });
 
 const mapDispatchToProps = dispatch => ({
+  openOppChange: (payload) => dispatch(openOppChange(payload)),
+  openOppChangeAsync: (payload) => {
+    return Promise.resolve(dispatch(openOppChange(payload)))
+  },
+  updateTutorialStep: (index) => dispatch(updateTutorialStep(index)),
+  closeOppChange: () => dispatch(closeOppChange()),
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
   fetchOpportunities: (workspaceId, option) => dispatch(fetchOpportunities(workspaceId, option)),
   fetchWorkspaceOptions: (workspaceId) => dispatch(fetchWorkspaceOptions(workspaceId)),
@@ -101,7 +117,8 @@ const mapDispatchToProps = dispatch => ({
   // createReferral: (referral) => dispatch(createReferral(referral)),
   clearOpportunityErrors: () => dispatch(clearOpportunityErrors()),
   fetchSavedOpportunities: () => dispatch(fetchSavedOpportunities()),
-  fetchPassedOpportunities: () => dispatch(fetchPassedOpportunities())
+  fetchPassedOpportunities: () => dispatch(fetchPassedOpportunities()),
+  updateUserFeature: (payload) => dispatch(updateUserFeature(payload))
 });
 
 const styles = theme => ({
@@ -303,21 +320,30 @@ const styles = theme => ({
   }
 });
 
-// const DEFAULTSTATE = {
-//   opportunityNeed: '',
-//   geography: [],
-//   industries: [],
-//   value: '',
-//   title: '',
-//   description: '',
-//   // status: 'Pending',
-//   picture: null,
-//   pictureUrl: null,
-//   // networks: [],
-//   anonymous: false,
-//   viewType: 'post',
-//   // permissions: ['-Network']
-// }
+const DEFAULTSTATE = {
+  opportunityNeed: '',
+  geography: [],
+  industries: [],
+  value: '',
+  title: '',
+  description: '',
+  // status: 'Pending',
+  picture: null,
+  pictureUrl: null,
+  // networks: [],
+  anonymous: false,
+  viewType: 'post',
+  // permissions: ['-Network']
+}
+
+const openOppChangeClosure = () => {
+  let payload = {
+    opportunity: DEFAULTSTATE,
+    mode: 'create'
+  }
+  debugger
+  openOppChange(payload);
+}
 
 class OpportunityHome extends React.Component {
   constructor(props){
@@ -344,8 +370,179 @@ class OpportunityHome extends React.Component {
         industries: new Set(),
         geography: new Set(),
         value: new Set()
-      }
+      },
+      tutorialTourStep: 0,
+      tutorialTourOpen: false,
+      beenToModal: false
     };
+
+    this.tutorial_steps = [
+      {
+        target: '.first-step-tutorial-tour',
+        content: (
+          <React.Fragment>
+            <Grid container direction='column' alignItems='center'>
+              <Img src={BridgekinLogo} alt='logo'
+                style={{ height: 24, width: 'auto', marginBottom: 15}}/>
+              <Typography color='textSecondary'
+                style={{ fontSize: 15}}>
+                {`Welcome to our quick tutorial. Let's get started!`}
+              </Typography>
+            </Grid>
+          </React.Fragment>
+        ),
+        disableBeacon: true,
+        placement: 'center'
+        // content: `Welcome to our quick tutorial. Let's get started!`
+      },
+      {
+        title: 'Your Feed',
+        target: '.feed-tutorial-tour',
+        content: (
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`This is your opportunity feed. We’ll always prioritize
+                opportunities sent to you by your connections to help
+                ensure relevancy.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'auto'
+      },
+      {
+        title: 'Connect',
+        target: '.connect-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`If you see an opportunity that’s right for you, press
+              connect and you’ll get introduced to the opportunity owner via
+              email.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'top'
+      },
+      {
+        title: 'Refer A Trusted Contact',
+        target: '.refer-step-tutorial-tour',
+        content: (
+          <React.Fragment>
+            <Typography color='textSecondary' gutterBottom
+              style={{ fontSize: 15}}>
+              {`If the opportunity may be right for a trusted contact in
+              your network, press refer and you’ll get introduced via email and can
+              then loop in your contact accordingly.`}
+            </Typography>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`Whether connecting or referring you can always preview the email prior to sending.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'top'
+      },
+      {
+        title: 'Create Your Opportunity',
+        target: '.create-open-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`You can create your own opportunity by clicking above. Go ahead, click!`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'left',
+        disableBeacon: true,
+        spotlightClicks: true,
+        hideFooter: true,
+        // disableOverlayClose: true,
+        // hideCloseButton: true,
+      },
+      {
+        title: 'Add Details',
+        target: '.create-details-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`Insert a title and any additional information you’d like to share. You
+              can do things like post anonymously or add detailed filter criteria.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        disableBeacon: true,
+        spotlightClicks: true,
+        placement: 'auto'
+      },
+      {
+        title: 'Share',
+        target: '.share-panel-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`Click here to privately share your opportunity with specific contacts,
+              trusted groups or all Bridgekin users.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        disableBeacon: true,
+        spotlightClicks: true,
+        hideFooter: true,
+        placement: 'auto'
+      },
+      {
+        title: 'Share',
+        target: '.share-expanded-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`You can choose the right audience to share your opportunity,
+              whether they be networks or specific connctions. Your selections
+              will show up the top of the panel.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'top'
+      },
+      {
+        title: 'Discreet Search',
+        target: '.search-bar-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`Using the search bar above, find and connect to contacts
+              you know on Bridgekin by entering their name here. We’ll ask you
+              to verify their email address prior to sending an invite to help
+              avoid unknown connection requests.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'bottom',
+
+      },
+      {
+        title: 'Invite',
+        target: '.invite-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`To help ensure trust, privacy and relevancy Bridgekin
+              is invite only. You have 3 invitations, get the most value from
+              the platform by inviting your trusted contact now.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'left'
+      },
+    ]
 
     this.handleModalClose = this.handleModalClose.bind(this);
     // this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
@@ -368,15 +565,24 @@ class OpportunityHome extends React.Component {
     this.getOpportunities = this.getOpportunities.bind(this);
     this.handleEditHover = this.handleEditHover.bind(this);
     this.sendToAccountSettings = this.sendToAccountSettings.bind(this);
+    this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
+    this.incrementStep = this.incrementStep.bind(this);
   }
 
   componentDidMount(){
+    const { userFeature } = this.props;
     const workspaceId = this.props.siteTemplate.networkId
     if(workspaceId){this.resetWorkspace(workspaceId)}
 
     this.props.fetchSavedOpportunities();
     this.props.fetchCurrentUserMetrics();
     this.props.fetchPassedOpportunities();
+
+    // Something with ReactTour
+    this.setState({
+      tutorialTourStep: userFeature.tutorialTourStep,
+      tutorialTourOpen: !Boolean(userFeature.tutorialTourDate)
+    })
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -562,44 +768,6 @@ class OpportunityHome extends React.Component {
       )
       return noOppMessage
     }
-
-    // .map(({perms, type}) => {
-    //   let uniqHash = perms.reduce((acc, perm) => {
-    //     if (acc[perm.opportunityId]){
-    //       // debugger
-    //       let value = acc[perm.opportunityId];
-    //       value.shareableId.push(perm.shareableId)
-    //     } else {
-    //       let value = merge({}, perm);
-    //       value.shareableId = [value.shareableId];
-    //       acc[perm.opportunityId] = value;
-    //     }
-    //     return acc
-    //   },{})
-    //   return { uniqHash, type }
-    // })
-
-    // Object.values(networkOppPerms).map(perm => perm.opportunityId)
-    // const filteredOpps = [...networkOpps].map(id => opportunities[id])
-    //   .filter(this.filterOpportunities)
-    //
-    // const opportunityCards = filteredOpps.length > 0 ? (
-    //   filteredOpps.map((opportunity, idx) => (
-    //     <OpportunityCardFeed
-    //       opportunity={opportunity}/>
-    //   ))
-    // ) : (opportunityErrors.length > 0 ? (
-    //     <Typography variant="h3" color="textSecondary" align='center'
-    //       className={classes.emptyOppsText} gutterBottom>
-    //       {opportunityErrors[0]}
-    //     </Typography>
-    //   ) : (
-    //     <Typography variant="h3" color="textSecondary" align='center'
-    //       className={classes.emptyOppsText} gutterBottom>
-    //       {`There aren't any posted opportunities yet. Be the first to post an opportunity above.`}
-    //     </Typography>
-    //   )
-    // )
   }
 
   updateFilters(key){
@@ -817,6 +985,41 @@ class OpportunityHome extends React.Component {
     }
   }
 
+  handleJoyrideCallback(data){
+    const { action, index, status, type } = data;
+    // debugger
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status) ||
+      action === 'close') {
+      // Need to set our running state to false, so we can restart if we click start again.
+      this.setState({ tutorialTourOpen: false },
+      () => {
+        const { userFeature } = this.props;
+        let tutorialTourDate = (
+          userFeature.tutorialTourStep === this.tutorial_steps.length ||
+          action === 'skip') ?
+          new Date() : null
+        // debugger
+        let payload = {
+          tutorialTourDate,
+          id: userFeature.id
+        }
+        this.props.updateUserFeature(payload);
+        this.props.updateTutorialStep(0);
+      });
+    } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)){
+      // Update state to advance the tour
+      this.incrementStep(index, action)
+      if (index === 7 ){
+        this.props.closeOppChange()
+      }
+    }
+  }
+
+  incrementStep(index, action){
+    let newIndex = index + (action === ACTIONS.PREV ? -1 : 1)
+    this.props.updateTutorialStep(newIndex)
+  }
+
   sendToAccountSettings(e){
     e.stopPropagation();
     this.props.history.push('/account/settings');
@@ -829,12 +1032,14 @@ class OpportunityHome extends React.Component {
   render (){
     const { classes, opportunities, networks, workspaceOptions,
       referral, currentUser, networkOpps, siteTemplate,
-      workspaces, opportunityErrors, userMetrics } = this.props;
+      workspaces, opportunityErrors, userMetrics,
+      userFeature} = this.props;
 
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
         filterMobileAnchorEl, networksLoaded,
-        filters, editHover} = this.state;
+        filters, editHover, tutorialTourOpen,
+        tutorialTourStep} = this.state;
 
     const networksArray = [...workspaceOptions]
       .filter(x => x.includes('Network'))
@@ -854,6 +1059,37 @@ class OpportunityHome extends React.Component {
 
     if(networksLoaded){
       let source = this.getSource();
+
+      let tourStrings = {
+        back: 'Back', close: 'Close', last: 'Finish',
+        next: 'Next', skip: 'Skip Tutorial'
+      }
+
+      let tutorialTour =
+        <div style={{ outline: 'none'}}>
+          {this.props.width &&
+          <Joyride
+            callback={this.handleJoyrideCallback}
+            steps={this.tutorial_steps}
+            run={tutorialTourOpen}
+            stepIndex={userFeature.tutorialTourStep}
+            spotlightClicks={true}
+            continuous={true}
+            locale={tourStrings}
+            showSkipButton
+            styles={{
+              options: {
+                arrowColor: '#000',
+                backgroundColor: '#FFF',
+                primaryColor: '#000',
+                zIndex: 10000000,
+                fontSize: 10,
+                outline: 'none'
+              },
+            }}
+          />}
+        </div>
+
       const column1 = (
         <Grid container justify='center' alignItems='center'
           className={classes.column1}>
@@ -1049,7 +1285,7 @@ class OpportunityHome extends React.Component {
       const column2 = (
         <Grid container justify='center' alignItems='center'
           style={{ padding: 0, width: '100%' }}>
-          <div className={classes.feedCard}
+          <div className={['invite-step-tutorial-tour', classes.feedCard].join(' ')}
             style={{ padding: "10px 17px" }}>
             <OpportunityWaitlist
               currentUser={currentUser}
@@ -1065,14 +1301,16 @@ class OpportunityHome extends React.Component {
         </Grid>
       )
 
-      const opportunityCards = this.getOpportunities();
+      const opportunityCards = tutorialTourOpen ? <ExampleCard />:
+        this.getOpportunities();
 
       const feed = (
-        <Grid container justify='center' alignItems='center'>
+        <Grid container justify='center' alignItems='center'
+          className='feed-tutorial-tour'>
           <div style={{ overflow: 'scroll', paddingBottom:50,
             width: '100%'}}>
             <CreateOppButton />
-
+            <div className='first-step-tutorial-tour'/>
             {/*<Grid container justify='flex-end'
               className={classes.filterMobileCard}>
               {filterMobile}
@@ -1083,13 +1321,7 @@ class OpportunityHome extends React.Component {
                 <Loading/>
               </div>)}
 
-            <div className={classes.waitlistMobileCard}>
-              <Typography gutterBottom align='left'
-                className={classes.cardHeader} color='textSecondary'
-                style={{ marginBottom: 20 }}>
-                Invite your trusted business contacts
-              </Typography>
-
+            <div className={['invite-step-tutorial-tour', classes.waitlistMobileCard].join(' ')}>
               <OpportunityWaitlist
                 handleSubmit={this.handleWaitlistSubmit}
                 loading={loading}
@@ -1115,6 +1347,7 @@ class OpportunityHome extends React.Component {
 
         return (
           <div style={{flexGrow: 1}}>
+            {tutorialTour}
             <FilterBar
               updateSource={this.updateSource}
               updateFilters={this.updateFilters}
@@ -1145,7 +1378,7 @@ class OpportunityHome extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(OpportunityHome)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(withWidth()(OpportunityHome))));
 
 // <WaitlistModal
 //   open={waitlistOpen}

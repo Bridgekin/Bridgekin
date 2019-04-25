@@ -37,6 +37,8 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
       @user[:referred_by_id] = @referralLink[:member_id]
       @user.save
 
+      @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
+
       render :create
     elsif @referralLink.nil?
       render json: ["Invalid referral link"], status: 401

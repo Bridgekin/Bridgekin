@@ -25,8 +25,10 @@ import savedOpportunityReducer from './saved_opportunities_reducer.js';
 import profileOpportunityReducer from './opportunities/profile_opportunities_reducer.js';
 import directLinkReducer from './direct_links_reducer.js';
 import passedOpportunityReducer from './opportunities/passed_opportunities_reducer.js';
-import userMetricsReducer from './users/user_metrics_reducer.js';
 import networkOppPermissionsReducer from './opp_permissions/network_opp_permissions_reducer.js';
+
+import userMetricsReducer from './users/user_metrics_reducer.js';
+import userFeatureReducer from './users/user_feature_reducer.js';
 import userIndexOppPermissionsReducer from './opp_permissions/user_index_opp_permissions_reducer.js';
 
 import circlesReducer from './circles/circles_reducer.js';
@@ -60,5 +62,6 @@ export default combineReducers({
   networkOppPermissions: networkOppPermissionsReducer,
   userOppPermissions: userIndexOppPermissionsReducer,
   circles: circlesReducer,
-  circleConnections: circleConnectionsReducer
+  circleConnections: circleConnectionsReducer,
+  userFeature: userFeatureReducer,
 });

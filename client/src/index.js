@@ -32,12 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
   if (token){
     getAuthUserId(token)
     .then(handleAuthErrors)
-    .then( ({user, token, siteTemplate, workspaces}) => {
+    .then( ({user, token, siteTemplate, workspaces, userFeature}) => {
       let preloadedState = {
         users: { [user.id]: user},
         session: { id: user.id},
         siteTemplate,
         workspaces,
+        entities:{
+          userFeature
+        }
         // theme: getTheme(siteTemplate)
       };
       let store = configureStore(preloadedState);

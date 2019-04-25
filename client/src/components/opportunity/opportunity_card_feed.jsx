@@ -477,6 +477,9 @@ class OpportunityCard extends React.Component {
               let friendId = (currentUser.id !== connection.userId) ?
               connection.userId : connection.friendId
               let friend = users[friendId];
+              if(!friend){
+                debugger
+              }
               name = `${friend.fname} ${friend.lname}`
             }
           }

@@ -4,7 +4,7 @@ import { receiveDirectLinkErrors } from './error_actions';
 import { receiveOpportunities } from './opportunity_actions';
 import { receiveUser } from './user_actions';
 
-const genericError = 'Something went wrong. Please again in a bit or contact us at admin@bridgekin.com';
+const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
 export const RECEIVE_DIRECT_LINK = 'RECEIVE_DIRECT_LINK';
 export const REMOVE_DIRECT_LINK = "REMOVE_DIRECT_LINK";

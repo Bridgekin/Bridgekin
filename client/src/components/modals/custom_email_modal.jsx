@@ -271,7 +271,7 @@ class CustomEmailModal extends React.Component {
     let closeBar = (
       <Grid container justify='center'
         style={{ padding: "10px 0px"}}>
-        <Grid item xs={11} container justify='flex-end'>
+        <Grid item xs={12} container justify='flex-end'>
           <CloseIcon onClick={this.handleClose}
             style={{ color: 'grey', pointer: 'cursor'}}/>
         </Grid>
@@ -286,31 +286,33 @@ class CustomEmailModal extends React.Component {
     )
 
     let submit = (
-      <Grid container>
-        <Grid container>
-          <Button onClick={this.resetTemplate(customEmailModal)}
-            style={{ textTransform: 'capitalize'}}>
-            Reset Template
-          </Button>
-        </Grid>
+      <Grid container justify='space-between' alignItems='center'
+        className={classes.submitContainer}>
+        <Button onClick={this.resetTemplate(customEmailModal)}
+          style={{ textTransform: 'capitalize'}}>
+          Reset Template
+        </Button>
 
-        <Grid container justify='center' alignItems='center'
-          direction='column'
-          className={classes.submitContainer}>
+        <div>
+          <Button variant='contained'
+            onClick={this.handleClose}
+            classes={{ root: classes.actionButton}}
+            style={{ marginRight: 10 }}>
+            {`Cancel`}
+          </Button>
           <Button variant='contained' color='primary'
-            onClick={this.handleSubmit}
-            style={{ margin: 10}}>
+            onClick={this.handleSubmit}>
             Send
             <SendIcon className={classes.rightIcon} />
           </Button>
-        </Grid>
+        </div>
       </Grid>
     )
 
     let updateEmail = (
       <div>
         <Grid container
-          style={{ padding: 20 }}>
+          style={{ padding: "0px 20px 10px" }}>
           {closeBar}
           <Typography align='center' fullWidth
             style={{ fontSize: 13 }}>
