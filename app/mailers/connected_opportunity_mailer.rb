@@ -13,6 +13,11 @@ class ConnectedOpportunityMailer < ApplicationMailer
       to: @recipients.map(&:email).uniq,
       subject: @subject
     )
+    #Log email being sent
+    EmailLog.create(
+      recipient_id: @user.id,
+      email_type: 'make_connected_with_connection'
+    )
   end
 
   def make_connected_no_connection(connected_opportunity, subject = nil, body = nil)
@@ -28,6 +33,11 @@ class ConnectedOpportunityMailer < ApplicationMailer
     mail(
       to: @recipients.map(&:email).uniq,
       subject: @subject
+    )
+    #Log email being sent
+    EmailLog.create(
+      recipient_id: @user.id,
+      email_type: 'make_connected_no_connection'
     )
   end
 
@@ -46,6 +56,11 @@ class ConnectedOpportunityMailer < ApplicationMailer
       to: @recipients.map(&:email).uniq,
       subject: @subject
     )
+    #Log email being sent
+    EmailLog.create(
+      recipient_id: @user.id,
+      email_type: 'make_facilitated_with_connection'
+    )
   end
 
   def make_facilitated_no_connection(connected_opportunity, subject = nil, body = nil)
@@ -61,6 +76,11 @@ class ConnectedOpportunityMailer < ApplicationMailer
     mail(
       to: @recipients.map(&:email).uniq,
       subject: @subject
+    )
+    #Log email being sent
+    EmailLog.create(
+      recipient_id: @user.id,
+      email_type: 'make_facilitated_no_connection'
     )
   end
 end

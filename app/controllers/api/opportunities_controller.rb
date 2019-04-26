@@ -119,6 +119,7 @@ class Api::OpportunitiesController < ApiController
     authorize @opportunity
 
     if @opportunity.save
+      #Set Permissions AND Send Notifications
       @opportunity.set_permissions(params[:opportunity][:permissions])
 
       # Send email to joe

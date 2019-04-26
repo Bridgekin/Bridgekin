@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_23_203557) do
+ActiveRecord::Schema.define(version: 2019_04_25_235954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,15 @@ ActiveRecord::Schema.define(version: 2019_04_23_203557) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["link_code"], name: "index_direct_links_on_link_code"
+  end
+
+  create_table "email_logs", force: :cascade do |t|
+    t.integer "recipient_id"
+    t.string "email_type"
+    t.integer "sender_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipient_id"], name: "index_email_logs_on_recipient_id"
   end
 
   create_table "email_notifications", force: :cascade do |t|

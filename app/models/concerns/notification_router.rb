@@ -1,6 +1,7 @@
 module NotificationRouter
   def send_opportunity_notifications(opportunity, opp_permission_ids)
-    sent_to = Set.new()
+    sent_to_notifications = Set.new()
+    sent_to_emails = Set.new()
     actorId = opportunity.owner_id
     permissions = OppPermission.includes(:shareable)
       .where(id: opp_permission_ids)
@@ -14,9 +15,11 @@ module NotificationRouter
       notification_setting = NotificationSetting.find_by(user_id: recipient_id)
       action = perm.mass ? "shared" : "sent"
 
+      #Create Notification object if needed
       if (notification_setting.nil? ||
-        (perm.mass ? notification_setting.opps_shared_contacts : notification_setting.opps_shared_direct)) &&
-        !(sent_to.include?(recipient_id))
+        (perm.mass ? notification_setting.opps_shared_contacts :
+          notification_setting.opps_shared_direct)) &&
+        !(sent_to_notifications.include?(recipient_id))
         Notification.create(
           recipient_id: recipient_id,
           actor_id: actorId,
@@ -28,7 +31,19 @@ module NotificationRouter
           anonymous: opportunity.anonymous
         )
 
-        sent_to.add(recipient_id)
+        sent_to_notifications.add(recipient_id)
+      end
+
+      unless sent_to_emails.include?(recipient_id)
+        if (!perm.mass && notification_setting.email_opps_shared_direct) ||
+          notification_setting.nil?
+          NotificationMailer.direct_opportunity_received(recipient_id, actorId).deliver_later
+          sent_to_emails.add(recipient_id)
+        elsif (perm.mass && notification_setting.email_opps_shared_contacts) ||
+          notification_setting.nil?
+          NotificationMailer.direct_opportunity_received(recipient_id, actorId).deliver_later
+          sent_to_emails.add(recipient_id)
+        end
       end
     end
 
@@ -37,11 +52,13 @@ module NotificationRouter
       network = perm.shareable
       notifiable_users = User.joins("LEFT JOIN notification_settings on notification_settings.user_id = users.id")
         .where(notification_settings: { opps_shared_communities: [true, nil]})
+      email_notifiable_users = User.joins("LEFT JOIN notification_settings on notification_settings.user_id = users.id")
+        .where(notification_settings: { opps_shared_communities: [true, nil]})
       members = network.members.where.not(users: { id: opportunity.owner_id})
       notifiable_members = members & notifiable_users
 
       notifiable_members.each do |member|
-        unless sent_to.include?(member.id)
+        unless sent_to_notifications.include?(member.id)
           Notification.create(
             recipient_id: member.id,
             actor_id: actorId,
@@ -55,9 +72,16 @@ module NotificationRouter
             anonymous: opportunity.anonymous
           )
 
-          sent_to.add(member.id)
+          sent_to_notifications.add(member.id)
         end
       end
+
+      # email_notifiable_members.each do |member|
+      #   unless sent_to_emails.include?(member.id)
+      #     NotificationMailer.direct_opportunity_received(recipient_id, actorId).deliver_later
+      #     sent_to_emails.add(member.id)
+      #   end
+      # end
     end
   end
 
@@ -74,6 +98,10 @@ module NotificationRouter
         origin_type: 'Connection',
         origin_id: connection.id
       )
+    end
+
+    if notification_setting.nil? || notification_setting.email_invites_requested
+      NotificationMailer.invitation_request(recipient_id, actorId).deliver_later
     end
   end
 
