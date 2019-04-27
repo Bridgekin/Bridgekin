@@ -143,11 +143,11 @@ const styles = theme => ({
     color: theme.palette.text.primary
   },
   title:{
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 600
   },
   description:{
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 400
   },
   need:{

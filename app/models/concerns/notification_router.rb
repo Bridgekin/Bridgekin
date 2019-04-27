@@ -41,7 +41,7 @@ module NotificationRouter
           sent_to_emails.add(recipient_id)
         elsif (perm.mass && notification_setting.email_opps_shared_contacts) ||
           notification_setting.nil?
-          NotificationMailer.direct_opportunity_received(recipient_id, actorId).deliver_later
+          NotificationMailer.opportunity_from_contacts(recipient_id, actorId).deliver_later
           sent_to_emails.add(recipient_id)
         end
       end
@@ -53,7 +53,7 @@ module NotificationRouter
       notifiable_users = User.joins("LEFT JOIN notification_settings on notification_settings.user_id = users.id")
         .where(notification_settings: { opps_shared_communities: [true, nil]})
       email_notifiable_users = User.joins("LEFT JOIN notification_settings on notification_settings.user_id = users.id")
-        .where(notification_settings: { opps_shared_communities: [true, nil]})
+        .where(notification_settings: { email_opps_shared_communities: [true, nil]})
       members = network.members.where.not(users: { id: opportunity.owner_id})
       notifiable_members = members & notifiable_users
 
@@ -101,7 +101,7 @@ module NotificationRouter
     end
 
     if notification_setting.nil? || notification_setting.email_invites_requested
-      NotificationMailer.invitation_request(recipient_id, actorId).deliver_later
+      NotificationMailer.invitation_request(recipient.id, actor.id).deliver_later
     end
   end
 

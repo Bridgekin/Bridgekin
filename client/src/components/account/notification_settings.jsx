@@ -86,6 +86,7 @@ class NotificationSettings extends React.Component {
       this.setState({
         [option.value]: cadence,
         [option.anchor]: null,
+        changed: true
       })
     }
   }
@@ -94,12 +95,14 @@ class NotificationSettings extends React.Component {
     e.stopPropagation();
     const { oppsSharedDirect, oppsSharedContacts, oppsSharedCommunities,
       invitesRequested, emailOppsSharedDirect, emailInvitesRequested,
-      emailOppsSharedContacts, emailOppsSharedCommunities } = this.state;
+      emailOppsSharedContacts, emailRecapSharedCommunities,
+      emailRecapSharedContacts } = this.state;
 
     let notificationSetting = {
       oppsSharedDirect, oppsSharedContacts, oppsSharedCommunities,
       invitesRequested, emailOppsSharedDirect, emailInvitesRequested,
-      emailOppsSharedContacts, emailOppsSharedCommunities
+      emailOppsSharedContacts, emailRecapSharedCommunities,
+      emailRecapSharedContacts
     }
 
     this.setState({ sending: true },

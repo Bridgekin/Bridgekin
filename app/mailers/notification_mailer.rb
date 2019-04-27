@@ -6,8 +6,8 @@ class NotificationMailer < ApplicationMailer
   end
 
   def direct_opportunity_received(userId, senderId)
-    @user = user
-    @sender = sender
+    @user = User.find(userId)
+    @sender = User.find(senderId)
     subject = "#{@sender.fname.capitalize} #{@sender.lname.capitalize} has directly sent you an opportunity"
     mail(to: @user.email, subject: subject)
     #Log email being sent
@@ -19,8 +19,8 @@ class NotificationMailer < ApplicationMailer
   end
 
   def opportunity_from_contacts(userId, senderId)
-    @user = user
-    @sender = sender
+    @user = User.find(userId)
+    @sender = User.find(senderId)
     subject = "#{@sender.fname.capitalize} #{@sender.lname.capitalize} has shared an opportunity with you"
     mail(to: @user.email, subject: subject)
     #Log email being sent
@@ -32,42 +32,54 @@ class NotificationMailer < ApplicationMailer
   end
 
   def invitation_request(userId, requestorId)
-    @user = user
-    @requestor = requestor
+    @user = User.find(userId)
+    @requestor = User.find(requestorId)
     subject = "#{@requestor.fname.capitalize} #{@requestor.lname.capitalize} would like to add you to their trusted network"
     mail(to: @user.email, subject: subject)
     #Log email being sent
     EmailLog.create(
       recipient_id: userId,
       email_type: 'invitation_request',
-      sender_id: senderId
+      sender_id: requestorId
     )
   end
 
-  def opps_from_contacts_summary(user, opps_count, type)
-    @user = user
+  def opps_from_contacts_summary(userId, opps_count, type)
+    # debugger
+    @user = User.find(userId)
     @opps_count = opps_count
     @wording = determineWording(type)
-    subject = "Your trusted contacts #{type} opportunity recap"
+    subject = "Your trusted contacts #{type.downcase} opportunity recap"
     mail(to: @user.email, subject: subject)
+    #Log email being sent
+    EmailLog.create(
+      recipient_id: userId,
+      email_type: 'opps_from_contacts_summary'
+    )
   end
 
-  def opps_within_Bridgekin_summary(user, opps_count, type)
-    @user = user
+  def opps_within_Bridgekin_summary(userId, opps_count, type)
+    # debugger
+    @user = User.find(userId)
     @opps_count = opps_count
     @wording = determineWording(type)
-    subject = "Bridgekin Network #{type} opportunity recap"
+    subject = "Bridgekin #{type.downcase} opportunity recap"
     mail(to: @user.email, subject: subject)
+    #Log email being sent
+    EmailLog.create(
+      recipient_id: userId,
+      email_type: 'opps_within_Bridgekin_summary'
+    )
   end
 
   #### UTIL
   def determineWording(type)
     case type
-    when 'daily'
+    when 'Daily'
       'day'
-    when 'weekly'
+    when 'Weekly'
       'week'
-    when 'monthly'
+    when 'Monthly'
       'month'
     else
       ''

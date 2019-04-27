@@ -19,6 +19,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 // import castlePic from '../../static/castle.jpg';
 import { PickImage } from '../../static/opportunity_images/image_util.js';
 import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions';
+import { updateTutorialStep } from '../../actions/user_feature_actions';
 
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
@@ -37,10 +38,12 @@ const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   opportunities: state.entities.opportunities,
   connectedOpportunityErrors: state.errors.connectedOpportunities,
-  oppCardModal: state.modals.oppCard
+  oppCardModal: state.modals.oppCard,
+  userFeature: state.entities.userFeature,
 });
 
 const mapDispatchToProps = dispatch => ({
+  updateTutorialStep: (index) => dispatch(updateTutorialStep(index)),
   closeOppCard: () => dispatch(closeOppCard()),
   fetchProfile: (userId) => dispatch(fetchProfile(userId)),
   openCustomEmailOppCard:(templateType, connectBool, oppId) => (
@@ -198,9 +201,26 @@ class CardModal extends React.Component {
         page: nextModal.page,
         connectBool: nextModal.connectBool
       })
-      this.props.fetchProfile(this.props.opportunities[nextModal.oppId].ownerId)
+      // debugger
+      if(!nextModal.fake){
+        this.props.fetchProfile(this.props.opportunities[nextModal.oppId].ownerId)
+      }
     }
     return true
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    const prevModal = prevProps.oppCardModal
+    const currentModal = this.props.oppCardModal
+    const { userFeature } = this.props;
+    if(currentModal.open && currentModal.open !== prevModal.open){
+      //If Tutorial Tour is Open,
+      if (!Boolean(userFeature.tutorialTourDate) &&
+        userFeature.tutorialTourStep === 2){
+        let newStep = userFeature.tutorialTourStep + 1
+        this.props.updateTutorialStep(newStep)
+      }
+    }
   }
 
   handleClose(field){
@@ -282,10 +302,10 @@ class CardModal extends React.Component {
       oppCardModal } = this.props;
     const { connectBool, page, connectLoading } = this.state;
 
-    const opportunity = opportunities[oppCardModal.oppId];
+    // const opportunity = opportunities[oppCardModal.oppId];
 
-    let { title, description, industries, opportunityNeed, geography,
-      value, networks, pictureUrl, viewType } = opportunity;
+    // let { title, description, industries, opportunityNeed, geography,
+    //   value, networks, pictureUrl, viewType } = opportunity;
 
     let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
       <ListItem >
@@ -294,19 +314,19 @@ class CardModal extends React.Component {
       </ListItem>
     ));
 
-    let loader = (
-      <Grid container justify='center' alignItems='center'
-        className={classes.loader}>
-        <CircularProgress className={classes.progress} />
-      </Grid>
-    )
-
-    let picture = pictureUrl ? (
-      <Img src={pictureUrl}
-        className={classes.cover}
-        loader={loader}
-        />
-    ) : undefined
+    // let loader = (
+    //   <Grid container justify='center' alignItems='center'
+    //     className={classes.loader}>
+    //     <CircularProgress className={classes.progress} />
+    //   </Grid>
+    // )
+    //
+    // let picture = pictureUrl ? (
+    //   <Img src={pictureUrl}
+    //     className={classes.cover}
+    //     loader={loader}
+    //     />
+    // ) : undefined
 
     // <Img src={PickImage(industries[0])}
     //   className={classes.cover}
@@ -562,7 +582,8 @@ class CardModal extends React.Component {
     const { classes, opportunities,
       oppCardModal, currentUser } = this.props;
 
-    if (!_.isEmpty(opportunities[oppCardModal.oppId])){
+    if (!_.isEmpty(opportunities[oppCardModal.oppId]) ||
+      oppCardModal.fake){
       let externalUserMessage = (
         <Grid container justify='center'
           style={{ padding: "20px 0px"}}>
@@ -607,7 +628,7 @@ class CardModal extends React.Component {
           onClose={this.handleClose('find')}
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}>
-          <div className={classes.container}>
+          <div className={['send-email-step-tutorial-tour', classes.container].join(' ')}>
             {currentUser ? this.getContent() : externalUserMessage}
           </div>
         </Dialog>

@@ -57,7 +57,7 @@ import { fetchPassedOpportunities } from '../../actions/passed_opportunity_actio
 import { fetchCurrentUserMetrics } from '../../actions/user_metric_actions';
 import { updateUserFeature, updateTutorialStep } from '../../actions/user_feature_actions';
 import { clearOpportunityErrors } from '../../actions/error_actions';
-import { openOppChange, closeOppChange } from '../../actions/modal_actions';
+import { closeOppChange, closeOppCard } from '../../actions/modal_actions';
 // import OpportunityChangeModal from './opportunity_change_modal';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
@@ -104,12 +104,9 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  openOppChange: (payload) => dispatch(openOppChange(payload)),
-  openOppChangeAsync: (payload) => {
-    return Promise.resolve(dispatch(openOppChange(payload)))
-  },
   updateTutorialStep: (index) => dispatch(updateTutorialStep(index)),
   closeOppChange: () => dispatch(closeOppChange()),
+  closeOppCard: () => dispatch(closeOppCard()),
   registerWaitlistFromReferral: (user) => dispatch(registerWaitlistFromReferral(user)),
   fetchOpportunities: (workspaceId, option) => dispatch(fetchOpportunities(workspaceId, option)),
   fetchWorkspaceOptions: (workspaceId) => dispatch(fetchWorkspaceOptions(workspaceId)),
@@ -336,15 +333,6 @@ const DEFAULTSTATE = {
   // permissions: ['-Network']
 }
 
-const openOppChangeClosure = () => {
-  let payload = {
-    opportunity: DEFAULTSTATE,
-    mode: 'create'
-  }
-  debugger
-  openOppChange(payload);
-}
-
 class OpportunityHome extends React.Component {
   constructor(props){
     super(props);
@@ -396,7 +384,7 @@ class OpportunityHome extends React.Component {
         // content: `Welcome to our quick tutorial. Let's get started!`
       },
       {
-        title: 'Your Feed',
+        // title: 'Your Feed',
         target: '.feed-tutorial-tour',
         content: (
           <React.Fragment>
@@ -411,47 +399,64 @@ class OpportunityHome extends React.Component {
         placement: 'auto'
       },
       {
-        title: 'Connect',
+        // title: 'Connect',
         target: '.connect-step-tutorial-tour',
         content:(
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`If you see an opportunity that’s right for you, press
-              connect and you’ll get introduced to the opportunity owner via
-              email.`}
+              {`If you see an opportunity that’s right for you press
+                connect. Give it a try.`}
             </Typography>
           </React.Fragment>
         ),
-        placement: 'top'
+        placement: 'top',
+        spotlightPadding: 0,
+        disableBeacon: true,
+        spotlightClicks: true,
+        hideFooter: true,
       },
       {
-        title: 'Refer A Trusted Contact',
+        // title: 'Send Email',
+        target: '.send-email-step-tutorial-tour',
+        content:(
+          <React.Fragment>
+            <Typography color='textSecondary'
+              style={{ fontSize: 15}}>
+              {`By pressing send you’ll get connected with the opportunity
+                owner via email. You can always preview and adjust the
+                email copy.`}
+            </Typography>
+          </React.Fragment>
+        ),
+        placement: 'auto',
+        spotlightClicks: false,
+      },
+      {
+        // title: 'Refer A Trusted Contact',
         target: '.refer-step-tutorial-tour',
         content: (
           <React.Fragment>
             <Typography color='textSecondary' gutterBottom
               style={{ fontSize: 15}}>
-              {`If the opportunity may be right for a trusted contact in
-              your network, press refer and you’ll get introduced via email and can
-              then loop in your contact accordingly.`}
-            </Typography>
-            <Typography color='textSecondary'
-              style={{ fontSize: 15}}>
-              {`Whether connecting or referring you can always preview the email prior to sending.`}
+              {`You can also refer an opportunity to your trusted contact.
+                You’ll get connected via email and can loop in your contact
+                from there.`}
             </Typography>
           </React.Fragment>
         ),
-        placement: 'top'
+        placement: 'top',
+        spotlightPadding: 0
       },
       {
-        title: 'Create Your Opportunity',
+        // title: 'Create Your Opportunity',
         target: '.create-open-step-tutorial-tour',
         content:(
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`You can create your own opportunity by clicking above. Go ahead, click!`}
+              {`Now let’s show you how to create your own opportunity.
+                Go ahead and click.`}
             </Typography>
           </React.Fragment>
         ),
@@ -463,14 +468,15 @@ class OpportunityHome extends React.Component {
         // hideCloseButton: true,
       },
       {
-        title: 'Add Details',
+        // title: 'Add Details',
         target: '.create-details-step-tutorial-tour',
         content:(
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Insert a title and any additional information you’d like to share. You
-              can do things like post anonymously or add detailed filter criteria.`}
+              {`Insert a title and any additional information you’d like
+                to share. You can do things like post anonymously or add
+                detailed filter criteria.`}
             </Typography>
           </React.Fragment>
         ),
@@ -479,14 +485,14 @@ class OpportunityHome extends React.Component {
         placement: 'auto'
       },
       {
-        title: 'Share',
+        // title: 'Share',
         target: '.share-panel-step-tutorial-tour',
         content:(
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Click here to privately share your opportunity with specific contacts,
-              trusted groups or all Bridgekin users.`}
+              {`Click here to privately share your opportunity with specific
+                contacts, trusted groups or all Bridgekin users.`}
             </Typography>
           </React.Fragment>
         ),
@@ -496,31 +502,29 @@ class OpportunityHome extends React.Component {
         placement: 'auto'
       },
       {
-        title: 'Share',
+        // title: 'Share',
         target: '.share-expanded-step-tutorial-tour',
         content:(
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`You can choose the right audience to share your opportunity,
-              whether they be networks or specific connctions. Your selections
-              will show up the top of the panel.`}
+              {`Select exactly who you’d like to share your opportunity
+                with, press save and then post your opportunity.`}
             </Typography>
           </React.Fragment>
         ),
-        placement: 'top'
+        placement: 'auto'
       },
       {
-        title: 'Discreet Search',
+        // title: 'Discreet Search',
         target: '.search-bar-step-tutorial-tour',
         content:(
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Using the search bar above, find and connect to contacts
-              you know on Bridgekin by entering their name here. We’ll ask you
-              to verify their email address prior to sending an invite to help
-              avoid unknown connection requests.`}
+              {`Find and connect to contacts you know on Bridgekin.
+                We’ll ask you to verify their email prior to sending an
+                invite to help avoid unknown connection requests.`}
             </Typography>
           </React.Fragment>
         ),
@@ -528,15 +532,15 @@ class OpportunityHome extends React.Component {
 
       },
       {
-        title: 'Invite',
+        // title: 'Invite',
         target: '.invite-step-tutorial-tour',
         content:(
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`To help ensure trust, privacy and relevancy Bridgekin
-              is invite only. You have 3 invitations, get the most value from
-              the platform by inviting your trusted contact now.`}
+              {`Bridgekin is invite only to help ensure trust, privacy and
+                relevancy. You have 3 invitations, get the most value from
+                the platform by inviting your trusted contact now.`}
             </Typography>
           </React.Fragment>
         ),
@@ -1005,12 +1009,18 @@ class OpportunityHome extends React.Component {
         }
         this.props.updateUserFeature(payload);
         this.props.updateTutorialStep(0);
+        this.props.closeOppCard()
+        this.props.closeOppChange()
       });
     } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)){
       // Update state to advance the tour
+      debugger
       this.incrementStep(index, action)
-      if (index === 7 ){
+      debugger
+      if (index === 8 ){
         this.props.closeOppChange()
+      } else if (index === 3){
+        this.props.closeOppCard()
       }
     }
   }
@@ -1071,7 +1081,7 @@ class OpportunityHome extends React.Component {
           <Joyride
             callback={this.handleJoyrideCallback}
             steps={this.tutorial_steps}
-            run={tutorialTourOpen}
+            run={tutorialTourOpen && !Boolean(userFeature.tutorialTourDate)}
             stepIndex={userFeature.tutorialTourStep}
             spotlightClicks={true}
             continuous={true}
@@ -1084,7 +1094,8 @@ class OpportunityHome extends React.Component {
                 primaryColor: '#000',
                 zIndex: 10000000,
                 fontSize: 10,
-                outline: 'none'
+                outline: 'none',
+                borderRadius: 0
               },
             }}
           />}
@@ -1301,12 +1312,12 @@ class OpportunityHome extends React.Component {
         </Grid>
       )
 
-      const opportunityCards = tutorialTourOpen ? <ExampleCard />:
+      const opportunityCards = (tutorialTourOpen && !Boolean(userFeature.tutorialTourDate)) ?
+        <ExampleCard /> :
         this.getOpportunities();
 
       const feed = (
-        <Grid container justify='center' alignItems='center'
-          className='feed-tutorial-tour'>
+        <Grid container justify='center' alignItems='center'>
           <div style={{ overflow: 'scroll', paddingBottom:50,
             width: '100%'}}>
             <CreateOppButton />
@@ -1316,13 +1327,26 @@ class OpportunityHome extends React.Component {
               {filterMobile}
             </Grid>*/}
 
+            {/* Tutorial Lin Break */}
+            {(tutorialTourOpen && !Boolean(userFeature.tutorialTourDate)) &&
+              <Grid container alignItems='center'
+              style={{ marginBottom: 5}}>
+              <div style={{ borderTop: `1px solid grey`, width: 10}}/>
+              <Typography variant="body" color="textPrimary" align='center'
+                style={{ fontSize: 11, textTransform:'uppercase', margin: "0px 7px" }}>
+                {`Shared Directly With You`}
+              </Typography>
+              <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
+            </Grid>}
+
             {opportunitiesLoaded ? opportunityCards :
               (<div style={{ marginTop: 50 }}>
                 <Loading/>
               </div>)}
 
-            <div className={['invite-step-tutorial-tour', classes.waitlistMobileCard].join(' ')}>
+            <div className={classes.waitlistMobileCard}>
               <OpportunityWaitlist
+                className='invite-step-tutorial-tour'
                 handleSubmit={this.handleWaitlistSubmit}
                 loading={loading}
                 currentUser={currentUser}

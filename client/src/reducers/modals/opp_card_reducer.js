@@ -8,8 +8,7 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case OPEN_OPP_CARD_MODAL:
-      return merge({}, {open: true, oppId: action.oppId, page: action.page,
-      connectBool: action.connectBool, permType: action.permType });
+      return merge({}, {open: true}, action.payload);
     case CLOSE_OPP_CARD_MODAL:
       return {};
     default:

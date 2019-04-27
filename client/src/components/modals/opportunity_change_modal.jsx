@@ -387,9 +387,10 @@ class OpportunityChangeModal extends React.Component {
     const currentModal = this.props.oppChangeModal
     const { userFeature } = this.props;
     if(this.state.justOpened){
+      debugger
       //If Tutorial Tour is Open,
       if (!Boolean(userFeature.tutorialTourDate) &&
-        userFeature.tutorialTourStep === 4){
+        userFeature.tutorialTourStep === 5){
         let newStep = userFeature.tutorialTourStep + 1
         this.props.updateTutorialStep(newStep)
       }
@@ -719,7 +720,7 @@ class OpportunityChangeModal extends React.Component {
   handleExpandShare(){
     const { userFeature } = this.props;
     if (!Boolean(userFeature.tutorialTourDate) &&
-      userFeature.tutorialTourStep === 6){
+      userFeature.tutorialTourStep === 7){
       let newStep = userFeature.tutorialTourStep + 1
       this.props.updateTutorialStep(newStep)
     }

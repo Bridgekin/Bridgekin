@@ -24,16 +24,18 @@ import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
 import ReferIcon from '../../static/opp_feed_icons/refer.png'
 import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/EditSharp';
+import { openOppCard } from '../../actions/modal_actions';
 
 import Img from 'react-image';
 import ExamplePicture from '../../static/opportunity_images/Professional_business_services.jpg';
+import ExampleProfile from '../../static/my_trusted_network_images/Joe_Lopardo.png';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  openOppCard: (payload) => dispatch(openOppCard(payload)),
 });
 
 const styles = theme => ({
@@ -143,6 +145,20 @@ class ExampleCard extends React.Component {
   constructor(props){
     super(props)
     this.state = {}
+    this.handleCardOpen = this.handleCardOpen.bind(this);
+  }
+
+  handleCardOpen(cardModalPage, connectBool, permType){
+    return e => {
+      e.preventDefault();
+      e.stopPropagation();
+      let payload = {
+        page: cardModalPage,
+        connectBool,
+        fake: true
+      }
+      this.props.openOppCard(payload);
+    }
   }
 
   render(){
@@ -152,25 +168,26 @@ class ExampleCard extends React.Component {
       className={classes.pictureCover} />
 
     return (
-      <div className={classes.opportunityCard}>
+      <div className={['feed-tutorial-tour', classes.opportunityCard].join(' ')}>
         <Grid container className={classes.oppCardGrid}>
           <Grid item xs={6} container alignItems='center'>
             <Grid item xs={4} container
               justify='center' alignItems='center'>
-                <AccountCircle
+                <Avatar alt="profile-pic"
+                  src={ExampleProfile}
                   className={classes.avatar}/>
             </Grid>
             <Grid container item xs={8} direction='column'
               justify='flex-start'>
               <Typography align='left' color="textPrimary"
                 style={{ textTransform: 'capitalize', fontSize: 14}}>
-                {`John Doe` }
+                {`Joe Lopardo` }
               </Typography>
               <Typography align='left' color="textSecondary"
                 onMouseEnter={this.handlePermissionsOpen}
                 onMouseLeave={this.handlePermissionsClose}
                 style={{ textTransform: 'capitalize', fontSize: 10}}>
-                {`Shared - 5 min`}
+                {`Bridgekin - 5 min`}
               </Typography>
             </Grid>
           </Grid>
@@ -193,14 +210,17 @@ class ExampleCard extends React.Component {
               <Typography variant="h5" align='left'
                 color="textPrimary"
                 className={classes.title} >
-                {`Your Amazing Opportunity`}
+                {`An Amazing Opportunity Or Need`}
               </Typography>
             </div>
             <div style={{ margin: "10px 0px"}}>
               <Typography variant="body2" align='left'
                 color="textPrimary"
                 className={classes.description}>
-                {'With some more info'}
+                {`Here a user can add more details about the opportunity
+                  or need. The more context they provide the more likely
+                  whomever they share it with will be able to see if it's
+                  a fit for them or someone they know.`}
               </Typography>
             </div>
 
@@ -233,7 +253,7 @@ class ExampleCard extends React.Component {
                 color="textPrimary" className={classes.cardSubContent}
                 >
                 <LinesEllipsis
-                  text={`Media`}
+                  text={`Technology & Internet`}
                   maxLine='3'
                   ellipsis='...'
                   trimRight
@@ -252,7 +272,7 @@ class ExampleCard extends React.Component {
               <Typography variant="subtitle1" gutterBottom align='left'
                 color="textPrimary" className={classes.cardSubContent}
                 >
-                {`$1-5M`}
+                {`$1M - $5M`}
               </Typography>
             </div>
           </Grid>
@@ -260,9 +280,10 @@ class ExampleCard extends React.Component {
           <Grid container justify='space-around'
           className={classes.feedCardActionContainer}
           style={{ marginTop: 10}}>
-            <Grid item xs={3}
-              className='connect-step-tutorial-tour'>
+            <Grid item xs={3}>
               <Button fullWidth
+                onClick={this.handleCardOpen('confirm', true, '')}
+                className='connect-step-tutorial-tour'
                 classes={{ label: classes.oppActionButton }}>
                 <img alt='connect' src={ConnectIcon}
                   className={classes.oppActionIconPic}/>
@@ -270,9 +291,9 @@ class ExampleCard extends React.Component {
               </Button>
             </Grid>
 
-            <Grid item xs={3}
-              className='refer-step-tutorial-tour'>
+            <Grid item xs={3}>
               <Button fullWidth
+                className='refer-step-tutorial-tour'
                 classes={{ label: classes.oppActionButton }}>
                 <img src={ReferIcon} alt=''
                   className={classes.oppActionIconPic}/>
