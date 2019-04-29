@@ -90,11 +90,11 @@ const styles = theme => ({
     color: theme.palette.text.primary
   },
   title:{
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 600
   },
   description:{
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 400
   },
   need:{
@@ -168,7 +168,7 @@ class ExampleCard extends React.Component {
       className={classes.pictureCover} />
 
     return (
-      <div className={['feed-tutorial-tour', classes.opportunityCard].join(' ')}>
+      <div className={classes.opportunityCard}>
         <Grid container className={classes.oppCardGrid}>
           <Grid item xs={6} container alignItems='center'>
             <Grid item xs={4} container
@@ -282,7 +282,6 @@ class ExampleCard extends React.Component {
           style={{ marginTop: 10}}>
             <Grid item xs={3}>
               <Button fullWidth
-                onClick={this.handleCardOpen('confirm', true, '')}
                 className='connect-step-tutorial-tour'
                 classes={{ label: classes.oppActionButton }}>
                 <img alt='connect' src={ConnectIcon}

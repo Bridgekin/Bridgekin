@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 
 const mapStateToProps = state => ({
-  dimensions: state.window
+  dimensions: state.util.window
 });
 
 const styles = theme => ({

@@ -21,7 +21,7 @@ class Api::UserFeaturesController < ApiController
 
     def user_feature_params
       params.require(:payload).permit(:user_id, :tutorial_tour_date,
-        :user_onboarding, :tutorial_tour_step)
+        :user_onboarding, :tutorial_tour_step, :tutorial_tour_session)
     end
     # Use callbacks to share common setup or constraints between actions.
     # def set_site_template

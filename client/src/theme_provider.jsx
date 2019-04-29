@@ -25,7 +25,7 @@ import DeleteOppModal from './components/modals/delete_opp_modal';
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
   currentUser: state.users[state.session.id],
-  dimensions: state.window
+  dimensions: state.util.window
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -5,7 +5,8 @@ import sessionReducer from './session/session_reducer';
 import usersReducer from './users/users_reducer';
 import siteTemplateReducer from './site_templates/site_template_reducer.js';
 import workspaceReducer from './site_templates/workspace_reducer.js';
-import windowReducer from './util/window_reducer.js';
+// import windowReducer from './util/window_reducer.js';
+import utilReducer from './util/util_reducer';
 import errorsReducer from './errors/errors_reducer';
 
 import { LOGOUT_CURRENT_USER } from '../actions/session_actions';
@@ -17,7 +18,7 @@ const appReducer = combineReducers({
   users: usersReducer,
   siteTemplate: siteTemplateReducer,
   workspaces: workspaceReducer,
-  window: windowReducer,
+  util: utilReducer,
   errors: errorsReducer
 });
 

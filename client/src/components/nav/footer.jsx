@@ -18,7 +18,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
-  dimensions: state.window
+  dimensions: state.util.window
 });
 
 const styles = theme => ({

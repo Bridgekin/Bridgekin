@@ -16,6 +16,11 @@ class Api::Users::SessionsController < ApiController
       @site_template = @user.get_template
       @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
 
+      if @user_feature.tutorial_tour_session
+        @user_feature.tutorial_tour_session = nil
+        @user_feature.save
+      end
+
       render :show
     # elsif @user && !@user.confirmed?
     #   render json: ['You need to confirm your account before logging in.'], status: 404

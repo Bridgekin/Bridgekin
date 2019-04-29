@@ -24,6 +24,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import defaultNetworkIcon from '../../static/favicon_default.ico';
+import {ReactHeight} from 'react-height';
 
 // import { fetchShareOptions } from '../../actions/opp_permission_actions';
 
@@ -33,7 +34,9 @@ const mapStateToProps = (state, ownProps) => ({
   circles: state.entities.circles,
   connections: state.entities.connections,
   users: state.users,
-  shareOptions: state.entities.shareOptions
+  shareOptions: state.entities.shareOptions,
+  userFeature: state.entities.userFeature,
+  dimensions: state.util.window
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -108,7 +111,7 @@ const styles = theme => ({
   listHeader:{ fontSize: 14, fontWeight: 600 },
   emptyList: { fontSize: 14, fontWeight: 400, fontStyle: 'italic' },
   submitContainer:{
-    height: 60,
+    height: 50,
     borderTop: `1px solid ${theme.palette.border.primary}`,
   },
   actionButton: { fontSize: 12 },
@@ -117,7 +120,7 @@ const styles = theme => ({
     color: theme.palette.text.primary
   },
   contentContainer:{
-    padding: 12,
+    padding: "12px 12px 0px",
     // backgroundColor: theme.palette.base3
     borderTop: `1px solid ${theme.palette.border.secondary}`
   },
@@ -344,10 +347,13 @@ class SharePanel extends Component{
   }
 
   render(){
-    const { classes, shareOptions, currentUser } = this.props;
+    const { classes, shareOptions, currentUser,
+      userFeature, dimensions, formHeight} = this.props;
     const { permissions, searchInput } = this.state;
 
     let filteredOptions = [...shareOptions].filter(this.filterItem);
+    let onTour = (!Boolean(userFeature.tutorialTourDate) &&
+      userFeature.tutorialTourStep === 7)
 
     let search = (
       <Grid item xs={12}
@@ -376,7 +382,8 @@ class SharePanel extends Component{
         <Typography gutterBottom align='left'
           color="textPrimary" variant="body1"
           style={{ fontSize: 13 }}>
-          {[...permissions].map(perm => this.getTitle(perm))
+          {onTour ? 'Everyone on Bridgekin' :
+            [...permissions].map(perm => this.getTitle(perm))
             .join(', ')}
         </Typography>
       </Grid>
@@ -401,9 +408,16 @@ class SharePanel extends Component{
     //     </Typography>
     //   </Grid>
     // debugger
+
+    let maxHeightPanel = (!dimensions.height - formHeight - (60 + 173) < 0 ) ? (dimensions.height - (45 + 45 + 18 + 8) -
+      formHeight - 60) : undefined
+
+    let maxHeightChoices = maxHeightPanel ? (maxHeightPanel - (24 + 50 + 45 + 34)) : undefined
+
     let choices = (
       <Grid item xs={12}
-        className={classes.resultsGrid}>
+        className={classes.resultsGrid}
+        style={{ maxHeight: maxHeightChoices }}>
         <Grid container justify='flex-start'
           style={{ marginTop: 10 }}>
 
@@ -456,7 +470,7 @@ class SharePanel extends Component{
             </ListItem>*/}
 
 
-          {[...filteredOptions].filter(x => x.includes('Circle'))
+          {!onTour && [...filteredOptions].filter(x => x.includes('Circle'))
             .map(option => (
             <ListItem key={option} className={classes.listItem}
               disabled={permissions.has('-Everyone') || permissions.has('-Circle')}
@@ -466,7 +480,7 @@ class SharePanel extends Component{
             </ListItem>
           ))}
 
-          {[...filteredOptions].filter(x => x.includes('Network'))
+          {!onTour && [...filteredOptions].filter(x => x.includes('Network'))
             .map(option => (
             <ListItem key={option} className={classes.listItem}
               disabled={permissions.has('-Everyone') || permissions.has('-Network')}
@@ -477,7 +491,7 @@ class SharePanel extends Component{
             </ListItem>
           ))}
 
-          {[...filteredOptions].filter(x => x.includes('Connection'))
+          {!onTour && [...filteredOptions].filter(x => x.includes('Connection'))
             .map(option => (
             <ListItem key={option} className={classes.listItem}
               disabled={permissions.has('-Everyone') || permissions.has('-Connection')}
@@ -486,6 +500,40 @@ class SharePanel extends Component{
               <Checkbox checked={permissions.has(option)} />
             </ListItem>
           ))}
+
+          {onTour &&
+            <ListItem key={'fake1'}
+              disabled={permissions.has('-Everyone')}
+              className={classes.listItem}>
+              <Grid container alignItems='center' style={{ flexGrow: 1}}>
+                <Img src={defaultNetworkIcon}
+                  className={classes.shareIcon}/>
+                {`Inner Business Circle`}
+              </Grid>
+              <Checkbox/>
+            </ListItem>}
+
+          {onTour &&
+            <ListItem key={'fake2'}
+              disabled={permissions.has('-Everyone')}
+              className={classes.listItem}>
+              <Grid container alignItems='center' style={{ flexGrow: 1}}>
+                {`The Bridgekin Network`}
+              </Grid>
+              <Checkbox/>
+            </ListItem>}
+
+          {onTour &&
+            <ListItem key={'fake3'}
+              disabled={permissions.has('-Everyone')}
+              className={classes.listItem}>
+              <Grid container alignItems='center' style={{ flexGrow: 1}}>
+                <PersonIcon className={classes.shareIcon}/>
+                {`Joe Lopardo`}
+              </Grid>
+              <Checkbox/>
+            </ListItem>}
+
         </Grid>
       </Grid>
     )
@@ -518,7 +566,8 @@ class SharePanel extends Component{
     return (
       <Grid container className='share-expanded-step-tutorial-tour'>
         <Grid container justify='center'
-          className={classes.contentContainer}>
+          className={classes.contentContainer}
+          style={{ maxHeight: maxHeightPanel}}>
           <Grid container justify='center' alignItems='flex-start'
             style={{ maxHeight: 300}}>
             {chosen}

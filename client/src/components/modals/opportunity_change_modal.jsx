@@ -59,9 +59,12 @@ import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeftSharp';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRightSharp';
 import Checkbox from '@material-ui/core/Checkbox';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+// import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+// import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
+import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+// import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import SvgIcon from '@material-ui/core/SvgIcon';
 import PictureIconSVG from '../../static/opp_feed_icons/picture.svg'
@@ -86,6 +89,43 @@ import { updateTutorialStep } from '../../actions/user_feature_actions';
 import RSelect from 'react-select'
 import merge from 'lodash/merge';
 import { animateScroll } from 'react-scroll';
+import {ReactHeight} from 'react-height';
+
+const ExpansionPanel = withStyles({
+  root: {
+    borderTop: '1px solid rgba(0,0,0,.125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+  },
+  expanded: {
+    margin: 'auto',
+  },
+})(MuiExpansionPanel);
+
+const ExpansionPanelSummary = withStyles({
+  root: {
+    // backgroundColor: 'rgba(0,0,0,.03)',
+    // borderBottom: '1px solid rgba(0,0,0,.125)',
+    marginBottom: -1,
+    minHeight: 56,
+    '&$expanded': {
+      minHeight: 56,
+    },
+  },
+  content: {
+    '&$expanded': {
+      margin: '12px 0',
+    },
+  },
+  expanded: {},
+})(props => <MuiExpansionPanelSummary {...props} />);
+
+ExpansionPanelSummary.muiName = 'ExpansionPanelSummary';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -273,7 +313,15 @@ const styles = theme => ({
   sharePanel: {
     boxShadow: 'none'
   },
+  sharePanelSummaryContentExpanded:{
+    '&$expanded': {
+      margin: "0px"
+    }
+  },
   sharePanelSummary:{
+    '&$expanded': {
+      margin: "0px"
+    },
     "& > :last-child": {
       paddingRight: 0
     }
@@ -301,7 +349,9 @@ const DEFAULTSTATE = {
   permissions: [],
   showFilters: false,
   sharePanelExpanded: false,
-  contextLoaded: false
+  contextLoaded: false,
+  formDimensions: 0,
+  exPanSummmaryDimensions: 0
   // share: []
 }
 
@@ -327,6 +377,7 @@ class OpportunityChangeModal extends React.Component {
     this.handleExpandShare = this.handleExpandShare.bind(this);
     this.getTitle = this.getTitle.bind(this);
     this.handleSaveCroppedImage = this.handleSaveCroppedImage.bind(this);
+    this.refCallback = this.refCallback.bind(this);
   }
 
   // componentDidMount(){
@@ -386,11 +437,11 @@ class OpportunityChangeModal extends React.Component {
     const prevModal = prevProps.oppChangeModal
     const currentModal = this.props.oppChangeModal
     const { userFeature } = this.props;
+    // debugger
     if(this.state.justOpened){
-      debugger
       //If Tutorial Tour is Open,
       if (!Boolean(userFeature.tutorialTourDate) &&
-        userFeature.tutorialTourStep === 5){
+        userFeature.tutorialTourStep === 4){
         let newStep = userFeature.tutorialTourStep + 1
         this.props.updateTutorialStep(newStep)
       }
@@ -720,7 +771,7 @@ class OpportunityChangeModal extends React.Component {
   handleExpandShare(){
     const { userFeature } = this.props;
     if (!Boolean(userFeature.tutorialTourDate) &&
-      userFeature.tutorialTourStep === 7){
+      userFeature.tutorialTourStep === 6){
       let newStep = userFeature.tutorialTourStep + 1
       this.props.updateTutorialStep(newStep)
     }
@@ -768,6 +819,14 @@ class OpportunityChangeModal extends React.Component {
       // }
     }
   }
+
+  refCallback(name){
+    return height => {
+      if (height) {
+        this.setState({ [name]: height});
+      }
+    }
+  };
 
   render () {
     const { open, classes,
@@ -1113,6 +1172,8 @@ class OpportunityChangeModal extends React.Component {
         </Grid>
       )
 
+      // let tutorialPermissions
+
       let sharePanel = (
         <ExpansionPanel
           expanded={sharePanelExpanded}
@@ -1120,7 +1181,11 @@ class OpportunityChangeModal extends React.Component {
           className='share-panel-step-tutorial-tour'
           classes={{ root: classes.sharePanel}}
         >
-          <ExpansionPanelSummary classes={{ content: classes.sharePanelSummary}}>
+          <ExpansionPanelSummary
+            classes={{
+              content: classes.sharePanelSummary,
+              expanded: classes.sharePanelSummaryContentExpanded
+            }}>
             <Grid container>
               <Grid item xs={7}>
                 <Typography variant='body1' align='left'
@@ -1134,12 +1199,12 @@ class OpportunityChangeModal extends React.Component {
                     style={{ fontSize: 13}}>
                     <b>{[...permissions].map(perm => this.capitalize(this.getTitle(perm)))
                         .join(', ')}</b>
-                    </Typography>
-                    {sharePanelExpanded ?
-                      <KeyboardArrowDownIcon
-                        style={{ fontSize: 20 }}/> :
-                      <KeyboardArrowUpIcon
-                        style={{ fontSize: 20 }}/>}
+                  </Typography>
+                  {sharePanelExpanded ?
+                    <KeyboardArrowDownIcon
+                      style={{ fontSize: 20 }}/> :
+                    <KeyboardArrowUpIcon
+                      style={{ fontSize: 20 }}/>}
                 </Grid>
               </Grid>
               <Grid item xs={5} container justify='flex-end'
@@ -1157,6 +1222,8 @@ class OpportunityChangeModal extends React.Component {
             className='share-expanded-step-tutorial-tour'
             classes={{ root: classes.sharePanelDetails}}>
             <SharePanel
+              formHeight={this.state.formDimensions}
+              summaryHeight={this.state.exPanSummaryDimensions}
               permissions={permissions}
               handleClose={this.handleExpandShare}
               handleChange={this.handleUpdatePermissions}/>
@@ -1165,46 +1232,14 @@ class OpportunityChangeModal extends React.Component {
       )
 
       let formContainer = (
-        <Grid container
-          className='create-details-step-tutorial-tour'
-          style={{ padding: 12 }}>
-          {oppForm}
-          {filters}
-        </Grid>
-      )
-
-      let submitBar = (
-        <Grid container justify='space-between'
-          className={classes.submitBar}>
-
-          <Button color="primary"
-            variant={permissions.length > 0 ? 'contained' : undefined }
-            className={permissions.length > 0 ?
-              classes.createFilterSelectedButton :
-              classes.createFilterButton }
-            onClick={this.handleShareClick}>
-            { permissions.length === 0 && <img src={ShareIconSVG} alt='share-icon'
-            className={classes.filterButtonIcon}/>}
-            {`Share`}
-            { permissions.length > 0 &&
-              <IconButton
-                onClick={this.handleRemovePermissions.bind(this)}
-                classes={{ root: classes.infoIconButton}}>
-                <CloseIcon style={{ color: 'white', fontSize: 20}}/>
-              </IconButton>
-            }
-          </Button>
-
-          <Button className={classes.postButton}
-            color='primary' variant='contained'
-            onClick={this.handleSubmit}
-            disabled={
-              (viewType === 'card' && isError) ||
-              (viewType === 'post' && isError) ||
-              sendingProgress}>
-              {oppChangeModal.mode === 'create' ? `Post` : `Update`}
-          </Button>
-        </Grid>
+        <ReactHeight onHeightReady={this.refCallback('formDimensions')}>
+          <Grid container
+            className='create-details-step-tutorial-tour'
+            style={{ padding: 12 }}>
+            {oppForm}
+            {filters}
+          </Grid>
+        </ReactHeight>
       )
 
       return (

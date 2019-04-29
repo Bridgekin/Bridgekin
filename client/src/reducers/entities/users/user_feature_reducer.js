@@ -1,6 +1,7 @@
 import {
   RECEIVE_USER_FEATURE,
-  UPDATE_TUTORIAL_STEP} from '../../../actions/user_feature_actions';
+  UPDATE_TUTORIAL_STEP,
+  UPDATE_TUTORIAL_TEMP} from '../../../actions/user_feature_actions';
 import merge from 'lodash/merge';
 
 export default(state = {}, action) => {
