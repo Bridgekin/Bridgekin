@@ -58,7 +58,7 @@ class ConnectedOpportunityMailer < ApplicationMailer
     )
     #Log email being sent
     EmailLog.create(
-      recipient_id: @user.id,
+      recipient_id: @facilitator.id,
       email_type: 'make_facilitated_with_connection'
     )
   end
@@ -79,7 +79,7 @@ class ConnectedOpportunityMailer < ApplicationMailer
     )
     #Log email being sent
     EmailLog.create(
-      recipient_id: @user.id,
+      recipient_id: @facilitator.id,
       email_type: 'make_facilitated_no_connection'
     )
   end
