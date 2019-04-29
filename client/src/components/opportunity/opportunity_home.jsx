@@ -1018,13 +1018,11 @@ class OpportunityHome extends React.Component {
       // });
     } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)){
       // Update state to advance the tour
-      debugger
       this.incrementStep(index, action)
-      debugger
-      if (index === 8 ){
+      if (index === 7 ){
         this.props.closeOppChange()
-      } else if (index === 3){
-        this.props.closeOppCard()
+      // } else if (index === 3){
+      //   this.props.closeOppCard()
       }
     }
   }
