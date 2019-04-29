@@ -458,7 +458,7 @@ class OpportunityHome extends React.Component {
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
               {`Now let’s show you how to create your own opportunity.
-                Go ahead and click.`}
+                Click the highlighted area to advance`}
             </Typography>
           </React.Fragment>
         ),
@@ -493,9 +493,9 @@ class OpportunityHome extends React.Component {
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Click below to select who you’d like to privately share
-                your opportunity with, such as specific contacts, trusted
-                groups or all Bridgekin users.`}
+              {`Select who you’d like to privately share your opportunity
+                with, such as specific contacts, trusted groups or all
+                Bridgekin users. Click the highlighted area below to advance`}
             </Typography>
           </React.Fragment>
         ),
