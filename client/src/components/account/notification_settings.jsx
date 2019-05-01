@@ -140,7 +140,7 @@ class NotificationSettings extends React.Component {
             <Grid item xs={12} style={{ marginBottom: 10}}>
               <Typography align='left' color='textPrimary'
                 className={classes.notificationHeader}>
-                {`In-App Notifications`}
+                {`Platform Notifications`}
               </Typography>
             </Grid>
 

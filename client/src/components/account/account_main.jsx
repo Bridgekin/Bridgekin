@@ -32,10 +32,15 @@ import AccountOpportunities from './account_opportunities';
 import NotificationSettings from './notification_settings';
 import Notifications from './notifications'
 
-const mapStateToProps = (state, ownProps) => ({
+import queryString from 'query-string';
+
+const mapStateToProps = (state, ownProps) => {
+  const values = queryString.parse(ownProps.location.search)
+  return {
   currentUser: state.users[state.session.id],
-  pathname: window.location.pathname
-});
+  pathname: window.location.pathname,
+  oppFilter: values.oppFilter || 'posted'
+}};
 
 const styles = theme => ({
   root: {
@@ -199,7 +204,7 @@ class AccountMain extends React.Component {
     super(props);
     this.state = {
       loaded: false,
-      oppFilter: 'posted',
+      // oppFilter: 'posted',
       mobileNavAnchorEl: null,
       tabVal: 0
     };
@@ -234,8 +239,9 @@ class AccountMain extends React.Component {
 
   handleFilter(name){
     return e => {
-      this.setState({ oppFilter: name });
       animateScroll.scrollTo(0);
+      // this.setState({ oppFilter: name });
+      this.props.history.push(`/account/opportunities?oppFilter=${name}`)
     }
   }
 
@@ -268,9 +274,9 @@ class AccountMain extends React.Component {
   // }
 
   render (){
-    let { classes, currentUser } = this.props;
+    let { classes, currentUser, oppFilter } = this.props;
     let pathName = this.props.location.pathname;
-    let { oppFilter, mobileNavAnchorEl, tabVal } = this.state;
+    let { mobileNavAnchorEl, tabVal } = this.state;
 
     const mobileNavOpen = Boolean(mobileNavAnchorEl);
 
@@ -505,7 +511,6 @@ class AccountMain extends React.Component {
           <ProtectedRoute
             path="/account/opportunities"
             component={AccountOpportunities}
-            passedProps={{ oppFilter  }}
           />
           <ProtectedRoute
             path="/account/profile"

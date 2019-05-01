@@ -59,10 +59,10 @@ module SQLControllerModule
       .joins("INNER JOIN opportunities on opp_permissions.opportunity_id = opportunities.id")
       .where(shareable_id: @workspace_networks.pluck(:id),
         shareable_type: "Network",
-        opportunities: {status: 'Approved'})
+        opportunities: { status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted', owner_id: @user })
+        opportunities: { deal_status: 'Deleted', owner_id: @user })
   end
 
   def opps_network_id(network_id)
@@ -76,7 +76,7 @@ module SQLControllerModule
 
     network_opp_perms = OppPermission.includes(:opportunity)
       .joins("INNER JOIN opportunities on opp_permissions.opportunity_id = opportunities.id")
-      .where(shareable_id: @workspace_networks.pluck(:id),
+      .where(shareable_id: network_id,
         shareable_type: "Network",
         opportunities: {status: 'Approved'})
       .where.not(

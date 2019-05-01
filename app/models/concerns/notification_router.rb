@@ -36,10 +36,10 @@ module NotificationRouter
 
       unless sent_to_emails.include?(recipient_id)
         if notification_setting.nil? || (!perm.mass && notification_setting.email_opps_shared_direct)
-          NotificationMailer.direct_opportunity_received(recipient_id, actorId).deliver_later
+          NotificationMailer.direct_opportunity_received(recipient_id, actorId, opportunity).deliver_now
           sent_to_emails.add(recipient_id)
         elsif notification_setting.nil? || (perm.mass && notification_setting.email_opps_shared_contacts)
-          NotificationMailer.opportunity_from_contacts(recipient_id, actorId).deliver_later
+          NotificationMailer.opportunity_from_contacts(recipient_id, actorId, opportunity).deliver_now
           sent_to_emails.add(recipient_id)
         end
       end
@@ -76,7 +76,7 @@ module NotificationRouter
 
       # email_notifiable_members.each do |member|
       #   unless sent_to_emails.include?(member.id)
-      #     NotificationMailer.direct_opportunity_received(recipient_id, actorId).deliver_later
+      #     NotificationMailer.direct_opportunity_received(recipient_id, actorId).deliver_now
       #     sent_to_emails.add(member.id)
       #   end
       # end
@@ -99,7 +99,7 @@ module NotificationRouter
     end
 
     if notification_setting.nil? || notification_setting.email_invites_requested
-      NotificationMailer.invitation_request(recipient.id, actor.id).deliver_later
+      NotificationMailer.invitation_request(recipient.id, actor.id).deliver_now
     end
   end
 

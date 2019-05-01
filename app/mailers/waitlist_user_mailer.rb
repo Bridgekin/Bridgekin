@@ -68,4 +68,11 @@ class WaitlistUserMailer < ApplicationMailer
     )
   end
 
+  def flag_waitlist_referral(user, waitlist_user, alreadyExists = false)
+    @user = user
+    @waitlist_user = waitlist_user
+    @alreadyExists = alreadyExists ? "true" : "false"
+    mail(to: 'joe@bridgekin.com', subject: "A user was referred to the waitlist!")
+  end
+
 end

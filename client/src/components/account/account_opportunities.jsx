@@ -23,8 +23,11 @@ import { fetchSavedOpportunities } from '../../actions/saved_opportunity_actions
 import OpportunityCardFeed from '../opportunity/opportunity_card_feed';
 // import OpportunityChangeModal from '../opportunity/opportunity_change_modal';
 import merge from 'lodash/merge';
+import queryString from 'query-string';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => {
+  const values = queryString.parse(ownProps.location.search)
+  return {
   currentUser: state.users[state.session.id],
   opportunities: state.entities.opportunities,
   userOpps: state.entities.userOpportunities,
@@ -33,8 +36,9 @@ const mapStateToProps = state => ({
   facilitatedOpps: state.entities.facilitatedOpportunities,
   savedOpportunities: state.entities.savedOpportunities,
   networks: Object.values(state.entities.networks),
-  userOppPermissions: state.entities.userOppPermissions
-});
+  userOppPermissions: state.entities.userOppPermissions,
+  oppFilter: values.oppFilter || 'posted'
+}};
 
 const mapDispatchToProps = dispatch => ({
   fetchAllTouchedOpportunities: () => dispatch(fetchAllTouchedOpportunities()),

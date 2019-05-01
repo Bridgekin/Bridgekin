@@ -359,7 +359,7 @@ class SharePanel extends Component{
       <Grid item xs={12}
         className={classes.search}>
         <InputBase
-          placeholder="Search..."
+          placeholder="Search Name..."
           classes={{
             root: classes.inputRoot,
             input: classes.inputInput,
@@ -408,16 +408,16 @@ class SharePanel extends Component{
     //     </Typography>
     //   </Grid>
     // debugger
-
-    let maxHeightPanel = (!dimensions.height - formHeight - (60 + 173) < 0 ) ? (dimensions.height - (45 + 45 + 18 + 8) -
-      formHeight - 60) : undefined
+    let aroundModal = (45 + 45 + 18 + 8) // Nav bar, filter bar, padding top & bottom
+    let maxHeightPanel = (dimensions.height - aroundModal - formHeight - 60 > 40) ?
+    (dimensions.height - aroundModal - formHeight - 60) : undefined
 
     let maxHeightChoices = maxHeightPanel ? (maxHeightPanel - (24 + 50 + 45 + 34)) : undefined
 
     let choices = (
       <Grid item xs={12}
         className={classes.resultsGrid}
-        style={{ maxHeight: maxHeightChoices }}>
+        style={{ maxHeight: maxHeightChoices, minHeight: 30 }}>
         <Grid container justify='flex-start'
           style={{ marginTop: 10 }}>
 
@@ -480,7 +480,7 @@ class SharePanel extends Component{
             </ListItem>
           ))}
 
-          {!onTour && [...filteredOptions].filter(x => x.includes('Network'))
+          {false && !onTour && [...filteredOptions].filter(x => x.includes('Network'))
             .map(option => (
             <ListItem key={option} className={classes.listItem}
               disabled={permissions.has('-Everyone') || permissions.has('-Network')}
@@ -551,7 +551,7 @@ class SharePanel extends Component{
         <Button color='primary' variant='contained'
           classes={{ root: classes.actionButton}}
           onClick={this.handleSave}>
-          {`Save`}
+          {`Select`}
         </Button>
       </Grid>
     )

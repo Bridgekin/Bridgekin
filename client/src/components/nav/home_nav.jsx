@@ -333,11 +333,13 @@ class HomeNav extends React.Component {
   handleNotificationMenuOpen(e){
     this.setState({ notificationsAnchorEl: e.currentTarget })
     const { notifications } = this.props;
+    // let notificationIds = Object.values(notifications).filter(x => !x.readAt)
+    //   .sort((a,b) => (
+    //     (new Date(b.createdAt)) - (new Date(a.createdAt))
+    //   ))
+    //   .slice(0, 4)
+    //   .map(notification => notification.id)
     let notificationIds = Object.values(notifications).filter(x => !x.readAt)
-      .sort((a,b) => (
-        (new Date(b.createdAt)) - (new Date(a.createdAt))
-      ))
-      .slice(0, 4)
       .map(notification => notification.id)
     this.props.updateAsRead(notificationIds)
   }

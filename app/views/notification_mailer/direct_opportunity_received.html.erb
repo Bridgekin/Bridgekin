@@ -2,7 +2,7 @@
 
 <p><%= @sender.fname.capitalize %> has sent an opportunity directly with you
   on Bridgekin. You can see what <%= @user.fname.capitalize %> sent to you
-  <a href='https://bridgekin.com/findandconnect'>here</a>.</p>
+  <%= link_to 'here', "#{root_url}findandconnect?focusedOppId=#{@oppId}" %>.</p>
 
 <p>Cheers,<br>
 The Bridgekin Team</p>

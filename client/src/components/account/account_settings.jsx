@@ -176,6 +176,7 @@ class AccountSetting extends React.Component {
       company: this.props.currentUser.company,
       city: this.props.currentUser.city,
       state: this.props.currentUser.state,
+      linkedInUrl: this.props.currentUser.linkedInUrl,
       // defaultNetworkId: this.props.currentUser.defaultNetworkId,
       country: countryList.getName(this.props.currentUser.country) || '',
       profilePicFile: null,
@@ -300,7 +301,8 @@ class AccountSetting extends React.Component {
     let { country, profilePicFile, previewUrl } = this.state;
     const formData = new FormData();
 
-    let fields = ['fname', 'lname', 'city', 'state', 'title', 'company'];
+    let fields = ['fname', 'lname', 'city', 'state', 'title',
+    'company', 'linkedInUrl'];
     for (let i = 0; i < fields.length; i++){
       formData.append(`user[${fields[i]}]`, this.state[fields[i]]);
     }
@@ -636,6 +638,17 @@ class AccountSetting extends React.Component {
                     </Select>
                   </Grid>
                 </Grid>
+
+                {/* Social - LinkedIn*/}
+                <TextField
+                  id="standard-name"
+                  label="LinkedIn Url"
+                  className={classes.textField}
+                  margin="normal"
+                  value={this.state.linkedInUrl}
+                  fullWidth
+                  onChange={this.handleInfoChange('linkedInUrl')}
+                />
 
                 <Typography variant="h6" align='left'
                   color="textPrimary" className={classes.fieldLabel}>

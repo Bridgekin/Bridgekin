@@ -15,6 +15,7 @@
     "base64-to-file": "^1.1.0",
     "blob-util": "^2.0.2",
     "canvas-to-image": "^2.0.0",
+    "capitalize": "^2.0.0",
     "copy-to-clipboard": "^3.0.8",
     "country-list": "^2.1.0",
     "datetime-difference": "^1.0.1",

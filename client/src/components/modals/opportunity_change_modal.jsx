@@ -139,6 +139,7 @@ const mapStateToProps = (state, ownProps) => ({
   users: state.users,
   siteTemplate: state.siteTemplate,
   userFeature: state.entities.userFeature,
+  tourSession: state.util.tourSession.tutorialTour,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -401,10 +402,18 @@ class OpportunityChangeModal extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextModal = nextProps.oppChangeModal
     const currentModal = this.props.oppChangeModal
+    const { userFeature } = this.props;
+
+    if(!Boolean(userFeature.tutorialTourSession) &&
+      !Boolean(userFeature.tutorialTourDate) &&
+      this.props.userFeature.tutorialTourStep === 7 &&
+      nextProps.userFeature.tutorialTourStep === 6){
+      this.setState({ sharePanelExpanded: false })
+    }
+
     if(nextModal.open && nextModal.open !== currentModal.open){
       // Refresh Share Options
       // this.props.removeShareOptions();
-      // debugger
       this.props.fetchShareOptions()
       .then(() => {
         if(nextModal.mode === 'create'){
@@ -440,7 +449,8 @@ class OpportunityChangeModal extends React.Component {
     // debugger
     if(this.state.justOpened){
       //If Tutorial Tour is Open,
-      if (!Boolean(userFeature.tutorialTourDate) &&
+      if (!Boolean(userFeature.tutorialTourSession) &&
+        !Boolean(userFeature.tutorialTourDate) &&
         userFeature.tutorialTourStep === 4){
         let newStep = userFeature.tutorialTourStep + 1
         this.props.updateTutorialStep(newStep)
@@ -770,7 +780,8 @@ class OpportunityChangeModal extends React.Component {
 
   handleExpandShare(){
     const { userFeature } = this.props;
-    if (!Boolean(userFeature.tutorialTourDate) &&
+    if (!Boolean(userFeature.tutorialTourSession) &&
+      !Boolean(userFeature.tutorialTourDate) &&
       userFeature.tutorialTourStep === 6){
       let newStep = userFeature.tutorialTourStep + 1
       this.props.updateTutorialStep(newStep)
@@ -831,7 +842,7 @@ class OpportunityChangeModal extends React.Component {
   render () {
     const { open, classes,
       availNetworks, flow, currentUser,
-      oppChangeModal } = this.props;
+      oppChangeModal, userFeature } = this.props;
 
     const { viewType, infoAnchorEl, needsChoices,
       industryChoices, geographyChoices, valueChoices,
@@ -893,6 +904,7 @@ class OpportunityChangeModal extends React.Component {
               multiline
               fullWidth
               required
+              rowsMax="4"
               helperText="Optional"
               placeholder={`Additional details`}
               value={this.state.description}
@@ -1131,7 +1143,7 @@ class OpportunityChangeModal extends React.Component {
               <Typography variant='body1' align='left'
                 color="textSecondary"
                 style={{ fontSize: 10}}>
-                {`Value`}
+                {`Opportunity Size`}
               </Typography>
               <FormControl className={classes.formControl}>
                 <Select
@@ -1212,8 +1224,12 @@ class OpportunityChangeModal extends React.Component {
                 <Button className={classes.postButton}
                   color='primary' variant='contained'
                   onClick={this.handleSubmit}
-                  disabled={ isError || sendingProgress}>
-                  {oppChangeModal.mode === 'create' ? `Post` : `Update`}
+                  disabled={ isError || sendingProgress ||
+                    sharePanelExpanded ||
+                    (!Boolean(userFeature.tutorialTourSession) &&
+                    !Boolean(userFeature.tutorialTourDate))}>
+                  {`Post`}
+                  {/*oppChangeModal.mode === 'create' ? `Post` : `Update`*/}
                 </Button>
               </Grid>
             </Grid>

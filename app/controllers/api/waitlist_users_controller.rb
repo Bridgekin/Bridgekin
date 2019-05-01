@@ -9,7 +9,7 @@ class Api::WaitlistUsersController < ApiController
     else
       waitlist_user = WaitlistUser.new(waitlist_user_params)
       if waitlist_user.save
-        WaitlistUserMailer.register_email(waitlist_user).deliver_later
+        WaitlistUserMailer.register_email(waitlist_user).deliver_now
         render json: ['Successfully added user to waitlist'], status: 201
       else
         render json: waitlist_user.errors.full_messages, status: 422
@@ -34,16 +34,18 @@ class Api::WaitlistUsersController < ApiController
             waitlist_user_id: existing_waitlist_user.id,
             from_referral_id: @user.id
           )
+          # Send email to joe
+          WaitlistUserMailer.flag_waitlist_referral(@user, existing_waitlist_user, true).deliver_now
 
           #Send Email
           if params[:user][:subject]
             subject = params[:user][:subject]
             body = params[:user][:body]
             WaitlistUserMailer.register_referred_existing(
-              existing_waitlist_user, @user, subject, body ).deliver_later
+              existing_waitlist_user, @user, subject, body ).deliver_now
           else
             WaitlistUserMailer.register_referred_existing(
-              existing_waitlist_user, @user).deliver_later
+              existing_waitlist_user, @user).deliver_now
           end
 
           #Track notable metrics
@@ -62,16 +64,18 @@ class Api::WaitlistUsersController < ApiController
             waitlist_user_id: waitlist_user.id,
             from_referral_id: @user.id
           )
+          # Send email to joe
+          WaitlistUserMailer.flag_waitlist_referral(@user, waitlist_user, false).deliver_now
 
           #Send Email
           if params[:user][:subject]
             subject = params[:user][:subject]
             body = params[:user][:body]
             WaitlistUserMailer.register_referred_new(
-              waitlist_user, @user, subject, body ).deliver_later
+              waitlist_user, @user, subject, body ).deliver_now
           else
             WaitlistUserMailer.register_referred_new(
-              waitlist_user, @user).deliver_later
+              waitlist_user, @user).deliver_now
           end
 
           #Track notable metrics

@@ -5,10 +5,12 @@ class NotificationMailer < ApplicationMailer
     mail(to: @user.email, subject: "Your Weekly Summary - Bridgekin")
   end
 
-  def direct_opportunity_received(userId, senderId)
+  def direct_opportunity_received(userId, senderId, opportunity)
     @user = User.find(userId)
     @sender = User.find(senderId)
+    @oppId = opportunity.id
     subject = "#{@sender.fname.capitalize} #{@sender.lname.capitalize} has directly sent you an opportunity"
+    # @url = "https://bridgekin.com/findandconnect?focusedOppId=#{@oppId}"
     mail(to: @user.email, subject: subject)
     #Log email being sent
     EmailLog.create(
@@ -18,9 +20,10 @@ class NotificationMailer < ApplicationMailer
     )
   end
 
-  def opportunity_from_contacts(userId, senderId)
+  def opportunity_from_contacts(userId, senderId, opportunity)
     @user = User.find(userId)
     @sender = User.find(senderId)
+    @oppId = opportunity.id
     subject = "#{@sender.fname.capitalize} #{@sender.lname.capitalize} has shared an opportunity with you"
     mail(to: @user.email, subject: subject)
     #Log email being sent

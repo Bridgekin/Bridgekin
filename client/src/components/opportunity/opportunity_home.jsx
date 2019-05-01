@@ -85,7 +85,9 @@ import ExampleCard from './example_card';
 import BridgekinLogo from '../../static/Bridgekin_Logo.png'
 // import Loading from '../loading';
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state, ownProps) => {
+  const values = queryString.parse(ownProps.location.search)
+  return {
   currentUser: state.users[state.session.id],
   waitlistErrors: state.errors.waitlistUsers,
   opportunityErrors: state.errors.opportunities,
@@ -103,9 +105,9 @@ const mapStateToProps = (state, ownProps) => ({
   userFeature: state.entities.userFeature,
   passedOpps: state.entities.passedOpportunities,
   oppChangeModal: state.modals.oppChange,
-  tourSession: state.util.tourSession.tutorialTour,
-  sessionOpportunities: state.entities.sessionOpportunities
-});
+  sessionOpportunities: state.entities.sessionOpportunities,
+  focusedOpportunityId: values.focusedOppId
+}};
 
 const mapDispatchToProps = dispatch => ({
   closeOppChange: () => dispatch(closeOppChange()),
@@ -460,7 +462,9 @@ class OpportunityHome extends React.Component {
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
               {`Now let’s show you how to create your own opportunity.
-                Click the highlighted area to advance`}
+                We’ll show you the steps now and you’ll be able to create
+                a real opportunity after the tutorial. Click the highlighted
+                area to advance.`}
             </Typography>
           </React.Fragment>
         ),
@@ -582,11 +586,11 @@ class OpportunityHome extends React.Component {
     this.props.fetchCurrentUserMetrics();
     this.props.fetchPassedOpportunities();
 
-    const values = queryString.parse(this.props.location.search)
+    // const values = queryString.parse(this.props.location.search)
 
     // Something with ReactTour
     this.setState({
-      focusedOpportunityId: values.focusedOppId,
+      // focusedOpportunityId: values.focusedOppId,
       tutorialTourStep: userFeature.tutorialTourStep,
       tutorialTourOpen: !Boolean(userFeature.tutorialTourDate)
     })
@@ -594,12 +598,12 @@ class OpportunityHome extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
     if(nextProps.siteTemplate !== this.props.siteTemplate ||
-      nextProps.source !== this.props.source ||
-      nextProps.location.search !== this.props.location.search){
+      nextProps.source !== this.props.source){
+      // || nextProps.location.search !== this.props.location.search){
 
       const values = queryString.parse(nextProps.location.search)
       this.setState({
-        focusedOpportunityId: values.focusedOppId,
+        // focusedOpportunityId: values.focusedOppId,
         opportunitiesLoaded: false,
         networksLoaded: false
       },
@@ -808,8 +812,9 @@ class OpportunityHome extends React.Component {
 
   getOpportunities(){
     const { networkOppPerms, opportunities,
-      passedOpps, opportunityErrors, classes } = this.props;
-    const { focusedOpportunityId } = this.state;
+      passedOpps, opportunityErrors, focusedOpportunityId,
+      classes } = this.props;
+    // const { focusedOpportunityId } = this.state;
 
     let uniqPerms = this.getUniqPerms()
 
@@ -1075,10 +1080,11 @@ class OpportunityHome extends React.Component {
       this.props.closeOppChange()
     } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)){
       // Update state to advance the tour
-      this.incrementStep(index, action)
-      if (index === 7 ){
+      if ((action === 'next' && index === 7) ||
+        (action === 'prev' && index === 5)){
         this.props.closeOppChange()
       }
+      this.incrementStep(index, action)
     }
   }
 
@@ -1100,7 +1106,7 @@ class OpportunityHome extends React.Component {
     const { classes, opportunities, networks, workspaceOptions,
       referral, currentUser, networkOpps, siteTemplate,
       workspaces, opportunityErrors, userMetrics,
-      userFeature, tourSession} = this.props;
+      userFeature } = this.props;
 
     const { loading, changeModalOpen, referralNetwork,
         dropdownFocus, opportunitiesLoaded,
@@ -1211,7 +1217,7 @@ class OpportunityHome extends React.Component {
                 alignItems='center'>
                 <Typography align='center' color='textSecondary'
                   style={{ fontSize: 12, textTransform: 'uppercase'}}>
-                  {`Opportunities sent to you`}
+                  {`Opportunities in your feed`}
                 </Typography>
                 <Typography align='center' color='textPrimary'
                   style={{ fontSize: 16, fontWeight: 600}}>
@@ -1221,7 +1227,8 @@ class OpportunityHome extends React.Component {
               <Grid item xs={12} container justify='space-between'
                 alignItems='center'>
                 <Typography align='center' color='textSecondary'
-                  style={{ fontSize: 12, textTransform: 'uppercase'}}>
+                  onClick={() => this.props.history.push('/account/opportunities?oppFilter=connected')}
+                  style={{ fontSize: 12, textTransform: 'uppercase', cursor: 'pointer'}}>
                   {`Opportunity connections made`}
                 </Typography>
                 <Typography align='center' color='textPrimary'

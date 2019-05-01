@@ -127,7 +127,7 @@ namespace :recurring_emails do
             .pluck(:opportunity_id).uniq
           #Send email
           NotificationMailer.opps_within_Bridgekin_summary(user.id, opps.length, 'Weekly')
-            .deliver_later if opps.length > 0
+            .deliver_now if opps.length > 0
         end
 
       elsif setting.email_recap_shared_communities === 'Daily'
@@ -137,7 +137,7 @@ namespace :recurring_emails do
             .pluck(:opportunity_id).uniq
           #Send email
           NotificationMailer.opps_within_Bridgekin_summary(user.id, opps.length, 'Daily')
-            .deliver_later if opps.length > 0
+            .deliver_now if opps.length > 0
         end
 
       elsif setting.email_recap_shared_communities === 'Monthly'
@@ -147,7 +147,7 @@ namespace :recurring_emails do
             .pluck(:opportunity_id).uniq
           #Send email
           NotificationMailer.opps_within_Bridgekin_summary(user.id, opps.length, 'Monthly')
-            .deliver_later if opps.length > 0
+            .deliver_now if opps.length > 0
         end
       end
     end

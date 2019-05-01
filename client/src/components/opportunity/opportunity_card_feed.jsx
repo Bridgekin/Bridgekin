@@ -382,9 +382,7 @@ class OpportunityCard extends React.Component {
   handleProfilePage(id){
     return e => {
       e.stopPropagation();
-      if(this.props.currentUser.isAdmin){
-        this.props.history.push(`/mynetwork/profile/${id}`)
-      }
+      this.props.history.push(`/mynetwork/profile/${id}`)
     }
   }
 
@@ -725,7 +723,7 @@ class OpportunityCard extends React.Component {
                   <Typography variant="h6" align='left'
                     color="textSecondary" noWrap
                     className={classes.cardSubHeader}>
-                    Geography
+                    {`Geography`}
                   </Typography>
                   <Typography variant="subtitle1" gutterBottom align='left'
                     color="textPrimary" className={classes.cardSubContent}>
@@ -745,7 +743,7 @@ class OpportunityCard extends React.Component {
                     color="textSecondary"
                     className={classes.cardSubHeader}
                     noWrap>
-                    Industry
+                    {`Industry`}
                   </Typography>
                   <Typography variant="subtitle1" gutterBottom align='left'
                     color="textPrimary" className={classes.cardSubContent}
@@ -766,7 +764,7 @@ class OpportunityCard extends React.Component {
                     color="textSecondary"
                     className={classes.cardSubHeader}
                     noWrap>
-                    Value
+                    {`Opportunity Size`}
                   </Typography>
                   <Typography variant="subtitle1" gutterBottom align='left'
                     color="textPrimary" className={classes.cardSubContent}

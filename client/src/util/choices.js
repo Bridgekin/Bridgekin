@@ -3,7 +3,7 @@ export const needsChoices = [
   'Sell',
   'Raise Capital',
   'Invest Capital',
-  'Hiring'
+  'Hire'
 ];
 
 export const industryChoices = [

@@ -64,18 +64,18 @@ class Api::ConnectedOpportunitiesController < ApiController
       if connection
         if connect_bool
           ConnectedOpportunityMailer.make_connected_with_connection(
-            @connected_opportunity, subject, body).deliver_later
+            @connected_opportunity, subject, body).deliver_now
         else
           ConnectedOpportunityMailer.make_facilitated_with_connection(
-            @connected_opportunity, subject, body).deliver_later
+            @connected_opportunity, subject, body).deliver_now
         end
       else
         if connect_bool
           ConnectedOpportunityMailer.make_connected_no_connection(
-            @connected_opportunity, subject, body).deliver_later
+            @connected_opportunity, subject, body).deliver_now
         else
           ConnectedOpportunityMailer.make_facilitated_no_connection(
-            @connected_opportunity, subject, body).deliver_later
+            @connected_opportunity, subject, body).deliver_now
         end
       end
       render :show

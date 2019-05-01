@@ -31,6 +31,7 @@ import { openInvite, openUpdateUser }
 import { updateUser } from '../../actions/user_actions';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { updateConnection, deleteConnection } from '../../actions/connection_actions';
+import Capitalize from 'capitalize';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -387,6 +388,24 @@ class Profile extends React.Component {
             </Typography>
             {currentUser && currentUser.id !== user.id &&
               this.getConnectionButton()
+            }
+
+            {currentUser &&
+              <div>
+                <Typography variant="h6" gutterBottom align='left'
+                  color="textSecondary" className={classes.cardSection}>
+                  LinkedIn
+                </Typography>
+                {user.linkedInUrl ?
+                  <Link to={user.linkedInUrl}
+                    style={{ fontSize: 13 }}>
+                    {`${Capitalize(user.fname)}'s LinkedIn Profile`}
+                  </Link>
+                : <Typography variant="body2" gutterBottom align='left'
+                  color="textPrimary" className={classes.cardContent}>
+                  {"Unknown"}
+                </Typography>}
+              </div>
             }
 
             {currentUser &&
