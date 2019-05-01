@@ -597,7 +597,7 @@ class OpportunityHome extends React.Component {
       nextProps.source !== this.props.source ||
       nextProps.location.search !== this.props.location.search){
 
-      const values = queryString.parse(this.props.location.search)
+      const values = queryString.parse(nextProps.location.search)
       this.setState({
         focusedOpportunityId: values.focusedOppId,
         opportunitiesLoaded: false,
@@ -816,6 +816,7 @@ class OpportunityHome extends React.Component {
     // Check for a focused Opportunity
     let focusedOppPerm = uniqPerms[focusedOpportunityId];
     let focusedOppCard = ''
+
     if (focusedOppPerm){
       focusedOppCard = this.getFocusedCard(focusedOppPerm, focusedOpportunityId);
       delete uniqPerms[focusedOpportunityId];
