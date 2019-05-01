@@ -22,6 +22,8 @@ const genericError = 'Something went wrong. Please try again in a bit or contact
 export const RECEIVE_OPPORTUNITIES = 'RECEIVE_OPPORTUNITIES';
 export const RECEIVE_OPPORTUNITY = 'RECEIVE_OPPORTUNITY';
 export const REMOVE_OPPORTUNITY = "REMOVE_OPPORTUNITY";
+export const RECEIVE_SESSION_OPPORTUNITY = "RECEIVE_SESSION_OPPORTUNITY";
+export const REMOVE_SESSION_OPPORTUNITY = "REMOVE_SESSION_OPPORTUNITY";
 
 export const receiveOpportunities = opportunities => ({
   type: RECEIVE_OPPORTUNITIES,
@@ -35,6 +37,16 @@ export const receiveOpportunity = opportunity => ({
 
 export const removeOpportunity = opportunityId => ({
   type: REMOVE_OPPORTUNITY,
+  opportunityId
+});
+
+export const receiveSessionOpportunity = opportunity => ({
+  type: RECEIVE_SESSION_OPPORTUNITY,
+  opportunity,
+});
+
+export const removeSessionOpportunity = opportunityId => ({
+  type: REMOVE_SESSION_OPPORTUNITY,
   opportunityId
 });
 
@@ -117,7 +129,7 @@ export const fetchOpportunity = (id) => dispatch => (
 export const createOpportunity = (opportunity) => dispatch => (
   OpportunityApiUtil.createOpportunity(opportunity)
     .then(handleErrors)
-    .then(data => dispatch(receiveOpportunity(data.opportunity)))
+    .then(data => dispatch(receiveSessionOpportunity(data.opportunity)))
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];
@@ -129,7 +141,10 @@ export const createOpportunity = (opportunity) => dispatch => (
 export const updateOpportunity = (opportunity) => dispatch => (
   OpportunityApiUtil.updateOpportunity(opportunity)
     .then(handleErrors)
-    .then(data => dispatch(receiveOpportunity(data.opportunity)))
+    .then(data => {
+      dispatch(receiveOpportunity(data.opportunity))
+      dispatch(receiveSessionOpportunity(data.opportunity))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];

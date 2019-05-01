@@ -11,7 +11,7 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted'})
+        opportunities: {deal_status: 'Deleted', owner_id: @user })
 
     indirect_opp_perms = OppPermission.includes(:opportunity)
       .joins("INNER JOIN opportunities on opp_permissions.opportunity_id = opportunities.id")
@@ -21,7 +21,7 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted'})
+        opportunities: {deal_status: 'Deleted', owner_id: @user })
         # opportunity_id: direct_opp_perms.pluck(:opportunity_id),
 
     network_opp_perms = OppPermission.includes(:opportunity)
@@ -31,7 +31,7 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted'})
+        opportunities: {deal_status: 'Deleted', owner_id: @user})
         # opportunity_id: direct_opp_perms.pluck(:opportunity_id),
         # opportunity_id: indirect_opp_perms.pluck(:opportunity_id),
 
@@ -62,7 +62,7 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted'})
+        opportunities: {deal_status: 'Deleted', owner_id: @user })
   end
 
   def opps_network_id(network_id)
@@ -81,7 +81,7 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted'})
+        opportunities: {deal_status: 'Deleted', owner_id: @user })
   end
 
   # def opps_all_circles
@@ -151,7 +151,7 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted'})
+        opportunities: {deal_status: 'Deleted', owner_id: @user })
   end
 
   def opps_all_connections
@@ -171,7 +171,7 @@ module SQLControllerModule
         opportunities: {status: 'Approved'})
       .where.not(
         opportunity_id: @user.passed_opportunities.pluck(:opportunity_id),
-        opportunities: {deal_status: 'Deleted'})
+        opportunities: {deal_status: 'Deleted', owner_id: @user })
   end
 end
 

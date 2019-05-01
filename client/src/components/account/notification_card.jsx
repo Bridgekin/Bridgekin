@@ -45,11 +45,16 @@ class NotificationCard extends React.Component {
     e.stopPropagation();
     const { notification } = this.props;
     if(notification.actedWithType === "Opportunity"){
-      if(notification.action !== "posted"){
-        this.props.history.push('/findandconnect/direct-connections')
-      } else {
-        this.props.history.push('/findandconnect')
-      }
+      this.props.history.push(
+        `/findandconnect?focusedOppId=${notification.actedWithId}`)
+      // if(notification.action !== "posted"){
+      //   // this.props.history.push('/findandconnect/direct-connections')
+      //   this.props.history.push(
+      //     `/findandconnect?focusedOppId=${notification.actedWithId}`)
+      // } else {
+      //   this.props.history.push(
+      //     `/findandconnect?focusedOppId=${notification.actedWithId}`)
+      // }
     } else if(notification.actedWithType === "Connection"){
       if(notification.action === "invited"){
         this.props.history.push('/mynetwork/invitations')

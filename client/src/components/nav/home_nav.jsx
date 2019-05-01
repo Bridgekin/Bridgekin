@@ -349,11 +349,13 @@ class HomeNav extends React.Component {
       () => {
         if(notification.actedWithType === "Opportunity"){
           if(notification.action !== "posted"){
-            this.props.history.push('/findandconnect/direct-connections')
+            this.props.history.push(
+              `/findandconnect?focusedOppId=${notification.actedWithId}`)
           } else if(notification.targetableType === "Network"){
-            this.props.history.push(`/findandconnect/${notification.targetableId}-${notification.targetableType.toLowerCase()}`)
+            this.props.history.push(`/findandconnect/${notification.targetableId}-${notification.targetableType.toLowerCase()}?focusedOppId=${notification.actedWithId}`)
           } else {
-            this.props.history.push('/findandconnect')
+            this.props.history.push(
+              `/findandconnect?focusedOppId=${notification.actedWithId}`)
           }
         } else if(notification.actedWithType === "Connection"){
           if(notification.action === "invited"){

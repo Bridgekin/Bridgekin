@@ -77,6 +77,7 @@ import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
 import FilterBar from './filters/filter_bar';
 import merge from 'lodash/merge';
+import queryString from 'query-string'
 
 import Tour from 'reactour';
 import Joyride, { ACTIONS, EVENTS, LIFECYCLE, STATUS } from 'react-joyride';
@@ -102,7 +103,8 @@ const mapStateToProps = (state, ownProps) => ({
   userFeature: state.entities.userFeature,
   passedOpps: state.entities.passedOpportunities,
   oppChangeModal: state.modals.oppChange,
-  tourSession: state.util.tourSession.tutorialTour
+  tourSession: state.util.tourSession.tutorialTour,
+  sessionOpportunities: state.entities.sessionOpportunities
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -552,18 +554,9 @@ class OpportunityHome extends React.Component {
     ]
 
     this.handleModalClose = this.handleModalClose.bind(this);
-    // this.handleWaitlistSubmit = this.handleWaitlistSubmit.bind(this);
-    // this.handleReferralChange = this.handleReferralChange.bind(this);
-    // this.handleReferralSubmit = this.handleReferralSubmit.bind(this);
     this.handleDropdownClick = this.handleDropdownClick.bind(this);
     this.handleDropdownClose = this.handleDropdownClose.bind(this);
-    // this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.resetWorkspace = this.resetWorkspace.bind(this);
-    // this.handleOpportunityChangeModalOpen = this.handleOpportunityChangeModalOpen.bind(this);
-    // this.updateNetworkOpps = this.updateNetworkOpps.bind(this);
-    // this.setSources = this.setSources.bind(this);
-    // this.createMenuItem = this.createMenuItem.bind(this);
-    // this.createListItem = this.createListItem.bind(this);
     this.getSelectedTitle = this.getSelectedTitle.bind(this);
     this.getSource = this.getSource.bind(this);
     this.updateFilters = this.updateFilters.bind(this);
@@ -574,6 +567,10 @@ class OpportunityHome extends React.Component {
     this.sendToAccountSettings = this.sendToAccountSettings.bind(this);
     this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
     this.incrementStep = this.incrementStep.bind(this);
+    this.getFeedCards = this.getFeedCards.bind(this);
+    this.getUniqPerms = this.getUniqPerms.bind(this);
+    this.getFeedCards = this.getFeedCards.bind(this);
+    this.getSessionOppCards = this.getSessionOppCards.bind(this);
   }
 
   componentDidMount(){
@@ -585,16 +582,24 @@ class OpportunityHome extends React.Component {
     this.props.fetchCurrentUserMetrics();
     this.props.fetchPassedOpportunities();
 
+    const values = queryString.parse(this.props.location.search)
+
     // Something with ReactTour
     this.setState({
+      focusedOpportunityId: values.focusedOppId,
       tutorialTourStep: userFeature.tutorialTourStep,
       tutorialTourOpen: !Boolean(userFeature.tutorialTourDate)
     })
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    if(nextProps.siteTemplate !== this.props.siteTemplate){
+    if(nextProps.siteTemplate !== this.props.siteTemplate ||
+      nextProps.source !== this.props.source ||
+      nextProps.location.search !== this.props.location.search){
+
+      const values = queryString.parse(this.props.location.search)
       this.setState({
+        focusedOpportunityId: values.focusedOppId,
         opportunitiesLoaded: false,
         networksLoaded: false
       },
@@ -621,8 +626,9 @@ class OpportunityHome extends React.Component {
           this.setState({
             opportunitiesLoaded: true,
             networksLoaded: true,
-            referralNetwork})
-          });
+            referralNetwork
+          })
+        });
       }
     })
     this.props.clearOpportunityErrors();
@@ -669,11 +675,9 @@ class OpportunityHome extends React.Component {
     }
   }
 
-  getOpportunities(){
-    const { networkOppPerms, opportunities,
-      passedOpps, opportunityErrors, classes } = this.props;
-
-    let uniqPerms = Object.values(networkOppPerms).reduce((acc, perm) => {
+  getUniqPerms(){
+    const { networkOppPerms } = this.props;
+    return Object.values(networkOppPerms).reduce((acc, perm) => {
       if (acc[perm.opportunityId]){
         let hash = acc[perm.opportunityId];
         if (perm.shareableType === 'Connection' && !perm.mass){
@@ -697,6 +701,57 @@ class OpportunityHome extends React.Component {
       }
       return acc
     },{})
+  }
+
+  getFocusedCard(focusedOppPerm, focusedOpportunityId, uniqPerms){
+    const { opportunities } = this.props;
+    let opp = opportunities[focusedOpportunityId];
+    let permType = '';
+
+    if (focusedOppPerm.sharePerms.direct.length > 0){
+      permType = 'direct'
+    } else if (focusedOppPerm.sharePerms.indirect.length > 0){
+      permType = 'indirect'
+    } else { permType = 'network'}
+
+    return (<div style={{ borderLeft: "2px solid gold", borderRight: "2px solid gold"}}>
+      <OpportunityCardFeed
+        opportunity={opp}
+        permission={focusedOppPerm}
+        permType={permType}
+        showPerms={true}/>
+    </div>)
+  }
+
+  getSessionOppCards(){
+    const { sessionOpportunities } = this.props;
+    let sessionOppCards = Object.values(sessionOpportunities).map(opp => (
+      <OpportunityCardFeed
+        opportunity={opp}/>
+    ))
+    let newOppDivider = (<Grid container alignItems='center'
+      style={{ marginBottom: 5}}>
+      <div style={{ borderTop: `1px solid grey`, width: 10}}/>
+        <Typography variant="body" color="textPrimary" align='center'
+          style={{ fontSize: 11, textTransform:'uppercase', margin: "0px 7px" }}>
+          {`Opps You've Created Recently`}
+        </Typography>
+      <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
+    </Grid>)
+
+    if(sessionOppCards.length > 0){
+      return [newOppDivider, ...sessionOppCards]
+    }
+    return []
+  }
+
+  getFeedCards(uniqPerms){
+    const { opportunities } = this.props;
+
+    let dividerMessages = {
+      'direct':'Shared Directly With You',
+      'indirect':'From Your Connections',
+      'network':'Shared To The Bridgekin Network'}
 
     let direct_perms = Object.values(uniqPerms)
       .filter(uniqPerm => uniqPerm.sharePerms.direct.length > 0 )
@@ -704,21 +759,13 @@ class OpportunityHome extends React.Component {
     let indirect_perms = Object.values(uniqPerms)
       .filter(uniqPerm => (
         uniqPerm.sharePerms.direct.length === 0 &&
-        uniqPerm.sharePerms.indirect.length > 0
-      ))
+        uniqPerm.sharePerms.indirect.length > 0 ))
 
     let network_perms = Object.values(uniqPerms)
       .filter(uniqPerm => (
         uniqPerm.sharePerms.direct.length === 0 &&
         uniqPerm.sharePerms.indirect.length === 0 &&
-        uniqPerm.sharePerms.network.length > 0
-      ))
-
-    let dividerMessages = {
-      'direct':'Shared Directly With You',
-      'indirect':'From Your Connections',
-      'network':'Shared To The Bridgekin Network',
-    }
+        uniqPerm.sharePerms.network.length > 0 ))
 
     let results = [{perms: direct_perms, type: 'direct'},
       {perms: indirect_perms, type: 'indirect'},
@@ -729,15 +776,16 @@ class OpportunityHome extends React.Component {
       })
       .filter(({perms, type}) => perms.length > 0)
       .map(({perms, type}) => {
-        let divider = <Grid container alignItems='center'
-          style={{ marginBottom: 5}}>
-          <div style={{ borderTop: `1px solid grey`, width: 10}}/>
-          <Typography variant="body" color="textPrimary" align='center'
-            style={{ fontSize: 11, textTransform:'uppercase', margin: "0px 7px" }}>
-            {dividerMessages[type]}
-          </Typography>
-          <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
-        </Grid>
+        let divider = (
+          <Grid container alignItems='center'
+            style={{ marginBottom: 5}}>
+            <div style={{ borderTop: `1px solid grey`, width: 10}}/>
+            <Typography variant="body" color="textPrimary" align='center'
+              style={{ fontSize: 11, textTransform:'uppercase', margin: "0px 7px" }}>
+              {dividerMessages[type]}
+            </Typography>
+            <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
+          </Grid>)
 
         let cards = perms.map(perm => ({
             opp: opportunities[perm.opportunityId],
@@ -748,19 +796,37 @@ class OpportunityHome extends React.Component {
             opportunity={opp}
             permission={perm}
             permType={type}
-            showPerms={true}/>
-          )
+            showPerms={true}/> )
 
-        return (
-          <div>
+        return (<div>
             {cards.length > 0 && divider}
             {cards}
-          </div>
-        )
+          </div>)
       })
+    return results;
+  }
 
-    if (results.length > 0){
-      return results
+  getOpportunities(){
+    const { networkOppPerms, opportunities,
+      passedOpps, opportunityErrors, classes } = this.props;
+    const { focusedOpportunityId } = this.state;
+
+    let uniqPerms = this.getUniqPerms()
+
+    // Check for a focused Opportunity
+    let focusedOppPerm = uniqPerms[focusedOpportunityId];
+    let focusedOppCard = ''
+    if (focusedOppPerm){
+      focusedOppCard = this.getFocusedCard(focusedOppPerm, focusedOpportunityId);
+      delete uniqPerms[focusedOpportunityId];
+    }
+    // Get Session Cards
+    let sessionOppCards = this.getSessionOppCards();
+    // Get remaining feed cards
+    let remainingFeedCards = this.getFeedCards(uniqPerms);
+
+    if (remainingFeedCards.length > 0){
+      return [focusedOppCard, ...sessionOppCards, ...remainingFeedCards]
     } else {
       let noOppMessage = opportunityErrors.length > 0 ? (
         <Typography variant="h3" color="textSecondary" align='center'
@@ -933,11 +999,6 @@ class OpportunityHome extends React.Component {
 
   getSelectedTitle(source){
     const { networks } = this.props;
-    // let mapping = {
-    //   '': "All Opportunities",
-    //   'all-network': "All Networks"
-    // }
-    // return mapping[filter];
     switch(source){
       case '': return "All Opportunities";
       case 'all-networks': return "All Networks";
@@ -997,10 +1058,6 @@ class OpportunityHome extends React.Component {
     // debugger
     if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status) ||
       action === 'close') {
-      // Need to set our running state to false, so we can restart if we click start again.
-      // this.setState({ tutorialTourOpen: false },
-      // () => {
-      // this.props.consumeTutorialSession()
       const { userFeature } = this.props;
       let tutorialTourDate = (
         userFeature.tutorialTourStep === this.tutorial_steps.length ||
@@ -1015,14 +1072,11 @@ class OpportunityHome extends React.Component {
       this.props.updateUserFeature(payload);
       this.props.closeOppCard()
       this.props.closeOppChange()
-      // });
     } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)){
       // Update state to advance the tour
       this.incrementStep(index, action)
       if (index === 7 ){
         this.props.closeOppChange()
-      // } else if (index === 3){
-      //   this.props.closeOppCard()
       }
     }
   }
@@ -1051,7 +1105,7 @@ class OpportunityHome extends React.Component {
         dropdownFocus, opportunitiesLoaded,
         filterMobileAnchorEl, networksLoaded,
         filters, editHover, tutorialTourOpen,
-        tutorialTourStep} = this.state;
+        tutorialTourStep, focusedOpportunityId} = this.state;
 
     const networksArray = [...workspaceOptions]
       .filter(x => x.includes('Network'))
@@ -1077,32 +1131,31 @@ class OpportunityHome extends React.Component {
         next: 'Next', skip: 'Skip Tutorial'
       }
 
-      let tutorialTour =
-        <div style={{ outline: 'none'}}>
-          {this.props.width &&
-          <Joyride
-            callback={this.handleJoyrideCallback}
-            steps={this.tutorial_steps}
-            run={!Boolean(userFeature.tutorialTourSession) &&
-              !Boolean(userFeature.tutorialTourDate)}
-            stepIndex={userFeature.tutorialTourStep}
-            spotlightClicks={true}
-            continuous={true}
-            locale={tourStrings}
-            showSkipButton
-            styles={{
-              options: {
-                arrowColor: '#000',
-                backgroundColor: '#FFF',
-                primaryColor: '#000',
-                zIndex: 10000000,
-                fontSize: 10,
-                outline: 'none',
-                borderRadius: 0
-              },
-            }}
-          />}
-        </div>
+      let tutorialTour = <div style={{ outline: 'none'}}>
+        {this.props.width &&
+        <Joyride
+          callback={this.handleJoyrideCallback}
+          steps={this.tutorial_steps}
+          run={!Boolean(userFeature.tutorialTourSession) &&
+            !Boolean(userFeature.tutorialTourDate)}
+          stepIndex={userFeature.tutorialTourStep}
+          spotlightClicks={true}
+          continuous={true}
+          locale={tourStrings}
+          showSkipButton
+          styles={{
+            options: {
+              arrowColor: '#000',
+              backgroundColor: '#FFF',
+              primaryColor: '#000',
+              zIndex: 10000000,
+              fontSize: 10,
+              outline: 'none',
+              borderRadius: 0
+            },
+          }}
+        />}
+      </div>
 
       const column1 = (
         <Grid container justify='center' alignItems='center'
@@ -1180,125 +1233,8 @@ class OpportunityHome extends React.Component {
         </Grid>
       )
 
-      // const genericDropdownOptions = currentUser.isAdmin ? [
-      //   {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
-      //     value: '', disabled: false},
-      //   {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
-      //     value: 'all-networks', disabled: false},
-      //   {header: 'All Connections' , subHeader: 'Opportunities posted by my connections',
-      //     value: 'all-connections',disabled: false},
-      //   // {header: 'All Circles' , subHeader: 'Opportunities posted within my circles',
-      //   //   value: 'All-Circle',disabled: false},
-      //   {header: 'Direct Opportunities' , subHeader: 'Opportunities sent directly to me from my connections',
-      //     value: 'direct-connections', disabled: false},
-      //   ] : [
-      //   {header: 'All Opportunities' , subHeader: `Everything visible to you and the ${workspaces[siteTemplate.networkId].title} network`,
-      //   value: '', disabled: false},
-      //   // {header: 'All Networks' , subHeader: 'Opportunities posted within my networks',
-      //   //   value: 'All-Network',disabled: false}
-      //   ]
-
-      // const filterMobile = (
-      //   <Grid container justify='flex-end'
-      //     className={classes.filterMobile}>
-      //     <Button
-      //       aria-owns={filterMobileAnchorEl ? 'simple-menu' : undefined}
-      //       aria-haspopup="true"
-      //       onClick={this.handleDropdownClick('filterMobileAnchorEl')}
-      //       >
-      //       <Typography variant="subtitle1" align='left'
-      //         color="textPrimary" style={{ fontSize: 12, fontWeight: 300}}>
-      //         {"View By:"}
-      //       </Typography>
-      //       <Typography variant="subtitle1" align='left'
-      //         color="textPrimary"
-      //         style={{ fontWeight: 600, marginLeft: 10, fontSize: 12, textTransform: 'capitalize'}}>
-      //         {this.getSelectedTitle(source)}
-      //       </Typography>
-      //       <KeyboardArrowDownIcon />
-      //     </Button>
-      //
-      //     {opportunitiesLoaded &&
-      //       <Menu
-      //         id="simple-menu"
-      //         anchorEl={filterMobileAnchorEl}
-      //         open={Boolean(filterMobileAnchorEl)}
-      //         onClose={this.handleDropdownClose('filterMobileAnchorEl')}
-      //         style={{ padding: 0 }}
-      //         anchorOrigin={{
-      //           vertical: 'bottom',
-      //           horizontal: 'right',
-      //         }}
-      //         transformOrigin={{
-      //           vertical: 'top',
-      //           horizontal: 'right',
-      //         }}
-      //         >
-      //         {genericDropdownOptions.map(other => (
-      //           <MenuItem
-      //             onClick={this.handleDropdownChange('filterMobileAnchorEl', other.value)}
-      //             className={classes.dropdownMenuItem}
-      //             disabled={other.disabled}
-      //             style={{ paddingLeft: 0}}>
-      //             <Grid container alignItems='center'>
-      //               <Checkbox checked={source === other.value}/>
-      //               <div style={{ display: 'inline'}}>
-      //                 <Typography variant="h6" align='left'
-      //                   color="textPrimary" className={classes.filterMobileHeader}>
-      //                   {other.header}
-      //                 </Typography>
-      //                 <Typography variant="body2" align='left'
-      //                   color="textPrimary" className={classes.filterMobileSubtext}>
-      //                   {other.subHeader}
-      //                 </Typography>
-      //               </div>
-      //             </Grid>
-      //           </MenuItem>
-      //         ))}
-      //         {this.setSources('Menu')}
-      //
-      //       </Menu>}
-      //     </Grid>
-      //   )
-
-      // const filterDesktop = (
-      //   <Grid container justify='center' alignItems='center'
-      //     className={classes.filter}>
-      //     <div className={classes.filterCard}>
-      //       <Typography align='left'
-      //         className={classes.cardHeader}
-      //         style={{ margin: "10px 20px 0px"}}>
-      //         {`Whose opportunities would you like to see?`}
-      //       </Typography>
-      //
-      //       <List component="nav">
-      //         {genericDropdownOptions.map(other => (
-      //           <ListItem button value={other.value}
-      //             className={classes.filterItem}
-      //             onClick={this.handleDropdownChange('anchorEl', other.value)}
-      //             disabled={other.disabled}
-      //             selected={source === other.value}>
-      //             <div>
-      //               <Typography variant="h6" align='left'
-      //                 color="textPrimary" className={classes.filterHeader}>
-      //                 {other.header}
-      //               </Typography>
-      //               <Typography variant="body2" align='left'
-      //                 color="textPrimary" className={classes.filterSubtext}>
-      //                 {other.subHeader}
-      //               </Typography>
-      //             </div>
-      //           </ListItem>
-      //         ))}
-      //         {networksLoaded && this.setSources('List')}
-      //       </List>
-      //     </div>
-      //   </Grid>
-      // )
-
-      const column2 = (
-        <Grid container justify='center' alignItems='center'
-          style={{ padding: 0, width: '100%' }}>
+      const column2 = (<Grid container justify='center'
+        alignItems='center' style={{ padding: 0, width: '100%' }}>
           <div className={['invite-step-tutorial-tour', classes.feedCard].join(' ')}
             style={{ padding: "10px 17px" }}>
             <OpportunityWaitlist
@@ -1312,8 +1248,7 @@ class OpportunityHome extends React.Component {
             </div>}
 
           <div style={{ height: 50, width: '100%'}}/>
-        </Grid>
-      )
+        </Grid>)
 
       const opportunityCards = (!Boolean(userFeature.tutorialTourSession) && !Boolean(userFeature.tutorialTourDate)) ?
         <ExampleCard /> :
@@ -1325,12 +1260,8 @@ class OpportunityHome extends React.Component {
             width: '100%'}}>
             <CreateOppButton />
             <div className='first-step-tutorial-tour'/>
-            {/*<Grid container justify='flex-end'
-              className={classes.filterMobileCard}>
-              {filterMobile}
-            </Grid>*/}
             <div className='feed-tutorial-tour'>
-              {/* Tutorial Lin Break */}
+              {/* Tutorial Line Break */}
               {(!Boolean(userFeature.tutorialTourSession) &&
                 !Boolean(userFeature.tutorialTourDate)) &&
                 <Grid container alignItems='center'
@@ -1342,11 +1273,10 @@ class OpportunityHome extends React.Component {
                   </Typography>
                   <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
                 </Grid>}
-
-                {opportunitiesLoaded ? opportunityCards :
-                  (<div style={{ marginTop: 50 }}>
-                    <Loading/>
-                  </div>)}
+              {opportunitiesLoaded ? opportunityCards :
+                (<div style={{ marginTop: 50 }}>
+                  <Loading/>
+                </div>)}
             </div>
 
             <div className={classes.waitlistMobileCard}>
@@ -1362,13 +1292,6 @@ class OpportunityHome extends React.Component {
               this.props.currentUser.isAdmin &&
               <div className={classes.waitlistMobileCard}>
                 <OpportunityReferral />
-                {/*<OpportunityReferral
-                  referralNetwork={referralNetwork}
-                  referral={referral}
-                  networks={networksArray}
-                  handleChange={this.handleReferralChange}
-                  handleSubmit={this.handleReferralSubmit}
-                  />*/}
               </div>}
             </div>
           </Grid>
@@ -1386,14 +1309,6 @@ class OpportunityHome extends React.Component {
               feed={feed}
               column2={column2}
               home={true}/>
-
-            {/*<OpportunityChangeModal
-              open={changeModalOpen}
-              handleClose={this.handleModalClose('changeModalOpen')}
-              updateNetworkOpps={this.updateNetworkOpps}
-              currentUser={currentUser}
-              opportunity={DEFAULTSTATE}
-              type={'create'} />*/}
           </div>
         )
     } else {
