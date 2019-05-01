@@ -734,7 +734,7 @@ class OpportunityHome extends React.Component {
       <div style={{ borderTop: `1px solid grey`, width: 10}}/>
         <Typography variant="body" color="textPrimary" align='center'
           style={{ fontSize: 11, textTransform:'uppercase', margin: "0px 7px" }}>
-          {`Opps You've Created Recently`}
+          {`Opportunities You've Created Recently`}
         </Typography>
       <div style={{ borderTop: `1px solid grey`, flexGrow: 1}}/>
     </Grid>)
@@ -1146,7 +1146,7 @@ class OpportunityHome extends React.Component {
           showSkipButton
           styles={{
             options: {
-              arrowColor: '#000',
+              arrowColor: '#FFF',
               backgroundColor: '#FFF',
               primaryColor: '#000',
               zIndex: 10000000,

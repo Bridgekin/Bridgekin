@@ -156,7 +156,7 @@ export const updateOpportunity = (opportunity) => dispatch => (
 export const deleteOpportunity = (id) => dispatch => (
   OpportunityApiUtil.deleteOpportunity(id)
     .then(handleErrors)
-    .then(() => dispatch(removeOpportunity(id)))
+    .then(() => dispatch(removeSessionOpportunity(id)))
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];
