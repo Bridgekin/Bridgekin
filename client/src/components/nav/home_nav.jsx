@@ -488,7 +488,7 @@ class HomeNav extends React.Component {
             My Account
           </Typography>
         </MenuItem>
-        {currentUser &&
+        {currentUser && currentUser.isAdmin &&
         <MenuItem onClick={this.handleLinkClose('managenetworks')}
           className={classes.menuItem}>
           <Typography variant="body1" align='left' color="textPrimary"
