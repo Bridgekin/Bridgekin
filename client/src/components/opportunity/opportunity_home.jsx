@@ -729,7 +729,9 @@ class OpportunityHome extends React.Component {
 
   getSessionOppCards(){
     const { sessionOpportunities } = this.props;
-    let sessionOppCards = Object.values(sessionOpportunities).map(opp => (
+    let sessionOppCards = Object.values(sessionOpportunities)
+      .sort((a,b) => (new Date(b.createdAt)) - (new Date(a.createdAt)))
+      .map(opp => (
       <OpportunityCardFeed
         opportunity={opp}/>
     ))
