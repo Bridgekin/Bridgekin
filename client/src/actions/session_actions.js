@@ -12,9 +12,9 @@ const genericError = 'Something went wrong. Please try again in a bit or contact
 export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 export const LOGOUT_CURRENT_USER = "LOGOUT_CURRENT_USER";
 
-export const receiveCurrentUser = user => ({
+export const receiveCurrentUser = (user, subAction) => ({
   type: RECEIVE_CURRENT_USER,
-  user,
+  user, subAction
 });
 
 export const logoutCurrentUser = () => ({
@@ -27,7 +27,7 @@ export const refSignup = (formUser, code) => dispatch => (
     .then(data => {
       localStorage.setItem('bridgekinToken', data.token);
       dispatch(receiveUser(data.user));
-      dispatch(receiveCurrentUser(data.user));
+      dispatch(receiveCurrentUser(data.user, 'signup'));
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
@@ -46,7 +46,7 @@ export const login = formUser => dispatch => (
     .then(data => {
       localStorage.setItem('bridgekinToken', data.token);
       dispatch(receiveUser(data.user));
-      dispatch(receiveCurrentUser(data.user));
+      dispatch(receiveCurrentUser(data.user, 'login'));
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));

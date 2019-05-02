@@ -25,9 +25,9 @@ export const receiveUsers = users => ({
   users,
 });
 
-export const receiveUser = user => ({
+export const receiveUser = (user, subAction='unknown') => ({
   type: RECEIVE_USER,
-  user,
+  user, subAction
 });
 
 export const removeUser = userId => ({
@@ -57,7 +57,7 @@ export const fetchSearchResults = (searchInput, bool) => dispatch => (
 export const fetchProfile = (userId) => dispatch => (
   UserApiUtil.fetchUser(userId)
     .then(handleErrors)
-    .then(data => dispatch(receiveUser(data)))
+    .then(data => dispatch(receiveUser(data), "get user info"))
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];
@@ -69,7 +69,7 @@ export const fetchProfile = (userId) => dispatch => (
 export const updateUser = (user) => dispatch => (
   UserApiUtil.updateUser(user)
     .then(handleErrors)
-    .then(data => dispatch(receiveUser(data)))
+    .then(data => dispatch(receiveUser(data), "update user"))
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];

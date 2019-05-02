@@ -40,9 +40,9 @@ export const removeOpportunity = opportunityId => ({
   opportunityId
 });
 
-export const receiveSessionOpportunity = opportunity => ({
+export const receiveSessionOpportunity = (opportunity, subAction) => ({
   type: RECEIVE_SESSION_OPPORTUNITY,
-  opportunity,
+  opportunity, subAction
 });
 
 export const removeSessionOpportunity = opportunityId => ({
@@ -129,7 +129,7 @@ export const fetchOpportunity = (id) => dispatch => (
 export const createOpportunity = (opportunity) => dispatch => (
   OpportunityApiUtil.createOpportunity(opportunity)
     .then(handleErrors)
-    .then(data => dispatch(receiveSessionOpportunity(data.opportunity)))
+    .then(data => dispatch(receiveSessionOpportunity(data.opportunity, 'create opp')))
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];
@@ -143,7 +143,7 @@ export const updateOpportunity = (opportunity) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveOpportunity(data.opportunity))
-      dispatch(receiveSessionOpportunity(data.opportunity))
+      dispatch(receiveSessionOpportunity(data.opportunity, 'update opp'))
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
