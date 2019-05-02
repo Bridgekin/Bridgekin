@@ -66,7 +66,7 @@ class Api::OpportunitiesController < ApiController
       .includes(:owner, :opp_permissions)
       .where.not(deal_status: 'Deleted')
 
-    @opp_permissions = OppPermissions.where(opportunity_id: @opportunities.pluck(:id))
+    @opp_permissions = OppPermission.where(opportunity_id: @opportunities.pluck(:id))
     render :index
   end
 

@@ -167,13 +167,14 @@ class User < ApplicationRecord
     networks = self.member_networks.where(parent_id: nil)
     bridgekin_template = Network.find_by(title: 'Bridgekin').site_template
 
-    if networks.length == 0
-      return bridgekin_template
-    elsif self.default_network_id.nil?
-      return networks.last.site_template || bridgekin_template
-    else
-      return Network.find(self.default_network_id).site_template || bridgekin_template
-    end
+    return bridgekin_template
+    # if networks.length == 0
+    #   return bridgekin_template
+    # elsif self.default_network_id.nil?
+    #   return networks.last.site_template || bridgekin_template
+    # else
+    #   return Network.find(self.default_network_id).site_template || bridgekin_template
+    # end
 
     # if self.default_network_id.nil?
     #   networks.last.site_template #|| {network_id: networks.last.id}
