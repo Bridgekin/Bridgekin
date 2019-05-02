@@ -1311,7 +1311,6 @@ class OpportunityHome extends React.Component {
                   {`Opportunity connections made`}
                 </Typography>
                 <Typography align='center' color='textPrimary'
-                  onClick={this.addNotification}
                   style={{ fontSize: 16, fontWeight: 600}}>
                   {`${userMetrics.connectedOpps || 0}`}
                 </Typography>

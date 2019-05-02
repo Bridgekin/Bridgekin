@@ -70,8 +70,8 @@ const styles = theme => ({
     },
   },
   emptyOppsText:{
-    fontSize: 30,
-    fontWeight: 500,
+    fontSize: 20,
+    fontWeight: 400,
     margin: 20
   },
   progress: { color: theme.palette.text.primary}
@@ -236,13 +236,12 @@ class AccountOpportunities extends React.Component {
         <Grid container justify='center' alignItems='center'
           className={classes.oppFeedContainer}>
           <div style={{ overflow: 'scroll', paddingBottom: 50, width: '100%'}}>
-            {opportunityCards}
-            {/*opportunityCards.length > 0 ? opportunityCards : (
+            {opportunityCards.length > 0 ? opportunityCards : (
                 <Typography variant="h3" gutterBottom color="textSecondary"
                   align='center' className={classes.emptyOppsText}>
                   {`You haven't ${oppFilter} any opportunities yet`}
                 </Typography>
-              )*/}
+              )}
           </div>
 
           {/*<OpportunityChangeModal
