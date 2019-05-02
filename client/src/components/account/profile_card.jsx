@@ -397,10 +397,10 @@ class Profile extends React.Component {
                   LinkedIn
                 </Typography>
                 {user.linkedInUrl ?
-                  <Link to={user.linkedInUrl}
+                  <a href={user.linkedInUrl}
                     style={{ fontSize: 13 }}>
                     {`${Capitalize(user.fname)}'s LinkedIn Profile`}
-                  </Link>
+                  </a>
                 : <Typography variant="body2" gutterBottom align='left'
                   color="textPrimary" className={classes.cardContent}>
                   {"Unknown"}

@@ -46,4 +46,9 @@ namespace :maintain_db do
       body: body
     )
   end
+
+  # desc "Update email templates with new info"
+  # task update_email_templates: :environment do
+  #   opps_to_change = Opportunity.where(opportunity_need: "Hiring").update_all("Hire")
+  # end
 end

@@ -140,7 +140,8 @@ const styles = theme => ({
     width: 40,
     height: 40,
     margin: '12px 12px 12px 5px',
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
+    cursor: 'pointer'
   },
   title:{
     fontSize: 16,

@@ -71,18 +71,20 @@ import PrivacyIconSVG from '../../static/opp_feed_icons/privacy.svg'
 import PersonIcon from '@material-ui/icons/PersonSharp';
 import EditIcon from '@material-ui/icons/EditSharp';
 import CreateOppButton from './create_opp_button';
-import HomeImage from '../../static/Login_Background_Image.jpg'
 
+import HomeImage from '../../static/Login_Background_Image.jpg'
 import FeedContainer from '../feed_container';
 import FeedCard from '../feed_card';
 import FilterBar from './filters/filter_bar';
-import merge from 'lodash/merge';
-import queryString from 'query-string'
-
-import Tour from 'reactour';
-import Joyride, { ACTIONS, EVENTS, LIFECYCLE, STATUS } from 'react-joyride';
 import ExampleCard from './example_card';
 import BridgekinLogo from '../../static/Bridgekin_Logo.png'
+
+import merge from 'lodash/merge';
+import queryString from 'query-string'
+import Tour from 'reactour';
+import Joyride, { ACTIONS, EVENTS, LIFECYCLE, STATUS } from 'react-joyride';
+import NotificationSystem from 'react-notification-system';
+
 // import Loading from '../loading';
 
 const mapStateToProps = (state, ownProps) => {
@@ -368,8 +370,14 @@ class OpportunityHome extends React.Component {
       },
       tutorialTourStep: 0,
       tutorialTourOpen: false,
-      beenToModal: false
+      beenToModal: false,
+      countOppsFeed: 0,
+      realTimeNotificationsShown:{
+        passedFocused: false
+      }
     };
+
+    this.notificationSystem = React.createRef();
 
     this.tutorial_steps = [
       {
@@ -482,9 +490,9 @@ class OpportunityHome extends React.Component {
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Insert a title and any additional information you’d like
-                to share. You can do things like post anonymously or add
-                detailed filter criteria.`}
+              {`Here you’ll insert a title and any additional information
+                you’d like to share. You can do things like post anonymously
+                or add detailed filter criteria.`}
             </Typography>
           </React.Fragment>
         ),
@@ -499,9 +507,10 @@ class OpportunityHome extends React.Component {
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Select who you’d like to privately share your opportunity
-                with, such as specific contacts, trusted groups or all
-                Bridgekin users. Click the highlighted area below to advance`}
+              {`Now you’ll select who you’d like to privately share your
+                opportunity with, such as specific contacts, trusted groups
+                or all Bridgekin users. Click the highlighted area below to
+                advance`}
             </Typography>
           </React.Fragment>
         ),
@@ -517,7 +526,7 @@ class OpportunityHome extends React.Component {
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Here you will select who you’d like to share with, press
+              {`Lastly you will select who you’d like to share with, press
                 save and then post your opportunity.`}
             </Typography>
           </React.Fragment>
@@ -531,9 +540,9 @@ class OpportunityHome extends React.Component {
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Find and connect to contacts you know on Bridgekin.
-                We’ll ask you to verify their email prior to sending an
-                invite to help avoid unknown connection requests.`}
+              {`You can find and connect to contacts you know on Bridgekin
+                above. We’ll ask you to verify their email prior to sending
+                an invite to help avoid unknown connection requests.`}
             </Typography>
           </React.Fragment>
         ),
@@ -547,9 +556,9 @@ class OpportunityHome extends React.Component {
           <React.Fragment>
             <Typography color='textSecondary'
               style={{ fontSize: 15}}>
-              {`Bridgekin is invite only to help ensure trust, privacy and
-                relevancy. You have 3 invitations, get the most value from
-                the platform by inviting your trusted contact now.`}
+              {`Remember Bridgekin is invite only to help ensure trust,
+                privacy and relevancy. Get the most value from our platform
+                by sending your 3 invitations to your most trusted contacts now.`}
             </Typography>
           </React.Fragment>
         ),
@@ -575,6 +584,8 @@ class OpportunityHome extends React.Component {
     this.getUniqPerms = this.getUniqPerms.bind(this);
     this.getFeedCards = this.getFeedCards.bind(this);
     this.getSessionOppCards = this.getSessionOppCards.bind(this);
+    this.countOppsInFeed = this.countOppsInFeed.bind(this);
+    this.addNotification = this.addNotification.bind(this);
   }
 
   componentDidMount(){
@@ -613,6 +624,21 @@ class OpportunityHome extends React.Component {
       })
     }
     return true
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    const { networksLoaded, realTimeNotificationsShown } = this.state;
+    const { passedOpps, focusedOpportunityId } = this.props;
+    // debugger
+    if(networksLoaded && passedOpps.has(parseInt(focusedOpportunityId))
+      && !realTimeNotificationsShown.passedFocused){
+      if((prevProps.passedOpps === this.props.passedOpps)){
+        this.addNotification();
+      }
+      let newRTShown = Object.assign({}, realTimeNotificationsShown)
+      newRTShown.passedFocused = true;
+      this.setState({ realTimeNotificationsShown: newRTShown})
+    }
   }
 
   resetWorkspace(workspaceId){
@@ -773,6 +799,8 @@ class OpportunityHome extends React.Component {
         uniqPerm.sharePerms.indirect.length === 0 &&
         uniqPerm.sharePerms.network.length > 0 ))
 
+    // let countOpps = 0;
+
     let results = [{perms: direct_perms, type: 'direct'},
       {perms: indirect_perms, type: 'indirect'},
       {perms: network_perms, type: 'network'}]
@@ -804,34 +832,59 @@ class OpportunityHome extends React.Component {
             permType={type}
             showPerms={true}/> )
 
+        // countOpps += cards.length;
         return (<div>
             {cards.length > 0 && divider}
             {cards}
           </div>)
       })
-    return results;
+    return results
+  }
+
+  countOppsInFeed(){
+    const { focusedOpportunityId, sessionOpportunities } = this.props;
+    let uniqPerms = this.getUniqPerms();
+    let countOpps = 0;
+
+    if(uniqPerms[focusedOpportunityId]){
+      countOpps += 1;
+    }
+    countOpps += Object.values(sessionOpportunities).length
+    countOpps += Object.values(uniqPerms).filter(this.filterOpportunities).length
+    return countOpps;
   }
 
   getOpportunities(){
     const { networkOppPerms, opportunities,
       passedOpps, opportunityErrors, focusedOpportunityId,
       classes } = this.props;
-    // const { focusedOpportunityId } = this.state;
+    const { realTimeNotificationsShown } = this.state;
 
-    let uniqPerms = this.getUniqPerms()
+    let uniqPerms = this.getUniqPerms();
+    let focusedOppId = parseInt(focusedOpportunityId)
 
     // Check for a focused Opportunity
-    let focusedOppPerm = uniqPerms[focusedOpportunityId];
+    let focusedOppPerm = uniqPerms[focusedOppId];
     let focusedOppCard = ''
 
-    if (focusedOppPerm){
-      focusedOppCard = this.getFocusedCard(focusedOppPerm, focusedOpportunityId);
-      delete uniqPerms[focusedOpportunityId];
+    if (focusedOppPerm && !passedOpps.has(focusedOppId)){
+      focusedOppCard = this.getFocusedCard(focusedOppPerm, focusedOppId);
+      delete uniqPerms[focusedOppId];
     }
+    // debugger
+    // if(passedOpps.has(focusedOppId)){
+    //   this.addNotification();
+    //   // realTimeNotificationsShown.passed = true;
+    //   // this.setState({ realTimeNotificationsShown })
+    //   // setTimeout(this.addNotification, 100);
+    // }
     // Get Session Cards
     let sessionOppCards = this.getSessionOppCards();
     // Get remaining feed cards
     let remainingFeedCards = this.getFeedCards(uniqPerms);
+
+    // Update countOpps
+    // countOpps += (sessionOppCards.length + (focusedOppPerm ? 1 : 0))
 
     if (remainingFeedCards.length > 0){
       return [focusedOppCard, ...sessionOppCards, ...remainingFeedCards]
@@ -1100,6 +1153,23 @@ class OpportunityHome extends React.Component {
     this.props.history.push('/account/settings');
   }
 
+  addNotification(){
+    // e.preventDefault();
+    const notification = this.notificationSystem.current;
+    let { realTimeNotificationsShown } = this.state;
+
+    if(!realTimeNotificationsShown.passed){
+      notification.addNotification({
+        title: `Already Passed`,
+        message: `You've already passed on this opportunity. To find it, head
+        to Account > Connected/Posted Opportunities to see opportunities you've passed.`,
+        level: 'error',
+        position: `tc`,
+        autoDismiss: 5
+      });
+    }
+  };
+
   capitalize(str){
     return str[0].toUpperCase() + str.slice(1)
   }
@@ -1131,6 +1201,8 @@ class OpportunityHome extends React.Component {
     //     <CircularProgress className={classes.progress} />
     //   </Grid>
     // )
+    // let notificationSystem = <NotificationSystem ref={this.notificationSystem} />
+    let notificationSystem = <NotificationSystem ref={this.notificationSystem} />
 
     if(networksLoaded){
       let source = this.getSource();
@@ -1165,6 +1237,10 @@ class OpportunityHome extends React.Component {
           }}
         />}
       </div>
+
+      const opportunityCards = (!Boolean(userFeature.tutorialTourSession) && !Boolean(userFeature.tutorialTourDate)) ?
+        <ExampleCard /> :
+        this.getOpportunities();
 
       const column1 = (
         <Grid container justify='center' alignItems='center'
@@ -1223,7 +1299,8 @@ class OpportunityHome extends React.Component {
                 </Typography>
                 <Typography align='center' color='textPrimary'
                   style={{ fontSize: 16, fontWeight: 600}}>
-                  {`${userMetrics.receivedOpps || 0}`}
+                  {/*`${userMetrics.receivedOpps || 0}`*/}
+                  {this.countOppsInFeed()}
                 </Typography>
               </Grid>
               <Grid item xs={12} container justify='space-between'
@@ -1234,6 +1311,7 @@ class OpportunityHome extends React.Component {
                   {`Opportunity connections made`}
                 </Typography>
                 <Typography align='center' color='textPrimary'
+                  onClick={this.addNotification}
                   style={{ fontSize: 16, fontWeight: 600}}>
                   {`${userMetrics.connectedOpps || 0}`}
                 </Typography>
@@ -1259,10 +1337,6 @@ class OpportunityHome extends React.Component {
 
           <div style={{ height: 50, width: '100%'}}/>
         </Grid>)
-
-      const opportunityCards = (!Boolean(userFeature.tutorialTourSession) && !Boolean(userFeature.tutorialTourDate)) ?
-        <ExampleCard /> :
-        this.getOpportunities();
 
       const feed = (
         <Grid container justify='center' alignItems='center'>
@@ -1319,6 +1393,7 @@ class OpportunityHome extends React.Component {
               feed={feed}
               column2={column2}
               home={true}/>
+            {notificationSystem}
           </div>
         )
     } else {
