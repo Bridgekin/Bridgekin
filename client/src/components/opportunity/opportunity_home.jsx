@@ -613,8 +613,12 @@ class OpportunityHome extends React.Component {
       // || nextProps.location.search !== this.props.location.search){
 
       const values = queryString.parse(nextProps.location.search)
+      const { realTimeNotificationsShown } = this.state;
       this.setState({
         // focusedOpportunityId: values.focusedOppId,
+        realTimeNotificationsShown:{
+          passedFocused: false
+        },
         opportunitiesLoaded: false,
         networksLoaded: false
       },
