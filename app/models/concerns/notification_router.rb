@@ -36,10 +36,10 @@ module NotificationRouter
 
       unless sent_to_emails.include?(recipient_id)
         if notification_setting.nil? || (!perm.mass && notification_setting.email_opps_shared_direct)
-          NotificationMailer.direct_opportunity_received(recipient_id, actorId, opportunity).deliver_now
+          NotificationMailer.direct_opportunity_received(recipient_id, actorId, opportunity).deliver_later
           sent_to_emails.add(recipient_id)
         elsif notification_setting.nil? || (perm.mass && notification_setting.email_opps_shared_contacts)
-          NotificationMailer.opportunity_from_contacts(recipient_id, actorId, opportunity).deliver_now
+          NotificationMailer.opportunity_from_contacts(recipient_id, actorId, opportunity).deliver_later
           sent_to_emails.add(recipient_id)
         end
       end

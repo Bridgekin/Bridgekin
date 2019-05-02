@@ -55,6 +55,8 @@ gem 'pgbackups_s3'
 
 #Schedule cron jobs beyond heroku schedulers
 gem "simple_scheduler"
+#scheduling
+gem 'sidekiq'
 
 gem 'heroku-deflater', :group => :production
 

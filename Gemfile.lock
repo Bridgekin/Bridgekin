@@ -427,6 +427,7 @@ DEPENDENCIES
   sendgrid-ruby
   sentry-raven
   shoulda-matchers!
+  sidekiq
   simple_scheduler
   simple_token_authentication (~> 1.0)
   skylight

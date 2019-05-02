@@ -608,13 +608,14 @@ class OpportunityHome extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState){
+    const { realTimeNotificationsShown } = this.state;
+
     if(nextProps.siteTemplate !== this.props.siteTemplate ||
       nextProps.source !== this.props.source ||
       nextProps.focusedOpportunityId !== this.props.focusedOpportunityId){
       // nextProps.location.search !== this.props.location.search){
 
       const values = queryString.parse(nextProps.location.search)
-      const { realTimeNotificationsShown } = this.state;
       this.setState({
         // focusedOpportunityId: values.focusedOppId,
         realTimeNotificationsShown:{
@@ -628,6 +629,16 @@ class OpportunityHome extends React.Component {
         this.resetWorkspace(workspaceId);
       })
     }
+    // if(nextState.opportunitiesLoaded &&
+    //   nextState.opportunitiesLoaded !== this.props.opportunitiesLoaded){
+    //   debugger
+    //   // if(prevProps.passedOpps === this.props.passedOpps){
+    //   // }
+    //   this.addNotification();
+    //   let newRTShown = Object.assign({}, realTimeNotificationsShown)
+    //   newRTShown.passedFocused = true;
+    //   this.setState({ realTimeNotificationsShown: newRTShown})
+    // }
     return true
   }
 
@@ -635,9 +646,12 @@ class OpportunityHome extends React.Component {
     const { networksLoaded, realTimeNotificationsShown } = this.state;
     const { passedOpps, focusedOpportunityId } = this.props;
     // debugger
-    if(networksLoaded && passedOpps.has(parseInt(focusedOpportunityId))
-      && !realTimeNotificationsShown.passedFocused){
-      if((prevProps.passedOpps === this.props.passedOpps)){
+    if(this.state.opportunitiesLoaded &&
+      prevState.opportunitiesLoaded !== this.state.opportunitiesLoaded &&
+      passedOpps.has(parseInt(focusedOpportunityId)) &&
+      !realTimeNotificationsShown.passedFocused){
+      debugger
+      if(prevProps.passedOpps === this.props.passedOpps){
         this.addNotification();
       }
       let newRTShown = Object.assign({}, realTimeNotificationsShown)

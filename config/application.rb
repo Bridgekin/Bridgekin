@@ -42,5 +42,7 @@ module Bridgekin
     Raven.configure do |config|
       config.dsn = 'https://045adca147814c2ebbb61f41dfa72206:87e9f62cf90142399b2bdc018e4fc53f@sentry.io/1437234'
     end
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end
