@@ -609,8 +609,8 @@ class OpportunityHome extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
     if(nextProps.siteTemplate !== this.props.siteTemplate ||
-      nextProps.source !== this.props.source){
-      // || nextProps.location.search !== this.props.location.search){
+      nextProps.source !== this.props.source ||
+      nextProps.location.search !== this.props.location.search){
 
       const values = queryString.parse(nextProps.location.search)
       const { realTimeNotificationsShown } = this.state;
