@@ -92,7 +92,8 @@ class SignupModal extends React.Component {
       return (
         <ListItem >
           <ListItemText primary={error}
-            classes={{ primary: classes.listText }}/>
+            classes={{ primary: classes.listText }}
+            data-cy='login-errors'/>
         </ListItem>
       )
     })

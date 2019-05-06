@@ -37,6 +37,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+
 // import logo from '../../static/castle.jpg';
 import logo from '../../static/Bridgekin_Logo.png';
 import whiteLogo from '../../static/bridgekin_white.png';
@@ -652,6 +656,9 @@ class HomeNav extends React.Component {
             id='email'
             label="Email"
             variant='outlined'
+            data-cy='email-login'
+            tabindex="1"
+            type='text'
             className={classes.textField}
             onChange={this.handleChange('email')}
             InputLabelProps={{
@@ -677,6 +684,7 @@ class HomeNav extends React.Component {
             label="Password"
             type="password"
             variant='outlined'
+            data-cy='password-login'
             className={classes.textField}
             autoComplete="current-password"
             onChange={this.handleChange('password')}
@@ -698,7 +706,8 @@ class HomeNav extends React.Component {
             }}
           />
         <Button variant="contained" color="primary"
-            className={classes.button} onClick={this.handleSubmit}>
+          data-cy='submit-button'
+          className={classes.button} onClick={this.handleSubmit}>
             Login
           </Button>
         </div>

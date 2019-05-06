@@ -229,7 +229,7 @@ class OpportunityCard extends React.Component {
       passedOppLoading: false
     }
 
-    this.handleCardOpen = this.handleCardOpen.bind(this);
+    // this.handleCardOpen = this.handleCardOpen.bind(this);
     // this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
     // this.handleDeleteClose = this.handleDeleteClose.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -592,7 +592,8 @@ class OpportunityCard extends React.Component {
               <Grid container item xs={8} direction='column'
                 justify='flex-start'>
                 <Typography align='left' color="textPrimary"
-                  style={{ textTransform: 'capitalize', fontSize: 14}}>
+                  onClick={!anonymous && this.handleProfilePage(ownerId)}
+                  style={{ textTransform: 'capitalize', fontSize: 14, cursor: 'pointer'}}>
                   {anonymous ? 'Anonymous' : `${ownerFirstName} ${ownerLastName}`}
                 </Typography>
                 <Typography align='left' color="textSecondary"

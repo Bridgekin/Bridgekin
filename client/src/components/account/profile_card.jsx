@@ -386,10 +386,8 @@ class Profile extends React.Component {
                 "Unknown"
               }
             </Typography>
-            {currentUser && currentUser.id !== user.id &&
-              this.getConnectionButton()
-            }
 
+            {/* LinkedIn Field */}
             {currentUser &&
               <div>
                 <Typography variant="h6" gutterBottom align='left'
@@ -406,6 +404,11 @@ class Profile extends React.Component {
                   {"Unknown"}
                 </Typography>}
               </div>
+            }
+
+            {/* Add Connection Button*/}
+            {currentUser && currentUser.id !== user.id &&
+              this.getConnectionButton()
             }
 
             {currentUser &&

@@ -8,13 +8,67 @@ import createRavenMiddleware from "raven-for-redux";
 import createSentryMiddleware from "redux-sentry-middleware";
 import bugsnagMiddleware from 'redux-bugsnag-middleware';
 
+import amplitude from 'amplitude-js';
+import Amplitude, { logEvent } from '@redux-beacon/amplitude';
+import { createMiddleware, createMetaReducer } from 'redux-beacon';
+import analytics from 'redux-analytics';
+
 const prod = process.env.NODE_ENV === 'production';
 
-// Sentry.init({
-//  dsn: "https://a84f2e17de8c43a7b66471a2bc28de50@sentry.io/1437155",
-//  environment: process.env.NODE_ENV,
+// Initialize Amplitude
+const amplitudeInstance = amplitude.getInstance();
+amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
+// RAILS.ENV('')
+
+// amplitudeInstance.logEvent('Test')
+const target = Amplitude({ instance: amplitudeInstance });
+
+// const eventsMap = {
+//   '*': logEvent((action, prevState, nextState) => {
+//     return {
+//     category: 'redux',
+//     action: 'test'
+//   }}),
+// }
+
+// let trackEvent = logEvent((action, prevState, nextState) => ({
+//     category: 'redux',
+//     action: action.type,
+//   }))
+//
+// const eventsMapper = (action) => {
+//   switch(action.type) {
+//     case 'other':
+//       return '';
+//     default:
+//       debugger
+//       return trackEvent;
+//   }
+// }
+
+// const amplitudeMiddleware = createMiddleware(eventsMap, target);
+
+// const analyticsMiddleware = analytics(({ type, payload }) => {
+//   amplitudeInstance.logEvent(action => ({
+//     category: 'redux',
+//     action: action.type
+//   }))
 // });
 
+// const customMiddleWare = store => next => action => {
+//   console.log("Middleware triggered:", action);
+//   // debugger
+//   if(!(action instanceof Function)){
+//     amplitudeInstance.logEvent('Test in MiddleWare')
+//     // amplitudeInstance.logEvent((action, store) => ({
+//     //   category: 'redux',
+//     //   action: 'test'
+//     // }))
+//   }
+//   next(action);
+// }
+
+// Sentry State Transformer
 const stateTransformer = state => {
   // make sure you don't change state tree
   const stateCopy = Object.assign({}, state);
@@ -41,7 +95,7 @@ export default (preloadedState = {}) => {
       rootReducer,
       preloadedState,
       applyMiddleware(
-        createSentryMiddleware(Sentry),
+        createSentryMiddleware(Sentry, {stateTransformer}),
         thunk
       )
     )
@@ -50,9 +104,10 @@ export default (preloadedState = {}) => {
       rootReducer,
       preloadedState,
       applyMiddleware(
-        createSentryMiddleware(Sentry, {
-          stateTransformer
-        }),
+        // customMiddleWare,
+        // analyticsMiddleware,
+        // amplitudeMiddleware,
+        createSentryMiddleware(Sentry),
         thunk,
         logger,
       )

@@ -73,7 +73,7 @@ class FilterBar extends React.Component {
           updateFilters={this.props.updateFilters('geography')}/>
 
         <FilterButton
-          name='Value'
+          name='Opportunity Size'
           key='value'
           options={valueChoices}
           params={this.props.filters['value']}

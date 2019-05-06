@@ -10,7 +10,10 @@
     "@bugsnag/plugin-react": "^6.0.0",
     "@material-ui/core": "^3.6.2",
     "@material-ui/icons": "^3.0.2",
+    "@redux-beacon/amplitude": "^1.0.2",
     "@sentry/browser": "^5.0.7",
+    "ajv": "^6.10.0",
+    "amplitude-js": "^5.2.2",
     "babel-loader": "^8.0.4",
     "base64-to-file": "^1.1.0",
     "blob-util": "^2.0.2",
@@ -38,6 +41,7 @@
     "react-read-more-less": "^0.1.6",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
+    "react-router-redux": "^4.0.8",
     "react-scripts": "^2.1.8",
     "react-scroll": "^1.7.11",
     "react-select": "^2.4.2",
@@ -48,8 +52,11 @@
     "reactour": "^1.13.4",
     "read-more-react": "^1.0.9",
     "redux": "^4.0.1",
+    "redux-analytics": "^0.3.1",
+    "redux-beacon": "^2.1.0",
     "redux-bugsnag-middleware": "^0.1.0",
     "redux-logger": "^3.0.6",
+    "redux-query": "^2.3.1",
     "redux-sentry-middleware": "0.0.15",
     "redux-thunk": "^2.3.0",
     "save-file": "^2.2.1",
@@ -61,7 +68,8 @@
     "start": "PORT=5000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cy:open": "cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -72,5 +80,12 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "http://localhost:3000"
+  "proxy": "http://localhost:3000",
+  "devDependencies": {
+    "cypress": "^3.2.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "eslint-plugin-cypress": "^2.2.1",
+    "jest-enzyme": "^7.0.2"
+  }
 }

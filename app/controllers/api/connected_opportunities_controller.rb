@@ -32,7 +32,9 @@ class Api::ConnectedOpportunitiesController < ApiController
 
   # POST /opportunities
   def create
+    logger.debug "Begin creating connected_opportunity for UID-" + @user.id.to_s
     opportunity = Opportunity.find(params[:connected_opportunity][:opportunity_id])
+    logger.debug "Opportunity was found: #{!!opportunity}"
     newConnectedOpportunity = {
       opportunity_id: params[:connected_opportunity][:opportunity_id],
       perm_type: params[:connected_opportunity][:perm_type]
@@ -80,6 +82,7 @@ class Api::ConnectedOpportunitiesController < ApiController
       end
       render :show
     else
+      logger.error "Connected_opportunity create failed for user"
       # render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
       render json: ["You've already connected to this opportunity"], status: :unprocessable_entity
     end
