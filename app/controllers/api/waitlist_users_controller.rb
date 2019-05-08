@@ -92,6 +92,16 @@ class Api::WaitlistUsersController < ApiController
     end
   end
 
+  def destroy
+    @waitlist_user = WaitlistUser.find_by(email: params[:email])
+    if Rails.env.development? && @waitlist_user && @waitlist_user.destroy
+      render json: ["you deleted your account"], status: 200
+    else
+      # render json: @waitlist_user.errors.full_messages, status: 422
+      render json: ["No user found"], status: 204
+    end
+  end
+
   private
 
   def waitlist_user_params

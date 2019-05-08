@@ -14,3 +14,8 @@ Rails.application.initialize!
 #   :authentication => :plain,
 #   :enable_starttls_auto => true
 # }
+
+#Additional Logger settings
+# Rails.logger = Logger.new(STDOUT)
+# config.logger = ActiveSupport::Logger.new("log/#{Rails.env}.log")
+# Rails.logger.datetime_format = "%Y-%m-%d %H:%M:%S"

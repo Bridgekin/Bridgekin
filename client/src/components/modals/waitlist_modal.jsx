@@ -107,6 +107,7 @@ class WaitlistModal extends React.Component {
           {`You’ve invited your trusted contact!`}
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
+          data-cy='waitlist-success'
           align='left' color='textPrimary'>
           {`We’ve sent them an email letting them know.`}
         </Typography>
@@ -125,7 +126,8 @@ class WaitlistModal extends React.Component {
           Thanks for signing up!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
-          align='left' color='textPrimary'>
+          align='left' color='textPrimary'
+          data-cy='waitlist-success'>
           You've now been added to our waitlist! You'll receive a confirmation email shortly.
         </Typography>
         <Grid item xs={12}>
@@ -148,7 +150,7 @@ class WaitlistModal extends React.Component {
           align='left' color='textPrimary'>
           It looks like we were unable to add them to the waitlist because:
         </Typography>
-        <List>
+        <List data-cy='waitlist-errors'>
           {waitlistErrors}
         </List>
         <Grid item xs={12}>
@@ -169,7 +171,7 @@ class WaitlistModal extends React.Component {
           align='left' color='textPrimary'>
           Unfortunately, we weren't able to sign you up because:
         </Typography>
-        <List>
+        <List data-cy='waitlist-errors'>
           {waitlistErrors}
         </List>
         <Grid item xs={12}>

@@ -104,7 +104,7 @@ class LoginModal extends React.Component {
           align='left' color='textPrimary'>
           We weren’t able to log you in because:
         </Typography>
-        <List>
+        <List data-cy='login-errors'>
           {sessionErrors}
         </List>
         <Link to='/passwordreset' onClick={this.handleClose}>

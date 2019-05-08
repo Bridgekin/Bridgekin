@@ -14,6 +14,7 @@ export default(state = _nullSession, action) => {
     case RECEIVE_CURRENT_USER:
       return merge({}, {id: action.user.id });
     case LOGOUT_CURRENT_USER:
+      localStorage.removeItem('bridgekinToken');
       return _nullSession;
     default:
       return state;

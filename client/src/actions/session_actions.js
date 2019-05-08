@@ -64,7 +64,6 @@ export const login = formUser => dispatch => (
 export const logout = () => dispatch => (
   SessionApiUtil.logout()
     .then(() => {
-      localStorage.removeItem('bridgekinToken');
       dispatch(logoutCurrentUser());
       dispatch(removeSiteTemplate());
     })

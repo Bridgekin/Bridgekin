@@ -804,6 +804,7 @@ class OpportunityCard extends React.Component {
               style={{ marginTop: 10}}>
                 <Grid item xs={3}>
                   <Button fullWidth
+                    data-cy='opp-connect-button'
                     onClick={this.handleCardOpen('confirm', true, permType)}
                     classes={{ label: classes.oppActionButton }}>
                     <img alt='connect' src={ConnectIcon}
@@ -814,6 +815,7 @@ class OpportunityCard extends React.Component {
 
                 <Grid item xs={3}>
                   <Button fullWidth
+                    data-cy='opp-refer-button'
                     onClick={this.handleCardOpen('confirm', false, permType)}
                     classes={{ label: classes.oppActionButton }}>
                     <img src={ReferIcon} alt=''

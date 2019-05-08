@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     resources :connected_opportunities
     resources :finalized_opportunities
     resources :saved_opportunities
-    resource :waitlist_user, only: [:create]
+    resource :waitlist_user, only: [:create, :destroy]
     resources :referral_links, only: [:create]
     resource :email_notifications, only: [:create, :show]
     resources :users, only: [:show, :update, :destroy]
@@ -36,7 +36,9 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
-
+    delete 'destroy_user_connected_opps', :to => 'connected_opportunities#destroy_user_connected_opps'
+    delete 'destroy_all_user_opps', :to => 'opportunities#delete_all_user_opps'
+    delete 'destroy_user_by_email', :to => 'users#destroy_by_email'
     get 'profile_index', :to => 'opportunities#profile_index'
     get 'connected_opportunity_template', :to => 'email_templates#connected_opportunity'
     get 'waitlist_referral_template', :to => 'email_templates#waitlist_referral'

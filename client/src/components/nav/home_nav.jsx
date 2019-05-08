@@ -263,13 +263,18 @@ class HomeNav extends React.Component {
     if(this.props.currentUser){
       this.props.fetchNotifications()
     }
+    // debugger
   }
 
   componentDidUpdate(prevProps, prevState){
     if(this.props.session &&
       this.props.session !== prevProps.session){
       this.props.fetchNotifications()
+    } else if (!this.props.session &&
+      this.props.session !== prevProps.session){
+      this.setState({ email: '', password: ''})
     }
+    // debugger
     return true
   }
 
@@ -299,7 +304,7 @@ class HomeNav extends React.Component {
       email: this.state.email,
       password: this.state.password
     };
-
+    debugger
     this.props.login(credentials)
     .then((user) => {
       if(path.includes('signup') && user){
@@ -512,6 +517,7 @@ class HomeNav extends React.Component {
           </MenuItem>
         }
         <MenuItem onClick={this.handleLinkClose('logout')}
+          data-cy='logout-menu-item'
           className={classes.menuItem}>
           <Typography variant="body1" align='left' color="textPrimary"
             className={classes.menuFont}>
@@ -705,9 +711,9 @@ class HomeNav extends React.Component {
               },
             }}
           />
-        <Button variant="contained" color="primary"
-          data-cy='submit-button'
-          className={classes.button} onClick={this.handleSubmit}>
+          <Button variant="contained" color="primary"
+            data-cy='submit-button'
+            className={classes.button} onClick={this.handleSubmit}>
             Login
           </Button>
         </div>
@@ -739,6 +745,7 @@ class HomeNav extends React.Component {
               </Typography>
             </Button>}
           <Button color='secondary'
+            data-cy='nav-opportunities-button'
             onClick={this.handleLinkClose('findandconnect')}>
             <Typography variant="h4" align='left'
               style={(pathName.includes('findandconnect')) ? { fontWeight: 600} : {}}
@@ -748,6 +755,7 @@ class HomeNav extends React.Component {
           </Button>
           {currentUser &&
             <Button color='secondary'
+              data-cy='nav-my-trusted-network-button'
             onClick={this.handleLinkClose('mynetwork')}
             style={{ marginRight: 10}}>
               <Typography variant="h4" align='left'
@@ -771,6 +779,7 @@ class HomeNav extends React.Component {
               aria-owns={isMenuOpen ? 'material-appbar' : undefined}
               aria-haspopup="true"
               onClick={this.handleMenuToggle('anchorEl')}
+              data-cy='nav-menu'
               className={classes.navButtonText}
               style={{ padding: 0, margin: "0px 12px" }}
             >

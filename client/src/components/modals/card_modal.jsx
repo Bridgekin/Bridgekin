@@ -343,6 +343,7 @@ class CardModal extends React.Component {
             </Grid>
             <Grid item xs={10} container direction='column'>
               <Typography variant="body1" align='center'
+                data-cy='card-modal-success-header'
                 color="textPrimary" gutterBottom
                 style={{ fontSize: 20, fontWeight: 600}}>
                 {`Time for business!`}
@@ -422,6 +423,7 @@ class CardModal extends React.Component {
               </Grid>
               <Grid item xs={10} container direction='column'>
                 <Typography variant="body1" align='center'
+                  data-cy='card-modal-header'
                   color="textPrimary" gutterBottom
                   style={{ fontSize: 20, fontWeight: 600}}>
                   {connectBool ?
@@ -443,6 +445,7 @@ class CardModal extends React.Component {
                 <Grid container justify='center'>
                   <Button autoFocus variant='contained' color='primary'
                     className={classes.button}
+                    data-cy='card-modal-submit-button'
                     onClick={this.handleConnection()}>
                     {`Send`}
                   </Button>
@@ -450,6 +453,7 @@ class CardModal extends React.Component {
                 <Grid container justify='center'>
                   <Button onClick={this.handleConnectionTemplate}
                     className={classes.button}
+                    data-cy='card-modal-preview-email-button'
                     style={{ textTransform: 'capitalize'}}>
                     {`Preview Email`}
                   </Button>

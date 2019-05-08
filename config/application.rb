@@ -13,6 +13,8 @@ require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
+require_relative '../app/logging/log_formatter'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -44,5 +46,8 @@ module Bridgekin
     end
 
     config.active_job.queue_adapter = :sidekiq
+
+    #logging using our new formatter
+    # config.log_formatter = LogFormatter.new
   end
 end

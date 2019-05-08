@@ -100,7 +100,7 @@ export default (preloadedState = {}) => {
       )
     )
   } else {
-    return createStore(
+    let store = createStore(
       rootReducer,
       preloadedState,
       applyMiddleware(
@@ -112,5 +112,10 @@ export default (preloadedState = {}) => {
         logger,
       )
     )
+
+    if(window.Cypress){
+      window.__store__ = store
+    }
+    return store;
   }
 }

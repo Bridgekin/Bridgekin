@@ -1,0 +1,10 @@
+{
+  "title": "test post",
+  "description": "more testable code",
+  "opportunityNeed": "Invest Capital",
+  "value": "$5M - $25M",
+  "status": "Pending",
+  "industries": ["Other"],
+  "geography": ["North America"],
+  "anonymous": true
+}

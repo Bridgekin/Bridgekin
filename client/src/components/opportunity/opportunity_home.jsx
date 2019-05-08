@@ -388,6 +388,7 @@ class OpportunityHome extends React.Component {
               <Img src={BridgekinLogo} alt='logo'
                 style={{ height: 24, width: 'auto', marginBottom: 15}}/>
               <Typography color='textSecondary'
+                data-cy='tutorial-start'
                 style={{ fontSize: 15}}>
                 {`Welcome to our quick tutorial. Let's get started!`}
               </Typography>

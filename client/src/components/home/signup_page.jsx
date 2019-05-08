@@ -195,6 +195,7 @@ class SignupPage extends React.Component{
               className={classes.textField}
               margin="normal"
               fullWidth
+              data-cy='first-name-signup'
               variant='outlined'
               value={this.state.fname}
               onChange={this.handleChange('fname')}
@@ -208,6 +209,7 @@ class SignupPage extends React.Component{
               className={classes.textField}
               margin="normal"
               fullWidth
+              data-cy='last-name-signup'
               variant='outlined'
               value={this.state.lname}
               onChange={this.handleChange('lname')}
@@ -221,6 +223,7 @@ class SignupPage extends React.Component{
               className={classes.textField}
               margin="normal"
               fullWidth
+              data-cy='email-signup'
               variant='outlined'
               value={this.state.email}
               onChange={this.handleChange('email')}
@@ -235,6 +238,7 @@ class SignupPage extends React.Component{
               margin="normal"
               fullWidth
               variant='outlined'
+              data-cy='password-signup'
               type="password"
               value={this.state.password}
               onChange={this.handleChange('password')}
@@ -246,6 +250,7 @@ class SignupPage extends React.Component{
               control={
                 <Checkbox
                   checked={this.state.termsAgreement}
+                  data-cy='terms-checkbox'
                   onChange={this.handleChange('termsAgreement')}
                   value="termsAgreement"
                 />
@@ -255,6 +260,7 @@ class SignupPage extends React.Component{
           </Grid>
           <Grid item xs={12} className={classes.wrapper}>
             <Button variant="contained" color="primary" className={classes.button}
+              data-cy='signup-submit-button'
               disabled={loading || !termsAgreement } onClick={this.handleSignupSubmit}>
               Sign In Now
             </Button>

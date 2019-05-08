@@ -180,6 +180,7 @@ class OpportunityWaitlist extends React.Component{
         placeholder="First Name"
         className={classes.textField}
         fullWidth
+        data-cy="waitlist-first-name"
         onChange={this.handleChange('fname')}
         value={fname}
         InputProps={{
@@ -199,6 +200,7 @@ class OpportunityWaitlist extends React.Component{
         placeholder="Email"
         className={classes.textField}
         fullWidth
+        data-cy="waitlist-email"
         onChange={this.handleChange('email')}
         value={email}
         InputProps={{
@@ -214,6 +216,7 @@ class OpportunityWaitlist extends React.Component{
         />
         <Button variant="contained" color='primary' fullWidth
           className={classes.refButton}
+          data-cy='waitlist-submit-button'
           onClick={this.handleSubmit}
           disabled={loading || currentUser.invitesRemaining === 0 ||
             (fname.length === 0 || email.length === 0)}
@@ -226,6 +229,7 @@ class OpportunityWaitlist extends React.Component{
         {currentUser.invitesRemaining > 0 &&
           <Grid item xs={12} container justify='flex-end'>
           <Button onClick={this.handleSubmitTemplate}
+            data-cy='waitlist-preview-email-button'
             disabled={fname.length === 0 || email.length === 0}
             className={classes.preview}>
             Preview Email

@@ -278,6 +278,7 @@ class CustomEmailModal extends React.Component {
         <Grid item xs={10} container direction='column'>
           <Typography variant="body1" align='center'
             color="textPrimary" gutterBottom
+            data-cy='custom-email-closebar-header'
             style={{ fontSize: 20, fontWeight: 600}}>
             {`Edit Email`}
           </Typography>
@@ -301,6 +302,7 @@ class CustomEmailModal extends React.Component {
             {`Cancel`}
           </Button>
           <Button variant='contained' color='primary'
+            data-cy="custom-email-submit"
             onClick={this.handleSubmit}>
             Send
             <SendIcon className={classes.rightIcon} />
@@ -326,6 +328,7 @@ class CustomEmailModal extends React.Component {
               fullWidth
               multiline
               label="Email Subject"
+              data-cy="custom-email-subject"
               value={this.state.subject}
               onChange={this.handleChange("subject")}
               className={classes.textField}
@@ -338,6 +341,7 @@ class CustomEmailModal extends React.Component {
             <TextField
               fullWidth
               label="Email Body"
+              data-cy="custom-email-body"
               value={this.state.body}
               onChange={this.handleChange("body")}
               multiline

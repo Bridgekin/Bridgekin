@@ -169,6 +169,7 @@ class HomePage extends React.Component{
               label="First Name"
               className={classes.textField}
               margin="normal"
+              data-cy='first-name-waitlist-signup'
               fullWidth
               variant='outlined'
               value={this.state.fname}
@@ -181,6 +182,7 @@ class HomePage extends React.Component{
               required
               label="Last Name"
               className={classes.textField}
+              data-cy='last-name-waitlist-signup'
               margin="normal"
               fullWidth
               variant='outlined'
@@ -195,6 +197,7 @@ class HomePage extends React.Component{
               label="Email"
               className={classes.textField}
               margin="normal"
+              data-cy='email-waitlist-signup'
               fullWidth
               variant='outlined'
               value={this.state.email}
@@ -205,6 +208,7 @@ class HomePage extends React.Component{
           <Grid item xs={10} className={classes.wrapper}>
             <Button variant="contained" color="primary"
               className={classes.button} disabled={loading}
+              data-cy='waitlist-submit-button'
               onClick={this.handleWaitlistSubmit}>
               Join Our Waitlist
             </Button>

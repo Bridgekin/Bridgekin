@@ -92,8 +92,7 @@ class SignupModal extends React.Component {
       return (
         <ListItem >
           <ListItemText primary={error}
-            classes={{ primary: classes.listText }}
-            data-cy='login-errors'/>
+            classes={{ primary: classes.listText }}/>
         </ListItem>
       )
     })
@@ -106,6 +105,7 @@ class SignupModal extends React.Component {
           Thanks for signing up!
         </Typography>
         <Typography variant="body1" id="simple-modal-description"
+          data-cy='signup-success'
           color='textPrimary' align='left'>
           We've sent you a confirmation email. Please confirm within your email to login.
         </Typography>
@@ -127,7 +127,7 @@ class SignupModal extends React.Component {
           color='textPrimary' align='left'>
           Unfortunately, we weren't able to sign you up because:
         </Typography>
-        <List>
+        <List data-cy='signup-errors'>
           {userErrors}
         </List>
         <Grid item xs={12}>

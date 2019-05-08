@@ -588,7 +588,7 @@ class OpportunityChangeModal extends React.Component {
   handlePrivacyClose(bool){
     return e => {
       e.preventDefault();
-      this.setState({ anonymous: bool})
+      this.setState({ anonymous: bool, privacyAnchorEl: null })
     }
   }
 
@@ -890,6 +890,7 @@ class OpportunityChangeModal extends React.Component {
               rowsMax="3"
               fullWidth
               required
+              data-cy='opp-change-title'
               placeholder={ `What’s your business opportunity or need?`}
               value={this.state.title}
               onChange={this.handleChange('title')}
@@ -905,6 +906,7 @@ class OpportunityChangeModal extends React.Component {
               fullWidth
               required
               rowsMax="4"
+              data-cy='opp-change-description'
               helperText="Optional"
               placeholder={`Additional details`}
               value={this.state.description}
@@ -970,6 +972,7 @@ class OpportunityChangeModal extends React.Component {
 
           <Button
             className={classes.filterButton}
+            data-cy='opp-change-privacy-button'
             onClick={this.handleMenuClick('privacyAnchorEl')}>
             {this.state.anonymous ?
               <img src={PrivacyIconSVG} alt='privacy-icon'
@@ -988,7 +991,8 @@ class OpportunityChangeModal extends React.Component {
               <Checkbox checked={!this.state.anonymous} />
               <ListItemText primary={`Post with Name & Picture`} />
             </MenuItem>
-            <MenuItem onClick={this.handlePrivacyClose(true)}>
+            <MenuItem onClick={this.handlePrivacyClose(true)}
+              data-cy='opp-change-anonymous-menu-item'>
               <Checkbox checked={this.state.anonymous} />
               <ListItemText primary={`Post anonymously`} />
             </MenuItem>
@@ -996,6 +1000,7 @@ class OpportunityChangeModal extends React.Component {
 
           <Button
             className={classes.filterButton}
+            data-cy='opp-change-toggle-filter-button'
             onClick={this.toggleDetails}>
             {showFilters ? `Remove Details` : `Add Details`}
             {showFilters ? <KeyboardArrowLeftIcon /> :
@@ -1026,6 +1031,7 @@ class OpportunityChangeModal extends React.Component {
                   className={classes.fieldSelectNeed}
                   input={
                     <OutlinedInput
+                      data-cy='opp-change-need-select'
                       inputProps={{
                         root: classes.filterButton
                       }}
@@ -1039,6 +1045,7 @@ class OpportunityChangeModal extends React.Component {
                   }>
                   {needsChoices.map(choice => (
                     <MenuItem value={choice} key={choice}
+                      data-cy='opp-change-need-choice'
                       style={{ textTransform: 'capitalize'}}>
                       <ListItemText
                         primary={choice}
@@ -1223,6 +1230,7 @@ class OpportunityChangeModal extends React.Component {
                 alignItems='center'>
                 <Button className={classes.postButton}
                   color='primary' variant='contained'
+                  data-cy='opp-change-submit'
                   onClick={this.handleSubmit}
                   disabled={ isError || sendingProgress ||
                     sharePanelExpanded ||
@@ -1262,6 +1270,7 @@ class OpportunityChangeModal extends React.Component {
         <Dialog
           open={oppChangeModal.open}
           onClose={this.handleClose}
+          data-cy='opp-create-dialog'
           className={classes.cardModalWrapper}
           classes={{ paper: classes.modalPaper}}>
           <Grid container>

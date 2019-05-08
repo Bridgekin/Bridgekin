@@ -1,7 +1,7 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::UsersController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user
+  before_action :authenticate_user, except: [:destroy_by_email]
 
   after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
@@ -35,6 +35,16 @@ class Api::UsersController < ApiController
       render json: ["you deleted your account"]
     else
       render json: @user.errors.full_messages, status: 422
+    end
+  end
+
+  def destroy_by_email
+    @user = User.find_by(email: params[:email])
+    if Rails.env.development? && @user && @user.destroy
+      render json: ["you deleted your account"]
+    else
+      # render json: @user.errors.full_messages, status: 422
+      render json: ["No user found"], status: 204
     end
   end
 

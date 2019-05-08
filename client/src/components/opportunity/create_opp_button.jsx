@@ -111,6 +111,7 @@ class CreateOppButton extends React.Component {
 
     let button = (
       <CardActionArea
+        data-cy='create-opp-button'
         className={classes.feedCard}
         style={{ paddingBottom: 9}}
         onClick={this.handleOpen}>

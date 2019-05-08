@@ -8,7 +8,7 @@ class Api::OpportunitiesController < ApiController
   before_action :set_workspace_networks, only: [:index]
 
   after_action :verify_authorized, except: [:index, :user_index,
-    :profile_index, :all_touched_index]
+    :profile_index, :all_touched_index, :delete_all_user_opps]
   # after_action :verify_policy_scoped, only: :index
 
   def index
@@ -157,6 +157,11 @@ class Api::OpportunitiesController < ApiController
     else
       render json: @opportunity.errors.full_messages, status: :unprocessable_entity
     end
+  end
+
+  def delete_all_user_opps
+    @user.opportunities.destroy_all if Rails.env.development?
+    render json: ['Finish']
   end
 
   private

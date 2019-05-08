@@ -4,7 +4,7 @@ class Api::ConnectedOpportunitiesController < ApiController
   before_action :set_connected_opportunity, only: [:show, :update, :destroy]
   before_action :authenticate_user
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: [:index, :destroy_user_connected_opps]
   # after_action :verify_policy_scoped, only: :index
 
   def index
@@ -33,6 +33,7 @@ class Api::ConnectedOpportunitiesController < ApiController
   # POST /opportunities
   def create
     logger.debug "Begin creating connected_opportunity for UID-" + @user.id.to_s
+    # logger.info(message: 'Info message', source_class: 'connected_opps', user_id: @user.id)
     opportunity = Opportunity.find(params[:connected_opportunity][:opportunity_id])
     logger.debug "Opportunity was found: #{!!opportunity}"
     newConnectedOpportunity = {
@@ -107,6 +108,11 @@ class Api::ConnectedOpportunitiesController < ApiController
     else
       render json: @connected_opportunity.errors.full_messages, status: :unprocessable_entity
     end
+  end
+
+  def destroy_user_connected_opps
+    @user.connected_opportunities.destroy_all if Rails.env.development?
+    render json: ['Finish']
   end
 
   private
