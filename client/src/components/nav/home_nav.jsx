@@ -304,7 +304,7 @@ class HomeNav extends React.Component {
       email: this.state.email,
       password: this.state.password
     };
-    debugger
+
     this.props.login(credentials)
     .then((user) => {
       if(path.includes('signup') && user){
