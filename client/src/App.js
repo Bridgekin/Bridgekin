@@ -40,9 +40,7 @@ import NotFound from './components/not_found';
 import ConfirmationError from './components/confirmation_error';
 import ScrollToTop from './components/scroll_to_top';
 
-import InviteModal from './components/modals/invite_modal';
-import CreateCircleModal from './components/modals/create_circle_modal';
-import CircleModal from './components/modals/circle_modal';
+import ImportContacts from './components/google/import_contacts';
 
 // const mapStateToProps = state => ({
 //   currentUser: state.users[state.session.id]
@@ -64,6 +62,7 @@ export default ()=> (
 
     {/* General Modals */}
     <Switch>
+      <ProtectedRoute path="/importcontacts" component={ImportContacts} />
       <ProtectedRoute path="/findandconnect/:source?" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
       <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
