@@ -422,16 +422,20 @@ class OpportunityCard extends React.Component {
     if(permType === 'direct'){
       return `Direct ` +
         (((shareLength > 1) && (currentUser.id === opportunity.ownerId)) ?
-        `(${shareLength})` : ``) + `- `
+        `(${shareLength})` : ``)
+        // `(${shareLength})` : ``) + `- `
     } else if(permType === 'indirect'){
       return `Connections ` +
         (((shareLength > 1) && (currentUser.id === opportunity.ownerId)) ?
-        `(${shareLength})` : ``) + `- `
+        `(${shareLength})` : ``)
+        // `(${shareLength})` : ``) + `- `
     } else if(permType === 'network'){
       let networkTitle = networks[permission.sharePerms.network[0]].title
-      return `Bridgekin - `
+      return `Bridgekin`
+      // return `Bridgekin - `
     }
-    return 'Shared - '
+    return `Shared`
+    // return 'Shared - '
   }
 
   handlePermissionsOpen(e){
@@ -600,8 +604,8 @@ class OpportunityCard extends React.Component {
                   onMouseEnter={this.handlePermissionsOpen}
                   onMouseLeave={this.handlePermissionsClose}
                   style={{ textTransform: 'capitalize', fontSize: 10}}>
-                  {showPerms ? this.getPermissionLabel() : 'Shared - '}
-                  {this.getNotificationDate()}
+                  {showPerms ? this.getPermissionLabel() : 'Shared'/* - '*/}
+                  {/*this.getNotificationDate()*/}
                 </Typography>
                 {showPerms && <Popover
                   className={classes.popover}
