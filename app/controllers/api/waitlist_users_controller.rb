@@ -35,17 +35,17 @@ class Api::WaitlistUsersController < ApiController
             from_referral_id: @user.id
           )
           # Send email to joe
-          WaitlistUserMailer.flag_waitlist_referral(@user, existing_waitlist_user, true).deliver_now
+          WaitlistUserMailer.flag_waitlist_referral(@user, existing_waitlist_user, true).deliver_later
 
           #Send Email
           if params[:user][:subject]
             subject = params[:user][:subject]
             body = params[:user][:body]
             WaitlistUserMailer.register_referred_existing(
-              existing_waitlist_user, @user, subject, body ).deliver_now
+              existing_waitlist_user, @user, subject, body ).deliver_later
           else
             WaitlistUserMailer.register_referred_existing(
-              existing_waitlist_user, @user).deliver_now
+              existing_waitlist_user, @user).deliver_later
           end
 
           #Track notable metrics
@@ -65,17 +65,17 @@ class Api::WaitlistUsersController < ApiController
             from_referral_id: @user.id
           )
           # Send email to joe
-          WaitlistUserMailer.flag_waitlist_referral(@user, waitlist_user, false).deliver_now
+          WaitlistUserMailer.flag_waitlist_referral(@user, waitlist_user, false).deliver_later
 
           #Send Email
           if params[:user][:subject]
             subject = params[:user][:subject]
             body = params[:user][:body]
             WaitlistUserMailer.register_referred_new(
-              waitlist_user, @user, subject, body ).deliver_now
+              waitlist_user, @user, subject, body ).deliver_later
           else
             WaitlistUserMailer.register_referred_new(
-              waitlist_user, @user).deliver_now
+              waitlist_user, @user).deliver_later
           end
 
           #Track notable metrics
