@@ -6,22 +6,30 @@ class Api::Users::SessionsController < ApiController
   # acts_as_token_authentication_handler_for User, only: [:destroy]
 
   def create
-    @user = User.includes(:notifications)
+    @currentUser = User.includes(:notifications)
       .find_by(email: sign_in_params[:email].downcase)
 
-    if @user && @user.valid_password?(sign_in_params[:password]) #&& @user.confirmed?
-      @token = get_login_token!(@user)
+    if @currentUser && @currentUser.valid_password?(sign_in_params[:password]) #&& @user.confirmed?
+      @token = get_login_token!(@currentUser)
 
-      @user.implement_trackable
-      @site_template = @user.get_template
-      @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
+      @currentUser.implement_trackable
+      @site_template = @currentUser.get_template
+      @user_feature = @currentUser.user_feature ||
+        UserFeature.create(user_id: @currentUser.id)
 
       if @user_feature.tutorial_tour_session
         @user_feature.tutorial_tour_session = nil
         @user_feature.save
       end
 
-      render :show
+      @users = [@currentUser]
+      @connections = @currentUser.connections
+      @connections.each do |connection|
+        @users << connection.requestor
+        @users << connection.recipient
+      end
+
+      render :create
     # elsif @user && !@user.confirmed?
     #   render json: ['You need to confirm your account before logging in.'], status: 404
     else
@@ -30,6 +38,7 @@ class Api::Users::SessionsController < ApiController
   end
 
   def show
+    #Not a working route at the moment
     @token = get_login_token!(@user)
     @site_template = @user.get_template
     @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
@@ -40,7 +49,15 @@ class Api::Users::SessionsController < ApiController
     @token = get_login_token!(@user)
     @site_template = @user.get_template
     @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
-    render :show
+
+    @currentUser = @user
+    @users = [@user]
+    @connections = @user.connections
+    @connections.each do |connection|
+      @users << connection.requestor
+      @users << connection.recipient
+    end
+    render :create
   end
 
   def destroy

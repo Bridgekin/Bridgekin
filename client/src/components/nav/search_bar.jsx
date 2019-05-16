@@ -112,10 +112,10 @@ class SearchBar extends React.Component {
     this.keyPress = this.keyPress.bind(this);
   }
 
-  componentDidMount(){
-    this.props.fetchConnections()
-    .then(() => this.setState({ loaded: true }))
-  }
+  // componentDidMount(){
+  //   this.props.fetchConnections()
+  //   .then(() => this.setState({ loaded: true }))
+  // }
 
   handleClickAwayClose(anchorEl) {
     return e => {

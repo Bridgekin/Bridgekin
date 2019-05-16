@@ -1,3 +1,9 @@
-json.user do |json|
-  json.partial! 'users/user', user: current_user
-end
+json.partial! 'api/users/sessions/session',
+variables: {
+  currentUser: @currentUser,
+  users: @users,
+  token: @token,
+  site_template: @site_template,
+  user_feature: @user_feature,
+  connections: @connections
+}

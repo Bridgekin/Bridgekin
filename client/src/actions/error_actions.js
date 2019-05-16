@@ -51,6 +51,9 @@ export const CLEAR_USER_METRIC_ERRORS = 'CLEAR_USER_METRIC_ERRORS';
 export const RECEIVE_USER_FEATURE_ERRORS = 'RECEIVE_USER_FEATURE_ERRORS';
 export const CLEAR_USER_FEATURE_ERRORS = 'CLEAR_USER_FEATURE_ERRORS';
 
+export const RECEIVE_GOOGLE_IMPORT_ERRORS = 'RECEIVE_GOOGLE_IMPORT_ERRORS';
+export const CLEAR_GOOGLE_IMPORT_ERRORS = 'CLEAR_GOOGLE_IMPORT_ERRORS';
+
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
   errors
@@ -256,4 +259,13 @@ export const receiveUserFeatureErrors = errors => ({
 
 export const clearUserFeatureErrors = () => ({
   type: CLEAR_USER_FEATURE_ERRORS,
+});
+
+export const receiveGoogleImportErrors = errors => ({
+  type: RECEIVE_GOOGLE_IMPORT_ERRORS,
+  errors
+});
+
+export const clearGoogleImportErrors = () => ({
+  type: CLEAR_GOOGLE_IMPORT_ERRORS,
 });

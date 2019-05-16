@@ -10,34 +10,42 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
   def create
     @referralLink = ReferralLink.find_link_by_code(params[:code])
-    @user = User.new(user_params)
+    @currentUser = User.new(user_params)
 
-    if @referralLink && @referralLink[:status] == 'Active' && @user.save
+    if @referralLink && @referralLink[:status] == 'Active' && @currentUser.save
       #Check for a single use code
-      @referralLink.consume_charge(@user.id)
-      # UserMailer.register_email(@user).deliver_now
-      # sign_in User, @user
+      @referralLink.consume_charge(@currentUser.id)
+      # UserMailer.register_email(@currentUser).deliver_now
+      # sign_in User, @currentUser
       # current_user.send_confirmation_email
-      @token = get_login_token!(@user)
+      @token = get_login_token!(@currentUser)
       @network = @referralLink.network
 
-      @user.implement_trackable
-      @site_template = @user.get_template
+      @currentUser.implement_trackable
+      @site_template = @currentUser.get_template
 
       #set networks
-      @user.set_networks(@network) if @network
+      @currentUser.set_networks(@network) if @network
 
       #Remove waitlist user from waitlist by changing status
-      @user.update_waitlist
+      @currentUser.update_waitlist
 
       #Connect new user with any people who's referred them, incluing
       #the referral link owner
-      @user.set_connections(@referralLink)
+      @currentUser.set_connections(@referralLink)
 
-      @user[:referred_by_id] = @referralLink[:member_id]
-      @user.save
+      @currentUser[:referred_by_id] = @referralLink[:member_id]
+      @currentUser.save
 
-      @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
+      @users = [@currentUser]
+      #Pull connections
+      if referral_link.is_friendable
+        @connections = @currentUser.connections
+        @users << referral_link.owner
+      end
+
+      @user_feature = @currentUser.user_feature ||
+        UserFeature.create(user_id: @currentUser.id)
 
       render :create
     elsif @referralLink.nil?

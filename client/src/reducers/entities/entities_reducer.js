@@ -35,6 +35,8 @@ import userIndexOppPermissionsReducer from './opp_permissions/user_index_opp_per
 import circlesReducer from './circles/circles_reducer.js';
 import circleConnectionsReducer from './circles/circle_connections_reducer.js';
 
+import googleMatchedContactsReducer from './google/contacts_reducer.js';
+
 export default combineReducers({
   opportunities: opportuntiesReducer,
   connectedOpportunities: connectedOpportuntiesReducer,
@@ -66,4 +68,5 @@ export default combineReducers({
   circleConnections: circleConnectionsReducer,
   userFeature: userFeatureReducer,
   sessionOpportunities: sessionOpportunityReducer,
+  googleMatchedContacts: googleMatchedContactsReducer,
 });

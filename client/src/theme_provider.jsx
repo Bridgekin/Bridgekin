@@ -21,6 +21,7 @@ import OppChangeModal from './components/modals/opportunity_change_modal';
 import ImageCropModal from './components/modals/image_upload_modal';
 import SubmitOppModal from './components/modals/submit_opp_modal';
 import DeleteOppModal from './components/modals/delete_opp_modal';
+import ExternalInviteModal from './components/modals/external_invite_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -74,6 +75,7 @@ class ThemeProvider extends React.Component{
               <ImageCropModal />
               <SubmitOppModal />
               <DeleteOppModal />
+              <ExternalInviteModal/>
             </div>}
             <OppCardModal/>
             <WaitlistModal/>

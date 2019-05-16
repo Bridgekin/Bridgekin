@@ -35,6 +35,21 @@ export const removeUser = userId => ({
   userId
 });
 
+export const addExternalUser = (user) => dispatch => (
+  UserApiUtil.addExternalUser(user)
+    .then(handleErrors)
+    .then(data => {
+      // debugger
+      return true
+    })
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveUserErrors(errors))
+    })
+);
+
 export const fetchSearchResults = (searchInput, bool) => dispatch => (
   UserApiUtil.fetchSearchResults(searchInput)
     .then(handleErrors)

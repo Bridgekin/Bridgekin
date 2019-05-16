@@ -27,7 +27,7 @@ import FeedCard from '../feed_card';
 import FilterCard from '../filter_card';
 import Loading from '../loading';
 import OpportunityWaitlist from '../opportunity/opportunity_waitlist';
-import Contacts from './contacts';
+// import Contacts from './contacts';
 import ProfilePage from './profile_page';
 import SearchResults from './search_results';
 import ContactsPage from './contacts_page';

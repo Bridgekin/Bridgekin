@@ -11,6 +11,7 @@ import oppChangeReducer from './opp_change_reducer';
 import imageCropReducer from './image_crop_reducer';
 import submitOppReducer from './submit_opp_reducer';
 import deleteOppReducer from './delete_opp_reducer';
+import externalInviteReducer from './external_invite_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
   oppChange: oppChangeReducer,
   imageCrop: imageCropReducer,
   submitOpp: submitOppReducer,
-  deleteOpp: deleteOppReducer
+  deleteOpp: deleteOppReducer,
+  externalInvite: externalInviteReducer,
 });
