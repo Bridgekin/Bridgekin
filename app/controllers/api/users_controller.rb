@@ -27,6 +27,20 @@ class Api::UsersController < ApiController
     end
   end
 
+  def add_external_user
+    email, fname = params[:user][:email], params[:user][:fname]
+    @link = ReferralLink.new(
+      member_id: @user.id,
+      network_id: Network.find_by(title: 'Bridgekin').id,
+    )
+    if @link.save
+      InviteMailer.invite_external_user(email, fname, @link.referral_code, @user).deliver_later
+      render json: ['Link made, invite sent'], status: 200
+    else
+      render json: @link.errors.full_messages, status: 422
+    end
+  end
+
   def destroy
     authorize @user
 

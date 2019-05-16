@@ -1,0 +1,12 @@
+<p>Hi <%= @fname.capitalize %>,</p>
+
+<p><%= @user.fname.capitalize %> has sent you an exclusive invitation to be a
+  part of their trusted network on Bridgekin and has a business opportunity
+  they’d like to privately share with you. You can find your private
+  invitation link <%= link_to 'here', "#{root_url}signup/#{@code}." %>,
+  where you’ll be able to quickly create your account
+  and login into the platform.</p>
+
+<p>Cheers,<br>
+The Bridgekin Team<br>
+<%= link_to 'Bridgekin.com', root_url %></p>

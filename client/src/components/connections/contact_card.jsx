@@ -27,9 +27,12 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { updateConnection, deleteConnection }
   from '../../actions/connection_actions';
-import { openInvite } from '../../actions/modal_actions';
+import { openInvite, openExternalInvite } from '../../actions/modal_actions';
 import { openCreateCircle, openCircle } from '../../actions/modal_actions';
 import { addMember, removeMember } from '../../actions/circle_actions';
+import { createConnection } from '../../actions/connection_actions';
+
+import Capitalize from 'capitalize';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -42,12 +45,14 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   openInvite: userId => dispatch(openInvite(userId)),
+  openExtenalInvite: email => dispatch(openExternalInvite(email)),
   openCreateCircle: () => dispatch(openCreateCircle()),
   openCircle: circleId => dispatch(openCircle(circleId)),
   updateConnection: connection => dispatch(updateConnection(connection)),
   deleteConnection: (id) => dispatch(deleteConnection(id)),
   addMember: (circleId, memberId) => dispatch(addMember(circleId, memberId)),
   removeMember: (circleConnectionId) => dispatch(removeMember(circleConnectionId)),
+  createConnection: connection => dispatch(createConnection(connection))
 });
 
 const styles = theme => ({
@@ -109,6 +114,7 @@ class ContactCard extends React.Component {
     this.openCircle = this.openCircle.bind(this);
     this.openCreateModal = this.openCreateModal.bind(this);
     this.transformCircleConnections = this.transformCircleConnections.bind(this);
+    this.addContact = this.addContact.bind(this)
   }
 
   // handleRemoveUser(){
@@ -131,7 +137,9 @@ class ContactCard extends React.Component {
 
   handleProfilePage(e){
     e.stopPropagation();
-    this.props.history.push(`/mynetwork/profile/${this.getUser().id}`)
+    if(!this.props.external){
+      this.props.history.push(`/mynetwork/profile/${this.getUser().id}`)
+    }
   }
 
   acceptConnection(e){
@@ -144,6 +152,7 @@ class ContactCard extends React.Component {
 
   removeConnection(e){
     e.stopPropagation();
+    if(this.props.connected)
     this.props.deleteConnection(this.props.contact.id)
   }
 
@@ -152,8 +161,30 @@ class ContactCard extends React.Component {
   }
 
   openInvite(e){
+    const { external, importedUser } = this.props;
     e.stopPropagation();
-    this.props.openInvite(this.getUser().id)
+    if(external && importedUser){
+      this.props.openExtenalInvite(importedUser.email)
+    } else {
+      // If from search or contacts (not imported - In Bridgekin)
+      this.props.openInvite(this.getUser().id)
+    }
+  }
+
+  addContact(e){
+    e.stopPropagation();
+    const { contactId } = this.props;
+    let user = this.getUser();
+    let email = user ? user.email : '';
+    this.setState({ inviteLoading: true },
+    () => {
+      this.props.createConnection({
+        friendId: contactId,
+        email
+      })
+      .then(() => this.setState({
+        loading: false, responsePage: true}))
+    })
   }
 
   handleToggleCircleMenu(e){
@@ -206,70 +237,110 @@ class ContactCard extends React.Component {
     return transformedCircleConnections
   }
 
+  getSearchAction(){
+    const { classes, contactId, currentUser,
+      connections  } = this.props;
+    let connected = Object.values(connections).filter(x =>(
+        (x.userId === currentUser.id && x.friendId === contactId) ||
+        (x.friendId === currentUser.id && x.userId === contactId)
+      ))
+
+    if(connected.length > 0 && connected[0].status === 'Accepted'){
+      return (
+        <div>
+          <Typography align='left' color='textPrimary'
+            style={{ fontSize: 13, fontWeight: 600, marginRight: 20}}
+            className={classes.desktopOptions}>
+            {`My Contact`}
+          </Typography>
+          <CheckIcon className={classes.mobileOptions}
+            style={{ marginRight: 13}}/>
+        </div>
+      )
+    } else if(connected.length > 0 && connected[0].status === 'Pending'){
+      return (
+        <div>
+          <Typography align='left' color='textPrimary'
+            style={{ fontSize: 13, fontWeight: 600, marginRight: 20}}
+            className={classes.desktopOptions}>
+            {`Pending Invite`}
+          </Typography>
+          <LoopIcon className={classes.mobileOptions}
+            style={{ marginRight: 13}}/>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <Button variant='contained' color='primary'
+            onClick={this.openInvite}
+            style={{ textTransform: 'capitalize'}}
+            className={classes.desktopOptions}>
+            {`Add Contact`}
+          </Button>
+          <IconButton
+            onClick={this.openInvite}
+            className={classes.mobileOptions}>
+            <AddCircleIcon />
+          </IconButton>
+        </div>
+      )
+    }
+  }
+
+  getImportedAction(){
+    const { classes, external, internal } = this.props;
+    if(external){
+      return (
+        <div>
+          <Button variant='contained' color='primary'
+            onClick={this.openInvite}
+            style={{ textTransform: 'capitalize'}}
+            className={classes.desktopOptions}>
+            {`Invite Contact`}
+          </Button>
+          <IconButton
+            onClick={this.openInvite}
+            className={classes.mobileOptions}>
+            <AddCircleIcon />
+          </IconButton>
+        </div>
+      )
+    } else if(internal){
+      return (
+        <div>
+          <Button variant='contained' color='primary'
+            onClick={this.addContact}
+            style={{ textTransform: 'capitalize'}}
+            className={classes.desktopOptions}>
+            {`Add Contact`}
+          </Button>
+          <IconButton
+            onClick={this.openInvite}
+            className={classes.mobileOptions}>
+            <AddCircleIcon />
+          </IconButton>
+        </div>
+      )
+    } else {
+      return 'Not Found'
+    }
+  }
+
   getSecondaryAction(){
-    const { classes, contact, currentUser,
-      search, connections, circles  } = this.props;
+    const { classes, contact, contactId, currentUser,
+      search, connections, circles, importedUser,
+      imported, external } = this.props;
     const { contactAnchorEl, inviteAnchorEl,
       circleMenu } = this.state;
     const transformedCircleConnections = this.transformCircleConnections();
 
     if(search){
-      let connected = Object.values(connections).filter(x =>(
-          (x.userId === currentUser.id && x.friendId === contact) ||
-          (x.friendId === currentUser.id && x.userId === contact)
-        ))
-
-      if(connected.length > 0 && connected[0].status === 'Accepted'){
-        return (
-          <div>
-            <Typography align='left' color='textPrimary'
-              style={{ fontSize: 13, fontWeight: 600, marginRight: 20}}
-              className={classes.desktopOptions}>
-              {`My Contact`}
-            </Typography>
-            <CheckIcon className={classes.mobileOptions}
-              style={{ marginRight: 13}}/>
-          </div>
-        )
-      } else if(connected.length > 0 && connected[0].status === 'Pending'){
-        return (
-          <div>
-            <Typography align='left' color='textPrimary'
-              style={{ fontSize: 13, fontWeight: 600, marginRight: 20}}
-              className={classes.desktopOptions}>
-              {`Pending Invite`}
-            </Typography>
-            <LoopIcon className={classes.mobileOptions}
-              style={{ marginRight: 13}}/>
-          </div>
-        )
-      } else {
-        return (
-          <div>
-            <Button variant='contained' color='primary'
-              onClick={this.openInvite}
-              style={{ textTransform: 'capitalize'}}
-              className={classes.desktopOptions}>
-              {`Add Contact`}
-            </Button>
-            <IconButton
-              onClick={this.openInvite}
-              className={classes.mobileOptions}>
-              <AddCircleIcon />
-            </IconButton>
-          </div>
-        )
-      }
+      return this.getSearchAction()
+    } else if(imported || external){
+      return this.getImportedAction()
     } else {
       switch (contact.status) {
-        // <Button variant='contained' color='primary'
-        //   onClick={this.removeConnection}
-        //   className={classes.desktopOptions}
-        //   style={{ textTransform: 'capitalize'}}>
-        //   {`Remove User`}
-        // </Button>
-        // <DeleteIcon
-        //   style={{ marginRight: 3 }}/>
         case 'Accepted':
         return (
           <div>
@@ -446,72 +517,82 @@ class ContactCard extends React.Component {
   }
 
   getUser(){
-    const { search, users, contact, currentUser } = this.props;
+    const { connected, users, contactId, contact,
+      currentUser } = this.props;
+    if(!contactId && !contact){ return null }
 
-    if(search){
-      return users[contact]
-    } else {
+    if(connected){
       let friend = (currentUser.id !== contact.userId) ?
       contact.userId : contact.friendId
       return users[friend];
+    } else {
+      return users[contactId]
+    }
+  }
+
+  getName(user){
+    const { imported, external, importedUser } = this.props;
+
+    if(external){
+      // if(!importedUser){
+      //   debugger
+      // }
+      if(importedUser.name){
+        return Capitalize(importedUser.name)
+      } else {
+        return importedUser.email
+      }
+    } else {
+      if(!user){
+        debugger
+      }
+      return Capitalize(`${user.fname} ${user.lname}`)
     }
   }
 
   render(){
     const { classes, users, currentUser,
-      contact, search } = this.props;
-    const { inviteModalOpen } = this.state;
+      contact, search, Bridgekin, importedUser,
+      imported } = this.props;
     let user = this.getUser();
+    let contactName = this.getName(user)
 
-    if(user){
-      return (
-        <Grid container className={classes.userCard}
-          justify="center" alignItems="center"
-          onClick={this.handleProfilePage}>
-          <Grid item xs={9} sm={7} container justify='space-between' alignItems='center'>
-            <Grid item xs={3}>
-              <Avatar>
-                {user.profilePicUrl ? (
-                  <VisibilitySensor>
-                    <Img src={user.profilePicUrl}
-                      className={classes.profilePic}
-                      />
-                  </VisibilitySensor>
-                ):<PersonIcon />}
-              </Avatar>
-            </Grid>
-            <Grid item xs={9} container direction='column'>
-              <Typography variant="body1" align='left' color="textPrimary"
-                noWrap
-                style={{ fontSize: 13, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
-                {`${user.fname} ${user.lname}`}
-              </Typography>
-              <Typography variant="body1" align='left' color="textPrimary"
-                noWrap
-                style={{ fontSize: 12, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
-                {user.title && `${user.title} @ `}
-                {user.company && `${user.company}`}
-              </Typography>
-            </Grid>
+    return (
+      <Grid container className={classes.userCard}
+        justify="center" alignItems="center"
+        onClick={this.handleProfilePage}>
+        <Grid item xs={9} sm={7} container justify='flex-end' alignItems='center'>
+          <Grid item xs={3}>
+            <Avatar>
+              {user && user.profilePicUrl ? (
+                <VisibilitySensor>
+                  <Img src={user.profilePicUrl}
+                    className={classes.profilePic}
+                    />
+                </VisibilitySensor>
+              ):<PersonIcon />}
+            </Avatar>
           </Grid>
-
-          {/*<ListItemText
-            classes={{
-            primary: classes.listItemText,
-            secondary: classes.listItemText}}
-            primary={`${this.capitalize(user.fname)} ${this.capitalize(user.lname)}`}
-            secondary={(user.title && `${user.title} @ `) + (user.company && `${user.company}`)}
-            />*/}
-
-            <Grid item xs={3} sm={5} container justify='flex-end'>
-              {currentUser.id !== user.id && this.getSecondaryAction()}
-            </Grid>
-
+          <Grid item xs={9} container direction='column'>
+            <Typography variant="body1" align='left' color="textPrimary"
+              noWrap
+              style={{ fontSize: 13, fontWeight: 600, width:'100%', textTransform: 'capitalize'}}>
+              {contactName}
+            </Typography>
+            <Typography variant="body1" align='left' color="textPrimary"
+              noWrap
+              style={{ fontSize: 12, fontWeight: 400, width:'100%', textTransform: 'capitalize'}}>
+              {user && user.title && Capitalize(`${user.title} @ `)}
+              {user && user.company && Capitalize(`${user.company}`)}
+            </Typography>
           </Grid>
-        )
-    } else {
-      return <div></div>
-    }
+        </Grid>
+
+        <Grid item xs={3} sm={5} container justify='flex-end'>
+          {(!user || currentUser.id !== user.id) && this.getSecondaryAction()}
+        </Grid>
+      </Grid>
+    )
   }
 }
 

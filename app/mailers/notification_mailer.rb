@@ -50,28 +50,32 @@ class NotificationMailer < ApplicationMailer
   def opps_from_contacts_summary(userId, opps_count, type)
     # debugger
     @user = User.find(userId)
-    @opps_count = opps_count
-    @wording = determineWording(type)
+    @oppLang = (opps_count > 1) ? "have been #{opps_count} opportunities" :
+    "has been #{opps_count} opportunity"
+
+    @cadenceLang = determineWording(type)
     subject = "Your trusted contacts #{type.downcase} opportunity recap"
     mail(to: @user.email, subject: subject)
     #Log email being sent
     EmailLog.create(
       recipient_id: userId,
-      email_type: 'opps_from_contacts_summary'
+      email_type: 'opps_recap_from_contacts_summary'
     )
   end
 
   def opps_within_Bridgekin_summary(userId, opps_count, type)
     # debugger
     @user = User.find(userId)
-    @opps_count = opps_count
-    @wording = determineWording(type)
+    @oppLang = (opps_count > 1) ? "have been #{opps_count} opportunities" :
+    "has been #{opps_count} opportunity"
+
+    @cadenceLang = determineWording(type)
     subject = "Bridgekin #{type.downcase} opportunity recap"
     mail(to: @user.email, subject: subject)
     #Log email being sent
     EmailLog.create(
       recipient_id: userId,
-      email_type: 'opps_within_Bridgekin_summary'
+      email_type: 'opps_recap_within_Bridgekin_summary'
     )
   end
 

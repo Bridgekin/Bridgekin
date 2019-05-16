@@ -64,7 +64,7 @@ class SearchResults extends React.Component {
     if (searchResultsPage.length > 0){
       let resultCards = searchResultsPage.map(contactId => (
         <FeedCard
-          contents={<ContactCard contact={contactId} search={true}/>}
+          contents={<ContactCard contactId={contactId} search internal/>}
           />
       ))
       return <div style={{ paddingBottom: 30}}>

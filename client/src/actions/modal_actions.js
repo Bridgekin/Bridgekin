@@ -163,3 +163,16 @@ export const openDeleteOpp = (oppId) => ({
 export const closeDeleteOpp = () => ({
   type: CLOSE_DELETE_OPP_MODAL,
 });
+
+// Open External Invite Modal
+export const OPEN_EXTERNAL_INVITE_MODAL = 'OPEN_EXTERNAL_INVITE_MODAL';
+export const CLOSE_EXTERNAL_INVITE_MODAL = "CLOSE_EXTERNAL_INVITE_MODAL";
+
+export const openExternalInvite = email => ({
+  type: OPEN_EXTERNAL_INVITE_MODAL,
+  email
+});
+
+export const closeExternalInvite = () => ({
+  type: CLOSE_EXTERNAL_INVITE_MODAL,
+});

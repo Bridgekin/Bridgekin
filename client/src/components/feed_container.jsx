@@ -86,27 +86,6 @@ class FeedContainer extends React.Component{
     return (
       <Grid container justify='center' className={classes.grid}
         style={{ paddingTop: 63+adjustment}}>
-        {/*<Grid xs={12} sm={11} md={10} container
-          className={classes.feedContainer}
-          style={{ height: windowHeight }}>
-          <Grid item xs={4}
-            style={{ position: 'relative'}}>
-            <div className={classes.sideColumnContent}
-              style={{ height: windowHeight-45-18 }}>
-              {column1}
-            </div>
-          </Grid>
-          <Grid item xs={4} className={classes.mainColumn}>
-            {feed}
-          </Grid>
-          <Grid item xs={4}
-            style={{ position: 'relative'}}>
-            <div className={classes.sideColumnContent}
-              style={{ height: windowHeight-45-18 }}>
-              {column2}
-            </div>
-          </Grid>
-        </Grid>*/}
         <div className={classes.feedContainer}
           style={{ minHeight: dimensions.height}}>
           <div className={[classes.sideColumnAll, classes.sideColumn1].join(' ')}

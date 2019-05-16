@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import ImportGoogle from '../google/import_contacts';
+
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDownSharp';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -45,7 +47,7 @@ class ContactsFeed extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      contactAnchorEl: null
+      contactAnchorEl: null,
     }
 
     this.handleMenuClick = this.handleMenuClick.bind(this);
@@ -105,9 +107,9 @@ class ContactsFeed extends React.Component {
     // )
 
     return (
-      <div style={{ paddingBottom:30, width: '100%'}}>
-        {/*mobileFilter*/}
+      <div style={{ paddingBottom: 30, width: '100%'}}>
         {page && <Contacts pathName={pathName}/>}
+        {/*<ImportGoogle asContactCard/>*/}
         <div className={classes.mobileWaitlist}>
           {waitlistCard}
         </div>

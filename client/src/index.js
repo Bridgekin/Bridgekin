@@ -5,6 +5,7 @@ import configureStore from './store/store';
 import * as SessionApiUtil from './util/session_api_util';
 import * as WaitlistApiUtil from './util/waitlist_api_util';
 import './index.css';
+import dotenv from 'dotenv'
 
 import { handleAuthErrors } from './actions/fetch_error_handler';
 import { getAuthUserId } from './util/session_api_util';
@@ -14,7 +15,11 @@ import getTheme from './components/theme.js';
 import BridgekinLogo from './static/Bridgekin_Logo.png';
 import * as Sentry from '@sentry/browser';
 
-
+// dotenv.config();
+// let val = process.env.GOOGLE_USER
+// require('dotenv').config({path: __dirname + '/.env'})
+// const env = dotenv.config({path: './.env'}).parsed;
+// debugger
 document.addEventListener("DOMContentLoaded", () => {
 
   const root = document.getElementById('root');
@@ -32,14 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (token){
     getAuthUserId(token)
     .then(handleAuthErrors)
-    .then( ({user, token, siteTemplate, workspaces, userFeature}) => {
+    .then( ({currentUser, token, siteTemplate, workspaces,
+      userFeature, users, connections }) => {
       let preloadedState = {
-        users: { [user.id]: user},
-        session: { id: user.id},
+        users: users,
+        session: { id: currentUser.id},
         siteTemplate,
         workspaces,
         entities:{
-          userFeature
+          userFeature,
+          connections
         }
         // theme: getTheme(siteTemplate)
       };

@@ -43,3 +43,5 @@ heroku.yml
 
 /config/initializers/bugsnag.rb
 /config/skylight.yml
+
+/.env

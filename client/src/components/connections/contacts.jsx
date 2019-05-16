@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import ContactCard from './contact_card';
 import FeedCard from '../feed_card';
+import ImportGoogle from '../google/import_contacts';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -62,7 +63,7 @@ class Contacts extends React.Component {
     let connections = this.filterConnections();
     let connectionCards = connections.map(contact => (
       <FeedCard
-        contents={<ContactCard contact={contact} />}
+        contents={<ContactCard contact={contact} internal connected/>}
         />
     ))
 
@@ -73,12 +74,13 @@ class Contacts extends React.Component {
     }
 
     return (
-      <div style={{ paddingBottom: 30}}>
+      <div>
         {connectionCards.length > 0 ? connectionCards :
           (<Typography variant="h3" color="textSecondary" align='center'
-              className={classes.emptyOppsText} gutterBottom>
-              {noContactMessage[pathName]}
-            </Typography>)}
+            className={classes.emptyOppsText} gutterBottom>
+            {noContactMessage[pathName]}
+          </Typography>)}
+        {(pathName === '/mynetwork') && <ImportGoogle asContactCard/>}
       </div>
     )
   }

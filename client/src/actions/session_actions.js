@@ -1,9 +1,10 @@
 import * as SessionApiUtil from '../util/session_api_util';
-import {receiveUser} from './user_actions';
+import {receiveUser, receiveUsers} from './user_actions';
 import {receiveSiteTemplate} from './site_template_actions';
 import {receiveWorkspaces} from './workspace_actions';
 import {removeSiteTemplate} from './site_template_actions';
 import {receiveUserFeature} from './user_feature_actions';
+import {receiveConnections} from './connection_actions';
 import {receiveSessionErrors, receiveUserErrors} from './error_actions';
 import { handleErrors } from './fetch_error_handler';
 
@@ -26,11 +27,12 @@ export const refSignup = (formUser, code) => dispatch => (
     .then(handleErrors)
     .then(data => {
       localStorage.setItem('bridgekinToken', data.token);
-      dispatch(receiveUser(data.user));
-      dispatch(receiveCurrentUser(data.user));
+      dispatch(receiveUsers(data.users));
+      dispatch(receiveCurrentUser(data.currentUser));
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
+      dispatch(receiveConnections(data.connections));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
@@ -45,11 +47,12 @@ export const login = formUser => dispatch => (
     .then(handleErrors)
     .then(data => {
       localStorage.setItem('bridgekinToken', data.token);
-      dispatch(receiveUser(data.user));
-      dispatch(receiveCurrentUser(data.user));
+      dispatch(receiveUsers(data.users));
+      dispatch(receiveCurrentUser(data.currentUser));
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
+      dispatch(receiveConnections(data.connections));
       return data.user
     })
     .catch(errors => {

@@ -11,9 +11,8 @@ namespace :recurring_emails do
 
     #Find all the email logs for 1) these users on 2) this topic
     related_email_logs = EmailLog.where(recipient_id: email_notifiable_users)
-      .where(email_type: 'opps_from_contacts_summary')
+      .where(email_type: 'opps_recap_from_contacts_summary')
 
-    # debugger
     #Iterate through all notifiable users
     email_notifiable_users.each do |user|
       setting = user.notification_setting
@@ -40,7 +39,6 @@ namespace :recurring_emails do
           opportunities: {id: user.opportunities}
         )
 
-      # debugger
       #Determine if email should be sent
       if setting.nil? || setting.email_recap_shared_contacts === 'Weekly'
         if days_since_last_email.nil? || days_since_last_email >= 7
@@ -89,7 +87,7 @@ namespace :recurring_emails do
 
     #Find all the email logs for 1) these users on 2) this topic
     related_email_logs = EmailLog.where(recipient_id: email_notifiable_users)
-      .where(email_type: 'opps_within_Bridgekin_summary')
+      .where(email_type: 'opps_recap_within_Bridgekin_summary')
 
     #Iterate through all notifiable users
     email_notifiable_users.each do |user|
@@ -106,7 +104,7 @@ namespace :recurring_emails do
           prev_email_sent.created_at.to_date).to_i
       end
 
-      #Collect what was share to connections
+      #Collect what was share to networks
       opp_perms = OppPermission.includes(:opportunity)
         .joins("INNER JOIN opportunities on opp_permissions.opportunity_id = opportunities.id")
         .where(shareable_id: networks.pluck(:id),
@@ -118,7 +116,7 @@ namespace :recurring_emails do
         )
 
       #Days_from_mapping = { 'Daily' => 1, 'Weekly' => 7, 'Monthly' => 28 }
-      # debugger
+
       #Determine if email should bsent
       if setting.nil? || setting.email_recap_shared_communities === 'Weekly'
         if days_since_last_email.nil? || days_since_last_email >= 7

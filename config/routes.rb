@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  namespace :api, default: {format: :json} do
+  # namespace :api, default: {format: :json} do
+  namespace :api, format: :json do
     resources :opportunities
     resources :networks
     resources :connected_opportunities
@@ -36,6 +37,8 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    post 'add_external_user', :to => 'users#add_external_user'
+    get 'third_parties/google_contacts', :to => 'third_parties#google_contacts'
     delete 'destroy_user_connected_opps', :to => 'connected_opportunities#destroy_user_connected_opps'
     delete 'destroy_all_user_opps', :to => 'opportunities#delete_all_user_opps'
     delete 'destroy_user_by_email', :to => 'users#destroy_by_email'
