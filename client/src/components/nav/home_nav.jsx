@@ -72,7 +72,8 @@ const mapStateToProps = (state, ownProps) => {
     searchResults: state.entities.searchResults,
     users: state.users,
     siteTemplate,
-    notifications: state.entities.notifications
+    notifications: state.entities.notifications,
+    userFeature: state.entities.userFeature,
   })
 };
 
@@ -451,7 +452,8 @@ class HomeNav extends React.Component {
   render(){
     const { classes, currentUser, sessionErrors,
       siteTemplate, workspaces, users,
-      searchResults, notifications } = this.props;
+      searchResults, notifications, 
+      userFeature } = this.props;
 
     const { auth, anchorEl, mobileMoreAnchorEl,
     logoAnchorEl, searchAnchorEl,
@@ -744,7 +746,7 @@ class HomeNav extends React.Component {
                 Test Feature
               </Typography>
             </Button>}
-          <Button color='secondary'
+          {(currentUser && !userFeature.hireUser) && <Button color='secondary'
             data-cy='nav-opportunities-button'
             onClick={this.handleLinkClose('findandconnect')}>
             <Typography variant="h4" align='left'
@@ -752,8 +754,8 @@ class HomeNav extends React.Component {
               className={classes.navButtonText}>
               Opportunities
             </Typography>
-          </Button>
-          {currentUser &&
+          </Button>}
+          {(currentUser && !userFeature.hireUser)&&
             <Button color='secondary'
               data-cy='nav-my-trusted-network-button'
             onClick={this.handleLinkClose('mynetwork')}
@@ -766,7 +768,7 @@ class HomeNav extends React.Component {
             </Button>
           }
 
-          {currentUser &&
+          {(currentUser && !userFeature.hireUser) &&
             <Badge badgeContent={this.countNotifications()}
               classes={{ badge: classes.badge}}
               onClick={this.handleNotificationMenuOpen}
@@ -876,13 +878,14 @@ class HomeNav extends React.Component {
     //   <img alt='logo' className={classes.logo} src={logo} />
     // </Link>
     // <div className={classes.grow} />
+
     return (
       <div>
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
               {logoChunk}
-              {currentUser ? <Grid item xs={7} sm={4} md={3} lg={3}>
+              {(currentUser && !userFeature.hireUser) ? <Grid item xs={7} sm={4} md={3} lg={3}>
                 <SearchBar />
               </Grid> : <div style={{ flexGrow: 1}}/>}
               {navMenu}

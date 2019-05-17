@@ -24,12 +24,32 @@ const Auth = ({ currentUser, path, component: Component}) => (
   />
 );
 
+const HiringAuth = ({ currentUser, path, component: Component}) => (
+  <Route
+    path={path}
+    render={props => (
+      currentUser ? <Redirect to="/hiring_dashboard" /> :
+      <Component{...props} />
+    )}
+  />
+);
+
 const Protected = ({ currentUser, path, component: Component, passedProps}) => {
   return <Route
     path={path}
     render={props => (
       currentUser ? <Component {...Object.assign({}, props, passedProps)} /> :
       <Redirect to='/'/>
+    )}
+  />
+};
+
+const HiringProtected = ({ currentUser, path, component: Component, passedProps}) => {
+  return <Route
+    path={path}
+    render={props => (
+      currentUser ? <Component {...Object.assign({}, props, passedProps)} /> :
+      <Redirect to='/hiring'/>
     )}
   />
 };
@@ -70,7 +90,11 @@ const ReferralProtected = ({ currentUser, path, name, siteTemplate,
 };
 
 export const AuthRoute = withRouter(connect(mapStateToProps)(Auth));
+export const HiringAuthRoute = withRouter(connect(mapStateToProps)(HiringAuth));
+
 export const ProtectedRoute = withRouter(connect(mapStateToProps)(Protected));
+export const HiringProtectedRoute = withRouter(connect(mapStateToProps)(HiringProtected));
+
 export const AdminProtectedRoute = withRouter(connect(mapStateToProps)(AdminProtected));
 export const TemplateProtectedRoute = withRouter(connect(mapStateToProps)(TemplateProtected));
 export const ReferralProtectedRoute = withRouter(connect(mapStateToProps, mapDispatchToProps)(ReferralProtected));

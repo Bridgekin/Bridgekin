@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { AuthRoute,
   ProtectedRoute,
+  HiringAuthRoute,
+  HiringProtectedRoute,
   AdminProtectedRoute,
   TemplateProtectedRoute,
   ReferralProtectedRoute } from './util/route_util';
@@ -76,10 +78,10 @@ export default ()=> (
       <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
       <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
 
-      <Route path="/hiring" component={HiringHome} />
-      <ProtectedRoute path="/hiring/dashboard" component={HiringDashboard} />
-      <ProtectedRoute path="/hiring/change/:ref_opp_id?" component={HiringChangeOpp} />
-      <Route path="/hiring/show" component={HiringShow} />
+      <HiringAuthRoute path="/hiring" component={HiringHome} />
+      <HiringProtectedRoute path="/hiring_dashboard" component={HiringDashboard} />
+      <HiringProtectedRoute path="/hiring_change/:ref_opp_id?" component={HiringChangeOpp} />
+      <Route path="/hiring_show" component={HiringShow} />
 
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/login" component={Login}/>

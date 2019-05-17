@@ -56,6 +56,15 @@ ActiveRecord::Schema.define(version: 2019_05_16_214609) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
@@ -221,16 +230,16 @@ ActiveRecord::Schema.define(version: 2019_05_16_214609) do
     t.string "title", default: "", null: false
     t.text "description"
     t.string "opportunity_need", default: "", null: false
+    t.string "industries", default: [], null: false, array: true
+    t.string "geography", default: [], null: false, array: true
     t.string "value", default: "", null: false
     t.string "status", default: "Pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "industries", default: [], null: false, array: true
-    t.string "geography", default: [], null: false, array: true
     t.string "deal_status", default: "Active", null: false
     t.boolean "anonymous", default: true
     t.string "view_type", default: "card", null: false
-    t.index ["status"], name: "index_opportunities_on_status"
+    t.index ["owner_id"], name: "index_opportunities_on_owner_id"
   end
 
   create_table "opportunity_networks", force: :cascade do |t|

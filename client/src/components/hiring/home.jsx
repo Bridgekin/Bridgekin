@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 
 import { hireSignup } from '../../actions/session_actions';
 import { openSignup } from '../../actions/modal_actions';
+import HiringContainer from './hiring_container';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -30,6 +31,11 @@ const styles = theme => ({
     paddingTop: 45,
     flexGrow: 1,
     backgroundColor: theme.palette.base2,
+  },
+  grid:{
+    background: 'white', 
+    paddingTop: 18,
+    borderRight: "1px solid light-grey"
   }
 })
 
@@ -63,7 +69,7 @@ class HiringHome extends React.Component {
     this.props.hireSignup(user)
     .then(() => {
       if(this.props.userErrors.length === 0){
-        this.props.history.push('/hiring/dashboard')
+        this.props.history.push('/hiring_dashboard')
       } else {
         this.props.openSignup();
       }
@@ -138,13 +144,7 @@ class HiringHome extends React.Component {
       </Grid>
     </Grid>
 
-    return <Grid container justify='center'
-      className={classes.backgroundGrid}>
-      <Grid container item xs={12} sm={10} md={8} justify='center'
-        style={{ background: 'white', minHeight: dimensions.height - 45, paddingTop: 18}}>
-        {content}
-      </Grid>
-    </Grid>
+    return <HiringContainer content={content} />
   }
 }
 
