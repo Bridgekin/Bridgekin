@@ -80,7 +80,7 @@ export default ()=> (
 
       <HiringAuthRoute path="/hiring" component={HiringHome} />
       <HiringProtectedRoute path="/hiring_dashboard" component={HiringDashboard} />
-      <HiringProtectedRoute path="/hiring_change/:ref_opp_id?" component={HiringChangeOpp} />
+      <HiringProtectedRoute path="/hiring_change" component={HiringChangeOpp} />
       <Route path="/hiring_show" component={HiringShow} />
 
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
