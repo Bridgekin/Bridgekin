@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_02_160713) do
+ActiveRecord::Schema.define(version: 2019_05_16_214609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -249,6 +249,39 @@ ActiveRecord::Schema.define(version: 2019_05_02_160713) do
     t.index ["user_id"], name: "index_passed_opportunities_on_user_id"
   end
 
+  create_table "ref_opp_events", force: :cascade do |t|
+    t.integer "owner_id"
+    t.string "logged_out_email"
+    t.string "event"
+    t.integer "ref_opp_id"
+    t.integer "ref_opp_link_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ref_opp_links", force: :cascade do |t|
+    t.integer "owner_id"
+    t.string "link_code", null: false
+    t.integer "ref_opp_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ref_opportunities", force: :cascade do |t|
+    t.integer "owner_id"
+    t.string "url"
+    t.string "title"
+    t.text "description"
+    t.string "company"
+    t.string "location"
+    t.string "salary"
+    t.string "incentive_interview"
+    t.string "incentive_hire"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_ref_opportunities_on_owner_id"
+  end
+
   create_table "referral_links", force: :cascade do |t|
     t.string "referral_code", null: false
     t.integer "member_id", null: false
@@ -303,6 +336,7 @@ ActiveRecord::Schema.define(version: 2019_05_02_160713) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "tutorial_tour_session"
+    t.boolean "hire_user", default: false
     t.index ["user_id"], name: "index_user_features_on_user_id"
   end
 

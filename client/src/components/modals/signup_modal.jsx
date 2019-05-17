@@ -15,29 +15,20 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 
 import { connect } from 'react-redux';
 import { clearUserErrors } from '../../actions/error_actions';
+import { closeSignup } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  userErrors: state.errors.users
+  userErrors: state.errors.users,
+  signupModal: state.modals.signup
 });
 
 const mapDispatchToProps = dispatch => ({
-  clearUserErrors: () => dispatch(clearUserErrors())
+  clearUserErrors: () => dispatch(clearUserErrors()),
+  closeSignup: () => dispatch(closeSignup()),
 });
 
 const styles = theme => ({
-  // paper: {
-  //   // position: 'absolute',
-  //   // width: '40%',
-  //   height: 350,
-  //   backgroundColor: theme.palette.background.paper,
-  //   boxShadow: theme.shadows[5],
-  //   padding: theme.spacing.unit * 4,
-  //   display: 'flex',
-  //   direction: 'column',
-  //   alignItems: 'flex-start',
-  //   justifyContent: 'center'
-  // },
   thanksHeader:{
     marginBottom: 30,
     color: theme.palette.darkGrey
@@ -75,15 +66,16 @@ class SignupModal extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClose = () => {
+  handleClose(e){
+    e.stopPropagation();
     if(this.props.userErrors){
       this.props.clearUserErrors();
     }
-    this.props.handleClose();
+    this.props.closeSignup();
   };
 
   render () {
-    const { open, classes } = this.props;
+    const { classes, signupModal } = this.props;
 
     let userErrors = this.props.userErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
@@ -141,7 +133,7 @@ class SignupModal extends React.Component {
 
     return (
       <Dialog
-        open={open}
+        open={signupModal.open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         onClose={this.handleClose}

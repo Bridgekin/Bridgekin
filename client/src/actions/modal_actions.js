@@ -176,3 +176,15 @@ export const openExternalInvite = email => ({
 export const closeExternalInvite = () => ({
   type: CLOSE_EXTERNAL_INVITE_MODAL,
 });
+
+// Open Signup Errors Modal
+export const OPEN_SIGNUP_MODAL = 'OPEN_SIGNUP_MODAL';
+export const CLOSE_SIGNUP_MODAL = "CLOSE_SIGNUP_MODAL";
+
+export const openSignup = () => ({
+  type: OPEN_SIGNUP_MODAL
+});
+
+export const closeSignup = () => ({
+  type: CLOSE_SIGNUP_MODAL,
+});

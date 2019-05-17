@@ -12,6 +12,7 @@ import imageCropReducer from './image_crop_reducer';
 import submitOppReducer from './submit_opp_reducer';
 import deleteOppReducer from './delete_opp_reducer';
 import externalInviteReducer from './external_invite_reducer';
+import signupReducer from './signup_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -27,4 +28,5 @@ export default combineReducers({
   submitOpp: submitOppReducer,
   deleteOpp: deleteOppReducer,
   externalInvite: externalInviteReducer,
+  signup: signupReducer,
 });

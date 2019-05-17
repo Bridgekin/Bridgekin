@@ -42,6 +42,11 @@ import ScrollToTop from './components/scroll_to_top';
 
 import ImportContacts from './components/google/import_contacts';
 
+import HiringHome from './components/hiring/home.jsx'
+import HiringDashboard from './components/hiring/dashboard.jsx'
+import HiringShow from './components/hiring/show_opp.jsx'
+import HiringChangeOpp from './components/hiring/change_opp.jsx'
+
 // const mapStateToProps = state => ({
 //   currentUser: state.users[state.session.id]
 // });
@@ -65,16 +70,24 @@ export default ()=> (
       <ProtectedRoute path="/importcontacts" component={ImportContacts} />
       <ProtectedRoute path="/findandconnect/:source?" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
-      <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
       <ProtectedRoute path="/mynetwork" component={MyTrustedNetwork} />
+
+      <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
       <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
       <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
+
+      <Route path="/hiring" component={HiringHome} />
+      <ProtectedRoute path="/hiring/dashboard" component={HiringDashboard} />
+      <ProtectedRoute path="/hiring/change/:ref_opp_id?" component={HiringChangeOpp} />
+      <Route path="/hiring/show" component={HiringShow} />
+
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/login" component={Login}/>
       <AuthRoute path="/passwordreset" component={PasswordReset}/>
       <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>
       <AuthRoute exact path="/" component={HomePage} />
       <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
+
       <Route path="/useragreement" component={UserAgreement} />
       <Route path="/privacypolicy" component={PrivacyPolicy} />
       <Route path="/shareopportunities/:linkCode" component={DirectLinkPage} />

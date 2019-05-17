@@ -1,7 +1,7 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::UsersController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user, except: [:destroy_by_email]
+  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup]
 
   after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
@@ -10,6 +10,32 @@ class Api::UsersController < ApiController
     @user = User.find(params[:id])
     # authorize @user
     render :show
+  end
+
+  def hire_signup
+    @currentUser = User.new(user_params)
+    if @currentUser.save
+      @token = get_login_token!(@currentUser)
+      @currentUser.implement_trackable
+      @site_template = @currentUser.get_template
+
+      #Remove waitlist user from waitlist by changing status
+      @currentUser.update_waitlist
+      #Create array of user info
+      @users = [@currentUser]
+      #Get User feature set
+      @user_feature = @currentUser.user_feature ||
+        UserFeature.create(user_id: @currentUser.id)
+      #Set hire user setting
+      @user_feature.hire_user = true
+      @user_feature.save
+      #No friends yet = Empty object to fill connections
+      @connections = {}
+
+      render :hire_signup
+    else
+      render json: @currentUser.errors.full_messages, status: 422
+    end
   end
 
   def update

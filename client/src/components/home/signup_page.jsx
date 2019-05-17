@@ -13,20 +13,23 @@ import './home.css';
 
 import { connect } from 'react-redux';
 import { refSignup } from '../../actions/session_actions';
+import { openSignup } from '../../actions/modal_actions';
 
 // import { MuiThemeProvider } from '@material-ui/core/styles';
 // import theme from '../theme';
-import SignupModal from './signup_modal';
+// import SignupModal from './signup_modal';
 import BottomFade from '../../static/bottom-fade.png';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   code: ownProps.match.params.code,
-  sessionErrors: state.errors.login
+  userErrors: state.errors.users,
+  // sessionErrors: state.errors.login,
 });
 
 const mapDispatchToProps = dispatch => ({
-  signup: (user, code) => dispatch(refSignup(user, code))
+  signup: (user, code) => dispatch(refSignup(user, code)),
+  openSignup: () => dispatch(openSignup())
 });
 
 const styles = theme => ({
@@ -110,7 +113,6 @@ class SignupPage extends React.Component{
 
     this.handleSignupSubmit = this.handleSignupSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleClose = this.handleClose.bind(this);
   }
 
   handleSignupSubmit(e){
@@ -130,11 +132,10 @@ class SignupPage extends React.Component{
         () => {
           this.props.signup(user, this.props.code)
             .then(res => {
-              if(this.props.sessionErrors.length === 0){
+              if(this.props.userErrors.length === 0){
                 this.setState({
                   loading: false,
                   success: true,
-                  open: true,
                   email: '',
                   fname: '',
                   lname: '',
@@ -143,20 +144,16 @@ class SignupPage extends React.Component{
                   // passwordConfirmation: ''
                 })
               } else {
+                this.props.openSignup();
                 this.setState({
                   loading: false,
                   success: true,
-                  open: true,
                 })
               }
             })
       })
     }
   }
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
 
   handleChange(field){
     return (e) => {
@@ -320,11 +317,6 @@ class SignupPage extends React.Component{
           <div className={classes.bottomFade} />
 
         </Grid>
-
-
-        <SignupModal
-          open={open}
-          handleClose={this.handleClose}/>
       </div>
     );
   }

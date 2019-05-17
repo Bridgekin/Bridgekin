@@ -7,7 +7,7 @@ class User < ApplicationRecord
          :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
-  validates :fname, :lname,  presence: true
+  validates :fname, presence: true
   validates :email, uniqueness: { case_sensitive: false }
 
   has_many :opportunities,

@@ -39,11 +39,11 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
       @users = [@currentUser]
       #Pull connections
+      @connections = @currentUser.connections
       if referral_link.is_friendable
-        @connections = @currentUser.connections
         @users << referral_link.owner
       end
-
+      #Get User feature set
       @user_feature = @currentUser.user_feature ||
         UserFeature.create(user_id: @currentUser.id)
 
