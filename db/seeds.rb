@@ -37,9 +37,9 @@ Network.create!(
   title: 'Bridgekin'
 )
 
-Network.create!(
-  title: 'Ideate'
-)
+# Network.create!(
+#   title: 'Ideate'
+# )
 
 UserNetwork.create!(
   network_id: 1,

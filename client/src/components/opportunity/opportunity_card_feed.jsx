@@ -68,6 +68,15 @@ import ReadMoreReact from 'read-more-react';
 import ReadMoreAndLess from 'react-read-more-less';
 import datetimeDifference from "datetime-difference";
 
+import amplitude from 'amplitude-js';
+const prod = process.env.NODE_ENV === 'production';
+const amplitudeInstance = amplitude.getInstance();
+if(prod){
+  amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
+} else {
+  amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
+}
+
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   savedOpportunities: state.entities.savedOpportunities,
@@ -261,6 +270,13 @@ class OpportunityCard extends React.Component {
         permType
       }
       this.props.openOppCard(payload);
+
+      // Track Event
+      if(connectBool){
+        amplitudeInstance.logEvent('Click on Connect Button')
+      } else {
+        amplitudeInstance.logEvent('Click on Refer Button')
+      }
     }
   }
 
@@ -271,10 +287,18 @@ class OpportunityCard extends React.Component {
       const { passed } = this.props;
       if(!passed){
         this.props.createPassedOpportunity(this.props.opportunity.id)
-        .then(() => this.setState({ passedOppLoading: false }))
+        .then(() => {
+          this.setState({ passedOppLoading: false })
+          // Track Event
+          amplitudeInstance.logEvent('Add Passed Opportunity')
+        })
       } else {
         this.props.deletePassedOpportunity(this.props.opportunity.id)
-        .then(() => this.setState({ passedOppLoading: false }))
+        .then(() => {
+          this.setState({ passedOppLoading: false })
+          // Track Event
+          amplitudeInstance.logEvent('Remove Passed Opportunity')
+        })
       }
     })
   }
@@ -350,8 +374,12 @@ class OpportunityCard extends React.Component {
     let savedOpportunity = savedOpportunities[opportunity.id];
     if (savedOpportunity){
       this.props.deleteSavedOppportunity(savedOpportunity)
+      // Track Event
+      amplitudeInstance.logEvent('Remove Saved Opportunity')
     } else {
       this.props.createSavedOppportunity(opportunity.id)
+      // Track Event
+      amplitudeInstance.logEvent('Add Saved Opportunity')
     }
   }
 

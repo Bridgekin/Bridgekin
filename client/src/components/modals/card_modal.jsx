@@ -34,6 +34,15 @@ import { closeOppCard } from '../../actions/modal_actions';
 import { fetchProfile } from '../../actions/user_actions';
 import { openCustomEmailOppCard } from '../../actions/modal_actions';
 
+import amplitude from 'amplitude-js';
+const prod = process.env.NODE_ENV === 'production';
+const amplitudeInstance = amplitude.getInstance();
+if(prod){
+  amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
+} else {
+  amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
+}
+
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   opportunities: state.entities.opportunities,
@@ -171,9 +180,8 @@ class CardModal extends React.Component {
     this.handleConfirm = this.handleConfirm.bind(this);
     this.getContent = this.getContent.bind(this);
     this.handleConnection = this.handleConnection.bind(this);
-    this.handleBack = this.handleBack.bind(this);
     this.handleConnectionTemplate = this.handleConnectionTemplate.bind(this);
-    this.handleSignup = this.handleSignup.bind(this);
+    this.redirectToSignup = this.redirectToSignup.bind(this);
   }
 
   // componentDidUpdate(prevProps, prevState){
@@ -202,9 +210,9 @@ class CardModal extends React.Component {
         connectBool: nextModal.connectBool
       })
       // debugger
-      if(!nextModal.fake){
-        this.props.fetchProfile(this.props.opportunities[nextModal.oppId].ownerId)
-      }
+      // if(!nextModal.fake){
+      //   this.props.fetchProfile(this.props.opportunities[nextModal.oppId].ownerId)
+      // }
     }
     return true
   }
@@ -239,24 +247,15 @@ class CardModal extends React.Component {
     }
   };
 
-  handleBack(){
-    // if (this.props.viewType === 'card'){
-    //   this.setState({page: 'opportunity'})
-    // } else {
-    //   this.props.closeOppCard();
-    //   this.setState({ })
-    // }
-
-  }
-
-  handleSignup(){
+  redirectToSignup(){
     this.props.closeOppCard();
     this.props.history.push('/');
   }
 
   handleConnection(){
     return e => {
-      e.preventDefault()
+      e.preventDefault();
+      const { connectBool } = this.state;
       this.setState({ connectLoading: true},
       () => {
         let opportunity = {
@@ -273,9 +272,14 @@ class CardModal extends React.Component {
             connectLoading: false,
             connectBool: this.state.connectBool
           })
+          
+          // Track Event
+          if(connectBool){
+            amplitudeInstance.logEvent('Connect To An Opportunity (Template)')
+          } else {
+            amplitudeInstance.logEvent('Refer To An Opportunity (Template)')
+          }
         });
-        // if(!this.props.demo){
-        // }
       })
     }
   }
@@ -302,36 +306,12 @@ class CardModal extends React.Component {
       oppCardModal } = this.props;
     const { connectBool, page, connectLoading } = this.state;
 
-    // const opportunity = opportunities[oppCardModal.oppId];
-
-    // let { title, description, industries, opportunityNeed, geography,
-    //   value, networks, pictureUrl, viewType } = opportunity;
-
     let connectedOpportunityErrors = this.props.connectedOpportunityErrors.map(error => (
       <ListItem >
         <ListItemText primary={error}
           classes={{ primary: classes.listText }}/>
       </ListItem>
     ));
-
-    // let loader = (
-    //   <Grid container justify='center' alignItems='center'
-    //     className={classes.loader}>
-    //     <CircularProgress className={classes.progress} />
-    //   </Grid>
-    // )
-    //
-    // let picture = pictureUrl ? (
-    //   <Img src={pictureUrl}
-    //     className={classes.cover}
-    //     loader={loader}
-    //     />
-    // ) : undefined
-
-    // <Img src={PickImage(industries[0])}
-    //   className={classes.cover}
-    //   loader={loader}
-    //   />
 
     switch(page) {
       case "sent":
@@ -460,124 +440,9 @@ class CardModal extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            {/*<Grid item xs={10} container justify='flex-start'
-              style={{ margin: "40px 0px 25px"}}>
-              <Typography variant="h5" gutterBottom align='left'
-                color="textPrimary" className={classes.submitHeader}>
-                {connectBool ?
-                  `Connect to this opportunity` :
-                  `Refer a trusted contact to this opportunity`}
-              </Typography>
-              <Typography variant="body1" gutterBottom align='left'
-                color="textPrimary" className={classes.section}>
-                {connectBool ?
-                  `Once you press the send button below you'll receive an
-                  email introducing you to the opportunity owner. We'll
-                  let you work your magic from there.` :
-                  `Once you press the send button below you'll receive an
-                  email introducing you to the opportunity owner. We'll
-                  let you take it from there and loop in your contact.`
-                }
-              </Typography>
-
-              <Grid container justify='flex-end'
-                style={{ margin: "25px 0px"}}>
-                <Button onClick={this.handleConnectionTemplate}
-                  style={{ fontSize: 12, textTransform: "capitalize"}}>
-                  Preview Email
-                </Button>
-                <Button onClick={this.handleConnection()}
-                  variant='contained' color='primary'
-                  disabled={connectLoading}
-                  style={{ marginLeft: 20}}>
-                  Send
-                  <SendIcon className={classes.rightIcon} />
-                </Button>
-              </Grid>
-            </Grid>*/}
           </Grid>
         );
       default:
-        {/*return (
-          <Grid container justify="center" alignItems='center'>
-            <Grid item xs={12}>
-              {picture}
-            </Grid>
-            <Grid item xs={11} sm={10} md={8} className={classes.cardContent}
-              container justify='center' spacing={16}>
-              <Grid item xs={12}>
-                <Typography variant="h5" gutterBottom align='left'
-                  color="textPrimary">
-                  {title}
-                </Typography>
-                <Typography variant="body2" gutterBottom align='left'
-                  color="textPrimary">
-                  {description}
-                </Typography>
-              </Grid>
-
-              <Grid container justify='flex-start' spacing={24}>
-                <Grid item xs={4}>
-                  <Typography variant="h6" gutterBottom align='left'
-                    color="textPrimary"
-                    className={classes.cardSubHeader}>
-                    Geography
-                  </Typography>
-                  <Typography variant="subtitle1" gutterBottom align='left'
-                    color="textPrimary" className={classes.cardSubContent}>
-                    {geography.join(", ")}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={5}>
-                  <Typography variant="h6" gutterBottom align='left'
-                    color="textPrimary"
-                    className={classes.cardSubHeader}>
-                    Industry
-                  </Typography>
-                  <Typography variant="subtitle1" gutterBottom align='left'
-                    color="textPrimary" className={classes.cardSubContent}>
-                    {industries.join(", ")}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={3}>
-                  <Typography variant="h6" gutterBottom align='left'
-                    color="textPrimary"
-                    className={classes.cardSubHeader}>
-                    Value
-                  </Typography>
-                  <Typography variant="subtitle1" gutterBottom align='left'
-                    color="textPrimary"className={classes.cardSubContent}>
-                    {value}
-                  </Typography>
-                </Grid>
-              </Grid>
-
-              <Grid container justify='flex-start'
-                style={{ margin: "10px 0px"}}>
-                <Button variant="contained" color='primary'
-                  onClick={this.handleConfirm(true)}
-                  className={classes.actionButton}
-                  style={{marginRight: 20}}>
-                  Connect Me
-                </Button>
-
-                <Button variant="contained" color='primary'
-                  onClick={this.handleConfirm(false)}
-                  className={classes.actionButton}>
-                  Refer A Trusted Contact
-                </Button>
-              </Grid>
-
-              <Typography variant="body2" align='left'
-                color="textPrimary" style={{ marginBottom: 30 }}>
-                Once you connect or refer above, we'll send you an email introducing
-                you to the opportunity owner
-              </Typography>
-            </Grid>
-          </Grid>
-        )*/}
         return ""
     }
   }
@@ -588,6 +453,7 @@ class CardModal extends React.Component {
 
     if (!_.isEmpty(opportunities[oppCardModal.oppId]) ||
       oppCardModal.fake){
+
       let externalUserMessage = (
         <Grid container justify='center'
           style={{ padding: "20px 0px"}}>
@@ -609,7 +475,7 @@ class CardModal extends React.Component {
             </Typography>
             <Grid container justify='center'>
               <Button variant="contained" color='primary'
-                onClick={this.handleSignup}
+                onClick={this.redirectToSignup}
                 className={classes.button}>
                 Sign Up
               </Button>

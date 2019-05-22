@@ -15,6 +15,8 @@ import analytics from 'redux-analytics';
 
 const prod = process.env.NODE_ENV === 'production';
 
+// const prod = process.env.NODE_ENV === 'development';
+// debugger
 // Initialize Amplitude
 const amplitudeInstance = amplitude.getInstance();
 amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
@@ -23,13 +25,15 @@ amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
 // amplitudeInstance.logEvent('Test')
 const target = Amplitude({ instance: amplitudeInstance });
 
-// const eventsMap = {
-//   '*': logEvent((action, prevState, nextState) => {
-//     return {
-//     category: 'redux',
-//     action: 'test'
-//   }}),
-// }
+const eventsMap = {
+  '*': logEvent((action, prevState, nextState) => {
+    return {
+    category: 'redux',
+    action: 'test'
+  }}),
+}
+
+const amplitudeMiddleware = createMiddleware(eventsMap, target);
 
 // let trackEvent = logEvent((action, prevState, nextState) => ({
 //     category: 'redux',
@@ -46,8 +50,6 @@ const target = Amplitude({ instance: amplitudeInstance });
 //   }
 // }
 
-// const amplitudeMiddleware = createMiddleware(eventsMap, target);
-
 // const analyticsMiddleware = analytics(({ type, payload }) => {
 //   amplitudeInstance.logEvent(action => ({
 //     category: 'redux',
@@ -56,10 +58,10 @@ const target = Amplitude({ instance: amplitudeInstance });
 // });
 
 // const customMiddleWare = store => next => action => {
-//   console.log("Middleware triggered:", action);
+//   console.log("Middleware triggered:");
 //   // debugger
 //   if(!(action instanceof Function)){
-//     amplitudeInstance.logEvent('Test in MiddleWare')
+//     // amplitudeInstance.logEvent('Test in MiddleWare')
 //     // amplitudeInstance.logEvent((action, store) => ({
 //     //   category: 'redux',
 //     //   action: 'test'
@@ -106,7 +108,7 @@ export default (preloadedState = {}) => {
       applyMiddleware(
         // customMiddleWare,
         // analyticsMiddleware,
-        // amplitudeMiddleware,
+        amplitudeMiddleware,
         createSentryMiddleware(Sentry),
         thunk,
         logger,

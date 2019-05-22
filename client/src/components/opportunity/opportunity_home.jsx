@@ -592,7 +592,8 @@ class OpportunityHome extends React.Component {
   componentDidMount(){
     const { userFeature } = this.props;
     const workspaceId = this.props.siteTemplate.networkId
-    if(workspaceId){this.resetWorkspace(workspaceId)}
+    // if(workspaceId){this.resetWorkspace(workspaceId)}
+    this.resetWorkspace(workspaceId)
 
     this.props.fetchSavedOpportunities();
     this.props.fetchCurrentUserMetrics();
@@ -661,7 +662,7 @@ class OpportunityHome extends React.Component {
     }
   }
 
-  resetWorkspace(workspaceId){
+  resetWorkspace(workspaceId = 1){
     this.props.fetchWorkspaceOptions(workspaceId)
     .then(() => {
       const { networks } = this.props;
@@ -671,6 +672,7 @@ class OpportunityHome extends React.Component {
         let referralNetwork = networksArray[0].id;
         let source = this.getSource();
         // Choose all opportunities for this workspace
+        // debugger
         this.props.fetchOpportunities(workspaceId, source)
         .then(() => {
           this.setState({

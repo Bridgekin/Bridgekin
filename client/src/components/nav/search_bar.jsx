@@ -25,6 +25,15 @@ import SearchItem from './search_item';
 import { fetchSearchResults } from '../../actions/user_actions';
 import { fetchConnections } from '../../actions/connection_actions';
 
+import amplitude from 'amplitude-js';
+const prod = process.env.NODE_ENV === 'production';
+const amplitudeInstance = amplitude.getInstance();
+if(prod){
+  amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
+} else {
+  amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
+}
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   searchResults: state.entities.searchResults,
@@ -154,6 +163,9 @@ class SearchBar extends React.Component {
     this.setState({ searchAnchorEl: null })
     if (searchInput.length > 0){
       this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
+
+      // Track Event
+      amplitudeInstance.logEvent('Show Search Results')
     }
   }
 

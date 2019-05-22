@@ -12,6 +12,7 @@ class Api::OpportunitiesController < ApiController
   # after_action :verify_policy_scoped, only: :index
 
   def index
+    # debugger
     option = params[:option].split('-')
     @opportunities = []
     if option.empty?

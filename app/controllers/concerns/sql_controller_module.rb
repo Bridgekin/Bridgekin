@@ -34,7 +34,8 @@ module SQLControllerModule
         opportunities: {deal_status: 'Deleted', owner_id: @user})
         # opportunity_id: direct_opp_perms.pluck(:opportunity_id),
         # opportunity_id: indirect_opp_perms.pluck(:opportunity_id),
-
+    
+    # debugger
     #Pull out opportunities
     all_perms = direct_opp_perms + indirect_opp_perms + network_opp_perms
     all_opportunities = all_perms.map{|perm| perm.opportunity}
