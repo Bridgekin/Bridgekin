@@ -293,6 +293,13 @@ class CardModal extends React.Component {
       connectBool,
       this.props.oppCardModal.oppId
     )
+    
+    // Track Event
+    if(connectBool){
+      amplitudeInstance.logEvent('Open Custom Email - Connect Opportunity (Template)')
+    } else {
+      amplitudeInstance.logEvent('Open Custom Email - Refer Opportunity (Template)')
+    }
   }
 
   handleConfirm(connectBool){
