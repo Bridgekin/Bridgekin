@@ -296,9 +296,9 @@ class CardModal extends React.Component {
     
     // Track Event
     if(connectBool){
-      amplitudeInstance.logEvent('Open Custom Email - Connect Opportunity (Template)')
+      amplitudeInstance.logEvent('Open Custom Email - Connect Opportunity')
     } else {
-      amplitudeInstance.logEvent('Open Custom Email - Refer Opportunity (Template)')
+      amplitudeInstance.logEvent('Open Custom Email - Refer Opportunity')
     }
   }
 

@@ -239,9 +239,13 @@ class CustomEmailModal extends React.Component {
             connectBool: customEmailModal.connectBool
           }
           this.props.openOppCard(response);
-
+          
           // Track Event
-          amplitudeInstance.logEvent('Connect To An Opportunity (Custom)')
+          if(customEmailModal.connectBool){
+            amplitudeInstance.logEvent('Connect To An Opportunity (Custom)')
+          } else {
+            amplitudeInstance.logEvent('Refer To An Opportunity (Custom)')
+          }
         })
     }
   }
