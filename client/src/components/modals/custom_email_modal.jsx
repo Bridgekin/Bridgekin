@@ -32,7 +32,7 @@ import { createConnectedOpportunity } from '../../actions/connected_opportunity_
 import amplitude from 'amplitude-js';
 const prod = process.env.NODE_ENV === 'production';
 const amplitudeInstance = amplitude.getInstance();
-if(prod){
+if(window.location.origin === "https://bridgekin.com"){
   amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
 } else {
   amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
