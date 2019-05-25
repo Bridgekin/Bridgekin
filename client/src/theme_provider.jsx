@@ -23,6 +23,7 @@ import SubmitOppModal from './components/modals/submit_opp_modal';
 import DeleteOppModal from './components/modals/delete_opp_modal';
 import ExternalInviteModal from './components/modals/external_invite_modal';
 import SignupModal from './components/modals/signup_modal';
+import LoginModal from './components/modals/login_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -81,6 +82,7 @@ class ThemeProvider extends React.Component{
             <SignupModal />
             <OppCardModal/>
             <WaitlistModal/>
+            <LoginModal />
 
           </GAListener>
         </BrowserRouter>

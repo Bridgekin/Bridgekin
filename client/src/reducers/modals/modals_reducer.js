@@ -13,6 +13,7 @@ import submitOppReducer from './submit_opp_reducer';
 import deleteOppReducer from './delete_opp_reducer';
 import externalInviteReducer from './external_invite_reducer';
 import signupReducer from './signup_reducer';
+import loginReducer from './login_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -29,4 +30,5 @@ export default combineReducers({
   deleteOpp: deleteOppReducer,
   externalInvite: externalInviteReducer,
   signup: signupReducer,
+  login: loginReducer,
 });

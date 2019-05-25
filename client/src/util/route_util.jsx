@@ -28,7 +28,7 @@ const HiringAuth = ({ currentUser, path, component: Component}) => (
   <Route
     path={path}
     render={props => (
-      currentUser ? <Redirect to="/hiring_dashboard" /> :
+      currentUser ? <Redirect to="/hiring/dashboard" /> :
       <Component{...props} />
     )}
   />

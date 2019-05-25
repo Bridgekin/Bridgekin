@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { AuthRoute,
   ProtectedRoute,
-  HiringAuthRoute,
-  HiringProtectedRoute,
   AdminProtectedRoute,
   TemplateProtectedRoute,
   ReferralProtectedRoute } from './util/route_util';
@@ -44,31 +42,22 @@ import ScrollToTop from './components/scroll_to_top';
 
 import ImportContacts from './components/google/import_contacts';
 
-import HiringHome from './components/hiring/home.jsx'
-import HiringDashboard from './components/hiring/dashboard.jsx'
-import HiringShow from './components/hiring/show_opp.jsx'
-import HiringChangeOpp from './components/hiring/change_opp.jsx'
-
-// const mapStateToProps = state => ({
-//   currentUser: state.users[state.session.id]
-// });
-
-// class App extends React.Component {
-//   render(){
-//     const { currentUser } = this.props;
-//
-//     return (
-//     )
-//   }
-// }
+import HiringRouter from './components/hiring/hiring_router.jsx'
+import HiringNav from './components/hiring/nav.jsx'
 
 export default ()=> (
   <div>
     <ScrollToTop />
-    <Route path="/" component={HomeNav} />
+
+    <Switch>
+      <Route path="/hiring" component={HiringNav} />
+      <Route path="/" component={HomeNav} />
+    </Switch>
 
     {/* General Modals */}
     <Switch>
+      <Route path="/hiring" component={HiringRouter} />
+
       <ProtectedRoute path="/importcontacts" component={ImportContacts} />
       <ProtectedRoute path="/findandconnect/:source?" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
@@ -77,11 +66,6 @@ export default ()=> (
       <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
       <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
       <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
-
-      <HiringAuthRoute path="/hiring" component={HiringHome} />
-      <HiringProtectedRoute path="/hiring_dashboard" component={HiringDashboard} />
-      <HiringProtectedRoute path="/hiring_change" component={HiringChangeOpp} />
-      <Route path="/hiring_show" component={HiringShow} />
 
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/login" component={Login}/>

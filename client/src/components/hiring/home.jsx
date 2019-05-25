@@ -32,10 +32,19 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.base2,
   },
+  // grid:{
+  //   background: 'white', 
+  //   paddingTop: 18,
+  //   borderRight: "1px solid light-grey"
+  // }
   grid:{
-    background: 'white', 
-    paddingTop: 18,
-    borderRight: "1px solid light-grey"
+    paddingTop: 64,
+    paddingBottom: '10%'
+  },
+  container:{
+  },
+  textField:{
+    // height: 34
   }
 })
 
@@ -80,71 +89,146 @@ class HiringHome extends React.Component {
     const { classes, dimensions } = this.props;
     const { fname, email, password } = this.state;
 
-    let content = <Grid item xs={10} sm={8}>
-      <Grid container justify='center'>
-        <Typography align='center' color='textPrimary'
-          gutterBottom
-          style={{ fontSize: 20, fontWeight: 600, marginTop: 20}}>
-          {`Super-Charge Your AngelList Postings!`}
-        </Typography>
-        <Typography align='center' color='textPrimary'
-          gutterBottom
-          style={{ fontSize: 14}}>
-          {`Drive more traffic to your postings by Angel List postings`}
-        </Typography>
-        <Grid item xs={7} container justify='center'
-          style={{ marginTop: 30 }}>
-          <Typography align='center' color='textPrimary'
-            gutterBottom
-            style={{ fontSize: 20, fontWeight: 600}}>
-            {`Signup`}
-          </Typography>
+    // let content = <Grid item xs={10} sm={8}>
+    //   <Grid container justify='center'>
+    //     <Typography align='center' color='textPrimary'
+    //       gutterBottom
+    //       style={{ fontSize: 20, fontWeight: 600, marginTop: 20}}>
+    //       {`Super-Charge Your AngelList Postings!`}
+    //     </Typography>
+    //     <Typography align='center' color='textPrimary'
+    //       gutterBottom
+    //       style={{ fontSize: 14}}>
+    //       {`Drive more traffic to your postings by Angel List postings`}
+    //     </Typography>
+    //     <Grid item xs={7} container justify='center'
+    //       style={{ marginTop: 30 }}>
+    //       <Typography align='center' color='textPrimary'
+    //         gutterBottom
+    //         style={{ fontSize: 20, fontWeight: 600}}>
+    //         {`Signup`}
+    //       </Typography>
+    //       <TextField
+    //         required
+    //         label="First Name"
+    //         className={classes.textField}
+    //         margin="normal"
+    //         fullWidth
+    //         variant='outlined'
+    //         value={fname}
+    //         onChange={this.handleChange('fname')}
+    //         onMouseUp={this.handleChange('fname')}
+    //         />
+    //       <TextField
+    //         required
+    //         label="Email"
+    //         className={classes.textField}
+    //         margin="normal"
+    //         fullWidth
+    //         variant='outlined'
+    //         value={email}
+    //         onChange={this.handleChange('email')}
+    //         onMouseUp={this.handleChange('email')}
+    //         />
+    //       <TextField
+    //         required
+    //         label="Password"
+    //         className={classes.textField}
+    //         margin="normal"
+    //         fullWidth
+    //         variant='outlined'
+    //         type="password"
+    //         value={password}
+    //         onChange={this.handleChange('password')}
+    //         onMouseUp={this.handleChange('password')}
+    //         />
+    //       <Button variant="contained" color="primary"
+    //         className={classes.button} fullWidth
+    //         disabled={!fname || !email || !password}
+    //         onClick={this.handleSignup}
+    //         style={{ margin: "10px 0px"}}>
+    //         Sign In
+    //       </Button>
+    //     </Grid>
+    //   </Grid>
+    // </Grid>
+
+    // return <HiringContainer content={content} />
+
+    let form = (
+      <Grid container justify='center' alignItems='center'>
+        <Grid item xs={3} container justify='center'>
           <TextField
             required
             label="First Name"
             className={classes.textField}
             margin="normal"
-            fullWidth
             variant='outlined'
             value={fname}
             onChange={this.handleChange('fname')}
             onMouseUp={this.handleChange('fname')}
             />
+        </Grid>
+
+        <Grid item xs={3} container justify='center'>
           <TextField
             required
             label="Email"
             className={classes.textField}
             margin="normal"
-            fullWidth
             variant='outlined'
             value={email}
             onChange={this.handleChange('email')}
             onMouseUp={this.handleChange('email')}
             />
+        </Grid>
+
+        <Grid item xs={3} container justify='center'>
           <TextField
             required
             label="Password"
             className={classes.textField}
             margin="normal"
-            fullWidth
             variant='outlined'
             type="password"
             value={password}
             onChange={this.handleChange('password')}
             onMouseUp={this.handleChange('password')}
             />
+        </Grid>
+
+        <Grid item xs={3} container justify='center'>
           <Button variant="contained" color="primary"
-            className={classes.button} fullWidth
+            className={classes.button}
             disabled={!fname || !email || !password}
             onClick={this.handleSignup}
-            style={{ margin: "10px 0px"}}>
-            Sign In
+            style={{ margin: 20}}>
+            {`SignUp`}
           </Button>
         </Grid>
       </Grid>
-    </Grid>
+    )
 
-    return <HiringContainer content={content} />
+    return (
+      <Grid container justify='center' alignItems='center' className={classes.grid}
+      style={{ minHeight: dimensions.height}}>
+        <Grid item container xs={11} sm={9} md={8}
+        justify='center'>
+          <Grid item xs={8}>
+            <Typography color='textPrimary' align='center' gutterBottom
+              style={{ fontSize: 64, fontWeight: 600}}>
+              {`Hire smarter from within your network`}
+            </Typography>
+            <Typography color='textPrimary' align='center' gutterBottom
+            stle={{ fontSize: 18}}>
+              {`Easily get referred top candidates today, send a reward when you hire them tomorrow`}
+            </Typography>
+          </Grid>
+
+          {form}
+        </Grid>
+      </Grid>
+    )
   }
 }
 

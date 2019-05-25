@@ -46,7 +46,7 @@ import logo from '../../static/Bridgekin_Logo.png';
 import whiteLogo from '../../static/bridgekin_white.png';
 import whiteLogoMobile from '../../static/white_mobile.png';
 import logoMobile from '../../static/apple-touch-icon.png';
-import LoginModal from './login_modal';
+import LoginModal from '../modals/login_modal';
 import SearchBar from './search_bar';
 
 import { login, logout } from '../../actions/session_actions';
@@ -57,6 +57,7 @@ import { fetchSiteTemplate } from '../../actions/site_template_actions';
 import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 import { fetchSearchResults } from '../../actions/user_actions';
+import { openLogin } from '../../actions/modal_actions';
 
 import { fetchNotifications, updateAsRead } from '../../actions/notification_actions';
 // import timeBetweenDates from 'time-between-dates';
@@ -87,6 +88,7 @@ const mapDispatchToProps = dispatch => ({
   fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput)),
   fetchNotifications: () => dispatch(fetchNotifications()),
   updateAsRead: (ids) => dispatch(updateAsRead(ids)),
+  openLogin: (login) => dispatch(openLogin(login))
 });
 
 let styles = (theme) => ({
@@ -308,6 +310,10 @@ class HomeNav extends React.Component {
 
     this.props.login(credentials)
     .then((user) => {
+      if(this.props.sessionErrors.length > 0){
+        this.props.openLogin()
+      }
+      
       if(path.includes('signup') && user){
         let referralCode = path.pop();
         this.props.addUserByReferral(referralCode, user.id)
