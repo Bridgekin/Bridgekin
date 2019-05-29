@@ -29,15 +29,6 @@ import { registerWaitlistFromReferral } from '../../actions/waitlist_user_action
 import { clearEmailTemplateErrors } from '../../actions/error_actions';
 import { createConnectedOpportunity } from '../../actions/connected_opportunity_actions';
 
-import amplitude from 'amplitude-js';
-const prod = process.env.NODE_ENV === 'production';
-const amplitudeInstance = amplitude.getInstance();
-if(window.location.origin === "https://bridgekin.com"){
-  amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
-} else {
-  amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
-}
-
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   customEmailModal: state.modals.customEmail,
@@ -216,7 +207,7 @@ class CustomEmailModal extends React.Component {
         this.props.openWaitlist(true);
 
         // Track Event
-        amplitudeInstance.logEvent('Submit A Waitlist User (Custom)')
+        window.amplitudeInstance.logEvent('Submit A Waitlist User (Custom)')
       })
     } else if (customEmailModal.type === "connected_opportunity"){
       const { opportunities, customEmailModal } = this.props;
@@ -242,9 +233,9 @@ class CustomEmailModal extends React.Component {
           
           // Track Event
           if(customEmailModal.connectBool){
-            amplitudeInstance.logEvent('Connect To An Opportunity (Custom)')
+            window.amplitudeInstance.logEvent('Connect To An Opportunity (Custom)')
           } else {
-            amplitudeInstance.logEvent('Refer To An Opportunity (Custom)')
+            window.amplitudeInstance.logEvent('Refer To An Opportunity (Custom)')
           }
         })
     }

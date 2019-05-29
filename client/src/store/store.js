@@ -18,22 +18,22 @@ const prod = process.env.NODE_ENV === 'production';
 // const prod = process.env.NODE_ENV === 'development';
 // debugger
 // Initialize Amplitude
-const amplitudeInstance = amplitude.getInstance();
-amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
+// const amplitudeInstance = amplitude.getInstance();
+// amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
 // RAILS.ENV('')
 
 // amplitudeInstance.logEvent('Test')
-const target = Amplitude({ instance: amplitudeInstance });
+// const target = Amplitude({ instance: amplitudeInstance });
 
-const eventsMap = {
-  '*': logEvent((action, prevState, nextState) => {
-    return {
-    category: 'redux',
-    action: 'test'
-  }}),
-}
+// const eventsMap = {
+//   '*': logEvent((action, prevState, nextState) => {
+//     return {
+//     category: 'redux',
+//     action: 'test'
+//   }}),
+// }
 
-const amplitudeMiddleware = createMiddleware(eventsMap, target);
+// const amplitudeMiddleware = createMiddleware(eventsMap, target);
 
 // let trackEvent = logEvent((action, prevState, nextState) => ({
 //     category: 'redux',
@@ -59,16 +59,23 @@ const amplitudeMiddleware = createMiddleware(eventsMap, target);
 
 // const customMiddleWare = store => next => action => {
 //   console.log("Middleware triggered:");
-//   // debugger
-//   if(!(action instanceof Function)){
-//     // amplitudeInstance.logEvent('Test in MiddleWare')
-//     // amplitudeInstance.logEvent((action, store) => ({
-//     //   category: 'redux',
-//     //   action: 'test'
-//     // }))
-//   }
-//   next(action);
+//   window.amplitudeInstance.logEvent(action)
+//   // if(!(action instanceof Function)){
+//   //   window.amplitudeInstance.logEvent((action, store) => ({
+//   //     category: 'redux',
+//   //     action
+//   //   }))
+//   // }
+//   return next(action);
 // }
+
+const customMiddleWare = store => next => action => {
+  console.log("Middleware triggered:");
+  if(!(action instanceof Function)){
+    window.amplitudeInstance.logEvent(action.type)
+  }
+  return next(action);
+}
 
 // Sentry State Transformer
 const stateTransformer = state => {
@@ -97,6 +104,7 @@ export default (preloadedState = {}) => {
       rootReducer,
       preloadedState,
       applyMiddleware(
+        customMiddleWare,
         createSentryMiddleware(Sentry, {stateTransformer}),
         thunk
       )
@@ -106,9 +114,9 @@ export default (preloadedState = {}) => {
       rootReducer,
       preloadedState,
       applyMiddleware(
-        // customMiddleWare,
+        customMiddleWare,
         // analyticsMiddleware,
-        amplitudeMiddleware,
+        // amplitudeMiddleware,
         createSentryMiddleware(Sentry),
         thunk,
         logger,

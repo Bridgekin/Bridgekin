@@ -34,15 +34,6 @@ import { closeOppCard } from '../../actions/modal_actions';
 import { fetchProfile } from '../../actions/user_actions';
 import { openCustomEmailOppCard } from '../../actions/modal_actions';
 
-import amplitude from 'amplitude-js';
-const prod = process.env.NODE_ENV === 'production';
-const amplitudeInstance = amplitude.getInstance();
-if(window.location.origin === "https://bridgekin.com"){
-  amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
-} else {
-  amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
-}
-
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   opportunities: state.entities.opportunities,
@@ -275,9 +266,9 @@ class CardModal extends React.Component {
 
           // Track Event
           if(connectBool){
-            amplitudeInstance.logEvent('Connect To An Opportunity (Template)')
+            window.amplitudeInstance.logEvent('Connect To An Opportunity (Template)')
           } else {
-            amplitudeInstance.logEvent('Refer To An Opportunity (Template)')
+            window.amplitudeInstance.logEvent('Refer To An Opportunity (Template)')
           }
         });
       })
@@ -296,9 +287,9 @@ class CardModal extends React.Component {
     
     // Track Event
     if(connectBool){
-      amplitudeInstance.logEvent('Open Custom Email - Connect Opportunity')
+      window.amplitudeInstance.logEvent('Open Custom Email - Connect Opportunity')
     } else {
-      amplitudeInstance.logEvent('Open Custom Email - Refer Opportunity')
+      window.amplitudeInstance.logEvent('Open Custom Email - Refer Opportunity')
     }
   }
 

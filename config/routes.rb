@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    get 'public_env_variables', :to => 'utils#show'
     post 'add_external_user', :to => 'users#add_external_user'
     get 'third_parties/google_contacts', :to => 'third_parties#google_contacts'
     delete 'destroy_user_connected_opps', :to => 'connected_opportunities#destroy_user_connected_opps'

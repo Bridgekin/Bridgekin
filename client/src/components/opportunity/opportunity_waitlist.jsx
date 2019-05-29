@@ -14,15 +14,6 @@ import { openWaitlist } from '../../actions/modal_actions';
 import { registerWaitlistFromReferral } from '../../actions/waitlist_user_actions';
 import { openCustomEmailWaitlistReferral } from '../../actions/modal_actions';
 
-import amplitude from 'amplitude-js';
-const prod = process.env.NODE_ENV === 'production';
-const amplitudeInstance = amplitude.getInstance();
-if(window.location.origin === "https://bridgekin.com"){
-  amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
-} else {
-  amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
-}
-
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   // waitlistErrors: state.errors.waitlistUsers
@@ -144,7 +135,7 @@ class OpportunityWaitlist extends React.Component{
               fname: ''
             })
           })
-        amplitudeInstance.logEvent('Submit A Waitlist User (Template)')
+        window.amplitudeInstance.logEvent('Submit A Waitlist User (Template)')
       })
     }
   }
@@ -155,7 +146,7 @@ class OpportunityWaitlist extends React.Component{
       this.state.email,
       this.state.fname,
     )
-    amplitudeInstance.logEvent('Open Custom Waitlist Email')
+    window.amplitudeInstance.logEvent('Open Custom Waitlist Email')
   }
 
   handleClose(){

@@ -8,18 +8,28 @@ import './index.css';
 import dotenv from 'dotenv'
 
 import { handleAuthErrors } from './actions/fetch_error_handler';
-import { getAuthUserId } from './util/session_api_util';
+import { getAuthUserId, getPublicEnv } from './util/session_api_util';
 import { receiveCurrentUser } from './actions/session_actions';
 import { receiveUser } from './actions/user_actions';
 import getTheme from './components/theme.js';
 import BridgekinLogo from './static/Bridgekin_Logo.png';
 import * as Sentry from '@sentry/browser';
 
-// dotenv.config();
-// let val = process.env.GOOGLE_USER
-// require('dotenv').config({path: __dirname + '/.env'})
-// const env = dotenv.config({path: './.env'}).parsed;
-// debugger
+import amplitude from 'amplitude-js';
+window.amplitudeInstance = amplitude.getInstance();
+
+getPublicEnv()
+.then(handleAuthErrors)
+.then((env) => {
+  window.publicEnv = env;
+  
+  if(window.publicEnv.railsEnv === 'production'){
+    window.amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
+  } else {
+    window.amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
+  }
+})
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const root = document.getElementById('root');

@@ -27,8 +27,14 @@ export const logout = () => (
 export const getAuthUserId = (token) => (
   fetch(`${window.location.origin}/api/authorization`, {
     headers: {
-        "Authorization":token
+      "Authorization": token
     },
+    method: 'GET'
+  })
+)
+
+export const getPublicEnv = () => (
+  fetch(`${window.location.origin}/api/public_env_variables`, {
     method: 'GET'
   })
 )

@@ -25,15 +25,6 @@ import SearchItem from './search_item';
 import { fetchSearchResults } from '../../actions/user_actions';
 import { fetchConnections } from '../../actions/connection_actions';
 
-import amplitude from 'amplitude-js';
-const prod = process.env.NODE_ENV === 'production';
-const amplitudeInstance = amplitude.getInstance();
-if(window.location.origin === "https://bridgekin.com"){
-  amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
-} else {
-  amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
-}
-
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   searchResults: state.entities.searchResults,
@@ -165,7 +156,7 @@ class SearchBar extends React.Component {
       this.props.history.push(`/mynetwork/searchresults/${searchInput}`)
 
       // Track Event
-      amplitudeInstance.logEvent('Show Search Results')
+      window.amplitudeInstance.logEvent('Show Search Results')
     }
   }
 
