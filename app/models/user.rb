@@ -122,6 +122,10 @@ class User < ApplicationRecord
     foreign_key: :user_id,
     class_name: :UserFeature
 
+  has_many :ref_opportunities,
+  foreign_key: :owner_id,
+  class_name: :RefOpportunity
+
   def connections
     Connection.includes(:requestor, :recipient)
     .where("user_id = ? OR friend_id = ?", self.id, self.id)

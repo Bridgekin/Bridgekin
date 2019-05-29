@@ -6,7 +6,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 
 import HiringHome from './home.jsx'
 import HiringDashboard from './dashboard.jsx'
-// import HiringShow from './components/hiring/show_opp.jsx'
+import HiringShow from './show_posting.jsx'
 import HiringCreate from './create/create_flow.jsx'
 
 import { HiringAuthRoute,
@@ -37,7 +37,7 @@ class HiringRouter extends React.Component {
       <Switch>
         <HiringProtectedRoute path="/hiring/dashboard" component={HiringDashboard} />
         <HiringProtectedRoute path="/hiring/create" component={HiringCreate} />
-        {/* <Route path="/hiring_show" component={HiringShow} /> */}
+        <Route path="/hiring/show" component={HiringShow} />
         <HiringAuthRoute path="/hiring" component={HiringHome} />
       </Switch>
     </div>

@@ -35,9 +35,10 @@ class Api::RefOpportunitiesController < ApiController
   private
 
   def ref_opp_params
-    params.require(:ref_opp).permit(:title, :description, :url,
-      :city, :state, :company, :salary, :incentive_interview,
-      :incentive_hire, :owner_id)
+    params.require(:ref_opp).permit(:title, :description,
+      :url, :city, :state, :company, :compensation, 
+      :interview_incentive, :hire_incentive, :owner_id,
+      )
   end
 
   def set_ref_opp
