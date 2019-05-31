@@ -54,6 +54,11 @@ export const CLEAR_USER_FEATURE_ERRORS = 'CLEAR_USER_FEATURE_ERRORS';
 export const RECEIVE_GOOGLE_IMPORT_ERRORS = 'RECEIVE_GOOGLE_IMPORT_ERRORS';
 export const CLEAR_GOOGLE_IMPORT_ERRORS = 'CLEAR_GOOGLE_IMPORT_ERRORS';
 
+export const RECEIVE_REF_OPP_ERRORS = 'RECEIVE_REF_OPP_ERRORS';
+export const CLEAR_REF_OPP_ERRORS = 'CLEAR_REF_OPP_ERRORS';
+export const RECEIVE_REF_APPLICATION_ERRORS = 'RECEIVE_REF_APPLICATION_ERRORS';
+export const CLEAR_REF_APPLICATION_ERRORS = 'CLEAR_REF_APPLICATION_ERRORS';
+
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
   errors
@@ -268,4 +273,22 @@ export const receiveGoogleImportErrors = errors => ({
 
 export const clearGoogleImportErrors = () => ({
   type: CLEAR_GOOGLE_IMPORT_ERRORS,
+});
+
+export const receiveRefOppErrors = errors => ({
+  type: RECEIVE_REF_OPP_ERRORS,
+  errors
+});
+
+export const clearRefOppErrors = () => ({
+  type: CLEAR_REF_OPP_ERRORS,
+});
+
+export const receiveRefApplicationErrors = errors => ({
+  type: RECEIVE_REF_APPLICATION_ERRORS,
+  errors
+});
+
+export const clearRefApplicationErrors = () => ({
+  type: CLEAR_REF_APPLICATION_ERRORS,
 });

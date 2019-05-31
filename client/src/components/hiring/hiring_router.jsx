@@ -8,6 +8,7 @@ import HiringHome from './home.jsx'
 import HiringDashboard from './dashboard.jsx'
 import HiringShow from './show_posting.jsx'
 import HiringCreate from './create/create_flow.jsx'
+import HiringSharing from './share_posting.jsx'
 
 import { HiringAuthRoute,
   HiringProtectedRoute } from '../../util/route_util';
@@ -37,7 +38,8 @@ class HiringRouter extends React.Component {
       <Switch>
         <HiringProtectedRoute path="/hiring/dashboard" component={HiringDashboard} />
         <HiringProtectedRoute path="/hiring/create" component={HiringCreate} />
-        <Route path="/hiring/show" component={HiringShow} />
+        <HiringProtectedRoute path="/hiring/share/:id?" component={HiringSharing} />
+        <Route path="/hiring/show/:id?" component={HiringShow} />
         <HiringAuthRoute path="/hiring" component={HiringHome} />
       </Switch>
     </div>

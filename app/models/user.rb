@@ -123,8 +123,12 @@ class User < ApplicationRecord
     class_name: :UserFeature
 
   has_many :ref_opportunities,
-  foreign_key: :owner_id,
-  class_name: :RefOpportunity
+    foreign_key: :owner_id,
+    class_name: :RefOpportunity
+
+  def ref_applications
+    RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)
+  end
 
   def connections
     Connection.includes(:requestor, :recipient)

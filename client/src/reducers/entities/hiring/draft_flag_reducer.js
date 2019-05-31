@@ -3,7 +3,7 @@ import {
 import merge from 'lodash/merge';
 import { TemplateProtectedRoute } from '../../../util/route_util';
 
-export default(state = true, action) => {
+export default(state = false, action) => {
   Object.freeze(state);
 
   switch(action.type){

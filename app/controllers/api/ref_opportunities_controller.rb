@@ -2,13 +2,18 @@ require_relative '../concerns/devise_controller_patch.rb'
 class Api::RefOpportunitiesController < ApiController
   include DeviseControllerPatch
   before_action :set_ref_opp, only: [:show, :update, :destroy]
+  before_action :authenticate_user, except: [:show]
+
+  def index
+    
+  end
 
   def show
     render :show
   end
 
   def create
-    @ref_opp = RefOpp.new(ref_opp_params)
+    @ref_opp = RefOpportunity.new(ref_opp_params)
     if @ref_opp.save
       render :show
     else
@@ -25,8 +30,8 @@ class Api::RefOpportunitiesController < ApiController
   end
 
   def destroy
-    if @ref_opp.update(status: 'Deleted')
-      render :show
+    if @ref_opp.destroy
+      render :json, ['Deleted'], status: 200
     else
       render json: @ref_opp.errors.full_messages, status: 401
     end
@@ -42,6 +47,6 @@ class Api::RefOpportunitiesController < ApiController
   end
 
   def set_ref_opp
-    @ref_opp = RefOpp.find(params[:id])
+    @ref_opp = RefOpportunity.find(params[:id])
   end
 end

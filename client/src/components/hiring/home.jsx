@@ -19,7 +19,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   hireSignup: user => dispatch(hireSignup(user)),
-  openSignup: () => dispatch(openSignup())
+  openSignup: (payload) => dispatch(openSignup(payload))
 });
 
 const styles = theme => ({
@@ -80,7 +80,7 @@ class HiringHome extends React.Component {
       if(this.props.userErrors.length === 0){
         this.props.history.push('/hiring_dashboard')
       } else {
-        this.props.openSignup();
+        this.props.openSignup({ page: 'response'});
       }
     })
   }

@@ -126,7 +126,7 @@ class LoginModal extends React.Component {
   }
 
   handleClose = () => {
-    if(this.props.sessionErrors){
+    if(this.props.sessionErrors.length > 0){
       this.props.clearSessionErrors();
     }
     this.props.closeLogin();

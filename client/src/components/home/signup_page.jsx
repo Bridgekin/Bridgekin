@@ -29,7 +29,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   signup: (user, code) => dispatch(refSignup(user, code)),
-  openSignup: () => dispatch(openSignup())
+  openSignup: (payload) => dispatch(openSignup(payload))
 });
 
 const styles = theme => ({
@@ -144,7 +144,9 @@ class SignupPage extends React.Component{
                   // passwordConfirmation: ''
                 })
               } else {
-                this.props.openSignup();
+                this.props.openSignup({ 
+                  page: 'response'
+                });
                 this.setState({
                   loading: false,
                   success: true,

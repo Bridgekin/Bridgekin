@@ -14,6 +14,7 @@ import deleteOppReducer from './delete_opp_reducer';
 import externalInviteReducer from './external_invite_reducer';
 import signupReducer from './signup_reducer';
 import loginReducer from './login_reducer';
+import refApplicationReducer from './ref_application_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -31,4 +32,5 @@ export default combineReducers({
   externalInvite: externalInviteReducer,
   signup: signupReducer,
   login: loginReducer,
+  refApplication: refApplicationReducer,
 });

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_25_231114) do
+ActiveRecord::Schema.define(version: 2019_05_30_155728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,21 @@ ActiveRecord::Schema.define(version: 2019_05_25_231114) do
     t.index ["user_id"], name: "index_passed_opportunities_on_user_id"
   end
 
+  create_table "ref_applications", force: :cascade do |t|
+    t.string "fname"
+    t.string "lname"
+    t.string "email"
+    t.text "answer_1"
+    t.string "referral_code"
+    t.integer "ref_opp_id"
+    t.integer "direct_referrer_id"
+    t.integer "candidate_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "question_1"
+    t.index ["ref_opp_id"], name: "index_ref_applications_on_ref_opp_id"
+  end
+
   create_table "ref_opp_events", force: :cascade do |t|
     t.integer "owner_id"
     t.string "logged_out_email"
@@ -282,12 +297,13 @@ ActiveRecord::Schema.define(version: 2019_05_25_231114) do
     t.string "title"
     t.text "description"
     t.string "company"
-    t.string "location"
-    t.string "salary"
-    t.string "incentive_interview"
-    t.string "incentive_hire"
+    t.string "interview_incentive"
+    t.string "hire_incentive"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "city"
+    t.string "state"
+    t.string "compensation"
     t.index ["owner_id"], name: "index_ref_opportunities_on_owner_id"
   end
 

@@ -181,8 +181,9 @@ export const closeExternalInvite = () => ({
 export const OPEN_SIGNUP_MODAL = 'OPEN_SIGNUP_MODAL';
 export const CLOSE_SIGNUP_MODAL = "CLOSE_SIGNUP_MODAL";
 
-export const openSignup = () => ({
-  type: OPEN_SIGNUP_MODAL
+export const openSignup = (payload) => ({
+  type: OPEN_SIGNUP_MODAL,
+  payload
 });
 
 export const closeSignup = () => ({
@@ -200,4 +201,17 @@ export const openLogin = (login) => ({
 
 export const closeLogin = () => ({
   type: CLOSE_LOGIN_MODAL,
+});
+
+// Open Ref Application
+export const OPEN_REF_APPLICATION_MODAL = 'OPEN_REF_APPLICATION_MODAL';
+export const CLOSE_REF_APPLICATION_MODAL = "CLOSE_REF_APPLICATION_MODAL";
+
+export const openRefAppModal = (payload) => ({
+  type: OPEN_REF_APPLICATION_MODAL,
+  payload
+});
+
+export const closeRefApplication = () => ({
+  type: CLOSE_REF_APPLICATION_MODAL,
 });
