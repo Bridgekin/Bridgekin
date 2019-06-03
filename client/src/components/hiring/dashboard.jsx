@@ -36,6 +36,7 @@ class HiringDashboard extends React.Component {
 
   componentDidMount(){
     const { userFeature } = this.props;
+    debugger
     if(!userFeature.initialPostingDate){
       this.props.history.push('/hiring/create/AngelList')
     }

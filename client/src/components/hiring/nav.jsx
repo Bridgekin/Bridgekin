@@ -22,7 +22,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  login: (user) => dispatch(login(user)),
+  login: (payload) => dispatch(login(payload)),
   logout: () => dispatch(logout()),
   openLogin: (login) => dispatch(openLogin(login))
 });
@@ -124,7 +124,7 @@ class HiringNav extends React.Component {
     if(currentUser){
       this.props.logout();
     } else {
-      this.props.openLogin(true);
+      this.props.openLogin({ page: 'login' });
     }
   }
 

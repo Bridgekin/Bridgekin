@@ -126,6 +126,10 @@ class User < ApplicationRecord
     foreign_key: :owner_id,
     class_name: :RefOpportunity
 
+  has_many :ref_opp_links,
+    foreign_key: :owner_id,
+    class_name: :RefOppLink
+
   def ref_applications
     RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)
   end

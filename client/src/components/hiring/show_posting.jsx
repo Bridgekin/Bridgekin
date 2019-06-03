@@ -14,8 +14,9 @@ import { SocialIcon } from 'react-social-icons';
 import { fetchRefOpp, createRefOpp, updateRefOpp } from
 '../../actions/ref_opportunity_actions.js';
 import queryString from 'query-string';
-import { openRefAppModal } from '../../actions/modal_actions';
-import { openSignup } from '../../actions/modal_actions';
+import { openRefAppModal, openSignup } from '../../actions/modal_actions';
+import { createRefLink } from '../../actions/ref_link_actions';
+import { fetchRefApplications } from '../../actions/ref_application_actions';
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -26,15 +27,19 @@ const mapStateToProps = (state, ownProps) => {
   dimensions: state.util.window,
   id: ownProps.match.params.id,
   postings: state.entities.hiring.refOpps,
-  referralCode: values.referralCode
+  referralCode: values.referralCode,
+  submittedApps: state.entities.hiring.submittedApps,
+  refApps: state.entities.hiring.refApps,
 }};
 
 const mapDispatchToProps = dispatch => ({
   fetchRefOpp: (id) => dispatch(fetchRefOpp(id)),
+  fetchRefApplications: () => dispatch(fetchRefApplications()),
   createRefOpp: (refOpp) => dispatch(createRefOpp(refOpp)),
   updateRefOpp: (refOpp) => dispatch(updateRefOpp(refOpp)),
   openRefAppModal: (payload) => dispatch(openRefAppModal(payload)),
-  openSignup: (payload) => dispatch(openSignup(payload))
+  openSignup: (payload) => dispatch(openSignup(payload)),
+  createRefLink: id => dispatch(createRefLink(id))
 });
 
 const styles = theme => ({
@@ -74,25 +79,65 @@ class ShowPosting extends React.Component {
     this.handleSave = this.handleSave.bind(this);
     this.handleShare = this.handleShare.bind(this);
     this.handleApplication = this.handleApplication.bind(this);
+    this.isApplyDisabled = this.isApplyDisabled.bind(this);
   }
 
   componentDidMount(){
-    this.props.fetchRefOpp(this.props.id)
-    .then(() => {
-      this.setState({ posting: this.getPosting()})
-    })
+    if(this.props.id){
+      const { id, postings } = this.props
+      this.props.fetchRefOpp(id)
+      .then(() => {
+        this.setState({ posting: postings[id] });
+      })
+
+      this.props.createRefLink(this.props.id)
+      this.props.fetchRefApplications()
+    }
+    // debugger
+    if(this.props.draftFlag){
+      let draftCopy = this.props.draftPosting;
+      this.setState({ posting: draftCopy })
+    }
   }
 
-  getPosting(){
-    const { postings, id, draftFlag, 
-      draftPosting } = this.props;
-    if (draftFlag){
-      return draftPosting;
-    } else if (postings && id) {
-      return postings[id]
+  shouldComponentUpdate(nextProps, nextState){
+    let thisCurrent = this.props.currentUser;
+    let nextCurrent = nextProps.currentUser;
+    if(nextCurrent && thisCurrent !== nextCurrent){
+      this.props.fetchRefApplications()
+      this.props.createRefLink(this.props.id)
     }
-    return undefined
+
+    return true
   }
+
+  isApplyDisabled(posting){
+    const { draftFlag, currentUser, submittedApps, refApps, id } = this.props;
+
+    if(draftFlag || (!draftFlag && posting && currentUser && posting.ownerId === currentUser.id)){
+      return true
+    }
+    // Find submitted Apps
+    let prevApplication = submittedApps.filter(x => {
+      let app = refApps[x];
+      if(currentUser.id === app.candidateId &&
+        parseInt(id) === app.refOppId){ return true }
+      return false
+    })
+    if(prevApplication.length > 0){ return true }
+    return false
+  }
+
+  // getPosting(){
+  //   const { postings, id, draftFlag, 
+  //     draftPosting } = this.props;
+  //   if (draftFlag){
+  //     return posting
+  //   } else if (postings && id) {
+  //     return postings[id]
+  //   }
+  //   return undefined
+  // }
 
   getInfoMessage(){
     const { classes, draftFlag } = this.props;
@@ -153,8 +198,18 @@ class ShowPosting extends React.Component {
   }
 
   handleShare(){
-    const { referralCode } = this.props;
-    this.props.history.push(`/hiring/share/${this.props.id}?referralCode=${referralCode}`)
+    const { currentUser, referralCode, id} = this.props;
+    if(currentUser){
+      this.props.history.push(`/hiring/share/${this.props.id}?referralCode=${referralCode}`)
+    } else {
+      let payload = {
+        page: 'new', id,
+        message: `Quick signup to refer for this position`,
+        type: 'refer',
+      }
+      referralCode && (payload.referralCode = referralCode);
+      this.props.openSignup(payload)
+    }
   }
 
   handleApplication(){
@@ -182,6 +237,7 @@ class ShowPosting extends React.Component {
     
     const { posting, edit, loading } = this.state;
     // let posting = draftFlag ? draftPosting : this.getPosting();
+    // debugger
 
     if(!posting){
       return <Grid container justify='center'
@@ -197,7 +253,7 @@ class ShowPosting extends React.Component {
         <Grid container
         style={{ margin: '20px 0px'}}>
           <Button color='primary' variant='contained'
-          disabled={(draftFlag || !draftFlag && posting && currentUser && posting.ownerId === currentUser.id)}
+          disabled={this.isApplyDisabled(posting)}
           onClick={this.handleApplication}>
             {'Apply'}
           </Button>
@@ -352,7 +408,7 @@ class ShowPosting extends React.Component {
         {this.makeHeader('Refer Job Posting')}
 
         <Grid container direction='column'
-        style={{ paddingBottom: 20, borderBottom: '1px solid grey', marginBottom: 30}}>
+        style={{ paddingBottom: 20, borderBottom: '1px solid grey'}}>
           <Typography color='textPrimary' gutterBottom
           fullWidth
           style={{ fontSize: 18}}>
@@ -383,30 +439,13 @@ class ShowPosting extends React.Component {
         </Grid>
       </div>
     )
+
     let referComponent = (
       <div style={{ flexGrow: 1}}>
-        <ReferralLink />
-
-        <Grid container style={{ marginBottom: 30}}>
-          <Typography color='textPrimary' gutterBottom
-          fullWidth
-          style={{ fontSize: 18}}>
-            {`Share Referral link to your network`}
-          </Typography>
-          <Grid container justify='space-around'
-          item xs={8}>
-            <SocialIcon network="email"
-            url="mailto:mail@example.org"/>
-            <SocialIcon url="http://linkedin.com/" 
-            network="linkedin"/>
-            <SocialIcon url="http://facebook.com/" 
-            network="facebook"/>
-            <SocialIcon url="http://twitter.com/" network="twitter"/>
-          </Grid>
-        </Grid>
+        {currentUser && <ReferralLink show refOppId={id}/>}
 
         <Grid container
-        style={{ marginTop: 50}}>
+        style={{ marginTop: 30}}>
           {draftFlag ? 
           <Button variant='contained' color='primary'
           disabled={edit}
@@ -415,23 +454,31 @@ class ShowPosting extends React.Component {
           </Button> : 
           <Button variant='contained' color='primary'
           onClick={this.handleShare}>
-            {`Submit a specific candidate`}
+            {currentUser ? `Submit A Specific Candidate` : `Refer A Candidate New`}
           </Button>}
         </Grid>
       </div>
     )
 
+    let backToDashboard = <Grid item xs={10}
+    style={{ paddingTop: 30}}>
+      {currentUser && <Button
+      onClick={() => this.props.history.push('/hiring/dashboard')}>
+        {`Back to Dashboard`}
+      </Button>}
+    </Grid>
+
     return <Grid container justify='center'
     alignItems='flexStart'
     className={classes.grid}>
       {this.getInfoMessage()}
+      {backToDashboard}
       <Grid item xs={10} sm={5} container
       style={{ padding: 40}}>
         {jobDescription}
       </Grid>
       <Grid item xs={1}/>
-      <Grid item xs={10} sm={5} container
-      direction='column'
+      <Grid item xs={10} sm={5}
       style={{ padding: 40}}>
         {referInfo}
         {referComponent}

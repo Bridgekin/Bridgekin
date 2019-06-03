@@ -58,6 +58,8 @@ export const RECEIVE_REF_OPP_ERRORS = 'RECEIVE_REF_OPP_ERRORS';
 export const CLEAR_REF_OPP_ERRORS = 'CLEAR_REF_OPP_ERRORS';
 export const RECEIVE_REF_APPLICATION_ERRORS = 'RECEIVE_REF_APPLICATION_ERRORS';
 export const CLEAR_REF_APPLICATION_ERRORS = 'CLEAR_REF_APPLICATION_ERRORS';
+export const RECEIVE_REF_LINK_ERRORS = 'RECEIVE_REF_LINK_ERRORS';
+export const CLEAR_REF_LINK_ERRORS = 'CLEAR_REF_LINK_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -291,4 +293,13 @@ export const receiveRefApplicationErrors = errors => ({
 
 export const clearRefApplicationErrors = () => ({
   type: CLEAR_REF_APPLICATION_ERRORS,
+});
+
+export const receiveRefLinkErrors = errors => ({
+  type: RECEIVE_REF_LINK_ERRORS,
+  errors
+});
+
+export const clearRefLinkErrors = () => ({
+  type: CLEAR_REF_LINK_ERRORS,
 });

@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :user_features, only: [:update]
     resources :ref_opportunities
     resources :ref_applications
+    resource :ref_opp_link, only: [:create]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end

@@ -8,7 +8,7 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case OPEN_LOGIN_MODAL:
-      return merge({}, {open: true, login: action.login});
+      return merge({}, {open: true}, action.payload);
     case CLOSE_LOGIN_MODAL:
       return {};
     default:

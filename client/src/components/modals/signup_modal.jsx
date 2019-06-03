@@ -1,5 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
+
 import Dialog from '@material-ui/core/Dialog';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -20,7 +22,7 @@ import { clearUserErrors } from '../../actions/error_actions';
 import { closeSignup } from '../../actions/modal_actions';
 import TextField from '@material-ui/core/TextField';
 import { hireSignup } from '../../actions/session_actions';
-import { openRefAppModal } from '../../actions/modal_actions';
+import { openRefAppModal, openLogin } from '../../actions/modal_actions';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -29,6 +31,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  openLogin: payload => dispatch(openLogin(payload)),
   hireSignup: user => dispatch(hireSignup(user)),
   clearUserErrors: () => dispatch(clearUserErrors()),
   closeSignup: () => dispatch(closeSignup()),
@@ -45,6 +48,7 @@ const styles = theme => ({
   },
   modalPaper:{
     margin: 15,
+    minWidth: 400,
     backgroundColor: theme.palette.base3
   },
   listText:{ color: theme.palette.text.primary},
@@ -75,6 +79,8 @@ class SignupModal extends React.Component {
     this.getContent = this.getContent.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.retry = this.retry.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -84,6 +90,24 @@ class SignupModal extends React.Component {
       this.setState({ page: nextModal.page })
     }
     return true;
+  }
+
+  retry(){
+    this.props.clearUserErrors();
+    this.setState({ page: 'new'})
+  }
+
+  redirectToLogin(){
+    const { signupModal } = this.props;
+    let payload={
+      page: 'login',
+      from: 'signup',
+      id: signupModal.id,
+      referralCode: signupModal.referralCode,
+      type: signupModal.type
+    }
+    this.props.openLogin(payload);
+    this.props.closeSignup();
   }
 
   handleClose(e){
@@ -98,7 +122,7 @@ class SignupModal extends React.Component {
     return e => {
       this.setState({ [field]: e.target.value })
     }
-  }
+  } 
 
   handleSubmit(){
     const { fname, lname, email, password } = this.state;
@@ -109,6 +133,10 @@ class SignupModal extends React.Component {
     this.props.hireSignup(user)
     .then(() => {
       if(this.props.userErrors.length === 0){
+        this.setState({
+          fname:'', lname: '', email: '', password: ''
+         })
+
         const { signupModal } = this.props;
         if(signupModal.type === 'personal'){
           let payload = { type: 'personal',
@@ -116,10 +144,11 @@ class SignupModal extends React.Component {
             referralCode: signupModal.referralCode
           }
           this.props.openRefAppModal(payload)
+          this.props.closeSignup();
         } else if(signupModal.type === 'refer'){
+          this.props.closeSignup();
           this.props.history.push(`/hiring/share/${signupModal.id}?referralCode=${signupModal.referralCode}`)
         }
-        this.props.closeSignup();
       } else {
         this.setState({ page: 'response'})
       }
@@ -182,6 +211,13 @@ class SignupModal extends React.Component {
               {`Signup`}
             </Button>
           </Grid>
+          <Grid container justify='center'>
+            <Button
+            style={{ marginTop: 10, textTransform: 'none', fontSize: 14, fontWeight: 400}}
+            onClick={this.redirectToLogin}>
+              {`Already have an account? Sign-in here!`}
+            </Button>
+          </Grid>
         </Grid>
   
         return <Grid>
@@ -234,10 +270,16 @@ class SignupModal extends React.Component {
             <List data-cy='signup-errors'>
               {userErrors}
             </List>
-            <Grid item xs={12}>
-              <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
+            <Grid container justify='center'
+            style={{marginTop: 30}}>
+              <Button variant="contained"
                 onClick={this.handleClose} color='primary'>
                 Close
+              </Button>
+            </Grid>
+            <Grid container justify='center'>
+              <Button onClick={this.retry}>
+                Retry?
               </Button>
             </Grid>
           </Grid>
@@ -274,4 +316,4 @@ class SignupModal extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignupModal));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(SignupModal)));

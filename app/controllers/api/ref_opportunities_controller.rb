@@ -1,12 +1,8 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::RefOpportunitiesController < ApiController
   include DeviseControllerPatch
-  before_action :set_ref_opp, only: [:show, :update, :destroy]
   before_action :authenticate_user, except: [:show]
-
-  def index
-    
-  end
+  before_action :set_ref_opp, only: [:show, :update, :destroy]
 
   def show
     render :show

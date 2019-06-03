@@ -17,6 +17,7 @@ import queryString from 'query-string'
 import ReferralLink from './referral_link';
 import { createRefApplication } from '../../actions/ref_application_actions.js'
 import { openRefAppModal } from '../../actions/modal_actions';
+import { createRefLink } from '../../actions/ref_link_actions';
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -31,7 +32,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   fetchRefOpp: (id) => dispatch(fetchRefOpp(id)),
   createRefApplication: (app) => dispatch(createRefApplication(app)),
-  openRefAppModal: (payload) => dispatch(openRefAppModal(payload))
+  openRefAppModal: (payload) => dispatch(openRefAppModal(payload)),
+  createRefLink: id => dispatch(createRefLink(id))
 });
 
 const styles = theme => ({
@@ -79,6 +81,8 @@ class SharePosting extends React.Component {
     .then(() => {
       this.setState({ loaded: true }) 
     })
+
+    this.props.createRefLink(this.props.id)
   }
 
   back(){
@@ -107,12 +111,11 @@ class SharePosting extends React.Component {
       // Set referral Code if one is in the url
       referralCode && (app[referralCode] = referralCode);
 
-      // this.props.createRefApplication(app)
-      // .then(() => this.props.openRefAppModal(`/hiring/show/${id}`))
-      this.props.openRefAppModal({
+      this.props.createRefApplication(app)
+      .then(() => this.props.openRefAppModal({
         redirect: `/hiring/show/${id}`,
         type: 'referral'
-      })
+      }))
     })
   }
 
@@ -153,7 +156,7 @@ class SharePosting extends React.Component {
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <ReferralLink />
+          <ReferralLink refOppId={id}/>
         </Grid>
       </Grid>
 

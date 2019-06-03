@@ -56,8 +56,8 @@ const styles = theme => ({
     textTransform: 'none'
   },
   incHeader:{
-    fontSize: 20,
-    fontWeight: 600
+    fontSize: 16,
+    fontWeight: 400
   },
   incPaper:{
     padding: '5px 10px',
@@ -83,6 +83,7 @@ class CreateFlow extends React.Component {
     this.updateDraftPosting = this.updateDraftPosting.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.redirectToPreview = this.redirectToPreview.bind(this);
+    this.redirectToDashboard = this.redirectToDashboard.bind(this);
   }
 
   componentDidMount(){
@@ -131,8 +132,23 @@ class CreateFlow extends React.Component {
 
   redirectToPreview(){
     this.updateDraftPosting();
-    this.props.updateDraftFlag(true);
-    this.props.history.push('/hiring/show')
+    async function openShow(){
+      await this.props.updateDraftFlag(true)
+      await this.props.history.push('/hiring/show')
+    }
+    openShow.bind(this)()
+  }
+
+  redirectToDashboard(){
+    const { userFeature } = this.props;
+    if(!userFeature.initialPostingDate){
+      let payload = {
+        initialPostingDate: new Date(),
+        id: userFeature.id
+      }
+      this.props.updateUserFeature(payload);
+    }
+    this.props.history.push('/hiring/dashboard')
   }
 
   getContent(){
@@ -144,9 +160,9 @@ class CreateFlow extends React.Component {
     switch(pathName){
       case "AngelList":
         content = <Grid container justify='center'
-        direction='column' alignItems='center'>
+        alignItems='center' direction='column'>
           <Typography color='textPrimary' align='center'
-          gutterBottom
+          gutterBottom fullWidth
           className={classes.header}>
             {`Input AngelList Job URL`}
           </Typography>
@@ -167,13 +183,13 @@ class CreateFlow extends React.Component {
           </Button>
         </Grid>
         
-        return <Grid container justify='center' alignItems='center' className={classes.grid}
-        style={{ minHeight: dimensions.height}}>
+        return <Grid item xs={10} container justify='center' alignItems='center'
+        style={{ marginTop: '15%'}}>
           {content}
         </Grid>;
       case "Manual":
         let header = (
-          <Grid container alignItems='center'
+          <Grid item xs={12} container alignItems='center'
           style={{ marginLeft: 50, borderBottom: "1px solid grey"}}>
             <Typography color='textSecondary'
             style={{ fontSize: 20, fontWeight: 600}}>
@@ -298,10 +314,9 @@ class CreateFlow extends React.Component {
           </Grid>
         )
 
-        content = <Grid container justify='center'
-        direction='column' alignItems='center'>
+        content = <Grid style={{ marginTop: 50}}>
           {header}
-          <Grid container
+          <Grid container item xs={12}
           style={{ marginTop: 30}}>
             {formFirst}
             {formSecond}
@@ -309,12 +324,7 @@ class CreateFlow extends React.Component {
         </Grid>
 
         
-        return <Grid container justify='center'
-        alignItems='flex-start'
-        className={classes.grid}
-        style={{ minHeight: dimensions.height, paddingTop: 114}}>
-          {content}
-        </Grid>;
+        return content
 
       case "Incentive":
         content = <Grid container justify='center'
@@ -330,7 +340,7 @@ class CreateFlow extends React.Component {
             {`When you decide to interview or hire someone you’ll reward the referer with the amount below`}
           </Typography>
 
-          <Grid container item xs={10} sm={8} alignItems='center' justify='space-around'
+          <Grid container item xs={10} sm={8} alignItems='flex-end' justify='space-around'
           style={{ marginTop: 20}}>
             <Grid item xs={10} sm={3}>
               <Typography color='textPrimary' align='center' gutterBottom fullWidth
@@ -365,8 +375,7 @@ class CreateFlow extends React.Component {
 
           </Grid>
         </Grid>
-        return <Grid container justify='center' alignItems='center' className={classes.grid}
-        style={{ minHeight: dimensions.height}}>
+        return <Grid container justify='center' alignItems='center' style={{ marginTop: '15%'}}>
           {content}
         </Grid>;
       default: 
@@ -375,9 +384,23 @@ class CreateFlow extends React.Component {
   }
 
   render(){
-    const { classes, dimensions } = this.props;
+    const { classes, dimensions, currentUser } = this.props;
 
-    return this.getContent()
+    let backToDashboard = <Grid item xs={10}
+    style={{ paddingTop: 30, height: 'auto'}}>
+      {currentUser && <Button
+      onClick={this.redirectToDashboard}>
+        {`Back to Dashboard`}
+      </Button>}
+    </Grid>
+
+    return <div style={{ minHeight: dimensions.height}}>
+      <Grid container item justify='center'
+      className={classes.grid}>
+        {backToDashboard}
+        {this.getContent()}
+      </Grid>
+    </div>
   }
 }
 

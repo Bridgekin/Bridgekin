@@ -194,9 +194,9 @@ export const closeSignup = () => ({
 export const OPEN_LOGIN_MODAL = 'OPEN_LOGIN_MODAL';
 export const CLOSE_LOGIN_MODAL = "CLOSE_LOGIN_MODAL";
 
-export const openLogin = (login) => ({
+export const openLogin = (payload) => ({
   type: OPEN_LOGIN_MODAL,
-  login
+  payload
 });
 
 export const closeLogin = () => ({

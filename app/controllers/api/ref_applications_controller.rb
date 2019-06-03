@@ -1,9 +1,9 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::RefApplicationsController < ApiController
   include DeviseControllerPatch
+  before_action :authenticate_user
   before_action :set_ref_application, only: [:show,
   :update, :destroy]
-  before_action :authenticate_user
 
   def index
     @owned_applications = RefApplication.where(ref_opp_id: @user.ref_opportunities.pluck(:id))

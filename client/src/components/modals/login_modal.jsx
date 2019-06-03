@@ -16,7 +16,7 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 import { connect } from 'react-redux';
 import { clearSessionErrors } from '../../actions/error_actions';
 
-import { closeLogin } from '../../actions/modal_actions';
+import { closeLogin, openRefAppModal } from '../../actions/modal_actions';
 import { login } from '../../actions/session_actions';
 
 const mapStateToProps = state => ({
@@ -29,6 +29,7 @@ const mapDispatchToProps = dispatch => ({
   clearSessionErrors: () => dispatch(clearSessionErrors()),
   closeLogin: () => dispatch(closeLogin()),
   login: (user) => dispatch(login(user)),
+  openRefAppModal: (payload) => dispatch(openRefAppModal(payload)),
 });
 
 const styles = theme => ({
@@ -45,6 +46,7 @@ const styles = theme => ({
   },
   modalPaper:{
     margin: 15,
+    minWidth: 350,
     backgroundColor: theme.palette.base3
   },
   badge: {
@@ -96,7 +98,7 @@ class LoginModal extends React.Component {
     let next = nextProps.loginModal
     let current = this.props.loginModal
     if(next.open && next.open !== current.open){
-      this.setState({ login: next.login })
+      this.setState({ page: next.page })
     }
     return true
   }
@@ -118,8 +120,21 @@ class LoginModal extends React.Component {
     this.props.login(credentials)
     .then(() => {
       if(this.props.sessionErrors.length > 0){
-        this.setState({ login: false})
+        this.setState({ page: 'response'})
       } else {
+        const { loginModal } = this.props;
+
+        if(loginModal.from === `signup`){
+          if(loginModal.type === 'personal'){
+            let payload = { type: 'personal',
+              id: loginModal.id,
+              referralCode: loginModal.referralCode
+            }
+            this.props.openRefAppModal(payload);
+          } else if(loginModal.type === 'refer'){
+            this.props.history.push(`/hiring/share/${loginModal.id}?referralCode=${loginModal.referralCode}`)
+          }
+        }
         this.handleClose();
       }
     })
@@ -139,12 +154,12 @@ class LoginModal extends React.Component {
   }
 
   backToLogin(){
-    this.setState({ login: true, email: '', password:''})
+    this.setState({ page: `login`, email: '', password:''})
   }
 
   render () {
     const { classes, loginModal } = this.props;
-    const { login, email, password } = this.state;
+    const { page, email, password } = this.state;
 
     let sessionErrors = this.props.sessionErrors.map(error => {
       error = error.replace(/(Fname|Lname)/g, (ex) => {
@@ -205,11 +220,14 @@ class LoginModal extends React.Component {
       <Grid item container xs={10} direction='column'
       className={classes.form}>
         {closeBar}
-        <Typography color='textSecondary' align='center'
-        gutterBottom
-        style={{ fontSize: 18, fontWeight: 600, marginTop: 10}}>
-          {`Login To Your Bridgekin Acount below:`}
-        </Typography>
+        <Grid container 
+        justify='space-between'
+        style={{ paddingBottom: 30, borderBottom: `1px solid grey`, marginBottom: 20, width: '100%'}}>
+          <Typography color='textPrimary'
+          style={{ fontSize: 24 }}>
+            {`Login`}
+          </Typography>
+        </Grid>
         <TextField
           required
           label="Email"
@@ -250,7 +268,7 @@ class LoginModal extends React.Component {
       </Grid>
     )
 
-    let content = login ? form : responseText
+    let content = page === `login` ? form : responseText
 
     return (
       <Dialog

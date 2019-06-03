@@ -129,7 +129,9 @@ class ApplicationModal extends React.Component {
           referralCode: refApplicationModal.referralCode
         }
         this.props.createRefApplication(app)
-        .then(() => this.setState({ type: 'response' }))
+        .then(() => this.setState({ 
+          type: 'response', answer1: '' 
+        }))
       })
   }
 

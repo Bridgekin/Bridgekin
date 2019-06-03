@@ -38,7 +38,7 @@ class HiringRouter extends React.Component {
       <Switch>
         <HiringProtectedRoute path="/hiring/dashboard" component={HiringDashboard} />
         <HiringProtectedRoute path="/hiring/create" component={HiringCreate} />
-        <HiringProtectedRoute path="/hiring/share/:id?" component={HiringSharing} />
+        <HiringProtectedRoute path="/hiring/share/:id" component={HiringSharing} />
         <Route path="/hiring/show/:id?" component={HiringShow} />
         <HiringAuthRoute path="/hiring" component={HiringHome} />
       </Switch>

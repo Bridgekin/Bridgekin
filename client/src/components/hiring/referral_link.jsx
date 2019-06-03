@@ -4,9 +4,14 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+
+import copy from 'copy-to-clipboard';
+import { SocialIcon } from 'react-social-icons';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
+  refLink: state.entities.hiring.refLink
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -23,31 +28,83 @@ class ReferralLink extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      linkCode: ''
+      linkCode: '',
+      copied: false,
+    }
+
+    this.getLink = this.getLink.bind(this);
+    this.handleCopy = this.handleCopy.bind(this);
+  }
+
+  handleCopy(link){
+    return e => {
+      copy(link);
+      this.setState({ copied: true })
     }
   }
 
-  componentDidMount(){
-    //Generate Link
-    // this.props.generateLink(this.props.id)
-    // .then((linkCode) => this.setState({ linkCode })
+  getLink(){
+    const { refLink, refOppId } = this.props;
+    if(!refOppId){
+      return 'Set on posting creation...'
+    } else {
+      if(Object.keys(refLink).length > 0){
+        return `${window.location.origin}/hiring/show/${refOppId}?referralCode=${refLink.linkCode}`
+      } else {
+        return 'Loading'
+      }
+    }
   }
 
   render(){
-    const { refOppId } = this.props;
+    const { refOppId, show } = this.props;
+    const { copied } = this.state;
 
-    return <Grid style={{ marginBottom: 30}}>
-    <Typography color='textPrimary' gutterBottom
-    fullWidth
-    style={{ fontSize: 18}}>
-      {`Your Referral Rewards`}
-    </Typography>
+    let link = this.getLink();
 
-    <Typography color='textSecondary' gutterBottom
-    fullWidth style={{ fontSize: 14 }}>
-      <i>{refOppId ?'Set on posting creation...': 'bridgekin.com/hiring/HGJKFK42'}</i>
-    </Typography>
-  </Grid>
+    let shareLink= <Grid style={{ marginBottom: 30}}>
+      <Typography color='textPrimary' gutterBottom
+      fullWidth
+      style={{ fontSize: 18}}>
+        {`Your Referral Rewards`}
+      </Typography>
+
+      <Typography color='textSecondary' gutterBottom
+      fullWidth style={{ fontSize: 14 }}>
+        <i>{link}</i>
+      </Typography>
+      <Grid item xs={12}
+      style={{ marginTop: 10}}>
+        <Button color='primary' variant='contained'
+        onClick={this.handleCopy(link)}>
+          {copied ? `Copied` : `Copy`}
+        </Button>
+      </Grid>
+    </Grid>
+
+    let shareExternal = <Grid container style={{ marginBottom: 30}}>
+      {show && <Typography color='textPrimary' gutterBottom
+      fullWidth
+      style={{ fontSize: 18}}>
+        {`Share Referral link to your network`}
+      </Typography>}
+      <Grid container justify='space-around'
+      item xs={8}>
+        <SocialIcon network="email"
+        url="mailto:mail@example.org"/>
+        <SocialIcon url="http://linkedin.com/" 
+        network="linkedin"/>
+        <SocialIcon url="http://facebook.com/" 
+        network="facebook"/>
+        <SocialIcon url="http://twitter.com/" network="twitter"/>
+      </Grid>
+    </Grid>
+
+
+    return <div style={{ flexGrow: 1}}>
+      {shareLink}
+      {shareExternal}
+    </div>
   }
 }
 
