@@ -6,10 +6,18 @@ class Api::RefApplicationsController < ApiController
   :update, :destroy]
 
   def index
-    @owned_applications = RefApplication.where(ref_opp_id: @user.ref_opportunities.pluck(:id))
-    @submitted_applications = @user.ref_applications
+    owned_opps = @user.ref_opportunities
+    @owned_applications = RefApplication.includes(:ref_opp).where(ref_opp_id: owned_opps.pluck(:id))
+    @submitted_applications = @user.submitted_apps
+      .includes(:ref_opp)
 
     @ref_applications = @owned_applications + @submitted_applications
+
+    submitted_opps = @submitted_applications.map do |app|
+      app.ref_opp
+    end if @submitted_applications
+
+    @ref_opps = owned_opps + submitted_opps
     render :index
   end
   
@@ -20,6 +28,9 @@ class Api::RefApplicationsController < ApiController
   def create
     @ref_application = RefApplication.new(ref_application_params)
     if @ref_application.save
+      # Send Job owner a notification
+      ref_opp = @ref_application.ref_opp
+      HiringMailer.notify_job_owner(ref_opp).deliver_later
       render :show
     else
       render json: @ref_application.errors.full_messages,status: 401

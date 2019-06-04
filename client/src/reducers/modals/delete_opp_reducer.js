@@ -8,7 +8,7 @@ export default(state = {}, action) => {
 
   switch(action.type){
     case OPEN_DELETE_OPP_MODAL:
-      return merge({}, {open: true, oppId: action.oppId});
+      return merge({}, {open: true}, action.payload);
     case CLOSE_DELETE_OPP_MODAL:
       return {};
     default:

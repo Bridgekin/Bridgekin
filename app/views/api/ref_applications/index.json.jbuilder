@@ -9,18 +9,10 @@ end
 json.submitted_applications @submitted_applications.pluck(:id)
 json.owned_applications @owned_applications.pluck(:id)
 
-# json.submitted_applications do
-#   @submitted_applications.each do |submitted_application|
-#     json.set! submitted_application.id do
-#       json.partial! 'api/ref_applications/ref_application', ref_application: submitted_application
-#     end
-#   end
-# end
-
-# json.owned_applications do
-#   @owned_applications.each do |owned_application|
-#     json.set! owned_application.id do
-#       json.partial! 'api/ref_applications/ref_application', ref_application: owned_application
-#     end
-#   end
-# end
+json.ref_opps do
+  @ref_opps.each do |ref_opp|
+    json.set! ref_opp.id do
+      json.partial! 'api/ref_opportunities/ref_opp', ref_opp: ref_opp
+    end
+  end
+end

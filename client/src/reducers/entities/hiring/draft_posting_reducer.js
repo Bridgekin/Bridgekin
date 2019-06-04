@@ -6,7 +6,7 @@ import merge from 'lodash/merge';
 const DEFAULT_STATE = {
   title: '',
   description: '',
-  type: '',
+  typeOfPosition: '',
   company: '',
   compensation: '',
   city: '',
@@ -25,7 +25,7 @@ export default(state = DEFAULT_STATE, action) => {
     case UPDATE_DRAFT_POSTING:
       return merge({}, state, action.draftPosting);
     case RESET_DRAFT_POSTING:
-      return {};
+      return merge({}, DEFAULT_STATE) ;
     default:
       return state;
   }

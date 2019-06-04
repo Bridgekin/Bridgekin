@@ -23,10 +23,15 @@ export const removeRefOpp = refOppId => ({
   refOppId
 });
 
-export const RECEIVE_USER_REF_OPPS = 'RECEIVE_USER_REF_OPPS';
-export const receiveUserRefOpps = userRefOpps => ({
-  type: RECEIVE_USER_REF_OPPS,
-  userRefOpps,
+export const RECEIVE_OWNED_REF_OPPS = 'RECEIVE_OWNED_REF_OPPS';
+export const RECEIVE_OWNED_REF_OPP = 'RECEIVE_OWNED_REF_OPP';
+export const receiveOwnedRefOpps = ownedRefOpps => ({
+  type: RECEIVE_OWNED_REF_OPPS,
+  ownedRefOpps,
+});
+export const receiveOwnedRefOpp = ownedRefOppId => ({
+  type: RECEIVE_OWNED_REF_OPP,
+  ownedRefOppId,
 });
 
 export const fetchRefOpps = () => dispatch => (
@@ -34,7 +39,7 @@ export const fetchRefOpps = () => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveRefOpps(data.refOpps));
-      dispatch(receiveUserRefOpps(data.userRefOpps));
+      dispatch(receiveOwnedRefOpps(data.ownedOpps));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
@@ -63,6 +68,7 @@ export const createRefOpp = (refOpp) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveRefOpp(data.refOpp));
+      dispatch(receiveOwnedRefOpp(data.refOpp.id))
       return data.refOpp
     })
     .catch(errors => {

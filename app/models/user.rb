@@ -130,7 +130,7 @@ class User < ApplicationRecord
     foreign_key: :owner_id,
     class_name: :RefOppLink
 
-  def ref_applications
+  def submitted_apps
     RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)
   end
 

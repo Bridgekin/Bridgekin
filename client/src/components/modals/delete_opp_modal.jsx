@@ -86,10 +86,15 @@ class DeleteModal extends React.Component {
 
   handleClose(deleteBool){
     return e => {
+      const { deleteModal} = this.props
       this.props.closeDeleteOpp();
       if(deleteBool){
-        this.props.deleteOpportunity(this.props.deleteModal.oppId)
-        .then(() => this.props.fetchUserOpportunities())
+        if(deleteModal.type === 'hiring'){
+          this.props.deleteRefOpp(this.props.deleteModal.oppId)
+        } else {
+          this.props.deleteOpportunity(this.props.deleteModal.oppId)
+          .then(() => this.props.fetchUserOpportunities())
+        }
       }
     }
   };

@@ -2,7 +2,13 @@ require_relative '../concerns/devise_controller_patch.rb'
 class Api::RefOpportunitiesController < ApiController
   include DeviseControllerPatch
   before_action :authenticate_user, except: [:show]
-  before_action :set_ref_opp, only: [:show, :update, :destroy]
+  before_action :set_ref_opp, only: [:show, :update, :destroy, :update_status]
+
+  def index
+    @ref_opps = @user.ref_opportunities
+    @owned_opps = @ref_opps.pluck(:id)
+    render :index
+  end
 
   def show
     render :show
@@ -23,6 +29,10 @@ class Api::RefOpportunitiesController < ApiController
     else
       render json: @ref_opp.errors.full_messages, status: 401
     end
+  end
+
+  def update_status
+    
   end
 
   def destroy

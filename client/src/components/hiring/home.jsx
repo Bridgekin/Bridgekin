@@ -156,8 +156,8 @@ class HiringHome extends React.Component {
     // return <HiringContainer content={content} />
 
     let form = (
-      <Grid container justify='center' alignItems='center'>
-        <Grid item xs={3} container justify='center'>
+      <Grid container justify='center' alignItems='center' spacing={12}>
+        <Grid item xs={6} sm={4} container justify='center'>
           <TextField
             required
             label="First Name"
@@ -170,7 +170,7 @@ class HiringHome extends React.Component {
             />
         </Grid>
 
-        <Grid item xs={3} container justify='center'>
+        <Grid item xs={6} sm={4} container justify='center'>
           <TextField
             required
             label="Email"
@@ -183,7 +183,7 @@ class HiringHome extends React.Component {
             />
         </Grid>
 
-        <Grid item xs={3} container justify='center'>
+        <Grid item xs={6} sm={4} container justify='center'>
           <TextField
             required
             label="Password"
@@ -197,7 +197,7 @@ class HiringHome extends React.Component {
             />
         </Grid>
 
-        <Grid item xs={3} container justify='center'>
+        <Grid container justify='center'>
           <Button variant="contained" color="primary"
             className={classes.button}
             disabled={!fname || !email || !password}

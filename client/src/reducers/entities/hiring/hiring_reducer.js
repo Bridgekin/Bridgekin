@@ -7,6 +7,7 @@ import refApplicationReducer from './ref_application_reducer.js'
 import submittedApplicationReducer from './submitted_application_reducer.js'
 import ownedApplicationReducer from './owned_application_reducer.js'
 import refLinkReducer from './ref_link_reducer.js'
+import ownedOppsReducer from './owned_opps_reducer.js'
 
 export default combineReducers({
   draftPosting: draftPostingReducer,
@@ -16,4 +17,5 @@ export default combineReducers({
   submittedApps: submittedApplicationReducer,
   ownedApps: ownedApplicationReducer,
   refLink: refLinkReducer,
+  ownedOpps: ownedOppsReducer,
 })

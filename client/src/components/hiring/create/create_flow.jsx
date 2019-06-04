@@ -236,8 +236,8 @@ class CreateFlow extends React.Component {
               </Typography>
               <Paper className={classes.formPaper}>
                 <InputBase className={classes.input} placeholder="e.g. Full Time Employee"
-                value={posting.type} 
-                onChange={this.changePosting('type')}/>
+                value={posting.typeOfPosition} 
+                onChange={this.changePosting('typeOfPosition')}/>
               </Paper>
             </Grid>
           </Grid>

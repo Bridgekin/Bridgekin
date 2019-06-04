@@ -17,6 +17,7 @@ import queryString from 'query-string';
 import { openRefAppModal, openSignup } from '../../actions/modal_actions';
 import { createRefLink } from '../../actions/ref_link_actions';
 import { fetchRefApplications } from '../../actions/ref_application_actions';
+import { resetDraftPosting } from '../../actions/hiring_actions';
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -39,7 +40,8 @@ const mapDispatchToProps = dispatch => ({
   updateRefOpp: (refOpp) => dispatch(updateRefOpp(refOpp)),
   openRefAppModal: (payload) => dispatch(openRefAppModal(payload)),
   openSignup: (payload) => dispatch(openSignup(payload)),
-  createRefLink: id => dispatch(createRefLink(id))
+  createRefLink: id => dispatch(createRefLink(id)),
+  resetDraftPosting: () => dispatch(resetDraftPosting())
 });
 
 const styles = theme => ({
@@ -184,6 +186,8 @@ class ShowPosting extends React.Component {
       let payload = merge({}, posting, {ownerId: currentUser.id})
       this.props.createRefOpp(payload)
       .then((refOpp) => {
+        this.props.resetDraftPosting();
+        this.props.updateDraftFlag(false);
         this.props.history.push(`/hiring/show/${refOpp.id}`)
       })
     } else {
@@ -306,13 +310,13 @@ class ShowPosting extends React.Component {
           </Typography>
 
           {!edit ? <Typography color='textPrimary'>
-            {posting.type}
+            {posting.typeOfPosition}
           </Typography> :
           <InputBase 
             className={classes.formInput}
-            value={posting.type}
+            value={posting.typeOfPosition}
             placeholder="e.g. Full Time"
-            onChange={this.changePostingValue('type')}
+            onChange={this.changePostingValue('typeOfPosition')}
             style={{ width: '50%'}}/>}
         </Grid>
 

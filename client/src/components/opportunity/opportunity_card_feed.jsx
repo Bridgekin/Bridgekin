@@ -82,7 +82,7 @@ const mapDispatchToProps = dispatch => ({
   openOppCard: (payload) => dispatch(openOppCard(payload)),
   openDirectLink: (opp) => dispatch(openDirectLink(opp)),
   openOppChange: (payload) => dispatch(openOppChange(payload)),
-  openDeleteOpp: (oppId) => dispatch(openDeleteOpp(oppId)),
+  openDeleteOpp: (payload) => dispatch(openDeleteOpp(payload)),
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   // deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   updateOpportunity: (opp) => dispatch(updateOpportunity(opp)),
@@ -336,7 +336,10 @@ class OpportunityCard extends React.Component {
         this.handleEdit();
       } else if (option && option === 'Delete'){
         // this.handleDeleteOpen();
-        this.props.openDeleteOpp(this.props.opportunity.id)
+        this.props.openDeleteOpp({ 
+          oppId: this.props.opportunity.id,
+          type: 'general'
+        })
       } else if (option && option === 'Share'){
         this.props.createDirectLink([this.props.opportunity.id])
         .then(() => this.props.openDirectLink())

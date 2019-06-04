@@ -155,9 +155,9 @@ export const closeSubmitOpp = () => ({
 export const OPEN_DELETE_OPP_MODAL = 'OPEN_DELETE_OPP_MODAL';
 export const CLOSE_DELETE_OPP_MODAL = "CLOSE_DELETE_OPP_MODAL";
 
-export const openDeleteOpp = (oppId) => ({
+export const openDeleteOpp = (payload) => ({
   type: OPEN_DELETE_OPP_MODAL,
-  oppId
+  payload
 });
 
 export const closeDeleteOpp = () => ({
