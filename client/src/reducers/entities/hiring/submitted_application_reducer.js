@@ -1,5 +1,6 @@
 import {
-  RECEIVE_SUBMITTED_APPLICATIONS } from '../../../actions/ref_application_actions';
+  RECEIVE_SUBMITTED_APPLICATIONS,
+  RECEIVE_SUBMITTED_APPLICATION, } from '../../../actions/ref_application_actions';
 import merge from 'lodash/merge';
 
 export default(state = [], action) => {
@@ -9,6 +10,8 @@ export default(state = [], action) => {
   switch(action.type){
     case RECEIVE_SUBMITTED_APPLICATIONS:
       return merge([], action.submittedApps);
+    case RECEIVE_SUBMITTED_APPLICATION:
+      return merge([], state, {[action.submittedApp.id]: action.submittedApp });
     default:
       return state;
   }

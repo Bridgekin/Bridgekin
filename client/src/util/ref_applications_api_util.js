@@ -21,9 +21,8 @@ export const fetchRefApplication = id => (
 export const createRefApplication = refApplication => (
   fetch(`${window.location.origin}/api/ref_applications`, {
     method: 'POST',
-    body: JSON.stringify({ refApplication }),
+    body: refApplication,
     headers:{
-      'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
   	}
   })
@@ -33,6 +32,17 @@ export const updateRefApplication = refApplication => (
   fetch(`${window.location.origin}/api/ref_applications/${refApplication.id}`, {
     method: 'PATCH',
     body: JSON.stringify({ refApplication }),
+    headers:{
+      'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+  	}
+  })
+)
+
+export const updateRefAppStatus = payload => (
+  fetch(`${window.location.origin}/api/update_ref_app_status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ payload }),
     headers:{
       'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')

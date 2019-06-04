@@ -25,6 +25,7 @@ import ExternalInviteModal from './components/modals/external_invite_modal';
 import SignupModal from './components/modals/signup_modal';
 import LoginModal from './components/modals/login_modal';
 import RefApplicationModal from './components/modals/ref_application_modal';
+import RefAppStatusModal from './components/modals/ref_app_status_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -79,6 +80,7 @@ class ThemeProvider extends React.Component{
               <SubmitOppModal />
               <DeleteOppModal />
               <ExternalInviteModal/>
+              <RefAppStatusModal />
             </div>}
             <SignupModal />
             <OppCardModal/>

@@ -11,6 +11,7 @@ export const REMOVE_REF_APPLICATION = "REMOVE_REF_APPLICATION";
 
 export const RECEIVE_OWNED_APPLICATIONS = 'RECEIVE_OWNED_APPLICATIONS';
 export const RECEIVE_SUBMITTED_APPLICATIONS = 'RECEIVE_SUBMITTED_APPLICATIONS';
+export const RECEIVE_SUBMITTED_APPLICATION = 'RECEIVE_SUBMITTED_APPLICATION';
 
 export const receiveRefApplications = refApplications => ({
   type: RECEIVE_REF_APPLICATIONS,
@@ -35,6 +36,11 @@ export const receiveOwnedApps = ownedApps => ({
 export const receiveSubmittedApps = submittedApps => ({
   type: RECEIVE_SUBMITTED_APPLICATIONS,
   submittedApps,
+});
+
+export const receiveSubmittedApp = submittedApp => ({
+  type: RECEIVE_SUBMITTED_APPLICATIONS,
+  submittedApp,
 });
 
 export const fetchRefApplications = () => dispatch => (
@@ -73,6 +79,7 @@ export const createRefApplication = (refApplication) => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(receiveRefApplication(data.refApplication));
+      dispatch(receiveSubmittedApp(data.refApplication.id));
       return data.refApplication
     })
     .catch(errors => {
@@ -85,6 +92,20 @@ export const createRefApplication = (refApplication) => dispatch => (
 
 export const updateRefApplication = (refApplication) => dispatch => (
   RefApplicationApiUtil.updateRefApplication(refApplication)
+    .then(handleErrors)
+    .then(data => {
+      dispatch(receiveRefApplication(data.refApplication));
+    })
+    .catch(errors => {
+      if (!(errors instanceof Array)){
+        errors = [genericError];
+      }
+      dispatch(receiveRefApplicationErrors(errors))
+    })
+);
+
+export const updateRefAppStatus = (payload) => dispatch => (
+  RefApplicationApiUtil.updateRefAppStatus(payload)
     .then(handleErrors)
     .then(data => {
       dispatch(receiveRefApplication(data.refApplication));

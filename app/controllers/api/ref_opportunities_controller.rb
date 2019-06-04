@@ -32,7 +32,12 @@ class Api::RefOpportunitiesController < ApiController
   end
 
   def update_status
-    
+    prev_status = @ref_opp.status
+    if @ref_opp.update(ref_opp_params)
+      render :show
+    else
+      render json: @ref_opp.errors.full_messages,status: 401
+    end
   end
 
   def destroy

@@ -17,7 +17,7 @@ import queryString from 'query-string';
 import { openRefAppModal, openSignup } from '../../actions/modal_actions';
 import { createRefLink } from '../../actions/ref_link_actions';
 import { fetchRefApplications } from '../../actions/ref_application_actions';
-import { resetDraftPosting } from '../../actions/hiring_actions';
+import { updateDraftFlag, resetDraftPosting } from '../../actions/hiring_actions';
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -41,7 +41,8 @@ const mapDispatchToProps = dispatch => ({
   openRefAppModal: (payload) => dispatch(openRefAppModal(payload)),
   openSignup: (payload) => dispatch(openSignup(payload)),
   createRefLink: id => dispatch(createRefLink(id)),
-  resetDraftPosting: () => dispatch(resetDraftPosting())
+  resetDraftPosting: () => dispatch(resetDraftPosting()),
+  updateDraftFlag: (flag) => dispatch(updateDraftFlag(flag))
 });
 
 const styles = theme => ({
@@ -73,7 +74,8 @@ class ShowPosting extends React.Component {
     super(props)
     this.state = {
       edit: false,
-      loading: false
+      loading: false,
+      loaded: false
     }
 
     this.changePostingValue = this.changePostingValue.bind(this);
@@ -85,10 +87,11 @@ class ShowPosting extends React.Component {
   }
 
   componentDidMount(){
-    if(this.props.id){
-      const { id, postings } = this.props
+    const { id } = this.props
+    if(id){
       this.props.fetchRefOpp(id)
       .then(() => {
+        const { postings } = this.props;
         this.setState({ posting: postings[id] });
       })
 
@@ -106,10 +109,18 @@ class ShowPosting extends React.Component {
     let thisCurrent = this.props.currentUser;
     let nextCurrent = nextProps.currentUser;
     if(nextCurrent && thisCurrent !== nextCurrent){
+      // this.props.fetchRefOpp(id)
       this.props.fetchRefApplications()
       this.props.createRefLink(this.props.id)
     }
 
+    if(!nextCurrent && thisCurrent !== nextCurrent){
+      this.props.fetchRefOpp(nextProps.id)
+      .then(() => {
+        const { postings, id } = nextProps;
+        this.setState({ posting: postings[id] });
+      })
+    }
     return true
   }
 
@@ -240,8 +251,7 @@ class ShowPosting extends React.Component {
     id } = this.props;
     
     const { posting, edit, loading } = this.state;
-    // let posting = draftFlag ? draftPosting : this.getPosting();
-    // debugger
+    // let posting = draftFlag ? draftPosting : this.getPosting()
 
     if(!posting){
       return <Grid container justify='center'

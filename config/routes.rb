@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    patch 'update_ref_app_status', :to => 'ref_applications#update_status'
     post "hire_signup", :to => 'users#hire_signup'
     post 'add_external_user', :to => 'users#add_external_user'
     get 'third_parties/google_contacts', :to => 'third_parties#google_contacts'

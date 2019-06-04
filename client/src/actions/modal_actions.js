@@ -215,3 +215,16 @@ export const openRefAppModal = (payload) => ({
 export const closeRefApplication = () => ({
   type: CLOSE_REF_APPLICATION_MODAL,
 });
+
+// Open Ref Application
+export const OPEN_REF_APP_STATUS_MODAL = 'OPEN_REF_APP_STATUS_MODAL';
+export const CLOSE_REF_APP_STATUS_MODAL = "CLOSE_REF_APP_STATUS_MODAL";
+
+export const openRefAppStatus = (payload) => ({
+  type: OPEN_REF_APP_STATUS_MODAL,
+  payload
+});
+
+export const closeRefAppStatus = () => ({
+  type: CLOSE_REF_APP_STATUS_MODAL,
+});

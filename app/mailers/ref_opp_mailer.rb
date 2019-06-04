@@ -3,7 +3,7 @@ class RefOppMailer < ApplicationMailer
     @owner = owner
     @applicant = applicant
     @opp_title = ref_opp.title.capitalize
-    subject = "#{applicant.fname.capitalize}'s' application"
+    subject = "You have a new job candidate!"
     #Send mail
     mail(to: applicant.email, subject: subject)
     #Log email being sent

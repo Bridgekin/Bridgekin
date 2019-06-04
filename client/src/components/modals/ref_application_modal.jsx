@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
+import CloudUploadIcon from '@material-ui/icons/CloudUploadSharp';
 
 import { connect } from 'react-redux';
 import { clearRefApplicationErrors } from '../../actions/error_actions';
@@ -83,6 +84,7 @@ class ApplicationModal extends React.Component {
       answer1: '',
       question1: `Write an intro note. Why would you be a good fit for this position? What excites you about the position?`,
       resume: null,
+      resumeUrl: '',
       loading: false,
       type: 'response'
     };
@@ -117,18 +119,42 @@ class ApplicationModal extends React.Component {
     }
   }
 
+  handleFile(e){
+    let resume = e.currentTarget.files[0];
+    let fileReader = new FileReader();
+
+    fileReader.onloadend = () => {
+      this.setState({ 
+        resume: resume,
+        resumeUrl: fileReader.result
+      })
+    }
+    if(resume){
+      fileReader.readAsDataURL(resume)
+    }
+  }
+
   handleSubmit(){
     this.setState({ loading: true },
       () => {
         const { currentUser, refApplicationModal } = this.props;
-        const { answer1, question1 } = this.state;
+        const { answer1, question1, resume } = this.state;
+        const formData = new FormData();
+
         // Collect Application
-        let app = { answer1, question1,
-          refOppId: refApplicationModal.id,
-          candidateId: currentUser.id,
-          referralCode: refApplicationModal.referralCode
-        }
-        this.props.createRefApplication(app)
+        // let app = { answer1, question1,
+        //   refOppId: refApplicationModal.id,
+        //   candidateId: currentUser.id,
+        //   referralCode: refApplicationModal.referralCode
+        // }
+        formData.append(`refApplication[answer_1]`, answer1)
+        formData.append(`refApplication[question_1]`, question1)
+        formData.append(`refApplication[resume]`, resume)
+        formData.append(`refApplication[refOppId]`, refApplicationModal.id)
+        formData.append(`refApplication[candidateId]`, currentUser.id)
+        formData.append(`refApplication[referralCode]`,refApplicationModal.referralCode)
+
+        this.props.createRefApplication(formData)
         .then(() => this.setState({ 
           type: 'response', answer1: '' 
         }))
@@ -137,8 +163,9 @@ class ApplicationModal extends React.Component {
 
   getContent(){
     const { classes, refApplicationModal } = this.props;
-    const { question1, answer1, type } = this.state;
-    // debugger
+    const { question1, answer1, type, resumeUrl,
+      resume} = this.state;
+
     switch(type){
       case 'personal':
         let applyHeader = <Grid container 
@@ -164,11 +191,36 @@ class ApplicationModal extends React.Component {
             onChange={this.handleChange('answer1')}
             value={answer1}
             />
-          <Button color='primary' variant='contained'
-          style={{ marginTop: 20}}
-          onClick={this.handleSubmit}>
-            {`Send Application`}
-          </Button>
+
+          {resumeUrl ? (
+            <a href={resumeUrl} download={resume.name}>{resume.name}</a>
+          ) : <Grid container>
+            <input
+              // accept="image/*"
+              style={{ display: 'none'}}
+              id="resume-button-file"
+              type="file"
+              onChange={this.handleFile.bind(this)}
+              onClick={(event)=> {
+                event.target.value = null
+              }}
+              />
+            <label htmlFor="resume-button-file">
+              {<Button component="span">
+                {`Upload Resume `}
+                <CloudUploadIcon 
+                style={{ marginLeft: 5 }}/>
+              </Button>}
+            </label>
+          </Grid>}
+          
+          <Grid container>
+            <Button color='primary' variant='contained'
+            style={{ marginTop: 20}}
+            onClick={this.handleSubmit}>
+              {`Send Application`}
+            </Button>
+          </Grid>
         </div>
 
         return <Grid container item xs={11}
