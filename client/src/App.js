@@ -42,39 +42,38 @@ import ScrollToTop from './components/scroll_to_top';
 
 import ImportContacts from './components/google/import_contacts';
 
-// const mapStateToProps = state => ({
-//   currentUser: state.users[state.session.id]
-// });
-
-// class App extends React.Component {
-//   render(){
-//     const { currentUser } = this.props;
-//
-//     return (
-//     )
-//   }
-// }
+import HiringRouter from './components/hiring/hiring_router.jsx'
+import HiringNav from './components/hiring/nav.jsx'
 
 export default ()=> (
   <div>
     <ScrollToTop />
-    <Route path="/" component={HomeNav} />
+
+    <Switch>
+      <Route path="/hiring" component={HiringNav} />
+      <Route path="/" component={HomeNav} />
+    </Switch>
 
     {/* General Modals */}
     <Switch>
+      <Route path="/hiring" component={HiringRouter} />
+
       <ProtectedRoute path="/importcontacts" component={ImportContacts} />
       <ProtectedRoute path="/findandconnect/:source?" component={OpportunityHome} />
       <ProtectedRoute path="/account" component={AccountMain} />
-      <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
       <ProtectedRoute path="/mynetwork" component={MyTrustedNetwork} />
+
+      <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
       <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
       <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
+
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/login" component={Login}/>
       <AuthRoute path="/passwordreset" component={PasswordReset}/>
       <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>
       <AuthRoute exact path="/" component={HomePage} />
       <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
+
       <Route path="/useragreement" component={UserAgreement} />
       <Route path="/privacypolicy" component={PrivacyPolicy} />
       <Route path="/shareopportunities/:linkCode" component={DirectLinkPage} />

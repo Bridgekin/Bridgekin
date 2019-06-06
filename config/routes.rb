@@ -33,11 +33,15 @@ Rails.application.routes.draw do
     get 'passed_opportunities', :to => 'passed_opportunities#index'
     resources :user_metrics, only: [:index]
     resources :user_features, only: [:update]
+    resources :ref_opportunities
+    resources :ref_applications
+    resource :ref_opp_link, only: [:create]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
-    get 'public_env_variables', :to => 'utils#show'
+    patch 'update_ref_app_status', :to => 'ref_applications#update_status'
+    post "hire_signup", :to => 'users#hire_signup'
     post 'add_external_user', :to => 'users#add_external_user'
     get 'third_parties/google_contacts', :to => 'third_parties#google_contacts'
     delete 'destroy_user_connected_opps', :to => 'connected_opportunities#destroy_user_connected_opps'

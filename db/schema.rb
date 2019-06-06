@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_02_160713) do
+ActiveRecord::Schema.define(version: 2019_06_06_155912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,15 @@ ActiveRecord::Schema.define(version: 2019_05_02_160713) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
@@ -221,16 +230,16 @@ ActiveRecord::Schema.define(version: 2019_05_02_160713) do
     t.string "title", default: "", null: false
     t.text "description"
     t.string "opportunity_need", default: "", null: false
+    t.string "industries", default: [], null: false, array: true
+    t.string "geography", default: [], null: false, array: true
     t.string "value", default: "", null: false
     t.string "status", default: "Pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "industries", default: [], null: false, array: true
-    t.string "geography", default: [], null: false, array: true
     t.string "deal_status", default: "Active", null: false
     t.boolean "anonymous", default: true
     t.string "view_type", default: "card", null: false
-    t.index ["status"], name: "index_opportunities_on_status"
+    t.index ["owner_id"], name: "index_opportunities_on_owner_id"
   end
 
   create_table "opportunity_networks", force: :cascade do |t|
@@ -247,6 +256,63 @@ ActiveRecord::Schema.define(version: 2019_05_02_160713) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_passed_opportunities_on_user_id"
+  end
+
+  create_table "ref_applications", force: :cascade do |t|
+    t.string "fname"
+    t.string "lname"
+    t.string "email"
+    t.text "answer_1"
+    t.string "referral_code"
+    t.integer "ref_opp_id"
+    t.integer "direct_referrer_id"
+    t.integer "candidate_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "question_1"
+    t.string "status", default: "open"
+    t.boolean "has_license", default: false
+    t.boolean "allows_screening", default: false
+    t.string "availability", default: ""
+    t.string "phone_number", default: ""
+    t.index ["ref_opp_id"], name: "index_ref_applications_on_ref_opp_id"
+  end
+
+  create_table "ref_opp_events", force: :cascade do |t|
+    t.integer "owner_id"
+    t.string "logged_out_email"
+    t.string "event"
+    t.integer "ref_opp_id"
+    t.integer "ref_opp_link_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ref_opp_links", force: :cascade do |t|
+    t.integer "owner_id"
+    t.string "link_code", null: false
+    t.integer "ref_opp_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ref_opportunities", force: :cascade do |t|
+    t.integer "owner_id"
+    t.string "url"
+    t.string "title"
+    t.text "description"
+    t.string "company"
+    t.string "interview_incentive"
+    t.string "hire_incentive"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "city"
+    t.string "state"
+    t.string "compensation"
+    t.string "status", default: "open"
+    t.string "type_of_position"
+    t.integer "views"
+    t.index ["owner_id"], name: "index_ref_opportunities_on_owner_id"
   end
 
   create_table "referral_links", force: :cascade do |t|
@@ -303,6 +369,8 @@ ActiveRecord::Schema.define(version: 2019_05_02_160713) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "tutorial_tour_session"
+    t.boolean "hire_user", default: false
+    t.datetime "initial_posting_date"
     t.index ["user_id"], name: "index_user_features_on_user_id"
   end
 
@@ -328,7 +396,7 @@ ActiveRecord::Schema.define(version: 2019_05_02_160713) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string "phone", default: "", null: false
+    t.string "phone_number", default: "", null: false
     t.string "city", default: "", null: false
     t.string "state", default: "", null: false
     t.string "country", default: "", null: false

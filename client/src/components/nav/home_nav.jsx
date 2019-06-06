@@ -46,7 +46,7 @@ import logo from '../../static/Bridgekin_Logo.png';
 import whiteLogo from '../../static/bridgekin_white.png';
 import whiteLogoMobile from '../../static/white_mobile.png';
 import logoMobile from '../../static/apple-touch-icon.png';
-import LoginModal from './login_modal';
+import LoginModal from '../modals/login_modal';
 import SearchBar from './search_bar';
 
 import { login, logout } from '../../actions/session_actions';
@@ -57,6 +57,7 @@ import { fetchSiteTemplate } from '../../actions/site_template_actions';
 import { addUserByReferral } from '../../actions/member_users_actions';
 import { handleAuthErrors } from '../../actions/fetch_error_handler';
 import { fetchSearchResults } from '../../actions/user_actions';
+import { openLogin } from '../../actions/modal_actions';
 
 import { fetchNotifications, updateAsRead } from '../../actions/notification_actions';
 // import timeBetweenDates from 'time-between-dates';
@@ -72,7 +73,8 @@ const mapStateToProps = (state, ownProps) => {
     searchResults: state.entities.searchResults,
     users: state.users,
     siteTemplate,
-    notifications: state.entities.notifications
+    notifications: state.entities.notifications,
+    userFeature: state.entities.userFeature,
   })
 };
 
@@ -86,6 +88,7 @@ const mapDispatchToProps = dispatch => ({
   fetchSearchResults: (searchInput) => dispatch(fetchSearchResults(searchInput)),
   fetchNotifications: () => dispatch(fetchNotifications()),
   updateAsRead: (ids) => dispatch(updateAsRead(ids)),
+  openLogin: (login) => dispatch(openLogin(login))
 });
 
 let styles = (theme) => ({
@@ -307,6 +310,10 @@ class HomeNav extends React.Component {
 
     this.props.login(credentials)
     .then((user) => {
+      if(this.props.sessionErrors.length > 0){
+        this.props.openLogin()
+      }
+      
       if(path.includes('signup') && user){
         let referralCode = path.pop();
         this.props.addUserByReferral(referralCode, user.id)
@@ -451,7 +458,8 @@ class HomeNav extends React.Component {
   render(){
     const { classes, currentUser, sessionErrors,
       siteTemplate, workspaces, users,
-      searchResults, notifications } = this.props;
+      searchResults, notifications, 
+      userFeature } = this.props;
 
     const { auth, anchorEl, mobileMoreAnchorEl,
     logoAnchorEl, searchAnchorEl,
@@ -744,7 +752,7 @@ class HomeNav extends React.Component {
                 Test Feature
               </Typography>
             </Button>}
-          <Button color='secondary'
+          {(currentUser && !userFeature.hireUser) && <Button color='secondary'
             data-cy='nav-opportunities-button'
             onClick={this.handleLinkClose('findandconnect')}>
             <Typography variant="h4" align='left'
@@ -752,8 +760,8 @@ class HomeNav extends React.Component {
               className={classes.navButtonText}>
               Opportunities
             </Typography>
-          </Button>
-          {currentUser &&
+          </Button>}
+          {(currentUser && !userFeature.hireUser)&&
             <Button color='secondary'
               data-cy='nav-my-trusted-network-button'
             onClick={this.handleLinkClose('mynetwork')}
@@ -766,7 +774,7 @@ class HomeNav extends React.Component {
             </Button>
           }
 
-          {currentUser &&
+          {(currentUser && !userFeature.hireUser) &&
             <Badge badgeContent={this.countNotifications()}
               classes={{ badge: classes.badge}}
               onClick={this.handleNotificationMenuOpen}
@@ -876,13 +884,14 @@ class HomeNav extends React.Component {
     //   <img alt='logo' className={classes.logo} src={logo} />
     // </Link>
     // <div className={classes.grow} />
+
     return (
       <div>
         <AppBar position="static" className={classes.nav}>
           <Toolbar className={classes.toolbar}>
             <Grid container alignItems='center'>
               {logoChunk}
-              {currentUser ? <Grid item xs={7} sm={4} md={3} lg={3}>
+              {(currentUser && !userFeature.hireUser) ? <Grid item xs={7} sm={4} md={3} lg={3}>
                 <SearchBar />
               </Grid> : <div style={{ flexGrow: 1}}/>}
               {navMenu}

@@ -7,8 +7,9 @@ class User < ApplicationRecord
          :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
-  validates :fname, :lname,  presence: true
+  validates :fname, presence: true
   validates :email, uniqueness: { case_sensitive: false }
+  validates :phone_number, uniqueness: { allow_blank: :true}
 
   has_many :opportunities,
     foreign_key: :owner_id,
@@ -121,6 +122,18 @@ class User < ApplicationRecord
   has_one :user_feature,
     foreign_key: :user_id,
     class_name: :UserFeature
+
+  has_many :ref_opportunities,
+    foreign_key: :owner_id,
+    class_name: :RefOpportunity
+
+  has_many :ref_opp_links,
+    foreign_key: :owner_id,
+    class_name: :RefOppLink
+
+  def submitted_apps
+    RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)
+  end
 
   def connections
     Connection.includes(:requestor, :recipient)

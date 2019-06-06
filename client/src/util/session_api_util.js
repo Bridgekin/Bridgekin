@@ -8,6 +8,16 @@ export const refSignup = (user, code) => (
   })
 )
 
+export const hireSignup = (user, code) => (
+  fetch(`${window.location.origin}/api/hire_signup`, {
+    method: 'POST',
+    body: JSON.stringify({ user }),
+    headers:{
+    	'Content-Type': 'application/json'
+  	}
+  })
+)
+
 export const login = user => (
   fetch(`${window.location.origin}/api/login`, {
     method: 'POST',

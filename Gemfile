@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
+# ruby '2.3.7'
 
 #NOTE - Check we're using 1.0 pg in gemfile lock
 
@@ -65,6 +66,9 @@ gem 'rails_12factor', group: :production
 gem 'bullet', group: 'development'
 # Useful for lots of things in dev, but also for detecting classes well
 gem 'binding_of_caller'
+
+#sending text messages
+gem 'twilio-ruby'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

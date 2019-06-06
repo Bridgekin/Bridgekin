@@ -30,7 +30,8 @@ User.create!(
   fname: 'Joe',
   lname: 'Demo',
   title: "Director of Testing",
-  company: "Bridgekin Analytics"
+  company: "Bridgekin Analytics",
+  is_admin: true
 )
 
 Network.create!(
@@ -46,10 +47,10 @@ UserNetwork.create!(
   member_id: 1,
 )
 
-UserNetwork.create!(
-  network_id: 2,
-  member_id: 1,
-)
+# UserNetwork.create!(
+#   network_id: 2,
+#   member_id: 1,
+# )
 
 User.create!(
   email: 'eric@bridgekin.com',
@@ -60,7 +61,8 @@ User.create!(
   fname: 'Eric',
   lname: 'Conway',
   title: "Software Engineer",
-  company: "Bridgekin Analytics"
+  company: "Bridgekin Analytics",
+  is_admin: true
 )
 
 UserNetwork.create!(
@@ -68,22 +70,22 @@ UserNetwork.create!(
   member_id: 2,
 )
 
-UserNetwork.create!(
-  network_id: 2,
-  member_id: 2,
-)
+# UserNetwork.create!(
+#   network_id: 2,
+#   member_id: 2,
+# )
 
 
-Opportunity.create!(
-  owner_id: 1,
-  title: 'Test - Amazing castle opportunity in France',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
-  opportunity_need: "Raise Capital",
-  industries: ["Education", "Technology", "Internet"],
-  geography: ["Worldwide"],
-  value:  "$1M - $5M",
-  status: "Approved",
-)
+# Opportunity.create!(
+#   owner_id: 1,
+#   title: 'Test - Amazing castle opportunity in France',
+#   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
+#   opportunity_need: "Raise Capital",
+#   industries: ["Education", "Technology", "Internet"],
+#   geography: ["Worldwide"],
+#   value:  "$1M - $5M",
+#   status: "Approved",
+# )
 
 # OpportunityNetwork.create!(
 #   network_id: 1,
@@ -95,18 +97,31 @@ Opportunity.create!(
 #   opportunity_id: 1
 # )
 
-Opportunity.create!(
-  owner_id: 1,
-  title: 'Test - Amazing castle opportunity in Czech',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
-  opportunity_need: "Raise Capital",
-  industries: ["Education", "Technology", "Internet"],
-  geography: ["Worldwide"],
-  value:  "$1M - $5M",
-  status: "Approved"
-)
+# Opportunity.create!(
+#   owner_id: 1,
+#   title: 'Test - Amazing castle opportunity in Czech',
+#   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
+#   opportunity_need: "Raise Capital",
+#   industries: ["Education", "Technology", "Internet"],
+#   geography: ["Worldwide"],
+#   value:  "$1M - $5M",
+#   status: "Approved"
+# )
 
 # OpportunityNetwork.create!(
 #   network_id: 1,
 #   opportunity_id: 2
 # )
+
+User.create!(
+  email: 'try4@email.com',
+  password: 'password',
+  password_confirmation: 'password',
+  confirmed_at: DateTime.now,
+  confirmation_sent_at: DateTime.now,
+  fname: 'Test',
+  lname: 'User',
+  title: "Software Engineer",
+  company: "Bridgekin Analytics",
+  is_admin: true
+)

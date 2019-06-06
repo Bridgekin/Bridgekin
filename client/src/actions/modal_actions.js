@@ -155,9 +155,9 @@ export const closeSubmitOpp = () => ({
 export const OPEN_DELETE_OPP_MODAL = 'OPEN_DELETE_OPP_MODAL';
 export const CLOSE_DELETE_OPP_MODAL = "CLOSE_DELETE_OPP_MODAL";
 
-export const openDeleteOpp = (oppId) => ({
+export const openDeleteOpp = (payload) => ({
   type: OPEN_DELETE_OPP_MODAL,
-  oppId
+  payload
 });
 
 export const closeDeleteOpp = () => ({
@@ -175,4 +175,56 @@ export const openExternalInvite = email => ({
 
 export const closeExternalInvite = () => ({
   type: CLOSE_EXTERNAL_INVITE_MODAL,
+});
+
+// Open Signup Errors Modal
+export const OPEN_SIGNUP_MODAL = 'OPEN_SIGNUP_MODAL';
+export const CLOSE_SIGNUP_MODAL = "CLOSE_SIGNUP_MODAL";
+
+export const openSignup = (payload) => ({
+  type: OPEN_SIGNUP_MODAL,
+  payload
+});
+
+export const closeSignup = () => ({
+  type: CLOSE_SIGNUP_MODAL,
+});
+
+// Open Login Modal
+export const OPEN_LOGIN_MODAL = 'OPEN_LOGIN_MODAL';
+export const CLOSE_LOGIN_MODAL = "CLOSE_LOGIN_MODAL";
+
+export const openLogin = (payload) => ({
+  type: OPEN_LOGIN_MODAL,
+  payload
+});
+
+export const closeLogin = () => ({
+  type: CLOSE_LOGIN_MODAL,
+});
+
+// Open Ref Application
+export const OPEN_REF_APPLICATION_MODAL = 'OPEN_REF_APPLICATION_MODAL';
+export const CLOSE_REF_APPLICATION_MODAL = "CLOSE_REF_APPLICATION_MODAL";
+
+export const openRefAppModal = (payload) => ({
+  type: OPEN_REF_APPLICATION_MODAL,
+  payload
+});
+
+export const closeRefApplication = () => ({
+  type: CLOSE_REF_APPLICATION_MODAL,
+});
+
+// Open Ref Application
+export const OPEN_REF_APP_STATUS_MODAL = 'OPEN_REF_APP_STATUS_MODAL';
+export const CLOSE_REF_APP_STATUS_MODAL = "CLOSE_REF_APP_STATUS_MODAL";
+
+export const openRefAppStatus = (payload) => ({
+  type: OPEN_REF_APP_STATUS_MODAL,
+  payload
+});
+
+export const closeRefAppStatus = () => ({
+  type: CLOSE_REF_APP_STATUS_MODAL,
 });

@@ -39,11 +39,11 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
       @users = [@currentUser]
       #Pull connections
+      @connections = @currentUser.connections
       if referral_link.is_friendable
-        @connections = @currentUser.connections
         @users << referral_link.owner
       end
-
+      #Get User feature set
       @user_feature = @currentUser.user_feature ||
         UserFeature.create(user_id: @currentUser.id)
 
@@ -86,9 +86,9 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def user_params
-    received_params = params.require(:user).permit(:email, :fname, :lname,
-      :phone, :city, :state, :country, :password, :membership_type,
-      :password_confirmation, :password_digest)
+    received_params = params.require(:user).permit(:email, :fname, :lname, :phone_number, :city, 
+    :state, :country, :password, :membership_type,
+    :password_confirmation, :password_digest)
 
     received_params[:password_confirmation] = received_params[:password]
     received_params[:email].downcase!
