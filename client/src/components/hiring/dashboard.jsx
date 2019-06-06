@@ -85,7 +85,7 @@ class HiringDashboard extends React.Component {
     const { userFeature } = this.props;
 
     if(!userFeature.initialPostingDate){
-      this.props.history.push('/hiring/create/AngelList')
+      this.props.history.push('/hiring/create/Manual')
     }
 
     async function loadData(){

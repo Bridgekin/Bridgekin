@@ -1,7 +1,7 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::RefApplicationsController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user
+  before_action :authenticate_user, except: [:request_demo]
   before_action :set_ref_application, only: [:show,
   :update, :destroy]
 
@@ -27,6 +27,12 @@ class Api::RefApplicationsController < ApiController
 
   def create
     @ref_application = RefApplication.new(ref_application_params)
+
+    ref_code = params[:ref_application][:referral_code]
+    if ref_code && !params[:ref_application][:direct_referrer_id]
+      @ref_application.direct_referrer_id = RefOppLink.find_by(link_code: ref_code).owner_id
+    end
+
     if @ref_application.save
       # Send Job owner a notification
       ref_opp = @ref_application.ref_opp
@@ -68,6 +74,12 @@ class Api::RefApplicationsController < ApiController
     else
       render json: @ref_application.errors.full_messages,status: 401
     end
+  end
+
+  def request_demo
+    HiringMailer.notify_request_demo(
+      params[:email], params[:fname]
+    ).deliver_later
   end
 
   private

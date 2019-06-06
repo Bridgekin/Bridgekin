@@ -98,6 +98,9 @@ const styles = theme => ({
   notchedOutline: {
     borderColor: 'black',//`${theme.palette.text.tertiary} !important`
   },
+  navItem:{
+    fontSize: 14, fontWeight: 400
+  }
 })
 
 class HiringNav extends React.Component {
@@ -156,12 +159,22 @@ class HiringNav extends React.Component {
     )
 
     const session = (
-      <Button style={{textTransform: 'capitalize'}}
-        onClick={this.handleSubmit}>
-        <Typography color='textSecondary'>
-          {currentUser ? `Logout` : `Login`}
-        </Typography>
-      </Button>
+      <Grid item>
+        <Button style={{textTransform: 'capitalize'}}
+        onClick={() => this.props.history.push('/hiring/dashboard')}>
+          <Typography color='textSecondary'
+          className={classes.navItem}>
+            {`My Dashboard`}
+          </Typography>
+        </Button>
+        <Button style={{textTransform: 'capitalize'}}
+          onClick={this.handleSubmit}>
+          <Typography color='textSecondary'
+            className={classes.navItem}>
+            {currentUser ? `Logout` : `Login`}
+          </Typography>
+        </Button>
+      </Grid>
     )
 
     // const login = (

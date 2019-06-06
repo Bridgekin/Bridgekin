@@ -75,7 +75,8 @@ class CreateFlow extends React.Component {
     this.state = {
       page: 'AngelList',
       angelListUrl: '',
-      posting: {}
+      posting: {},
+      previousPage: 'Manual',
     }
     this.getContent = this.getContent.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -84,6 +85,7 @@ class CreateFlow extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.redirectToPreview = this.redirectToPreview.bind(this);
     this.redirectToDashboard = this.redirectToDashboard.bind(this);
+    this.backPage = this.backPage.bind(this);
   }
 
   componentDidMount(){
@@ -103,12 +105,19 @@ class CreateFlow extends React.Component {
 
   changePage(page){
     return e => {
+      let currentPage = this.props.location.pathname.split('/').pop();
       if(page === 'Incentive'){
         this.updateDraftPosting();
+        this.setState({ previousPage: currentPage})
       }
       // this.setState({ page })
       this.props.history.push(`/hiring/create/${page}`)
     }
+  }
+
+  backPage(e){
+    const { previousPage } = this.state;
+    this.props.history.push(`/hiring/create/${previousPage}`)
   }
 
   changePosting(field){
@@ -158,35 +167,35 @@ class CreateFlow extends React.Component {
 
     let content = undefined
     switch(pathName){
-      case "AngelList":
-        content = <Grid container justify='center'
-        alignItems='center' direction='column'>
-          <Typography color='textPrimary' align='center'
-          gutterBottom fullWidth
-          className={classes.header}>
-            {`Input AngelList Job URL`}
-          </Typography>
-          <Grid item xs={10} sm={8} md={6} container>
-            <Paper className={classes.searchPaper}>
-              <InputBase className={classes.input} placeholder="Input your Angelist url..." 
-              onChange={this.handleChange('angelListUrl')}/>
-            </Paper>
-          </Grid>
-          <Button onClick={this.changePage('Manual')}
-          className={classes.manualButton}>
-            {`Or input manually`}
-          </Button>
-          <Button variant='contained' color='primary'
-          onClick={this.changePage('Incentive')}
-          className={classes.saveButton}>
-            {`Next`}
-          </Button>
-        </Grid>
+      // case "AngelList":
+      //   content = <Grid container justify='center'
+      //   alignItems='center' direction='column'>
+      //     <Typography color='textPrimary' align='center'
+      //     gutterBottom fullWidth
+      //     className={classes.header}>
+      //       {`Input AngelList Job URL`}
+      //     </Typography>
+      //     <Grid item xs={10} sm={8} md={6} container>
+      //       <Paper className={classes.searchPaper}>
+      //         <InputBase className={classes.input} placeholder="Input your Angelist url..." 
+      //         onChange={this.handleChange('angelListUrl')}/>
+      //       </Paper>
+      //     </Grid>
+      //     <Button onClick={this.changePage('Manual')}
+      //     className={classes.manualButton}>
+      //       {`Or input manually`}
+      //     </Button>
+      //     <Button variant='contained' color='primary'
+      //     onClick={this.changePage('Incentive')}
+      //     className={classes.saveButton}>
+      //       {`Next`}
+      //     </Button>
+      //   </Grid>
         
-        return <Grid item xs={10} container justify='center' alignItems='center'
-        style={{ marginTop: '15%'}}>
-          {content}
-        </Grid>;
+      //   return <Grid item xs={10} container justify='center' alignItems='center'
+      //   style={{ marginTop: '15%'}}>
+      //     {content}
+      //   </Grid>;
       case "Manual":
         let header = (
           <Grid item xs={12} container alignItems='center'
@@ -300,11 +309,11 @@ class CreateFlow extends React.Component {
 
             <Grid container justify='flex-end'
             style={{ margin: 20 }}>
-              <Button color='textSecondary'
+              {/*<Button color='textSecondary'
               onClick={this.changePage('AngelList')}
               style={{ textTransform: 'none', marginRight: 20}}>
                 {`Import from AngelList`}
-              </Button>
+        </Button>*/}
               <Button variant='contained' color='primary'
               onClick={this.changePage('Incentive')}>
                 {`Next`}
@@ -386,19 +395,23 @@ class CreateFlow extends React.Component {
   render(){
     const { classes, dimensions, currentUser } = this.props;
 
-    let backToDashboard = <Grid item xs={10}
-    style={{ paddingTop: 30, height: 'auto'}}>
-      {currentUser && <Button
-      onClick={this.redirectToDashboard}>
-        {`Back to Dashboard`}
-      </Button>}
+    let pathName = this.props.location.pathname.split('/').pop();
+
+    let backButton = <Grid container justify='center'
+    style={{ marginTop: 30}}>
+      <Grid item xs={10}>
+        <Button onClick={this.backPage}
+        style={{ textTransform: 'capitalize', fontSize: 14}}>
+          {`Back`}
+        </Button>
+      </Grid>
     </Grid>
 
     return <div style={{ minHeight: dimensions.height}}>
       <Grid container item justify='center'
       className={classes.grid}>
-        {backToDashboard}
         {this.getContent()}
+        {pathName === "Incentive" && backButton}
       </Grid>
     </div>
   }

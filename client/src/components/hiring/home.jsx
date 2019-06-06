@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 
 import { hireSignup } from '../../actions/session_actions';
 import { openSignup } from '../../actions/modal_actions';
+import { requestDemo } from '../../actions/hiring_actions';
 import HiringContainer from './hiring_container';
 import MaskedInput from 'react-text-mask';
 
@@ -20,7 +21,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   hireSignup: user => dispatch(hireSignup(user)),
-  openSignup: (payload) => dispatch(openSignup(payload))
+  openSignup: (payload) => dispatch(openSignup(payload)),
+  requestDemo: user => dispatch(requestDemo(user))
 });
 
 const styles = theme => ({
@@ -72,11 +74,13 @@ class HiringHome extends React.Component {
       fname: '',
       email: '',
       password: '',
-      phoneNumber: ''
+      phoneNumber: '',
+      sent: false
     }
 
     this.handleSignup = this.handleSignup.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.requestDemo = this.requestDemo.bind(this);
   }
 
   handleChange(field){
@@ -103,10 +107,19 @@ class HiringHome extends React.Component {
       }
     })
   }
+  
+  requestDemo(){
+    const { fname, email } = this.state;
+    //do some things
+    let user = { fname, email }
+    this.props.requestDemo(user)
+    .then(() => this.setState({ sent: true}))
+  }
 
   render(){
     const { classes, dimensions, currentUser } = this.props;
-    const { fname, email, password, phoneNumber } = this.state;
+    const { fname, email, password, phoneNumber,
+    sent } = this.state;
 
     let phoneComponent = <div></div>
 
@@ -185,6 +198,37 @@ class HiringHome extends React.Component {
       </Button>
     </Grid>
 
+    let requestDemo = <Grid container justify='center'
+    style={{ marginTop: 30 }}>
+      <Grid item xs={12} container justify='center'>
+        <TextField
+          required
+          label="First Name"
+          className={classes.textField}
+          margin="normal"
+          variant='outlined'
+          value={fname}
+          onChange={this.handleChange('fname')}
+          onMouseUp={this.handleChange('fname')}
+          style={{ marginRight: 15}}
+        />
+        <TextField
+          required
+          label="Email"
+          className={classes.textField}
+          margin="normal"
+          variant='outlined'
+          value={email}
+          onChange={this.handleChange('email')}
+          onMouseUp={this.handleChange('email')}
+        />
+      </Grid>
+      <Button variant='contained' color={sent ? 'default' : 'primary'}
+        onClick={this.requestDemo}>
+        {sent? `Sent` : `Request A Demo!`}
+      </Button>
+    </Grid>
+
     return (
       <Grid container justify='center' alignItems='center' className={classes.grid}
       style={{ minHeight: dimensions.height}}>
@@ -201,7 +245,8 @@ class HiringHome extends React.Component {
             </Typography>
           </Grid>
 
-          {currentUser ? toDashboard : form}
+          {/*currentUser ? toDashboard : form */}
+          {requestDemo}
         </Grid>
       </Grid>
     )

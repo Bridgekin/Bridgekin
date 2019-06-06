@@ -80,7 +80,7 @@ class Contacts extends React.Component {
             className={classes.emptyOppsText} gutterBottom>
             {noContactMessage[pathName]}
           </Typography>)}
-        {(false && pathName === '/mynetwork') && <ImportGoogle asContactCard/>}
+        {(pathName === '/mynetwork') && <ImportGoogle asContactCard/>}
       </div>
     )
   }

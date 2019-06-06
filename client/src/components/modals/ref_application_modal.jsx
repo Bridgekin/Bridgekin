@@ -347,7 +347,7 @@ class ApplicationModal extends React.Component {
           </Typography>
           <Typography variant="body1" id="simple-modal-description"
             align='left' color='textPrimary'>
-            We weren’t able to submit your application because:
+            We weren’t able to submit the application because:
           </Typography>
           <List data-cy='login-errors'>
             {refApplicationErrors}
@@ -369,7 +369,9 @@ class ApplicationModal extends React.Component {
           </Typography>
           <Typography variant="body1" id="simple-modal-description"
             align='left' color='textPrimary'>
-            We've sent your application to the job owner. If you're a good fit for a position, you'll receive next steps shortly!
+            {type === 'personal' ? 
+            `We've sent your application to the job owner. If you're a good fit for a position, you'll receive next steps shortly!` : 
+            "Thank you for submitting a candidate. You’ll be notified via text as the hiring process progresses." }
           </Typography>
     
           <Grid item xs={12} container justify='flex-start'>

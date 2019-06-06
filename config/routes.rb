@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    post 'notify_request_demo', :to => "ref_applications#request_demo"
     patch 'update_ref_app_status', :to => 'ref_applications#update_status'
     post "hire_signup", :to => 'users#hire_signup'
     post 'add_external_user', :to => 'users#add_external_user'
