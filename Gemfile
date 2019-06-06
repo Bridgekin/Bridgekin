@@ -111,3 +111,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "bugsnag", "~> 6.11"
 gem "skylight"
 gem "sentry-raven"
+gem 'coffee-rails', '~> 5.0.0'
