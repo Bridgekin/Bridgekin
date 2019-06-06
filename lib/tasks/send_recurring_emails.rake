@@ -35,8 +35,7 @@ namespace :recurring_emails do
           shareable_type: "Connection",
           opportunities: {status: 'Approved'})
         .where.not(
-          opportunities: {deal_status: 'Deleted'},
-          opportunities: {id: user.opportunities}
+          opportunities: {deal_status: 'Deleted', id: user.opportunities}
         )
 
       #Determine if email should be sent
@@ -111,8 +110,7 @@ namespace :recurring_emails do
           shareable_type: "Network",
           opportunities: {status: 'Approved'})
         .where.not(
-          opportunities: {deal_status: 'Deleted'},
-          opportunities: {id: user.opportunities}
+          opportunities: {deal_status: 'Deleted', id: user.opportunities}
         )
 
       #Days_from_mapping = { 'Daily' => 1, 'Weekly' => 7, 'Monthly' => 28 }
