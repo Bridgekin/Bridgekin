@@ -9,6 +9,7 @@ class User < ApplicationRecord
 
   validates :fname, presence: true
   validates :email, uniqueness: { case_sensitive: false }
+  validates :phone_number, uniqueness: { allow_blank: :true}
 
   has_many :opportunities,
     foreign_key: :owner_id,

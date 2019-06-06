@@ -14,6 +14,7 @@ class Api::UsersController < ApiController
 
   def hire_signup
     @currentUser = User.new(user_params)
+    @currentUser.phone_number = @currentUser.phone_number
     if @currentUser.save
       @token = get_login_token!(@currentUser)
       @currentUser.implement_trackable
@@ -125,7 +126,7 @@ class Api::UsersController < ApiController
     # Only allow a trusted parameter "white list" through.
     def user_params
       user = params.require(:user).permit(:email, :fname, :lname,
-        :phone, :city, :state, :country, :password,
+        :phone_number, :city, :state, :country, :password,
         :membership_type, :password_confirmation,
         :password_digest, :title, :company, :profile_pic,
         :default_network_id, :linked_in_url)

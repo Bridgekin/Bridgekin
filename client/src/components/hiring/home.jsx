@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import { hireSignup } from '../../actions/session_actions';
 import { openSignup } from '../../actions/modal_actions';
 import HiringContainer from './hiring_container';
+import MaskedInput from 'react-text-mask';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -48,13 +49,30 @@ const styles = theme => ({
   }
 })
 
+function TextMaskCustom(props) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={ref => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
+  );
+}
+
 class HiringHome extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       fname: '',
       email: '',
-      password: ''
+      password: '',
+      phoneNumber: ''
     }
 
     this.handleSignup = this.handleSignup.bind(this);
@@ -69,16 +87,17 @@ class HiringHome extends React.Component {
   }
 
   handleSignup(){
-    const { fname, email, password } = this.state;
+    const { fname, email, password, 
+      phoneNumber} = this.state;
     //do some things
     let user = {
-      fname, email, password,
-      lname: ''
+      fname, email, password, lname: '',
+      phoneNumber: phoneNumber.replace(/[ ()-]/g,"")
     }
     this.props.hireSignup(user)
     .then(() => {
       if(this.props.userErrors.length === 0){
-        this.props.history.push('/hiring_dashboard')
+        this.props.history.push('/hiring/dashboard')
       } else {
         this.props.openSignup({ page: 'response'});
       }
@@ -86,78 +105,14 @@ class HiringHome extends React.Component {
   }
 
   render(){
-    const { classes, dimensions } = this.props;
-    const { fname, email, password } = this.state;
+    const { classes, dimensions, currentUser } = this.props;
+    const { fname, email, password, phoneNumber } = this.state;
 
-    // let content = <Grid item xs={10} sm={8}>
-    //   <Grid container justify='center'>
-    //     <Typography align='center' color='textPrimary'
-    //       gutterBottom
-    //       style={{ fontSize: 20, fontWeight: 600, marginTop: 20}}>
-    //       {`Super-Charge Your AngelList Postings!`}
-    //     </Typography>
-    //     <Typography align='center' color='textPrimary'
-    //       gutterBottom
-    //       style={{ fontSize: 14}}>
-    //       {`Drive more traffic to your postings by Angel List postings`}
-    //     </Typography>
-    //     <Grid item xs={7} container justify='center'
-    //       style={{ marginTop: 30 }}>
-    //       <Typography align='center' color='textPrimary'
-    //         gutterBottom
-    //         style={{ fontSize: 20, fontWeight: 600}}>
-    //         {`Signup`}
-    //       </Typography>
-    //       <TextField
-    //         required
-    //         label="First Name"
-    //         className={classes.textField}
-    //         margin="normal"
-    //         fullWidth
-    //         variant='outlined'
-    //         value={fname}
-    //         onChange={this.handleChange('fname')}
-    //         onMouseUp={this.handleChange('fname')}
-    //         />
-    //       <TextField
-    //         required
-    //         label="Email"
-    //         className={classes.textField}
-    //         margin="normal"
-    //         fullWidth
-    //         variant='outlined'
-    //         value={email}
-    //         onChange={this.handleChange('email')}
-    //         onMouseUp={this.handleChange('email')}
-    //         />
-    //       <TextField
-    //         required
-    //         label="Password"
-    //         className={classes.textField}
-    //         margin="normal"
-    //         fullWidth
-    //         variant='outlined'
-    //         type="password"
-    //         value={password}
-    //         onChange={this.handleChange('password')}
-    //         onMouseUp={this.handleChange('password')}
-    //         />
-    //       <Button variant="contained" color="primary"
-    //         className={classes.button} fullWidth
-    //         disabled={!fname || !email || !password}
-    //         onClick={this.handleSignup}
-    //         style={{ margin: "10px 0px"}}>
-    //         Sign In
-    //       </Button>
-    //     </Grid>
-    //   </Grid>
-    // </Grid>
-
-    // return <HiringContainer content={content} />
+    let phoneComponent = <div></div>
 
     let form = (
       <Grid container justify='center' alignItems='center' spacing={12}>
-        <Grid item xs={6} sm={4} container justify='center'>
+        <Grid item xs={10} container justify='space-around'>
           <TextField
             required
             label="First Name"
@@ -168,9 +123,6 @@ class HiringHome extends React.Component {
             onChange={this.handleChange('fname')}
             onMouseUp={this.handleChange('fname')}
             />
-        </Grid>
-
-        <Grid item xs={6} sm={4} container justify='center'>
           <TextField
             required
             label="Email"
@@ -183,7 +135,23 @@ class HiringHome extends React.Component {
             />
         </Grid>
 
-        <Grid item xs={6} sm={4} container justify='center'>
+        <Grid item xs={10} container justify='space-around'>
+          <TextField
+            required
+            label="Mobile Number"
+            className={classes.textField}
+            margin="normal"
+            variant='outlined'
+            value={phoneNumber}
+            onChange={this.handleChange('phoneNumber')}
+            onMouseUp={this.handleChange('phoneNumber')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            InputProps={{
+              inputComponent: TextMaskCustom,
+            }}
+            />
           <TextField
             required
             label="Password"
@@ -209,6 +177,14 @@ class HiringHome extends React.Component {
       </Grid>
     )
 
+    let toDashboard = <Grid container justify='center'
+    style={{ marginTop: 30 }}>
+      <Button variant='contained' color='primary'
+      onClick={() => this.props.history.push('/hiring/dashboard')}>
+        {`To My Dashboard`}
+      </Button>
+    </Grid>
+
     return (
       <Grid container justify='center' alignItems='center' className={classes.grid}
       style={{ minHeight: dimensions.height}}>
@@ -225,7 +201,7 @@ class HiringHome extends React.Component {
             </Typography>
           </Grid>
 
-          {form}
+          {currentUser ? toDashboard : form}
         </Grid>
       </Grid>
     )

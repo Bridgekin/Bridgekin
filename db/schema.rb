@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_04_164641) do
+ActiveRecord::Schema.define(version: 2019_06_06_155912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -271,6 +271,10 @@ ActiveRecord::Schema.define(version: 2019_06_04_164641) do
     t.datetime "updated_at", null: false
     t.string "question_1"
     t.string "status", default: "open"
+    t.boolean "has_license", default: false
+    t.boolean "allows_screening", default: false
+    t.string "availability", default: ""
+    t.string "phone_number", default: ""
     t.index ["ref_opp_id"], name: "index_ref_applications_on_ref_opp_id"
   end
 
@@ -392,7 +396,7 @@ ActiveRecord::Schema.define(version: 2019_06_04_164641) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string "phone", default: "", null: false
+    t.string "phone_number", default: "", null: false
     t.string "city", default: "", null: false
     t.string "state", default: "", null: false
     t.string "country", default: "", null: false

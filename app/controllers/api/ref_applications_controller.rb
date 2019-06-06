@@ -31,8 +31,9 @@ class Api::RefApplicationsController < ApiController
       # Send Job owner a notification
       ref_opp = @ref_application.ref_opp
       HiringMailer.notify_job_owner(ref_opp).deliver_later
-      #Send Text to applicant
-      #Send Text to Referrer
+
+      # Notify Applicant and Referrer
+      @ref_application.notify_parties
       
       render :show
     else
@@ -52,10 +53,9 @@ class Api::RefApplicationsController < ApiController
     @ref_application = RefApplication.find(params[:payload][:id])
     prev_status = @ref_application.status
     if @ref_application.update(status: params[:payload][:status])
-      # Notify Applicants
-      @ref_application.notify_applicant()
-      # Notifiy Referrer
-      @ref_application.notify_referrer()
+      # Notify Applicant and Referrer
+      @ref_application.notify_parties
+
       render :show
     else
       render json: @ref_application.errors.full_messages,status: 401
@@ -76,7 +76,8 @@ class Api::RefApplicationsController < ApiController
     params.require(:ref_application).permit(:fname,
       :lname, :email, :referral_code, :ref_opp_id,
       :direct_referrer_id, :candidate_id, :question_1,
-      :answer_1, :resume)
+      :answer_1, :resume, :has_license,
+      :allows_screening, :availability, :phone_number)
   end
 
   def set_ref_application

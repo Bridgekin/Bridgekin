@@ -18,6 +18,7 @@ import ReferralLink from './referral_link';
 import { createRefApplication } from '../../actions/ref_application_actions.js'
 import { openRefAppModal } from '../../actions/modal_actions';
 import { createRefLink } from '../../actions/ref_link_actions';
+import MaskedInput from 'react-text-mask';
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -54,8 +55,26 @@ const styles = theme => ({
   input:{
     width: '100%'
   },
+  textField:{
+    width: '50%'
+  },
   inputLabel:{ fontSize: 15 }
 })
+
+function TextMaskCustom(props) {
+  const { inputRef, ...other } = props;
+  return (
+    <MaskedInput
+      {...other}
+      ref={ref => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
+  );
+}
 
 class SharePosting extends React.Component {
   constructor(props){
@@ -67,7 +86,9 @@ class SharePosting extends React.Component {
       lname: '',
       email: '',
       answer1: '',
+      phoneNumber: '',
       question1: `Tell us why the candidate would be a good fit for this position`,
+      resume: null
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -100,18 +121,44 @@ class SharePosting extends React.Component {
     this.setState({ loading: true },
     () => {
       const { currentUser, referralCode, id } = this.props;
-      const { fname, lname, email, answer1, question1 } = this.state;
+      const { fname, lname, email, answer1, question1,
+        phoneNumber, resume } = this.state;
       
       // Collect Application
       let app = { fname, lname, email, answer1,
         question1, 
         directReferrerId: currentUser.id,
-        refOppId: id
+        refOppId: id,
+        phoneNumber: phoneNumber.replace(/[ ()-]/g,"")
       }
       // Set referral Code if one is in the url
       referralCode && (app[referralCode] = referralCode);
 
-      this.props.createRefApplication(app)
+      const formData = new FormData();
+
+        // Collect Application
+        // let app = { answer1, question1,
+        //   refOppId: refApplicationModal.id,
+        //   candidateId: currentUser.id,
+        //   referralCode: refApplicationModal.referralCode
+        // }
+        formData.append(`refApplication[fname]`, fname)
+        formData.append(`refApplication[email]`, email)
+        formData.append(`refApplication[answer_1]`, answer1)
+        formData.append(`refApplication[question_1]`, question1)
+        formData.append(`refApplication[directReferrerId]`, currentUser.id)
+        formData.append(`refApplication[refOppId]`,id)
+        formData.append(`refApplication[phoneNumber]`,phoneNumber.replace(/[ ()-]/g,""))
+
+        if(referralCode){
+          formData.append(`refApplication[referralCode]`, referralCode)
+        }
+
+        if(resume){
+          formData.append(`refApplication[resume]`, resume)
+        }
+
+      this.props.createRefApplication(formData)
       .then(() => this.props.openRefAppModal({
         redirect: `/hiring/show/${id}`,
         type: 'referral'
@@ -168,65 +215,85 @@ class SharePosting extends React.Component {
           </Typography>
 
           <Grid container justify='space-between'
+          alignItems='center'
           style={{ margin: '10px 0px'}}>
             <Typography color='textSecondary'
             className={classes.inputLabel}>
               {`First Name`}
             </Typography>
-            <Paper className={classes.inputPaper}>
-              <InputBase 
-              className={classes.input}
-              value={this.state.fName}
-              placeholder="e.g. John"
-              onChange={this.handleChange('fName')}
-              style={{ width: '50%'}}/>
-            </Paper>
+            <TextField
+            required
+            variant='outlined'
+            placeholder="e.g. John"
+            className={classes.textField}
+            value={this.state.fname}
+            onChange={this.handleChange('fname')}
+            onMouseUp={this.handleChange('fname')}
+            />
           </Grid>
 
           <Grid container justify='space-between'
-          style={{ margin: '10px 0px'}}>
-            <Typography color='textSecondary'
-            className={classes.inputLabel}>
-              {`Last Name`}
-            </Typography>
-            <Paper className={classes.inputPaper}>
-              <InputBase 
-              className={classes.input}
-              value={this.state.lName}
-              placeholder="e.g. Doe"
-              onChange={this.handleChange('lName')}/>
-            </Paper>
-          </Grid>
-
-          <Grid container justify='space-between'
+          alignItems='center'
           style={{ margin: '10px 0px'}}>
             <Typography color='textSecondary'
             className={classes.inputLabel}>
               {`Email`}
             </Typography>
-            <Paper className={classes.inputPaper}>
-              <InputBase 
-              className={classes.input}
-              value={this.state.email}
-              placeholder="e.g. john.doe@gmail.com"
-              onChange={this.handleChange('email')}/>
-            </Paper>
+            <TextField
+            required
+            variant='outlined'
+            placeholder="e.g. john.doe@gmail.com"
+            className={classes.textField}
+            value={this.state.email}
+            onChange={this.handleChange('email')}
+            onMouseUp={this.handleChange('email')}
+            />
           </Grid>
 
           <Grid container justify='space-between'
+          alignItems='center'
+          style={{ margin: '10px 0px'}}>
+            <Typography color='textSecondary'
+            className={classes.inputLabel}>
+              {`Mobile Number`}
+            </Typography>
+            <TextField
+            required
+            variant='outlined'
+            className={classes.textField}
+            value={this.state.phoneNumber}
+            onChange={this.handleChange('phoneNumber')}
+            onMouseUp={this.handleChange('phoneNumber')}
+            InputProps={{
+              inputComponent: TextMaskCustom,
+            }}/>
+          </Grid>
+
+          <Grid container justify='space-between'
+          alignItems='center'
           style={{ margin: '10px 0px'}}>
             <Typography color='textSecondary'
             className={classes.inputLabel}>
               {`Candidate Description`}
             </Typography>
-            <Paper className={classes.inputPaper}>
-              <InputBase multiline rows='7'
-              className={classes.input}
-              value={this.state.description}
-              placeholder={question1}
-              onChange={this.handleChange('description')}/>
-            </Paper>
+            <TextField
+            required
+            variant='outlined'
+            placeholder="e.g. John"
+            rows="6"
+            multiline
+            className={classes.textField}
+            value={this.state.answer1}
+            onChange={this.handleChange('answer1')}
+            onMouseUp={this.handleChange('answer1')}
+            />
           </Grid>
+
+          {false && <Grid container>
+            <Button>
+              Upload Resume
+            </Button>
+          </Grid>}
 
           <Grid container justify='center'
           style={{ marginTop: 20 }}>
@@ -240,9 +307,8 @@ class SharePosting extends React.Component {
         </Grid>
       </Grid>
 
-      let backButton = <Grid container justify='flex-end'>
-        <Button variant='contained' color='primary'
-        onClick={this.back}>
+      let backButton = <Grid container justify='flex-start'>
+        <Button onClick={this.back}>
           {`Back`}
         </Button>
       </Grid>
@@ -252,10 +318,10 @@ class SharePosting extends React.Component {
       className={classes.grid}>
         <Grid item xs={11} sm={10}
         style={{ padding: "40px 0px"}}>
+          {backButton} 
           {header}
           {referralDetails}
           {formApplication}
-          {backButton}
         </Grid>
       </Grid>
     } else {

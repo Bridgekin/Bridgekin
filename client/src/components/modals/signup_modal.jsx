@@ -23,6 +23,7 @@ import { closeSignup } from '../../actions/modal_actions';
 import TextField from '@material-ui/core/TextField';
 import { hireSignup } from '../../actions/session_actions';
 import { openRefAppModal, openLogin } from '../../actions/modal_actions';
+import MaskedInput from 'react-text-mask';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -61,6 +62,22 @@ const styles = theme => ({
   },
 });
 
+function TextMaskCustom(props) {
+  const { inputRef, ...other } = props;
+  return (
+    <MaskedInput
+      {...other}
+      ref={ref => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
+  );
+}
+
+
 class SignupModal extends React.Component {
   constructor(props){
     super(props)
@@ -72,7 +89,8 @@ class SignupModal extends React.Component {
       fname:'',
       lname: '',
       email: '',
-      password: ''
+      password: '',
+      phoneNumber: ''
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -125,7 +143,7 @@ class SignupModal extends React.Component {
   } 
 
   handleSubmit(){
-    const { fname, lname, email, password } = this.state;
+    const { fname, lname, email, password, phoneNumber } = this.state;
     //do some things
     let user = {
       fname, email, password,lname: ''
@@ -134,7 +152,8 @@ class SignupModal extends React.Component {
     .then(() => {
       if(this.props.userErrors.length === 0){
         this.setState({
-          fname:'', lname: '', email: '', password: ''
+          fname:'', lname: '', email: '', password: '',
+          phoneNumber: phoneNumber.replace(/[ ()-]/g,"")
          })
 
         const { signupModal } = this.props;
@@ -184,18 +203,27 @@ class SignupModal extends React.Component {
           />
           <TextField fullWidth
           variant="outlined"
-          label='Last Name'
-          margin='normal'
-          onChange={this.handleChange('lname')}
-          value={this.state.lname}
-          />
-          <TextField fullWidth
-          variant="outlined"
           label='Email Name'
           margin='normal'
           onChange={this.handleChange('email')}
           value={this.state.email}
           />
+          <TextField
+            required
+            label="Mobile Number"
+            className={classes.textField}
+            margin="normal"
+            variant='outlined'
+            value={this.state.phoneNumber}
+            onChange={this.handleChange('phoneNumber')}
+            onMouseUp={this.handleChange('phoneNumber')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            InputProps={{
+              inputComponent: TextMaskCustom,
+            }}
+            />
           <TextField fullWidth
           variant="outlined"
           label='Password'

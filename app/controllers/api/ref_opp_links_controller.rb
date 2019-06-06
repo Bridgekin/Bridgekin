@@ -5,19 +5,26 @@ class Api::RefOppLinksController < ApiController
 
   def create
     #Create Link
-    @ref_opp_link = RefOppLink.find_by(
-      owner_id: @user.id,
-      ref_opp_id: params[:id]
-    )
-    unless @ref_opp_link
-      @ref_opp_link = @user.ref_opp_links.new(ref_opp_id: params[:id])
-      if @ref_opp_link.save
-        render :create
-      else
-        render json: @ref_opp_link.errors.full_messages, status: 401
-      end
-    else
+    # @ref_opp_link = RefOppLink.find_by(
+    #   owner_id: @user.id,
+    #   ref_opp_id: params[:id]
+    # )
+    # unless @ref_opp_link
+    #   @ref_opp_link = @user.ref_opp_links.new(ref_opp_id: params[:id])
+    #   if @ref_opp_link.save
+    #     render :create
+    #   else
+    #     render json: @ref_opp_link.errors.full_messages, status: 401
+    #   end
+    # else
+    #   render :create
+    # end
+    # debugger
+    @ref_opp_link = @user.ref_opp_links.new(ref_opp_id: params[:id])
+    if @ref_opp_link.save
       render :create
+    else
+      render json: @ref_opp_link.errors.full_messages, status: 404
     end
   end
 

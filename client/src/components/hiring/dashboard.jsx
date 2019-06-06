@@ -19,10 +19,11 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 import Loading from '../loading';
 import Capitalize from 'capitalize';
-import { fetchRefApplications } from '../../actions/ref_application_actions';
+import { fetchRefApplications, updateRefAppStatus } from '../../actions/ref_application_actions';
 import { fetchRefOpps } from '../../actions/ref_opportunity_actions';
 import { openDeleteOpp, openRefAppStatus } from '../../actions/modal_actions';
 import { EPERM } from 'constants';
@@ -43,7 +44,8 @@ const mapDispatchToProps = dispatch => ({
   fetchRefApplications: () => dispatch(fetchRefApplications()),
   fetchRefOpps: () => dispatch(fetchRefOpps()),
   openDeleteOpp: (payload) => dispatch(openDeleteOpp(payload)),
-  openRefAppStatus: (payload) => dispatch(openRefAppStatus(payload))
+  openRefAppStatus: (payload) => dispatch(openRefAppStatus(payload)),
+  updateRefAppStatus: (payload) => dispatch(updateRefAppStatus(payload))
 });
 
 const styles = theme => ({
@@ -81,6 +83,7 @@ class HiringDashboard extends React.Component {
 
   componentDidMount(){
     const { userFeature } = this.props;
+
     if(!userFeature.initialPostingDate){
       this.props.history.push('/hiring/create/AngelList')
     }
@@ -129,6 +132,20 @@ class HiringDashboard extends React.Component {
         type: 'hiring'
       })
       this.setState({ anchorEl: null})
+    }
+  }
+
+  handleUpdateAppStatus(row){
+    return e => {
+      e.stopPropagation()
+      let value = e.target.value;
+      if(value !== row.status){
+        let payload = {
+          status: value,
+          id: row.id
+        }
+        this.props.updateRefAppStatus(payload);
+      }
     }
   }
 
@@ -242,35 +259,17 @@ class HiringDashboard extends React.Component {
                 </TableCell>
                 {['fname', 'lname', 'email', 'resume','status'].map(field => {
                   if(field === 'status'){
-                    let status = (currentUser.id === refOpps[row.refOppId].ownerId) ? (
-                      <Button onClick={this.handleMenuClick('statusAnchorEl')}>
-                        {row.status}
-                      </Button>
-                    ) : (row.status)
-                    return <TableCell align="right"
-                    className={classes.tableCell}>
-                      {status}
-                      <Menu
-                        id="simple-menu"
-                        anchorEl={statusAnchorEl}
-                        open={Boolean(statusAnchorEl)}
-                        onClose={this.handleMenuClick('statusAnchorEl')}
-                        anchorOrigin={{
-                          vertical: 'top',
-                          horizontal: 'right',
-                        }}
-                        transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'center',
-                        }}
-                        getContentAnchorEl={null}>
-                        {['open', 'phone screen', 'interview', 'hire', 'passed'].map(val => (
-                          <MenuItem onClick={this.handleStatusUpdate(val, row.id)}
-                          style={{ textTransform: 'capitalize'}}>
-                            {val}
-                          </MenuItem>
-                        ))}
-                      </Menu>
+                    return <TableCell>
+                      <Select fullWidth
+                        value={row.status}
+                        onClick={(e)=> e.stopPropagation()}
+                        onChange={this.handleUpdateAppStatus(row)}>
+                        <MenuItem value={'open'}>Open</MenuItem>
+                        <MenuItem value={'phone screen'}>Phone Screen</MenuItem>
+                        <MenuItem value={'interview'}>Interview</MenuItem>
+                        <MenuItem value={'hired'}>Hired</MenuItem>
+                        <MenuItem value={'passed'}>Passed</MenuItem>
+                      </Select>
                     </TableCell>
                   } else if (field === 'resume'){
                     return <TableCell align='right'>

@@ -86,9 +86,9 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def user_params
-    received_params = params.require(:user).permit(:email, :fname, :lname,
-      :phone, :city, :state, :country, :password, :membership_type,
-      :password_confirmation, :password_digest)
+    received_params = params.require(:user).permit(:email, :fname, :lname, :phone_number, :city, 
+    :state, :country, :password, :membership_type,
+    :password_confirmation, :password_digest)
 
     received_params[:password_confirmation] = received_params[:password]
     received_params[:email].downcase!

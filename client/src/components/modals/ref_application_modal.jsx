@@ -13,6 +13,12 @@ import TextField from '@material-ui/core/TextField';
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
 import CloudUploadIcon from '@material-ui/icons/CloudUploadSharp';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Switch from '@material-ui/core/Switch';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import { connect } from 'react-redux';
 import { clearRefApplicationErrors } from '../../actions/error_actions';
@@ -74,6 +80,9 @@ const styles = theme => ({
     marginTop: 15,
     cursor: 'pointer',
     fontSize: 12
+  },
+  question: {
+    margin: "10px 0px"
   }
 });
 
@@ -86,12 +95,16 @@ class ApplicationModal extends React.Component {
       resume: null,
       resumeUrl: '',
       loading: false,
-      type: 'response'
+      type: 'response',
+      hasLicense: "no",
+      allowsScreening: "no",
+      availability: 'Days'
     };
     this.handleClose = this.handleClose.bind(this);
     this.getContent = this.getContent.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSwitch = this.handleSwitch.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -116,6 +129,12 @@ class ApplicationModal extends React.Component {
   handleChange(field){
     return e => {
       this.setState({ [field]: e.target.value})
+    }
+  }
+
+  handleSwitch(field){
+    return e => {
+      this.setState({ [field]: e.target.checked})
     }
   }
 
@@ -149,11 +168,14 @@ class ApplicationModal extends React.Component {
         // }
         formData.append(`refApplication[answer_1]`, answer1)
         formData.append(`refApplication[question_1]`, question1)
-        formData.append(`refApplication[resume]`, resume)
         formData.append(`refApplication[refOppId]`, refApplicationModal.id)
         formData.append(`refApplication[candidateId]`, currentUser.id)
         formData.append(`refApplication[referralCode]`,refApplicationModal.referralCode)
 
+        if(resume){
+          formData.append(`refApplication[resume]`, resume)
+        }
+        
         this.props.createRefApplication(formData)
         .then(() => this.setState({ 
           type: 'response', answer1: '' 
@@ -164,7 +186,7 @@ class ApplicationModal extends React.Component {
   getContent(){
     const { classes, refApplicationModal } = this.props;
     const { question1, answer1, type, resumeUrl,
-      resume} = this.state;
+      resume, hasLicense, allowsScreening, availability} = this.state;
 
     switch(type){
       case 'personal':
@@ -180,7 +202,7 @@ class ApplicationModal extends React.Component {
         </Grid>
 
         let section = <div>
-          <Typography color='textSecondary'
+          {/*<Typography color='textSecondary'
           style={{ fontSize: 18 }}>
             {question1}
           </Typography>
@@ -190,7 +212,82 @@ class ApplicationModal extends React.Component {
             margin="normal"
             onChange={this.handleChange('answer1')}
             value={answer1}
-            />
+          />*/}
+          <Grid container alignItems='center'
+          justify='space-between'
+          className={classes.question}>
+            <Grid item xs={6}>
+              <Typography color='textSecondary'
+              style={{ fontSize: 18 }}>
+                {`Do you have a Drivers License? `}
+              </Typography>
+            </Grid>
+            <Grid item xs={5}
+            container justify="flex-end">
+              <Typography
+              style={{ marginLeft: 20}}>
+                {`Yes`}
+                <Radio
+                  checked={hasLicense === "yes"}
+                  onChange={this.handleChange('hasLicense')}
+                  value={"yes"}/>
+                {`No`}
+                <Radio
+                  checked={hasLicense === "no"}
+                  onChange={this.handleChange('hasLicense')}
+                  value={"no"}/>
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid container alignItems='center'
+          justify='space-between'
+          className={classes.question}>
+            <Grid item xs={6}>
+              <Typography color='textSecondary'
+              style={{ fontSize: 18 }}>
+                {`Are you ok with a background and drug screen?`}
+              </Typography>
+            </Grid>
+            <Grid item xs={5}
+            container justify="flex-end">
+              <Typography
+              style={{ marginLeft: 20}}>
+                {`Yes`}
+                <Radio
+                  checked={allowsScreening === "yes"}
+                  onChange={this.handleChange('allowsScreening')}
+                  value={"yes"}/>
+                {`No`}
+                <Radio
+                  checked={allowsScreening === "no"}
+                  onChange={this.handleChange('allowsScreening')}
+                  value={"no"}/>
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid container alignItems='center'
+          justify='space-between'
+          className={classes.question}>
+            <Grid item xs={6}>
+              <Typography color='textSecondary'
+              style={{ fontSize: 18 }}>
+                {`What shifts are you available?`}
+              </Typography>
+            </Grid>
+            <Grid item xs={5} 
+            container justify="flex-end">  
+              <Select fullWidth
+                value={availability}
+                onChange={this.handleChange('availability')}
+              >
+                <MenuItem value={'Days'}>Days</MenuItem>
+                <MenuItem value={'Nights'}>Nights</MenuItem>
+                <MenuItem value={'All'}>All</MenuItem>
+              </Select>
+            </Grid>
+          </Grid>
 
           {resumeUrl ? (
             <a href={resumeUrl} download={resume.name}>{resume.name}</a>
@@ -206,8 +303,9 @@ class ApplicationModal extends React.Component {
               }}
               />
             <label htmlFor="resume-button-file">
-              {<Button component="span">
-                {`Upload Resume `}
+              {<Button component="span"
+              style={{ textTransform: 'capitalize'}}>
+                {`Upload your resume (Optional)`}
                 <CloudUploadIcon 
                 style={{ marginLeft: 5 }}/>
               </Button>}
@@ -218,7 +316,7 @@ class ApplicationModal extends React.Component {
             <Button color='primary' variant='contained'
             style={{ marginTop: 20}}
             onClick={this.handleSubmit}>
-              {`Send Application`}
+              {`Submit Application`}
             </Button>
           </Grid>
         </div>

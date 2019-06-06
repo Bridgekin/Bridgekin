@@ -1,6 +1,6 @@
-Hi <%= @recipient.fname.capitalize %>,
+<p>Hi <%= @recipient.fname.capitalize %>,</p>
  
-You’ve got another application for your job posting, "<%= @ref_opp.title.capitalize %>". You can check this and all other applications <%= link_to 'here', "#{root_url}hiring/dashboard/received_applications" %>:
+<p>You’ve got another application for your job posting, "<%= @ref_opp.title.capitalize %>". You can check this and all other applications <%= link_to 'here', "#{root_url}hiring/dashboard/received_applications" %>.</p>
  
-Cheers,
-The Bridgekin Team
+<p>Cheers,<br>
+The Bridgekin Team</p>
