@@ -200,7 +200,7 @@ class HiringHome extends React.Component {
 
     let requestDemo = <Grid container justify='center'
     style={{ marginTop: 30 }}>
-      <Grid item xs={12} container justify='center'>
+      {!sent && <Grid item xs={12} container justify='center'>
         <TextField
           required
           label="First Name"
@@ -222,7 +222,7 @@ class HiringHome extends React.Component {
           onChange={this.handleChange('email')}
           onMouseUp={this.handleChange('email')}
         />
-      </Grid>
+      </Grid>}
       <Button variant='contained' color={sent ? 'default' : 'primary'}
         onClick={this.requestDemo}>
         {sent? `Sent` : `Request A Demo!`}
