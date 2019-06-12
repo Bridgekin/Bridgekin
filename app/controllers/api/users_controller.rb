@@ -1,7 +1,7 @@
 require_relative '../concerns/devise_controller_patch.rb'
 class Api::UsersController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup]
+  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup]
 
   after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
@@ -15,6 +15,7 @@ class Api::UsersController < ApiController
   def hire_signup
     @currentUser = User.new(user_params)
     @currentUser.phone_number = @currentUser.phone_number
+
     if @currentUser.save
       @token = get_login_token!(@currentUser)
       @currentUser.implement_trackable
@@ -32,6 +33,42 @@ class Api::UsersController < ApiController
       @user_feature.save
       #No friends yet = Empty object to fill connections
       @connections = {}
+
+      render :hire_signup
+    else
+      render json: @currentUser.errors.full_messages, status: 422
+    end
+  end
+
+  def sales_signup
+    @currentUser = User.new(user_params)
+    network = SalesNetwork.find_by(domain: params[:user][:domain])
+
+    providedDomain = params[:user][:email].split('@').last
+    # debugger
+    if providedDomain != network.domain
+      render json: ["Domain does not match chosen network"], status: 422
+    elsif providedDomain == network.domain && @currentUser.save
+      @token = get_login_token!(@currentUser)
+      @currentUser.implement_trackable
+      @site_template = @currentUser.get_template
+
+      #Remove waitlist user from waitlist by changing status
+      @currentUser.update_waitlist
+      #Create array of user info
+      @users = [@currentUser]
+      #Get User feature set
+      @user_feature = @currentUser.user_feature ||
+        UserFeature.create(user_id: @currentUser.id)
+      #Set hire user setting
+      @user_feature.hire_user = true
+      @user_feature.save
+      #No friends yet = Empty object to fill connections
+      @connections = {}
+
+      #Create a mirror member within this network
+      member = SalesMember.create(user_id: @currentUser.id)
+      member.network = network
 
       render :hire_signup
     else

@@ -36,10 +36,13 @@ Rails.application.routes.draw do
     resources :ref_opportunities
     resources :ref_applications
     resource :ref_opp_link, only: [:create]
+    resources :sales_networks, only: [:index]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    post "connect_social", :to => 'sales_networks#connect_social'
+    post "sales_signup", :to => 'users#sales_signup'
     post 'notify_request_demo', :to => "ref_applications#request_demo"
     patch 'update_ref_app_status', :to => 'ref_applications#update_status'
     post "hire_signup", :to => 'users#hire_signup'

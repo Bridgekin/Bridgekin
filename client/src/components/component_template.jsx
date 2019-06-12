@@ -2,6 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
 });

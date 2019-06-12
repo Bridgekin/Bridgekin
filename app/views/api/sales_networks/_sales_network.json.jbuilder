@@ -1,0 +1,1 @@
+json.extract! sales_network, :id, :title, :domain

@@ -45,17 +45,22 @@ import ImportContacts from './components/google/import_contacts';
 import HiringRouter from './components/hiring/hiring_router.jsx'
 import HiringNav from './components/hiring/nav.jsx'
 
+import SalesRouter from './components/sales/sales_router.jsx'
+import SalesNav from './components/sales/nav.jsx'
+
 export default ()=> (
   <div>
     <ScrollToTop />
 
     <Switch>
+      <Route path="/sales" component={SalesNav} />
       <Route path="/hiring" component={HiringNav} />
       <Route path="/" component={HomeNav} />
     </Switch>
 
     {/* General Modals */}
     <Switch>
+      <Route path="/sales" component={SalesRouter} />
       <Route path="/hiring" component={HiringRouter} />
 
       <ProtectedRoute path="/importcontacts" component={ImportContacts} />

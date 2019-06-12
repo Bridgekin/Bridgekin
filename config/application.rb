@@ -12,6 +12,8 @@ require "action_view/railtie"
 require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
+# For Neo4j
+require 'neo4j/railtie'
 
 require_relative '../app/logging/log_formatter'
 
@@ -49,5 +51,10 @@ module Bridgekin
 
     #logging using our new formatter
     # config.log_formatter = LogFormatter.new
+
+    config.generators { |g| g.orm :neo4j }
+
+    config.neo4j.session.type = :http
+    config.neo4j.session.url = 'http://neo4j:password@localhost:7474'
   end
 end

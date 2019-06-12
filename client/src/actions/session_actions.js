@@ -61,6 +61,25 @@ export const hireSignup = (formUser) => dispatch => (
     })
 );
 
+export const salesSignup = (formUser) => dispatch => (
+  SessionApiUtil.salesSignup(formUser)
+    .then(handleErrors)
+    .then(data => {
+      localStorage.setItem('bridgekinToken', data.token);
+      dispatch(receiveUsers(data.users));
+      dispatch(receiveCurrentUser(data.currentUser));
+      dispatch(receiveSiteTemplate(data.siteTemplate));
+      dispatch(receiveWorkspaces(data.workspaces));
+      dispatch(receiveUserFeature(data.userFeature));
+    })
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveUserErrors(errors));
+    })
+);
+
 export const login = formUser => dispatch => (
   SessionApiUtil.login(formUser)
     .then(handleErrors)

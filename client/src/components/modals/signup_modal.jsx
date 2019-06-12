@@ -305,11 +305,11 @@ class SignupModal extends React.Component {
                 Close
               </Button>
             </Grid>
-            <Grid container justify='center'>
+            {!signupModal.responseOnly && <Grid container justify='center'>
               <Button onClick={this.retry}>
                 Retry?
               </Button>
-            </Grid>
+            </Grid>}
           </Grid>
         )
         return modalText;

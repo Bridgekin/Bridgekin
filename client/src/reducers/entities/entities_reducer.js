@@ -38,6 +38,7 @@ import circleConnectionsReducer from './circles/circle_connections_reducer.js';
 import googleMatchedContactsReducer from './google/contacts_reducer.js';
 
 import hiringReducer from './hiring/hiring_reducer';
+import salesReducer from './sales/sales_reducer';
 
 export default combineReducers({
   opportunities: opportuntiesReducer,
@@ -71,5 +72,6 @@ export default combineReducers({
   userFeature: userFeatureReducer,
   sessionOpportunities: sessionOpportunityReducer,
   googleMatchedContacts: googleMatchedContactsReducer,
-  hiring: hiringReducer
+  hiring: hiringReducer,
+  sales: salesReducer
 });
