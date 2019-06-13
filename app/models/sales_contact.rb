@@ -51,7 +51,7 @@ class SalesContact
   end
 
   def setSource(source)
-    case source:
+    case source
     when :linked_in_upload
       self.linked_in = true
     when :google_upload

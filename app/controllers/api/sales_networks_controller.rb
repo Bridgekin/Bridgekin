@@ -15,12 +15,14 @@ class Api::SalesNetworksController < ApiController
     inputs = params[:connect_social]
     # debugger
     currentUserNode = SalesMember.find_by(user_id: @currentUser.id)
-    [:linked_in_upload].each do |k|
-      if inputs[k]
-        parsedFile = CSV.parse(inputs[k].read, headers: true)
-        debugger
-        SalesContact.ingestLinkedIn(parsedFile, currentUserNode)
-      end
+
+    if inputs[:linked_in_upload]
+      parsedFile = CSV.parse(inputs[k].read, headers: true)
+      SalesContact.ingestLinkedIn(parsedFile, currentUserNode)
+    end
+
+    if inputs[:google_users]
+      SalesContact.ingestGoogle(inputs[:google_users], currentUserNode)
     end
 
     render json: ["Parsing Results"], status: 201

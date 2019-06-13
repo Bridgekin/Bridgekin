@@ -45,12 +45,99 @@ class SalesDashboard extends React.Component {
     this.props.history.push('/sales/connect_social')
   }
 
+  handleChange(field){
+    return e => {
+      this.setState({ [field]: e.target.value })
+    }
+  }
+
   render() {
     const { classes, dimensions } = this.props;
+    const { title, location, company,
+    fname, lname } = this.state;
 
-    let searchComponent = <Grid container
-    style={{ border: `1px solid grey`, marginBottom: 30}}>
-      Search component
+    let searchComponent = <Grid container justify='center'
+    style={{ border: `1px solid grey`, marginBottom: 30, padding: "10px 0px"}}>
+      <Grid container item xs={11}>
+        <Grid item container xs={5} direction='column' justify='space-around'>
+          <Typography align='center'>
+            {`Search by Characteristic`}
+          </Typography>
+          <TextField
+            required
+            label="Title"
+            className={classes.textField}
+            margin="dense"
+            variant='outlined'
+            value={title}
+            onChange={this.handleChange('title')}
+            onMouseUp={this.handleChange('title')}
+          />
+
+          <TextField
+            required
+            label="Company"
+            className={classes.textField}
+            margin="dense"
+            variant='outlined'
+            value={company}
+            onChange={this.handleChange('company')}
+            onMouseUp={this.handleChange('company')}
+          />
+
+          <TextField
+            required
+            label="Location"
+            className={classes.textField}
+            margin="dense"
+            variant='outlined'
+            value={location}
+            onChange={this.handleChange('location')}
+            onMouseUp={this.handleChange('location')}
+          />
+        </Grid>
+
+        <Grid item xs={2} container alignItems='center' justify='center'>
+          <Typography>
+            {`OR`}
+          </Typography>
+        </Grid>
+
+        <Grid item container xs={5}
+          direction='column'>
+          <Typography align='center'>
+            {`Search by Name`}
+          </Typography>
+          <TextField
+            required
+            label="First Name"
+            className={classes.textField}
+            margin="dense"
+            variant='outlined'
+            value={fname}
+            onChange={this.handleChange('fname')}
+            onMouseUp={this.handleChange('fname')}
+          />
+
+          <TextField
+            required
+            label="Last Name"
+            className={classes.textField}
+            margin="dense"
+            variant='outlined'
+            value={lname}
+            onChange={this.handleChange('lname')}
+            onMouseUp={this.handleChange('lname')}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container item xs={11} justify='center'
+      style={{ margin: "10px 0px"}}>
+        <Button variant='contained' color='primary'>
+          {`Search Network Contacts`}
+        </Button>
+      </Grid>
     </Grid>
 
     let resultsComponent = <Grid container

@@ -88,6 +88,7 @@ class GoogleContacts extends React.Component {
   }
 
   getAllContactsRequest(token){
+    const { asContactCard } = this.props;
     window.gapi.client.request({
       'path': `/m8/feeds/contacts/default/full`,
       'method': 'GET',
@@ -110,10 +111,15 @@ class GoogleContacts extends React.Component {
         name: contact.title.$t
       }))
       let contactEmails = Object.values(contactUsers).map(user => user.email)
-      this.props.fetchGoogleMatchedContacts(contactEmails)
-      .then(() => this.setState({
-        contactsCompared: true, contactUsers
-      }))
+
+      if(asContactCard){
+        this.props.fetchGoogleMatchedContacts(contactEmails)
+        .then(() => this.setState({
+          contactsCompared: true, contactUsers
+        }))
+      } else {
+        this.setState({ contactUsers })
+      }
     }, (reason) => {
       console.log('Error: ' + reason.result.error.message);
     });
@@ -126,8 +132,9 @@ class GoogleContacts extends React.Component {
   }
 
   getContent(){
-    const { classes, asContactCard, googleMatchedContacts,
-      connections, currentUser, users} = this.props;
+    const { classes, asContactCard, 
+    googleMatchedContacts, connections, 
+    currentUser, users, salesImport } = this.props;
     const { contactsCompared, contactUsers } = this.state;
 
     if (contactsCompared){
@@ -168,6 +175,12 @@ class GoogleContacts extends React.Component {
       //Combine and return both lists
       return [...unconnectedBIDCards, ...nonBIDCards]
       // return nonBIDCards
+    } else if (contactUsers){
+      this.props.receiveGoogleUsers(contactUsers)
+      return <Typography 
+      style={{ fontSize: 14}}>
+        {`Contacts retrieved. Ready for upload`}
+      </Typography>
     } else {
       if(asContactCard){
         return <GoogleLogin

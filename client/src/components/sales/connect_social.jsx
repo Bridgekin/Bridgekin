@@ -16,6 +16,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import { updateUserFeature } from '../../actions/user_feature_actions';
 import { connectSocial } from '../../actions/sales_actions';
+import ImportGoogle from '../google/import_contacts';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -66,14 +67,14 @@ class ConnectSocial extends React.Component {
     this.state = {
       linkedInUpload: null,
       linkedInUploadUrl: '',
-      googleUpload: null,
-      googleUploadUrl: '',
+      googleUsers: null,
       facebookUpload: null,
       facebookUploadUrl: '',
     }
 
     this.handleFile = this.handleFile.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.receiveGoogleUsers = this.receiveGoogleUsers.bind(this);
   }
 
   componentDidMount(){
@@ -81,7 +82,7 @@ class ConnectSocial extends React.Component {
     // If first time, flag create flow
     if (!userFeature.importSocial){
       let payload = {
-        importSocial: new Date(),
+        importedSocial: new Date(),
         id: userFeature.id
       }
       this.props.updateUserFeature(payload);
@@ -109,7 +110,7 @@ class ConnectSocial extends React.Component {
     const { currentUser } = this.props;
     const formData = new FormData();
 
-    ['linkedInUpload', 'googleUpload', 'facebookUpload'].map(upload => {
+    ['linkedInUpload', 'googleUsers', 'facebookUpload'].map(upload => {
       if(this.state[upload]){
         formData.append(`connectSocial[${upload}]`, this.state[upload])
       }
@@ -117,6 +118,10 @@ class ConnectSocial extends React.Component {
 
     this.props.connectSocial(formData)
     // .then(() => )
+  }
+
+  receiveGoogleUsers(googleUsers){
+    this.setState({ googleUsers })
   }
 
   render() {
@@ -214,31 +219,10 @@ class ConnectSocial extends React.Component {
           <u>{`Upload Your Gmail Address Book`}</u>
         </Typography>
         
-        <Grid container justify='center'>
-          {googleUploadUrl ? (
-            <a href={googleUploadUrl} download={googleUpload.name}>{googleUpload.name}</a>
-          ) : <div>
-            <input
-              style={{ display: 'none' }}
-              id="resume-button-file"
-              type="file"
-              onChange={this.handleFile('googleUpload', 'googleUploadUrl').bind(this)}
-              onClick={(event) => {
-                event.target.value = null
-              }}
-            />
-            <label htmlFor="resume-button-file">
-              {<Button variant='contained'
-                component="span"
-                className={classes.importButton}
-                style={{ backgroundColor: '#B2363C', color: 'white' }}>
-                {`Upload`}
-                <CloudUploadIcon
-                  style={{ marginLeft: 5 }} />
-              </Button>
-              }
-            </label>
-          </div>}
+        <Grid container justify='center'
+          className={classes.importButton}>
+          {<ImportGoogle salesImport
+          receiveGoogleUsers={this.receiveGoogleUsers}/>}
         </Grid>
       </Grid>
 
@@ -272,6 +256,12 @@ class ConnectSocial extends React.Component {
     let facebookComp = <Grid item xs={12} sm={3} md={3}
       container justify='center'
       className={classes.socialComp}>
+      <Grid item xs={10}>
+        <Typography
+        style={{ fontSize: 11, color: 'red'}}>
+          {`Currently Disabled`}
+        </Typography>
+      </Grid>
       <Grid item xs={10} container justify='center'>
         <Typography color='textSecondary' 
           align='center' fullWidth
@@ -294,9 +284,9 @@ class ConnectSocial extends React.Component {
             />
             <label htmlFor="resume-button-file">
               {<Button variant='contained'
-                component="span"
+                component="span" disabled
                 className={classes.importButton}
-                style={{ backgroundColor: '#455894', color: 'white' }}>
+                style={{ backgroundColor: 'grey', color: 'white' }}>
                 {`Upload`}
                 <CloudUploadIcon
                   style={{ marginLeft: 5 }} />
