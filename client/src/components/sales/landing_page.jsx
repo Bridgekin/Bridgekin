@@ -371,12 +371,11 @@ class LandingPage extends React.Component {
     </Grid>
 
     let footer = <Grid container justify='center'
-      className={classes.section}
-      style={{ backgroundColor: 'black' }}>
+      style={{ backgroundColor: 'black', padding: "20px 0px" }}>
       <Grid item xs={10} container justify='flex-end'>
         <Button onClick={()=>this.props.history.push('/useragreement')}
         style={{ color: 'white', textTransform: 'capitalize', marginRight: 20 }}>
-          {`Terms of Use`}
+          {`User Agreement`}
         </Button>
         <Button onClick={()=>this.props.history.push('/privacypolicy')}
         style={{ color: 'white', textTransform: 'capitalize'}}>

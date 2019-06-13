@@ -72,6 +72,7 @@ const styles = theme => ({
     width: '100%',
     boxShadow: 'none',
     position: 'fixed',
+    transition: '0.2s',
     top: 0
   },
   nav: {
