@@ -54,7 +54,7 @@ module Bridgekin
 
     config.generators { |g| g.orm :neo4j }
 
-    config.neo4j.session.type = :http
-    config.neo4j.session.url = 'http://neo4j:password@localhost:7474'
+    # config.neo4j.session.type = :http
+    # config.neo4j.session.url = 'http://neo4j:password@localhost:7474'
   end
 end
