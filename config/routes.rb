@@ -43,7 +43,7 @@ Rails.application.routes.draw do
     # resource :session, only: [:create, :destroy]
     post "connect_social", :to => 'sales_networks#connect_social'
     post "sales_signup", :to => 'users#sales_signup'
-    post 'notify_request_demo', :to => "ref_applications#request_demo"
+    post 'notify_request_demo', :to => "utils#request_demo"
     patch 'update_ref_app_status', :to => 'ref_applications#update_status'
     post "hire_signup", :to => 'users#hire_signup'
     post 'add_external_user', :to => 'users#add_external_user'

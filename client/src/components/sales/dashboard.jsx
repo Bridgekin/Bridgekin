@@ -7,10 +7,24 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+import ResultCard from './result_card.jsx'
+
+const EXAMPLE = {
+  1: {
+    fname: "Test",
+    lname: "Person",
+    company: "Bridgekin",
+    position: "CEO",
+    location: "San Francisco",
+    connectedMembers: []
+  }
+}
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
   userFeature: state.entities.userFeature,
+  resultNodes: EXAMPLE
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -52,9 +66,13 @@ class SalesDashboard extends React.Component {
   }
 
   render() {
-    const { classes, dimensions } = this.props;
+    const { classes, dimensions, resultNodes } = this.props;
     const { title, location, company,
     fname, lname } = this.state;
+    let resultArray = Object.values(resultNodes);
+    let resultCards = resultArray.map(contact => (
+      <ResultCard contact={contact} />
+    ))
 
     let searchComponent = <Grid container justify='center'
     style={{ border: `1px solid grey`, marginBottom: 30, padding: "10px 0px"}}>
@@ -140,9 +158,19 @@ class SalesDashboard extends React.Component {
       </Grid>
     </Grid>
 
-    let resultsComponent = <Grid container
-      style={{ border: `1px solid grey` }}>
-      Results component
+    let resultsComponent = <Grid container justify='center'
+    style={{ border: `1px solid grey`}}>
+      <Grid item xs={9} container justify='center'
+        style={{ margin: "20px 0px"}}>
+        {resultArray.length > 0 ? (
+          resultCards
+        ): (
+          <Typography color='textSecondary'
+          align='center'>
+            {`Use the form above to find potential leads. Results will show here.`}
+          </Typography>
+        )}
+      </Grid>
     </Grid>
 
     return <div style={{ minHeight: dimensions.height }}>

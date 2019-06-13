@@ -1,0 +1,3 @@
+class DemoRequest < ApplicationRecord
+
+end

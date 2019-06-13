@@ -9,11 +9,4 @@ class HiringMailer < ApplicationMailer
       email_type: 'notify_job_owner'
     )
   end
-
-  def notify_request_demo(email, fname)
-    @email = email,
-    @fname = fname
-    mail(to: 'joe@bridgekin.com', subject: "Hiring Demo Request!")
-  end
-
 end

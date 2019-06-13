@@ -64,6 +64,9 @@ export const CLEAR_REF_LINK_ERRORS = 'CLEAR_REF_LINK_ERRORS';
 export const RECEIVE_SALES_ERRORS = 'RECEIVE_SALES_ERRORS';
 export const CLEAR_SALES_ERRORS = 'CLEAR_SALES_ERRORS';
 
+export const RECEIVE_UTIL_ERRORS = 'RECEIVE_UTIL_ERRORS';
+export const CLEAR_UTIL_ERRORS = 'CLEAR_UTIL_ERRORS';
+
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
   errors
@@ -314,4 +317,13 @@ export const receiveSalesErrors = errors => ({
 
 export const clearSalesErrors = () => ({
   type: CLEAR_SALES_ERRORS,
+});
+
+export const receiveUtilErrors = errors => ({
+  type: RECEIVE_UTIL_ERRORS,
+  errors
+});
+
+export const clearUtilErrors = () => ({
+  type: CLEAR_UTIL_ERRORS,
 });

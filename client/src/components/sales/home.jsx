@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 
 import { hireSignup } from '../../actions/session_actions';
 import { openSignup } from '../../actions/modal_actions';
-import { requestDemo } from '../../actions/hiring_actions';
+import { requestDemo } from '../../actions/util_actions';
 import MaskedInput from 'react-text-mask';
 
 const mapStateToProps = (state, ownProps) => ({

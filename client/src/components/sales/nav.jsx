@@ -10,7 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
-import blackLogo from '../../static/Bridgekin_Logo.png';
+// import blackLogo from '../../static/Bridgekin_Logo.png';
+import blackLogo from '../../static/Bridgekin_Logo_fake_transp.png';
 import blackLogoMobile from '../../static/apple-touch-icon.png';
 
 import { login, logout } from '../../actions/session_actions';
@@ -35,14 +36,15 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       marginLeft: 25,
     },
-    '&:hover': {
-      backgroundColor: theme.palette.base1
-    },
-    '&:click': {
-      backgroundColor: theme.palette.base1
-    },
+    // '&:hover': {
+    //   backgroundColor: 'none'
+    // },
+    // '&:click': {
+    //   backgroundColor: theme.palette.base1
+    // },
     // padding: "12px 0px"
     padding: 0,
+    cursor: 'pointer'
     // height: '100%'
   },
   logoDesktop: {
@@ -63,14 +65,24 @@ const styles = theme => ({
       display: 'none'
     },
   },
+  topNav:{
+    // backgroundImage: "linear-gradient(rgb(255, 255, 255, 0), rgb(255, 255, 255, 1))",
+    backgroundColor: 'rgb(255, 255, 255, 0)',
+    color: 'black',
+    width: '100%',
+    boxShadow: 'none',
+    position: 'fixed',
+    top: 0
+  },
   nav: {
     backgroundColor: 'white',
     color: 'black',
     width: '100%',
     boxShadow: 'none',
     position: 'fixed',
-    top: 0
-    // borderBottom: `1px solid ${theme.palette.grey1}`,
+    top: 0,
+    transition: '0.2s',
+    borderBottom: `1px solid #F2F1F1`,
   },
   textFieldLabel: {
     '&$cssFocused': {
@@ -100,14 +112,26 @@ const styles = theme => ({
   },
   navItem: {
     fontSize: 14, fontWeight: 400
-  }
+  },
+  
 })
 
 class SalesNav extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      isTop: true
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('scroll', () => {
+      const isTop = window.scrollY < 40;
+      if (isTop !== this.state.isTop) {
+        this.setState({ isTop })
+      }
+    });
   }
 
   handleChange(field) {
@@ -129,15 +153,16 @@ class SalesNav extends React.Component {
 
   render() {
     const { classes, siteTemplate, currentUser } = this.props;
+    const { isTop } = this.state;
 
-    const logoComp = <IconButton aria-label="logo-link"
+    const logoComp = <div
       className={classes.logoLink}
       onClick={() => this.props.history.push('/sales/home')}>
       <img alt='logo' className={classes.logoDesktop}
         src={siteTemplate.navLogo || blackLogo} />
       <img alt='logo' className={classes.logoMobile}
         src={siteTemplate.navLogoMobile || blackLogoMobile} />
-    </IconButton>
+    </div>
 
     const session = <Grid item>
       {currentUser && <Button style={{ textTransform: 'capitalize' }}
@@ -147,17 +172,19 @@ class SalesNav extends React.Component {
           {`My Dashboard`}
         </Typography>
       </Button>}
-      <Button style={{ textTransform: 'capitalize' }}
-        onClick={this.handleSubmit}>
-        <Typography color='textSecondary'
-          className={classes.navItem}>
-          {currentUser ? `Logout` : `Login`}
-        </Typography>
-      </Button>
+      {currentUser && 
+        <Button style={{ textTransform: 'capitalize' }}
+          onClick={this.handleSubmit}>
+          <Typography color='textSecondary'
+            className={classes.navItem}>
+            {`Logout`}
+          </Typography>
+        </Button>}
     </Grid>
 
     return <div>
-      <AppBar position="static" className={classes.nav}>
+      <AppBar position="static" 
+        className={isTop ? classes.topNav : classes.nav}>
         <Toolbar className={classes.toolbar}>
           <Grid container alignItems='center' justify='space-between'>
             {logoComp}

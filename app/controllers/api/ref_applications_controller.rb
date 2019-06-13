@@ -76,12 +76,6 @@ class Api::RefApplicationsController < ApiController
     end
   end
 
-  def request_demo
-    HiringMailer.notify_request_demo(
-      params[:email], params[:fname]
-    ).deliver_later
-  end
-
   private
 
   def ref_application_params

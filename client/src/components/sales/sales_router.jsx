@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Switch, Route, withRouter } from 'react-router-dom';
 
 import SalesHome from './home.jsx'
+import SalesLandingPage from './landing_page.jsx'
 import SalesDashboard from './dashboard.jsx'
 import SalesLogin from './login.jsx'
 import SalesConnectSocial from './connect_social.jsx'
@@ -46,7 +47,7 @@ class SalesRouter extends React.Component {
         <SalesProtectedRoute path="/sales/share/:id" component={SalesSharing} />
         <Route path="/sales/show/:id?" component={SalesShow} />*/}
         <Route path="/sales/login" component={SalesLogin}/>
-        <Route path="/sales" component={SalesHome} />
+        <Route path="/sales" component={SalesLandingPage} />
       </Switch>
     </div>
   }

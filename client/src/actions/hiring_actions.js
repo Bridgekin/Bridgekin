@@ -22,18 +22,6 @@ export const updateDraftFlag = draftFlag => ({
   draftFlag
 });
 
-export const requestDemo = (payload) => dispatch => (
-  RefApplicationApiUtil.requestDemo(payload)
-    .then(handleErrors)
-    .then(data => data)
-    .catch(errors => {
-      if (!(errors instanceof Array)){
-        errors = [genericError];
-      }
-      // dispatch(receiveUserFeatureErrors(errors))
-    })
-)
-
 // export const updateUserFeature = (payload) => dispatch => (
 //   UserFeatureApiUtil.updateUserFeature(payload)
 //     .then(handleErrors)

@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 
 import { hireSignup } from '../../actions/session_actions';
 import { openSignup } from '../../actions/modal_actions';
-import { requestDemo } from '../../actions/hiring_actions';
+import { requestDemo } from '../../actions/util_actions';
 import HiringContainer from './hiring_container';
 import MaskedInput from 'react-text-mask';
 
@@ -111,9 +111,15 @@ class HiringHome extends React.Component {
   requestDemo(){
     const { fname, email } = this.state;
     //do some things
-    let user = { fname, email }
+    let user = { fname, email, demoType: 'hiring' }
     this.props.requestDemo(user)
-    .then(() => this.setState({ sent: true}))
+    .then(() => this.setState({ 
+      sent: true,
+      fname: '',
+      email: '',
+      password: '',
+      phoneNumber: '',
+    }))
   }
 
   render(){
