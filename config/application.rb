@@ -13,7 +13,7 @@ require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
 # For Neo4j
-# require 'neo4j/railtie'
+require 'neo4j/railtie'
 
 require_relative '../app/logging/log_formatter'
 
