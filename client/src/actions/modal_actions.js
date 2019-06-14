@@ -216,7 +216,7 @@ export const closeRefApplication = () => ({
   type: CLOSE_REF_APPLICATION_MODAL,
 });
 
-// Open Ref Application
+// Open Ref App Status
 export const OPEN_REF_APP_STATUS_MODAL = 'OPEN_REF_APP_STATUS_MODAL';
 export const CLOSE_REF_APP_STATUS_MODAL = "CLOSE_REF_APP_STATUS_MODAL";
 
@@ -227,4 +227,17 @@ export const openRefAppStatus = (payload) => ({
 
 export const closeRefAppStatus = () => ({
   type: CLOSE_REF_APP_STATUS_MODAL,
+});
+
+// Open Request Warm Intro
+export const OPEN_REQUEST_INTRO_MODAL = 'OPEN_REQUEST_INTRO_MODAL';
+export const CLOSE_REQUEST_INTRO_MODAL = "CLOSE_REQUEST_INTRO_MODAL";
+
+export const openRequestIntro = (payload) => ({
+  type: OPEN_REQUEST_INTRO_MODAL,
+  payload
+});
+
+export const closeRequestIntro = () => ({
+  type: CLOSE_REQUEST_INTRO_MODAL,
 });

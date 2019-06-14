@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Img from 'react-image'
 
 import { SocialIcon } from 'react-social-icons';
+import { openRequestIntro } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -16,7 +17,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  openRequestIntro: payload => dispatch(openRequestIntro(payload))
 });
 
 const styles = theme => ({
@@ -43,9 +44,19 @@ class ResultCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
+
+    this.requestIntro = this.requestIntro.bind(this);
   }
 
-  render() {
+  requestIntro(){
+    const { contact } = this.props;
+    this.props.openRequestIntro({ 
+      page: 'request',
+      contact
+    })
+  }
+
+  render(){
     const { classes, contact, networkMembers } = this.props;
     return <Grid item xs={12} sm={5}>
       <Grid container
@@ -97,6 +108,7 @@ class ResultCard extends React.Component {
           </div>
         }) }
         <Button color='primary' variant='contained'
+        onClick={this.requestIntro}
         style={{ textTransform: 'capitalize'}}>
           {`Request a warm intro`}
         </Button>
