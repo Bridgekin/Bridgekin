@@ -53,7 +53,7 @@ const styles = theme => ({
     padding: "40px 0px"
   },
   section:{
-    padding: "50px 0px"
+    padding: "40px 0px 50px"
   },
   sectionHeader:{
     fontSize: 36, fontWeight: 600
@@ -256,7 +256,7 @@ class LandingPage extends React.Component {
               <Grid item xs={5}>
                 <Typography fullWidth
                   className={classes.benefitText}>
-                  {`Create a win-win environment and boost moral across the team`}
+                  {`Get warm introductions into the right stakeholders`}
                 </Typography>
               </Grid>
             </Grid>

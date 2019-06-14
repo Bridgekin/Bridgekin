@@ -188,6 +188,7 @@ class SalesLogin extends React.Component {
             <Grid item xs={6} sm={2} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
+                disabled
                 onClick={this.handleLogin}>
                   {`Login`}
                 </Button>
@@ -218,6 +219,7 @@ class SalesLogin extends React.Component {
             <Grid item xs={6} sm={2} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
+                disabled
                 onClick={this.retrieveNetworks}>
                   {`Find`}
                 </Button>
@@ -258,6 +260,10 @@ class SalesLogin extends React.Component {
         </Grid>
 
         return <Grid item xs={8}>
+          <Typography fullWidth color='textSecondary'
+          style={{ fontSize: 14, marginBottom: 50}}>
+            {`Note* We're putting the finishing touches on this project. We'll be launching in the coming weeks! Stay tuned!`}
+          </Typography>
           {loginComp}
           {divider}
           {findCompany}
