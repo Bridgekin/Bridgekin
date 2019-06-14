@@ -71,9 +71,9 @@ gem 'binding_of_caller'
 gem 'twilio-ruby'
 
 # gem 'neo4j', '~> 6.1.0'
-gem 'neo4j'
-gem 'neo4j-rake_tasks'
-gem 'neo4j-core'
+# gem 'neo4j'
+# gem 'neo4j-rake_tasks'
+# gem 'neo4j-core'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

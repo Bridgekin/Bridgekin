@@ -266,12 +266,12 @@ class LandingPage extends React.Component {
       </Grid>
     </div>)
 
-    let numbersDontLie = <Grid container 
+    let theFacts = <Grid container 
     className={classes.section}>
       <Grid container justify='center'>
         <Typography align='center'
           className={classes.sectionHeader}>
-          {`Numbers Don't Lie`}
+          {`The Facts`}
         </Typography>
       </Grid>
 
@@ -391,7 +391,7 @@ class LandingPage extends React.Component {
         
         {demoWelcome}
         {benefitsOfBridgekin}
-        {numbersDontLie}
+        {theFacts}
         {demoCTA}
 
         {footer}

@@ -52,7 +52,7 @@ module Bridgekin
     #logging using our new formatter
     # config.log_formatter = LogFormatter.new
 
-    config.generators { |g| g.orm :neo4j }
+    # config.generators { |g| g.orm :neo4j }
 
     # config.neo4j.session.type = :http
     # config.neo4j.session.url = 'http://neo4j:password@localhost:7474'

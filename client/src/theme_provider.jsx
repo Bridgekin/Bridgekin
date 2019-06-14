@@ -26,6 +26,7 @@ import SignupModal from './components/modals/signup_modal';
 import LoginModal from './components/modals/login_modal';
 import RefApplicationModal from './components/modals/ref_application_modal';
 import RefAppStatusModal from './components/modals/ref_app_status_modal';
+import RequestIntroModal from './components/modals/request_intro_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -87,6 +88,7 @@ class ThemeProvider extends React.Component{
             <WaitlistModal/>
             <LoginModal />
             <RefApplicationModal />
+            <RequestIntroModal />
 
           </GAListener>
         </BrowserRouter>

@@ -10,6 +10,7 @@ import circleErrorsReducer from './circle_errors_reducer';
 import emailTemplateErrorsReducer from './email_template_errors_reducer';
 import directLinkErrorsReducer from './direct_link_errors_reducer';
 import refApplicationErrorsReducer from './ref_application_errors_reducer';
+import requestIntroErrorsReducer from './request_intro_errors_reducer';
 
 export default combineReducers({
   login: loginErrorsReducer,
@@ -22,5 +23,6 @@ export default combineReducers({
   circle: circleErrorsReducer,
   emailTemplate: emailTemplateErrorsReducer,
   directLink: directLinkErrorsReducer,
-  refApplication: refApplicationErrorsReducer
+  refApplication: refApplicationErrorsReducer,
+  requestIntro: requestIntroErrorsReducer
 });

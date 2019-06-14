@@ -16,6 +16,7 @@ import signupReducer from './signup_reducer';
 import loginReducer from './login_reducer';
 import refApplicationReducer from './ref_application_reducer';
 import refAppStatusReducer from './ref_app_status_reducer';
+import requestIntroReducer from './request_intro_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -35,4 +36,5 @@ export default combineReducers({
   login: loginReducer,
   refApplication: refApplicationReducer,
   refAppStatus: refAppStatusReducer,
+  requestIntro: requestIntroReducer,
 });

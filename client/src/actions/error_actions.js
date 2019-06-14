@@ -66,6 +66,8 @@ export const CLEAR_SALES_ERRORS = 'CLEAR_SALES_ERRORS';
 
 export const RECEIVE_UTIL_ERRORS = 'RECEIVE_UTIL_ERRORS';
 export const CLEAR_UTIL_ERRORS = 'CLEAR_UTIL_ERRORS';
+export const RECEIVE_REQUEST_INTRO_ERRORS = 'RECEIVE_REQUEST_INTRO_ERRORS';
+export const CLEAR_REQUEST_INTRO_ERRORS = 'CLEAR_REQUEST_INTRO_ERRORS';
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -326,4 +328,13 @@ export const receiveUtilErrors = errors => ({
 
 export const clearUtilErrors = () => ({
   type: CLEAR_UTIL_ERRORS,
+});
+
+export const receiveRequestIntroErrors = errors => ({
+  type: RECEIVE_REQUEST_INTRO_ERRORS,
+  errors
+});
+
+export const clearRequestIntroErrors = () => ({
+  type: CLEAR_REQUEST_INTRO_ERRORS,
 });
