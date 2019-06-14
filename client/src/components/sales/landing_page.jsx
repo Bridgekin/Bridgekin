@@ -99,11 +99,14 @@ class LandingPage extends React.Component {
     const { fname, lname, email } = this.state;
     //do some things
     let user = { fname, lname, email, demoType: 'sales' }
-    this.props.requestDemo(user)
-      .then(() => this.setState({ 
-        requestSent: true,
-        fname: '', lname: '', email: ''
-      }))
+    
+    if(fname && email){
+      this.props.requestDemo(user)
+        .then(() => this.setState({ 
+          requestSent: true,
+          fname: '', lname: '', email: ''
+        }))
+    }
   }
 
   redirectLogin(){
@@ -177,12 +180,11 @@ class LandingPage extends React.Component {
         <div style={{ marginTop: 20 }}>
           {requestSent ? <Typography
           style={{ fontSize: 16}}>
-            {`Request Sent!`}
+            {`We'll be in touch within 48 hours!`}
           </Typography>
           : <Button variant='contained' color='primary'
-            disabled={!fname || !email}
             onClick={this.requestDemo}>
-            {`Request A Demo`}
+            {`Let's Chat!`}
           </Button>}
         </div>
       </Grid>
@@ -359,11 +361,13 @@ class LandingPage extends React.Component {
             onMouseUp={this.handleChange('email')}
           />
           <div>
-            <Button variant='contained' color='primary'
-            disabled={!fname || !email}
-            onClick={this.requestDemo}>
-              {`Request A Demo`}
-            </Button>
+            {requestSent ? <Typography
+              style={{ fontSize: 16 }}>
+              {`We'll be in touch within 48 hours!`}
+            </Typography> : <Button variant='contained' color='primary'
+              onClick={this.requestDemo}>
+              {`Let's Chat!`}
+            </Button>}
           </div>
         </Grid>
 

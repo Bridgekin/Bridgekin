@@ -14,8 +14,10 @@ import SalesConnectSocial from './connect_social.jsx'
 // import SalesSharing from './share_posting.jsx'
 
 import {
+  AuthRoute,
   SalesAuthRoute,
-  SalesProtectedRoute
+  SalesProtectedRoute,
+
 } from '../../util/route_util';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -47,7 +49,7 @@ class SalesRouter extends React.Component {
         <SalesProtectedRoute path="/sales/share/:id" component={SalesSharing} />
         <Route path="/sales/show/:id?" component={SalesShow} />*/}
         <Route path="/sales/login" component={SalesLogin}/>
-        <Route path="/sales" component={SalesLandingPage} />
+        <AuthRoute path="/sales" component={SalesLandingPage} />
       </Switch>
     </div>
   }
