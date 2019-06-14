@@ -6,7 +6,6 @@ class Api::UserFeaturesController < ApiController
   # after_action :verify_authorized, except: :show
 
   def update
-    debugger
     if @user_feature.update(user_feature_params)
       render :show
     else

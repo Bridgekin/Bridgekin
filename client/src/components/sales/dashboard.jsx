@@ -45,6 +45,8 @@ class SalesDashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
+
+    this.connectNetworks = this.connectNetworks.bind(this);
   }
 
   componentDidMount() {

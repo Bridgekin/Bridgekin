@@ -7,5 +7,5 @@ test:
   url: http://neo4j:password@localhost:7575
 
 production:
-  type: http
+  type: https
   url: <%= ENV["GRAPHENEDB_URL"] %>
