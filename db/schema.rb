@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_13_221322) do
+ActiveRecord::Schema.define(version: 2019_06_17_155105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -337,6 +337,26 @@ ActiveRecord::Schema.define(version: 2019_06_13_221322) do
     t.index ["member_id"], name: "index_referral_links_on_member_id"
     t.index ["recipient_id"], name: "index_referral_links_on_recipient_id"
     t.index ["referral_code"], name: "index_referral_links_on_referral_code"
+  end
+
+  create_table "sales_contacts", force: :cascade do |t|
+    t.string "email", default: ""
+    t.string "fname", default: ""
+    t.string "lname", default: ""
+    t.string "company", default: ""
+    t.string "position", default: ""
+    t.boolean "linked_in"
+    t.boolean "google"
+    t.boolean "facebook"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sales_networks", force: :cascade do |t|
+    t.string "title", default: ""
+    t.string "domain", default: ""
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "saved_opportunities", force: :cascade do |t|
