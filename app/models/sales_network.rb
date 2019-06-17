@@ -1,11 +1,11 @@
-class SalesNetwork
-  # include Neo4j::ActiveNode
-  # include Neo4j::Timestamps
+class SalesNetwork < ApplicationRecord
+  validates :title, :domain, presence: :true
 
-  # property :title, type: String
-  # property :domain, type: String
+  has_many :user_networks,
+    foreign_key: :network_id,
+    class_name: :SalesUserNetwork
 
-  # has_many :in, :members,
-  #   origin: :network, 
-  #   model_class: :SalesMember
+  has_many :members,
+    through: :user_networks,
+    source: :user
 end

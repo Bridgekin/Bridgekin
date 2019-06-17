@@ -45,3 +45,5 @@ heroku.yml
 /config/skylight.yml
 
 /.env
+
+dump.rdb

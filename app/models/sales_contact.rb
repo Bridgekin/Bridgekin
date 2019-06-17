@@ -1,64 +1,67 @@
-class SalesContact
-  # include Neo4j::ActiveNode
-  # include Neo4j::Timestamps
+class SalesContact < ApplicationRecord
+  has_many :sales_user_contacts,
+    foreign_key: :contact_id,
+    class_name: :SalesUserContact
 
-  # property :email, type: String
-  # property :fname, type: String
-  # property :lname, type: String
-  # property :company, type: String
-  # property :position, type: String
+  has_many :friends,
+    through: :sales_user_contacts,
+    source: :user
 
-  # property :linked_in, type: Boolean #Or Datetime
-  # property :google, type: Boolean #Or Datetime
-  # property :facebook, type: Boolean #Or Datetime
+  headerMapping = {
+    "Email Address": :email,
+    "First Name": :fname,
+    "Last Name": :lname,
+    "Company": :company,
+    "Position": :position
+  }
 
-  # has_many :in, :friends,
-  #   origin: :contacts, 
-  #   model_class: :SalesMember
+  def self.ingestGoogle(emails, currentUser)
 
-  # headerMapping = {
-  #   "Email Address": :email,
-  #   "First Name": :fname,
-  #   "Last Name": :lname,
-  #   "Company": :company,
-  #   "Position": :position
-  # }
+  end
 
-  # def self.ingestLinkedIn(parsedFile, currentUserNode)
-  #   failed_saved_contacts = Array.new
-  #   parsedFile.each do |contact|
-  #     contactNode = SalesContact.find_by(email: contact["Email Address"]) || SalesContact.new
-  #     parsedFile.headers.each do |header|
-  #       unless contactNode[headerMapping[header]]
-  #         contactNode[headerMapping[header]] = contact[header]
-  #       end
-  #     end
-  #     #Link Contact to Current User
-  #     contactNode.friends << currentUserNode
-  #     #Set Source
-  #     setSource(:linked_in_upload)
-  #     #Save failed contact save if needed
-  #     unless contactNode.save
-  #       failed_saved_contacts << {
-  #         contact: contact, source: source
-  #       }
-  #     end
-  #   end
+  def self.ingestLinkedIn(parsedFile, currentUser)
+    failed_saved_contacts = Array.new
+    parsedFile.each do |entry|
+      contact = SalesContact.find_by(email: entry["Email Address"]) || SalesContact.new
+
+      parsedFile.headers.each do |header|
+        unless contact[headerMapping[header]]
+          contact[headerMapping[header]] = entry[header]
+        end
+      end
+
+      #Set Source
+      contact.setSource(:linked_in_upload)
+
+      #Save failed contact save if needed
+      unless contact.save
+        failed_saved_contacts << {
+          contact: entry, source: :linked_in_upload
+        }
+      else
+        #Link Contact to Current User
+        # contact.friends << currentUserNode
+        SalesUserContact.create(
+          user_id: currentUser.id,
+          contact_id: contact.id
+        )
+      end
+    end
     
-  #   if failed_saved_contacts.length > 0
-  #     logger.error "Failed to sync following contacts for user id #{@user.id.to_s}:" + failed_saved_contacts.to_s
-  #   end
-  # end
+    if failed_saved_contacts.length > 0
+      logger.error "Failed to sync following contacts for user id #{@user.id.to_s}:" + failed_saved_contacts.to_s
+    end
+  end
 
-  # def setSource(source)
-  #   case source
-  #   when :linked_in_upload
-  #     self.linked_in = true
-  #   when :google_upload
-  #     self.google = true
-  #   when :facebook_upload
-  #     self.facebook = true
-  #   else 
-  #   end
-  # end
+  def setSource(source)
+    case source
+    when :linked_in_upload
+      self.linked_in = true
+    when :google_upload
+      self.google = true
+    when :facebook_upload
+      self.facebook = true
+    else 
+    end
+  end
 end

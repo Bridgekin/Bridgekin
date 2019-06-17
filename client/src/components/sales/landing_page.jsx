@@ -53,7 +53,7 @@ const styles = theme => ({
   },
   demoComponent:{
     backgroundColor: "#F2F1F1",
-    height: 548, 
+    minHeight: 548, 
     padding: "40px 0px"
   },
   section:{
