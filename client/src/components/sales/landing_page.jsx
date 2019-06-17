@@ -40,7 +40,11 @@ const styles = theme => ({
     objectFit: 'cover',
     position: 'absolute',
     top: 0, right: 0,
-    zIndex: 1000
+    zIndex: 1000,
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex'
+    },
   },
   login: {
     position: 'fixed',
@@ -70,7 +74,10 @@ const styles = theme => ({
     marginTop: 30
   },
   s2Header:{ fontSize: 40, fontWeight: 600 },
-  s2Text: { fontSize: 20 }
+  s2Text: { fontSize: 20 },
+  factsSection:{
+    margin: '10px 0px'
+  }
 })
 
 class LandingPage extends React.Component {
@@ -128,7 +135,7 @@ class LandingPage extends React.Component {
       {`Login`}
     </Button>
 
-    let demoWelcome = <Grid item xs={6} container justify='center'
+    let demoWelcome = <Grid item xs={12} sm={6}container justify='center'
       className={classes.demoComponent}>
       <Grid item xs={8}>
         <Typography gutterBottom
@@ -202,7 +209,7 @@ class LandingPage extends React.Component {
       </Grid>
 
       <Grid container justify='center'>
-        <Grid item xs={9} container>
+        <Grid item xs={12} sm={9} container>
 
           <Grid item xs={12} sm={6}
             className={classes.benefitCard}>
@@ -210,8 +217,8 @@ class LandingPage extends React.Component {
               direction='column'>
               <Img src={MoneyIcon}
                 className={classes.benefitIcon} />
-              <Grid item xs={5}>
-                <Typography fullWidth
+              <Grid item xs={8} sm={6}>
+                <Typography fullWidth align='center'
                   className={classes.benefitText}>
                   {`Increase your close rate by double with referred leads*`}
                 </Typography>
@@ -225,8 +232,8 @@ class LandingPage extends React.Component {
               direction='column'>
               <Img src={TimeIcon}
                 className={classes.benefitIcon} />
-              <Grid item xs={5}>
-                <Typography fullWidth
+              <Grid item xs={8} sm={6}>
+                <Typography fullWidth align='center'
                   className={classes.benefitText}>
                   {`Stop or reduce your time outbounding and cold calling `}
                 </Typography>
@@ -240,8 +247,8 @@ class LandingPage extends React.Component {
               direction='column'>
               <Img src={WinIcon}
                 className={classes.benefitIcon} />
-              <Grid item xs={5}>
-                <Typography fullWidth
+              <Grid item xs={8} sm={6}>
+                <Typography fullWidth align='center'
                   className={classes.benefitText}>
                   {`Create a win-win environment and boost moral across the team`}
                 </Typography>
@@ -255,8 +262,8 @@ class LandingPage extends React.Component {
               direction='column'>
               <Img src={BusinessIcon}
                 className={classes.benefitIcon} />
-              <Grid item xs={5}>
-                <Typography fullWidth
+              <Grid item xs={8} sm={6}>
+                <Typography fullWidth align='center'
                   className={classes.benefitText}>
                   {`Get warm introductions into the right stakeholders`}
                 </Typography>
@@ -279,10 +286,11 @@ class LandingPage extends React.Component {
 
       <Grid container justify='center'
         style={{ marginTop: 20 }}>
-        <Grid item xs={9} container
+        <Grid item xs={9} sm={12} container
           justify='space-around'>
 
-          <Grid item xs={3}>
+          <Grid item xs={10} sm={3} 
+            className={classes.factsSection}>
             <Typography align='center'
             className={classes.s2Header}>
               {`84%`}
@@ -293,7 +301,8 @@ class LandingPage extends React.Component {
             </Typography>
           </Grid>
 
-          <Grid item xs={3}>
+          <Grid item xs={10} sm={3}
+            className={classes.factsSection}>
             <Typography align='center'
               className={classes.s2Header}>
               {`24%`}
@@ -304,7 +313,8 @@ class LandingPage extends React.Component {
             </Typography>
           </Grid>
 
-          <Grid item xs={3}>
+          <Grid item xs={10} sm={3}
+            className={classes.factsSection}>
             <Typography align='center'
               className={classes.s2Header}>
               {`50%`}
@@ -322,7 +332,7 @@ class LandingPage extends React.Component {
     let demoCTA = <Grid container className={classes.section}
       justify='center'
       style={{ backgroundColor: 'white' }}>
-      <Grid item xs={8}>
+      <Grid item xs={9} sm={8}>
         <Typography align='center'
           style={{ fontSize: 48, fontWeight: 600 }}>
           {`Sell faster through warm referrals`}
