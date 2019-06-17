@@ -71,7 +71,6 @@ const prod = process.env.NODE_ENV === 'production';
 const facebookPixelMiddleWare = store => next => action => {
   switch(action.type){
     case 'REQUEST_SALES_DEMO':
-      debugger
       window.ReactPixel.track('Lead', { demoType: 'sales'})
       break;
     default:
@@ -116,6 +115,7 @@ export default (preloadedState = {}) => {
       preloadedState,
       applyMiddleware(
         customAmplitudeMiddleWare,
+        facebookPixelMiddleWare,
         createSentryMiddleware(Sentry, {stateTransformer}),
         thunk
       )
