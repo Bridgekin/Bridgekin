@@ -68,8 +68,19 @@ const prod = process.env.NODE_ENV === 'production';
 //   // }
 //   return next(action);
 // }
+const facebookPixelMiddleWare = store => next => action => {
+  switch(action.type){
+    case 'REQUEST_SALES_DEMO':
+      debugger
+      window.ReactPixel.track('Lead', { demoType: 'sales'})
+      break;
+    default:
+      break;
+  }
+  return next(action);
+}
 
-const customMiddleWare = store => next => action => {
+const customAmplitudeMiddleWare = store => next => action => {
   console.log("Middleware triggered:");
   if(!(action instanceof Function)){
     window.amplitudeInstance.logEvent(action.type)
@@ -104,7 +115,7 @@ export default (preloadedState = {}) => {
       rootReducer,
       preloadedState,
       applyMiddleware(
-        customMiddleWare,
+        customAmplitudeMiddleWare,
         createSentryMiddleware(Sentry, {stateTransformer}),
         thunk
       )
@@ -114,7 +125,8 @@ export default (preloadedState = {}) => {
       rootReducer,
       preloadedState,
       applyMiddleware(
-        customMiddleWare,
+        customAmplitudeMiddleWare,
+        facebookPixelMiddleWare,
         // analyticsMiddleware,
         // amplitudeMiddleware,
         createSentryMiddleware(Sentry),

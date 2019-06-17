@@ -15,9 +15,12 @@ import getTheme from './components/theme.js';
 import BridgekinLogo from './static/Bridgekin_Logo.png';
 import * as Sentry from '@sentry/browser';
 
+import ReactPixel from 'react-facebook-pixel';
+
 import amplitude from 'amplitude-js';
 window.amplitudeInstance = amplitude.getInstance();
 
+// Set Amplitude Instance
 getPublicEnv()
 .then(handleAuthErrors)
 .then((env) => {
@@ -30,6 +33,17 @@ getPublicEnv()
   }
 })
 
+// Set Facebook Pixel Instance
+// const advancedMatching = { em: 'some@email.com' }; 
+const advancedMatching = {}; 
+const options = {
+  autoConfig: true, 	// set pixel's autoConfig
+  debug: false, 		// enable logs
+};
+window.ReactPixel = ReactPixel
+window.ReactPixel.init('337172490309267', advancedMatching, options);
+
+// Load main site
 document.addEventListener("DOMContentLoaded", () => {
 
   const root = document.getElementById('root');

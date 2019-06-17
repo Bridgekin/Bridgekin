@@ -15,10 +15,26 @@ export const consumeTutorialSession = () => ({
   type: CONSUME_TUTORIAL_SESSION
 })
 
+export const REQUEST_SALES_DEMO = 'REQUEST_SALES_DEMO';
+export const requestSalesDemo = () => ({
+  type: REQUEST_SALES_DEMO
+})
+
+export const REQUEST_HIRING_DEMO = 'REQUEST_HIRING_DEMO';
+export const requestHiringDemo = () => ({
+  type: REQUEST_HIRING_DEMO
+})
+
 export const requestDemo = (payload) => dispatch => (
   UtilApiUtil.requestDemo(payload)
     .then(handleErrors)
-    .then(data => data)
+    .then(data => {
+      if (payload.demoType === 'sales'){
+        dispatch(requestSalesDemo())
+      } else if (payload.demoType === 'hiring'){
+        dispatch(requestHiringDemo())
+      }
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
