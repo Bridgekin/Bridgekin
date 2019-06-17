@@ -5,9 +5,8 @@ class Api::SalesNetworksController < ApiController
   # before_action :set_ref_opp, only: [:show]
 
   def index
-    title = params[:title]
-    @sales_networks = SalesNetwork.where(title: /.*#{title}.*/i)
-    # debugger
+    @sales_networks = SalesNetwork.where("LOWER(title) LIKE ?" , "%" + params[:title].downcase + "%")
+
     render :index
   end
 
