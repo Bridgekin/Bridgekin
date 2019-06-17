@@ -188,7 +188,6 @@ class SalesLogin extends React.Component {
             <Grid item xs={6} sm={2} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
-                disabled
                 onClick={this.handleLogin}>
                   {`Login`}
                 </Button>
@@ -219,7 +218,6 @@ class SalesLogin extends React.Component {
             <Grid item xs={6} sm={2} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
-                disabled
                 onClick={this.retrieveNetworks}>
                   {`Find`}
                 </Button>
