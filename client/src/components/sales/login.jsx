@@ -260,10 +260,6 @@ class SalesLogin extends React.Component {
         </Grid>
 
         return <Grid item xs={8}>
-          <Typography fullWidth color='textSecondary'
-          style={{ fontSize: 14, marginBottom: 50}}>
-            {`Note* We're putting the finishing touches on this project. We'll be launching in the coming weeks! Stay tuned!`}
-          </Typography>
           {loginComp}
           {divider}
           {findCompany}
