@@ -140,11 +140,11 @@ class LandingPage extends React.Component {
       <Grid item xs={8}>
         <Typography gutterBottom
           style={{ fontSize: 38, fontWeight: 600 }}>
-          {`Sell faster through warm referrals`}
+          {`Close more B2B deals with warm introductions`}
         </Typography>
         <Typography gutterBottom
           style={{ fontSize: 16 }}>
-          {`Get warm introductions into your target accounts by leveraging your team’s network. Close more deals faster and ensure everyone is winning.`}
+          {`Get warm introductions into your target accounts by utilizing our simple technology to seamlessly create visbility and leverage your team’s collective network.`}
         </Typography>
 
         <Grid container justify='space-between'
@@ -220,7 +220,7 @@ class LandingPage extends React.Component {
               <Grid item xs={8} sm={6}>
                 <Typography fullWidth align='center'
                   className={classes.benefitText}>
-                  {`Increase your close rate by double with referred leads*`}
+                  {`Close more business and increase revenue with warm introductions`}
                 </Typography>
               </Grid>
             </Grid>
@@ -235,7 +235,7 @@ class LandingPage extends React.Component {
               <Grid item xs={8} sm={6}>
                 <Typography fullWidth align='center'
                   className={classes.benefitText}>
-                  {`Stop or reduce your time outbounding and cold calling `}
+                  {`Save resources by reducing your time cold outbounding`}
                 </Typography>
               </Grid>
             </Grid>
@@ -265,7 +265,7 @@ class LandingPage extends React.Component {
               <Grid item xs={8} sm={6}>
                 <Typography fullWidth align='center'
                   className={classes.benefitText}>
-                  {`Get warm introductions into the right stakeholders`}
+                  {`Get introduced into the right stakeholders and increase your close rate`}
                 </Typography>
               </Grid>
             </Grid>
@@ -317,11 +317,11 @@ class LandingPage extends React.Component {
             className={classes.factsSection}>
             <Typography align='center'
               className={classes.s2Header}>
-              {`50%`}
+              {`90%`}
             </Typography>
             <Typography align='center'
               className={classes.s2Text}>
-              {`Traditional closing rate  of a referral lead`}
+              {`B2B buying decisions that are influenced by peer recommendations`}
             </Typography>
           </Grid>
           
@@ -332,53 +332,55 @@ class LandingPage extends React.Component {
     let demoCTA = <Grid container className={classes.section}
       justify='center'
       style={{ backgroundColor: 'white' }}>
-      <Grid item xs={9} sm={8}>
+      <Grid item xs={11} sm={0}>
         <Typography align='center'
           style={{ fontSize: 48, fontWeight: 600 }}>
-          {`Sell faster through warm referrals`}
+          {`Close more B2B deals with warm introductions`}
         </Typography>
 
-        <Grid container alignItems='center'
-          justify='space-around'
-          style={{ marginTop: 30 }}>
-          <TextField
-            required
-            label="First Name"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={fname}
-            onChange={this.handleChange('fname')}
-            onMouseUp={this.handleChange('fname')}
-          />
-          <TextField
-            label="Last Name"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={lname}
-            onChange={this.handleChange('lname')}
-            onMouseUp={this.handleChange('lname')}
-          />
-          <TextField
-            required
-            label="Work Email"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={email}
-            onChange={this.handleChange('email')}
-            onMouseUp={this.handleChange('email')}
-          />
-          <div>
-            {requestSent ? <Typography
-              style={{ fontSize: 16 }}>
-              {`We'll be in touch within 48 hours!`}
-            </Typography> : <Button variant='contained' color='primary'
-              onClick={this.requestDemo}>
-              {`Let's Chat!`}
-            </Button>}
-          </div>
+        <Grid container justify='center'>
+          <Grid item xs={10} sm={8} container alignItems='center'
+            justify='space-around'
+            style={{ marginTop: 30 }}>
+            <TextField
+              required
+              label="First Name"
+              className={classes.textField}
+              margin="dense"
+              variant='outlined'
+              value={fname}
+              onChange={this.handleChange('fname')}
+              onMouseUp={this.handleChange('fname')}
+            />
+            <TextField
+              label="Last Name"
+              className={classes.textField}
+              margin="dense"
+              variant='outlined'
+              value={lname}
+              onChange={this.handleChange('lname')}
+              onMouseUp={this.handleChange('lname')}
+            />
+            <TextField
+              required
+              label="Work Email"
+              className={classes.textField}
+              margin="dense"
+              variant='outlined'
+              value={email}
+              onChange={this.handleChange('email')}
+              onMouseUp={this.handleChange('email')}
+            />
+            <div>
+              {requestSent ? <Typography
+                style={{ fontSize: 16 }}>
+                {`We'll be in touch within 48 hours!`}
+              </Typography> : <Button variant='contained' color='primary'
+                onClick={this.requestDemo}>
+                {`Let's Chat!`}
+              </Button>}
+            </div>
+          </Grid>
         </Grid>
 
       </Grid>
@@ -386,15 +388,20 @@ class LandingPage extends React.Component {
 
     let footer = <Grid container justify='center'
       style={{ backgroundColor: 'black', padding: "20px 0px" }}>
-      <Grid item xs={10} container justify='flex-end'>
-        <Button onClick={()=>this.props.history.push('/useragreement')}
-        style={{ color: 'white', textTransform: 'capitalize', marginRight: 20 }}>
-          {`User Agreement`}
-        </Button>
-        <Button onClick={()=>this.props.history.push('/privacypolicy')}
-        style={{ color: 'white', textTransform: 'capitalize'}}>
-          {`Privacy Policy`}
-        </Button>
+      <Grid item xs={10} container justify='space-between'>
+        <Typography style={{ color:'white', fontSize: 14}}>
+          {`“The Facts” sourced from Harvard Business Review`}
+        </Typography>
+        <div>
+          <Button onClick={()=>this.props.history.push('/useragreement')}
+          style={{ color: 'white', textTransform: 'capitalize', marginRight: 20 }}>
+            {`User Agreement`}
+          </Button>
+          <Button onClick={()=>this.props.history.push('/privacypolicy')}
+          style={{ color: 'white', textTransform: 'capitalize'}}>
+            {`Privacy Policy`}
+          </Button>
+        </div>
       </Grid>
     </Grid>
 
