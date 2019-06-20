@@ -1,0 +1,21 @@
+<p>Hi <%= @recipient.fname.capitalize %>,</p>
+
+<p><%= @requestor.fname.capitalize%> is requesting an introduction to <%= @contact.fname.capitalize %>.</p>
+
+<% if @sales_intro.message.present? %>
+  <p>From sender:</p>
+  <p><%= @sales_intro.message %></p>
+<% end %>
+<br>
+
+<% if @sales_intro.explaination.present? %>
+  <p>Why would our solution be good for them? </p>
+  <p><%= @sales_intro.explaination %></p>
+<% end %>
+<br>
+
+<p>Click <%= link_to 'here.', "#{root_url}sales/respond_to_intro/#{@sales_intro.id}" %> to respond!</p>
+<br>
+
+<p>Cheers,<br>
+The Bridgekin Team</p>

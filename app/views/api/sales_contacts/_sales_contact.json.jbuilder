@@ -1,0 +1,1 @@
+json.extract! sales_contact, :id, :email, :fname, :lname, :company, :position, :linked_in, :google, :facebook

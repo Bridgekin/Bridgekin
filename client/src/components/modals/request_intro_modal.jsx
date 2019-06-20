@@ -19,18 +19,20 @@ import FormControl from '@material-ui/core/FormControl';
 
 import { connect } from 'react-redux';
 import { closeRequestIntro } from '../../actions/modal_actions';
-import { clearRequestIntroErrors } from '../../actions/error_actions';
+import { clearSalesIntroErrors } from '../../actions/error_actions';
+import { createSalesIntro } from '../../actions/sales_intro_actions.js';
 // import theme from './theme';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  requestIntroErrors: state.errors.requestIntro,
+  requestIntroErrors: state.errors.salesIntro,
   requestIntroModal: state.modals.requestIntro
 });
 
 const mapDispatchToProps = dispatch => ({
   closeRequestIntro: () => dispatch(closeRequestIntro()),
-  clearRequestIntroErrors: () => dispatch(clearRequestIntroErrors())
+  clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors()),
+  createSalesIntro: salesIntro => dispatch(createSalesIntro(salesIntro))
 });
 
 const styles = theme => ({
@@ -67,12 +69,14 @@ class RequestIntroModal extends React.Component {
     this.state = {
       page: 'response',
       message: '', 
-      explaination: ''
+      explaination: '',
+      referralBonus: 0
     };
 
     this.handleClose = this.handleClose.bind(this);
     this.getContent = this.getContent.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -86,9 +90,14 @@ class RequestIntroModal extends React.Component {
 
   handleClose(){
     if (this.props.requestIntroErrors){
-      this.props.clearRequestIntroErrors();
+      this.props.clearSalesIntroErrors();
     }
     this.props.closeRequestIntro();
+    this.setState({
+      message:'', 
+      explaination:'', 
+      referralBonus:''
+    })
   };
 
   handleChange(field) {
@@ -99,13 +108,14 @@ class RequestIntroModal extends React.Component {
   }
 
   handleSubmit(){
+    const { contact } = this.props.requestIntroModal
     const { message, explaination, referralBonus } = this.state;
 
-    let payload = { message, explaination, 
-      referralBonus
+    let payload = {message, explaination, referralBonus,
+      contactId: contact.id
     }
 
-    this.props.createRequestIntro(payload)
+    this.props.createSalesIntro(payload)
     .then(() => this.setState({ page: 'response'}) )
   }
 
@@ -167,7 +177,8 @@ class RequestIntroModal extends React.Component {
           {referralBonus}
           {introResponses}
           <Grid container justify='flex-end'>
-            <Button variant='contained' color='primary'>
+            <Button variant='contained' color='primary'
+              onClick={this.handleSubmit}>
               {`Send Request`}
             </Button>
           </Grid>
@@ -193,13 +204,13 @@ class RequestIntroModal extends React.Component {
           <Typography variant="h2" id="modal-title" 
             color='textPrimary' align='left'
             className={classes.thanksHeader}>
-            {`You’ve invited your trusted contact!`}
+            {`Request Sent`}
           </Typography>
           <Typography variant="body1" 
             id="simple-modal-description"
             data-cy='waitlist-success'
             align='left' color='textPrimary'>
-            {`We’ve sent them an email letting them know.`}
+            {`We've sent a introduction request to your teammate on behalf of this contact!`}
           </Typography>
           <Grid item xs={12}>
             <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_17_164731) do
+ActiveRecord::Schema.define(version: 2019_06_19_193156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -350,6 +350,19 @@ ActiveRecord::Schema.define(version: 2019_06_17_164731) do
     t.boolean "facebook"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "sales_intros", force: :cascade do |t|
+    t.integer "contact_id"
+    t.integer "requestor_id"
+    t.integer "recipient_id"
+    t.string "message"
+    t.string "explaination"
+    t.integer "referral_bonus"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipient_id"], name: "index_sales_intros_on_recipient_id"
+    t.index ["requestor_id"], name: "index_sales_intros_on_requestor_id"
   end
 
   create_table "sales_networks", force: :cascade do |t|

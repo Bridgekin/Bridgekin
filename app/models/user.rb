@@ -139,6 +139,26 @@ class User < ApplicationRecord
     through: :sales_user_networks,
     source: :network
 
+  has_many :sales_user_contacts,
+    foreign_key: :user_id,
+    class_name: :SalesUserContact
+
+  has_many :sales_contacts,
+    through: :sales_user_contacts,
+    source: :contact
+
+  has_many :intro_requests_sent,
+    foreign_key: :requestor_id,
+    class_name: :SalesIntro
+
+  has_many :intro_requests_received,
+    foreign_key: :recipient_id,
+    class_name: :SalesIntro
+
+  # def intro_requests
+  #   SalesIntro.where("requestor_id = ? OR recipient_id = ?", self.id, self.id)
+  # end
+
   def submitted_apps
     RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)
   end

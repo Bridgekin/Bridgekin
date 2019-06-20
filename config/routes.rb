@@ -37,10 +37,15 @@ Rails.application.routes.draw do
     resources :ref_applications
     resource :ref_opp_link, only: [:create]
     resources :sales_networks, only: [:index]
+    resources :sales_intros
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    patch "respond_intro_request", :to => 'sales_intros#respond_intro_request'
+    get "sales_contacts/search_by_name", :to => 'sales_contacts#search_by_name'
+    get "sales_contacts/search_by_characteristic", :to => 'sales_contacts#search_by_characteristic'
+    post "webhook/clearbit", :to => 'webhook#clearbit'
     post "connect_social", :to => 'sales_networks#connect_social'
     post "sales_signup", :to => 'users#sales_signup'
     post 'notify_request_demo', :to => "utils#request_demo"

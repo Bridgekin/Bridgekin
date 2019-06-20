@@ -8,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Img from 'react-image'
 
+import PersonIcon from '@material-ui/icons/PersonSharp';
+
 import { SocialIcon } from 'react-social-icons';
 import { openRequestIntro } from '../../actions/modal_actions';
 
@@ -37,6 +39,22 @@ const styles = theme => ({
   },
   socialIcon:{
     height: 25, width: 25
+  },
+  defaultProfilePic: {
+    height: 'auto',
+    width: '100%',
+    color: theme.palette.text.secondary
+  },
+  card:{
+    border: `1px solid ${theme.palette.border.secondary}`,
+  },
+  cardDivider: { borderTop: `1px solid ${theme.palette.border.secondary}`},
+  actionSection:{
+    padding: 10
+  },
+  nameDivider:{
+    borderBottom: `1px solid grey`, 
+    margin: "10px 0px"
   }
 })
 
@@ -58,11 +76,14 @@ class ResultCard extends React.Component {
 
   render(){
     const { classes, contact, networkMembers } = this.props;
-    return <Grid item xs={12} sm={5}>
-      <Grid container
-        style={{ border: `1px solid red`}}>
-        <Grid item xs={3}
-        style={{ backgroundColor: 'grey'}}> 
+    return <Grid item xs={12} sm={6} container 
+    justify='center'
+      className={classes.card}>
+      <Grid container>
+        <Grid item xs={3} container alignItems='center'> 
+          <PersonIcon
+            className={classes.defaultProfilePic}
+            onClick={this.sendToAccountSettings} />
         </Grid>
         <Grid item xs={9}
         style={{ padding: 16}}>
@@ -79,12 +100,11 @@ class ResultCard extends React.Component {
             {`${contact.company}`}
           </Typography>
           
-          <div 
-          style={{ borderBottom: `1px solid grey`, margin: "10px 0px"}}/>
+          <div className={classes.nameDivider}/>
 
           <Typography color='textPrimary'
             style={{ fontSize: 13, textTransform: 'capitalize' }}>
-            {`${contact.location}`}
+            {`${contact.location || "Location: Unknown"}`}
           </Typography>
 
           {false && <Grid container>
@@ -97,16 +117,17 @@ class ResultCard extends React.Component {
           </Grid>}
         </Grid>
       </Grid>
+      <Grid item xs={10} className={classes.cardDivider}/>
       <Grid container justify='flex-end'
-      style={{ border: `1px solid blue`}}>
-        {contact.connectedMembers.map(id => {
+      className={classes.actionSection}>
+        {/*contact.connectedMembers.map(id => {
           let member = networkMembers[id];
           return <div 
           className={classes.connectedMember}>
             <Img src={member.profilePicUrl}
               className={classes.pictureCover}/>
           </div>
-        }) }
+        }) */}
         <Button color='primary' variant='contained'
         onClick={this.requestIntro}
         style={{ textTransform: 'capitalize'}}>

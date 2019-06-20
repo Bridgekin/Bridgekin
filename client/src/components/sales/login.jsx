@@ -57,6 +57,7 @@ class SalesLogin extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.retrieveNetworks = this.retrieveNetworks.bind(this);
     this.handleSignup = this.handleSignup.bind(this);
+    this.backPage = this.backPage.bind(this);
   }
 
   handleChange(field){
@@ -103,6 +104,10 @@ class SalesLogin extends React.Component {
     this.props.searchNetworks(networkTitle)
   }
 
+  backPage(){
+    this.setState({ page: 'login'})
+  }
+
   getContent(){
     const { classes, dimensions, resultNetworks } = this.props;
     const { email, password, networkTitle, page, fname, lname, target } = this.state;
@@ -110,6 +115,11 @@ class SalesLogin extends React.Component {
     switch(page){
       case 'signup':
         let signupComp = <Grid item xs={8} sm={6} md={4}container direction='column'>
+          <div style={{ marginBottom: 25 }}>
+            <Button onClick={this.backPage}>
+              {`Back`}
+            </Button>
+          </div>
           <Typography>
             {`Company: ${target.title}`}
           </Typography>
@@ -146,7 +156,7 @@ class SalesLogin extends React.Component {
             type='password'
             onChange={this.handleChange('password')}
             onMouseUp={this.handleChange('password')} />
-          <div>
+          <div style={{ marginTop: 20}}>
             <Button color='primary' variant='contained'
             onClick={this.handleSignup}>
               {`Signup`}

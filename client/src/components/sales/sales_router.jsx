@@ -9,15 +9,11 @@ import SalesLandingPage from './landing_page.jsx'
 import SalesDashboard from './dashboard.jsx'
 import SalesLogin from './login.jsx'
 import SalesConnectSocial from './connect_social.jsx'
-// import SalesShow from './show_posting.jsx'
-// import SalesCreate from './create/create_flow.jsx'
-// import SalesSharing from './share_posting.jsx'
+import SalesRespondToIntro from './respond_to_intro.jsx'
 
-import {
-  AuthRoute,
+import { AuthRoute,
   SalesAuthRoute,
   SalesProtectedRoute,
-
 } from '../../util/route_util';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -45,6 +41,7 @@ class SalesRouter extends React.Component {
       <Switch>
         <SalesProtectedRoute path="/sales/dashboard" component={SalesDashboard} />
         <SalesProtectedRoute path="/sales/connect_social" component={SalesConnectSocial} />
+        <Route path="/sales/respond_to_request/:introId" component={SalesRespondToIntro} />
         {/* <SalesProtectedRoute path="/sales/create" component={SalesCreate} />
         <SalesProtectedRoute path="/sales/share/:id" component={SalesSharing} />
         <Route path="/sales/show/:id?" component={SalesShow} />*/}

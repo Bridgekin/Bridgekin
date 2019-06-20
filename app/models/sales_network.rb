@@ -8,4 +8,8 @@ class SalesNetwork < ApplicationRecord
   has_many :members,
     through: :user_networks,
     source: :user
+
+  has_many :member_contacts,
+    through: :members,
+    source: :sales_contacts
 end
