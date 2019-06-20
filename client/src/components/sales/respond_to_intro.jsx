@@ -58,34 +58,46 @@ class RespondToIntro extends React.Component {
     this.state = {
       loaded: false
     }
+    this.loadIntro = this.loadIntro.bind(this);
   }
 
   componentDidMount(){
+    const { introId, currentUser } = this.props;
+    this.loadIntro();
+    if (!currentUser) {
+      this.props.openLogin({
+        page: 'login',
+        message: `**You must login to view this introduction request**`,
+        redirectFailure: '/sales'
+      });
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if (nextProps.currentUser && nextProps.currentUser !== this.props.currentUser){
+      this.loadIntro();
+    }
+    return true
+  }
+
+  loadIntro(){
     const { introId } = this.props;
-    this.props.fetchSalesIntro(introId)
-    .then(() => {
-      const { salesIntros, currentUser } = this.props;
-      let intro = salesIntros[introId];
-      if (!currentUser){
-        this.props.openLogin({ 
-          page: 'login',
-          message: `**You must login to view this introduction request**`,
-          redirectFailure: '/sales'
-        });
-      }
-      this.setState({ loaded: true })
-    })
+    if(this.props.currentUser){
+      this.props.fetchSalesIntro(introId)
+      .then(() => {
+        // debugger
+        // const { salesIntros, currentUser } = this.props;
+        // let intro = salesIntros[introId];
+        this.setState({ loaded: true })
+      })
+    };
   }
 
   respondToRequest(decision){
     return e => {
-      if(decision === 'unknown'){
-        // this.props.respondToRequest()
-      } else {
-        const { introId } = this.props;
-        let response = { decision, introId };
-        this.props.openRespondToRequest(response)
-      }
+      const { introId } = this.props;
+      let response = { decision, introId };
+      this.props.openRespondToRequest(response)
     }
   }
 
@@ -95,7 +107,7 @@ class RespondToIntro extends React.Component {
       introId } = this.props
     const { loaded } = this.state;
 
-    if (loaded){
+    if (currentUser && loaded){
       let contact = salesContacts[salesIntros[introId].contactId]
 
       let contactComp = <Grid container justify='center'>

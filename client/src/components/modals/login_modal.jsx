@@ -135,17 +135,24 @@ class LoginModal extends React.Component {
             this.props.history.push(`/hiring/share/${loginModal.id}?referralCode=${loginModal.referralCode}`)
           }
         }
-        this.handleClose();
+        this.props.closeLogin();
+        this.setState({ email: '', password: '' });
       }
     })
   }
 
   handleClose = () => {
+    const { loginModal } = this.props;
     if(this.props.sessionErrors.length > 0){
       this.props.clearSessionErrors();
     }
     this.props.closeLogin();
-    this.setState({ email: '', password: ''})
+    this.setState({ email: '', password: ''});
+
+    if(loginModal.redirectFailure){
+      this.props.history.push(loginModal.redirectFailure)
+    }
+
   };
 
   handlePasswordReset(){
@@ -223,10 +230,15 @@ class LoginModal extends React.Component {
         <Grid container 
         justify='space-between'
         style={{ paddingBottom: 30, borderBottom: `1px solid grey`, marginBottom: 20, width: '100%'}}>
-          <Typography color='textPrimary'
+          <Typography color='textPrimary' gutterBottom
           style={{ fontSize: 24 }}>
             {`Login`}
           </Typography>
+          
+          {loginModal.message && <Typography color='textSecondary'
+            style={{ fontSize: 13 }}>
+            {loginModal.message}
+          </Typography>}
         </Grid>
         <TextField
           required

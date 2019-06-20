@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
@@ -145,7 +146,10 @@ class SalesNav extends React.Component {
   handleSubmit() {
     const { currentUser } = this.props;
     if (currentUser) {
-      this.props.logout();
+      this.props.logout()
+      .then(() => {
+        this.props.history.push('/sales')
+      })
     } else {
       // this.props.openLogin({ page: 'login' });
       this.props.history.push('/sales/login')
@@ -198,4 +202,4 @@ class SalesNav extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SalesNav));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(SalesNav)));

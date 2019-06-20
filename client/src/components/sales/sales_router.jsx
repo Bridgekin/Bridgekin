@@ -10,6 +10,7 @@ import SalesDashboard from './dashboard.jsx'
 import SalesLogin from './login.jsx'
 import SalesConnectSocial from './connect_social.jsx'
 import SalesRespondToIntro from './respond_to_intro.jsx'
+import SalesStats from './stats.jsx'
 
 import { AuthRoute,
   SalesAuthRoute,
@@ -42,6 +43,7 @@ class SalesRouter extends React.Component {
         <SalesProtectedRoute path="/sales/dashboard" component={SalesDashboard} />
         <SalesProtectedRoute path="/sales/connect_social" component={SalesConnectSocial} />
         <Route path="/sales/respond_to_request/:introId" component={SalesRespondToIntro} />
+        <SalesProtectedRoute path="/sales/stats" component={SalesStats} />
         {/* <SalesProtectedRoute path="/sales/create" component={SalesCreate} />
         <SalesProtectedRoute path="/sales/share/:id" component={SalesSharing} />
         <Route path="/sales/show/:id?" component={SalesShow} />*/}

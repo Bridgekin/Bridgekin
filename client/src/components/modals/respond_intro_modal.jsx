@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
@@ -26,6 +27,7 @@ import { connect } from 'react-redux';
 import { fetchUserOpportunities,
   deleteOpportunity } from '../../actions/opportunity_actions';
 import { closeRespondToRequest } from '../../actions/modal_actions';
+import { respondToRequest } from '../../actions/sales_intro_actions';
 import { clearSalesIntroErrors } from '../../actions/error_actions';
 // import theme from './theme';
 
@@ -41,6 +43,8 @@ const mapDispatchToProps = dispatch => ({
   closeRespondToRequest: () => dispatch(closeRespondToRequest()),
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
+  respondToRequest: response => dispatch(respondToRequest(response)),
+  clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors())
 });
 
 const styles = theme => ({
@@ -57,7 +61,8 @@ const styles = theme => ({
   },
   modalPaper:{
     margin: 15,
-    backgroundColor: theme.palette.base3
+    backgroundColor: theme.palette.base3,
+    minWidth: '40%'
   },
   badge: {
     top: 19,
@@ -73,7 +78,11 @@ const styles = theme => ({
   listText:{ color: theme.palette.text.primary},
   button:{
     margin: 10
-  }
+  },
+  modalWrapper: {
+    padding: 0,
+    // minWidth: 500,
+  },
 });
 
 class RespondIntroModal extends React.Component {
@@ -81,8 +90,8 @@ class RespondIntroModal extends React.Component {
     super(props)
     this.state = {
       email: '',
-      fname: '',
-      lname: '',
+      subject: 'Opportunities to connect',
+      body: '',
       loading: false,
       success: false,
       open: false,
@@ -98,6 +107,8 @@ class RespondIntroModal extends React.Component {
     this.handleClose = this.handleClose.bind(this);
     this.getContent = this.getContent.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.redirectToStats = this.redirectToStats.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -106,10 +117,17 @@ class RespondIntroModal extends React.Component {
     if (nextModal.open && currentModal.open !== nextModal.open) {
       switch(nextModal.decision){
         case "yes":
-          this.setState({ page: 'intro'})
+          const { salesContacts, salesIntros } = nextProps;
+          let contact = salesContacts[salesIntros[nextModal.introId].contactId]
+          let email = contact.email
+          let body = `Hi Matt, \n\nHope you've been amazing! I'm working on...`
+          this.setState({ page: 'intro', email, body})
           break;
         case "no":
           this.setState({ page: 'refuse' })
+          break;
+        case "unknown": 
+          this.setState({ page: 'unknown'})
           break;
         default:
           break;
@@ -138,20 +156,82 @@ class RespondIntroModal extends React.Component {
       () => this.props.closeRespondToRequest());
   };
 
+  handleSubmit(){
+    const { respondToRequestModal } = this.props;
+    const { email, subject, body, reason, details} = this.state;
+    let response = {
+      decision: respondToRequestModal.decision,
+      introId: respondToRequestModal.introId,
+      email, subject, body, reason, details
+    }
+    this.props.respondToRequest(response)
+    .then(() => {
+      this.setState({ page: 'response' })
+    })
+  }
+
+  redirectToStats(){
+    this.props.history.push('/sales/stats')
+  }
+
   getContent(){
-    const { page, reason, details } = this.state;
+    const { classes, respondToRequestModal, 
+      salesIntros, salesContacts } = this.props;
+    const { page, reason, details, email, 
+      subject, body } = this.state;
+    let contact = salesContacts[salesIntros[respondToRequestModal.introId].contactId]
 
     switch(page){
-      case 'intro':
+      case 'intro':  
         let intro = <Grid item xs={10} container direction='column'>
-          
+          <Typography gutterBottom
+            style={{ fontSize: 16, fontWeight: 600 }}>
+            {`Message to Candidate`}
+          </Typography>
+          <TextField 
+            fullWidth
+            label="Email"
+            variant='outlined'
+            value={email}
+            onChange={this.handleChange('email')}
+            style={{ marginBottom: 10}}
+          />
+          <TextField
+            fullWidth
+            label="Subject"
+            variant='outlined'
+            value={subject}
+            onChange={this.handleChange('subject')}
+          />
+          <Typography gutterBottom
+            style={{ fontSize: 14, margin: "20px 0px 10px" }}>
+            {`Suggested Text (Feel free to edit)`}
+          </Typography>
+          <TextField
+            fullWidth
+            multiline
+            rows="6"
+            label="Body"
+            variant='outlined'
+            value={body}
+            onChange={this.handleChange('body')}
+          />
+          <Grid container justify="space-between"
+          style={{ marginTop: 15}}>
+            <Button variant='contained' color='default'
+            onClick={this.handleClose}>
+              {`Cancel`}
+            </Button>
+
+            <Button variant='contained' color='primary'
+            disabled={!email}
+              onClick={this.handleSubmit}>
+              {`Send`}
+            </Button>
+          </Grid>
         </Grid>
         return intro;
       case 'refuse':
-        const { respondToRequestModal, salesIntros,
-        salesContacts } = this.props;
-        let contact = salesContacts[salesIntros[respondToRequestModal.introId].contactId]
-
         let refuse = <Grid item xs={10} container direction='column'>
           <Typography gutterBottom
             style={{ fontSize: 16, fontWeight: 600 }}>
@@ -191,21 +271,99 @@ class RespondIntroModal extends React.Component {
             value={details}
             onChange={this.handleChange('details')}
           />
-          <Grid container justify='center'
-          style={{ marginTop: 20}}>
-            <div>
-              <Button variant='contained' color='primary'
+          <Grid container justify="space-between"
+            style={{ marginTop: 15 }}>
+            <Button variant='contained' color='default'
+              onClick={this.handleClose}>
+              {`Cancel`}
+            </Button>
+
+            <Button variant='contained' color='primary'
+              disabled={!reason}
               onClick={this.handleSubmit}>
-                {`Send`}
-              </Button>
-            </div>
+              {`Send`}
+            </Button>
           </Grid>
         </Grid>
         return refuse;
+      case 'unknown':
+        let unknown = <Grid item xs={10} container>
+          <Typography gutterBottom
+            style={{ fontSize: 20, fontWeight: 600 }}>
+            {`No Problem!`}
+          </Typography>
+          <Typography gutterBottom
+            style={{ fontSize: 16 }}>
+            {`That's alright. Determining whether a contact is the right fit for your company is a careful process. Return to this flow once you're ready to decide`}
+          </Typography>
+          <Grid item xs={12}>
+            <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
+              onClick={this.redirectToStats} color='primary'>
+              {`Back to Stats`}
+            </Button>
+          </Grid>
+        </Grid>
+        return unknown
       case 'response':
-        return 'response';
+        let salesIntroErrors = this.props.salesIntroErrors.map(error => {
+          error = error.replace(/(Fname|Lname)/g, (ex) => {
+            return ex === 'Fname' ? 'First name' : 'Last name';
+          });
+          return (
+            <ListItem >
+              <ListItemText primary={error}
+                classes={{ primary: classes.listText }} />
+            </ListItem>
+          )
+        })
+
+        let modalText = this.props.salesIntroErrors.length === 0 ? (
+          <Grid item xs={10}>
+            <Typography variant="h2" id="modal-title"
+              color='textPrimary' align='left'
+              className={classes.thanksHeader} >
+              {`Thanks for responding`}
+            </Typography>
+            <Typography variant="body1" id="simple-modal-description"
+              data-cy='signup-success'
+              color='textPrimary' align='left'>
+              {`You've responed to this introduction request. You can see your other introduction requests and their status on your stats page.`}
+            </Typography>
+            <Grid item xs={12}>
+              <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
+                onClick={this.redirectToStats} color='primary'>
+                {`Back to Stats`}
+              </Button>
+            </Grid>
+          </Grid>
+        ) : (
+          <Grid item xs={10}>
+            <Typography variant="h2" id="modal-title"
+              color='textPrimary' align='left'
+              className={classes.thanksHeader}>
+              Thanks for your interest in Bridgekin!
+          </Typography>
+            <Typography variant="body1" id="simple-modal-description"
+              color='textPrimary' align='left'>
+              Unfortunately, we weren't able to sign you up because:
+          </Typography>
+            <List data-cy='signup-errors'>
+              {salesIntroErrors}
+            </List>
+            <Grid container justify='center'
+              style={{ marginTop: 30 }}>
+              <Button variant="contained"
+                onClick={this.handleClose} color='primary'>
+                Close
+            </Button>
+            </Grid>
+          </Grid>
+        )
+        return <Grid container justify='center'>
+          {modalText}
+        </Grid>
       default:
-        return ''
+        return <div></div>
     }
   }
 
@@ -215,7 +373,9 @@ class RespondIntroModal extends React.Component {
     return (
       <Dialog
         open={respondToRequestModal.open}
-        onClose={this.handleClose}>
+        onClose={this.handleClose}
+        className={classes.cardModalWrapper}
+        classes={{ paper: classes.modalPaper }}>
         <Grid container justify='center'
           style={{ padding: "20px 0px"}}>
           <Grid item xs={10} container justify='flex-end'>
@@ -229,4 +389,4 @@ class RespondIntroModal extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RespondIntroModal));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(RespondIntroModal)));
