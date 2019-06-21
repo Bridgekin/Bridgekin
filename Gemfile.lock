@@ -168,15 +168,24 @@ GEM
       railties (>= 4.2.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.13.1)
+      faraday (>= 0.7.4, < 1.0)
     ffi (1.11.1)
     formtastic (3.1.5)
       actionpack (>= 3.2.13)
     formtastic_i18n (0.6.0)
+    fullcontact (0.6.0)
+      faraday (>= 0.8)
+      faraday_middleware (>= 0.9)
+      hashie (>= 2.0)
+      multi_xml (>= 0.5)
+      rash (>= 0.4)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     has_scope (0.7.2)
       actionpack (>= 4.1)
       activesupport (>= 4.1)
+    hashie (2.0.5)
     heroku-deflater (0.6.3)
       rack (>= 1.4.5)
     httparty (0.13.1)
@@ -300,6 +309,8 @@ GEM
       activerecord (>= 5.0)
       activesupport (>= 5.0)
       i18n
+    rash (0.4.0)
+      hashie (~> 2.0.0)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
@@ -422,6 +433,7 @@ DEPENDENCIES
   devise
   devise-jwt
   factory_bot_rails
+  fullcontact
   heroku-deflater
   jbuilder (~> 2.5)
   jquery-rails

@@ -1,5 +1,8 @@
 require 'clearbit'
 require 'nameable'
+require 'fullcontact'
+# require 'json'
+
 module ConnectSocial
 
   def import_contacts(import_hash, current_user)
@@ -20,7 +23,10 @@ module ConnectSocial
   end
 
   def ingestGoogle(google_contacts, current_user)
-    Clearbit.key = Rails.application.credentials.clearbit[:api_key]
+    # Clearbit.key = Rails.application.credentials.clearbit[:api_key]
+    FullContact.configure do |config|
+      config.api_key = Rails.application.credentials.full_contact[:api_key]
+    end
     
     failed_saved_contacts = Array.new
 
@@ -50,19 +56,24 @@ module ConnectSocial
           )
         end
         # debugger
-        #Kickoff Clearbit
-        # if contact.email.present?
-        #   # debugger
-        #   #Determine if I should
-        #   #sidekiq.perform_async(queue_id: 'clearbit')
-        #   #Track the call
-        #   #Create row in webhook requests
-        #   response = Clearbit::Enrichment.find(
-        #     email: contact.email, 
-        #     webhook_url: 'https://9a203437.ngrok.io/api/webhook/clearbit',
-        #     webhook_id:
-        #   )
-        # end
+        # Kickoff Full Contact
+        if contact.email.present?
+          # debugger
+          #Determine if I should
+          #sidekiq.perform_async(queue_id: 'clearbit')
+          #Track the call
+          #Create row in webhook requests
+          # RestClient.post("https://api.fullcontact.com/v3/person.enrich",
+          # {"email" => "#{contact.email}"}.to_json,
+          # {:authorization => "Bearer #{}"})
+          # response = Clearbit::Enrichment.find(
+          #   email: contact.email, 
+          #   webhook_url: 'https://9a203437.ngrok.io/api/webhook/clearbit',
+          #   webhook_id:
+          # )
+          # person = FullContact.person(email: contact.email)
+          # debugger
+        end
       else
         #Save failed contact if needed
         failed_saved_contacts << {
