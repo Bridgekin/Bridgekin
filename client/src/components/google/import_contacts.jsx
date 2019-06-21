@@ -88,7 +88,7 @@ class GoogleContacts extends React.Component {
   }
 
   getAllContactsRequest(token){
-    const { asContactCard } = this.props;
+    const { asContactCard, asLogin } = this.props;
     window.gapi.client.request({
       'path': `/m8/feeds/contacts/default/full`,
       'method': 'GET',
@@ -117,6 +117,9 @@ class GoogleContacts extends React.Component {
         .then(() => this.setState({
           contactsCompared: true, contactUsers
         }))
+      } else if(asLogin){
+        let author = response.result.feed.author[0]
+        this.props.getLoginInfo(author);
       } else {
         this.setState({ contactUsers })
       }
@@ -128,7 +131,10 @@ class GoogleContacts extends React.Component {
   responseGoogle(response){
     let token = response.accessToken;
     // let email = response.w3.U3;
-    this.getAllContactsRequest(token)
+
+    if(token){
+      this.getAllContactsRequest(token)
+    }
   }
 
   getContent(){

@@ -7,10 +7,11 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+import ImportGoogle from '../google/import_contacts';
 import { searchNetworks } from '../../actions/sales_actions';
-import { salesSignup } from '../../actions/session_actions';
+import { salesSignup, googleSalesLogin } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
-import { openSignup } from '../../actions/modal_actions';
+import { openSignup, openLogin } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -24,6 +25,8 @@ const mapDispatchToProps = dispatch => ({
   salesSignup: payload => dispatch(salesSignup(payload)),
   login: (user) => dispatch(login(user)),
   openSignup: (payload) => dispatch(openSignup(payload)),
+  openLogin: (payload) => dispatch(openLogin(payload)),
+  googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload))
 });
 
 const styles = theme => ({
@@ -38,6 +41,14 @@ const styles = theme => ({
     border: `1px solid #d3d3d3`,
     padding: 10,
     margin: 20
+  },
+  companyDivider:{
+    borderRight: `1px solid grey`, 
+    height: 'auto', marginTop: 30,
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex'
+    },
   }
 })
 
@@ -58,6 +69,7 @@ class SalesLogin extends React.Component {
     this.retrieveNetworks = this.retrieveNetworks.bind(this);
     this.handleSignup = this.handleSignup.bind(this);
     this.backPage = this.backPage.bind(this);
+    this.getLoginInfo = this.getLoginInfo.bind(this);
   }
 
   handleChange(field){
@@ -94,7 +106,11 @@ class SalesLogin extends React.Component {
     }
     this.props.login(user)
     .then(() => {
-      this.props.history.push('/sales/dashboard')
+      if(this.props.currentUser){
+        this.props.history.push('/sales/dashboard')
+      } else {
+        this.props.openLogin({ page: "response"})
+      }
     })
   }
 
@@ -106,6 +122,17 @@ class SalesLogin extends React.Component {
 
   backPage(){
     this.setState({ page: 'login'})
+  }
+
+  getLoginInfo(payload){
+    this.props.googleSalesLogin(payload)
+    .then(() => {
+      if (this.props.currentUser) {
+        this.props.history.push('/sales/dashboard')
+      } else {
+        this.props.openLogin({ page: "response" })
+      }
+    })
   }
 
   getContent(){
@@ -195,7 +222,7 @@ class SalesLogin extends React.Component {
                 onChange={this.handleChange('password')}
                 onMouseUp={this.handleChange('password')} />
             </Grid>
-            <Grid item xs={6} sm={2} container justify='center' alignItems='center'>
+            <Grid item xs={12 } sm={2} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
                 onClick={this.handleLogin}>
@@ -208,13 +235,18 @@ class SalesLogin extends React.Component {
         
         let results = Object.values(resultNetworks)
 
-        let findCompany = <Grid container
-          style={{ marginTop: 30}}>
-          <Typography style={{ fontWeight: 600}}>
-            {`Looking to find your company? Enter your company URL below and press find.`}
+        let findCompany = <Grid item xs={11} md={7}
+        style={{ marginTop: 30}}>
+          <Typography align='center' gutterBottom
+          style={{ fontSize: 16, fontWeight: 600}}>
+            {`Looking to find your company? `}
+          </Typography>
+          <Typography align='center' gutterBottom
+            style={{ fontSize: 14 }}>
+            {`Enter your company URL below and press find.`}
           </Typography>
           <Grid container spacing={16}>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={8}>
               <TextField margin='dense' fullWidth
                 required
                 label="Company Name"
@@ -225,7 +257,7 @@ class SalesLogin extends React.Component {
                 onChange={this.handleChange('networkTitle')}
                 onMouseUp={this.handleChange('networkTitle')} />
             </Grid>
-            <Grid item xs={6} sm={2} container justify='center' alignItems='center'>
+            <Grid item xs={4} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
                 onClick={this.retrieveNetworks}>
@@ -259,6 +291,25 @@ class SalesLogin extends React.Component {
           </Grid>}
         </Grid>
 
+        let loginCompany = <Grid item xs={12} md={4} 
+        container justify='center' alignItems='center'>
+          <Typography align='center' 
+          gutterBottom fullWidth
+          style={{ fontSize: 16, fontWeight: 600}}>
+            {`Login Via Gmail`}
+          </Typography>
+          <Grid container justify='center'>
+            <ImportGoogle asLogin getLoginInfo={this.getLoginInfo}/>
+          </Grid>
+        </Grid>
+
+        let throughCompany = <Grid container justify='space-around'
+        style={{ marginTop: 30 }}>
+          {loginCompany}
+          <div className={classes.companyDivider}/>
+          {findCompany}
+        </Grid>
+
         let divider = <Grid container alignItems='center'>
           <div style={{ flexGrow: 1, borderTop: `1px solid grey`}}/>
           <Typography color='textSecondary' style={{ margin: '0px 10px'}}>
@@ -267,10 +318,10 @@ class SalesLogin extends React.Component {
           <div style={{ flexGrow: 1, borderTop: `1px solid grey` }} />
         </Grid>
 
-        return <Grid item xs={8}>
+        return <Grid item xs={10} sm={8}>
           {loginComp}
           {divider}
-          {findCompany}
+          {throughCompany}
         </Grid>
     }
   }
