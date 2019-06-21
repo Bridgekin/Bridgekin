@@ -391,7 +391,7 @@ class LandingPage extends React.Component {
       <Grid item xs={10} container justify='space-between'>
         <Typography style={{ color:'white', fontSize: 14}}>
           {`“The Facts” sourced from `}
-          <a href={'https://hbr.org/2016/11/84-of-b2b-sales-start-with-a-referral-not-a-salesperson'} style={{ color:'white'}}>Harvard Business Review</a>
+          <a href={'https://hbr.org/2016/11/84-of-b2b-sales-start-with-a-referral-not-a-salesperson'} style={{ color: 'white' }}>Harvard Business Review</a>
         </Typography>
         <div>
           <Button onClick={()=>this.props.history.push('/useragreement')}
