@@ -24,7 +24,7 @@ module ConnectSocial
     
     failed_saved_contacts = Array.new
 
-    google_contacts.take(20).each do |entry|
+    google_contacts.each do |entry|
       if entry['email'].nil?
         contact = SalesContact.new()
       else
@@ -87,7 +87,7 @@ module ConnectSocial
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
 
-    parsed_file.take(20).each do |entry|
+    parsed_file.each do |entry|
       if entry["Email Address"].nil?
         contact = SalesContact.new
       else
