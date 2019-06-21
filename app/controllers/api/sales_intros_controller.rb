@@ -2,7 +2,8 @@
 class Api::SalesIntrosController < ApiController
   # include DeviseControllerPatch
   before_action :authenticate_user
-  before_action :set_sales_intro, only: [:show]
+  before_action :set_sales_intro, only: [:show, :update,
+  :destroy]
 
   def index
     #Get all users that current_user has reached out to as #Leads
@@ -10,8 +11,13 @@ class Api::SalesIntrosController < ApiController
     requests_received = @current_user.intro_requests_received
 
     @intro_requests = requests_sent + requests_received
-    @requests_sent = requests.sent.pluck(:id)
-    @requests_received = requests.received.pluck(:id)
+    @requests_sent = requests_sent.pluck(:id)
+    @requests_received = requests_received.pluck(:id)
+
+    @sales_contacts = SalesContact.where(id: @intro_requests.pluck(:contact_id))
+    @actors = User.where(id: @intro_requests.pluck(:requestor_id))
+    .or(User.where(id: @intro_requests.pluck(:recipient_id)))
+
     render :index
   end
 
@@ -36,6 +42,15 @@ class Api::SalesIntrosController < ApiController
       }))
     if @sales_intro.save
       SalesMailer.request_sales_intro(@sales_intro).deliver_later
+      render :show
+    else
+      render json: @sales_intro.errors.full_messages, status: 422
+    end
+  end
+
+  def update
+    if @sales_intro.update(intro_params)
+      @sales_contact = @sales_intro.contact
       render :show
     else
       render json: @sales_intro.errors.full_messages, status: 422
@@ -70,6 +85,11 @@ class Api::SalesIntrosController < ApiController
 
   def destroy
     #Not sure if this is needed
+    if @sales_intro.destroy
+      render json: ["Deleted"], status: 200
+    else
+      render json: @sales_intro.errors.full_messages, status: 422
+    end
   end
 
   private
@@ -77,7 +97,7 @@ class Api::SalesIntrosController < ApiController
   def intro_params
     params.require(:sales_intro).permit(:contact_id, 
       :recipient_id, :message, :explaination,
-      :referral_bonus)
+      :referral_bonus, :status)
   end
 
   def set_sales_intro

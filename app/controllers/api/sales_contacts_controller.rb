@@ -24,16 +24,16 @@ class Api::SalesContactsController < ApiController
         {id: @current_user.sales_contacts.pluck(:id)
       })
     #Filter Contacts
-    @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.title) LIKE ?", "%#{social_params[:title]}%") if social_params[:title].present?
     @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.position) LIKE ?", "%#{social_params[:position]}%") if social_params[:position].present?
+    @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.location) LIKE ?", "%#{social_params[:location]}%") if social_params[:location].present?
     @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.company) LIKE ?", "%#{social_params[:company]}%") if social_params[:company].present?  
-    
+
     render :index
   end
 
   private
 
   def social_params
-    params.permit(:title, :company, :position, :fname, :lname)
+    params.permit(:location, :company, :position, :fname, :lname)
   end
 end

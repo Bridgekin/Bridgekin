@@ -68,13 +68,16 @@ const styles = theme => ({
   },
   topNav:{
     // backgroundImage: "linear-gradient(rgb(255, 255, 255, 0), rgb(255, 255, 255, 1))",
-    backgroundColor: 'rgb(255, 255, 255, 0)',
+    backgroundColor: 'white',
     color: 'black',
     width: '100%',
     boxShadow: 'none',
     position: 'fixed',
-    transition: '0.2s',
     top: 0
+  },
+  navHome:{
+    backgroundColor: 'rgb(255, 255, 255, 0)',
+    transition: '0.2s',
   },
   nav: {
     backgroundColor: 'white',
@@ -175,6 +178,13 @@ class SalesNav extends React.Component {
         <Typography color='textSecondary'
           className={classes.navItem}>
           {`My Dashboard`}
+        </Typography>
+      </Button>}
+      {currentUser && <Button style={{ textTransform: 'capitalize' }}
+        onClick={() => this.props.history.push('/sales/stats')}>
+        <Typography color='textSecondary'
+          className={classes.navItem}>
+          {`My Stats`}
         </Typography>
       </Button>}
       {currentUser && 

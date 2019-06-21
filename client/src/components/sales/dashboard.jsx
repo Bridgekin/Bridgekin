@@ -51,9 +51,9 @@ class SalesDashboard extends React.Component {
     this.state = {
       fname: '',
       lname: '',
-      title: '',
       company: '',
-      position: ''
+      position: '',
+      location: ''
     }
 
     this.connectNetworks = this.connectNetworks.bind(this);
@@ -96,7 +96,7 @@ class SalesDashboard extends React.Component {
   render() {
     const { classes, dimensions, resultNodes,
       searchContacts } = this.props;
-    const { title, position, company,
+    const { position, company, location,
     fname, lname } = this.state;
 
     let resultArray = Object.values(searchContacts);
@@ -113,13 +113,13 @@ class SalesDashboard extends React.Component {
           </Typography>
           <TextField
             required
-            label="Title"
+            label="Title/Position"
             className={classes.textField}
             margin="dense"
             variant='outlined'
-            value={title}
-            onChange={this.handleChange('title')}
-            onMouseUp={this.handleChange('title')}
+            value={position}
+            onChange={this.handleChange('position')}
+            onMouseUp={this.handleChange('position')}
           />
 
           <TextField
@@ -139,9 +139,9 @@ class SalesDashboard extends React.Component {
             className={classes.textField}
             margin="dense"
             variant='outlined'
-            value={position}
-            onChange={this.handleChange('position')}
-            onMouseUp={this.handleChange('position')}
+            value={location}
+            onChange={this.handleChange('location')}
+            onMouseUp={this.handleChange('location')}
           />
 
           <Grid container justify='center'

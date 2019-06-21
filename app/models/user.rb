@@ -155,8 +155,8 @@ class User < ApplicationRecord
     foreign_key: :recipient_id,
     class_name: :SalesIntro
 
-  # def intro_requests
-  #   SalesIntro.where("requestor_id = ? OR recipient_id = ?", self.id, self.id)
+  # def contacts_from_requests
+  #   SalesIntro.includes(:contact).where("requestor_id = ? OR recipient_id = ?", self.id, self.id).pluck(:contact_id)
   # end
 
   def submitted_apps

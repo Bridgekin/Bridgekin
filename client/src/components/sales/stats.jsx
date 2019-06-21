@@ -23,19 +23,30 @@ import Select from '@material-ui/core/Select';
 import Loading from '../loading';
 import Capitalize from 'capitalize';
 
+import { fetchSalesIntros } from '../../actions/sales_intro_actions';
+import { updateSalesIntro } from '../../actions/sales_intro_actions'
+
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
-  userFeature: state.entities.userFeature,
+  // userFeature: state.entities.userFeature,
   page: ownProps.match.params.page,
   refOpps: state.entities.hiring.refOpps,
   ownedOpps: state.entities.hiring.ownedOpps,
   refApps: state.entities.hiring.refApps,
   ownedApps: state.entities.hiring.ownedApps,
   submittedApps: state.entities.hiring.submittedApps,
+  //
+  salesIntros: state.entities.sales.salesIntros,
+  receivedRequests: state.entities.sales.receivedRequests,
+  sentRequests: state.entities.sales.sentRequests,
+  users: state.users,
+  salesContacts: state.entities.sales.salesContacts
 });
 
 const mapDispatchToProps = dispatch => ({
+  fetchSalesIntros: () => dispatch(fetchSalesIntros()),
+  updateSalesIntro: (payload) => dispatch(updateSalesIntro(payload))
 });
 
 const styles = theme => ({
@@ -69,21 +80,14 @@ class HiringDashboard extends React.Component {
     this.handleChangeTablePage = this.handleChangeTablePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount(){
     const { userFeature } = this.props;
 
-    // if(!userFeature.initialPostingDate){
-    //   this.props.history.push('/hiring/create/Manual')
-    // }
-
-    // async function loadData(){
-    //   this.props.fetchRefApplications()
-    //   await this.props.fetchRefOpps()
-    //   await this.setState({ loaded: true})
-    // }
-    // loadData.bind(this)()
+    this.props.fetchSalesIntros()
+    .then(() => this.setState({ loaded: true }))
   }
 
   handleMenuClick(anchor){
@@ -91,18 +95,6 @@ class HiringDashboard extends React.Component {
       e.stopPropagation();
       const selectedEl = this.state[anchor];
       this.setState({ [anchor]: (selectedEl ? null : e.currentTarget)})
-    }
-  }
-
-  handleStatusUpdate(val, refAppId){
-    return e => {
-      e.stopPropagation();
-      const { refApps } = this.props;
-      debugger
-      this.props.openRefAppStatus({
-        newStatus: val,
-        refAppId
-      })
     }
   }
 
@@ -117,15 +109,12 @@ class HiringDashboard extends React.Component {
   handleDelete(id){
     return e => {
       e.stopPropagation();
-      this.props.openDeleteOpp({
-        oppId: id,
-        type: 'hiring'
-      })
+      this.props.deleteSalesIntro(id)
       this.setState({ anchorEl: null})
     }
   }
 
-  handleUpdateAppStatus(row){
+  handleUpdateStatus(row){
     return e => {
       e.stopPropagation()
       let value = e.target.value;
@@ -134,15 +123,8 @@ class HiringDashboard extends React.Component {
           status: value,
           id: row.id
         }
-        this.props.updateRefAppStatus(payload);
+        this.props.updateSalesIntro(payload);
       }
-    }
-  }
-
-  downloadResume(resumeUrl){
-    return (e) => {
-      e.stopPropagation();
-      window.location.replace(resumeUrl);
     }
   }
 
@@ -158,144 +140,44 @@ class HiringDashboard extends React.Component {
 
   getContent(){
     const { classes, page, ownedOpps, submittedApps, 
-      ownedApps, currentUser, refOpps, refApps } = this.props;
+      ownedApps, currentUser, refOpps, refApps,
+      salesIntros, receivedRequests, sentRequests,
+      salesContacts, users} = this.props;
     const { actionAnchorEl, statusAnchorEl, loaded } = this.state;
 
     if(!loaded){
       return <Loading />
     }
-
     let phrase, rows, headerCells, tableBody;
-    // debugger
     switch(page){
-      case `referrals`:
-        phrase = 'My Referrals'
-        headerCells = ["Type of Position", 'Compensation', 'Location', 'Status'];
-        rows = submittedApps.map(id => refApps[id])
-          .filter(x => x.directReferrerId === currentUser.id)
-          .map(x => refOpps[x.refOppId])
+      case 'intros':
+        phrase = `My Intros (Received Requests)` // sentRequests
+        headerCells = ["First Name", "Last Name",
+          "Title", "Company", "Employee Referrer",
+          "Status"]
+        rows = [...receivedRequests].map(id => salesIntros[id]);
         tableBody = <TableBody>
           {rows.map(row => {
+            let contact = salesContacts[row.contactId]
+            let requestor = users[row.requestorId]
+
             return (
-              <TableRow 
-              onClick={() => this.props.history.push(`/hiring/show/${row.id}`)}>
+              <TableRow>
                 <TableCell component="th" scope="row"
-                className={classes.tableCell}>
-                  {row.title}
+                  className={classes.tableCell}>
+                  {contact.fname}
                 </TableCell>
-                {['typeOfPosition', 'compensation', 'location', 'status', 'views'].map(field =>{
-                  if(field === 'location'){
+                {['lname', 'position', "company", "employee referral", "status"].map(field => {
+                  if (field === "employee referral") {
                     return <TableCell align="right"
-                    className={classes.tableCell}>{`${row.city}, ${row.state}`}</TableCell>
+                      className={classes.tableCell}>{`${Capitalize(requestor.fname)} ${Capitalize(requestor.lname)}`}
+                      </TableCell>
+                  } else if (field === "status") {
+                    return <TableCell align="right"
+                      className={classes.tableCell}>{row[field]}</TableCell>
                   } else {
                     return <TableCell align="right"
-                    className={classes.tableCell}>{row[field]}</TableCell>
-                  }
-                })}
-              </TableRow>
-            )}
-          )}
-        </TableBody>
-        break;
-      case `applications`:
-        phrase = `My Applications`;
-        headerCells = ["Type of Position", 'Compensation', 'Location', 'Status', 'Views', 'Resume'];
-        rows = submittedApps.map(id => refApps[id])
-          .filter(x => x.candidateId === currentUser.id)
-          // .map(x => refOpps[x.refOppId])
-        tableBody = <TableBody>
-          {rows.map(row => {
-            let refOpp = refOpps[row.refOppId]
-            return (
-              <TableRow 
-              onClick={() => this.props.history.push(`/hiring/show/${refOpp.id}`)}>
-                <TableCell component="th" scope="row"
-                className={classes.tableCell}>
-                  {refOpp.title}
-                </TableCell>
-                {['typeOfPosition', 'compensation', 'location', 'status', 'views', 'resume'].map(field =>{
-                  if(field === 'location'){
-                    return <TableCell align="right"
-                    className={classes.tableCell}>{`${refOpp.city}, ${refOpp.state}`}</TableCell>
-                  } else if (field === 'resume'){
-                    
-                    return <TableCell align='right'>
-                      <Button style={{ textTransform:'none'}}
-                      onClick={this.downloadResume(row.resumeUrl)}>View Resume</Button>
-                    </TableCell>
-                  } else {
-                    return <TableCell align="right"
-                    className={classes.tableCell}>{row[field]}</TableCell>
-                  }
-                })}
-              </TableRow>
-            )}
-          )}
-        </TableBody>
-        break;
-      case `received_applications`:
-        phrase = `Received Applications`;
-        headerCells = ["First Name", 'Last Name', 'Email', 'Resume','Status'];
-        rows = ownedApps.map(id => refApps[id])
-        // debugger
-        tableBody = <TableBody>
-          {rows.map(row => {
-            return (
-              <TableRow 
-              onClick={() => this.props.history.push(`/hiring/show/${row.id}`)}>
-                <TableCell component="th" scope="row"
-                className={classes.tableCell}>
-                  {`${refOpps[row.refOppId].title}`}
-                </TableCell>
-                {['fname', 'lname', 'email', 'resume','status'].map(field => {
-                  if(field === 'status'){
-                    return <TableCell>
-                      <Select fullWidth
-                        value={row.status}
-                        onClick={(e)=> e.stopPropagation()}
-                        onChange={this.handleUpdateAppStatus(row)}>
-                        <MenuItem value={'open'}>Open</MenuItem>
-                        <MenuItem value={'phone screen'}>Phone Screen</MenuItem>
-                        <MenuItem value={'interview'}>Interview</MenuItem>
-                        <MenuItem value={'hired'}>Hired</MenuItem>
-                        <MenuItem value={'passed'}>Passed</MenuItem>
-                      </Select>
-                    </TableCell>
-                  } else if (field === 'resume'){
-                    return <TableCell align='right'>
-                      <Button style={{ textTransform:'none', fontSize: 14, fontWeight: 400}}
-                      onClick={this.downloadResume(row.resumeUrl)}>View Resume</Button>
-                    </TableCell>
-                  } else {
-                    return <TableCell align="right"
-                    className={classes.tableCell}>{row[field]}</TableCell>
-                  }
-                })}
-              </TableRow>
-            )}
-          )}
-        </TableBody>
-        break;
-      default:
-        phrase = `My Jobs`
-        headerCells = ["Type of Position", 'Compensation', 'Location', 'Status', 'Views', 'Action']
-        rows = ownedOpps.map(id => refOpps[id]);
-        tableBody = <TableBody>
-          {rows.map(row => {
-            return (
-              <TableRow
-              onClick={() => this.props.history.push(`/hiring/show/${row.id}`)}>
-                <TableCell component="th" scope="row"
-                className={classes.tableCell}>
-                  {row.title}
-                </TableCell>
-                {['typeOfPosition', 'compensation', 'location', 'status', 'views'].map(field =>{
-                  if(field === 'location'){
-                    return <TableCell align="right"
-                    className={classes.tableCell}>{`${row.city}, ${row.state}`}</TableCell>
-                  } else {
-                    return <TableCell align="right"
-                    className={classes.tableCell}>{row[field]}</TableCell>
+                      className={classes.tableCell}>{contact[field]}</TableCell>
                   }
                 })}
                 <TableCell>
@@ -317,9 +199,75 @@ class HiringDashboard extends React.Component {
                       horizontal: 'center',
                     }}
                     getContentAnchorEl={null}>
-                    <MenuItem onClick={() => `/hiring/show/${row.id}`}>
-                      {`View/Edit`}
+                    <MenuItem onClick={this.handleDelete(row.id)}>
+                      {`Delete`}
                     </MenuItem>
+                  </Menu>
+                </TableCell>
+              </TableRow>
+            )
+          }
+          )}
+        </TableBody>
+        break;
+      default:
+        phrase = `My Leads (Sent Requests)` // sentRequests
+        headerCells = ["First Name", "Last Name",
+        "Title", "Company", "Employee Referrer",
+        "Status", "Options"]
+        rows = [...sentRequests].map(id => salesIntros[id]);
+        tableBody = <TableBody>
+          {rows.map(row => {
+            let contact = salesContacts[row.contactId]
+            let recipient = users[row.recipientId]
+
+            return (
+              <TableRow>
+                <TableCell component="th" scope="row"
+                className={classes.tableCell}>
+                  {contact.fname}
+                </TableCell>
+                {['lname', 'position', "company", "employee referral", "status"].map(field => {
+                  if (field === "employee referral"){
+                    return <TableCell align="right"
+                      className={classes.tableCell}>{`${Capitalize(recipient.fname)} ${Capitalize(recipient.lname)}`}</TableCell>
+                  } else if (field === "status"){
+                    return <TableCell>
+                      <Select fullWidth
+                        value={row.status}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={this.handleUpdateStatus(row)}>
+                        <MenuItem value={'open'}>Open</MenuItem>
+                        <MenuItem value={'in discussion'}>In Discussion</MenuItem>
+                        <MenuItem value={'in contract'}>In Contract</MenuItem>
+                        <MenuItem value={'closed won'}>Closed Won</MenuItem>
+                        <MenuItem value={'closed lost'}>Closed Lost</MenuItem>
+                      </Select>
+                    </TableCell>
+                  } else {
+                    return <TableCell align="right"
+                    className={classes.tableCell}>{contact[field]}</TableCell>
+                  }
+                })}
+                <TableCell>
+                  <IconButton
+                    onClick={this.handleMenuClick('actionAnchorEl')}>
+                    <MenuIcon />
+                  </IconButton>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={actionAnchorEl}
+                    open={Boolean(actionAnchorEl)}
+                    onClose={this.handleMenuClick('actionAnchorEl')}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                    getContentAnchorEl={null}>
                     <MenuItem onClick={this.handleDelete(row.id)}>
                       {`Delete`}
                     </MenuItem>
@@ -334,7 +282,6 @@ class HiringDashboard extends React.Component {
 
     let tableHead = <TableHead>
       <TableRow>
-        <TableCell>{`Job Title`}</TableCell>
         {headerCells.map(val =>(
           <TableCell align="right">{val}</TableCell>
         ))}
@@ -374,8 +321,8 @@ class HiringDashboard extends React.Component {
     return <div style={{ minHeight: dimensions.height}}>
       <Grid container justify='center'
       className={classes.grid}>
-        <Grid item xs={2} container justify='flex-start' alignItems='center' direction='column'
-        style={{ height: dimensions.height - 64, borderRight: `1px solid grey`}}>
+        <Grid item xs={2} container justify='center' alignItems='center' direction='column'
+        style={{ height: dimensions.height - 64, borderRight: `1px solid grey`, paddingBottom: 50}}>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/leads`)}>
             {`My Leads`}

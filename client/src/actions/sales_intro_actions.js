@@ -1,7 +1,8 @@
 import * as SalesIntrosApiUtil from '../util/sales_intros_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveSalesIntroErrors } from './error_actions';
-import { receiveSalesContact } from './sales_contacts_actions';
+import { receiveSalesContact, receiveSalesContacts } from './sales_contacts_actions';
+import { receiveUsers } from './user_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
@@ -22,10 +23,40 @@ export const removeSalesIntro = introId => ({
   introId
 });
 
+export const RECEIVE_SENT_REQUESTS = 'RECEIVE_SENT_REQUESTS';
+export const REMOVE_SENT_REQUEST = 'REMOVE_SENT_REQUEST';
+
+export const receiveSentRequests = introIds => ({
+  type: RECEIVE_SENT_REQUESTS,
+  introIds,
+});
+export const removeSentRequest = introId => ({
+  type: REMOVE_SENT_REQUEST,
+  introId
+});
+
+export const RECEIVE_RECEIVED_REQUESTS = 'RECEIVE_RECEIVED_REQUESTS';
+export const REMOVE_RECEIVED_REQUEST = 'REMOVE_RECEIVED_REQUEST';
+
+export const receiveReceivedRequests = introIds => ({
+  type: RECEIVE_RECEIVED_REQUESTS,
+  introIds,
+});
+export const removeReceivedRequest = introId => ({
+  type: REMOVE_RECEIVED_REQUEST,
+  introId
+});
+
 export const fetchSalesIntros = () => dispatch => (
   SalesIntrosApiUtil.fetchSalesIntros()
     .then(handleErrors)
-    .then(data => dispatch(receiveSalesIntros(data.salesIntros)))
+    .then(data => {
+      dispatch(receiveSalesIntros(data.salesIntros))
+      dispatch(receiveSentRequests(data.requestsSent))
+      dispatch(receiveReceivedRequests(data.requestsReceived))
+      dispatch(receiveSalesContacts(data.salesContacts))
+      dispatch(receiveUsers(data.actors))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
@@ -65,6 +96,21 @@ export const respondToRequest = (response) => dispatch => (
   SalesIntrosApiUtil.respondToRequest(response)
     .then(handleErrors)
     .then(data => data)
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveSalesIntroErrors(errors))
+    })
+);
+
+export const updateSalesIntro = (payload) => dispatch => (
+  SalesIntrosApiUtil.updateSalesIntro(payload)
+    .then(handleErrors)
+    .then(data => {
+      dispatch(receiveSalesIntro(data.salesIntro));
+      dispatch(receiveSalesContact(data.salesContact));
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];

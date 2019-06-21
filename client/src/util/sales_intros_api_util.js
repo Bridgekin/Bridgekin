@@ -40,6 +40,17 @@ export const respondToRequest = (response) => (
   })
 )
 
+export const updateSalesIntro = (salesIntro) => (
+  fetch(`${window.location.origin}/api/sales_intros/${salesIntro.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ salesIntro }),
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+    }
+  })
+)
+
 export const deleteSalesIntro = (salesIntroId) => (
   fetch(`${window.location.origin}/api/sales_intros/${salesIntroId}`, {
     method: 'DELETE',
