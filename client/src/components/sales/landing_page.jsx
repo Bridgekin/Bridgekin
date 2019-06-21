@@ -144,7 +144,7 @@ class LandingPage extends React.Component {
         </Typography>
         <Typography gutterBottom
           style={{ fontSize: 16 }}>
-          {`Get warm introductions into your target accounts by utilizing our simple technology to seamlessly create visbility and leverage your team’s collective network.`}
+          {`Get warm introductions into your target accounts by utilizing our simple technology to seamlessly create visibility and leverage your team’s collective network.`}
         </Typography>
 
         <Grid container justify='space-between'
