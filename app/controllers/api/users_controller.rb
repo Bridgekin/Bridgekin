@@ -1,7 +1,8 @@
 require_relative '../concerns/devise_controller_patch.rb'
+require 'nameable'
 class Api::UsersController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup]
+  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup, :google_sales_signup]
 
   after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
@@ -49,6 +50,9 @@ class Api::UsersController < ApiController
     if providedDomain != network.domain
       render json: ["Domain does not match chosen network"], status: 422
     elsif providedDomain == network.domain && @currentUser.save
+      #Attach to existing network
+
+      #Get Tokens and track
       @token = get_login_token!(@currentUser)
       @currentUser.implement_trackable
       @site_template = @currentUser.get_template
@@ -66,13 +70,57 @@ class Api::UsersController < ApiController
       #No friends yet = Empty object to fill connections
       @connections = {}
 
-      #Create a mirror member within this network
-      member = SalesMember.create(user_id: @currentUser.id)
-      member.network = network
-
       render :hire_signup
     else
       render json: @currentUser.errors.full_messages, status: 422
+    end
+  end
+
+  def google_sales_signup
+    domain = params[:user][:email][:$t].split('@').last
+    network = SalesNetwork.find_by(domain: domain)
+
+    if network
+      @user = User.find_by(email: params[:user][:email][:$t])
+      if @user #Fetch existing User
+        @token = get_login_token!(@user)
+        @site_template = @user.get_template
+        @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
+        
+        render :google_login
+      else #Create a new user
+        @user = User.create(email: params[:user][:email][:$t])
+        name = Nameable.parse(params[:user][:name][:$t])
+        @user.fname, @user.lname = name.first, name.last
+
+        if @user.save
+          # Link to network
+          SalesUserNetwork.create(network_id: network.id, user_id: @user.id)
+
+          #Get Tokens and track
+          @token = get_login_token!(@currentUser)
+          @currentUser.implement_trackable
+          @site_template = @currentUser.get_template
+
+          #Remove waitlist user from waitlist by changing status
+          @currentUser.update_waitlist
+          #Create array of user info
+          @users = [@currentUser]
+          #Get User feature set
+          @user_feature = @currentUser.user_feature ||
+            UserFeature.create(user_id: @currentUser.id)
+          #Set hire user setting
+          @user_feature.hire_user = true
+          @user_feature.save
+          #No friends yet = Empty object to fill connections
+          @connections = {}
+          render :google_signup
+        else
+          render json: @user.errors.full_messages, status: 422
+        end
+      end
+    else
+      render json: ["Could't find a network with that domain"], status: 422
     end
   end
 
@@ -170,5 +218,9 @@ class Api::UsersController < ApiController
 
       user[:searchable] = params[:user][:searchable] == 'true' unless params[:user][:searchable].nil?
       user
+    end
+
+    def gUser_params
+      params.require(:user).permit(:email, :name)
     end
 end
