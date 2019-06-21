@@ -17,6 +17,8 @@ import loginReducer from './login_reducer';
 import refApplicationReducer from './ref_application_reducer';
 import refAppStatusReducer from './ref_app_status_reducer';
 import requestIntroReducer from './request_intro_reducer';
+import connectSocialReducer from './connect_social_reducer';
+import respondToRequestReducer from './respond_to_request_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -37,4 +39,6 @@ export default combineReducers({
   refApplication: refApplicationReducer,
   refAppStatus: refAppStatusReducer,
   requestIntro: requestIntroReducer,
+  connectSocial: connectSocialReducer,
+  respondToRequest: respondToRequestReducer,
 });

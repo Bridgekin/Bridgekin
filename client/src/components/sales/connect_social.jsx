@@ -16,6 +16,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import { updateUserFeature } from '../../actions/user_feature_actions';
 import { connectSocial } from '../../actions/sales_actions';
+import { openConnectSocial } from '../../actions/modal_actions';
 import ImportGoogle from '../google/import_contacts';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -26,7 +27,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   updateUserFeature: (payload) => dispatch(updateUserFeature(payload)),
-  connectSocial: (payload) => dispatch(connectSocial(payload))
+  connectSocial: (payload) => dispatch(connectSocial(payload)),
+  openConnectSocial: (payload) => dispatch(openConnectSocial(payload))
 });
 
 const styles = theme => ({
@@ -67,9 +69,10 @@ class ConnectSocial extends React.Component {
     this.state = {
       linkedInUpload: null,
       linkedInUploadUrl: '',
-      googleUsers: null,
+      googleUsersArray: null,
       facebookUpload: null,
       facebookUploadUrl: '',
+      loading: false
     }
 
     this.handleFile = this.handleFile.bind(this);
@@ -107,27 +110,37 @@ class ConnectSocial extends React.Component {
   }
 
   handleSubmit(){
-    const { currentUser } = this.props;
-    const formData = new FormData();
-
-    ['linkedInUpload', 'googleUsers', 'facebookUpload'].map(upload => {
-      if(this.state[upload]){
-        formData.append(`connectSocial[${upload}]`, this.state[upload])
-      }
-    })
-
-    this.props.connectSocial(formData)
-    // .then(() => )
+    this.setState({ loading: true},
+      () => {
+        const { currentUser } = this.props;
+        const formData = new FormData();
+    
+        ['linkedInUpload', 'googleUsersArray', 'facebookUpload'].map(upload => {
+          if (this.state[upload]) {
+            if (upload === 'googleUsersArray') {
+              formData.append(`connectSocial[${upload}]`, JSON.stringify(this.state[upload]))
+            } else {
+              formData.append(`connectSocial[${upload}]`, this.state[upload])
+            }
+          }
+        })
+    
+        this.props.connectSocial(formData)
+          .then(() => {
+            this.props.openConnectSocial()
+            this.setState({ loading: false })
+          })
+      })
   }
 
-  receiveGoogleUsers(googleUsers){
-    this.setState({ googleUsers })
+  receiveGoogleUsers(googleUsersArray){
+    this.setState({ googleUsersArray })
   }
 
   render() {
     const { classes, dimensions } = this.props;
     const { linkedInUploadUrl, linkedInUpload,
-      googleUploadUrl, googleUpload, facebookUploadUrl, facebookUpload } = this.state;
+      googleUsersArray, facebookUploadUrl, facebookUpload } = this.state;
 
     let header = <Grid container justify='center'
     style={{ marginTop: 30}}>
@@ -221,7 +234,11 @@ class ConnectSocial extends React.Component {
         
         <Grid container justify='center'
           className={classes.importButton}>
-          {<ImportGoogle salesImport
+          {googleUsersArray ? <Typography align='center'
+          color='textSecondary'
+          style={{ fontSize: 14}}>
+            {`Contacts Ready for Upload`}
+          </Typography> : <ImportGoogle salesImport
           receiveGoogleUsers={this.receiveGoogleUsers}/>}
         </Grid>
       </Grid>
@@ -326,7 +343,7 @@ class ConnectSocial extends React.Component {
     let submitBar = <Grid container justify='center'
     style={{ marginTop: 30}}>
       <Button variant='contained' color='primary'
-        disabled={!linkedInUpload && !googleUpload && !facebookUpload }
+        disabled={!linkedInUpload && !googleUsersArray && !facebookUpload }
       onClick={this.handleSubmit}>
         {`Submit Connections`}
       </Button>

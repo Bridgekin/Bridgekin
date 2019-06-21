@@ -27,6 +27,8 @@ import LoginModal from './components/modals/login_modal';
 import RefApplicationModal from './components/modals/ref_application_modal';
 import RefAppStatusModal from './components/modals/ref_app_status_modal';
 import RequestIntroModal from './components/modals/request_intro_modal';
+import ConnectSocialModal from './components/modals/connect_social_modal';
+import RespondToRequestModal from './components/modals/respond_intro_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -82,6 +84,8 @@ class ThemeProvider extends React.Component{
               <DeleteOppModal />
               <ExternalInviteModal/>
               <RefAppStatusModal />
+              <ConnectSocialModal />
+              <RespondToRequestModal />
             </div>}
             <SignupModal />
             <OppCardModal/>

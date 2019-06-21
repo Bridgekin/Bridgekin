@@ -1,0 +1,1 @@
+json.extract! sales_intro, :id, :contact_id, :requestor_id, :recipient_id, :message, :explaination, :referral_bonus, :status, :decision

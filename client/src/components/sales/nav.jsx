@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
@@ -67,13 +68,16 @@ const styles = theme => ({
   },
   topNav:{
     // backgroundImage: "linear-gradient(rgb(255, 255, 255, 0), rgb(255, 255, 255, 1))",
-    backgroundColor: 'rgb(255, 255, 255, 0)',
+    backgroundColor: 'white',
     color: 'black',
     width: '100%',
     boxShadow: 'none',
     position: 'fixed',
-    transition: '0.2s',
     top: 0
+  },
+  navHome:{
+    backgroundColor: 'rgb(255, 255, 255, 0)',
+    transition: '0.2s',
   },
   nav: {
     backgroundColor: 'white',
@@ -145,7 +149,10 @@ class SalesNav extends React.Component {
   handleSubmit() {
     const { currentUser } = this.props;
     if (currentUser) {
-      this.props.logout();
+      this.props.logout()
+      .then(() => {
+        this.props.history.push('/sales')
+      })
     } else {
       // this.props.openLogin({ page: 'login' });
       this.props.history.push('/sales/login')
@@ -173,6 +180,13 @@ class SalesNav extends React.Component {
           {`My Dashboard`}
         </Typography>
       </Button>}
+      {currentUser && <Button style={{ textTransform: 'capitalize' }}
+        onClick={() => this.props.history.push('/sales/stats')}>
+        <Typography color='textSecondary'
+          className={classes.navItem}>
+          {`My Stats`}
+        </Typography>
+      </Button>}
       {currentUser && 
         <Button style={{ textTransform: 'capitalize' }}
           onClick={this.handleSubmit}>
@@ -198,4 +212,4 @@ class SalesNav extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SalesNav));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(SalesNav)));

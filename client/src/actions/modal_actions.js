@@ -241,3 +241,30 @@ export const openRequestIntro = (payload) => ({
 export const closeRequestIntro = () => ({
   type: CLOSE_REQUEST_INTRO_MODAL,
 });
+
+
+// Open Connect Social
+export const OPEN_CONNECT_SOCIAL_MODAL = 'OPEN_CONNECT_SOCIAL_MODAL';
+export const CLOSE_CONNECT_SOCIAL_MODAL = "CLOSE_CONNECT_SOCIAL_MODAL";
+
+export const openConnectSocial = (payload) => ({
+  type: OPEN_CONNECT_SOCIAL_MODAL,
+  payload
+});
+
+export const closeConnectSocial = () => ({
+  type: CLOSE_CONNECT_SOCIAL_MODAL,
+});
+
+// Open Resoond To Request
+export const OPEN_REQUEST_TO_REQUEST_MODAL = 'OPEN_REQUEST_TO_REQUEST_MODAL';
+export const CLOSE_REQUEST_TO_REQUEST_MODAL = "CLOSE_REQUEST_TO_REQUEST_MODAL";
+
+export const openRespondToRequest = (payload) => ({
+  type: OPEN_REQUEST_TO_REQUEST_MODAL,
+  payload
+});
+
+export const closeRespondToRequest = () => ({
+  type: CLOSE_REQUEST_TO_REQUEST_MODAL,
+});

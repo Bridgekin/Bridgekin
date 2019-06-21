@@ -94,7 +94,7 @@ class GoogleContacts extends React.Component {
       'method': 'GET',
       'params':{
         'alt':'json',
-        'max-results': 150,
+        'max-results': 400,
         'orderby': 'lastmodified',
         'sortorder': 'descending'
       },

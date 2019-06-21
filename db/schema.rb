@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_17_155105) do
+ActiveRecord::Schema.define(version: 2019_06_21_185029) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -352,11 +352,44 @@ ActiveRecord::Schema.define(version: 2019_06_17_155105) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sales_intros", force: :cascade do |t|
+    t.integer "contact_id"
+    t.integer "requestor_id"
+    t.integer "recipient_id"
+    t.string "message"
+    t.string "explaination"
+    t.integer "referral_bonus"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "decision"
+    t.datetime "email_sent"
+    t.string "status", default: "open"
+    t.string "location", default: ""
+    t.index ["recipient_id"], name: "index_sales_intros_on_recipient_id"
+    t.index ["requestor_id"], name: "index_sales_intros_on_requestor_id"
+  end
+
   create_table "sales_networks", force: :cascade do |t|
     t.string "title", default: ""
     t.string "domain", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "sales_user_contacts", force: :cascade do |t|
+    t.integer "contact_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "contact_id"], name: "index_sales_user_contacts_on_user_id_and_contact_id"
+  end
+
+  create_table "sales_user_networks", force: :cascade do |t|
+    t.integer "network_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["network_id", "user_id"], name: "index_sales_user_networks_on_network_id_and_user_id"
   end
 
   create_table "saved_opportunities", force: :cascade do |t|

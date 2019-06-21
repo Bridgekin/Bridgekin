@@ -63,11 +63,14 @@ export const CLEAR_REF_LINK_ERRORS = 'CLEAR_REF_LINK_ERRORS';
 
 export const RECEIVE_SALES_ERRORS = 'RECEIVE_SALES_ERRORS';
 export const CLEAR_SALES_ERRORS = 'CLEAR_SALES_ERRORS';
+export const RECEIVE_SALES_CONTACT_ERRORS = 'RECEIVE_SALES_CONTACT_ERRORS';
+export const CLEAR_SALES_CONTACT_ERRORS = 'CLEAR_SALES_CONTACT_ERRORS';
+export const RECEIVE_SALES_INTRO_ERRORS = 'RECEIVE_SALES_INTRO_ERRORS';
+export const CLEAR_SALES_INTRO_ERRORS = 'CLEAR_SALES_INTRO_ERRORS';
 
 export const RECEIVE_UTIL_ERRORS = 'RECEIVE_UTIL_ERRORS';
 export const CLEAR_UTIL_ERRORS = 'CLEAR_UTIL_ERRORS';
-export const RECEIVE_REQUEST_INTRO_ERRORS = 'RECEIVE_REQUEST_INTRO_ERRORS';
-export const CLEAR_REQUEST_INTRO_ERRORS = 'CLEAR_REQUEST_INTRO_ERRORS';
+
 
 export const receiveSessionErrors = errors => ({
   type: RECEIVE_SESSION_ERRORS,
@@ -330,11 +333,20 @@ export const clearUtilErrors = () => ({
   type: CLEAR_UTIL_ERRORS,
 });
 
-export const receiveRequestIntroErrors = errors => ({
-  type: RECEIVE_REQUEST_INTRO_ERRORS,
+export const receiveSalesIntroErrors = errors => ({
+  type: RECEIVE_SALES_INTRO_ERRORS,
   errors
 });
 
-export const clearRequestIntroErrors = () => ({
-  type: CLEAR_REQUEST_INTRO_ERRORS,
+export const clearSalesIntroErrors = () => ({
+  type: CLEAR_SALES_INTRO_ERRORS,
+});
+
+export const receiveSalesContactErrors = errors => ({
+  type: RECEIVE_SALES_CONTACT_ERRORS,
+  errors
+});
+
+export const clearSalesContactErrors = () => ({
+  type: CLEAR_SALES_CONTACT_ERRORS,
 });

@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 
 import ResultCard from './result_card.jsx'
 
+import { searchByName, searchByCharacteristic } from '../../actions/sales_contacts_actions';
+
 const EXAMPLE = {
   1: {
     fname: "Test",
@@ -24,11 +26,13 @@ const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
   userFeature: state.entities.userFeature,
-  resultNodes: EXAMPLE
+  resultNodes: EXAMPLE,
+  searchContacts: state.entities.sales.searchContacts
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  searchByName: search => dispatch(searchByName(search)),
+  searchByCharacteristic: search => dispatch(searchByCharacteristic(search))
 });
 
 const styles = theme => ({
@@ -44,9 +48,17 @@ const styles = theme => ({
 class SalesDashboard extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      fname: '',
+      lname: '',
+      company: '',
+      position: '',
+      location: ''
+    }
 
     this.connectNetworks = this.connectNetworks.bind(this);
+    this.searchByName = this.searchByName.bind(this);
+    this.searchByCharacteristic = this.searchByCharacteristic.bind(this);
   }
 
   componentDidMount() {
@@ -67,31 +79,47 @@ class SalesDashboard extends React.Component {
     }
   }
 
+  searchByCharacteristic(){
+    const { title, company, position } = this.state;
+    let search = { title, company, position }
+
+    this.props.searchByCharacteristic(search);
+  }
+
+  searchByName(){
+    const { fname, lname } = this.state;
+    let search = { fname, lname }
+
+    this.props.searchByName(search);
+  }
+
   render() {
-    const { classes, dimensions, resultNodes } = this.props;
-    const { title, location, company,
+    const { classes, dimensions, resultNodes,
+      searchContacts } = this.props;
+    const { position, company, location,
     fname, lname } = this.state;
-    let resultArray = Object.values(resultNodes);
+
+    let resultArray = Object.values(searchContacts);
     let resultCards = resultArray.map(contact => (
       <ResultCard contact={contact} />
     ))
 
     let searchComponent = <Grid container justify='center'
     style={{ border: `1px solid grey`, marginBottom: 30, padding: "10px 0px"}}>
-      <Grid container item xs={11}>
-        <Grid item container xs={5} direction='column' justify='space-around'>
+      <Grid container item xs={10} justify='space-around'>
+        <Grid item container xs={4} direction='column' justify='space-around'>
           <Typography align='center'>
             {`Search by Characteristic`}
           </Typography>
           <TextField
             required
-            label="Title"
+            label="Title/Position"
             className={classes.textField}
             margin="dense"
             variant='outlined'
-            value={title}
-            onChange={this.handleChange('title')}
-            onMouseUp={this.handleChange('title')}
+            value={position}
+            onChange={this.handleChange('position')}
+            onMouseUp={this.handleChange('position')}
           />
 
           <TextField
@@ -115,6 +143,14 @@ class SalesDashboard extends React.Component {
             onChange={this.handleChange('location')}
             onMouseUp={this.handleChange('location')}
           />
+
+          <Grid container justify='center'
+          style={{ marginTop: 10}}>
+            <Button variant='contained' color='primary'
+              onClick={this.searchByCharacteristic}>
+              {`Search By Characteristic`}
+            </Button>
+          </Grid>
         </Grid>
 
         <Grid item xs={2} container alignItems='center' justify='center'>
@@ -123,7 +159,7 @@ class SalesDashboard extends React.Component {
           </Typography>
         </Grid>
 
-        <Grid item container xs={5}
+        <Grid item container xs={4}
           direction='column'>
           <Typography align='center'>
             {`Search by Name`}
@@ -149,21 +185,21 @@ class SalesDashboard extends React.Component {
             onChange={this.handleChange('lname')}
             onMouseUp={this.handleChange('lname')}
           />
+          <Grid container justify='center'
+            style={{ marginTop: 40 }}>
+            <Button variant='contained' color='primary'
+            onClick={this.searchByName}>
+              {`Search By Name`}
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-
-      <Grid container item xs={11} justify='center'
-      style={{ margin: "10px 0px"}}>
-        <Button variant='contained' color='primary'>
-          {`Search Network Contacts`}
-        </Button>
       </Grid>
     </Grid>
 
     let resultsComponent = <Grid container justify='center'
     style={{ border: `1px solid grey`}}>
-      <Grid item xs={9} container justify='center'
-        style={{ margin: "20px 0px"}}>
+      <Grid container justify='flex-start' item xs={9}
+        spacing={2} style={{ margin: "20px 0px"}}>
         {resultArray.length > 0 ? (
           resultCards
         ): (

@@ -131,6 +131,34 @@ class User < ApplicationRecord
     foreign_key: :owner_id,
     class_name: :RefOppLink
 
+  has_many :sales_user_networks,
+    foreign_key: :user_id,
+    class_name: :SalesUserNetwork
+
+  has_many :sales_networks,
+    through: :sales_user_networks,
+    source: :network
+
+  has_many :sales_user_contacts,
+    foreign_key: :user_id,
+    class_name: :SalesUserContact
+
+  has_many :sales_contacts,
+    through: :sales_user_contacts,
+    source: :contact
+
+  has_many :intro_requests_sent,
+    foreign_key: :requestor_id,
+    class_name: :SalesIntro
+
+  has_many :intro_requests_received,
+    foreign_key: :recipient_id,
+    class_name: :SalesIntro
+
+  # def contacts_from_requests
+  #   SalesIntro.includes(:contact).where("requestor_id = ? OR recipient_id = ?", self.id, self.id).pluck(:contact_id)
+  # end
+
   def submitted_apps
     RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)
   end
