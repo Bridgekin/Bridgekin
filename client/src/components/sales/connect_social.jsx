@@ -18,6 +18,7 @@ import { updateUserFeature } from '../../actions/user_feature_actions';
 import { connectSocial } from '../../actions/sales_actions';
 import { openConnectSocial } from '../../actions/modal_actions';
 import ImportGoogle from '../google/import_contacts';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -48,7 +49,11 @@ const styles = theme => ({
     fontSize: 14,
   },
   importButton: { marginTop: 30 },
-  learnMore: { textTransform: 'capitalize'}
+  learnMore: { textTransform: 'capitalize'},
+  buttonProgress: {
+    position: 'absolute',
+    left: '50%',
+  },
 })
 
 const ExpansionPanel = withStyles({
@@ -140,7 +145,7 @@ class ConnectSocial extends React.Component {
   render() {
     const { classes, dimensions } = this.props;
     const { linkedInUploadUrl, linkedInUpload,
-      googleUsersArray, facebookUploadUrl, facebookUpload } = this.state;
+      googleUsersArray, facebookUploadUrl, facebookUpload, loading } = this.state;
 
     let header = <Grid container justify='center'
     style={{ marginTop: 30}}>
@@ -344,8 +349,10 @@ class ConnectSocial extends React.Component {
     style={{ marginTop: 30}}>
       <Button variant='contained' color='primary'
         disabled={!linkedInUpload && !googleUsersArray && !facebookUpload }
-      onClick={this.handleSubmit}>
+        onClick={this.handleSubmit}>
         {`Submit Connections`}
+        {loading && <CircularProgress size={24}
+          className={classes.buttonProgress} />}
       </Button>
     </Grid>
 
