@@ -5,3 +5,13 @@ json.sales_contacts do
     end
   end
 end
+
+json.friend_users do
+  @friend_users.each do |user|
+    json.set! user.id do
+      json.partial! 'api/users/user', user: user
+    end
+  end
+end
+
+json.friend_map @friend_map

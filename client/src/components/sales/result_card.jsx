@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Img from 'react-image'
+import Avatar from '@material-ui/core/Avatar';
 
 import PersonIcon from '@material-ui/icons/PersonSharp';
 
@@ -15,7 +16,8 @@ import { openRequestIntro } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
-  networkMembers: {}
+  networkMembers: {},
+  friendMap: state.entities.sales.friendMap
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -75,36 +77,43 @@ class ResultCard extends React.Component {
   }
 
   render(){
-    const { classes, contact, networkMembers } = this.props;
+    const { classes, contact, networkMembers,
+      friendMap } = this.props;
     return <Grid item xs={12} sm={6} container 
     justify='center'
       className={classes.card}>
       <Grid container>
-        <Grid item xs={3} container alignItems='center'> 
+        <Grid item xs={3} container alignItems='center'>
+          {contact.avatarUrl ? 
+          <Avatar alt="profile-pic"
+            src={contact.avatarUrl}
+            className={classes.avatar}/> :
           <PersonIcon
-            className={classes.defaultProfilePic}
-            onClick={this.sendToAccountSettings} />
+            className={classes.defaultProfilePic}/>
+          }
         </Grid>
         <Grid item xs={9}
         style={{ padding: 16}}>
-          <Typography color='textPrimary'
-          style={{ fontSize: 18, textTransform: 'capitalize'}}>
-            {`${contact.fname} ${contact.lname}`}
-          </Typography>
-          <Typography color='textPrimary'
-            style={{ fontSize: 13, textTransform: 'capitalize' }}>
-            {`${contact.position}`}
-          </Typography>
-          <Typography color='textPrimary'
-            style={{ fontSize: 13, textTransform: 'capitalize' }}>
-            {`${contact.company}`}
-          </Typography>
+          <div style={{ height: 64 }}>
+            <Typography color='textPrimary' noWrap
+            style={{ fontSize: 18, textTransform: 'capitalize'}}>
+              {`${contact.fname} ${contact.lname}`}
+            </Typography>
+            <Typography color='textPrimary' noWrap
+              style={{ fontSize: 13, textTransform: 'capitalize' }}>
+              {`${contact.position || "Position: N/A"}`}
+            </Typography>
+            <Typography color='textPrimary' noWrap
+              style={{ fontSize: 13, textTransform: 'capitalize' }}>
+              {`${contact.company || "Company: N/A"}`}
+            </Typography>
+          </div>
           
           <div className={classes.nameDivider}/>
 
           <Typography color='textPrimary'
             style={{ fontSize: 13, textTransform: 'capitalize' }}>
-            {`${contact.location || "Location: Unknown"}`}
+            {`${contact.location || "Location: N/A"}`}
           </Typography>
 
           {false && <Grid container>
@@ -128,6 +137,10 @@ class ResultCard extends React.Component {
               className={classes.pictureCover}/>
           </div>
         }) */}
+        <Typography color='textPrimary'
+        style={{ fontSize: 12, marginRight: 10}}>
+          {`Known Teammates: ${friendMap[contact.id]}`}
+        </Typography>
         <Button color='primary' variant='contained'
         onClick={this.requestIntro}
         style={{ textTransform: 'capitalize'}}>

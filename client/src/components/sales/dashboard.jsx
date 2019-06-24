@@ -63,7 +63,7 @@ class SalesDashboard extends React.Component {
 
   componentDidMount() {
     const { userFeature } = this.props;
-    // debugger
+
     if (!userFeature.importedSocial) {
       this.props.history.push('/sales/connect_social')
     }
@@ -83,21 +83,21 @@ class SalesDashboard extends React.Component {
     const { title, company, position } = this.state;
     let search = { title, company, position }
 
-    this.props.searchByCharacteristic(search);
+    this.props.searchByCharacteristic(search)
   }
 
   searchByName(){
     const { fname, lname } = this.state;
     let search = { fname, lname }
 
-    this.props.searchByName(search);
+    this.props.searchByName(search)
   }
 
   render() {
     const { classes, dimensions, resultNodes,
       searchContacts } = this.props;
     const { position, company, location,
-    fname, lname } = this.state;
+      fname, lname } = this.state;
 
     let resultArray = Object.values(searchContacts);
     let resultCards = resultArray.map(contact => (

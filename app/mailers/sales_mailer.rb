@@ -10,10 +10,11 @@ class SalesMailer < ApplicationMailer
   end
 
   def request_sales_intro(sales_intro)
-    @sales_intro = sales_intro.includes(:contact, :requestor, :recipient)
+    @sales_intro = SalesIntro.includes(:contact, :requestor, :recipient)
+    .find(sales_intro.id)
     @contact = @sales_intro.contact
-    @requestor = @ales_intro.requestor
-    @recipient = @ales_intro.recipient
+    @requestor = @sales_intro.requestor
+    @recipient = @sales_intro.recipient
 
     subject = "Intro Requested - Connect #{@requestor.fname.capitalize} and #{@contact.fname.capitalize}"
     # @recipients = [@recipient, @requestor]
@@ -24,7 +25,7 @@ class SalesMailer < ApplicationMailer
     # )
     #Log email being sent
     EmailLog.create(
-      recipient_id: @current_user.id,
+      recipient_id: @recipient.id,
       email_type: 'request_sales_intro'
     )
   end

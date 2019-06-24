@@ -6,6 +6,7 @@ import salesIntrosReducer from './sales_intro_reducer.js';
 import salesContactsReducer from './sales_contact_reducer.js';
 import receivedRequestsReducer from './received_request_reducer.js';
 import sentRequestsReducer from './sent_request_reducer.js';
+import friendMapReducer from './friend_map_reducer.js'
 
 export default combineReducers({
   searchNetworks: searchNetworksReducer,
@@ -14,4 +15,5 @@ export default combineReducers({
   salesContacts: salesContactsReducer,
   receivedRequests: receivedRequestsReducer,
   sentRequests: sentRequestsReducer,
+  friendMap: friendMapReducer
 })

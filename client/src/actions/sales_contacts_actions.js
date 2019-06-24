@@ -1,6 +1,7 @@
 import * as SalesContactsApiUtil from '../util/sales_contact_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveSalesContactErrors } from './error_actions';
+import { receiveUsers } from './user_actions'
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
@@ -32,10 +33,26 @@ export const removeSalesContact = contactId => ({
   contactId
 });
 
+export const RECEIVE_FRIEND_MAP = 'RECEIVE_FRIEND_MAP';
+export const CLEAR_FRIEND_MAP = 'CLEAR_FRIEND_MAP';
+
+export const receiveFriendMap = friendMap => ({
+  type: RECEIVE_FRIEND_MAP,
+  friendMap,
+});
+export const clearFriendMap = () => ({
+  type: CLEAR_FRIEND_MAP,
+});
+
+
 export const searchByName = (search) => dispatch => (
   SalesContactsApiUtil.searchByName(search)
     .then(handleErrors)
-    .then(data => dispatch(retrieveContactResults(data.salesContacts)))
+    .then(data => {
+      dispatch(retrieveContactResults(data.salesContacts))
+      dispatch(receiveUsers(data.friendUsers))
+      dispatch(receiveFriendMap(data.friendMap))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
@@ -47,7 +64,11 @@ export const searchByName = (search) => dispatch => (
 export const searchByCharacteristic = (search) => dispatch => (
   SalesContactsApiUtil.searchByCharacteristic(search)
     .then(handleErrors)
-    .then(data => dispatch(retrieveContactResults(data.salesContacts)))
+    .then(data => {
+      dispatch(retrieveContactResults(data.salesContacts))
+      dispatch(receiveUsers(data.friendUsers))
+      dispatch(receiveFriendMap(data.friendMap))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];

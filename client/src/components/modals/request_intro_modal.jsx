@@ -16,6 +16,8 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 import { connect } from 'react-redux';
 import { closeRequestIntro } from '../../actions/modal_actions';
@@ -26,7 +28,9 @@ import { createSalesIntro } from '../../actions/sales_intro_actions.js';
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
   requestIntroErrors: state.errors.salesIntro,
-  requestIntroModal: state.modals.requestIntro
+  requestIntroModal: state.modals.requestIntro,
+  friendMap: state.entities.sales.friendMap,
+  users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -70,7 +74,8 @@ class RequestIntroModal extends React.Component {
       page: 'response',
       message: '', 
       explaination: '',
-      referralBonus: 0
+      referralBonus: 0,
+      target: null
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -109,10 +114,12 @@ class RequestIntroModal extends React.Component {
 
   handleSubmit(){
     const { contact } = this.props.requestIntroModal
-    const { message, explaination, referralBonus } = this.state;
+    const { message, explaination, referralBonus,
+    target } = this.state;
 
     let payload = {message, explaination, referralBonus,
-      contactId: contact.id
+      contactId: contact.id,
+      targetId: target
     }
 
     this.props.createSalesIntro(payload)
@@ -120,8 +127,11 @@ class RequestIntroModal extends React.Component {
   }
 
   getContent(){
-    const { classes, currentUser } = this.props;
-    const { page, message, explaination, referralBonus } = this.state;
+    const { classes, currentUser, friendMap, 
+      requestIntroModal, users } = this.props;
+    const { page, message, explaination, 
+      referralBonus, target } = this.state;
+    const { contact } = requestIntroModal;
     
     switch(page){
       case 'request':
@@ -132,7 +142,7 @@ class RequestIntroModal extends React.Component {
           </Typography>
         </Grid>
 
-        let referralBonus = <Grid container>
+        let referralBonus = <Grid item xs={12} sm={5} container>
           <Typography fullWidth align='left'
           color='textSecondary'>
             {`Referral Bonus (Optional)`}
@@ -146,6 +156,34 @@ class RequestIntroModal extends React.Component {
               />
             </FormControl>
           </Grid>
+        </Grid>
+
+        let chooseContact = <Grid item xs={12} sm={5} container>
+          {/*friendMap[contact.id].length > 2 ?
+          <Select fullWidth
+            value={target}
+            onClick={(e) => e.stopPropagation()}
+            onChange={this.handleChange("target")}>
+            {friendMap[contact.id].map(id => {
+              let user = users[id];
+              return <MenuItem value={user.id}>{`${user.fname} ${user.lname}`}</MenuItem>
+            })}
+          </Select> : 
+          `${users[friendMap[contact.id][0]].fname} ${users[friendMap[contact.id][0]].lname}`
+          */}
+          <Typography color='textSecondary'
+          style={{ fontSize: 14}}>
+            {`Select teammate to request intro`}
+          </Typography>
+          <Select fullWidth
+            value={target}
+            onClick={(e) => e.stopPropagation()}
+            onChange={this.handleChange("target")}>
+            {friendMap[contact.id].map(id => {
+              let user = users[id];
+              return <MenuItem value={user.id}>{`${user.fname} ${user.lname}`}</MenuItem>
+            })}
+          </Select>
         </Grid>
 
         let introResponses = <Grid container>
@@ -174,10 +212,14 @@ class RequestIntroModal extends React.Component {
         let content = <Grid item xs={11} sm={10}
           className={classes.grid} container>
           {header}
-          {referralBonus}
+          <Grid container justify='space-around'>
+            {chooseContact}
+            {referralBonus}
+          </Grid>
           {introResponses}
           <Grid container justify='flex-end'>
             <Button variant='contained' color='primary'
+            disabled={!target}
               onClick={this.handleSubmit}>
               {`Send Request`}
             </Button>

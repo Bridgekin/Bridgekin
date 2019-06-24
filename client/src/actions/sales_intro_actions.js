@@ -83,7 +83,7 @@ export const fetchSalesIntro = (introId) => dispatch => (
 export const createSalesIntro = (salesIntro) => dispatch => (
   SalesIntrosApiUtil.createSalesIntro(salesIntro)
     .then(handleErrors)
-    .then(data => dispatch(receiveSalesIntro(data.salesIntros)))
+    .then(data => data)
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];

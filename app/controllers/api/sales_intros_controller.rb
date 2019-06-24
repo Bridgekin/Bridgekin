@@ -30,10 +30,11 @@ class Api::SalesIntrosController < ApiController
     #Find recipient
     @contact = SalesContact.find(intro_params[:contact_id])
     network = @current_user.sales_networks.first
-    recipient = contact.friends
-      .where.not(id: @current_user.id)
-      .where(id: network.members.pluck(:id))
-      .first
+    # recipient = contact.friends
+    #   .where.not(id: @current_user.id)
+    #   .where(id: network.members.pluck(:id))
+    #   .first
+    recipient = User.find(params[:sales_intro][:target_id])
     #Request Intro 
     @sales_intro = SalesIntro.new(intro_params
       .merge({
@@ -41,6 +42,7 @@ class Api::SalesIntrosController < ApiController
         recipient_id: recipient.id
       }))
     if @sales_intro.save
+      @sales_contact = @sales_intro.contact
       SalesMailer.request_sales_intro(@sales_intro).deliver_later
       render :show
     else

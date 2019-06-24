@@ -1,3 +1,4 @@
+require 'open-uri'
 class SalesContact < ApplicationRecord
   has_many :sales_user_contacts,
     foreign_key: :contact_id,
@@ -11,6 +12,8 @@ class SalesContact < ApplicationRecord
     foreign_key: :contact_id,
     class_name: :SalesIntro
 
+  has_one_attached :avatar
+
   def setSource(source)
     case source
     when :linked_in_upload
@@ -21,5 +24,10 @@ class SalesContact < ApplicationRecord
       self.facebook = true
     else 
     end
+  end
+
+  def grab_avatar_image(url)
+    downloaded_image = open(url)
+    self.avatar.attach(io: downloaded_image, filename: "full_contact_avatar")
   end
 end

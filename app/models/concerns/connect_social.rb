@@ -1,7 +1,8 @@
 require 'clearbit'
 require 'nameable'
 require 'fullcontact'
-# require 'json'
+require 'rest-client'
+require 'json'
 
 module ConnectSocial
 
@@ -22,31 +23,34 @@ module ConnectSocial
     # SalesMailer.notify_contacts_imported(current_user).deliver_later
   end
 
-  def ingestGoogle(google_contacts, current_user)
-    # Clearbit.key = Rails.application.credentials.clearbit[:api_key]
-    FullContact.configure do |config|
-      config.api_key = Rails.application.credentials.full_contact[:api_key]
-    end
-    
+  FCVARS = {
+    "email" => :email,
+    "twitter" => :twitter_handle,
+    "location" => :location,
+    "title" => :position,
+    "organization" => :company,
+    "linkedin" => :linkedin_url,
+    "facebook" => :facebook_url
+  }
+
+  def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
 
-    google_contacts.each do |entry|
+    google_contacts.take(25).each do |entry|
       if entry['email'].nil?
         contact = SalesContact.new()
       else
         contact = SalesContact.find_by(email: entry['email']) || SalesContact.new(email: entry['email'])
       end
-
       #Set Contact's Name
       if entry['name'].present?
         name = Nameable.parse(entry['name'])
         contact.fname = name.first
         contact.lname = name.last
       end
-
       #Set Source
       contact.setSource(:google_upload)
-      
+      #Save Contact
       if contact.save
         #Check if contact and user are already friends
         unless current_user.sales_contacts.include?(contact)
@@ -55,24 +59,34 @@ module ConnectSocial
             contact_id: contact.id
           )
         end
-        # debugger
         # Kickoff Full Contact
-        if contact.email.present?
-          # debugger
-          #Determine if I should
-          #sidekiq.perform_async(queue_id: 'clearbit')
-          #Track the call
-          #Create row in webhook requests
-          # RestClient.post("https://api.fullcontact.com/v3/person.enrich",
-          # {"email" => "#{contact.email}"}.to_json,
-          # {:authorization => "Bearer #{}"})
-          # response = Clearbit::Enrichment.find(
-          #   email: contact.email, 
-          #   webhook_url: 'https://9a203437.ngrok.io/api/webhook/clearbit',
-          #   webhook_id:
-          # )
-          # person = FullContact.person(email: contact.email)
-          # debugger
+        if contact.email.present? # && contact.last_full_contact_lookup.nil?
+          begin 
+            response = RestClient.post("https://api.fullcontact.com/v3/person.enrich",
+            {"email" => "#{contact.email}"}.to_json,
+            {:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"})
+    
+            if response.code < 300
+              person = JSON.parse(response.body)
+              #Set basic information
+              FCVARS.each do |key, value|
+                if person[key].present?
+                  contact[value] = person[key]
+                end
+              end
+              #Set Avatar
+              contact.grab_avatar_image(person["avatar"]) if person["avatar"]
+              #Set Name // Don't change name yet
+              # if person["fullName"].present?
+              #   name = Nameable.parse(person["fullName"])
+              #   contact.fname = name.first
+              #   contact.lname = name.last
+              # end
+              contact.save
+            end
+          rescue
+            logger.debug "No email found"
+          end
         end
       else
         #Save failed contact if needed
