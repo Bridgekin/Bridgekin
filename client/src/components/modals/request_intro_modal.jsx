@@ -132,6 +132,10 @@ class RequestIntroModal extends React.Component {
     const { page, message, explaination, 
       referralBonus, target } = this.state;
     const { contact } = requestIntroModal;
+
+    if (!requestIntroModal.open){
+      return <div></div>
+    }
     
     switch(page){
       case 'request':

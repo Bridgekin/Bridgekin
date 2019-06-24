@@ -47,3 +47,4 @@ heroku.yml
 /.env
 
 dump.rdb
+fc_test.rb

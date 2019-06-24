@@ -42,11 +42,11 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    post "webhooks/full_contact", :to => 'webhooks#full_contact'
     post "google_sales_signup", :to => 'users#google_sales_signup'
     patch "respond_intro_request", :to => 'sales_intros#respond_intro_request'
     get "sales_contacts/search_by_name", :to => 'sales_contacts#search_by_name'
     get "sales_contacts/search_by_characteristic", :to => 'sales_contacts#search_by_characteristic'
-    post "webhook/clearbit", :to => 'webhook#clearbit'
     post "connect_social", :to => 'sales_networks#connect_social'
     post "sales_signup", :to => 'users#sales_signup'
     post 'notify_request_demo', :to => "utils#request_demo"

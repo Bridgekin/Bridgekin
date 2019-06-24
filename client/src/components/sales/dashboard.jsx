@@ -53,7 +53,8 @@ class SalesDashboard extends React.Component {
       lname: '',
       company: '',
       position: '',
-      location: ''
+      location: '',
+      search: false
     }
 
     this.connectNetworks = this.connectNetworks.bind(this);
@@ -83,21 +84,29 @@ class SalesDashboard extends React.Component {
     const { title, company, position } = this.state;
     let search = { title, company, position }
 
-    this.props.searchByCharacteristic(search)
+    this.setState({ search: false },
+      () => {
+        this.props.searchByCharacteristic(search)
+          .then(() => this.setState({ search: true }));
+      })
   }
 
   searchByName(){
     const { fname, lname } = this.state;
     let search = { fname, lname }
 
-    this.props.searchByName(search)
+    this.setState({ search: false },
+      () => {
+        this.props.searchByName(search)
+          .then(() => this.setState({ search: true }));
+      })
   }
 
   render() {
     const { classes, dimensions, resultNodes,
       searchContacts } = this.props;
     const { position, company, location,
-      fname, lname } = this.state;
+      fname, lname, search } = this.state;
 
     let resultArray = Object.values(searchContacts);
     let resultCards = resultArray.map(contact => (
@@ -200,7 +209,7 @@ class SalesDashboard extends React.Component {
     style={{ border: `1px solid grey`}}>
       <Grid container justify='flex-start' item xs={9}
         spacing={2} style={{ margin: "20px 0px"}}>
-        {resultArray.length > 0 ? (
+        {(resultArray.length > 0 && search) ? (
           resultCards
         ): (
           <Typography color='textSecondary'

@@ -79,6 +79,7 @@ class ResultCard extends React.Component {
   render(){
     const { classes, contact, networkMembers,
       friendMap } = this.props;
+
     return <Grid item xs={12} sm={6} container 
     justify='center'
       className={classes.card}>
@@ -127,7 +128,7 @@ class ResultCard extends React.Component {
         </Grid>
       </Grid>
       <Grid item xs={10} className={classes.cardDivider}/>
-      <Grid container justify='flex-end'
+      <Grid container justify='flex-end' alignItems='center'
       className={classes.actionSection}>
         {/*contact.connectedMembers.map(id => {
           let member = networkMembers[id];
@@ -139,7 +140,7 @@ class ResultCard extends React.Component {
         }) */}
         <Typography color='textPrimary'
         style={{ fontSize: 12, marginRight: 10}}>
-          {`Known Teammates: ${friendMap[contact.id]}`}
+          {`Known Teammates: ${friendMap[contact.id].length || "N/A"}`}
         </Typography>
         <Button color='primary' variant='contained'
         onClick={this.requestIntro}

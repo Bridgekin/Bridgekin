@@ -36,7 +36,7 @@ module ConnectSocial
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
 
-    google_contacts.take(25).each do |entry|
+    google_contacts.take(15).each do |entry|
       if entry['email'].nil?
         contact = SalesContact.new()
       else
@@ -61,32 +61,18 @@ module ConnectSocial
         end
         # Kickoff Full Contact
         if contact.email.present? # && contact.last_full_contact_lookup.nil?
-          begin 
-            response = RestClient.post("https://api.fullcontact.com/v3/person.enrich",
-            {"email" => "#{contact.email}"}.to_json,
-            {:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"})
-    
-            if response.code < 300
-              person = JSON.parse(response.body)
-              #Set basic information
-              FCVARS.each do |key, value|
-                if person[key].present?
-                  contact[value] = person[key]
-                end
-              end
-              #Set Avatar
-              contact.grab_avatar_image(person["avatar"]) if person["avatar"]
-              #Set Name // Don't change name yet
-              # if person["fullName"].present?
-              #   name = Nameable.parse(person["fullName"])
-              #   contact.fname = name.first
-              #   contact.lname = name.last
-              # end
-              contact.save
-            end
-          rescue
-            logger.debug "No email found"
+          webhook_url = case Rails.env
+          when "development"
+            "https://09b95536.ngrok.io"
+          else "staging"
+            ENV['host_url']
           end
+
+          RestClient.post("https://api.fullcontact.com/v3/person.enrich",
+          { "email" => "#{contact.email}",
+            "webhookUrl" => "#{webhook_url}/webhooks/full_contact"
+          }.to_json,
+          {:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"})
         end
       else
         #Save failed contact if needed
