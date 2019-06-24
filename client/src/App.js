@@ -47,20 +47,23 @@ import HiringNav from './components/hiring/nav.jsx'
 
 import SalesRouter from './components/sales/sales_router.jsx'
 import SalesNav from './components/sales/nav.jsx'
+import SalesLandingPage from './components/sales/landing_page.jsx'
 
 export default ()=> (
   <div>
     <ScrollToTop />
 
     <Switch>
-      <Route path="/sales" component={SalesNav} />
       <Route path="/hiring" component={HiringNav} />
+      <Route exact path="/" component={SalesNav} />
+      <Route path="/sales" component={SalesNav} />
       <Route path="/" component={HomeNav} />
     </Switch>
 
     {/* General Modals */}
     <Switch>
       <Route path="/sales" component={SalesRouter} />
+      <AuthRoute exact path="/" component={SalesLandingPage} />
       <Route path="/hiring" component={HiringRouter} />
 
       <ProtectedRoute path="/importcontacts" component={ImportContacts} />

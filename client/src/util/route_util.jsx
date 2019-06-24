@@ -71,7 +71,7 @@ const SalesProtected = ({ currentUser, path, component: Component, passedProps }
     path={path}
     render={props => (
       currentUser ? <Component {...Object.assign({}, props, passedProps)} /> :
-        <Redirect to='/sales' />
+        <Redirect to='/' />
     )}
   />
 };
