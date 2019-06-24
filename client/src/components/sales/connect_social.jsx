@@ -115,7 +115,7 @@ class ConnectSocial extends React.Component {
   }
 
   handleSubmit(){
-    this.setState({ loading: true},
+    this.setState({ loading: true },
       () => {
         const { currentUser } = this.props;
         const formData = new FormData();
@@ -132,6 +132,7 @@ class ConnectSocial extends React.Component {
     
         this.props.connectSocial(formData)
           .then(() => {
+            debugger
             this.props.openConnectSocial()
             this.setState({ loading: false })
           })
@@ -348,7 +349,7 @@ class ConnectSocial extends React.Component {
     let submitBar = <Grid container justify='center'
     style={{ marginTop: 30}}>
       <Button variant='contained' color='primary'
-        disabled={!linkedInUpload && !googleUsersArray && !facebookUpload }
+        disabled={(!linkedInUpload && !googleUsersArray && !facebookUpload) || loading }
         onClick={this.handleSubmit}>
         {`Submit Connections`}
         {loading && <CircularProgress size={24}

@@ -70,7 +70,7 @@ module ConnectSocial
 
           RestClient.post("https://api.fullcontact.com/v3/person.enrich",
           { "email" => "#{contact.email}",
-            "webhookUrl" => "#{webhook_url}/webhooks/full_contact"
+            "webhookUrl" => "#{webhook_url}/api/webhooks/full_contact"
           }.to_json,
           {:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"})
         end

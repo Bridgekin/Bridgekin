@@ -57,7 +57,6 @@ class Api::WebhooksController < ApiController
 
       render json:["Success"], status: 200
     rescue
-      debugger
       logger.debug "No email found or Error"
     end
   end
