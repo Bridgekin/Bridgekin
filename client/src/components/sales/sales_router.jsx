@@ -48,6 +48,7 @@ class SalesRouter extends React.Component {
         <SalesProtectedRoute path="/sales/share/:id" component={SalesSharing} />
         <Route path="/sales/show/:id?" component={SalesShow} />*/}
         <Route path="/sales/login" component={SalesLogin}/>
+        <AuthRoute path="/sales" component={SalesLandingPage} />
       </Switch>
     </div>
   }

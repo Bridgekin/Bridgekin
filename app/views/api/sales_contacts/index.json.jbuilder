@@ -15,3 +15,5 @@ json.friend_users do
 end
 
 json.friend_map @friend_map
+
+json.total @total

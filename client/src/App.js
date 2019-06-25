@@ -79,7 +79,7 @@ export default ()=> (
       <AuthRoute path="/login" component={Login}/>
       <AuthRoute path="/passwordreset" component={PasswordReset}/>
       <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>
-      <AuthRoute exact path="/" component={HomePage} />
+      <AuthRoute path="/platform" component={HomePage} />
       <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
 
       <Route path="/useragreement" component={UserAgreement} />

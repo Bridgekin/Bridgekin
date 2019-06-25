@@ -31,16 +31,13 @@ class Api::WebhooksController < ApiController
     begin
       if params["status"].nil?
         contact = SalesContact.find_by(email: params["details"]["emails"][0]["value"])
-        # debugger
         unless contact.nil?
           #Set basic information
-          # debugger
           FCVARS.each do |key, value|
             if params[key].present?
               contact[value] = params[key]
             end
           end
-          # debugger
           #Set Avatar
           contact.grab_avatar_image(params["avatar"]) if params["avatar"]
           #Set Name // Don't change name yet
@@ -49,7 +46,6 @@ class Api::WebhooksController < ApiController
           #   contact.fname = name.first
           #   contact.lname = name.last
           # end
-          # debugger
           contact.last_full_contact_lookup = Datetime.now
           contact.save
         end

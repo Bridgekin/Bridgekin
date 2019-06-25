@@ -24,6 +24,8 @@ const mapDispatchToProps = dispatch => ({
   openRequestIntro: payload => dispatch(openRequestIntro(payload))
 });
 
+const COLORS = ["#FF8833", "#D92121", "#3AA655","#0095B7"]
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -58,6 +60,9 @@ const styles = theme => ({
   nameDivider:{
     borderBottom: `1px solid grey`, 
     margin: "10px 0px"
+  },
+  profileLetter: {
+    height: '100%'
   }
 })
 
@@ -79,7 +84,7 @@ class ResultCard extends React.Component {
 
   render(){
     const { classes, contact, networkMembers,
-      friendMap } = this.props;
+      friendMap, idx } = this.props;
     
     if (Object.keys(friendMap).length > 0){
       let otherFriendsCount = friendMap[contact.id].length || 0
@@ -88,13 +93,22 @@ class ResultCard extends React.Component {
         className={classes.card}>
         <Grid container>
           <Grid item xs={3} container alignItems='center'>
-            {contact.avatarUrl ? 
+            {/*contact.avatarUrl ? 
             <Avatar alt="profile-pic"
               src={contact.avatarUrl}
               className={classes.avatar}/> :
             <PersonIcon
               className={classes.defaultProfilePic}/>
-            }
+            */}
+            <Grid container justify='center' 
+            alignItems='center'
+            className={classes.profileLetter}
+              style={{ backgroundColor: COLORS[Math.floor(idx % COLORS.length)],}}>
+              <Typography 
+              style={{ fontSize: 50, fontWeight: 600, color:"white"}}>
+                {`${contact.fname.charAt(0)}`}
+              </Typography>
+            </Grid>
           </Grid>
           <Grid item xs={9}
           style={{ padding: 16}}>

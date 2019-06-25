@@ -45,29 +45,15 @@ export const clearFriendMap = () => ({
 });
 
 
-export const searchByName = (search) => dispatch => (
-  SalesContactsApiUtil.searchByName(search)
+export const searchContacts = (search) => dispatch => (
+  SalesContactsApiUtil.searchContacts(search)
     .then(handleErrors)
     .then(data => {
       dispatch(retrieveContactResults(data.salesContacts))
       dispatch(receiveUsers(data.friendUsers))
       dispatch(receiveFriendMap(data.friendMap))
-    })
-    .catch(errors => {
-      if (!(errors instanceof Array)) {
-        errors = [genericError];
-      }
-      dispatch(receiveSalesContactErrors(errors))
-    })
-);
-
-export const searchByCharacteristic = (search) => dispatch => (
-  SalesContactsApiUtil.searchByCharacteristic(search)
-    .then(handleErrors)
-    .then(data => {
-      dispatch(retrieveContactResults(data.salesContacts))
-      dispatch(receiveUsers(data.friendUsers))
-      dispatch(receiveFriendMap(data.friendMap))
+      // debugger
+      return data.total
     })
     .catch(errors => {
       if (!(errors instanceof Array)) {

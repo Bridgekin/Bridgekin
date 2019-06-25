@@ -8,8 +8,15 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import ResultCard from './result_card.jsx'
+// import Pagination from "react-js-pagination";
+import Pagination from "material-ui-flat-pagination";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import merge from 'lodash/merge';
+import Loading from '../loading';
 
-import { searchByName, searchByCharacteristic } from '../../actions/sales_contacts_actions';
+import { searchContacts } from '../../actions/sales_contacts_actions';
+// require("bootstrap/less/bootstrap.less");
+
 
 const EXAMPLE = {
   1: {
@@ -26,13 +33,11 @@ const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
   userFeature: state.entities.userFeature,
-  resultNodes: EXAMPLE,
-  searchContacts: state.entities.sales.searchContacts
+  results: state.entities.sales.searchContacts
 });
 
 const mapDispatchToProps = dispatch => ({
-  searchByName: search => dispatch(searchByName(search)),
-  searchByCharacteristic: search => dispatch(searchByCharacteristic(search))
+  searchContacts: search => dispatch(searchContacts(search)),
 });
 
 const styles = theme => ({
@@ -54,12 +59,19 @@ class SalesDashboard extends React.Component {
       company: '',
       position: '',
       location: '',
-      search: false
+      search: false,
+      loaded: false,
+      offset: 0,
+      total: 0,
+      limit: 10
     }
 
     this.connectNetworks = this.connectNetworks.bind(this);
     this.searchByName = this.searchByName.bind(this);
     this.searchByCharacteristic = this.searchByCharacteristic.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.searchData = this.searchData.bind(this);
+    this.getResults = this.getResults.bind(this);
   }
 
   componentDidMount() {
@@ -68,38 +80,91 @@ class SalesDashboard extends React.Component {
     if (!userFeature.importedSocial) {
       this.props.history.push('/sales/connect_social')
     }
+
+    this.searchData()
   }
 
-  connectNetworks(){
-    this.props.history.push('/sales/connect_social')
+  handlePageChange(offset) {
+    console.log(`active page is ${offset}`);
+    this.setState({ offset },
+      () => {
+        const { fname, lname, position, company, location } = this.state;
+        let search = { fname, lname, position, company, location }
+        this.searchData(search)
+      })
   }
 
-  handleChange(field){
-    return e => {
-      this.setState({ [field]: e.target.value })
-    }
+  async searchData(payload){
+    const { offset, limit } = this.state;
+    this.setState({ loaded: false });
+    payload = await merge({}, payload, {offset, limit})
+    let total = await this.props.searchContacts(payload)
+    await this.setState({ total, loaded: true })
   }
 
   searchByCharacteristic(){
-    const { title, company, position } = this.state;
-    let search = { title, company, position }
+    const { position, company, location } = this.state;
+    let search = { position, company, location}
 
-    this.setState({ search: false },
-      () => {
-        this.props.searchByCharacteristic(search)
-          .then(() => this.setState({ search: true }));
-      })
+    this.searchData(search)
   }
 
   searchByName(){
     const { fname, lname } = this.state;
     let search = { fname, lname }
 
-    this.setState({ search: false },
-      () => {
-        this.props.searchByName(search)
-          .then(() => this.setState({ search: true }));
-      })
+    this.searchData(search)
+  }
+
+  handleChange(field) {
+    return e => {
+      this.setState({ [field]: e.target.value })
+    }
+  }
+
+  connectNetworks() {
+    this.props.history.push('/sales/connect_social')
+  }
+
+  getResults(){
+    const { results } = this.props;
+    const { loaded, total} = this.state;
+
+    if(!loaded){
+      return <Loading />
+    }
+
+    let resultArray = Object.values(results);
+    let resultCards = resultArray.map((contact, idx) => (
+      <ResultCard contact={contact} idx={idx} />
+    ))
+
+    let resultsComponent = <Grid container justify='center'
+      style={{ border: `1px solid grey` }}>
+      <Grid item xs={9} container spacing={3}
+        style={{ margin: "20px 0px" }}>
+        {(resultArray.length > 0) ? (
+          resultCards
+        ) : (
+            <Typography color='textSecondary'
+              align='center'>
+              {`Use the form above to find potential leads. Results will show here.`}
+            </Typography>
+          )}
+      </Grid>
+
+      <Grid item xs={9} container justify='center'>
+        <CssBaseline />
+        <Pagination
+          limit={this.state.limit}
+          offset={this.state.offset}
+          total={this.state.total}
+          onClick={(e, offset) => this.handlePageChange(offset)}
+        />
+      </Grid>
+    </Grid>
+
+    return resultsComponent
   }
 
   render() {
@@ -107,11 +172,6 @@ class SalesDashboard extends React.Component {
       searchContacts } = this.props;
     const { position, company, location,
       fname, lname, search } = this.state;
-
-    let resultArray = Object.values(searchContacts);
-    let resultCards = resultArray.map(contact => (
-      <ResultCard contact={contact} />
-    ))
 
     let searchComponent = <Grid container justify='center'
     style={{ border: `1px solid grey`, marginBottom: 30, padding: "10px 0px"}}>
@@ -205,21 +265,6 @@ class SalesDashboard extends React.Component {
       </Grid>
     </Grid>
 
-    let resultsComponent = <Grid container justify='center'
-    style={{ border: `1px solid grey`}}>
-      <Grid item xs={9} container spacing={3}
-        style={{ margin: "20px 0px"}}>
-        {(resultArray.length > 0 && search) ? (
-          resultCards
-        ): (
-          <Typography color='textSecondary'
-          align='center'>
-            {`Use the form above to find potential leads. Results will show here.`}
-          </Typography>
-        )}
-      </Grid>
-    </Grid>
-
     return <div style={{ minHeight: dimensions.height }}>
       <Grid container justify='center'
         className={classes.grid}>
@@ -233,7 +278,7 @@ class SalesDashboard extends React.Component {
           </Grid>
 
           {searchComponent}
-          {resultsComponent}
+          {this.getResults()}
         </Grid>
       </Grid>
     </div>
