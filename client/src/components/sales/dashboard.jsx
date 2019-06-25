@@ -207,8 +207,8 @@ class SalesDashboard extends React.Component {
 
     let resultsComponent = <Grid container justify='center'
     style={{ border: `1px solid grey`}}>
-      <Grid container justify='flex-start' item xs={9}
-        spacing={2} style={{ margin: "20px 0px"}}>
+      <Grid item xs={9} container spacing={3}
+        style={{ margin: "20px 0px"}}>
         {(resultArray.length > 0 && search) ? (
           resultCards
         ): (

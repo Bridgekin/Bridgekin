@@ -151,7 +151,7 @@ class SalesNav extends React.Component {
     if (currentUser) {
       this.props.logout()
       .then(() => {
-        this.props.history.push('/sales')
+        this.props.history.push('/')
       })
     } else {
       // this.props.openLogin({ page: 'login' });

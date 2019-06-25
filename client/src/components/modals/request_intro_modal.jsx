@@ -249,12 +249,14 @@ class RequestIntroModal extends React.Component {
           container justify='flex-start'>
           <Typography variant="h2" id="modal-title" 
             color='textPrimary' align='left'
+            gutterBottom
             className={classes.thanksHeader}>
             {`Request Sent`}
           </Typography>
           <Typography variant="body1" 
             id="simple-modal-description"
             data-cy='waitlist-success'
+            gutterBottom
             align='left' color='textPrimary'>
             {`We've sent a introduction request to your teammate on behalf of this contact!`}
           </Typography>
@@ -269,11 +271,13 @@ class RequestIntroModal extends React.Component {
           container justify='flex-start'>
           <Typography variant="h2" id="modal-title"     
             color='textPrimary' align='left'
+            gutterBottom
             className={classes.thanksHeader} >
             {`Thanks for referring your trusted contact!`}
           </Typography>
           <Typography variant="body1" align='left'
             id="simple-modal-description"
+            gutterBottom
             color='textPrimary'>
             {`It looks like we were unable to add them to the waitlist because:`}
           </Typography>

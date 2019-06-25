@@ -49,6 +49,7 @@ const styles = theme => ({
   },
   card:{
     border: `1px solid ${theme.palette.border.secondary}`,
+    margin: "10px 0px"
   },
   cardDivider: { borderTop: `1px solid ${theme.palette.border.secondary}`},
   actionSection:{
@@ -79,76 +80,82 @@ class ResultCard extends React.Component {
   render(){
     const { classes, contact, networkMembers,
       friendMap } = this.props;
+    
+    if (Object.keys(friendMap).length > 0){
+      let otherFriendsCount = friendMap[contact.id].length || 0
+      return <Grid item xs={12} sm={6} container 
+      justify='center'
+        className={classes.card}>
+        <Grid container>
+          <Grid item xs={3} container alignItems='center'>
+            {contact.avatarUrl ? 
+            <Avatar alt="profile-pic"
+              src={contact.avatarUrl}
+              className={classes.avatar}/> :
+            <PersonIcon
+              className={classes.defaultProfilePic}/>
+            }
+          </Grid>
+          <Grid item xs={9}
+          style={{ padding: 16}}>
+            <div style={{ height: 64 }}>
+              <Typography color='textPrimary' noWrap
+              style={{ fontSize: 18, textTransform: 'capitalize'}}>
+                {`${contact.fname} ${contact.lname}`}
+              </Typography>
+              <Typography color='textPrimary' noWrap
+                style={{ fontSize: 13, textTransform: 'capitalize' }}>
+                {`${contact.position || "Position: N/A"}`}
+              </Typography>
+              <Typography color='textPrimary' noWrap
+                style={{ fontSize: 13, textTransform: 'capitalize' }}>
+                {`${contact.company || "Company: N/A"}`}
+              </Typography>
+            </div>
+            
+            <div className={classes.nameDivider}/>
 
-    return <Grid item xs={12} sm={6} container 
-    justify='center'
-      className={classes.card}>
-      <Grid container>
-        <Grid item xs={3} container alignItems='center'>
-          {contact.avatarUrl ? 
-          <Avatar alt="profile-pic"
-            src={contact.avatarUrl}
-            className={classes.avatar}/> :
-          <PersonIcon
-            className={classes.defaultProfilePic}/>
-          }
+            <Typography color='textPrimary'
+              style={{ fontSize: 13, textTransform: 'capitalize' }}>
+              {`${contact.location || "Location: N/A"}`}
+            </Typography>
+
+            {false && <Grid container>
+              <SocialIcon url="http://linkedin.com/"
+                network="linkedin" 
+                className={classes.socialIcon}/>
+              <SocialIcon network="email"
+                url="mailto:mail@example.org" 
+                className={classes.socialIcon}/>
+            </Grid>}
+          </Grid>
         </Grid>
-        <Grid item xs={9}
-        style={{ padding: 16}}>
-          <div style={{ height: 64 }}>
-            <Typography color='textPrimary' noWrap
-            style={{ fontSize: 18, textTransform: 'capitalize'}}>
-              {`${contact.fname} ${contact.lname}`}
-            </Typography>
-            <Typography color='textPrimary' noWrap
-              style={{ fontSize: 13, textTransform: 'capitalize' }}>
-              {`${contact.position || "Position: N/A"}`}
-            </Typography>
-            <Typography color='textPrimary' noWrap
-              style={{ fontSize: 13, textTransform: 'capitalize' }}>
-              {`${contact.company || "Company: N/A"}`}
-            </Typography>
-          </div>
-          
-          <div className={classes.nameDivider}/>
-
+        <Grid item xs={10} className={classes.cardDivider}/>
+        <Grid container justify='flex-end' alignItems='center'
+        className={classes.actionSection}>
+          {/*contact.connectedMembers.map(id => {
+            let member = networkMembers[id];
+            return <div 
+            className={classes.connectedMember}>
+              <Img src={member.profilePicUrl}
+                className={classes.pictureCover}/>
+            </div>
+          }) */}
           <Typography color='textPrimary'
-            style={{ fontSize: 13, textTransform: 'capitalize' }}>
-            {`${contact.location || "Location: N/A"}`}
+          style={{ fontSize: 12, marginRight: 10}}>
+            {`Known Teammates: ${otherFriendsCount || "N/A"}`}
           </Typography>
-
-          {false && <Grid container>
-            <SocialIcon url="http://linkedin.com/"
-              network="linkedin" 
-              className={classes.socialIcon}/>
-            <SocialIcon network="email"
-              url="mailto:mail@example.org" 
-              className={classes.socialIcon}/>
-          </Grid>}
+          <Button color='primary' variant='contained'
+          onClick={this.requestIntro}
+            disabled={otherFriendsCount === 0}
+          style={{ textTransform: 'capitalize'}}>
+            {`Request a warm intro`}
+          </Button>
         </Grid>
       </Grid>
-      <Grid item xs={10} className={classes.cardDivider}/>
-      <Grid container justify='flex-end' alignItems='center'
-      className={classes.actionSection}>
-        {/*contact.connectedMembers.map(id => {
-          let member = networkMembers[id];
-          return <div 
-          className={classes.connectedMember}>
-            <Img src={member.profilePicUrl}
-              className={classes.pictureCover}/>
-          </div>
-        }) */}
-        <Typography color='textPrimary'
-        style={{ fontSize: 12, marginRight: 10}}>
-          {`Known Teammates: ${friendMap[contact.id].length || "N/A"}`}
-        </Typography>
-        <Button color='primary' variant='contained'
-        onClick={this.requestIntro}
-        style={{ textTransform: 'capitalize'}}>
-          {`Request a warm intro`}
-        </Button>
-      </Grid>
-    </Grid>
+    } else {
+      return <div></div>
+    }
   }
 }
 
