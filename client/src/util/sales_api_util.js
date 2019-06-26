@@ -7,13 +7,3 @@ export const searchNetworks = (title) => (
     }
   })
 )
-
-export const connectSocial = (payload) => (
-  fetch(`${window.location.origin}/api/connect_social`, {
-    method: 'POST',
-    body: payload,
-    headers: {
-      "Authorization": localStorage.getItem('bridgekinToken')
-    }
-  })
-)

@@ -26,15 +26,3 @@ export const searchNetworks = (title) => dispatch => (
       dispatch(receiveSalesErrors(errors))
     })
 );
-
-export const connectSocial = (payload) => dispatch => (
-  SalesApiUtil.connectSocial(payload)
-    .then(handleErrors)
-    .then(data => data)
-    .catch(errors => {
-      if (!(errors instanceof Array)) {
-        errors = [genericError];
-      }
-      dispatch(receiveSalesErrors(errors))
-    })
-);

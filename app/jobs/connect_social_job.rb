@@ -4,12 +4,25 @@ class ConnectSocialJob < ApplicationJob
   queue_as :default
 
   def perform(import_hash, current_user)
+    s3 = Aws::S3::Client.new(
+      region: Rails.application.credentials.aws_dev[:region], #or any other region
+      access_key_id: Rails.application.credentials.aws_dev[:access_key_id],
+      secret_access_key: Rails.application.credentials.aws_dev[:secret_access_key]
+    )
+    # debugger
     import_hash.each do |key, upload|
       case key
-      when "linked_in_upload"
-        ingestLinkedIn(value, current_user)
+      when "linked_in_key"
+        resp = s3.get_object(bucket:Rails.application.credentials.aws_dev[:bucket], key: upload)
+        parsedFile = CSV.parse(resp.body.read.split("\n")
+          .drop(4)
+          .tap(&:pop)
+          .join("\n")
+          .remove("\r"),
+          headers: true)
+        ingestLinkedIn(parsedFile, current_user)
       when "google_users_array"
-        ingestGoogle(value, current_user)
+        ingestGoogle(upload, current_user)
       else
         logger.debug "Unsupported key provided"
       end

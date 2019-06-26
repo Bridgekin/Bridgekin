@@ -15,10 +15,11 @@ import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import { updateUserFeature } from '../../actions/user_feature_actions';
-import { connectSocial } from '../../actions/sales_actions';
+import { connectSocial, presignedUrl, uploadToS3 } from '../../actions/sales_contacts_actions';
 import { openConnectSocial } from '../../actions/modal_actions';
 import ImportGoogle from '../google/import_contacts';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from '../loading';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -29,7 +30,9 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   updateUserFeature: (payload) => dispatch(updateUserFeature(payload)),
   connectSocial: (payload) => dispatch(connectSocial(payload)),
-  openConnectSocial: (payload) => dispatch(openConnectSocial(payload))
+  openConnectSocial: (payload) => dispatch(openConnectSocial(payload)),
+  presignedUrl: (filename, fileType) => dispatch(presignedUrl(filename, fileType)),
+  uploadToS3: (response, formData) => dispatch(uploadToS3(response, formData))
 });
 
 const styles = theme => ({
@@ -75,7 +78,9 @@ class ConnectSocial extends React.Component {
     this.state = {
       linkedInUpload: null,
       linkedInUploadUrl: '',
+      linkedInUploading: false,
       googleUsersArray: null,
+      googleUploading: false,
       facebookUpload: null,
       facebookUploadUrl: '',
       loading: false,
@@ -85,6 +90,7 @@ class ConnectSocial extends React.Component {
     this.handleFile = this.handleFile.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.receiveGoogleUsers = this.receiveGoogleUsers.bind(this);
+    this.getContent = this.getContent.bind(this);
   }
 
   componentDidMount(){
@@ -106,17 +112,44 @@ class ConnectSocial extends React.Component {
         let fileReader = new FileReader();
     
         fileReader.onloadend = () => {
-          this.setState({
-            [upload]: file,
-            [uploadUrl]: fileReader.result
-          })
+          this.processFile(file, "linkedInUploading", "linkedInKey", "text/csv")
+          // this.setState({
+          //   [upload]: file,
+          //   [uploadUrl]: fileReader.result
+          // })
         }
         if (file) {
           fileReader.readAsDataURL(file)
         }
       } else {
+        // Show warning to user that they must upload a csv
         this.setState({ linkedInWarning: true})
       }
+    }
+  }
+
+  receiveGoogleUsers(googleUsersArray) {
+    this.setState({ googleUsersArray },
+      () => {
+        // Turn into a json object with type
+        // application/json
+
+      })
+  }
+
+  async processFile(file, loading, dest_key, fileType){
+    this.setState({ [loading]: true})
+    let urlResponse = await this.props.presignedUrl(file.name, fileType)
+    const formData = await new FormData();
+    await formData.append(`file`, file)
+    let awsResponse = await this.props.uploadToS3(urlResponse, formData)
+    if(awsResponse){
+      await this.setState({ 
+        [loading]: false,
+        [dest_key]: urlResponse.key
+      })
+    } else {
+      await this.setState({ [loading]: false })
     }
   }
 
@@ -126,7 +159,7 @@ class ConnectSocial extends React.Component {
         const { currentUser } = this.props;
         const formData = new FormData();
     
-        ['linkedInUpload', 'googleUsersArray', 'facebookUpload'].map(upload => {
+        ['linkedInKey', 'googleUsersArray', 'facebookUpload'].map(upload => {
           if (this.state[upload]) {
             if (upload === 'googleUsersArray') {
               formData.append(`connectSocial[${upload}]`, JSON.stringify(this.state[upload]))
@@ -135,25 +168,71 @@ class ConnectSocial extends React.Component {
             }
           }
         })
-    
         this.props.connectSocial(formData)
           .then(() => {
-            debugger
             this.props.openConnectSocial()
             this.setState({ loading: false })
           })
       })
   }
 
-  receiveGoogleUsers(googleUsersArray){
-    this.setState({ googleUsersArray })
+  getContent(type){
+    return () => {
+      const { classes } = this.props;
+      const { linkedInUploadUrl, linkedInUpload,
+        googleUsersArray, facebookUploadUrl, facebookUpload, loading,
+        linkedInWarning, linkedInKey,
+        linkedInUploading } = this.state;
+      // debugger
+      if(type === "linkedIn"){
+        if (linkedInKey){
+          return <Typography>
+            {`Ready for upload`}
+          </Typography>
+        } else if (linkedInUploading) {
+          return <Loading />
+        } else {
+          return <Grid container justify='center'>
+            {linkedInUploadUrl ? (
+              <a href={linkedInUploadUrl} download={linkedInUpload.name}>{linkedInUpload.name}</a>
+            ) : <div>
+                <input
+                  style={{ display: 'none' }}
+                  id="resume-button-file"
+                  type="file"
+                  onChange={this.handleFile('linkedInUpload', 'linkedInUploadUrl').bind(this)}
+                  onClick={(event) => {
+                    event.target.value = null
+                  }}
+                />
+                <label htmlFor="resume-button-file">
+                  {<Button variant='contained'
+                    component="span"
+                    className={classes.importButton}
+                    style={{ backgroundColor: '#455894', color: 'white' }}>
+                    {`Upload`}
+                    <CloudUploadIcon
+                      style={{ marginLeft: 5 }} />
+                  </Button>
+                  }
+                </label>
+              </div>}
+
+            {linkedInWarning && <Typography
+              style={{ fontSize: 12, color: 'red', marginTop: 10 }}>
+              {`Note* Your file must be type csv`}
+            </Typography>}
+          </Grid>
+        }
+      }
+    }
   }
 
   render() {
     const { classes, dimensions } = this.props;
     const { linkedInUploadUrl, linkedInUpload,
       googleUsersArray, facebookUploadUrl, facebookUpload, loading,
-      linkedInWarning } = this.state;
+      linkedInWarning, linkedInKey } = this.state;
 
     let header = <Grid container justify='center'
     style={{ marginTop: 30}}>
@@ -181,37 +260,7 @@ class ConnectSocial extends React.Component {
             <u>{`Upload Your LinkedIn CSV`}</u>
           </Typography>
 
-          <Grid container justify='center'>
-            {linkedInUploadUrl ? (
-              <a href={linkedInUploadUrl} download={linkedInUpload.name}>{linkedInUpload.name}</a>
-            ) : <div>
-              <input
-                style={{ display: 'none' }}
-                id="resume-button-file"
-                type="file"
-                onChange={this.handleFile('linkedInUpload', 'linkedInUploadUrl').bind(this)}
-                onClick={(event) => {
-                  event.target.value = null
-                }}
-              />
-              <label htmlFor="resume-button-file">
-                {<Button variant='contained'
-                  component="span"
-                  className={classes.importButton}
-                  style={{ backgroundColor: '#455894', color: 'white' }}>
-                  {`Upload`}
-                  <CloudUploadIcon
-                    style={{ marginLeft: 5 }} />
-                </Button>
-                }
-              </label>
-            </div>}
-
-            {linkedInWarning && <Typography
-            style={{ fontSize: 12, color: 'red', marginTop: 10}}>
-              {`Note* Your file must be type csv`}
-            </Typography>}
-          </Grid>
+          {this.getContent("linkedIn")()}
         </Grid>
 
         <ExpansionPanel
@@ -364,7 +413,7 @@ class ConnectSocial extends React.Component {
     let submitBar = <Grid container justify='center'
     style={{ marginTop: 30}}>
       <Button variant='contained' color='primary'
-        disabled={(!linkedInUpload && !googleUsersArray && !facebookUpload) || loading }
+        disabled={(!linkedInKey && !googleUsersArray && !facebookUpload) || loading }
         onClick={this.handleSubmit}>
         {`Submit Connections`}
         {loading && <CircularProgress size={24}

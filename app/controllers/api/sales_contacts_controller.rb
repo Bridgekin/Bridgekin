@@ -41,58 +41,56 @@ class Api::SalesContactsController < ApiController
     render :index
   end
 
-  # def search_by_name
-  #   network = @current_user.sales_networks.first
-  #   @sales_contacts = network.member_contacts
-  #     .includes(:friends)
-  #     # .where.not(sales_contacts: 
-  #     #   {id: @current_user.sales_contacts.pluck(:id)
-  #     # })
-  #   # debugger
-  #   #Filter Contacts
-  #   @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.fname) LIKE ?", "%#{social_params[:fname]}%") if social_params[:fname].present? 
-  #   @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.lname) LIKE ?", "%#{social_params[:lname]}%") if social_params[:lname].present? 
-  #   # debugger
+  def connect_social
+    inputs = params[:connect_social] 
+    import_hash = {}
+    inputs.each do |key, upload|
+      case key
+      when "linked_in_key"
+        # parsedFile = CSV.parse(upload.read, headers: true)
+        import_hash[key] = upload
+        # debugger
+      when "google_users_array"
+        parsed_array = JSON.parse(upload)
+        import_hash[key] = parsed_array
+      else
+      end
+    end
+    ConnectSocialJob.perform_later(import_hash, @current_user)
 
-  #   friends = Array.new()
-  #   @friend_map = @sales_contacts.reduce({}) do |acc, contact|
-  #     contact_friends = contact.friends
-  #       .where.not(users: {id: @current_user.id})
-  #       .pluck(:id)
-  #     friends += contact_friends
-  #     acc[contact.id] = contact_friends
-  #     acc
-  #   end
-  #   @friend_users = User.where(id: friends)
+    render json: ["Parsing Results"], status: 201
+  end
 
-  #   render :index
-  # end
+  def presigned_url
+    aws_env = case Rails.env
+    when "production"
+      :aws_prod
+    when "staging"
+      :aws_staging
+    else
+      :aws_dev
+    end
 
-  # def search_by_characteristic
-  #   network = @current_user.sales_networks.first
-  #   @sales_contacts = network.member_contacts
-  #     .includes(:friends)
-  #     # .where.not(sales_contacts: 
-  #     #   {id: @current_user.sales_contacts.pluck(:id)
-  #     # })
-  #   #Filter Contacts
-  #   @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.position) LIKE ?", "%#{social_params[:position]}%") if social_params[:position].present?
-  #   @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.location) LIKE ?", "%#{social_params[:location]}%") if social_params[:location].present?
-  #   @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.company) LIKE ?", "%#{social_params[:company]}%") if social_params[:company].present?
+    filename = params[:filename]
+    key = "#{SecureRandom.uuid}-#{filename}"
+    s3 = Aws::S3::Client.new(
+      region: Rails.application.credentials[aws_env][:region], #or any other region
+      access_key_id: Rails.application.credentials[aws_env][:access_key_id],
+      secret_access_key: Rails.application.credentials[aws_env][:secret_access_key]
+    )
 
-  #   friends = Array.new()
-  #   @friend_map = @sales_contacts.reduce({}) do |acc, contact|
-  #     contact_friends = contact.friends
-  #       .where.not(users: {id: @current_user.id})
-  #       .pluck(:id)
-  #     friends += contact_friends
-  #     acc[contact.id] = contact_friends
-  #     acc
-  #   end
-  #   @friend_users = User.where(id: friends)
-
-  #   render :index
-  # end
+    signer = Aws::S3::Presigner.new(client: s3)
+    ps_url = signer.presigned_url(
+      :put_object,
+      bucket: Rails.application.credentials[aws_env][:bucket],
+      key: key,
+      content_type: params[:filetype]
+      # content_type: "application/octet-stream"
+    )
+    data = { url: ps_url, key: key }
+    # data = { url: ps_url.url, url_fields: ps_url.fields }
+    render json: data, status: 200
+  end
 
   private
 

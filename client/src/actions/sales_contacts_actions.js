@@ -62,3 +62,37 @@ export const searchContacts = (search) => dispatch => (
       dispatch(receiveSalesContactErrors(errors))
     })
 );
+
+export const connectSocial = (payload) => dispatch => (
+  SalesContactsApiUtil.connectSocial(payload)
+    .then(handleErrors)
+    .then(data => data)
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveSalesContactErrors(errors))
+    })
+);
+
+export const presignedUrl = (filename, fileType) => dispatch => (
+  SalesContactsApiUtil.presignedUrl(filename, fileType)
+    .then(handleErrors)
+    .then(data => data)
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveSalesContactErrors(errors))
+    })
+);
+
+export const uploadToS3 = (response, formData) => dispatch => (
+  SalesContactsApiUtil.uploadToS3(response, formData)
+    .then(response => {
+      return response.url
+    })
+    .catch(response => {
+      return null
+    })
+);

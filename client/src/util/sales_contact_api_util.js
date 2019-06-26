@@ -8,3 +8,32 @@ export const searchContacts = (search) => (
     }
   })
 )
+
+export const connectSocial = (payload) => (
+  fetch(`${window.location.origin}/api/sales_contacts/connect_social`, {
+    method: 'POST',
+    body: payload,
+    headers: {
+      "Authorization": localStorage.getItem('bridgekinToken')
+    }
+  })
+)
+
+export const presignedUrl = (filename, filetype) => (
+  fetch(`${window.location.origin}/api/sales_contacts/presigned_url?filename=${filename}&filetype=${filetype}`, {
+    method: 'GET',
+    headers: {
+      "Authorization": localStorage.getItem('bridgekinToken')
+    }
+  })
+)
+
+export const uploadToS3 = (response, formData) => (
+  fetch(`${response.url}`, {
+    method: 'PUT',
+    body: formData,
+    headers: {
+      "Content-Type": "text/csv"
+    }
+  })
+)
