@@ -15,20 +15,19 @@ class Api::SalesNetworksController < ApiController
 
   def connect_social
     inputs = params[:connect_social] 
-    #social_params
-    # import_hash = {}
-    # inputs.each do |key, upload|
-    #   case key
-    #   when "linked_in_upload"
-    #     import_hash[key] = CSV.parse(upload.read, headers: true)
-    #   when "google_users_array"
-    #     import_hash[key] = JSON.parse(upload)
-    #   else
-    #   end
-    # end
-    #Later, need to change this to an activeJob
-    import_contacts(inputs, @current_user)
-    # ConnectSocialJob.perform_later(import_hash, @current_user)
+    import_hash = {}
+    inputs.each do |key, upload|
+      case key
+      when "linked_in_upload"
+        parsedFile = CSV.parse(upload.read, headers: true)
+        import_hash[key] = parsedFile
+      when "google_users_array"
+        parsed_array = JSON.parse(upload)
+        import_hash[key] = parsed_array
+      else
+      end
+    end
+    ConnectSocialJob.perform_later(import_hash, @current_user)
 
     render json: ["Parsing Results"], status: 201
   end

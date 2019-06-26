@@ -43,7 +43,8 @@ const styles = theme => ({
   socialComp: {
     padding: "20px 0px",
     border: `1px solid grey`,
-    margin: "30px 0px"
+    margin: "30px 0px",
+    minHeight: 205
   },
   importHeader:{
     fontSize: 14,
@@ -77,7 +78,8 @@ class ConnectSocial extends React.Component {
       googleUsersArray: null,
       facebookUpload: null,
       facebookUploadUrl: '',
-      loading: false
+      loading: false,
+      linkedInWarning: false
     }
 
     this.handleFile = this.handleFile.bind(this);
@@ -100,16 +102,20 @@ class ConnectSocial extends React.Component {
   handleFile(upload, uploadUrl) {
     return e => {
       let file = e.currentTarget.files[0];
-      let fileReader = new FileReader();
-  
-      fileReader.onloadend = () => {
-        this.setState({
-          [upload]: file,
-          [uploadUrl]: fileReader.result
-        })
-      }
-      if (file) {
-        fileReader.readAsDataURL(file)
+      if (file.name.split(".").pop() === 'csv'){
+        let fileReader = new FileReader();
+    
+        fileReader.onloadend = () => {
+          this.setState({
+            [upload]: file,
+            [uploadUrl]: fileReader.result
+          })
+        }
+        if (file) {
+          fileReader.readAsDataURL(file)
+        }
+      } else {
+        this.setState({ linkedInWarning: true})
       }
     }
   }
@@ -146,7 +152,8 @@ class ConnectSocial extends React.Component {
   render() {
     const { classes, dimensions } = this.props;
     const { linkedInUploadUrl, linkedInUpload,
-      googleUsersArray, facebookUploadUrl, facebookUpload, loading } = this.state;
+      googleUsersArray, facebookUploadUrl, facebookUpload, loading,
+      linkedInWarning } = this.state;
 
     let header = <Grid container justify='center'
     style={{ marginTop: 30}}>
@@ -164,186 +171,194 @@ class ConnectSocial extends React.Component {
       </Grid>
     </Grid>
 
-    let linkedInComp = <Grid item xs={12} sm={3} md={3} 
-    container justify='center' 
-    className={classes.socialComp}>
-      <Grid item xs={10} container justify='center'>
-        <Typography color='textSecondary' 
-        align='center' fullWidth
-        className={classes.importHeader}>
-          <u>{`Upload Your LinkedIn CSV`}</u>
-        </Typography>
-
-        <Grid container justify='center'>
-          {linkedInUploadUrl ? (
-            <a href={linkedInUploadUrl} download={linkedInUpload.name}>{linkedInUpload.name}</a>
-          ) : <div>
-            <input
-              style={{ display: 'none' }}
-              id="resume-button-file"
-              type="file"
-              onChange={this.handleFile('linkedInUpload', 'linkedInUploadUrl').bind(this)}
-              onClick={(event) => {
-                event.target.value = null
-              }}
-            />
-            <label htmlFor="resume-button-file">
-              {<Button variant='contained'
-                component="span"
-                className={classes.importButton}
-                style={{ backgroundColor: '#455894', color: 'white' }}>
-                {`Upload`}
-                <CloudUploadIcon
-                  style={{ marginLeft: 5 }} />
-              </Button>
-              }
-            </label>
-          </div>}
-        </Grid>
-      </Grid>
-
-      <ExpansionPanel
-        style={{ marginTop: 10 }}>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography color='textSecondary'
-          align='center' fullWidth
-          style={{ fontSize: 14}}>
-            {`Learn More`}
-          </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography color='textSecondary'
-          style={{ fontSize: 12}}>
-            {`Steps:`} <br /><br />
-            {`1) Login to your linkedIn profile`} <br/><br/>
-            {`2) Click "Settings and Privacy" in the account dropdown menu`} <br/><br/>
-            {`3) Toward the bottom, under the "How LinkedIn uses your data" header, you'll see an option to download your data.`} <br /><br />
-            {`4) Pick and choose only "connections" and press download. It may take about 10-15 min.`}
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    </Grid>
-
-    let googleComp = <Grid item xs={12} sm={4} md={4}
-    container justify='center'
-    className={classes.socialComp}>
-      <Grid item xs={10} container justify='center'>
-        <Typography color='textSecondary' 
+    let linkedInComp = <Grid item xs={12} sm={3} md={3}> 
+      <Grid container justify='center'
+        className={classes.socialComp}>
+        <Grid item xs={10} container justify='center'>
+          <Typography color='textSecondary' 
           align='center' fullWidth
           className={classes.importHeader}>
-          <u>{`Upload Your Gmail Address Book`}</u>
-        </Typography>
-        
-        <Grid container justify='center'
-          className={classes.importButton}>
-          {googleUsersArray ? <Typography align='center'
-          color='textSecondary'
-          style={{ fontSize: 14}}>
-            {`Contacts Ready for Upload`}
-          </Typography> : <ImportGoogle salesImport
-          receiveGoogleUsers={this.receiveGoogleUsers}/>}
-        </Grid>
-      </Grid>
+            <u>{`Upload Your LinkedIn CSV`}</u>
+          </Typography>
 
-      <ExpansionPanel
-        style={{ marginTop: 10 }}>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography color='textSecondary'
+          <Grid container justify='center'>
+            {linkedInUploadUrl ? (
+              <a href={linkedInUploadUrl} download={linkedInUpload.name}>{linkedInUpload.name}</a>
+            ) : <div>
+              <input
+                style={{ display: 'none' }}
+                id="resume-button-file"
+                type="file"
+                onChange={this.handleFile('linkedInUpload', 'linkedInUploadUrl').bind(this)}
+                onClick={(event) => {
+                  event.target.value = null
+                }}
+              />
+              <label htmlFor="resume-button-file">
+                {<Button variant='contained'
+                  component="span"
+                  className={classes.importButton}
+                  style={{ backgroundColor: '#455894', color: 'white' }}>
+                  {`Upload`}
+                  <CloudUploadIcon
+                    style={{ marginLeft: 5 }} />
+                </Button>
+                }
+              </label>
+            </div>}
+
+            {linkedInWarning && <Typography
+            style={{ fontSize: 12, color: 'red', marginTop: 10}}>
+              {`Note* Your file must be type csv`}
+            </Typography>}
+          </Grid>
+        </Grid>
+
+        <ExpansionPanel
+          style={{ marginTop: 10 }}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography color='textSecondary'
             align='center' fullWidth
-            style={{ fontSize: 14 }}>
-            {`Learn More`}
-          </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography color='textSecondary'
-            style={{ fontSize: 12 }}>
-            {`Steps:`} <br /><br />
-            {`1) Login to your linkedIn profile`} <br /><br />
-            {`2) Click "Settings and Privacy" in the account dropdown menu`} <br /><br />
-            {`3) Toward the bottom, under the "How LinkedIn uses your data" header, you'll see an option to download your data.`} <br /><br />
-            {`4) Pick and choose only "connections" and press download. It may take about 10-15 min.`}
-            {`5) Once downloaded, open the zip file and upload the "Connection.csv" doc`}
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+            style={{ fontSize: 14}}>
+              {`Learn More`}
+            </Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Typography color='textSecondary'
+            style={{ fontSize: 12}}>
+              {`Steps:`} <br /><br />
+              {`1) Login to your linkedIn profile`} <br/><br/>
+              {`2) Click "Settings and Privacy" in the account dropdown menu`} <br/><br/>
+              {`3) Toward the bottom, under the "How LinkedIn uses your data" header, you'll see an option to download your data.`} <br /><br/>
+              {`4) Pick and choose only "connections" and press download. It may take about 5-15 min.`}<br/><br/>
+              {`5) Once downloaded, unzip the file. You should see a "connections.csv" file. Upload the "connections.csv" file (Not the entire folder or any other files in that folder)`}<br /><br />
+            </Typography>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </Grid>
     </Grid>
 
-    let facebookComp = <Grid item xs={12} sm={3} md={3}
-      container justify='center'
+    let googleComp = <Grid item xs={12} sm={4} md={4}>
+      <Grid container justify='center'
       className={classes.socialComp}>
-      <Grid item xs={10}>
-        <Typography
-        style={{ fontSize: 11, color: 'red'}}>
-          {`Currently Disabled`}
-        </Typography>
-      </Grid>
-      <Grid item xs={10} container justify='center'>
-        <Typography color='textSecondary' 
-          align='center' fullWidth
-          className={classes.importHeader}>
-          <u>{`Upload Your Facebook Friends`}</u>
-        </Typography>
-        
-        <Grid container justify='center'>
-          {facebookUploadUrl ? (
-            <a href={facebookUploadUrl} download={facebookUpload.name}>{facebookUpload.name}</a>
-          ) : <div>
-            <input
-              style={{ display: 'none' }}
-              id="resume-button-file"
-              type="file"
-              onChange={this.handleFile('facebookUpload', 'facebookUploadUrl').bind(this)}
-              onClick={(event) => {
-                event.target.value = null
-              }}
-            />
-            <label htmlFor="resume-button-file">
-              {<Button variant='contained'
-                component="span" disabled
-                className={classes.importButton}
-                style={{ backgroundColor: 'grey', color: 'white' }}>
-                {`Upload`}
-                <CloudUploadIcon
-                  style={{ marginLeft: 5 }} />
-              </Button>
-              }
-            </label>
-          </div>}
-        </Grid>
-      </Grid>
-
-      <ExpansionPanel
-        style={{ marginTop: 10 }}>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography color='textSecondary'
+        <Grid item xs={10} container justify='center'>
+          <Typography color='textSecondary' 
             align='center' fullWidth
-            style={{ fontSize: 14 }}>
-            {`Learn More`}
+            className={classes.importHeader}>
+            <u>{`Upload Your Gmail Address Book`}</u>
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography color='textSecondary'
-            style={{ fontSize: 12 }}>
-            {`Steps:`} <br /><br />
-            {`1) Login to your linkedIn profile`} <br /><br />
-            {`2) Click "Settings and Privacy" in the account dropdown menu`} <br /><br />
-            {`3) Toward the bottom, under the "How LinkedIn uses your data" header, you'll see an option to download your data.`} <br /><br />
-            {`4) Pick and choose only "connections" and press download. It may take about 10-15 min.`}
+          
+          <Grid container justify='center'
+            className={classes.importButton}>
+            {googleUsersArray ? <Typography align='center'
+            color='textSecondary'
+            style={{ fontSize: 14}}>
+              {`Contacts Ready for Upload`}
+            </Typography> : <ImportGoogle salesImport
+            receiveGoogleUsers={this.receiveGoogleUsers}
+            connectSocial
+            />}
+          </Grid>
+        </Grid>
+
+        <ExpansionPanel
+          style={{ marginTop: 10 }}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography color='textSecondary'
+              align='center' fullWidth
+              style={{ fontSize: 14 }}>
+              {`Learn More`}
+            </Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Typography color='textSecondary'
+              style={{ fontSize: 12 }}>
+              {`Steps:`} <br /><br />
+              {`1) Use the button above to verify your google login`} <br /><br />
+              {`2) Accept the permissions page and your all set!`} <br /><br />
+            </Typography>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </Grid>
+    </Grid>
+
+    let facebookComp = <Grid item xs={12} sm={3} md={3}>
+      <Grid container justify='center'
+        className={classes.socialComp}>
+        <Grid item xs={10}>
+          <Typography
+          style={{ fontSize: 11, color: 'red'}}>
+            {`Currently Disabled`}
           </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </Grid>
+        <Grid item xs={10} container justify='center'>
+          <Typography color='textSecondary' 
+            align='center' fullWidth
+            className={classes.importHeader}>
+            <u>{`Upload Your Facebook Friends`}</u>
+          </Typography>
+          
+          <Grid container justify='center'>
+            {facebookUploadUrl ? (
+              <a href={facebookUploadUrl} download={facebookUpload.name}>{facebookUpload.name}</a>
+            ) : <div>
+              <input
+                style={{ display: 'none' }}
+                id="resume-button-file"
+                type="file"
+                onChange={this.handleFile('facebookUpload', 'facebookUploadUrl').bind(this)}
+                onClick={(event) => {
+                  event.target.value = null
+                }}
+              />
+              <label htmlFor="resume-button-file">
+                {<Button variant='contained'
+                  component="span" disabled
+                  className={classes.importButton}
+                  style={{ backgroundColor: 'grey', color: 'white' }}>
+                  {`Upload`}
+                  <CloudUploadIcon
+                    style={{ marginLeft: 5 }} />
+                </Button>
+                }
+              </label>
+            </div>}
+          </Grid>
+        </Grid>
+
+        <ExpansionPanel
+          style={{ marginTop: 10 }}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography color='textSecondary'
+              align='center' fullWidth
+              style={{ fontSize: 14 }}>
+              {`Learn More`}
+            </Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Typography color='textSecondary'
+              style={{ fontSize: 12 }}>
+              {`Steps:`} <br /><br />
+              {`1) Login to your linkedIn profile`} <br /><br />
+              {`2) Click "Settings and Privacy" in the account dropdown menu`} <br /><br />
+              {`3) Toward the bottom, under the "How LinkedIn uses your data" header, you'll see an option to download your data.`} <br /><br />
+              {`4) Pick and choose only "connections" and press download. It may take about 10-15 min.`}
+            </Typography>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </Grid>
     </Grid>
 
     let submitBar = <Grid container justify='center'

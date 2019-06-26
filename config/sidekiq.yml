@@ -5,6 +5,7 @@ staging:
 production:
   :concurrency: 15
 :queues:
+  - full_contact
   - critical
   - default
   - low

@@ -165,7 +165,7 @@ class SalesNav extends React.Component {
 
     const logoComp = <div
       className={classes.logoLink}
-      onClick={() => this.props.history.push('/sales/home')}>
+      onClick={() => this.props.history.push('/sales/dashboard')}>
       <img alt='logo' className={classes.logoDesktop}
         src={siteTemplate.navLogo || blackLogo} />
       <img alt='logo' className={classes.logoMobile}

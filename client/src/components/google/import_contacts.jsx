@@ -11,6 +11,7 @@ import Loading from '../loading';
 import Img from 'react-image'
 import ContactCard from '../connections/contact_card';
 import FeedCard from '../feed_card';
+import GoogleLogo from './google-favicon-logo.png';
 
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { fetchGoogleMatchedContacts } from '../../actions/google_import_actions';
@@ -52,20 +53,35 @@ const styles = theme => ({
   cardHeader: {
     fontSize: 14,
     margin: 15
+  },
+  googleLogo:{
+    marginRight: 10,
+    width: 35, height: 35
+  },
+  customButton:{
+    border: `1px solid ${theme.palette.border.secondary}`
   }
 })
-
+// var GoogleAuth;
 class GoogleContacts extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      gapiLoaded: true,
-      contactsCompared: false
+      gapiLoaded: false,
+      contactsCompared: false,
+      isSignedIn: false
     }
+    this.scope = 'https://www.googleapis.com/auth/contacts.readonly'
+
     this.responseGoogle = this.responseGoogle.bind(this);
     this.startGapi = this.startGapi.bind(this);
     this.getAllContactsRequest = this.getAllContactsRequest.bind(this);
     this.getContent = this.getContent.bind(this);
+    this.handleAuthResponse = this.handleAuthResponse.bind(this);
+    this.googleSignIn = this.googleSignIn.bind(this);
+    this.googleSignOut = this.googleSignOut.bind(this);
+    this.handleMyTrustedNetwork = this.handleMyTrustedNetwork.bind(this);
+    this.handleConnectSocial = this.handleConnectSocial.bind(this);
   }
 
   componentDidMount(){
@@ -74,21 +90,53 @@ class GoogleContacts extends React.Component {
 
   loadGoogleApi() {
     const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/client.js";
+    script.async = true;
+    script.src = "https://apis.google.com/js/api.js";
 
-    script.onload = () => window.gapi.load('client', this.startGapi);
+    script.onload = () => window.gapi.load('client:auth2', this.startGapi);
     document.body.appendChild(script);
   }
 
   startGapi(){
     window.gapi.client.init({
+      'apiKey': 'AIzaSyAhrfyh8VvXWL1oxD6Ngj6rbaxV450W8Do',
       'clientId': "353914730270-5khisbclif4gqall7nta62fie8b9silk.apps.googleusercontent.com",
-      'scope': 'https://www.googleapis.com/auth/contacts.readonly',
-    }).then(() => { this.setState({ gapiLoaded: true })})
+      'scope': this.scope,
+      'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+    }).then(() => {
+      this.setState({ gapiLoaded: true})
+      window.googleAuth = window.gapi.auth2.getAuthInstance();
+      // Listen for sign-in state changes.
+      window.googleAuth.isSignedIn.listen(this.handleAuthResponse);
+      var user = window.googleAuth.currentUser.get();
+      this.handleAuthResponse()
+      // debugger
+    });
+  }
+
+  googleSignIn(){
+    window.googleAuth.signIn();
+  }
+
+  googleSignOut(){
+    window.googleAuth.disconnect();
+  }
+
+  handleAuthResponse(isSignedIn){
+    let user = window.googleAuth.currentUser.get();
+    let isAuthorized = user.hasGrantedScopes(this.scope);
+    
+    if(isAuthorized){
+      let token = user.Zi.access_token
+      if (token) {
+        this.getAllContactsRequest(token)
+      }
+    }
   }
 
   getAllContactsRequest(token){
     const { asContactCard, asLogin } = this.props;
+
     window.gapi.client.request({
       'path': `/m8/feeds/contacts/default/full`,
       'method': 'GET',
@@ -130,63 +178,83 @@ class GoogleContacts extends React.Component {
 
   responseGoogle(response){
     let token = response.accessToken;
-    // let email = response.w3.U3;
 
     if(token){
       this.getAllContactsRequest(token)
     }
   }
 
+  handleMyTrustedNetwork(){
+    const { currentUser, connections, users,
+      googleMatchedContacts } = this.props;
+    const { contactUsers } = this.state;
+
+    //Parse Connection Ids for Current User
+    let connectionIds = Object.values(connections).map(connection => {
+      if (connection.friendId === currentUser.id) {
+        return connection.userId
+      } else {
+        return connection.friendId
+      }
+    });
+    let connectionIdSet = new Set(connectionIds);
+
+    // Get Unconnected Emails
+    let usersByEmail = Object.values(users).reduce((acc, user) => {
+      acc[user.email] = user
+      return acc
+    }, {})
+    let nonBIDUsers = Object.values(contactUsers).filter(contactUser => (
+      !usersByEmail[contactUser.email]
+    ))
+    let nonBIDCards = nonBIDUsers.map(importedUser => {
+      return <FeedCard
+        contents={<ContactCard importedUser={importedUser} imported external />}
+      />
+    })
+
+    // Separate Bridgekin Ids that aren't already contacts
+    let unconnectedBIDs = googleMatchedContacts.filter(userId => (
+      !connectionIdSet.has(userId)
+    ))
+    let unconnectedBIDCards = unconnectedBIDs.map(contactId => (
+      <FeedCard
+        contents={<ContactCard contactId={contactId} imported internal />}
+      />
+    ))
+    // debugger
+    //Combine and return both lists
+    return [...unconnectedBIDCards, ...nonBIDCards]
+      // return nonBIDCards
+  }
+
+  handleConnectSocial(){
+    const { contactUsers } = this.state;
+
+    this.props.receiveGoogleUsers(contactUsers)
+    return <Grid container justify='center'>
+      <Typography fullWidth
+        style={{ fontSize: 14 }}>
+        {`Contacts retrieved. Ready for uplo`}
+      </Typography>
+      <Button
+        onClick={this.googleSignOut}>
+        {`Sign Out`}
+      </Button>
+    </Grid>
+  }
+
   getContent(){
     const { classes, asContactCard, 
     googleMatchedContacts, connections, 
-    currentUser, users, salesImport } = this.props;
+    currentUser, users, salesImport,
+    connectSocial } = this.props;
     const { contactsCompared, contactUsers } = this.state;
 
     if (contactsCompared){
-      //Parse Connection Ids for Current User
-      let connectionIds = Object.values(connections).map(connection => {
-        if (connection.friendId === currentUser.id){
-          return connection.userId
-        } else {
-          return connection.friendId
-        }
-      });
-      let connectionIdSet = new Set(connectionIds);
-
-      // Get Unconnected Emails
-      let usersByEmail = Object.values(users).reduce((acc,user) => {
-        acc[user.email] = user
-        return acc
-      },{})
-      let nonBIDUsers = Object.values(contactUsers).filter(contactUser => (
-        !usersByEmail[contactUser.email]
-      ))
-      let nonBIDCards = nonBIDUsers.map(importedUser => {
-        return <FeedCard
-          contents={<ContactCard importedUser={importedUser} imported external/>}
-          />
-      })
-
-      // Separate Bridgekin Ids that aren't already contacts
-      let unconnectedBIDs = googleMatchedContacts.filter(userId => (
-        !connectionIdSet.has(userId)
-      ))
-      let unconnectedBIDCards = unconnectedBIDs.map(contactId => (
-        <FeedCard
-          contents={<ContactCard contactId={contactId} imported internal/>}
-          />
-      ))
-      // debugger
-      //Combine and return both lists
-      return [...unconnectedBIDCards, ...nonBIDCards]
-      // return nonBIDCards
+      return this.handleMyTrustedNetwork()
     } else if (contactUsers){
-      this.props.receiveGoogleUsers(contactUsers)
-      return <Typography 
-      style={{ fontSize: 14}}>
-        {`Contacts retrieved. Ready for upload`}
-      </Typography>
+      return this.handleConnectSocial()
     } else {
       if(asContactCard){
         return <GoogleLogin
@@ -209,6 +277,16 @@ class GoogleContacts extends React.Component {
           onFailure={this.responseGoogle}
           cookiePolicy={'single_host_origin'}
           />
+      } else if (connectSocial){
+        return <Button onClick={this.googleSignIn}
+        className={classes.customButton}>
+          <Img src={GoogleLogo}
+          className={classes.googleLogo}/>
+          <Typography color='textSecondary'
+          style={{ fontSize: 14, textTransform:'none'}}>
+            {`Sign In`}
+          </Typography>
+        </Button>
       } else {
         return <GoogleLogin
           data-cy='import-google-button'

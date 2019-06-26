@@ -4,54 +4,49 @@ class ConnectSocialJob < ApplicationJob
   queue_as :default
 
   def perform(import_hash, current_user)
-    debugger
     import_hash.each do |key, upload|
       case key
       when "linked_in_upload"
-        parsedFile = CSV.parse(upload.read, headers: true)
-        ingestLinkedIn(parsedFile, current_user)
+        ingestLinkedIn(value, current_user)
       when "google_users_array"
-        parsed_array = JSON.parse(upload)
-        ingestGoogle(parsed_array, current_user)
+        ingestGoogle(value, current_user)
       else
-        debugger
+        logger.debug "Unsupported key provided"
       end
     end
-
     #When complete, send an email letting user know that the import is finished
     SalesMailer.notify_contacts_imported(current_user)
   end
 
-  def ingestGoogle(google_contacts, current_user)
-    Clearbit.key = Rails.application.credentials.clearbit[:api_key]
-    
+  FCVARS = {
+    "email" => :email,
+    "twitter" => :twitter_handle,
+    "location" => :location,
+    "title" => :position,
+    "organization" => :company,
+    "linkedin" => :linkedin_url,
+    "facebook" => :facebook_url
+  }
+
+  def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
 
-    google_contacts.take(20).each do |entry|
+    google_contacts.take(15).each do |entry|
       if entry['email'].nil?
         contact = SalesContact.new()
       else
         contact = SalesContact.find_by(email: entry['email']) || SalesContact.new(email: entry['email'])
       end
-
       #Set Contact's Name
-      name = Nameable.parse(entry['name'])
-      contact.fname = name.first
-      contact.lname = name.last
-      # split_name = entry['name'].split(' ')
-      # mid = split_name.length/2
-      # if entry['name'].include?(',')
-      #   split_name.each{|s| s.remove(',')}
-      #   contact.fname = split_name.drop(mid).join(' ')
-      #   contact.lname = split_name.take(mid).join(' ')
-      # else
-      #   contact.fname = split_name.take(mid).join(' ')
-      #   contact.lname = split_name.drop(mid).join(' ')
-      # end
-
+      if entry['name'].present?
+        name = Nameable.parse(entry['name'])
+        contact.fname = name.first
+        contact.lname = name.last
+      end
       #Set Source
       contact.setSource(:google_upload)
-      
+      debugger
+      #Save Contact
       if contact.save
         #Check if contact and user are already friends
         unless current_user.sales_contacts.include?(contact)
@@ -60,20 +55,10 @@ class ConnectSocialJob < ApplicationJob
             contact_id: contact.id
           )
         end
-        # debugger
-        #Kickoff Clearbit
-        # if contact.email.present?
-        #   # debugger
-        #   #Determine if I should
-        #   #sidekiq.perform_async(queue_id: 'clearbit')
-        #   #Track the call
-        #   #Create row in webhook requests
-        #   response = Clearbit::Enrichment.find(
-        #     email: contact.email, 
-        #     webhook_url: 'https://9a203437.ngrok.io/api/webhook/clearbit',
-        #     webhook_id:
-        #   )
-        # end
+        # Kickoff Full Contact
+        if contact.email.present? # && contact.last_full_contact_lookup.nil?
+          FullContactJob.perform_later("people", email: contact.email)
+        end
       else
         #Save failed contact if needed
         failed_saved_contacts << {
@@ -98,7 +83,7 @@ class ConnectSocialJob < ApplicationJob
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
 
-    parsed_file.take(20).each do |entry|
+    parsed_file.each do |entry|
       if entry["Email Address"].nil?
         contact = SalesContact.new
       else
