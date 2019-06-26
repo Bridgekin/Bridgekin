@@ -79,6 +79,7 @@ gem 'clearbit'
 gem 'nameable'
 gem 'fullcontact'
 gem 'rest-client'
+gem 'scout_apm'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

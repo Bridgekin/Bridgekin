@@ -88,6 +88,10 @@ class GoogleContacts extends React.Component {
     this.loadGoogleApi();
   }
 
+  componentWillUnmount(){
+    this.googleSignOut();
+  }
+
   loadGoogleApi() {
     const script = document.createElement("script");
     script.async = true;
@@ -99,7 +103,6 @@ class GoogleContacts extends React.Component {
 
   startGapi(){
     window.gapi.client.init({
-      'apiKey': 'AIzaSyAhrfyh8VvXWL1oxD6Ngj6rbaxV450W8Do',
       'clientId': "353914730270-5khisbclif4gqall7nta62fie8b9silk.apps.googleusercontent.com",
       'scope': this.scope,
       'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
