@@ -140,6 +140,7 @@ class ConnectSocial extends React.Component {
   async processFile(file, loading, dest_key, fileType){
     this.setState({ [loading]: true})
     let urlResponse = await this.props.presignedUrl(file.name, fileType)
+    console.log("urlResponse", urlResponse)
     const formData = await new FormData();
     await formData.append(`file`, file)
     let awsResponse = await this.props.uploadToS3(urlResponse, formData)
