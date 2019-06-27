@@ -64,6 +64,7 @@ class RespondToIntro extends React.Component {
   componentDidMount(){
     const { introId, currentUser } = this.props;
     this.loadIntro();
+    debugger
     if (!currentUser) {
       this.props.openLogin({
         page: 'login',

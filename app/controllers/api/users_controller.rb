@@ -51,7 +51,10 @@ class Api::UsersController < ApiController
       render json: ["Domain does not match chosen network"], status: 422
     elsif providedDomain == network.domain && @currentUser.save
       #Attach to existing network
-
+      SalesUserNetwork.create(
+        network_id: network.id,
+        user_id: @currentUser.id
+      )
       #Get Tokens and track
       @token = get_login_token!(@currentUser)
       @currentUser.implement_trackable

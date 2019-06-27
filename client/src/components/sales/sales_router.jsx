@@ -42,7 +42,7 @@ class SalesRouter extends React.Component {
       <Switch>
         <SalesProtectedRoute path="/sales/dashboard" component={SalesDashboard} />
         <SalesProtectedRoute path="/sales/connect_social" component={SalesConnectSocial} />
-        <Route path="/sales/respond_to_request/:introId" component={SalesRespondToIntro} />
+        <Route path="/sales/respond_to_intro/:introId" component={SalesRespondToIntro} />
         <SalesProtectedRoute path="/sales/stats/:page?" component={SalesStats} />
         {/* <SalesProtectedRoute path="/sales/create" component={SalesCreate} />
         <SalesProtectedRoute path="/sales/share/:id" component={SalesSharing} />
