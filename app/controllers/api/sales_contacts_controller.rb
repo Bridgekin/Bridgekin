@@ -12,10 +12,23 @@ class Api::SalesContactsController < ApiController
     "company" => :company
   }
   def search
+    filter = social_params[:filter]
     network = @current_user.sales_networks.first
     @sales_contacts = network.member_contacts
       .includes(:friends)
       .where.not(fname: '')
+    
+    case social_params[:filter]
+    when "teammates"
+      @sales_contacts = @sales_contacts.where.not(id: @current_user.sales_contacts.pluck(:id)) if social_params[:filter] == "teammates"
+    when "mine"
+      @sales_contacts = @sales_contacts.where(id: @current_user.sales_contacts.pluck(:id)) if social_params[:filter] == "mine"
+    when "linkedIn"
+      @sales_contacts = @sales_contacts.where(linkedIn: true) if social_params[:filter] == "linkedIn"
+    when "google"
+      @sales_contacts = @sales_contacts.where(google: true) if social_params[:filter] == "google"
+    else
+    end
     #Parse Results
     SEARCH_MAP.each do |key, value|
       if social_params[value].present?
@@ -95,6 +108,6 @@ class Api::SalesContactsController < ApiController
   private
 
   def social_params
-    params.permit(:location, :company, :position, :fname, :lname, :offset, :limit)
+    params.permit(:location, :company, :position, :fname, :lname, :offset, :limit, :filter)
   end
 end

@@ -70,7 +70,7 @@ class SalesDashboard extends React.Component {
       offset: 0,
       total: 0,
       limit: 10,
-      filter: 'all',
+      filter: '',
       filterAnchorEl: null
     }
 
@@ -114,30 +114,41 @@ class SalesDashboard extends React.Component {
 
   handleMenuChange(value){
     return e => {
-      this.setState({ filter: value, filterAnchorEl: null})
+      this.setState({ filter: value, filterAnchorEl: null},
+        () => {
+          const { position, company, location, fname, lname } = this.state;
+          let search = { position, company, location, fname, lname  }
+          this.searchData(search)
+        })
     }
   }
 
   async searchData(payload){
-    const { offset, limit } = this.state;
+    const { offset, limit, filter } = this.state;
     this.setState({ loaded: false });
-    payload = await merge({}, payload, {offset, limit})
+    payload = await merge({}, payload, {offset, limit, filter})
     let total = await this.props.searchContacts(payload)
     await this.setState({ total, loaded: true })
   }
 
   searchByCharacteristic(){
-    const { position, company, location } = this.state;
+    const { fname, lname, position, company, location } = this.state;
     let search = { position, company, location}
 
     this.searchData(search)
+    .then(() => {
+      this.setState({ fname: '', lname: '' })
+    })
   }
 
   searchByName(){
-    const { fname, lname } = this.state;
+    const { fname, lname, position, company, location } = this.state;
     let search = { fname, lname }
 
     this.searchData(search)
+      .then(() => {
+        this.setState({ position: '', company: '', location: '' })
+      })
   }
 
   handleChange(field) {
@@ -198,6 +209,15 @@ class SalesDashboard extends React.Component {
     const { position, company, location,
       fname, lname, search,
       filter, filterAnchorEl } = this.state;
+
+    let filterValues = {
+      "": "All",
+      "teammates": "My Team's Contacts",
+      "mine": "My Contacts",
+      "investor": "Investor Contacts",
+      "linkedIn": "Contacts From LinkedIn",
+      "google": "Contacts From Google"
+    }
 
     let searchComponent = <Grid container justify='center'
     style={{ border: `1px solid grey`, marginBottom: 30, padding: "10px 0px"}}>
@@ -296,8 +316,7 @@ class SalesDashboard extends React.Component {
             style={{ textTransform: 'none'}}>
               <Typography color='textPrimary'
               style={{ fontSize: 14}}>
-
-                {`View By: ${Capitalize(filter)}`}
+                {`View By: ${filterValues[filter]}`}
               </Typography>
             </Button>
             <Menu
@@ -314,10 +333,10 @@ class SalesDashboard extends React.Component {
                 horizontal: 'center',
               }}
               getContentAnchorEl={null}>
-              {["all", "teammates", "external"].map(choice => {
+              {["", "teammates", "mine", "investor", "linkedIn", "google"].map(choice => {
                 return <MenuItem onClick={this.handleMenuChange(choice)}>
-                  <Typography style={{ fontSize: 12}}>
-                    {Capitalize(choice)}
+                  <Typography style={{ fontSize: 14}}>
+                    {filterValues[choice]}
                   </Typography>
                 </MenuItem>
               })}
