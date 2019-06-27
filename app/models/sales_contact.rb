@@ -2,7 +2,8 @@ require 'open-uri'
 class SalesContact < ApplicationRecord
   has_many :sales_user_contacts,
     foreign_key: :contact_id,
-    class_name: :SalesUserContact
+    class_name: :SalesUserContact,
+    dependent: :destroy
 
   has_many :friends,
     through: :sales_user_contacts,
@@ -10,7 +11,8 @@ class SalesContact < ApplicationRecord
 
   has_many :sales_intros,
     foreign_key: :contact_id,
-    class_name: :SalesIntro
+    class_name: :SalesIntro,
+    dependent: :destroy
 
   has_one_attached :avatar
 

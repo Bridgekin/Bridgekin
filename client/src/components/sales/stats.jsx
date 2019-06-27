@@ -160,7 +160,6 @@ class HiringDashboard extends React.Component {
           {rows.map(row => {
             let contact = salesContacts[row.contactId]
             let requestor = users[row.requestorId]
-
             return (
               <TableRow>
                 <TableCell component="th" scope="row"

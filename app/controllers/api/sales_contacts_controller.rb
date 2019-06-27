@@ -19,7 +19,7 @@ class Api::SalesContactsController < ApiController
     #Parse Results
     SEARCH_MAP.each do |key, value|
       if social_params[value].present?
-        @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.#{key}) LIKE ?", "%#{social_params[value]}%") 
+        @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.#{key}) LIKE LOWER(?)", "%#{social_params[value]}%") 
       end
     end
     #Filter Results

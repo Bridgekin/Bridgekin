@@ -125,7 +125,6 @@ class SalesLogin extends React.Component {
   }
 
   getLoginInfo(payload){
-    debugger
     this.props.googleSalesLogin(payload)
     .then(() => {
       if (this.props.currentUser) {

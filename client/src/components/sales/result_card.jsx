@@ -88,7 +88,7 @@ class ResultCard extends React.Component {
     
     if (Object.keys(friendMap).length > 0){
       let otherFriendsCount = friendMap[contact.id].length || 0
-      return <Grid item xs={12} sm={6} container 
+      return <Grid item xs={12} sm={5} container 
       justify='center'
         className={classes.card}>
         <Grid container>

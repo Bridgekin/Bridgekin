@@ -166,6 +166,7 @@ class SalesDashboard extends React.Component {
     let resultsComponent = <Grid container justify='center'
       style={{ border: `1px solid grey` }}>
       <Grid item xs={9} container spacing={3}
+      justify='space-around'
         style={{ margin: "20px 0px" }}>
         {(resultArray.length > 0) ? (
           resultCards
@@ -315,7 +316,9 @@ class SalesDashboard extends React.Component {
               getContentAnchorEl={null}>
               {["all", "teammates", "external"].map(choice => {
                 return <MenuItem onClick={this.handleMenuChange(choice)}>
-                  {Capitalize(choice)}
+                  <Typography style={{ fontSize: 12}}>
+                    {Capitalize(choice)}
+                  </Typography>
                 </MenuItem>
               })}
             </Menu>
