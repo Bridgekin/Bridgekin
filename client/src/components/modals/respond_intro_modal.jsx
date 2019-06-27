@@ -171,6 +171,7 @@ class RespondIntroModal extends React.Component {
   }
 
   redirectToStats(){
+    this.props.closeRespondToRequest()
     this.props.history.push('/sales/stats')
   }
 

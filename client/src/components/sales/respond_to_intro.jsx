@@ -64,7 +64,6 @@ class RespondToIntro extends React.Component {
   componentDidMount(){
     const { introId, currentUser } = this.props;
     this.loadIntro();
-    debugger
     if (!currentUser) {
       this.props.openLogin({
         page: 'login',
@@ -76,20 +75,23 @@ class RespondToIntro extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
     if (nextProps.currentUser && nextProps.currentUser !== this.props.currentUser){
-      this.loadIntro();
+      this.loadIntro()
     }
     return true
   }
 
-  loadIntro(){
+  async loadIntro(){
     const { introId } = this.props;
     if(this.props.currentUser){
       this.props.fetchSalesIntro(introId)
       .then(() => {
-        // debugger
-        // const { salesIntros, currentUser } = this.props;
-        // let intro = salesIntros[introId];
-        this.setState({ loaded: true })
+        const { salesIntros, currentUser } = this.props;
+        let intro = salesIntros[introId];
+        if(intro.recipientId === currentUser.id){
+          this.setState({ loaded: true })
+        } else {
+          this.props.history.push('/sales/stats')
+        }
       })
     };
   }
