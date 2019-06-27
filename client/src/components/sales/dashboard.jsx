@@ -5,7 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import ResultCard from './result_card.jsx'
 // import Pagination from "react-js-pagination";
@@ -13,6 +18,7 @@ import Pagination from "material-ui-flat-pagination";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import merge from 'lodash/merge';
 import Loading from '../loading';
+import Capitalize from 'capitalize';
 
 import { searchContacts } from '../../actions/sales_contacts_actions';
 // require("bootstrap/less/bootstrap.less");
@@ -45,7 +51,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   grid: {
-    paddingTop: 64,
+    paddingTop: 64+15,
     paddingBottom: '10%'
   },
 })
@@ -63,7 +69,9 @@ class SalesDashboard extends React.Component {
       loaded: false,
       offset: 0,
       total: 0,
-      limit: 10
+      limit: 10,
+      filter: 'all',
+      filterAnchorEl: null
     }
 
     this.connectNetworks = this.connectNetworks.bind(this);
@@ -72,6 +80,8 @@ class SalesDashboard extends React.Component {
     this.handlePageChange = this.handlePageChange.bind(this);
     this.searchData = this.searchData.bind(this);
     this.getResults = this.getResults.bind(this);
+    this.handleMenuChange = this.handleMenuChange.bind(this);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
   }
 
   componentDidMount() {
@@ -92,6 +102,20 @@ class SalesDashboard extends React.Component {
         let search = { fname, lname, position, company, location }
         this.searchData(search)
       })
+  }
+
+  handleMenuClick(anchor) {
+    return e => {
+      e.stopPropagation();
+      const selectedEl = this.state[anchor];
+      this.setState({ [anchor]: (selectedEl ? null : e.currentTarget) })
+    }
+  }
+
+  handleMenuChange(value){
+    return e => {
+      this.setState({ filter: value, filterAnchorEl: null})
+    }
   }
 
   async searchData(payload){
@@ -171,7 +195,8 @@ class SalesDashboard extends React.Component {
     const { classes, dimensions, resultNodes,
       searchContacts } = this.props;
     const { position, company, location,
-      fname, lname, search } = this.state;
+      fname, lname, search,
+      filter, filterAnchorEl } = this.state;
 
     let searchComponent = <Grid container justify='center'
     style={{ border: `1px solid grey`, marginBottom: 30, padding: "10px 0px"}}>
@@ -181,7 +206,6 @@ class SalesDashboard extends React.Component {
             {`Search by Characteristic`}
           </Typography>
           <TextField
-            required
             label="Title/Position"
             className={classes.textField}
             margin="dense"
@@ -192,7 +216,6 @@ class SalesDashboard extends React.Component {
           />
 
           <TextField
-            required
             label="Company"
             className={classes.textField}
             margin="dense"
@@ -203,7 +226,6 @@ class SalesDashboard extends React.Component {
           />
 
           <TextField
-            required
             label="Location"
             className={classes.textField}
             margin="dense"
@@ -234,7 +256,6 @@ class SalesDashboard extends React.Component {
             {`Search by Name`}
           </Typography>
           <TextField
-            required
             label="First Name"
             className={classes.textField}
             margin="dense"
@@ -245,7 +266,6 @@ class SalesDashboard extends React.Component {
           />
 
           <TextField
-            required
             label="Last Name"
             className={classes.textField}
             margin="dense"
@@ -269,8 +289,36 @@ class SalesDashboard extends React.Component {
       <Grid container justify='center'
         className={classes.grid}>
         <Grid item xs={10}>
-          <Grid container justify='flex-end'
+          <Grid container justify='space-between'
           style={{ marginBottom: 30}}>
+            <Button onClick={this.handleMenuClick('filterAnchorEl')}
+            style={{ textTransform: 'none'}}>
+              <Typography color='textPrimary'
+              style={{ fontSize: 14}}>
+
+                {`View By: ${Capitalize(filter)}`}
+              </Typography>
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={filterAnchorEl}
+              open={Boolean(filterAnchorEl)}
+              onClose={this.handleMenuClick('filterAnchorEl')}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              getContentAnchorEl={null}>
+              {["all", "teammates", "external"].map(choice => {
+                return <MenuItem onClick={this.handleMenuChange(choice)}>
+                  {Capitalize(choice)}
+                </MenuItem>
+              })}
+            </Menu>
             <Button color='primary' variant='contained'
               onClick={this.connectNetworks}>
               {`Connect Your Networks`}

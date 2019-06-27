@@ -151,7 +151,7 @@ class HiringDashboard extends React.Component {
     let phrase, rows, headerCells, tableBody;
     switch(page){
       case 'intros':
-        phrase = `My Intros (Received Requests)` // sentRequests
+        phrase = `My Intros` // sentRequests
         headerCells = ["First Name", "Last Name",
           "Title", "Company", "Employee Referrer",
           "Status"]
@@ -211,7 +211,7 @@ class HiringDashboard extends React.Component {
         </TableBody>
         break;
       default:
-        phrase = `My Leads (Sent Requests)` // sentRequests
+        phrase = `My Leads` // sentRequests
         headerCells = ["First Name", "Last Name",
         "Title", "Company", "Employee Referrer",
         "Status", "Options"]
@@ -325,11 +325,11 @@ class HiringDashboard extends React.Component {
         style={{ height: dimensions.height - 64, borderRight: `1px solid grey`, paddingBottom: 50}}>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/leads`)}>
-            {`My Leads`}
+            {`Intro Requests`}
           </Button>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/intros`)}>
-            {`My Intros`}
+            {`Intros Received`}
           </Button>
         </Grid>
 

@@ -281,10 +281,10 @@ class ConnectSocial extends React.Component {
             <Typography color='textSecondary'
             style={{ fontSize: 12}}>
               {`Steps:`} <br /><br />
-              {`1) Login to your linkedIn profile`} <br/><br/>
-              {`2) Click "Settings and Privacy" in the account dropdown menu`} <br/><br/>
-              {`3) Toward the bottom, under the "How LinkedIn uses your data" header, you'll see an option to download your data.`} <br /><br/>
-              {`4) Pick and choose only "connections" and press download. It may take about 5-15 min.`}<br/><br/>
+              {`1) Login to your LinkedIn profile`} <br/><br/>
+              {`2) In the navigation bar click on your profile image and click “Settings and Privacy” in the account dropdown menu`} <br/><br/>
+              {`3) On the left of the page click “How LinkedIn uses your data”. Once it directs you to that section click the second line item that says “Download your data`} <br /><br/>
+              {`4) Under “Pick and choose” click the checkbox next to “Connections” and press download. It may take about 10-15 minutes, at which point you’ll get notified via email by LinkedIn.`}<br/><br/>
               {`5) Once downloaded, unzip the file. You should see a "connections.csv" file. Upload the "connections.csv" file (Not the entire folder or any other files in that folder)`}<br /><br />
             </Typography>
           </ExpansionPanelDetails>

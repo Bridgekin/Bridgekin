@@ -90,12 +90,12 @@ class ConnectSocialModal extends React.Component {
             <Typography variant="body1" align='center'
               color="textPrimary" gutterBottom
               style={{ fontSize: 20, fontWeight: 600}}>
-              {"Uploaded Processing"}
+              {"Upload Processing"}
             </Typography>
             <Typography variant="body1" align='center'
               color="textSecondary" gutterBottom
               style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
-              {`We've uploaded your contacts. We'll spend the next 24 hours flushing our your contacts, but you can start leveraging these connections right now.`}
+              {`We’re in the process of uploading your contacts. Please check back in 24 hours.`}
             </Typography>
             <Grid container justify='center'>
               <Button autoFocus variant='contained' color='primary'

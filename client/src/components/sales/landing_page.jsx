@@ -140,7 +140,7 @@ class LandingPage extends React.Component {
       <Grid item xs={8}>
         <Typography gutterBottom
           style={{ fontSize: 38, fontWeight: 600 }}>
-          {`Close more B2B deals with warm introductions`}
+          {`Make warm introductions and help you and your company grow`}
         </Typography>
         <Typography gutterBottom
           style={{ fontSize: 16 }}>
