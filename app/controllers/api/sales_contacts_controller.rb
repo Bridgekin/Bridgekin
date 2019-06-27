@@ -86,7 +86,7 @@ class Api::SalesContactsController < ApiController
       content_type: params[:filetype]
       # content_type: "application/octet-stream"
     )
-    logger.error "ps_url: #{ps_url}"
+
     data = { url: ps_url, key: key }
     # data = { url: ps_url.url, url_fields: ps_url.fields }
     render json: data, status: 200

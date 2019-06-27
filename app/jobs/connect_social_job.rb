@@ -4,16 +4,25 @@ class ConnectSocialJob < ApplicationJob
   queue_as :default
 
   def perform(import_hash, current_user)
+    aws_env = case Rails.env
+    when "production"
+      :aws_prod
+    when "staging"
+      :aws_staging
+    else
+      :aws_dev
+    end
+    
     s3 = Aws::S3::Client.new(
-      region: Rails.application.credentials.aws_dev[:region], #or any other region
-      access_key_id: Rails.application.credentials.aws_dev[:access_key_id],
-      secret_access_key: Rails.application.credentials.aws_dev[:secret_access_key]
+      region: Rails.application.credentials[aws_env][:region], #or any other region
+      access_key_id: Rails.application.credentials[aws_env][:access_key_id],
+      secret_access_key: Rails.application.credentials[aws_env][:secret_access_key]
     )
     # debugger
     import_hash.each do |key, upload|
       case key
       when "linked_in_key"
-        resp = s3.get_object(bucket:Rails.application.credentials.aws_dev[:bucket], key: upload)
+        resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
         parsedFile = CSV.parse(resp.body.read.split("\n")
           .drop(4)
           .tap(&:pop)
