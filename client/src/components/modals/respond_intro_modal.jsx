@@ -90,7 +90,7 @@ class RespondIntroModal extends React.Component {
     super(props)
     this.state = {
       email: '',
-      subject: 'Opportunities to connect',
+      subject: '',
       body: '',
       loading: false,
       success: false,
@@ -120,8 +120,9 @@ class RespondIntroModal extends React.Component {
           const { salesContacts, salesIntros } = nextProps;
           let contact = salesContacts[salesIntros[nextModal.introId].contactId]
           let email = contact.email
-          let body = `Hi Matt, \n\nHope you've been amazing! I'm working on...`
-          this.setState({ page: 'intro', email, body})
+          let subject = `I think you’ll appreciate this...`
+          let body = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(nextProps.currentUser.fname)}`
+          this.setState({ page: 'intro', email, subject, body})
           break;
         case "no":
           this.setState({ page: 'refuse' })
@@ -211,7 +212,7 @@ class RespondIntroModal extends React.Component {
           <TextField
             fullWidth
             multiline
-            rows="6"
+            rows="12"
             label="Body"
             variant='outlined'
             value={body}

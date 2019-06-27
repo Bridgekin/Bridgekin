@@ -16,7 +16,7 @@ class SalesMailer < ApplicationMailer
     @requestor = @sales_intro.requestor
     @recipient = @sales_intro.recipient
 
-    subject = "Intro Requested - Connect #{@requestor.fname.capitalize} and #{@contact.fname.capitalize}"
+    subject = "Intro Requested #{@requestor.fname.capitalize} <> #{@contact.fname.capitalize}"
     # @recipients = [@recipient, @requestor]
     mail(to: @recipient.email, subject: subject)
     # mail(

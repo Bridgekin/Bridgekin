@@ -111,18 +111,25 @@ class RespondToIntro extends React.Component {
     const { loaded } = this.state;
 
     if (currentUser && loaded){
-      let contact = salesContacts[salesIntros[introId].contactId]
+      let intro = salesIntros[introId];
+      let contact = salesContacts[intro.contactId];
 
       let contactComp = <Grid container justify='center'>
         <Grid item xs={10} sm={8}>
           <Typography align='center' gutterBottom
-          style={{ fontSize: 22, fontWeight: 600}}>
+          style={{ fontSize: 24, fontWeight: 600}}>
             {`Make referrals and help you and your company grow`}
           </Typography>
-          <Typography align='center' gutterBottom
-          style={{ fontSize: 16 }}>
-            {`The solution is a good fit because it would increase their sales by 15%.`}
-          </Typography>
+          {intro.explaination && <Grid container direction='column' alignItems='center'>
+            <Typography align='center'
+              style={{ fontSize: 16, fontWeight: 600 }}>
+              {`Why would this be a good fit?`}
+            </Typography>
+            <Typography align='center' gutterBottom
+            style={{ fontSize: 16 }}>
+              {`${intro.explaination}`}
+            </Typography>
+          </Grid>}
 
           <Grid container justify='center'
           style={{ margin: "20px 0px"}}>
@@ -155,22 +162,24 @@ class RespondToIntro extends React.Component {
               <Typography align='center' 
                 color='textPrimary'
                 style={{ fontSize: 14, textTransform: 'capitalize' }}>
-                {`${contact.location || "Unknown Location"}`}
+                {`Location: ${contact.location || "N/A"}`}
               </Typography>
             </Grid>
             <Grid></Grid>
           </Grid>
 
           <Grid container justify='center'>
-            <Grid item xs={8} container justify='space-around'>
+            <Grid item xs={8} container justify='center'>
               <Button color='primary' variant='contained'
                 onClick={this.respondToRequest('yes')}
-                className={classes.actionButton}>
+                className={classes.actionButton}
+                style={{ marginRight: 20}}>
                 {`Intro`}
               </Button>
               <Button color='primary' variant='contained'
                 onClick={this.respondToRequest('unknown')}
-                className={classes.actionButton}>
+                className={classes.actionButton}
+                style={{ marginRight: 20 }}>
                 {`Don't know`}
               </Button>
               <Button color='primary' variant='contained'

@@ -176,7 +176,7 @@ class SalesDashboard extends React.Component {
 
     let resultsComponent = <Grid container justify='center'
       style={{ border: `1px solid grey` }}>
-      <Grid item xs={9} container spacing={3}
+      <Grid item xs={9} container spacing={2}
       justify='space-around'
         style={{ margin: "20px 0px" }}>
         {(resultArray.length > 0) ? (
