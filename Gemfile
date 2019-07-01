@@ -83,6 +83,9 @@ gem 'scout_apm'
 #Stripe
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
+gem 'sidekiq-rate-limiter'
+gem 'activejob-traffic_control'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

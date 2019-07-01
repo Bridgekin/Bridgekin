@@ -52,7 +52,6 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-
     google_contacts.take(15).each do |entry|
       if entry['email'].nil?
         contact = SalesContact.new()
@@ -67,7 +66,6 @@ class ConnectSocialJob < ApplicationJob
       end
       #Set Source
       contact.setSource(:google_upload)
-      debugger
       #Save Contact
       if contact.save
         #Check if contact and user are already friends
