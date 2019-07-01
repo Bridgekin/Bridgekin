@@ -4,9 +4,7 @@ require 'pry'
 
 response = RestClient.post("https://api.fullcontact.com/v3/person.enrich",
   {
-    "phones": [
-      "+14436326422"
-    ],
+    "email" => "fakeemail@email.com"
   }.to_json,
   {
     :authorization => "Bearer aLGVGrpeBhBvt0eAn04z3uBnjlkl6WUQ"

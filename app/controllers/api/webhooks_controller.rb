@@ -56,6 +56,7 @@ class Api::WebhooksController < ApiController
               contact[value] = params[key]
             end
           end
+
           #Set Avatar
           contact.grab_avatar_image(params["avatar"]) if params["avatar"]
           #Set Name // Don't change name yet
@@ -68,10 +69,10 @@ class Api::WebhooksController < ApiController
           contact.save
         end
       end
-
-      render json:["Success"], status: 200
     rescue
       logger.debug "No email found or Error"
     end
+
+    render json:["Success"], status: 200
   end
 end

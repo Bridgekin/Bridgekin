@@ -252,7 +252,7 @@ class ConnectSocial extends React.Component {
       </Grid>
     </Grid>
 
-    let linkedInComp = <Grid item xs={12} sm={3} md={3}>
+    let linkedInComp = <Grid item xs={12} sm={4} md={4}>
       <Paper>
         <Grid container justify='center'
           className={classes.socialComp}>
@@ -295,7 +295,7 @@ class ConnectSocial extends React.Component {
       </Paper> 
     </Grid>
 
-    let googleComp = <Grid item xs={12} sm={4} md={4}>
+    let googleComp = <Grid item xs={12} sm={5} md={5}>
       <Paper>
         <Grid container justify='center'
         className={classes.socialComp}>
@@ -438,7 +438,6 @@ class ConnectSocial extends React.Component {
           <Grid container justify='space-around'>
             {linkedInComp}
             {googleComp}
-            {facebookComp}
           </Grid>
           
           {submitBar}
