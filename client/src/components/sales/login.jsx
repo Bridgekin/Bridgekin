@@ -235,8 +235,8 @@ class SalesLogin extends React.Component {
         
         let results = Object.values(resultNetworks)
 
-        let findCompany = <Grid item xs={11} container justify='space-between' 
-        style={{ marginTop: 30, border: `1px solid red`}}>
+        let findCompany = <Grid item xs={11} container justify='space-between' alignItems='flex-start'
+        style={{ marginTop: 30}}>
           <Grid item xs={6} container justify='center'>
             <Typography align='center' gutterBottom
             style={{ fontSize: 16, fontWeight: 600}}>
@@ -272,8 +272,8 @@ class SalesLogin extends React.Component {
           <Grid item xs={5} container justify='center'>
             {results.length > 0 && <Grid container
             style={{ marginTop: 30}}>
-              <Typography color='textSecondary'
-              stlye={{ fontWeight: 600}}>
+              <Typography color='textSecondary' align='center'
+              stlye={{ fontWeight: 600, fontWeight: 18}}>
                 {`Results`}
               </Typography>
               <Grid container direction='column'>

@@ -109,8 +109,8 @@ class ConnectSocialJob < ApplicationJob
       contact = SalesContact.find_by(
         email: entry["Email Address"],
         fname: entry["First Name"],
-        lname: entry["Last Name"]
-        company: entry["Company"]
+        lname: entry["Last Name"],
+        company: entry["Company"],
         position: entry["Position"]
         ) || SalesContact.new
 
