@@ -18,38 +18,53 @@ class Api::SalesContactsController < ApiController
       .includes(:friends)
       .where.not(fname: '')
     
+    # Filter back setting
     case social_params[:filter]
     when "teammates"
-      @sales_contacts = @sales_contacts.where.not(id: @current_user.sales_contacts.pluck(:id)) if social_params[:filter] == "teammates"
+      user_contacts = SalesContact.joins("INNER JOIN sales_user_contacts ON sales_user_contacts.contact_id = sales_contacts.id ")
+      .joins("INNER JOIN users ON sales_user_contacts.user_id = users.id ")
+      .where(users: {id: @current_user})
+
+      @sales_contacts = @sales_contacts.left_outer_joins(user_contacts)
+        # .where.not(id: user_contacts)
+        # .where()
+        # .left_outer_joins(user_contacts)
     when "mine"
-      @sales_contacts = @sales_contacts.where(id: @current_user.sales_contacts.pluck(:id)) if social_params[:filter] == "mine"
+      @sales_contacts = @current_user.sales_contacts
     when "linkedIn"
-      @sales_contacts = @sales_contacts.where(linkedIn: true) if social_params[:filter] == "linkedIn"
+      @sales_contacts = @sales_contacts.where(linkedIn: true)
     when "google"
-      @sales_contacts = @sales_contacts.where(google: true) if social_params[:filter] == "google"
+      @sales_contacts = @sales_contacts.where(google: true)
     else
     end
-    #Parse Results
+
+    #Parse Results from user entry
     SEARCH_MAP.each do |key, value|
       if social_params[value].present?
         @sales_contacts = @sales_contacts.where("LOWER(sales_contacts.#{key}) LIKE LOWER(?)", "%#{social_params[value]}%") 
       end
     end
+
     #Filter Results
-    @total = @sales_contacts.count
+    @total = @sales_contacts.count #Fine for memory
     offset, limit = social_params[:offset], social_params[:limit]
-    @sales_contacts = @sales_contacts[offset...(offset+limit)]
+    @sales_contacts = @sales_contacts.offset(offset)     
+      .limit(limit)
+
+    # new_var = @sales_contacts
+    # example = @sales_contacts.joins(new_var, "ON new_var.friends == @sales_contacts.id")
+    #   .where
+
     #Get Companion information
-    friends = Array.new()
-    @friend_map = @sales_contacts.reduce({}) do |acc, contact|
+    friends = Set.new()
+    @friend_map = @sales_contacts.reduce({}) do |acc, contact|friends
       contact_friends = contact.friends
         .where.not(users: {id: @current_user.id})
-        .pluck(:id)
-      friends += contact_friends
-      acc[contact.id] = contact_friends
+      friends.merge(contact_friends)
+      acc[contact.id] = contact_friends.pluck(:id)
       acc
     end
-    @friend_users = User.where(id: friends)
+    @friend_users = friends.to_a
    
     render :index
   end

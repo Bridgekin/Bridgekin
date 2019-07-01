@@ -4,13 +4,20 @@ require 'pry'
 
 response = RestClient.post("https://api.fullcontact.com/v3/person.enrich",
   {
-    "email" => "joe@bridgekin.com",
-    "webhookUrl" => "http://09b95536.ngrok.io/api/webhooks/full_contact"
+    "phones": [
+      "+14436326422"
+    ],
   }.to_json,
   {
-    :authorization => "Bearer xhE0CizNRiJ0w6EKOezqWi5n2flsA5Yj"
+    :authorization => "Bearer aLGVGrpeBhBvt0eAn04z3uBnjlkl6WUQ"
   })
+# response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=microsoft")
+  # "email" => "eaconwayjr@gmail.com"
+  # "phone" => "+14436326422"
+  # "fullName" => "Sam Winter"
 
 parsed = JSON.parse(response.body)
+
+binding.pry
 
 puts parsed

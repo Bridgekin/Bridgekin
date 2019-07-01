@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Img from 'react-image'
 import Avatar from '@material-ui/core/Avatar';
-
+import Paper from '@material-ui/core/Paper';
 import PersonIcon from '@material-ui/icons/PersonSharp';
 
 import { SocialIcon } from 'react-social-icons';
@@ -50,7 +50,7 @@ const styles = theme => ({
     color: theme.palette.text.secondary
   },
   card:{
-    border: `1px solid ${theme.palette.border.secondary}`,
+    // border: `1px solid ${theme.palette.border.secondary}`,
     margin: "10px 0px"
   },
   cardDivider: { borderTop: `1px solid ${theme.palette.border.secondary}`},
@@ -89,85 +89,87 @@ class ResultCard extends React.Component {
     if (Object.keys(friendMap).length > 0){
       let otherFriendsCount = friendMap[contact.id].length || 0
       return <Grid item xs={12} sm={6}>
-        <Grid container 
-          justify='center'
-          className={classes.card}>
-          <Grid container>
-            <Grid item xs={3} container alignItems='center'>
-              {/*contact.avatarUrl ? 
-              <Avatar alt="profile-pic"
-                src={contact.avatarUrl}
-                className={classes.avatar}/> :
-              <PersonIcon
-                className={classes.defaultProfilePic}/>
-              */}
-              <Grid container justify='center' 
-              alignItems='center'
-              className={classes.profileLetter}
-                style={{ backgroundColor: COLORS[Math.floor(idx % COLORS.length)],}}>
-                <Typography 
-                style={{ fontSize: 50, fontWeight: 600, color:"white"}}>
-                  {`${contact.fname.charAt(0)}`}
+        <Paper>
+          <Grid container 
+            justify='center'
+            className={classes.card}>
+            <Grid container>
+              <Grid item xs={3} container alignItems='center'>
+                {/*contact.avatarUrl ? 
+                <Avatar alt="profile-pic"
+                  src={contact.avatarUrl}
+                  className={classes.avatar}/> :
+                <PersonIcon
+                  className={classes.defaultProfilePic}/>
+                */}
+                <Grid container justify='center' 
+                alignItems='center'
+                className={classes.profileLetter}
+                  style={{ backgroundColor: COLORS[Math.floor(idx % COLORS.length)],}}>
+                  <Typography 
+                  style={{ fontSize: 50, fontWeight: 600, color:"white"}}>
+                    {`${contact.fname.charAt(0)}`}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item xs={9}
+              style={{ padding: 16}}>
+                <div style={{ height: 64 }}>
+                  <Typography color='textPrimary' noWrap
+                  style={{ fontSize: 18, textTransform: 'capitalize'}}>
+                    {`${contact.fname} ${contact.lname}`}
+                  </Typography>
+                  <Typography color='textPrimary' noWrap
+                    style={{ fontSize: 13, textTransform: 'capitalize' }}>
+                    {`${contact.position || "Position: N/A"}`}
+                  </Typography>
+                  <Typography color='textPrimary' noWrap
+                    style={{ fontSize: 13, textTransform: 'capitalize' }}>
+                    {`${contact.company || "Company: N/A"}`}
+                  </Typography>
+                </div>
+                
+                <div className={classes.nameDivider}/>
+
+                <Typography color='textPrimary'
+                  style={{ fontSize: 13, textTransform: 'capitalize' }}>
+                  {`${contact.location || "Location: N/A"}`}
                 </Typography>
+
+                {false && <Grid container>
+                  <SocialIcon url="http://linkedin.com/"
+                    network="linkedin" 
+                    className={classes.socialIcon}/>
+                  <SocialIcon network="email"
+                    url="mailto:mail@example.org" 
+                    className={classes.socialIcon}/>
+                </Grid>}
               </Grid>
             </Grid>
-            <Grid item xs={9}
-            style={{ padding: 16}}>
-              <div style={{ height: 64 }}>
-                <Typography color='textPrimary' noWrap
-                style={{ fontSize: 18, textTransform: 'capitalize'}}>
-                  {`${contact.fname} ${contact.lname}`}
-                </Typography>
-                <Typography color='textPrimary' noWrap
-                  style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                  {`${contact.position || "Position: N/A"}`}
-                </Typography>
-                <Typography color='textPrimary' noWrap
-                  style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                  {`${contact.company || "Company: N/A"}`}
-                </Typography>
-              </div>
-              
-              <div className={classes.nameDivider}/>
-
+            <Grid item xs={10} className={classes.cardDivider}/>
+            <Grid container justify='flex-end' alignItems='center'
+            className={classes.actionSection}>
+              {/*contact.connectedMembers.map(id => {
+                let member = networkMembers[id];
+                return <div 
+                className={classes.connectedMember}>
+                  <Img src={member.profilePicUrl}
+                    className={classes.pictureCover}/>
+                </div>
+              }) */}
               <Typography color='textPrimary'
-                style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                {`${contact.location || "Location: N/A"}`}
+              style={{ fontSize: 12, marginRight: 10}}>
+                {`Known Teammates: ${otherFriendsCount || "N/A"}`}
               </Typography>
-
-              {false && <Grid container>
-                <SocialIcon url="http://linkedin.com/"
-                  network="linkedin" 
-                  className={classes.socialIcon}/>
-                <SocialIcon network="email"
-                  url="mailto:mail@example.org" 
-                  className={classes.socialIcon}/>
-              </Grid>}
+              <Button color='primary' variant='contained'
+              onClick={this.requestIntro}
+                disabled={otherFriendsCount === 0}
+              style={{ textTransform: 'capitalize'}}>
+                {`Request a warm intro`}
+              </Button>
             </Grid>
           </Grid>
-          <Grid item xs={10} className={classes.cardDivider}/>
-          <Grid container justify='flex-end' alignItems='center'
-          className={classes.actionSection}>
-            {/*contact.connectedMembers.map(id => {
-              let member = networkMembers[id];
-              return <div 
-              className={classes.connectedMember}>
-                <Img src={member.profilePicUrl}
-                  className={classes.pictureCover}/>
-              </div>
-            }) */}
-            <Typography color='textPrimary'
-            style={{ fontSize: 12, marginRight: 10}}>
-              {`Known Teammates: ${otherFriendsCount || "N/A"}`}
-            </Typography>
-            <Button color='primary' variant='contained'
-            onClick={this.requestIntro}
-              disabled={otherFriendsCount === 0}
-            style={{ textTransform: 'capitalize'}}>
-              {`Request a warm intro`}
-            </Button>
-          </Grid>
-        </Grid>
+        </Paper>
       </Grid>
     } else {
       return <div></div>

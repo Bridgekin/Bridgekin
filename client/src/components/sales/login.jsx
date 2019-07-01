@@ -235,78 +235,84 @@ class SalesLogin extends React.Component {
         
         let results = Object.values(resultNetworks)
 
-        let findCompany = <Grid item xs={11} md={7}
-        style={{ marginTop: 30}}>
-          <Typography align='center' gutterBottom
-          style={{ fontSize: 16, fontWeight: 600}}>
-            {`Looking to find your company? `}
-          </Typography>
-          <Typography align='center' gutterBottom
-            style={{ fontSize: 14 }}>
-            {`Enter your company URL below and press find.`}
-          </Typography>
-          <Grid container spacing={16}>
-            <Grid item xs={8}>
-              <TextField margin='dense' fullWidth
-                required
-                label="Company Name"
-                placeholder='Eg: Bridgekin'
-                className={classes.textField}
-                variant='outlined'
-                value={networkTitle}
-                onChange={this.handleChange('networkTitle')}
-                onMouseUp={this.handleChange('networkTitle')} />
-            </Grid>
-            <Grid item xs={4} container justify='center' alignItems='center'>
-              <div>
-                <Button color='primary' variant='contained'
-                onClick={this.retrieveNetworks}>
-                  {`Find`}
-                </Button>
-              </div>
+        let findCompany = <Grid item xs={11} container justify='space-between' 
+        style={{ marginTop: 30, border: `1px solid red`}}>
+          <Grid item xs={6} container justify='center'>
+            <Typography align='center' gutterBottom
+            style={{ fontSize: 16, fontWeight: 600}}>
+              {`Looking to find your company? `}
+            </Typography>
+            <Typography align='center' gutterBottom
+              style={{ fontSize: 14 }}>
+              {`Enter your company URL below and press find.`}
+            </Typography>
+            <Grid container spacing={16}>
+              <Grid item xs={8}>
+                <TextField margin='dense' fullWidth
+                  required
+                  label="Company Name"
+                  placeholder='Eg: Bridgekin'
+                  className={classes.textField}
+                  variant='outlined'
+                  value={networkTitle}
+                  onChange={this.handleChange('networkTitle')}
+                  onMouseUp={this.handleChange('networkTitle')} />
+              </Grid>
+              <Grid item xs={4} container justify='center' alignItems='center'>
+                <div>
+                  <Button color='primary' variant='contained'
+                  onClick={this.retrieveNetworks}>
+                    {`Find`}
+                  </Button>
+                </div>
+              </Grid>
             </Grid>
           </Grid>
 
-          {results.length > 0 && <Grid container
-          style={{ marginTop: 30}}>
-            <Typography color='textSecondary'
-            stlye={{ fontWeight: 600}}>
-              {`Results`}
-            </Typography>
-            <Grid container direction='column'>
-              {results.map(network => {
-                return <Grid item container justify='space-between' 
-                className={classes.result}>
-                  <Typography color='textSecondary'
-                  style={{ fontSize: 14}}>
-                    {`${network.title}`}
-                  </Typography>
-                  <Button variant='contained' color='primary'
-                  onClick={this.handlePage(network)}>
-                    {`Select`}
-                  </Button>
-                </Grid>
-              })}
-            </Grid>
-          </Grid>}
+          <Grid item xs={5} container justify='center'>
+            {results.length > 0 && <Grid container
+            style={{ marginTop: 30}}>
+              <Typography color='textSecondary'
+              stlye={{ fontWeight: 600}}>
+                {`Results`}
+              </Typography>
+              <Grid container direction='column'>
+                {results.map(network => {
+                  return <Grid item container justify='space-between' 
+                  className={classes.result}>
+                    <Typography color='textSecondary'
+                    style={{ fontSize: 14}}>
+                      {`${network.title}`}
+                    </Typography>
+                    <Button variant='contained' color='primary'
+                    onClick={this.handlePage(network)}>
+                      {`Select`}
+                    </Button>
+                  </Grid>
+                })}
+              </Grid>
+            </Grid>}
+          </Grid>
         </Grid>
 
         let loginCompany = <Grid item xs={12} md={4} 
         container justify='center' alignItems='center'>
-          <Typography align='center' 
-          gutterBottom fullWidth
-          style={{ fontSize: 16, fontWeight: 600}}>
-            {`Login Via Gmail`}
-          </Typography>
-          <Grid container justify='center'>
+          <Grid item xs={5} container justify='center'>
+            <Typography align='center' 
+            gutterBottom fullWidth
+            style={{ fontSize: 16, fontWeight: 600}}>
+              {`Login Via Gmail`}
+            </Typography>
+          </Grid>
+          <Grid item xs={5} container justify='center'>
             <ImportGoogle asLogin getLoginInfo={this.getLoginInfo}/>
           </Grid>
         </Grid>
 
         let throughCompany = <Grid container justify='space-around'
         style={{ marginTop: 30 }}>
-          {loginCompany}
-          <div className={classes.companyDivider}/>
+          {/*{loginCompany}
+          <div className={classes.companyDivider}/>*/}
           {findCompany}
         </Grid>
 

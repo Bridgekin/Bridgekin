@@ -106,11 +106,13 @@ class ConnectSocialJob < ApplicationJob
     failed_saved_contacts = Array.new
 
     parsed_file.each do |entry|
-      if entry["Email Address"].nil?
-        contact = SalesContact.new
-      else
-        contact = SalesContact.find_by(email: entry["Email Address"]) || SalesContact.new
-      end
+      contact = SalesContact.find_by(
+        email: entry["Email Address"],
+        fname: entry["First Name"],
+        lname: entry["Last Name"]
+        company: entry["Company"]
+        position: entry["Position"]
+        ) || SalesContact.new
 
       parsed_file.headers.each do |header|
         if HEADERMAPPING[header].present? && contact[HEADERMAPPING[header]].blank?

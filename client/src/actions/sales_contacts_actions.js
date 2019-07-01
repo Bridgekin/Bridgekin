@@ -8,7 +8,7 @@ const genericError = 'Something went wrong. Please try again in a bit or contact
 export const RECEIVE_SALES_CONTACT_RESULTS = 'RECEIVE_SALES_CONTACT_RESULTS';
 export const CLEAR_SALES_CONTACT_RESULTS = 'CLEAR_SALES_CONTACT_RESULTS';
 
-export const retrieveContactResults = contacts => ({
+export const receiveContactResults = contacts => ({
   type: RECEIVE_SALES_CONTACT_RESULTS,
   contacts,
 });
@@ -49,7 +49,7 @@ export const searchContacts = (search) => dispatch => (
   SalesContactsApiUtil.searchContacts(search)
     .then(handleErrors)
     .then(data => {
-      dispatch(retrieveContactResults(data.salesContacts))
+      dispatch(receiveContactResults(data.salesContacts))
       dispatch(receiveUsers(data.friendUsers))
       dispatch(receiveFriendMap(data.friendMap))
       // debugger

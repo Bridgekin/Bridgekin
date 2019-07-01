@@ -18,10 +18,16 @@ import blackLogoMobile from '../../static/apple-touch-icon.png';
 import { login, logout } from '../../actions/session_actions';
 import { openLogin } from '../../actions/modal_actions';
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state, ownProps) => {
+  let onHomePage = false;
+  if (ownProps.location.pathname === "/sales" || ownProps.location.pathname === "/"){
+    onHomePage = true;
+  }
+  return {
   currentUser: state.users[state.session.id],
-  siteTemplate: state.siteTemplate
-});
+  siteTemplate: state.siteTemplate,
+  onHomePage
+}};
 
 const mapDispatchToProps = dispatch => ({
   login: (payload) => dispatch(login(payload)),
@@ -125,18 +131,20 @@ class SalesNav extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isTop: true
+      isTop: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    document.addEventListener('scroll', () => {
-      const isTop = window.scrollY < 40;
-      if (isTop !== this.state.isTop) {
-        this.setState({ isTop })
-      }
-    });
+    if (this.props.onHomePage){
+      document.addEventListener('scroll', () => {
+        const isTop = window.scrollY < 40;
+        if (isTop !== this.state.isTop) {
+          this.setState({ isTop })
+        }
+      });
+    }
   }
 
   handleChange(field) {

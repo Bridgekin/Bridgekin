@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/stripe/stripe-ruby
+  revision: 2cc77147d26ebd489cfd608a0bcd78c51625c875
+  specs:
+    stripe (4.20.0)
+      faraday (~> 0.13)
+      net-http-persistent (~> 3.0)
+
+GIT
   remote: https://github.com/thoughtbot/shoulda-matchers
   revision: 2939ea170fc2beee748923cbbde814f3957c2ed0
   specs:
@@ -72,7 +80,7 @@ GEM
       io-like (~> 0.3.0)
     arel (9.0.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.180.0)
+    aws-partitions (1.181.0)
     aws-sdk (1.49.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
@@ -168,7 +176,7 @@ GEM
     factory_bot_rails (5.0.2)
       factory_bot (~> 5.0.2)
       railties (>= 4.2.0)
-    faraday (0.11.0)
+    faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.13.1)
       faraday (>= 0.7.4, < 1.0)
@@ -176,16 +184,18 @@ GEM
     formtastic (3.1.5)
       actionpack (>= 3.2.13)
     formtastic_i18n (0.6.0)
-    fullcontact (0.18.0)
-      faraday (~> 0.11.0)
-      faraday_middleware (>= 0.10)
-      hashie (>= 2.0, < 4.0)
+    fullcontact (0.6.0)
+      faraday (>= 0.8)
+      faraday_middleware (>= 0.9)
+      hashie (>= 2.0)
+      multi_xml (>= 0.5)
+      rash (>= 0.4)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     has_scope (0.7.2)
       actionpack (>= 4.1)
       activesupport (>= 4.1)
-    hashie (3.6.0)
+    hashie (2.0.5)
     heroku-deflater (0.6.3)
       rack (>= 1.4.5)
     http-cookie (1.0.3)
@@ -246,6 +256,8 @@ GEM
     multipart-post (2.1.1)
     nameable (1.1.4)
     nestful (1.1.3)
+    net-http-persistent (3.0.1)
+      connection_pool (~> 2.2)
     netrc (0.11.0)
     newrelic_rpm (6.0.0.351)
     nio4r (2.3.1)
@@ -315,6 +327,8 @@ GEM
       activerecord (>= 5.0)
       activesupport (>= 5.0)
       i18n
+    rash (0.4.0)
+      hashie (~> 2.0.0)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
@@ -376,9 +390,9 @@ GEM
       actionmailer (>= 3.2.6, < 6)
       actionpack (>= 3.2.6, < 6)
       devise (>= 3.2, < 6)
-    skylight (4.1.1)
-      skylight-core (= 4.1.1)
-    skylight-core (4.1.1)
+    skylight (4.1.2)
+      skylight-core (= 4.1.2)
+    skylight-core (4.1.2)
       activesupport (>= 4.2.0)
     spring (2.1.0)
     spring-watcher-listen (2.0.1)
@@ -476,6 +490,7 @@ DEPENDENCIES
   skylight
   spring
   spring-watcher-listen (~> 2.0.0)
+  stripe!
   twilio-ruby
   tzinfo-data
   underscore_params

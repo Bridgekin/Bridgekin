@@ -20,7 +20,7 @@ import merge from 'lodash/merge';
 import Loading from '../loading';
 import Capitalize from 'capitalize';
 
-import { searchContacts } from '../../actions/sales_contacts_actions';
+import { searchContacts, clearContactResults } from '../../actions/sales_contacts_actions';
 // require("bootstrap/less/bootstrap.less");
 
 
@@ -44,6 +44,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   searchContacts: search => dispatch(searchContacts(search)),
+  clearContactResults: () => dispatch(clearContactResults())
 });
 
 const styles = theme => ({
@@ -126,6 +127,7 @@ class SalesDashboard extends React.Component {
   async searchData(payload){
     const { offset, limit, filter } = this.state;
     this.setState({ loaded: false });
+    this.props.clearContactResults();
     payload = await merge({}, payload, {offset, limit, filter})
     let total = await this.props.searchContacts(payload)
     await this.setState({ total, loaded: true })
@@ -166,7 +168,9 @@ class SalesDashboard extends React.Component {
     const { loaded, total} = this.state;
 
     if(!loaded){
-      return <Loading />
+      return <Grid style={{ padding: "30px 0px"}}>
+          <Loading />
+        </Grid>
     }
 
     let resultArray = Object.values(results);
@@ -174,8 +178,7 @@ class SalesDashboard extends React.Component {
       <ResultCard contact={contact} idx={idx} />
     ))
 
-    let resultsComponent = <Grid container justify='center'
-      style={{ border: `1px solid grey` }}>
+    let resultsComponent = <Grid container justify='center'>
       <Grid item xs={9} container spacing={2}
       justify='space-around'
         style={{ margin: "20px 0px" }}>
@@ -219,94 +222,103 @@ class SalesDashboard extends React.Component {
       "google": "Contacts From Google"
     }
 
-    let searchComponent = <Grid container justify='center'
-    style={{ border: `1px solid grey`, marginBottom: 30, padding: "10px 0px"}}>
-      <Grid container item xs={10} justify='space-around'>
-        <Grid item container xs={4} direction='column' justify='space-around'>
-          <Typography align='center'>
-            {`Search by Characteristic`}
-          </Typography>
-          <TextField
-            label="Title/Position"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={position}
-            onChange={this.handleChange('position')}
-            onMouseUp={this.handleChange('position')}
-          />
+    let searchComponent = <Paper>
+        <Grid container justify='center'
+      style={{ marginBottom: 30, padding: "20px 0px"}}>
+        <Grid container item xs={10} justify='space-around'>
+          <Grid item container xs={4} direction='column' justify='space-around'
+          style={{ height: "100%"}}>
+            <Typography align='center' gutterBottom 
+            color='textSecondary'
+            style={{ fontSize: 16 }}>
+              {`Search by Characteristic`}
+            </Typography>
+            <TextField
+              label="Title/Position"
+              className={classes.textField}
+              margin="dense"
+              variant='outlined'
+              value={position}
+              onChange={this.handleChange('position')}
+              onMouseUp={this.handleChange('position')}
+            />
 
-          <TextField
-            label="Company"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={company}
-            onChange={this.handleChange('company')}
-            onMouseUp={this.handleChange('company')}
-          />
+            <TextField
+              label="Company"
+              className={classes.textField}
+              margin="dense"
+              variant='outlined'
+              value={company}
+              onChange={this.handleChange('company')}
+              onMouseUp={this.handleChange('company')}
+            />
 
-          <TextField
-            label="Location"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={location}
-            onChange={this.handleChange('location')}
-            onMouseUp={this.handleChange('location')}
-          />
+            <TextField
+              label="Location"
+              className={classes.textField}
+              margin="dense"
+              variant='outlined'
+              value={location}
+              onChange={this.handleChange('location')}
+              onMouseUp={this.handleChange('location')}
+            />
 
-          <Grid container justify='center'
-          style={{ marginTop: 10}}>
-            <Button variant='contained' color='primary'
-              onClick={this.searchByCharacteristic}>
-              {`Search By Characteristic`}
-            </Button>
+            <Grid container justify='center'
+            style={{ marginTop: 10}}>
+              <Button variant='contained' color='primary'
+                onClick={this.searchByCharacteristic}>
+                {`Search By Characteristic`}
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
 
-        <Grid item xs={2} container alignItems='center' justify='center'>
-          <Typography>
-            {`OR`}
-          </Typography>
-        </Grid>
+          <Grid item xs={2} container alignItems='center' justify='center'>
+            <Typography>
+              {`OR`}
+            </Typography>
+          </Grid>
 
-        <Grid item container xs={4}
-          direction='column'>
-          <Typography align='center'>
-            {`Search by Name`}
-          </Typography>
-          <TextField
-            label="First Name"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={fname}
-            onChange={this.handleChange('fname')}
-            onMouseUp={this.handleChange('fname')}
-          />
+          <Grid item container xs={4}
+            direction='column' justify='space-between'
+            style={{ height: "100%" }}>
+            <Grid container direction='column'>
+              <Typography align='center' gutterBottom color='textSecondary'
+                style={{ fontSize: 16 }}>
+                {`Search by Name`}
+              </Typography>
+              <TextField
+                label="First Name"
+                className={classes.textField}
+                margin="dense"
+                variant='outlined'
+                value={fname}
+                onChange={this.handleChange('fname')}
+                onMouseUp={this.handleChange('fname')}
+              />
 
-          <TextField
-            label="Last Name"
-            className={classes.textField}
-            margin="dense"
-            variant='outlined'
-            value={lname}
-            onChange={this.handleChange('lname')}
-            onMouseUp={this.handleChange('lname')}
-          />
-          <Grid container justify='center'
-            style={{ marginTop: 40 }}>
-            <Button variant='contained' color='primary'
-            onClick={this.searchByName}>
-              {`Search By Name`}
-            </Button>
+              <TextField
+                label="Last Name"
+                className={classes.textField}
+                margin="dense"
+                variant='outlined'
+                value={lname}
+                onChange={this.handleChange('lname')}
+                onMouseUp={this.handleChange('lname')}
+              />
+            </Grid>
+            <Grid container justify='center'
+              style={{ marginTop: 40 }}>
+              <Button variant='contained' color='primary'
+              onClick={this.searchByName}>
+                {`Search By Name`}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </Paper>
 
-    return <div style={{ minHeight: dimensions.height }}>
+    return <div style={{ minHeight: dimensions.height, backgroundColor: 'white' }}>
       <Grid container justify='center'
         className={classes.grid}>
         <Grid item xs={10}>
@@ -348,7 +360,15 @@ class SalesDashboard extends React.Component {
           </Grid>
 
           {searchComponent}
-          {this.getResults()}
+          <Paper>
+            <Grid container justify='center'>
+              <Typography gutterBottom color='textSecondary'
+              style={{ fontSize: 18, marginTop: 30}}>
+                {`Search Results`}
+              </Typography>
+            </Grid>
+            {this.getResults()}
+          </Paper>
         </Grid>
       </Grid>
     </div>
