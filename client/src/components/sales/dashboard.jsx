@@ -180,7 +180,7 @@ class SalesDashboard extends React.Component {
 
     let resultsComponent = <Grid container justify='center'>
       <Grid item xs={9} container spacing={2}
-      justify='space-around'
+      justify='flex-start'
         style={{ margin: "20px 0px" }}>
         {(resultArray.length > 0) ? (
           resultCards

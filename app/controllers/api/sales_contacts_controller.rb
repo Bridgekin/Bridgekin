@@ -26,13 +26,10 @@ class Api::SalesContactsController < ApiController
       .where(users: {id: @current_user})
 
       @sales_contacts = @sales_contacts.left_outer_joins(user_contacts)
-        # .where.not(id: user_contacts)
-        # .where()
-        # .left_outer_joins(user_contacts)
     when "mine"
       @sales_contacts = @current_user.sales_contacts
     when "linkedIn"
-      @sales_contacts = @sales_contacts.where(linkedIn: true)
+      @sales_contacts = @sales_contacts.where(linked_in: true)
     when "google"
       @sales_contacts = @sales_contacts.where(google: true)
     else
