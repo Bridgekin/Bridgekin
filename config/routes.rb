@@ -38,10 +38,12 @@ Rails.application.routes.draw do
     resource :ref_opp_link, only: [:create]
     resources :sales_networks, only: [:index]
     resources :sales_intros
+    resource :admin_signup_links, only: [:show]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    post "admin_signup", :to => 'users#admin_signup'
     get "webhooks/clearbit", :to => 'webhooks#clearbit'
     post "webhooks/full_contact_company", :to => 'webhooks#full_contact_company'
     post "webhooks/full_contact_people", :to => 'webhooks#full_contact_people'

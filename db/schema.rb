@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_01_191751) do
+ActiveRecord::Schema.define(version: 2019_07_02_184205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,14 @@ ActiveRecord::Schema.define(version: 2019_07_01_191751) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "admin_signup_links", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "subscription", default: ""
+    t.integer "network_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -337,6 +345,13 @@ ActiveRecord::Schema.define(version: 2019_07_01_191751) do
     t.index ["member_id"], name: "index_referral_links_on_member_id"
     t.index ["recipient_id"], name: "index_referral_links_on_recipient_id"
     t.index ["referral_code"], name: "index_referral_links_on_referral_code"
+  end
+
+  create_table "sales_admin_networks", force: :cascade do |t|
+    t.integer "admin_id"
+    t.integer "network_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sales_companies", force: :cascade do |t|

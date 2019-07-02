@@ -52,7 +52,7 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.take(10).each do |entry|
+    google_contacts.take(5).each do |entry|
       if entry['email'].nil?
         contact = SalesContact.new()
       else
@@ -103,7 +103,7 @@ class ConnectSocialJob < ApplicationJob
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
 
-    parsed_file.take(5).each do |entry|
+    parsed_file.take(25).each do |entry|
       contact = SalesContact.find_by(
         email: entry["Email Address"],
         fname: entry["First Name"],

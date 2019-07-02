@@ -11,7 +11,7 @@ class HunterJob < ApplicationJob
         contact.email = email
         contact.save
 
-        # FullContactJob.perform_later("people", email: contact.email)
+        FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
       end
     rescue
       logger.error "Hunter couldn't find record with company name: #{company.title} and contact name: #{contact.fname} #{contact.lname}"

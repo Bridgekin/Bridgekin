@@ -10,8 +10,11 @@ import Img from 'react-image'
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import PersonIcon from '@material-ui/icons/PersonSharp';
+import IconButton from '@material-ui/core/IconButton';
 
-import { SocialIcon } from 'react-social-icons';
+// import { SocialIcon } from 'react-social-icons';
+import TwitterLogo from '../../static/twitter-logo.svg'
+import LinkedInLogo from '../../static/linkedin-sign.svg'
 import { openRequestIntro } from '../../actions/modal_actions';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -42,7 +45,16 @@ const styles = theme => ({
     borderBottom: `1px solid ${theme.palette.border.secondary}`
   },
   socialIcon:{
-    height: 25, width: 25
+    height: "25px !important", 
+    width: "25px !important",
+    margin: "0px 5px",
+    cursor: 'pointer'
+  },
+  socialIconButton:{
+    '&:hover': {
+      backgroundColor: 'none'
+    },
+    padding:0
   },
   defaultProfilePic: {
     height: 'auto',
@@ -87,6 +99,12 @@ class ResultCard extends React.Component {
       page: 'request',
       contact
     })
+  }
+
+  redirectSocial(url){
+    return e => {
+      window.location.replace(url)
+    }
   }
 
   render(){
@@ -140,14 +158,22 @@ class ResultCard extends React.Component {
                   {`${contact.location || "Location: N/A"}`}
                 </Typography>
 
-                {false && <Grid container>
-                  <SocialIcon url="http://linkedin.com/"
+                <Grid container style={{ marginTop: 5}}>
+                  {/*{contact.linkedinUrl && <SocialIcon 
+                    url={contact.linkedinUrl}
                     network="linkedin" 
-                    className={classes.socialIcon}/>
-                  <SocialIcon network="email"
-                    url="mailto:mail@example.org" 
-                    className={classes.socialIcon}/>
-                </Grid>}
+                    className={classes.socialIcon}/>}
+                  {contact.twitterHandle && <SocialIcon  
+                    url={contact.twitterHandle}
+                    network="twitter"
+                  className={classes.socialIcon} />}*/}
+                  {contact.linkedinUrl && <Img src={LinkedInLogo}
+                    onClick={this.redirectSocial(contact.linkedinUrl)}
+                  className={classes.socialIcon} />}
+                  {contact.twitterHandle && <Img src={TwitterLogo}
+                    onClick={this.redirectSocial(contact.twitterHandle)}
+                    className={classes.socialIcon} />}
+                </Grid>
               </Grid>
             </Grid>
 

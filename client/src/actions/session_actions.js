@@ -80,6 +80,25 @@ export const salesSignup = (formUser) => dispatch => (
     })
 );
 
+export const adminSignup = (formUser) => dispatch => (
+  SessionApiUtil.adminSignup(formUser)
+    .then(handleErrors)
+    .then(data => {
+      localStorage.setItem('bridgekinToken', data.token);
+      dispatch(receiveUsers(data.users));
+      dispatch(receiveCurrentUser(data.currentUser));
+      dispatch(receiveSiteTemplate(data.siteTemplate));
+      dispatch(receiveWorkspaces(data.workspaces));
+      dispatch(receiveUserFeature(data.userFeature));
+    })
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveUserErrors(errors));
+    })
+);
+
 export const googleSalesLogin = (formUser) => dispatch => (
   SessionApiUtil.googleSalesLogin(formUser)
     .then(handleErrors)

@@ -6,10 +6,14 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
 
 import Loading from '../loading';
 import PersonIcon from '@material-ui/icons/PersonSharp';
 
+import Img from 'react-image'
+import TwitterLogo from '../../static/twitter-logo.svg'
+import LinkedInLogo from '../../static/linkedin-sign.svg'
 import { fetchSalesIntro } from '../../actions/sales_intro_actions';
 import { openLogin, openRespondToRequest } from '../../actions/modal_actions';
 
@@ -49,6 +53,17 @@ const styles = theme => ({
     borderRadius: '50%',
     backgroundColor: `grey`,
     margin: "20px 0px 30px"
+  },
+  socialIcon: {
+    height: "25px !important",
+    width: "25px !important",
+    margin: "0px 5px",
+    cursor: 'pointer'
+  },
+  avatar:{
+    width:'100%',
+    height: 'auto',
+    maxWidth: 200
   }
 })
 
@@ -104,6 +119,12 @@ class RespondToIntro extends React.Component {
     }
   }
 
+  redirectSocial(url) {
+    return e => {
+      window.location.replace(url)
+    }
+  }
+
   render() {
     const { classes, currentUser, 
       dimensions, salesIntros, salesContacts,
@@ -137,12 +158,17 @@ class RespondToIntro extends React.Component {
             container alignItems='center'
             direction='column'
             style={{ padding: "15px 0px "}}>
-              <Grid container justify='center' 
-              alignItems='center' item
-              className={classes.profileContainer}>
-                <PersonIcon
-                  className={classes.defaultProfilePic}/>
-              </Grid>
+              {contact.avatarUrl ? 
+                <Avatar alt="profile-pic"
+                  src={contact.avatarUrl}
+                  className={classes.avatar}/>
+              : <Grid container justify='center'
+                  alignItems='center' item
+                  className={classes.profileContainer}>
+                  <PersonIcon
+                    className={classes.defaultProfilePic} />
+                </Grid>
+              }
               <Typography align='center' 
               gutterBottom 
               style={{ fontSize: 18}}>
@@ -158,12 +184,31 @@ class RespondToIntro extends React.Component {
                 style={{ fontSize: 14, textTransform: 'capitalize' }}>
                 {`${contact.company || "Unknown Company"}`}
               </Typography>
+
               <div style={{width:'65%', borderTop:`1px solid grey`, margin: "15px 0px" }}/>
+
               <Typography align='center' 
                 color='textPrimary'
                 style={{ fontSize: 14, textTransform: 'capitalize' }}>
                 {`Location: ${contact.location || "N/A"}`}
               </Typography>
+
+              <Grid container justify='center' style={{ marginTop: 5}}>
+                  {/*{contact.linkedinUrl && <SocialIcon 
+                    url={contact.linkedinUrl}
+                    network="linkedin" 
+                    className={classes.socialIcon}/>}
+                  {contact.twitterHandle && <SocialIcon  
+                    url={contact.twitterHandle}
+                    network="twitter"
+                  className={classes.socialIcon} />}*/}
+                  {contact.linkedinUrl && <Img src={LinkedInLogo}
+                    onClick={this.redirectSocial(contact.linkedinUrl)}
+                  className={classes.socialIcon} />}
+                  {contact.twitterHandle && <Img src={TwitterLogo}
+                    onClick={this.redirectSocial(contact.twitterHandle)}
+                    className={classes.socialIcon} />}
+                </Grid>
             </Grid>
             <Grid></Grid>
           </Grid>

@@ -41,6 +41,49 @@ class Api::UsersController < ApiController
     end
   end
 
+  def admin_signup
+    @currentUser = User.new(user_params)
+    sales_network = SalesNetwork.new(
+      domain: params[:user][:domain],
+      title: params[:user][:title]
+    )
+
+    if @currentUser.save && sales_network.save
+      #Attach to existing network
+      SalesUserNetwork.create(
+        network_id: sales_network.id,
+        user_id: @currentUser.id
+      )
+      #Attach admin user
+      SalesAdminNetwork.create(
+        network_id: sales_network.id,
+        admin_id: @currentUser.id
+      )
+      #Get Tokens and track
+      @token = get_login_token!(@currentUser)
+      @currentUser.implement_trackable
+      @site_template = @currentUser.get_template
+
+      #Remove waitlist user from waitlist by changing status
+      @currentUser.update_waitlist
+      #Create array of user info
+      @users = [@currentUser]
+      #Get User feature set
+      @user_feature = @currentUser.user_feature ||
+        UserFeature.create(user_id: @currentUser.id)
+      #Set hire user setting
+      @user_feature.hire_user = true
+      @user_feature.save
+      #No friends yet = Empty object to fill connections
+      @connections = {}
+
+      render :hire_signup
+    else
+      errors = @currentUser.errors.full_messages + sales_network.errors.full_messages
+      render json: errors, status: 422
+    end
+  end
+
   def sales_signup
     @currentUser = User.new(user_params)
     network = SalesNetwork.find_by(domain: params[:user][:domain])

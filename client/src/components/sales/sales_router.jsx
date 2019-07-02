@@ -11,6 +11,7 @@ import SalesLogin from './login.jsx'
 import SalesConnectSocial from './connect_social.jsx'
 import SalesRespondToIntro from './respond_to_intro.jsx'
 import SalesStats from './stats.jsx'
+import SalesAdminSignup from './admin_signup.jsx'
 
 import { AuthRoute,
   SalesAuthRoute,
@@ -44,9 +45,8 @@ class SalesRouter extends React.Component {
         <SalesProtectedRoute path="/sales/connect_social" component={SalesConnectSocial} />
         <Route path="/sales/respond_to_intro/:introId" component={SalesRespondToIntro} />
         <SalesProtectedRoute path="/sales/stats/:page?" component={SalesStats} />
-        {/* <SalesProtectedRoute path="/sales/create" component={SalesCreate} />
-        <SalesProtectedRoute path="/sales/share/:id" component={SalesSharing} />
-        <Route path="/sales/show/:id?" component={SalesShow} />*/}
+        x
+        <SalesAuthRoute path="/sales/admin_signup/:page" component={SalesAdminSignup} />
         <Route path="/sales/login" component={SalesLogin}/>
         <AuthRoute path="/sales" component={SalesLandingPage} />
       </Switch>
