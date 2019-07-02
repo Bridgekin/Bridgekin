@@ -51,18 +51,25 @@ const styles = theme => ({
   },
   card:{
     // border: `1px solid ${theme.palette.border.secondary}`,
-    margin: "10px 0px"
+    margin: "10px 0px",
+    // padding: 10
   },
   cardDivider: { borderTop: `1px solid ${theme.palette.border.secondary}`},
   actionSection:{
-    padding: 10
+    padding: "10px 0px"
   },
   nameDivider:{
     borderBottom: `1px solid grey`, 
     margin: "10px 0px"
   },
   profileLetter: {
-    height: '100%'
+    width: '100%',
+    height: 'auto',
+    borderRadius: "50%"
+  },
+  avatar:{
+    width:'100%',
+    height: 'auto'
   }
 })
 
@@ -93,15 +100,12 @@ class ResultCard extends React.Component {
           <Grid container 
             justify='center'
             className={classes.card}>
-            <Grid container>
+            <Grid container item xs={11}>
               <Grid item xs={3} container alignItems='center'>
-                {/*contact.avatarUrl ? 
+                {contact.avatarUrl ? 
                 <Avatar alt="profile-pic"
                   src={contact.avatarUrl}
                   className={classes.avatar}/> :
-                <PersonIcon
-                  className={classes.defaultProfilePic}/>
-                */}
                 <Grid container justify='center' 
                 alignItems='center'
                 className={classes.profileLetter}
@@ -110,7 +114,7 @@ class ResultCard extends React.Component {
                   style={{ fontSize: 50, fontWeight: 600, color:"white"}}>
                     {`${contact.fname.charAt(0)}`}
                   </Typography>
-                </Grid>
+                </Grid>}
               </Grid>
               <Grid item xs={9}
               style={{ padding: 16}}>
@@ -146,8 +150,10 @@ class ResultCard extends React.Component {
                 </Grid>}
               </Grid>
             </Grid>
-            <Grid item xs={10} className={classes.cardDivider}/>
-            <Grid container justify='flex-end' alignItems='center'
+
+            <Grid item xs={11} className={classes.cardDivider}/>
+
+            <Grid container justify='flex-end' alignItems='center' item xs={11}
             className={classes.actionSection}>
               {/*contact.connectedMembers.map(id => {
                 let member = networkMembers[id];

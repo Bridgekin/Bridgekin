@@ -551,7 +551,7 @@ class AccountSetting extends React.Component {
                   Name
                 </Typography>
                 <Grid container justify="center" alignItems="center"
-                  spacing={16}>
+                  spacing={2}>
                   <Grid item xs={10} sm={6}>
                     <TextField
                       id="standard-name"
@@ -578,7 +578,7 @@ class AccountSetting extends React.Component {
                   Position
                 </Typography>
                 <Grid container justify="center" alignItems="center"
-                  spacing={24}>
+                  spacing={3}>
                   <Grid item xs={10} sm={6}>
                     <TextField
                       id="standard-name"
@@ -604,7 +604,7 @@ class AccountSetting extends React.Component {
                   Location
                 </Typography>
                 <Grid container justify="center" alignItems="flex-end"
-                  spacing={24}>
+                  spacing={3}>
                   <Grid item xs={10} sm={6}>
                     <TextField
                       id="standard-name"
@@ -672,7 +672,7 @@ class AccountSetting extends React.Component {
                     </Grid>
                   </Grid>
                   <Grid container justify='flex-start' alignItems='center'
-                    spacing={8}>
+                    spacing={1}>
                     <label htmlFor="contained-button-file">
                       <Button variant="contained" component="span"
                         style={{ margin: "20px 10px 0px 0px", fontWeight: 600 }}>

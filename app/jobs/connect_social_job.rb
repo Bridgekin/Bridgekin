@@ -52,7 +52,7 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.take(5).each do |entry|
+    google_contacts.take(10).each do |entry|
       if entry['email'].nil?
         contact = SalesContact.new()
       else
@@ -77,7 +77,7 @@ class ConnectSocialJob < ApplicationJob
         end
         # Kickoff Full Contact
         if contact.email.present? # && contact.last_full_contact_lookup.nil?
-          FullContactJob.perform_later("people", email: contact.email)
+          FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
         end
       else
         #Save failed contact if needed
@@ -103,7 +103,7 @@ class ConnectSocialJob < ApplicationJob
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
 
-    parsed_file.each do |entry|
+    parsed_file.take(5).each do |entry|
       contact = SalesContact.find_by(
         email: entry["Email Address"],
         fname: entry["First Name"],
@@ -127,6 +127,31 @@ class ConnectSocialJob < ApplicationJob
             user_id: current_user.id,
             contact_id: contact.id
           )
+        end
+
+        # company = SalesCompany.find_by(title: contact.company) || SalesCompany.new(title: contact.company)
+        company = SalesCompany.find_or_initialize_by(title: contact.company)
+        response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
+
+        parsed = JSON.parse(response.body)
+        answer = parsed.reduce({}) do |acc, entry|
+          if entry["name"].downcase == company.title.downcase
+            acc = entry
+          end
+          acc
+        end
+        # debugger
+        if answer.present?
+          # debugger
+          company.domain = answer["domain"]
+          company.logo_url = answer["logo"]
+          company.grab_logo_image(answer["logo"]) if answer["logo"].present?
+        end
+        
+        if company.save
+          HunterJob.perform_later(company, contact) if company.domain.present?
+        else
+          logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
         end
       else
         #Save failed contact if needed

@@ -168,7 +168,7 @@ class OpportunityReferral extends React.Component{
               />
           </Grid>
         </Grid>
-        <Grid container justify='flex-start' spacing={16}>
+        <Grid container justify='flex-start' spacing={2}>
           <Grid item xs={12} container alignItems='center'>
             <FormControl className={classes.formControl} fullWidth>
               <Select

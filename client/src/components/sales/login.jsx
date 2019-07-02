@@ -200,7 +200,7 @@ class SalesLogin extends React.Component {
           <Typography style={{ fontWeight: 600}}>
             {`Login`}
           </Typography>
-          <Grid container spacing={16}>
+          <Grid container spacing={2}>
             <Grid item xs={6} sm={4}>
               <TextField margin='dense' fullWidth
                 required
@@ -246,7 +246,7 @@ class SalesLogin extends React.Component {
               style={{ fontSize: 14 }}>
               {`Enter your company URL below and press find.`}
             </Typography>
-            <Grid container spacing={16}>
+            <Grid container spacing={2}>
               <Grid item xs={8}>
                 <TextField margin='dense' fullWidth
                   required

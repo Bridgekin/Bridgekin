@@ -85,10 +85,10 @@ class AccountPosted extends React.Component {
       ));
 
       let opportunityGrid = (
-        <Grid container justify="center" alignItems="center" spacing={24}>
+        <Grid container justify="center" alignItems="center" spacing={3}>
           <Grid item xs={12} className={classes.gridOpp} >
             <Grid container style={{ flexGrow: 1, zIndex:-1}}
-              justify="flex-start" alignItems="center" spacing={16}>
+              justify="flex-start" alignItems="center" spacing={2}>
               {opportunityCards}
 
               <Grid item xs={12} sm={6} md={4} justify="center"

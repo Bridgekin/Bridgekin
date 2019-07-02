@@ -46,9 +46,9 @@ class Api::WebhooksController < ApiController
   }
 
   def full_contact_people
-    begin
+    if response.status < 300
+      contact = SalesContact.find(params["contact_id"])
       if params["status"].nil?
-        contact = SalesContact.find_by(email: params["details"]["emails"][0]["value"])
         unless contact.nil?
           #Set basic information
           FCVARS.each do |key, value|
@@ -65,12 +65,17 @@ class Api::WebhooksController < ApiController
           #   contact.fname = name.first
           #   contact.lname = name.last
           # end
-          contact.last_full_contact_lookup = Datetime.now
-          contact.save
         end
+      elsif params["status"] === 404
+        logger.debug "Not Found"
+      elsif params["status"] === 403
+        logger.error "Rate Limit hit"
       end
-    rescue
-      logger.debug "No email found or Error"
+
+      contact.last_full_contact_lookup = DateTime.now
+      contact.save
+    else 
+      logger.debug "Not Found"
     end
 
     render json:["Success"], status: 200

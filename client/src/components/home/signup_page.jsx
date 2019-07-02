@@ -186,7 +186,7 @@ class SignupPage extends React.Component{
 
     let form = (
       <form className='form-container'>
-        <Grid container justify="center" alignItems="center" spacing={8}>
+        <Grid container justify="center" alignItems="center" spacing={1}>
           <Grid item xs={12} sm={6} >
             <TextField
               required

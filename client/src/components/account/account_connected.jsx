@@ -77,7 +77,7 @@ class AccountConnected extends React.Component {
       ));
 
       let opportunityGrid = (
-        <Grid container justify="center" alignItems="center" spacing={24}>
+        <Grid container justify="center" alignItems="center" spacing={3}>
 
           <Grid item xs={11} className={classes.gridOpp} >
             <Typography variant="h2" gutterBottom align='left'
@@ -85,7 +85,7 @@ class AccountConnected extends React.Component {
               Connected Opportunities
             </Typography>
             <Grid container style={{ flexGrow: 1 }}
-              justify="flex-start" alignItems="center" spacing={24}>
+              justify="flex-start" alignItems="center" spacing={3}>
               {connectedOpportunityCards}
             </Grid>
           </Grid>
@@ -96,7 +96,7 @@ class AccountConnected extends React.Component {
               Referred Opportunities
             </Typography>
             <Grid container style={{ flexGrow: 1 }}
-              justify="flex-start" alignItems="center" spacing={24}>
+              justify="flex-start" alignItems="center" spacing={3}>
               {facilitatedOpportunityCards}
             </Grid>
           </Grid>

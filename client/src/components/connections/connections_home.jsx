@@ -304,7 +304,7 @@ class ConnectionsHome extends React.Component{
       <Grid item xs={12} md={6}>
         <Card className={classes.card}>
           <Grid container justify="space-around" alignItems="center"
-            spacing={16}>
+            spacing={2}>
 
             <Grid item xs={11}>
               <Typography variant="h6" gutterBottom align="center"
@@ -402,7 +402,7 @@ class ConnectionsHome extends React.Component{
       <Grid item xs={12} md={6}>
         <Card className={classes.card}>
           <Grid container justify="space-around" alignItems="center"
-            spacing={16}>
+            spacing={2}>
 
             <Grid item xs={11}>
               <Typography variant="h6" gutterBottom align="center"
@@ -485,7 +485,7 @@ class ConnectionsHome extends React.Component{
           {subHeaderDesktop}
 
           <Grid item xs={11} container justify="center"
-            alignItems="center" spacing={16}
+            alignItems="center" spacing={2}
             className={classes.connectionsContainer}>
 
             {myTrustedNetwork}
@@ -528,7 +528,7 @@ class ConnectionsHome extends React.Component{
           </Grid>
 
           <Grid item xs={12} container justify="center"
-            alignItems="center" spacing={16}>
+            alignItems="center" spacing={2}>
 
             {toggle ? myTrustedNetwork : networkCircles}
           </Grid>

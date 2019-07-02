@@ -162,7 +162,7 @@ class HomePage extends React.Component{
     let mui = true;
     let form = mui ? (
       <form className='form-container'>
-        <Grid container justify="flex-start" alignItems="center" spacing={8}>
+        <Grid container justify="flex-start" alignItems="center" spacing={1}>
           <Grid item xs={10} md={5} >
             <TextField
               required

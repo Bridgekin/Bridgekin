@@ -126,7 +126,7 @@ class SubmitModal extends React.Component {
       <Grid className={classes.grid}
         container justify='center'>
         <Grid item xs={9} sm={10} md={9} container justify='flex-start'
-          spacing={16}>
+          spacing={2}>
           <Typography variant="h2" id="modal-title"
             color='textPrimary'
             className={classes.thanksHeader}>
@@ -151,7 +151,7 @@ class SubmitModal extends React.Component {
       <Grid className={classes.grid}
         container justify='center'>
         <Grid item xs={9} sm={10} md={9} container justify='flex-start'
-          spacing={16}>
+          spacing={2}>
 
           <Typography variant="h2" id="modal-title"
             color='textPrimary'
@@ -181,7 +181,7 @@ class SubmitModal extends React.Component {
         <Grid className={classes.grid}
           container justify='center'>
           <Grid item xs={11} sm={10} md={8} container justify='flex-start'
-            spacing={16}>
+            spacing={2}>
             <Typography variant="h2" id="modal-title"
               color='textPrimary' align='left'
               className={classes.thanksHeader}>

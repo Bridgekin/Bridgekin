@@ -1010,7 +1010,7 @@ class OpportunityChangeModal extends React.Component {
           {/*showFilters && filterOptions.map(option => this.getFilterButton(option))*/}
           {showFilters &&
           <Grid container justify='space-between' alignItems='center'
-            spacing={8}>
+            spacing={1}>
             <Grid item xs={6} container justify='flex-start' direction='column'>
               <Typography variant='body1' align='left'
                 color="textSecondary"

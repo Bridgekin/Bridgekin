@@ -436,7 +436,7 @@ class HomeNav extends React.Component {
           return window.location.replace(`${window.location.origin}/admin/login`);
         case 'logout':
           return this.props.logout()
-            .then(() => this.props.history.push('/'),
+            .then(() => this.props.history.push('/platform'),
             () => alert("There was a problem logging out. We're working on it!"));
         // case 'findandconnect':
         //   return this.props.history.push(`/${field}`);

@@ -30,6 +30,6 @@ class SalesContact < ApplicationRecord
 
   def grab_avatar_image(url)
     downloaded_image = open(url)
-    self.avatar.attach(io: downloaded_image, filename: "full_contact_avatar")
+    self.avatar.attach(io: downloaded_image, filename: "full_contact_avatar.jpeg")
   end
 end

@@ -159,7 +159,7 @@ class OpportunityWaitlist extends React.Component{
 
     return(
       <Grid container className={classes.root}
-        justify="center" alignItems="center" spacing={8}>
+        justify="center" alignItems="center" spacing={1}>
         <Typography gutterBottom align='center'
           className={classes.cardHeader} color='textPrimary'
           style={{ margin: '10px 0px 15px', fontSize: 13, fontWeight: 600 }}>
@@ -253,7 +253,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(O
 // ])
 
 // <Grid container className={classes.root}
-//   justify="center" alignItems="center" spacing={24}>
+//   justify="center" alignItems="center" spacing={3}>
 //
 //   <Grid item xs={9} justify="flex-end" alignItems="center">
 //     <Typography variant="h4" gutterBottom align='center'
@@ -264,7 +264,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(O
 //   </Grid>
 //
 //   <Grid container className={classes.root}
-//     justify="center" alignItems="center" spacing={24}>
+//     justify="center" alignItems="center" spacing={3}>
 //
 //     <Grid item xs={10} sm={4} justify="center" alignItems="center">
 //       <Typography variant="h6" gutterBottom align='center'
