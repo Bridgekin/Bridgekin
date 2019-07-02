@@ -64,8 +64,16 @@ const styles = theme => ({
     width:'100%',
     height: 'auto',
     maxWidth: 200
-  }
+  },
+  profileLetter: {
+    width: 150,
+    height: 150,
+    borderRadius: "50%"
+  },
 })
+
+const COLORS = ["#FF8833", "#D92121", "#3AA655", "#0095B7"]
+const colorChoice = COLORS[Math.floor(Math.random() * COLORS.length)]
 
 class RespondToIntro extends React.Component {
   constructor(props) {
@@ -162,11 +170,14 @@ class RespondToIntro extends React.Component {
                 <Avatar alt="profile-pic"
                   src={contact.avatarUrl}
                   className={classes.avatar}/>
-              : <Grid container justify='center'
-                  alignItems='center' item
-                  className={classes.profileContainer}>
-                  <PersonIcon
-                    className={classes.defaultProfilePic} />
+                : <Grid container justify='center'
+                  alignItems='center'
+                  className={classes.profileLetter}
+                  style={{ backgroundColor: colorChoice, margin: "20px 0px"}}>
+                  <Typography
+                    style={{ fontSize: 60, fontWeight: 600, color: "white" }}>
+                    {`${contact.fname.charAt(0)}`}
+                  </Typography>
                 </Grid>
               }
               <Typography align='center' 

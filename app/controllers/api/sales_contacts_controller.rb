@@ -1,6 +1,4 @@
-# require_relative '../concerns/devise_controller_patch.rb'
 class Api::SalesContactsController < ApiController
-  # include DeviseControllerPatch
   before_action :authenticate_user
   # before_action :set_ref_opp, only: [:show]
 
