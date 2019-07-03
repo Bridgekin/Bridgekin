@@ -153,7 +153,7 @@ class ResultCard extends React.Component {
                 
                 <div className={classes.nameDivider}/>
 
-                <Typography color='textPrimary'
+                <Typography color='textPrimary' noWrap
                   style={{ fontSize: 13, textTransform: 'capitalize' }}>
                   {`${contact.location || "Location: N/A"}`}
                 </Typography>

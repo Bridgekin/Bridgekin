@@ -19,6 +19,19 @@ class SalesContact < ApplicationRecord
 
   has_one_attached :avatar
 
+  def self.test_stripe
+    Stripe.api_key = Rails.application.credentials.stripe[:test][:secret_key]
+
+    charge = Stripe::Charge.create({
+      amount: 999,
+      currency: 'usd',
+      source: 'tok_visa',
+      receipt_email: 'jenny.rosen@example.com',
+    })
+    debugger
+
+  end
+
   def setSource(source)
     case source
     when :linked_in_upload

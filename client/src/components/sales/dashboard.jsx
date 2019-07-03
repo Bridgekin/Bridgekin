@@ -115,8 +115,11 @@ class SalesDashboard extends React.Component {
 
   handleMenuChange(value){
     return e => {
-      this.setState({ filter: value, filterAnchorEl: null},
-        () => {
+      this.setState({ 
+        filter: value, 
+        filterAnchorEl: null,
+        offset: 0
+      }, () => {
           const { position, company, location, fname, lname } = this.state;
           let search = { position, company, location, fname, lname  }
           this.searchData(search)
@@ -137,20 +140,26 @@ class SalesDashboard extends React.Component {
     const { fname, lname, position, company, location } = this.state;
     let search = { position, company, location}
 
-    this.searchData(search)
-    .then(() => {
-      this.setState({ fname: '', lname: '' })
-    })
+    this.setState({ offset: 0 },
+      () => {
+        this.searchData(search)
+        .then(() => {
+          this.setState({ fname: '', lname: '' })
+        })
+      })
   }
 
   searchByName(){
     const { fname, lname, position, company, location } = this.state;
     let search = { fname, lname }
 
-    this.searchData(search)
-      .then(() => {
-        this.setState({ position: '', company: '', location: '' })
-      })
+    this.setState({ offset: 0 },
+      () => {
+        this.searchData(search)
+          .then(() => {
+            this.setState({ position: '', company: '', location: '' })
+          })
+        })
   }
 
   handleChange(field) {
