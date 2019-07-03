@@ -1,4 +1,7 @@
 require 'open-uri'
+require 'down'
+require 'mime/types'
+
 class SalesContact < ApplicationRecord
   has_many :sales_user_contacts,
     foreign_key: :contact_id,
@@ -29,7 +32,13 @@ class SalesContact < ApplicationRecord
   end
 
   def grab_avatar_image(url)
-    downloaded_image = open(url)
-    self.avatar.attach(io: downloaded_image, filename: "full_contact_avatar.jpeg")
+    # downloaded_image = open(url)
+    tempfile = Down.download(url)
+    mimetext = MIME::Types[tempfile.content_type].first
+    extension = mimetext.preferred_extension
+
+    if extension.present?
+      self.avatar.attach(io: tempfile, filename: "full_contact_avatar-#{self.id}.#{extension}")
+    end
   end
 end
