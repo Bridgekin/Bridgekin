@@ -103,7 +103,9 @@ class ResultCard extends React.Component {
 
   redirectSocial(url){
     return e => {
-      window.location.replace(url)
+      // window.location.replace(url)
+      var win = window.open(url, '_blank');
+      win.focus();
     }
   }
 

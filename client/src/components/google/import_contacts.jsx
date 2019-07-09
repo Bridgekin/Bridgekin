@@ -69,7 +69,8 @@ class GoogleContacts extends React.Component {
     this.state = {
       gapiLoaded: false,
       contactsCompared: false,
-      isSignedIn: false
+      isSignedIn: false,
+      loginRequestSent: false
     }
     this.scope = 'https://www.googleapis.com/auth/contacts.readonly'
 
@@ -88,9 +89,9 @@ class GoogleContacts extends React.Component {
     this.loadGoogleApi();
   }
 
-  componentWillUnmount(){
-    this.googleSignOut();
-  }
+  // componentWillUnmount(){
+  //   this.googleSignOut();
+  // }
 
   loadGoogleApi() {
     const script = document.createElement("script");
@@ -107,12 +108,14 @@ class GoogleContacts extends React.Component {
       'scope': this.scope,
       'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
     }).then(() => {
-      this.setState({ gapiLoaded: true})
       window.googleAuth = window.gapi.auth2.getAuthInstance();
+      window.googleAuth.disconnect();
+      // debugger
+      this.setState({ gapiLoaded: true})
       // Listen for sign-in state changes.
       window.googleAuth.isSignedIn.listen(this.handleAuthResponse);
-      var user = window.googleAuth.currentUser.get();
-      this.handleAuthResponse()
+      // var user = window.googleAuth.currentUser.get();
+      // this.handleAuthResponse()
       // debugger
     });
   }
@@ -126,14 +129,26 @@ class GoogleContacts extends React.Component {
   }
 
   handleAuthResponse(isSignedIn){
+    const { connectSocial, asLogin } = this.props;
+    const { loginRequestSent } = this.state;
     let user = window.googleAuth.currentUser.get();
-    let isAuthorized = user.hasGrantedScopes(this.scope);
-    
-    if(isAuthorized){
+
+    if(connectSocial){
+      let isAuthorized = user.hasGrantedScopes(this.scope);
       let token = user.Zi.access_token
-      if (token) {
+      
+      if(isAuthorized && token){
         this.getAllContactsRequest(token)
       }
+    } else if (asLogin && !loginRequestSent){
+      let author = {
+        fname: user.w3.ofa,
+        lname: user.w3.wea,
+        email: user.w3.U3
+      }
+      this.props.getLoginInfo(author);
+      window.googleAuth.disconnect();
+      this.setState({ loginRequestSent: true})
     }
   }
 
@@ -183,7 +198,13 @@ class GoogleContacts extends React.Component {
     let token = response.accessToken;
 
     if(token){
-      this.getAllContactsRequest(token)
+      // this.getAllContactsRequest(token)
+      let author = {
+        fname: response.w3.ofa,
+        lname: response.w3.wea,
+        email: response.w3.U3
+      }
+      this.props.getLoginInfo(author);
     }
   }
 
@@ -280,26 +301,27 @@ class GoogleContacts extends React.Component {
           onFailure={this.responseGoogle}
           cookiePolicy={'single_host_origin'}
           />
-      } else if (connectSocial){
+      } else {
         return <Button onClick={this.googleSignIn}
         className={classes.customButton}>
           <Img src={GoogleLogo}
           className={classes.googleLogo}/>
           <Typography color='textSecondary'
           style={{ fontSize: 14, textTransform:'none'}}>
-            {`Sign In`}
+            {connectSocial ? `Sign In` : "Signup/Signin"}
           </Typography>
         </Button>
-      } else {
-        return <GoogleLogin
-          data-cy='import-google-button'
-          clientId="353914730270-5khisbclif4gqall7nta62fie8b9silk.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={this.responseGoogle}
-          onFailure={this.responseGoogle}
-          cookiePolicy={'single_host_origin'}
-          />
       }
+      // } else {
+      //   return <GoogleLogin
+      //     data-cy='import-google-button'
+      //     clientId="353914730270-5khisbclif4gqall7nta62fie8b9silk.apps.googleusercontent.com"
+      //     buttonText="Signup/Signin"
+      //     onSuccess={this.responseGoogle}
+      //     onFailure={this.responseGoogle}
+      //     cookiePolicy={'single_host_origin'}
+      //     />
+      // }
     }
   }
 

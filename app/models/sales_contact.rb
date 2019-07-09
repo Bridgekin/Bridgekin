@@ -1,6 +1,6 @@
 require 'open-uri'
-require 'down'
-require 'mime/types'
+# require 'down'
+# require 'mime/types'
 
 class SalesContact < ApplicationRecord
   has_many :sales_user_contacts,

@@ -3,8 +3,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable
+         :recoverable, :rememberable, :trackable, :validatable, :confirmable
          # :jwt_authenticatable,jwt_revocation_strategy: JWTBlacklist
 
   validates :fname, presence: true
@@ -155,9 +154,133 @@ class User < ApplicationRecord
     foreign_key: :recipient_id,
     class_name: :SalesIntro
 
+  has_many :payments,
+    foreign_key: :user_id,
+    class_name: :StripePayment
+
+  has_many :paid_subscriptions,
+    foreign_key: :payer_id,
+    class_name: :StripePayment
+
+  has_many :owned_subscriptions,
+    as: :targetable
+
+  has_many :sales_admin_networks,
+    foreign_key: :admin_id,
+    class_name: :SalesAdminNetwork
+
+  has_many :managed_sales_networks,
+    through: :sales_admin_networks,
+    source: :network
+
+  has_many :stripe_details,
+    foreign_key: :user_id,
+    class_name: :StripeDetail
+  
   # def contacts_from_requests
   #   SalesIntro.includes(:contact).where("requestor_id = ? OR recipient_id = ?", self.id, self.id).pluck(:contact_id)
   # end
+
+  def save_new_admin_network(domain_params, purchase_params, address_params, admin_signup_link_id)
+    return false if invalid?
+    Stripe.api_key = Rails.application.credentials.stripe[:test][:secret_key]
+    @sales_network = SalesNetwork.new(domain_params)
+    # if purchase_params[:duration] == "month"
+    #   end_date = DateTime.now + 1.month
+    # elsif purchase_params[:duration] === "year"
+    #   end_date = DateTime.now + 1.year
+    # end
+    end_date = DateTime.now + 1.week
+
+    ActiveRecord::Base.transaction do
+      self.save!
+      @sales_network.save!
+      #Attach to existing network
+      self.sales_user_networks.create!(network: network)
+      #Attach admin user
+      self.sales_admin_networks.create!(network: network)
+      #Create a customer
+      customer = Stripe::Customer.create({
+        # address: {
+        #   line1: address_params[:line1],
+        #   city: address_params[:city],
+        #   state: address_params[:state],
+        #   postal_code: address_params[:zipcode]
+        # },
+        source: purchase_params[:token_id],
+        email: self.email
+      })
+      customerId = customer.id
+      #Add stripe customer Id and customer address 
+      StripeDetail.create!({
+        customer_id: customerId,
+        user: self,
+      })
+      #Track subscription
+      subscription = Subscription.create!({
+        targetable: @sales_network,
+        payer: self,
+        amount: purchase_params[:amount],
+        seats: purchase_params[:seats],
+        cadence: purchase_params[:duration],
+        renew: purchase_params[:renewal],
+        end_date: end_date,
+        sub_type: "trial"
+      })
+      #Make Payment
+      # charge = Stripe::Charge.create({
+      #   amount: purchase_params[:amount],
+      #   currency: 'usd',
+      #   customer: customerId,
+      #   receipt_email: 'jenny.rosen@example.com'
+      # })
+      #Track Payment
+      # StripePayment.create!({
+      #   transaction_id: charge,
+      #   user_id: self,
+      #   network_id: @sales_network,
+      #   sub_id: subscription,
+      #   seats: purchase_params[:seats],
+      #   duration: purchase_params[:duration],
+      #   amount: charge.amount
+      # })
+    end
+
+    true
+  rescue ActiveRecord::StatementInvalid => e
+    # e.message and e.cause.message can be helpful
+    errors.add(:base, e.message)
+    debugger
+    logger.error("Sales admin creation failed. Customer ID: #{customer.id if customer}, current_user: #{self.id}. Errors: #{errors.full_messages.to_s}")
+    false
+  end
+
+  def post_login_setup
+    implement_trackable
+    @site_template = get_template
+    #Get User feature set
+    @user_feature = self.user_feature ||
+      UserFeature.create(user_id: self.id)
+
+    return @site_template, @user_feature
+  end
+
+  def post_signup_setup
+    implement_trackable
+    site_template = get_template
+    #Get User feature set
+    user_feature = self.user_feature ||
+      self.user_feature.create()
+      # UserFeature.create(user_id: self.id)
+    #Remove waitlist user from waitlist by changing status
+    update_waitlist
+    #No friends yet = Empty object to fill connections
+    connections = {}
+    #Create array of user info
+    users = [self]
+
+    return site_template, user_feature, connections, users
+  end
 
   def submitted_apps
     RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)

@@ -8,16 +8,18 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import ImportGoogle from '../google/import_contacts';
-import { searchNetworks } from '../../actions/sales_actions';
+import { searchNetworks } from '../../actions/sales_network_actions';
 import { salesSignup, googleSalesLogin } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
+import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_network_actions'
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
   resultNetworks: state.entities.sales.searchNetworks,
-  userErrors: state.errors.users
+  userErrors: state.errors.users,
+  salesUserNetworks: state.entities.sales.salesUserNetworks,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -26,7 +28,9 @@ const mapDispatchToProps = dispatch => ({
   login: (user) => dispatch(login(user)),
   openSignup: (payload) => dispatch(openSignup(payload)),
   openLogin: (payload) => dispatch(openLogin(payload)),
-  googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload))
+  googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload)),
+  fetchUserNetworks: () => dispatch(fetchUserNetworks()),
+  setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId))
 });
 
 const styles = theme => ({
@@ -70,6 +74,7 @@ class SalesLogin extends React.Component {
     this.handleSignup = this.handleSignup.bind(this);
     this.backPage = this.backPage.bind(this);
     this.getLoginInfo = this.getLoginInfo.bind(this);
+    this.loadUserNetworks = this.loadUserNetworks.bind(this);
   }
 
   handleChange(field){
@@ -84,6 +89,18 @@ class SalesLogin extends React.Component {
     }
   }
 
+  loadUserNetworks() {
+    this.props.fetchUserNetworks()
+      .then(() => {
+        let userNetworks = Object.values(this.props.salesUserNetworks)
+        if (userNetworks.length > 0) {
+          let currentNetworkId = userNetworks[0].id
+          this.props.setCurrentNetwork(currentNetworkId)
+        }
+        this.props.history.push('/sales/dashboard')
+      })
+  }
+
   handleSignup(e){
     const { email, password, fname, lname, target } = this.state;
     let payload = { email, password, fname, lname,
@@ -91,11 +108,7 @@ class SalesLogin extends React.Component {
     }
     this.props.salesSignup(payload)
     .then(() => { 
-      if (this.props.userErrors.length === 0) {
-        this.props.history.push('/sales/dashboard')
-      } else {
-        this.props.openSignup({ page: 'response' });
-      }
+      this.props.openSignup({ page: 'response' });
     })
   }
 
@@ -107,7 +120,7 @@ class SalesLogin extends React.Component {
     this.props.login(user)
     .then(() => {
       if(this.props.currentUser){
-        this.props.history.push('/sales/dashboard')
+        this.loadUserNetworks()
       } else {
         this.props.openLogin({ page: "response"})
       }
@@ -127,8 +140,9 @@ class SalesLogin extends React.Component {
   getLoginInfo(payload){
     this.props.googleSalesLogin(payload)
     .then(() => {
-      if (this.props.currentUser) {
-        this.props.history.push('/sales/dashboard')
+      const { currentUser } = this.props;
+      if (currentUser) {
+        this.loadUserNetworks()
       } else {
         this.props.openLogin({ page: "response" })
       }
@@ -222,7 +236,7 @@ class SalesLogin extends React.Component {
                 onChange={this.handleChange('password')}
                 onMouseUp={this.handleChange('password')} />
             </Grid>
-            <Grid item xs={12 } sm={2} container justify='center' alignItems='center'>
+            <Grid item xs={12} sm={2} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
                 onClick={this.handleLogin}>
@@ -235,7 +249,7 @@ class SalesLogin extends React.Component {
         
         let results = Object.values(resultNetworks)
 
-        let findCompany = <Grid item xs={11} container justify='space-between' alignItems='flex-start'
+        let findCompany = <Grid container justify='space-between' alignItems='flex-start'
         style={{ marginTop: 30}}>
           <Grid item xs={6} container justify='center'>
             <Typography align='center' gutterBottom
@@ -295,25 +309,16 @@ class SalesLogin extends React.Component {
           </Grid>
         </Grid>
 
-        let loginCompany = <Grid item xs={12} md={4} 
-        container justify='center' alignItems='center'>
-          <Grid item xs={5} container justify='center'>
-            <Typography align='center' 
-            gutterBottom fullWidth
-            style={{ fontSize: 16, fontWeight: 600}}>
-              {`Login Via Gmail`}
+        let loginCompany = <Grid container spacing={2}
+        style={{ margin: "20px 0px"}}>
+          <Grid item xs={10} sm={6} container direction='column' alignItems='center'>
+            <Typography align='center'
+              gutterBottom fullWidth
+              style={{ fontSize: 16, fontWeight: 600 }}>
+              {`Login/Signup Via Gmail`}
             </Typography>
+            <ImportGoogle asLogin getLoginInfo={this.getLoginInfo} />
           </Grid>
-          <Grid item xs={5} container justify='center'>
-            <ImportGoogle asLogin getLoginInfo={this.getLoginInfo}/>
-          </Grid>
-        </Grid>
-
-        let throughCompany = <Grid container justify='space-around'
-        style={{ marginTop: 30 }}>
-          {/*{loginCompany}
-          <div className={classes.companyDivider}/>*/}
-          {findCompany}
         </Grid>
 
         let divider = <Grid container alignItems='center'>
@@ -327,7 +332,9 @@ class SalesLogin extends React.Component {
         return <Grid item xs={10} sm={8}>
           {loginComp}
           {divider}
-          {throughCompany}
+          {loginCompany}
+          {divider}
+          {findCompany}
         </Grid>
     }
   }

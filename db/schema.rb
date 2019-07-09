@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_02_184205) do
+ActiveRecord::Schema.define(version: 2019_07_08_195102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,10 +52,13 @@ ActiveRecord::Schema.define(version: 2019_07_02_184205) do
 
   create_table "admin_signup_links", force: :cascade do |t|
     t.string "code", null: false
-    t.string "subscription", default: ""
     t.integer "network_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "duration"
+    t.boolean "renewal"
+    t.integer "seats"
+    t.integer "amount"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -403,6 +406,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_184205) do
     t.string "domain", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "current_sub_id"
   end
 
   create_table "sales_user_contacts", force: :cascade do |t|
@@ -418,6 +422,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_184205) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "member_type", default: "full"
     t.index ["network_id", "user_id"], name: "index_sales_user_networks_on_network_id_and_user_id"
   end
 
@@ -450,6 +455,49 @@ ActiveRecord::Schema.define(version: 2019_07_02_184205) do
     t.string "base5"
     t.string "font3"
     t.index ["network_id"], name: "index_site_templates_on_network_id"
+  end
+
+  create_table "stripe_details", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "customer_id"
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_stripe_details_on_user_id"
+  end
+
+  create_table "stripe_payments", force: :cascade do |t|
+    t.integer "transaction_id"
+    t.integer "user_id"
+    t.integer "network_id"
+    t.integer "subscription"
+    t.integer "sub_id"
+    t.integer "seats"
+    t.integer "amount"
+    t.string "duration"
+    t.datetime "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["network_id"], name: "index_stripe_payments_on_network_id"
+    t.index ["sub_id"], name: "index_stripe_payments_on_sub_id"
+    t.index ["user_id"], name: "index_stripe_payments_on_user_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer "payer_id"
+    t.integer "amount"
+    t.string "cadence"
+    t.boolean "renew"
+    t.integer "seats"
+    t.datetime "end_date"
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "targetable_type"
+    t.bigint "targetable_id"
+    t.string "sub_type"
+    t.index ["payer_id"], name: "index_subscriptions_on_payer_id"
+    t.index ["targetable_type", "targetable_id"], name: "index_subscriptions_on_targetable_type_and_targetable_id"
   end
 
   create_table "user_features", force: :cascade do |t|

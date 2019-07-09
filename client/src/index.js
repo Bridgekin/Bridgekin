@@ -33,6 +33,8 @@ getPublicEnv()
   }
 })
 
+window.stripe_pk = "pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL"
+
 // Set Facebook Pixel Instance
 // const advancedMatching = { em: 'some@email.com' }; 
 const advancedMatching = {}; 

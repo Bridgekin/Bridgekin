@@ -10,8 +10,13 @@ class Api::SalesContactsController < ApiController
     "company" => :company
   }
   def search
+    # #Check if network is active
+    # network = SalesNetwork.find(params[:current_network_id])
+    # if network.current_subscription.nil?
+    #   render 
     filter = social_params[:filter]
-    network = @current_user.sales_networks.first
+    # network = @current_user.sales_networks.first
+    network = SalesNetwork.find(params[:current_sales_network_id])
     @sales_contacts = network.member_contacts
       .includes(:friends)
       .where.not(fname: '')

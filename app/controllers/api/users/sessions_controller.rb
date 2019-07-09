@@ -9,13 +9,10 @@ class Api::Users::SessionsController < ApiController
     @currentUser = User.includes(:notifications)
       .find_by(email: sign_in_params[:email].downcase)
 
-    if @currentUser && @currentUser.valid_password?(sign_in_params[:password]) #&& @user.confirmed?
+    if @currentUser && @currentUser.valid_password?(sign_in_params[:password]) && @currentUser.confirmed?
+      #Setup
       @token = get_login_token!(@currentUser)
-
-      @currentUser.implement_trackable
-      @site_template = @currentUser.get_template
-      @user_feature = @currentUser.user_feature ||
-        UserFeature.create(user_id: @currentUser.id)
+      @site_template, @user_feature = @currentUser.post_login_setup
 
       if @user_feature.tutorial_tour_session
         @user_feature.tutorial_tour_session = nil
@@ -30,8 +27,8 @@ class Api::Users::SessionsController < ApiController
       end
 
       render :create
-    # elsif @user && !@user.confirmed?
-    #   render json: ['You need to confirm your account before logging in.'], status: 404
+    elsif @user && !@user.confirmed?
+      render json: ['You need to confirm your account before logging in.'], status: 404
     else
       render json: ['Email or password is invalid'], status: 404
     end

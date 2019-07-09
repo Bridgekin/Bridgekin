@@ -18,7 +18,7 @@ export const clearAdminSignupLink = () => ({
 export const fetchAdminSignupLink = (code) => dispatch => (
   SalesAdminSignupApiUtil.fetchAdminSignupLink(code)
     .then(handleErrors)
-    .then(data => dispatch(retrieveAdminSignupLink(data.salesNetworks)))
+    .then(data => dispatch(retrieveAdminSignupLink(data.link)))
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];

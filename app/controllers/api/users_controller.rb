@@ -2,7 +2,7 @@ require_relative '../concerns/devise_controller_patch.rb'
 require 'nameable'
 class Api::UsersController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup, :google_sales_signup]
+  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup, :google_sales_signup, :admin_signup]
 
   after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
@@ -18,22 +18,13 @@ class Api::UsersController < ApiController
     @currentUser.phone_number = @currentUser.phone_number
 
     if @currentUser.save
+      # Setup post_signup_setup
       @token = get_login_token!(@currentUser)
-      @currentUser.implement_trackable
-      @site_template = @currentUser.get_template
+      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
 
-      #Remove waitlist user from waitlist by changing status
-      @currentUser.update_waitlist
-      #Create array of user info
-      @users = [@currentUser]
-      #Get User feature set
-      @user_feature = @currentUser.user_feature ||
-        UserFeature.create(user_id: @currentUser.id)
       #Set hire user setting
       @user_feature.hire_user = true
       @user_feature.save
-      #No friends yet = Empty object to fill connections
-      @connections = {}
 
       render :hire_signup
     else
@@ -43,44 +34,20 @@ class Api::UsersController < ApiController
 
   def admin_signup
     @currentUser = User.new(user_params)
-    sales_network = SalesNetwork.new(
-      domain: params[:user][:domain],
-      title: params[:user][:title]
-    )
 
-    if @currentUser.save && sales_network.save
-      #Attach to existing network
-      SalesUserNetwork.create(
-        network_id: sales_network.id,
-        user_id: @currentUser.id
-      )
-      #Attach admin user
-      SalesAdminNetwork.create(
-        network_id: sales_network.id,
-        admin_id: @currentUser.id
-      )
+    if @currentUser.save_new_admin_network(
+      domain_params, purchase_params, address_params, 
+      params[:admin_signup_link_id])
+
       #Get Tokens and track
       @token = get_login_token!(@currentUser)
-      @currentUser.implement_trackable
-      @site_template = @currentUser.get_template
-
-      #Remove waitlist user from waitlist by changing status
-      @currentUser.update_waitlist
-      #Create array of user info
-      @users = [@currentUser]
-      #Get User feature set
-      @user_feature = @currentUser.user_feature ||
-        UserFeature.create(user_id: @currentUser.id)
-      #Set hire user setting
-      @user_feature.hire_user = true
-      @user_feature.save
-      #No friends yet = Empty object to fill connections
-      @connections = {}
+      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
+      #Set as confirmed
+      @currentUser.update(confirmed_at: DateTime.now)
 
       render :hire_signup
     else
-      errors = @currentUser.errors.full_messages + sales_network.errors.full_messages
-      render json: errors, status: 422
+      render json: @currentUser.errors.full_messages, status: 422
     end
   end
 
@@ -94,76 +61,42 @@ class Api::UsersController < ApiController
       render json: ["Domain does not match chosen network"], status: 422
     elsif providedDomain == network.domain && @currentUser.save
       #Attach to existing network
-      SalesUserNetwork.create(
-        network_id: network.id,
-        user_id: @currentUser.id
-      )
+      @currentUser.sales_user_networks.create(network: network)
+
       #Get Tokens and track
-      @token = get_login_token!(@currentUser)
-      @currentUser.implement_trackable
-      @site_template = @currentUser.get_template
+      # @token = get_login_token!(@currentUser)
+      # @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
 
-      #Remove waitlist user from waitlist by changing status
-      @currentUser.update_waitlist
-      #Create array of user info
-      @users = [@currentUser]
-      #Get User feature set
-      @user_feature = @currentUser.user_feature ||
-        UserFeature.create(user_id: @currentUser.id)
-      #Set hire user setting
-      @user_feature.hire_user = true
-      @user_feature.save
-      #No friends yet = Empty object to fill connections
-      @connections = {}
-
-      render :hire_signup
+      # render :hire_signup
+      render json: ["Successful"], status: 200
     else
       render json: @currentUser.errors.full_messages, status: 422
     end
   end
 
   def google_sales_signup
-    domain = params[:user][:email][:$t].split('@').last
+    domain = params[:user][:email].split('@').last
     network = SalesNetwork.find_by(domain: domain)
+    @currentUser = User.find_by(email: params[:user][:email])
 
-    if network
-      @user = User.find_by(email: params[:user][:email][:$t])
-      if @user #Fetch existing User
-        @token = get_login_token!(@user)
-        @site_template = @user.get_template
-        @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
-        
-        render :google_login
-      else #Create a new user
-        @user = User.create(email: params[:user][:email][:$t])
-        name = Nameable.parse(params[:user][:name][:$t])
-        @user.fname, @user.lname = name.first, name.last
+    if @currentUser.present?
+      #Get Tokens and track
+      @token = get_login_token!(@currentUser)
+      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
 
-        if @user.save
-          # Link to network
-          SalesUserNetwork.create(network_id: network.id, user_id: @user.id)
+      render :hire_signup
+    elsif network.present?
+      @currentUser = User.new(user_params)
+      if @currentUser.save
+        #Attach to existing network
+        @currentUser.sales_user_networks.create(network: network)
+        #Get Tokens and track
+        @token = get_login_token!(@currentUser)
+        @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
 
-          #Get Tokens and track
-          @token = get_login_token!(@currentUser)
-          @currentUser.implement_trackable
-          @site_template = @currentUser.get_template
-
-          #Remove waitlist user from waitlist by changing status
-          @currentUser.update_waitlist
-          #Create array of user info
-          @users = [@currentUser]
-          #Get User feature set
-          @user_feature = @currentUser.user_feature ||
-            UserFeature.create(user_id: @currentUser.id)
-          #Set hire user setting
-          @user_feature.hire_user = true
-          @user_feature.save
-          #No friends yet = Empty object to fill connections
-          @connections = {}
-          render :google_signup
-        else
-          render json: @user.errors.full_messages, status: 422
-        end
+        render :hire_signup
+      else
+        render json: @user.errors.full_messages, status: 422
       end
     else
       render json: ["Could't find a network with that domain"], status: 422
@@ -268,5 +201,17 @@ class Api::UsersController < ApiController
 
     def gUser_params
       params.require(:user).permit(:email, :name)
+    end
+
+    def domain_params
+      params.require(:domain).permit(:title, :domain)
+    end
+
+    def purchase_params
+      params.require(:purchase).permit(:duration, :renewal, :amount, :seats, :token_id)
+    end
+
+    def address_params
+      params.require(:address).permit(:line1, :city, :state, :zipcode)
     end
 end

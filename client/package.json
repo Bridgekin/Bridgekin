@@ -48,6 +48,7 @@
     "react-scroll": "^1.7.12",
     "react-select": "^2.4.4",
     "react-select-country-list": "^1.0.7",
+    "react-stripe-elements": "^3.0.0",
     "react-text-mask": "^5.4.3",
     "react-visibility-sensor": "^5.0.2",
     "react-window-dimensions": "^1.0.2",

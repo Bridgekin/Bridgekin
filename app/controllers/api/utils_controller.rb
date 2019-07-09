@@ -16,6 +16,23 @@ class Api::UtilsController < ApiController
     end
   end
 
+  def validate_unique
+    model = params[:model]
+    field = params[:field]
+    value = params[:input]
+    
+    valid = case model
+    when "SalesNetwork"
+      SalesNetwork.find_by("LOWER(#{field})=LOWER(?)", value).nil?
+    when "User"
+      User.find_by(field => value).nil?
+    else
+      false
+    end
+
+    render json: valid, status: 200
+  end
+
   private
 
   def request_demo_params

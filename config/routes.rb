@@ -43,6 +43,9 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    get "search_sales_networks", :to => 'sales_networks#search_networks'
+    post 'validate_unique', :to => "utils#validate_unique"
+    post "charge", :to => "stripe#charge"
     post "admin_signup", :to => 'users#admin_signup'
     get "webhooks/clearbit", :to => 'webhooks#clearbit'
     post "webhooks/full_contact_company", :to => 'webhooks#full_contact_company'

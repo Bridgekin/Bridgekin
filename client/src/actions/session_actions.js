@@ -103,12 +103,12 @@ export const googleSalesLogin = (formUser) => dispatch => (
   SessionApiUtil.googleSalesLogin(formUser)
     .then(handleErrors)
     .then(data => {
-      localStorage.setItem('bridgekinToken', data.token);
       dispatch(receiveUsers(data.users));
       dispatch(receiveCurrentUser(data.currentUser));
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
+      localStorage.setItem('bridgekinToken', data.token);
     })
     .catch(errors => {
       if (!(errors instanceof Array)) {

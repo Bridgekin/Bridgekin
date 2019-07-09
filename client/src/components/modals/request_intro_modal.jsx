@@ -156,7 +156,7 @@ class RequestIntroModal extends React.Component {
               <Input type='number'
                 value={referralBonus}
                 onChange={this.handleChange('referralBonus')}
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                startAdornment={<InputAdornment position="start">%</InputAdornment>}
               />
             </FormControl>
           </Grid>
@@ -193,7 +193,7 @@ class RequestIntroModal extends React.Component {
         let introResponses = <Grid container>
           <TextField multiline
             rows={5} fullWidth
-            placeholder={`Message to employee (optional)`}
+            placeholder={`Message to teammate (optional)`}
             className={classes.textField}
             margin="normal"
             variant='outlined'
@@ -258,7 +258,7 @@ class RequestIntroModal extends React.Component {
             data-cy='waitlist-success'
             gutterBottom
             align='left' color='textPrimary'>
-            {`We've sent a introduction request to your teammate on behalf of this contact!`}
+            {`We've sent an introduction request to your teammate on behalf of this contact!`}
           </Typography>
           <Grid item xs={12}>
             <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}

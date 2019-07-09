@@ -61,12 +61,14 @@ export const CLEAR_REF_APPLICATION_ERRORS = 'CLEAR_REF_APPLICATION_ERRORS';
 export const RECEIVE_REF_LINK_ERRORS = 'RECEIVE_REF_LINK_ERRORS';
 export const CLEAR_REF_LINK_ERRORS = 'CLEAR_REF_LINK_ERRORS';
 
-export const RECEIVE_SALES_ERRORS = 'RECEIVE_SALES_ERRORS';
-export const CLEAR_SALES_ERRORS = 'CLEAR_SALES_ERRORS';
+export const RECEIVE_SALES_NETWORK_ERRORS = 'RECEIVE_SALES_NETWORK_ERRORS';
+export const CLEAR_SALES_NETWORK_ERRORS = 'CLEAR_SALES_NETWORK_ERRORS';
 export const RECEIVE_SALES_CONTACT_ERRORS = 'RECEIVE_SALES_CONTACT_ERRORS';
 export const CLEAR_SALES_CONTACT_ERRORS = 'CLEAR_SALES_CONTACT_ERRORS';
 export const RECEIVE_SALES_INTRO_ERRORS = 'RECEIVE_SALES_INTRO_ERRORS';
 export const CLEAR_SALES_INTRO_ERRORS = 'CLEAR_SALES_INTRO_ERRORS';
+export const RECEIVE_SALES_ADMIN_SIGNUP_ERRORS = 'RECEIVE_SALES_ADMIN_SIGNUP_ERRORS';
+export const CLEAR_SALES_ADMIN_SIGNUP_ERRORS = 'CLEAR_SALES_ADMIN_SIGNUP_ERRORS';
 
 export const RECEIVE_UTIL_ERRORS = 'RECEIVE_UTIL_ERRORS';
 export const CLEAR_UTIL_ERRORS = 'CLEAR_UTIL_ERRORS';
@@ -315,13 +317,13 @@ export const clearRefLinkErrors = () => ({
   type: CLEAR_REF_LINK_ERRORS,
 });
 
-export const receiveSalesErrors = errors => ({
-  type: RECEIVE_SALES_ERRORS,
+export const receiveSalesNetworkErrors = errors => ({
+  type: RECEIVE_SALES_NETWORK_ERRORS,
   errors
 });
 
-export const clearSalesErrors = () => ({
-  type: CLEAR_SALES_ERRORS,
+export const clearSalesNetworkErrors = () => ({
+  type: CLEAR_SALES_NETWORK_ERRORS,
 });
 
 export const receiveUtilErrors = errors => ({
@@ -349,4 +351,13 @@ export const receiveSalesContactErrors = errors => ({
 
 export const clearSalesContactErrors = () => ({
   type: CLEAR_SALES_CONTACT_ERRORS,
+});
+
+export const receiveSalesAdminSignupErrors = errors => ({
+  type: RECEIVE_SALES_ADMIN_SIGNUP_ERRORS,
+  errors
+});
+
+export const clearSalesAdminSignupErrors = () => ({
+  type: CLEAR_SALES_ADMIN_SIGNUP_ERRORS,
 });

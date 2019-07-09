@@ -5,3 +5,5 @@ json.sales_networks do
     end
   end
 end
+
+json.network_details @network_details

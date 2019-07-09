@@ -1,6 +1,17 @@
 class Api::SalesNetworksController < ApiController
+  before_action :authenticate_user, except: [:search_networks] 
+
   def index
-    @sales_networks = SalesNetwork.where("LOWER(title) LIKE ?" , "%" + params[:title].downcase + "%")
+    @sales_networks = @current_user.sales_networks
+    @network_details = SalesNetwork.generate_network_details(@sales_networks)
+
+    render :index
+  end
+
+  def search_networks
+    @sales_networks = SalesNetwork.includes(:members, :subscriptions).where("LOWER(title) LIKE ?" , "%" + params[:title].downcase + "%")
+
+    @network_details = SalesNetwork.generate_network_details(@sales_networks)
 
     render :index
   end

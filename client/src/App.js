@@ -5,7 +5,8 @@ import { AuthRoute,
   ProtectedRoute,
   AdminProtectedRoute,
   TemplateProtectedRoute,
-  ReferralProtectedRoute } from './util/route_util';
+  ReferralProtectedRoute,
+  SalesAuthRoute } from './util/route_util';
 import './App.css';
 
 // import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -49,15 +50,16 @@ import SalesRouter from './components/sales/sales_router.jsx'
 import SalesNav from './components/sales/nav.jsx'
 import SalesLandingPage from './components/sales/landing_page.jsx'
 
+
 export default ()=> (
   <div>
     <ScrollToTop />
 
     <Switch>
       <Route path="/hiring" component={HiringNav} />
-      <Route exact path="/" component={SalesNav} />
-      <Route path="/sales" component={SalesNav} />
-      <Route path="/" component={HomeNav} />
+      <Route path="/" component={SalesNav} />
+      {/* <Route exact path="/" component={SalesNav} /> */}
+      {/* <Route path="/" component={HomeNav} /> */}
     </Switch>
 
     {/* General Modals */}
@@ -66,25 +68,29 @@ export default ()=> (
       <AuthRoute exact path="/" component={SalesLandingPage} />
       <Route path="/hiring" component={HiringRouter} />
 
-      <ProtectedRoute path="/importcontacts" component={ImportContacts} />
+      {/* <ProtectedRoute path="/account" component={AccountMain} /> */}
+      {/* <ProtectedRoute path="/importcontacts" component={ImportContacts} />
       <ProtectedRoute path="/findandconnect/:source?" component={OpportunityHome} />
-      <ProtectedRoute path="/account" component={AccountMain} />
-      <ProtectedRoute path="/mynetwork" component={MyTrustedNetwork} />
+      <ProtectedRoute path="/mynetwork" component={MyTrustedNetwork} /> */}
 
-      <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
+      {/* <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
       <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
-      <ReferralProtectedRoute path="/signup/:code" component={SignupPage} />
+      <ReferralProtectedRoute path="/signup/:code" component={SignupPage} /> */}
 
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
       <AuthRoute path="/login" component={Login}/>
       <AuthRoute path="/passwordreset" component={PasswordReset}/>
       <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>
-      <AuthRoute path="/platform" component={HomePage} />
       <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
+
 
       <Route path="/useragreement" component={UserAgreement} />
       <Route path="/privacypolicy" component={PrivacyPolicy} />
-      <Route path="/shareopportunities/:linkCode" component={DirectLinkPage} />
+      {/* <Route path="/shareopportunities/:linkCode" component={DirectLinkPage} /> */}
+
+      {/* <AuthRoute path="/platform" component={HomePage} /> */}
+      <SalesAuthRoute path="/" component={SalesLandingPage} />
+
       <Route component={NotFound} />
     </Switch>
 

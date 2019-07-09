@@ -42,3 +42,15 @@ export const requestDemo = (payload) => dispatch => (
       dispatch(receiveUtilErrors(errors))
     })
 )
+
+export const validateUnique = (payload) => dispatch => (
+  UtilApiUtil.validateUnique(payload)
+    .then(handleErrors)
+    .then(data => data)
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveUtilErrors(errors))
+    })
+)

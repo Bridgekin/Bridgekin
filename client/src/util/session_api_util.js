@@ -31,7 +31,7 @@ export const salesSignup = (user) => (
 export const adminSignup = (user) => (
   fetch(`${window.location.origin}/api/admin_signup`, {
     method: 'POST',
-    body: JSON.stringify({ user }),
+    body: JSON.stringify( user ),
     headers: {
       'Content-Type': 'application/json'
     }

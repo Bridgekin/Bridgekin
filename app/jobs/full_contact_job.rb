@@ -19,7 +19,7 @@ class FullContactJob < ApplicationJob
 
     webhook_url = case Rails.env
       when "development"
-        "https://2f447ac4.ngrok.io"
+        "https://f2e8f69a.ngrok.io"
       else "staging"
         ENV['host_url']
       end

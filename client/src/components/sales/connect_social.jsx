@@ -26,6 +26,9 @@ const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
   userFeature: state.entities.userFeature,
+  salesUserNetworks: state.entities.sales.salesUserNetworks,
+  networkDetails: state.entities.sales.networkDetails,
+  currentSalesNetworkId: state.entities.sales.currentSalesNetwork
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -92,10 +95,11 @@ class ConnectSocial extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.receiveGoogleUsers = this.receiveGoogleUsers.bind(this);
     this.getContent = this.getContent.bind(this);
+    this.isExpiredSub = this.isExpiredSub.bind(this);
   }
 
   componentDidMount(){
-    const { userFeature, draftPosting } = this.props;
+    const { userFeature, draftPosting, currentSalesNetworkId } = this.props;
     // If first time, flag create flow
     if (!userFeature.importSocial){
       let payload = {
@@ -104,6 +108,27 @@ class ConnectSocial extends React.Component {
       }
       this.props.updateUserFeature(payload);
     }
+
+    if(!currentSalesNetworkId || this.isExpiredSub()){
+      this.props.history.push('/sales/dashboard')
+    }
+
+    // this.props.fetchUserNetworks()
+    //   .then(() => {
+    //     let userNetworks = Object.values(this.props.salesUserNetworks)
+    //     if (userNetworks.length > 0) {
+    //       let currentNetworkId = userNetworks.shift().id
+    //       this.setState({ currentNetworkId })
+    //     } else {
+    //       this.props.history.push('/sales/dashboard')
+    //     }
+    //   })
+  }
+
+  isExpiredSub() {
+    const { networkDetails, currentSalesNetworkId } = this.props;
+
+    return networkDetails[currentSalesNetworkId].current_sub_end === "no sub" || Date.parse(networkDetails[currentSalesNetworkId].current_sub_end) < Date.now()
   }
 
   handleFile(upload, uploadUrl) {
@@ -242,7 +267,7 @@ class ConnectSocial extends React.Component {
         <Typography fullWidth gutterBottom
         align='center'
         style={{ fontSize: 24}}>
-          {`Make referrals and help you and your company grow`}
+          {`Make warm introductions and help you and your company grow`}
         </Typography>
         <Typography fullWidth gutterBottom
         align='center'
@@ -335,9 +360,11 @@ class ConnectSocial extends React.Component {
             <ExpansionPanelDetails>
               <Typography color='textSecondary'
                 style={{ fontSize: 12 }}>
-                {`Steps:`} <br /><br />
-                {`1) Use the button above to verify your google login`} <br /><br />
-                {`2) Accept the permissions page and your all set!`} <br /><br />
+                {`Steps:`} <br/><br/>
+                {`1) Click the button above and select the Google account you’d like to sign in with`} <br/><br/>
+                {`2) Grant Bridgekin permission to see and download your contacts`} <br/><br/>
+                {`3) If you have more than one Google account you can sync your contacts across multiple accounts`} <br/><br/>
+                {`Note: We only access your Google contacts and sender, receiver and date on your emails and are in no way able to read the email body of any messages you’ve sent (or will send) or send emails on your behalf.`}
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
