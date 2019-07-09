@@ -16,6 +16,7 @@ import TwitterLogo from '../../static/twitter-logo.svg'
 import LinkedInLogo from '../../static/linkedin-sign.svg'
 import { fetchSalesIntro } from '../../actions/sales_intro_actions';
 import { openLogin, openRespondToRequest } from '../../actions/modal_actions';
+import { respondToRequest } from '../../actions/sales_intro_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -28,7 +29,8 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   fetchSalesIntro: introId => dispatch(fetchSalesIntro(introId)),
   openLogin: payload => dispatch(openLogin(payload)),
-  openRespondToRequest: response => dispatch(openRespondToRequest(response))
+  openRespondToRequest: response => dispatch(openRespondToRequest(response)),
+  respondToRequest: payload => dispatch(respondToRequest(payload)),
 });
 
 const styles = theme => ({
@@ -123,7 +125,14 @@ class RespondToIntro extends React.Component {
     return e => {
       const { introId } = this.props;
       let response = { decision, introId };
-      this.props.openRespondToRequest(response)
+      if (decision === "don't know"){
+        this.props.respondToRequest(response)
+        .then(() => {
+          this.props.openRespondToRequest({ decision: 'response'})
+        })
+      } else {
+        this.props.openRespondToRequest(response)
+      }
     }
   }
 
@@ -144,10 +153,11 @@ class RespondToIntro extends React.Component {
       let contact = salesContacts[intro.contactId];
 
       let contactComp = <Grid container justify='center'>
-        <Grid item xs={10} sm={8}>
+        <Grid item xs={10} sm={8}
+        style={{ marginTop: 30}}>
           <Typography align='center' gutterBottom
           style={{ fontSize: 24, fontWeight: 600}}>
-            {`Make referrals and help you and your company grow`}
+            {`Make warm introductions and help you and your company grow`}
           </Typography>
           {intro.explaination && <Grid container direction='column' alignItems='center'>
             <Typography align='center'
@@ -227,19 +237,19 @@ class RespondToIntro extends React.Component {
           <Grid container justify='center'>
             <Grid item xs={8} container justify='center'>
               <Button color='primary' variant='contained'
-                onClick={this.respondToRequest('yes')}
+                onClick={this.respondToRequest("intro")}
                 className={classes.actionButton}
                 style={{ marginRight: 20}}>
                 {`Intro`}
               </Button>
               <Button color='primary' variant='contained'
-                onClick={this.respondToRequest('unknown')}
+                onClick={this.respondToRequest("don't know")}
                 className={classes.actionButton}
                 style={{ marginRight: 20 }}>
                 {`Don't know`}
               </Button>
               <Button color='primary' variant='contained'
-                onClick={this.respondToRequest('no')}
+                onClick={this.respondToRequest("prefer not")}
                 className={classes.actionButton}>
                 {`I'd prefer not to reach out`}
               </Button>

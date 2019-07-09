@@ -24,7 +24,7 @@ import Loading from '../loading';
 import Capitalize from 'capitalize';
 
 import { fetchSalesIntros } from '../../actions/sales_intro_actions';
-import { updateSalesIntro } from '../../actions/sales_intro_actions'
+import { updateSalesIntro, deleteSalesIntro} from '../../actions/sales_intro_actions'
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -46,7 +46,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchSalesIntros: () => dispatch(fetchSalesIntros()),
-  updateSalesIntro: (payload) => dispatch(updateSalesIntro(payload))
+  updateSalesIntro: (payload) => dispatch(updateSalesIntro(payload)),
+  deleteSalesIntro: (id) => dispatch(deleteSalesIntro(id))
 });
 
 const styles = theme => ({
@@ -114,13 +115,13 @@ class HiringDashboard extends React.Component {
     }
   }
 
-  handleUpdateStatus(row){
+  handleUpdateStatus(row, field){
     return e => {
       e.stopPropagation()
       let value = e.target.value;
       if(value !== row.status){
         let payload = {
-          status: value,
+          [field]: value,
           id: row.id
         }
         this.props.updateSalesIntro(payload);
@@ -151,10 +152,10 @@ class HiringDashboard extends React.Component {
     let phrase, rows, headerCells, tableBody;
     switch(page){
       case 'intros':
-        phrase = `My Intros` // sentRequests
+        phrase = `Intro Made` // sentRequests
         headerCells = ["First Name", "Last Name",
           "Title", "Company", "Employee Referrer",
-          "Status"]
+          "Request Status", "Deal Status"] //"Options"]
         rows = [...receivedRequests].map(id => salesIntros[id]);
         tableBody = <TableBody>
           {rows.map(row => {
@@ -166,20 +167,32 @@ class HiringDashboard extends React.Component {
                   className={classes.tableCell}>
                   {contact.fname}
                 </TableCell>
-                {['lname', 'position', "company", "employee referral", "status"].map(field => {
+                {['lname', 'position', "company", "employee referral", "requestStatus", "dealStatus"].map(field => {
                   if (field === "employee referral") {
                     return <TableCell align="right"
                       className={classes.tableCell}>{`${Capitalize(requestor.fname)} ${Capitalize(requestor.lname)}`}
                       </TableCell>
-                  } else if (field === "status") {
+                  } else if (field === "dealStatus") {
                     return <TableCell align="right"
                       className={classes.tableCell}>{row[field]}</TableCell>
+                  } else if (field === "requestStatus"){
+                    return <TableCell>
+                      <Select fullWidth
+                        value={row.requestStatus}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={this.handleUpdateStatus(row, 'requestStatus')}>
+                        <MenuItem value={'open'}>Open</MenuItem>
+                        <MenuItem value={"intro"}>Intro Received</MenuItem>
+                        <MenuItem value={"don't know"}>Don't know</MenuItem>
+                        <MenuItem value={"prefer not"}>Prefer not to reach out</MenuItem>
+                      </Select>
+                    </TableCell>
                   } else {
                     return <TableCell align="right"
                       className={classes.tableCell}>{contact[field]}</TableCell>
                   }
                 })}
-                <TableCell>
+                {/* <TableCell>
                   <IconButton
                     onClick={this.handleMenuClick('actionAnchorEl')}>
                     <MenuIcon />
@@ -202,7 +215,7 @@ class HiringDashboard extends React.Component {
                       {`Delete`}
                     </MenuItem>
                   </Menu>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             )
           }
@@ -210,10 +223,9 @@ class HiringDashboard extends React.Component {
         </TableBody>
         break;
       default:
-        phrase = `My Leads` // sentRequests
+        phrase = `Intro Requested` // sentRequests
         headerCells = ["First Name", "Last Name",
-        "Title", "Company", "Employee Referrer",
-        "Status", "Options"]
+          "Title", "Company", "Employee Referrer", "Request Status", "Deal Status", "Options"]
         rows = [...sentRequests].map(id => salesIntros[id]);
         tableBody = <TableBody>
           {rows.map(row => {
@@ -226,21 +238,33 @@ class HiringDashboard extends React.Component {
                 className={classes.tableCell}>
                   {contact.fname}
                 </TableCell>
-                {['lname', 'position', "company", "employee referral", "status"].map(field => {
+                {['lname', 'position', "company", "employee referral", "requestStatus", "dealStatus"].map(field => {
                   if (field === "employee referral"){
                     return <TableCell align="right"
                       className={classes.tableCell}>{`${Capitalize(recipient.fname)} ${Capitalize(recipient.lname)}`}</TableCell>
-                  } else if (field === "status"){
+                  } else if (field === "dealStatus"){
                     return <TableCell>
                       <Select fullWidth
-                        value={row.status}
+                        value={row.dealStatus}
                         onClick={(e) => e.stopPropagation()}
-                        onChange={this.handleUpdateStatus(row)}>
+                        onChange={this.handleUpdateStatus(row, 'dealStatus')}>
                         <MenuItem value={'open'}>Open</MenuItem>
                         <MenuItem value={'in discussion'}>In Discussion</MenuItem>
                         <MenuItem value={'in contract'}>In Contract</MenuItem>
                         <MenuItem value={'closed won'}>Closed Won</MenuItem>
                         <MenuItem value={'closed lost'}>Closed Lost</MenuItem>
+                      </Select>
+                    </TableCell>
+                  } else if (field === 'requestStatus'){
+                    return <TableCell>
+                      <Select fullWidth
+                        value={row.requestStatus}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={this.handleUpdateStatus(row, 'requestStatus')}>
+                        <MenuItem value={'open'}>Open</MenuItem>
+                        <MenuItem value={"intro"}>Intro Received</MenuItem>
+                        <MenuItem value={"don't know"}>Don't know</MenuItem>
+                        <MenuItem value={"prefer not"}>Prefer not to reach out</MenuItem>
                       </Select>
                     </TableCell>
                   } else {
@@ -324,11 +348,11 @@ class HiringDashboard extends React.Component {
         style={{ height: dimensions.height - 64, borderRight: `1px solid grey`, paddingBottom: 50}}>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/leads`)}>
-            {`Intro Requests`}
+            {`Intro Requested`}
           </Button>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/intros`)}>
-            {`Intros Received`}
+            {`Intros Made`}
           </Button>
         </Grid>
 

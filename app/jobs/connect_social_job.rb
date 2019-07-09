@@ -1,4 +1,4 @@
-require 'clearbit'
+# require 'clearbit'
 # require 'nameable'
 class ConnectSocialJob < ApplicationJob
   queue_as :default
@@ -53,11 +53,10 @@ class ConnectSocialJob < ApplicationJob
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
     google_contacts.take(25).each do |entry|
-      if entry['email'].nil?
-        contact = SalesContact.new()
-      else
-        contact = SalesContact.find_by(email: entry['email']) || SalesContact.new(email: entry['email'])
-      end
+      #Skip any cases without emails
+      next if entry['email'].nil?
+ 
+      contact = SalesContact.find_or_initialize_by(email: entry['email'])
       #Set Contact's Name
       if entry['name'].present?
         name = Nameable.parse(entry['name'])
@@ -102,35 +101,29 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
-
+    
     parsed_file.take(25).each do |entry|
-      contact = SalesContact.find_by(
-        email: entry["Email Address"],
+      contact = SalesContact.find_or_initialize_by(
         fname: entry["First Name"],
         lname: entry["Last Name"],
         company: entry["Company"],
         position: entry["Position"]
-        ) || SalesContact.new
-
-      parsed_file.headers.each do |header|
-        if HEADERMAPPING[header].present? && contact[HEADERMAPPING[header]].blank?
-          contact[HEADERMAPPING[header]] = entry[header]
-        end
-      end
-
+      )
+      contact.email = entry["Email Address"] if entry["Email Address"].present? && contact.email.blank?
+      # parsed_file.headers.each do |header|
+      #   if HEADERMAPPING[header].present? && contact[HEADERMAPPING[header]].blank?
+      #     contact[HEADERMAPPING[header]] = entry[header]
+      #   end
+      # end
       #Set Source
       contact.setSource(:linked_in_upload)
       if contact.save
         #Check if contact and user are already friends
         unless current_user.sales_contacts.include?(contact)
-          SalesUserContact.create(
-            user_id: current_user.id,
-            contact_id: contact.id
-          )
+          current_user.sales_user_contacts.create(contact: contact)
         end
-
-        # company = SalesCompany.find_by(title: contact.company) || SalesCompany.new(title: contact.company)
         company = SalesCompany.find_or_initialize_by(title: contact.company)
+
         response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
 
         parsed = JSON.parse(response.body)
@@ -140,7 +133,7 @@ class ConnectSocialJob < ApplicationJob
           end
           acc
         end
-        # debugger
+
         if answer.present?
           # debugger
           company.domain = answer["domain"]
@@ -149,7 +142,8 @@ class ConnectSocialJob < ApplicationJob
         end
         
         if company.save
-          HunterJob.perform_later(company, contact) if company.domain.present?
+          #Turning off for the moment
+          # HunterJob.perform_later(company, contact) if company.domain.present?
         else
           logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
         end

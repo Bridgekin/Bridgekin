@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_08_195102) do
+ActiveRecord::Schema.define(version: 2019_07_09_182942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -395,8 +395,9 @@ ActiveRecord::Schema.define(version: 2019_07_08_195102) do
     t.datetime "updated_at", null: false
     t.string "decision"
     t.datetime "email_sent"
-    t.string "status", default: "open"
+    t.string "deal_status", default: "open"
     t.string "location", default: ""
+    t.string "request_status", default: "open"
     t.index ["recipient_id"], name: "index_sales_intros_on_recipient_id"
     t.index ["requestor_id"], name: "index_sales_intros_on_requestor_id"
   end

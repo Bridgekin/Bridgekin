@@ -65,15 +65,18 @@ class Api::WebhooksController < ApiController
           #   contact.fname = name.first
           #   contact.lname = name.last
           # end
+          contact.last_full_contact_lookup = DateTime.now
+          contact.save
         end
       elsif params["status"] === 404
         logger.debug "Not Found"
+        unless contact.nil?
+          contact.last_full_contact_lookup = DateTime.now
+          contact.save
+        end
       elsif params["status"] === 403
         logger.error "Rate Limit hit"
       end
-
-      contact.last_full_contact_lookup = DateTime.now
-      contact.save
     else 
       logger.debug "Not Found"
     end

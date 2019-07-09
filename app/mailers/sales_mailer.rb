@@ -50,16 +50,17 @@ class SalesMailer < ApplicationMailer
     sales_intro.update(email_sent: Datetime.now)
   end
 
-  def refuse_intro(reason, details, sales_intro, current_user)
-    @sales_intro = sales_intro.includes(:contact, :requestor, :recipient)
+  def refuse_intro(reason, details, sales_intro)
+    @sales_intro = SalesIntro.includes(:contact, :requestor, :recipient)
+    .find(sales_intro.id)
     @contact = @sales_intro.contact
-    @requestor = @ales_intro.requestor
-    @recipient = @ales_intro.recipient
+    @requestor = @sales_intro.requestor
+    @recipient = @sales_intro.recipient
 
     @reason = reason
     @details = details
 
-    subject = "Request Denied - | #{contact.fname.capitalize} #{contact.lname.capitalize}"
+    subject = "Request Denied - | #{@contact.fname.capitalize} #{@contact.lname.capitalize}"
 
     mail(to: @requestor.email, subject: subject)
 
@@ -67,7 +68,25 @@ class SalesMailer < ApplicationMailer
       recipient_id: @requestor.id,
       email_type: 'refuse_intro'
     )
-    sales_intro.update(email_sent: Datetime.now)
+    sales_intro.update(email_sent: DateTime.now)
+  end
+
+  def decline_intro(sales_intro)
+    @sales_intro = SalesIntro.includes(:contact, :requestor, :recipient)
+    .find(sales_intro.id)
+    @contact = @sales_intro.contact
+    @requestor = @sales_intro.requestor
+    @recipient = @sales_intro.recipient
+
+    subject = "Request Declined - | #{@contact.fname.capitalize} #{@contact.lname.capitalize}"
+
+    mail(to: @requestor.email, subject: subject)
+
+    EmailLog.create(
+      recipient_id: @requestor.id,
+      email_type: 'decline_intro'
+    )
+    sales_intro.update(email_sent: DateTime.now)
   end
   
 end

@@ -60,21 +60,21 @@ class Api::SalesIntrosController < ApiController
   def respond_intro_request
     response = params[:response]
     sales_intro = SalesIntro.find(response[:intro_id])
-    
+    debugger
     decision = response[:decision]
-    if sales_intro.update(decision: decision)
+    if sales_intro.update(request_status: decision)
       case response[:decision]
-      when "yes" #Intro
+      when "intro" #Intro
         subject = response[:subject]
         email = response[:email]
         body = response[:body]
         SalesMailer.make_intro(subject, email, body, sales_intro, @current_user).deliver_later
-      when "no" #"I'd prefer not to reach out"
+      when "prefer not" #"I'd prefer not to reach out"
         reason = response[:reason]
         details = response[:details]
-        SalesMailer.refuse_intro(reason, details, sales_intro, @current_user).deliver_later
-      when "unknown" #Don't Know
-        # SalesMailer.refuse_request(response, sales_intro, current_user).deliver_later
+        SalesMailer.refuse_intro(reason, details, sales_intro).deliver_later
+      when "don't know" #Don't Know
+        SalesMailer.decline_intro(sales_intro).deliver_later
       else
       end
       render json: ["Success"], status: 200
@@ -97,7 +97,7 @@ class Api::SalesIntrosController < ApiController
   def intro_params
     params.require(:sales_intro).permit(:contact_id, 
       :recipient_id, :message, :explaination,
-      :referral_bonus, :status)
+      :referral_bonus, :deal_status, :request_status)
   end
 
   def set_sales_intro

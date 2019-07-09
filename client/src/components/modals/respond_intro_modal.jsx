@@ -115,20 +115,28 @@ class RespondIntroModal extends React.Component {
     const nextModal = nextProps.respondToRequestModal;
     const currentModal = this.props.respondToRequestModal;
     if (nextModal.open && currentModal.open !== nextModal.open) {
+      let contact;
       switch(nextModal.decision){
-        case "yes":
+        case "intro":
           const { salesContacts, salesIntros } = nextProps;
-          let contact = salesContacts[salesIntros[nextModal.introId].contactId]
+          contact = salesContacts[salesIntros[nextModal.introId].contactId]
           let email = contact.email
           let subject = `I think you’ll appreciate this...`
           let body = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(nextProps.currentUser.fname)}`
-          this.setState({ page: 'intro', email, subject, body})
+          this.setState({ 
+            page: 'intro',
+            email, subject, body, contact
+          })
           break;
-        case "no":
-          this.setState({ page: 'refuse' })
+        case "prefer not":
+          contact = salesContacts[salesIntros[nextModal.introId].contactId]
+          this.setState({ page: "prefer not", contact })
           break;
-        case "unknown": 
-          this.setState({ page: 'unknown'})
+        case "don't know": 
+          this.setState({ page: "don't know"})
+          break;
+        case "response":
+          this.setState({ page: 'response' })
           break;
         default:
           break;
@@ -180,11 +188,10 @@ class RespondIntroModal extends React.Component {
     const { classes, respondToRequestModal, 
       salesIntros, salesContacts } = this.props;
     const { page, reason, details, email, 
-      subject, body } = this.state;
-    let contact = salesContacts[salesIntros[respondToRequestModal.introId].contactId]
+      subject, body, contact } = this.state;
 
     switch(page){
-      case 'intro':  
+      case "intro":  
         let intro = <Grid item xs={10} container direction='column'>
           <Typography gutterBottom
             style={{ fontSize: 16, fontWeight: 600 }}>
@@ -233,7 +240,7 @@ class RespondIntroModal extends React.Component {
           </Grid>
         </Grid>
         return intro;
-      case 'refuse':
+      case "prefer not":
         let refuse = <Grid item xs={10} container direction='column'>
           <Typography gutterBottom
             style={{ fontSize: 16, fontWeight: 600 }}>
@@ -247,8 +254,7 @@ class RespondIntroModal extends React.Component {
                 color="primary"
               />
             }
-            label={this.reasons[0]}
-          />
+            label={this.reasons[0]}/>
           <FormControlLabel
             control={
               <Checkbox
@@ -257,8 +263,7 @@ class RespondIntroModal extends React.Component {
                 color="primary"
               />
             }
-            label={this.reasons[1]}
-      />
+            label={this.reasons[1]}/>
           <Typography gutterBottom
             style={{ fontSize: 16, fontWeight: 600 }}>
             {`More Details `}
@@ -288,7 +293,7 @@ class RespondIntroModal extends React.Component {
           </Grid>
         </Grid>
         return refuse;
-      case 'unknown':
+      case "don't know":
         let unknown = <Grid item xs={10} container>
           <Typography gutterBottom
             style={{ fontSize: 20, fontWeight: 600 }}>
@@ -296,7 +301,7 @@ class RespondIntroModal extends React.Component {
           </Typography>
           <Typography gutterBottom
             style={{ fontSize: 16 }}>
-            {`That's alright. Determining whether a contact is the right fit for your company is a careful process. Return to this flow once you're ready to decide`}
+            {`That's alright. Determining whether a contact is the right fit for your company is a careful process.\n\nReturn to this flow once if you'd like to change your answer`}
           </Typography>
           <Grid item xs={12}>
             <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
