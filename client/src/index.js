@@ -19,6 +19,7 @@ import ReactPixel from 'react-facebook-pixel';
 
 import amplitude from 'amplitude-js';
 window.amplitudeInstance = amplitude.getInstance();
+const prod = process.env.NODE_ENV === 'production';
 
 // Set Amplitude Instance
 getPublicEnv()
@@ -33,7 +34,11 @@ getPublicEnv()
   }
 })
 
-window.stripe_pk = "pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL"
+if(prod){
+  window.stripe_pk = "pk_live_KBOOb3gd0eyjOvMKvybvFHt000XIfMTNna"
+} else {
+  window.stripe_pk = "pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL"
+}
 
 // Set Facebook Pixel Instance
 // const advancedMatching = { em: 'some@email.com' }; 

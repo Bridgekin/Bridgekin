@@ -227,8 +227,6 @@ class AdminSignup extends React.Component {
     })
   }
 
-
-
   isDisabledSubmit(){
     const { page } = this.props;
     const { fname, lname, email, password,
@@ -332,7 +330,7 @@ class AdminSignup extends React.Component {
             style={{ marginTop: 20 }}>
             {`Your Payment Info`}
           </Typography>
-          <StripeProvider apiKey="pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL">
+          <StripeProvider apiKey={window.stripe_pk}>
             <Elements>
               <CheckoutForm
                 canSubmit={this.isDisabledSubmit}

@@ -27,6 +27,9 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
+  #STRIPE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Stripe.api_key = Rails.application.credentials.stripe[:development][:secret_key]
+
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :amazon_dev
 

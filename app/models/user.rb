@@ -195,7 +195,6 @@ class User < ApplicationRecord
 
   def save_new_admin_network(domain_params, purchase_params, address_params)
     return false if invalid?
-    Stripe.api_key = Rails.application.credentials.stripe[:test][:secret_key]
     @sales_network = SalesNetwork.new(domain_params)
     # if purchase_params[:duration] == "month"
     #   end_date = DateTime.now + 1.month
