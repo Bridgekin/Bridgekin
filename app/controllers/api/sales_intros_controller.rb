@@ -27,11 +27,6 @@ class Api::SalesIntrosController < ApiController
   def create
     #Find recipient
     @contact = SalesContact.find(intro_params[:contact_id])
-    network = @current_user.sales_networks.first
-    # recipient = contact.friends
-    #   .where.not(id: @current_user.id)
-    #   .where(id: network.members.pluck(:id))
-    #   .first
     recipient = User.find(params[:sales_intro][:target_id])
     #Request Intro 
     @sales_intro = SalesIntro.new(intro_params
@@ -97,7 +92,8 @@ class Api::SalesIntrosController < ApiController
   def intro_params
     params.require(:sales_intro).permit(:contact_id, 
       :recipient_id, :message, :explaination,
-      :referral_bonus, :deal_status, :request_status)
+      :referral_bonus, :deal_status, :request_status,
+      :intro_subject, :intro_body)
   end
 
   def set_sales_intro

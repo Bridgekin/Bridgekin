@@ -31,7 +31,7 @@ class CheckoutForm extends Component {
         </div>
         <Button color='primary' variant='contained'
         fullWidth
-          disabled={this.props.canSubmit}
+          disabled={this.props.canSubmit()}
           onClick={this.submit}>
           Send
         </Button>

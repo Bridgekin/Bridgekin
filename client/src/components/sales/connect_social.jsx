@@ -109,9 +109,9 @@ class ConnectSocial extends React.Component {
       this.props.updateUserFeature(payload);
     }
 
-    if(!currentSalesNetworkId || this.isExpiredSub()){
-      this.props.history.push('/sales/dashboard')
-    }
+    // if(!currentSalesNetworkId || this.isExpiredSub()){
+    //   this.props.history.push('/sales/dashboard')
+    // }
 
     // this.props.fetchUserNetworks()
     //   .then(() => {

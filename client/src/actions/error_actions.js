@@ -69,6 +69,8 @@ export const RECEIVE_SALES_INTRO_ERRORS = 'RECEIVE_SALES_INTRO_ERRORS';
 export const CLEAR_SALES_INTRO_ERRORS = 'CLEAR_SALES_INTRO_ERRORS';
 export const RECEIVE_SALES_ADMIN_SIGNUP_ERRORS = 'RECEIVE_SALES_ADMIN_SIGNUP_ERRORS';
 export const CLEAR_SALES_ADMIN_SIGNUP_ERRORS = 'CLEAR_SALES_ADMIN_SIGNUP_ERRORS';
+export const RECEIVE_SALES_PRODUCT_ERRORS = 'RECEIVE_SALES_PRODUCT_ERRORS';
+export const CLEAR_SALES_PRODUCT_ERRORS = 'CLEAR_SALES_PRODUCT_ERRORS';
 
 export const RECEIVE_UTIL_ERRORS = 'RECEIVE_UTIL_ERRORS';
 export const CLEAR_UTIL_ERRORS = 'CLEAR_UTIL_ERRORS';
@@ -360,4 +362,13 @@ export const receiveSalesAdminSignupErrors = errors => ({
 
 export const clearSalesAdminSignupErrors = () => ({
   type: CLEAR_SALES_ADMIN_SIGNUP_ERRORS,
+});
+
+export const receiveSalesProductErrors = errors => ({
+  type: RECEIVE_SALES_PRODUCT_ERRORS,
+  errors
+});
+
+export const clearSalesProductErrors = () => ({
+  type: CLEAR_SALES_PRODUCT_ERRORS,
 });

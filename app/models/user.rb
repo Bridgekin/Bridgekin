@@ -181,7 +181,19 @@ class User < ApplicationRecord
   #   SalesIntro.includes(:contact).where("requestor_id = ? OR recipient_id = ?", self.id, self.id).pluck(:contact_id)
   # end
 
-  def save_new_admin_network(domain_params, purchase_params, address_params, admin_signup_link_id)
+  def self.determine_end_date(time)
+    now = DateTime.now
+    rounded = now.beginning_of_hour + 1.hour
+    if rounded.hour > 17
+      rounded = rounded.beginning_of_day + 1.day + 17.hour
+    else
+      diff = 17 - rounded.hour
+      rounded += diff.hour
+    end
+    rounded + time
+  end
+
+  def save_new_admin_network(domain_params, purchase_params, address_params)
     return false if invalid?
     Stripe.api_key = Rails.application.credentials.stripe[:test][:secret_key]
     @sales_network = SalesNetwork.new(domain_params)
@@ -190,15 +202,15 @@ class User < ApplicationRecord
     # elsif purchase_params[:duration] === "year"
     #   end_date = DateTime.now + 1.year
     # end
-    end_date = DateTime.now + 1.week
+    end_date = User.determine_end_date(1.week)
 
     ActiveRecord::Base.transaction do
       self.save!
       @sales_network.save!
       #Attach to existing network
-      self.sales_user_networks.create!(network: network)
+      self.sales_user_networks.create!(network: @sales_network)
       #Attach admin user
-      self.sales_admin_networks.create!(network: network)
+      self.sales_admin_networks.create!(network: @sales_network)
       #Create a customer
       customer = Stripe::Customer.create({
         # address: {
@@ -220,10 +232,9 @@ class User < ApplicationRecord
       subscription = Subscription.create!({
         targetable: @sales_network,
         payer: self,
-        amount: purchase_params[:amount],
-        seats: purchase_params[:seats],
-        cadence: purchase_params[:duration],
-        renew: purchase_params[:renewal],
+        product_id: purchase_params[:product_id],
+        duration: purchase_params[:duration],
+        renewal: purchase_params[:renewal],
         end_date: end_date,
         sub_type: "trial"
       })
@@ -250,7 +261,6 @@ class User < ApplicationRecord
   rescue ActiveRecord::StatementInvalid => e
     # e.message and e.cause.message can be helpful
     errors.add(:base, e.message)
-    debugger
     logger.error("Sales admin creation failed. Customer ID: #{customer.id if customer}, current_user: #{self.id}. Errors: #{errors.full_messages.to_s}")
     false
   end
@@ -270,8 +280,7 @@ class User < ApplicationRecord
     site_template = get_template
     #Get User feature set
     user_feature = self.user_feature ||
-      self.user_feature.create()
-      # UserFeature.create(user_id: self.id)
+      UserFeature.create(user_id: self.id)
     #Remove waitlist user from waitlist by changing status
     update_waitlist
     #No friends yet = Empty object to fill connections

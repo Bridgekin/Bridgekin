@@ -7,6 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
+import Switch from '@material-ui/core/Switch';
 
 import Loading from '../loading';
 import queryString from 'query-string'
@@ -19,6 +21,10 @@ import { adminSignup } from '../../actions/session_actions'
 import { openSignup } from '../../actions/modal_actions';
 
 import Capitalize from 'capitalize';
+import SignupPic from '../../static/signup_pic.png';
+import Img from 'react-image'
+
+import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_network_actions'
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -27,13 +33,18 @@ const mapStateToProps = (state, ownProps) => {
   dimensions: state.util.window,
   page: ownProps.match.params.page,
   code: values.code,
-  adminSignupLink: state.entities.sales.adminSignupLink
+  adminSignupLink: state.entities.sales.adminSignupLink,
+  salesProducts: state.entities.sales.salesProducts,
+  salesUserNetworks: state.entities.sales.salesUserNetworks,
 }};
 
 const mapDispatchToProps = dispatch => ({
   fetchAdminSignupLink: (code) => dispatch(fetchAdminSignupLink(code)),
   validateUnique: payload => dispatch(validateUnique(payload)),
-  adminSignup: payload => dispatch(adminSignup(payload))
+  adminSignup: payload => dispatch(adminSignup(payload)),
+  openSignup: () => dispatch(openSignup()),
+  fetchUserNetworks: () => dispatch(fetchUserNetworks()),
+  setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId))
 });
 
 const styles = theme => ({
@@ -46,19 +57,34 @@ const styles = theme => ({
   },
   subPart:{
     margin: 5
-  }
+  },
+  signupPic:{
+    width: '100%',
+    maxWidth: 300,
+    height: 'auto'
+  },
+  paymentDivider: {
+    borderTop: `4px solid black`,
+    margin: "20px 0px",
+    width: '100%'
+  },
+  paymentCallout:{
+    fontSize: 16, fontWeight: 600
+  },
+  renewOther:{ fontSize: 16},
+  renewBold: { fontSize: 16, fontWeight: 600}
 })
 
 class AdminSignup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      fname: 'asdf',
-      lname: 'asdfasdf',
-      email: 'tester@email.com',
-      password: 'password',
-      domain: 'tester.com',
-      title: 'tester',
+      fname: '',
+      lname: '',
+      email: '',
+      password: '',
+      domain: '',
+      title: '',
       loaded: false,
       validTitle: true,
       validDomain: true,
@@ -66,14 +92,13 @@ class AdminSignup extends React.Component {
       domainError: "",
       emailError: "",
       checkingValid: false,
-      duration: "",
+      line1: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      msa: false,
+      duration: "monthly",
       renewal: true,
-      amount: 0,
-      seats: 0,
-      line1: "asdfasdfasdf",
-      city: "asdfasdfasdf",
-      state: "CA",
-      zipcode: "94063"
     }
 
     this.domainModelMap = {
@@ -88,7 +113,8 @@ class AdminSignup extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleValidateChange = this.handleValidateChange.bind(this);
-    this.isReadySubmit = this.isReadySubmit.bind(this);
+    this.isDisabledSubmit = this.isDisabledSubmit.bind(this);
+    this.handleCheckedChange = this.handleCheckedChange.bind(this);
   }
 
   componentDidMount(){
@@ -97,17 +123,23 @@ class AdminSignup extends React.Component {
     .then(() => {
       const { adminSignupLink } = this.props;
       if(adminSignupLink.id){
-        this.setState({ 
-          loaded: true,
-          duration: adminSignupLink.duration,
-          renewal: adminSignupLink.renewal,
-          seats: adminSignupLink.seats,
-          amount: adminSignupLink.amount
-        })
+        this.setState({ loaded: true })
       } else {
-        this.setState({ loaded: true})
+        // this.setState({ loaded: true})
       }
     })
+  }
+  
+  loadUserNetworks() {
+    this.props.fetchUserNetworks()
+      .then(() => {
+        let userNetworks = Object.values(this.props.salesUserNetworks)
+        if (userNetworks.length > 0) {
+          let currentNetworkId = userNetworks[0].id
+          this.props.setCurrentNetwork(currentNetworkId)
+        }
+        this.props.history.push('/sales/dashboard')
+      })
   }
 
   changePage(url){
@@ -119,6 +151,17 @@ class AdminSignup extends React.Component {
   handleChange(field) {
     return e => {
       this.setState({ [field]: e.target.value })
+    }
+  }
+
+  handleCheckedChange(field){
+    return e => {
+      if (field === "duration"){
+        let checked = e.target.checked;
+        this.setState({ [field]: checked ? 'yearly' : 'monthly' })
+      } else {
+        this.setState({ [field]: e.target.checked})
+      }
     }
   }
 
@@ -171,140 +214,220 @@ class AdminSignup extends React.Component {
     let payload = { 
       user: { fname, lname, email, password },
       domain: { title, domain },
-      purchase: { duration, renewal, amount, seats, tokenId },
-      address: { line1, city, state, zipcode },
-      adminSignupLinkId: adminSignupLink.id
+      purchase: { duration, renewal, tokenId, productId: adminSignupLink.productId },
+      address: { line1, city, state, zipcode }
     }
     this.props.adminSignup(payload)
     .then(() => {
-      this.props.openSignup({ page: "response" })
+      if(this.props.currentUser){
+        this.loadUserNetworks()
+      } else {
+        this.props.openSignup({ page: "response" })
+      }
     })
-    // let response = await fetch("/api/charge", {
-    //   method: "POST",
-    //   body: JSON.stringify(payload),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     "Authorization": localStorage.getItem('bridgekinToken')
-    //   }
-    // });
-
-    // if(response.ok){
-    //   console.log("Purchase Complete!")
-    // }
   }
 
-  isReadySubmit(){
+
+
+  isDisabledSubmit(){
     const { page } = this.props;
     const { fname, lname, email, password,
-      address, city, state, zipcode,
-      title, domain } = this.state;
+      line1, city, state, zipcode,
+      title, domain, msa} = this.state;
     
     if(page === "signup"){
-      return !fname && !lname && !email && !password && !title && !domain
+      return !fname || !lname || !email || !password || !title || !domain || !msa
     } else if (page === 'payment'){
-      return !address && !city && !state && !zipcode
+      return !line1 || !city || !state || !zipcode
     }
   }
 
   getContent(){
     const { classes, page, adminSignupLink, 
-      code } = this.props;
-    const { duration, renewal, amount, seats,
+      code, salesProducts } = this.props;
+    const { duration, renewal,
       fname, lname, email, password,
       title, domain, titleError,
       line1, city, state, zipcode,
-      domainError, emailError, checkingValid } = this.state;
+      domainError, emailError, checkingValid,
+      msa } = this.state;
+
+    let product = salesProducts[adminSignupLink.productId]
 
     switch(page){
       case "payment":
-        let payment = <Grid item md={4} sm={7} xs={10}
-          style={{ marginTop: 30 }}>
-          <Paper style={{ padding: 20 }}>
-            <Typography fullWidth gutterBottom
-              color="textPrimary">
-              {`Your Subscription`}
+        let yourSub = <div>
+          <Typography fullWidth gutterBottom
+            color="textPrimary" align='left'
+            style={{ fontSize: 18}}>
+            {`Your Subscription`}
+          </Typography>
+          <Grid container>
+            <Typography color='textSecondary'
+              className={classes.subDetail}
+              style={{ marginRight: 10}}>
+              {`Seats: ${product.seats}`}
             </Typography>
-            <Grid container justify='center'>
-              <Typography color='textSecondary'
-              className={classes.subPart}>
-                {`Seats: ${seats}`}
-              </Typography>
-              <Typography color='textSecondary'
-                className={classes.subPart}>
-                {`Amount: ${amount}`}
-              </Typography>
-            </Grid>
-            <Grid container justify='center'>
-              <Typography color='textSecondary'
-                className={classes.subPart}>
-                {`Duration: ${Capitalize(duration)}`}
-              </Typography>
-              <Typography color='textSecondary'
-                className={classes.subPart}>
-                {`Renewal: ${renewal ? "Yes" : "No"}`}
-              </Typography>
-            </Grid>
-            
-            <Typography fullWidth gutterBottom
-              color="textPrimary"
-              style={{ marginTop: 20}}>
-              {`Your Billing address`}
+            <Typography color='textSecondary'
+              className={classes.subDetail}>
+              {`Amount: ${duration === 'monthly' ? product.monthlyAmount : product.yearlyAmount}`}
             </Typography>
-            <TextField fullWidth required
-              variant="outlined"
-              label='Address'
-              margin='dense'
-              placeholder='Eg: 1234 San Francisco St'
-              onChange={this.handleChange('line1')}
-              value={line1}
-            />
-            <TextField fullWidth required
-              variant="outlined"
-              label='City'
-              margin='dense'
-              placeholder='Eg: San Francisco'
-              onChange={this.handleChange('city')}
-              value={city}
-            />
-            <Grid container justify='space-between'
-            spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth required
-                  variant="outlined"
-                  label='State'
-                  margin='dense'
-                  placeholder='Eg: CA'
-                  onChange={this.handleChange('state')}
-                  value={state}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth required
-                  variant="outlined"
-                  label='Zipcode'
-                  margin='dense'
-                  placeholder='Eg: 98765'
-                  onChange={this.handleChange('zipcode')}
-                  value={zipcode}
-                />
-              </Grid>
-            </Grid>
+          </Grid>
+          <Typography color='textSecondary'
+            className={classes.subDetail}>
+            {`Length: ${Capitalize(duration)}`}
+          </Typography>
+        </div>
 
-            <Typography fullWidth gutterBottom
-              color="textPrimary"
-              style={{ marginTop: 20 }}>
-              {`Your Payment Info`}
-            </Typography>
-            <StripeProvider apiKey="pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL">
-              <Elements>
-                <CheckoutForm 
-                canSubmit={this.isReadySubmit()}
-                handleSubmit={this.handleSubmit}/>
-              </Elements>
-            </StripeProvider>
-          </Paper>
+        let billingInfo = <Grid container>
+          <Typography fullWidth gutterBottom
+            color="textPrimary"
+            style={{ marginTop: 20 }}>
+            {`Your Billing address`}
+          </Typography>
+          <TextField fullWidth required
+            variant="outlined"
+            label='Address'
+            margin='dense'
+            placeholder='Eg: 1234 San Francisco St'
+            onChange={this.handleChange('line1')}
+            value={line1}
+          />
+          <TextField fullWidth required
+            variant="outlined"
+            label='City'
+            margin='dense'
+            placeholder='Eg: San Francisco'
+            onChange={this.handleChange('city')}
+            value={city}
+          />
+          <Grid container justify='space-between'
+            spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth required
+                variant="outlined"
+                label='State'
+                margin='dense'
+                placeholder='Eg: CA'
+                onChange={this.handleChange('state')}
+                value={state}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth required
+                variant="outlined"
+                label='Zipcode'
+                margin='dense'
+                placeholder='Eg: 98765'
+                onChange={this.handleChange('zipcode')}
+                value={zipcode}
+              />
+            </Grid>
+          </Grid>
         </Grid>
-        return payment;
+        
+        let ccInfo = <div>
+          <Typography fullWidth gutterBottom
+            color="textPrimary"
+            style={{ marginTop: 20 }}>
+            {`Your Payment Info`}
+          </Typography>
+          <StripeProvider apiKey="pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL">
+            <Elements>
+              <CheckoutForm
+                canSubmit={this.isDisabledSubmit}
+                handleSubmit={this.handleSubmit} />
+            </Elements>
+          </StripeProvider>
+        </div>
+
+        let paymentInfo = <Grid item md={5} sm={6} xs={10}>
+          {yourSub}
+          {billingInfo}
+          {ccInfo}
+        </Grid>
+
+        let subCard = <Grid item xs={10} sm={5} container justify='center' alignItems='center'>
+          <Grid container style={{ backgroundColor: '#F1F1F1', padding: 40 }}>
+            <div className={classes.paymentDivider} />
+            <Grid container alignItems='flex-end'>
+              <Typography style={{ fontSize: 50, marginRight: 10 }}>
+                {`$${duration === "monthly" ? (product.monthlyAmount / product.seats) : (product.yearlyAmount/12/ product.seats)}`}
+              </Typography>
+              <Typography color='textSecondary'
+                style={{ fontSize: 18 }}>
+                {`User/Month`}
+              </Typography>
+            </Grid>
+            <Grid container>
+              <Typography style={{ fontSize: 18 }}>
+                {`Billed as $${duration === "monthly" ? product.monthlyAmount : product.yearlyAmount} per ${duration === "monthly" ? "month" : "year"}`}
+              </Typography>
+            </Grid>
+            <div className={classes.paymentDivider} />
+            <Typography color='textPrimary' gutterBottom className={classes.paymentCallout}>
+              {`Unlimited contacts uploaded`}
+            </Typography>
+            <Typography color='textPrimary' gutterBottom className={classes.paymentCallout}>
+              {`Unlimited introductions received`}
+            </Typography>
+            <Typography gutterBottom
+              style={{ fontSize: 15}}>
+              <Checkbox
+                checked={renewal}
+                onChange={this.handleCheckedChange('renewal')}
+                value="renewal"
+              />
+              {`Automatically renew subscription`}
+            </Typography>
+          </Grid>
+
+          <Grid container style={{ marginTop: 20}}>
+            <Grid item xs={5}>
+              <Typography align='center'
+              className={duration === 'monthly' ? classes.renewBold : classes.renewOther}>
+                {`Monthly Billing`}
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Switch
+                checked={duration === 'yearly'}
+                onChange={this.handleCheckedChange('duration')}
+                value="duration"
+              />
+            </Grid>
+            <Grid item xs={5}>
+              <Typography align='center'
+              className={duration === 'yearly' ? classes.renewBold : classes.renewOther}>
+                {`Annual Billing`} <br/>
+                {`Save 20%`}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Typography>
+            {}
+          </Typography>
+        </Grid>
+
+        let payment = <Grid container justify='center'
+          style={{ marginTop: 30 }}>
+          <Grid item xs={11} sm={9} container justify='space-between' alignItems='flex-start'>
+            {subCard}
+            {paymentInfo}
+          </Grid>
+        </Grid>
+
+        return <div style={{ marginTop: 50 }}>
+          <Typography align='center' gutterBottom
+          style={{ fontSize: 36, fontWeight: 600}}>
+            {`Try Bridgekin free for 7 days`}
+          </Typography>
+          <Typography align='center' gutterBottom
+            style={{ fontSize: 18 }}>
+            {`No Obligation. No Risk.`}
+          </Typography>
+          {payment}
+        </div>;
       case "signup":
         let createAccount = <div>
           <Typography color="textPrimary" gutterBottom
@@ -383,25 +506,48 @@ class AdminSignup extends React.Component {
           </Typography>}
         </div>
 
-        let submit = <Grid container justify='center'>
-          <Button color='primary' variant='contained'
-            disabled={this.isReadySubmit() || checkingValid}
-            onClick={this.handleChangePage('payment')}
-          style={{ marginTop: 15}}>
-            {`Next`}
-          </Button>
-        </Grid>
+        let submit = <div style={{ marginTop: 20}}>
+          <Typography gutterBottom 
+          style={{ fontSize: 12}}>
+            <Checkbox
+              checked={msa}
+              onChange={this.handleCheckedChange('msa')}
+              value="msa"
+              style={{ marginRight: 5}}
+            />
+            {`I agree to the Master Service Agreement.`}
+          </Typography>
+          <Typography gutterBottom
+            style={{ fontSize: 12 }}>
+            {`By registering I confirm that I have read and agree to the Privacy Statement.`}
+          </Typography>
+          <Grid container justify='center'>
+            <Button color='primary' variant='contained'
+              disabled={this.isDisabledSubmit() || checkingValid}
+              onClick={this.handleChangePage('payment')}
+            style={{ marginTop: 15}}>
+              {`Next`}
+            </Button>
+          </Grid>
+        </div>
 
-        let signup = <Grid item md={4} sm={7} xs={10}
-          container
-          style={{ marginTop: 30}}>
-          <Paper style={{ padding: 20 }}>
-            {createAccount}
-            {createCompany}
-            {submit}
-          </Paper>
+        let container = <Grid container justify='center'
+        style={{ marginTop: 50}}>
+          <Grid item xs={10} sm={8} container justify='space-between'>
+
+            <Grid item xs={10} sm={5} container justify='center' alignItems='center'>
+              <Img src={SignupPic} 
+              className={classes.signupPic} />
+            </Grid>
+            <Grid item md={5} sm={6} xs={10} container justify='center'>
+              {createAccount}
+              {createCompany}
+              {submit}
+            </Grid>
+
+          </Grid>
         </Grid>
-        return signup;
+        return container;
       default:
         let backToHome = <Grid container justify='center'>
           <Button color='primary' variant='contained'
@@ -414,16 +560,31 @@ class AdminSignup extends React.Component {
   }
 
   render() {
-    const { classes, dimensions } = this.props;
+    const { classes, dimensions, adminSignupLink } = this.props;
     const { loaded } = this.state;
 
-    if(loaded){
+    if(loaded && adminSignupLink.id){
       return <div style={{minHeight: dimensions.height}}>
         <Grid container justify='center'
           className={classes.grid}>
           {this.getContent()}
         </Grid>
       </div>
+    } else if (loaded && !adminSignupLink.id){
+      return <Grid container justify='center'
+        alignItems='center' direction='column'
+        style={{ minHeight: dimensions.height }}>
+        <Typography gutterBottom style={{ fontSize: 36}}>
+          {`We weren't able to find the signup link you provided`}
+        </Typography>
+        <Typography gutterBottom style={{ fontSize: 18 }}>
+          {`As a result, we can't sign you up for an admin account yet. If you'd like to learn more,please reach out to us at admin@bridgekin.com or joe@bridgekin.com.`}
+        </Typography>
+        <Button variant='contained' color='primary'
+        onClick={() => this.props.history.push('//')}>
+          {`Back home`}
+        </Button>
+      </Grid>
     } else {
       return <Grid container justify='center' 
         alignItems='center' style={{ minHeight: dimensions.height }}>

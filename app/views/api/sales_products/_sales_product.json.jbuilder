@@ -1,0 +1,1 @@
+json.extract! sales_product, :id, :seats, :monthly_amount, :yearly_amount

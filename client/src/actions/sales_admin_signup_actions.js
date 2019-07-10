@@ -1,6 +1,7 @@
 import * as SalesAdminSignupApiUtil from '../util/sales_admin_signup_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveSalesAdminSignupErrors } from './error_actions';
+import { receiveSalesProducts, receiveSalesProduct } from './sales_product_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
@@ -18,7 +19,10 @@ export const clearAdminSignupLink = () => ({
 export const fetchAdminSignupLink = (code) => dispatch => (
   SalesAdminSignupApiUtil.fetchAdminSignupLink(code)
     .then(handleErrors)
-    .then(data => dispatch(retrieveAdminSignupLink(data.link)))
+    .then(data => {
+      dispatch(retrieveAdminSignupLink(data.link))
+      dispatch(receiveSalesProduct(data.salesProduct))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];

@@ -106,16 +106,14 @@ class SalesDashboard extends React.Component {
     this.searchData();
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   let thisCurrent = this.props.currentUser;
-  //   let nextCurrent = nextProps.currentUser;
-  //   debugger
-  //   if (nextCurrent && !thisCurrent && thisCurrent !== nextCurrent) {
-  //     debugger
-  //     this.searchData();
-  //   }
-  //   return true
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    let thisCurrent = this.props.currentUser;
+    let nextCurrent = nextProps.currentUser;
+    if (nextCurrent && !thisCurrent && thisCurrent !== nextCurrent) {
+      this.searchData();
+    }
+    return true
+  }
 
 
   handlePageChange(offset) {

@@ -63,15 +63,14 @@ class SalesRouter extends React.Component {
   // shouldComponentUpdate(nextProps, nextState) {
   //   let thisCurrent = this.props.currentUser;
   //   let nextCurrent = nextProps.currentUser;
-  //   // debugger
+  
   //   if (nextCurrent && thisCurrent !== nextCurrent){
-  //     debugger
   //     this.loadUserNetworks()
   //   }
   //   return true
   // }
 
-  loadUserNetworks(){
+  loadUserNetworks() {
     this.props.fetchUserNetworks()
       .then(() => {
         let userNetworks = Object.values(this.props.salesUserNetworks)
@@ -93,9 +92,11 @@ class SalesRouter extends React.Component {
           <SalesProtectedRoute path="/sales/connect_social" component={SalesConnectSocial} />
           <Route path="/sales/respond_to_intro/:introId" component={SalesRespondToIntro} />
           <SalesProtectedRoute path="/sales/stats/:page?" component={SalesStats} />
-          <Route path="/sales/admin_signup/:page" component={SalesAdminSignup} />
+          <Route path="/sales/admin_signup/:page" 
+            render={(props) => <SalesAdminSignup {...props} loadUserNetworks={this.loadUserNetworks} />}/>
           {/* SalesLogin should stay a normal routes so that we don't load the next pages too quickly - think componentDidMount on Dashboard */}
-          <Route path="/sales/login" component={SalesLogin}/>
+          <Route path="/sales/login"
+            render={(props) => <SalesLogin {...props} loadUserNetworks={this.loadUserNetworks} />} />
           <SalesAuthRoute path="/" component={SalesLandingPage} />
         </Switch>
       </div>

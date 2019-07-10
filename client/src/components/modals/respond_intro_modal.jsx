@@ -22,7 +22,6 @@ import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/CloseSharp';
 import Capitalize from 'capitalize';
 
-
 import { connect } from 'react-redux';
 import { fetchUserOpportunities,
   deleteOpportunity } from '../../actions/opportunity_actions';
@@ -119,10 +118,11 @@ class RespondIntroModal extends React.Component {
       switch(nextModal.decision){
         case "intro":
           const { salesContacts, salesIntros } = nextProps;
-          contact = salesContacts[salesIntros[nextModal.introId].contactId]
+          let intro = salesIntros[nextModal.introId]
+          contact = salesContacts[intro.contactId]
           let email = contact.email
-          let subject = `I think you’ll appreciate this...`
-          let body = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(nextProps.currentUser.fname)}`
+          let subject = intro.intro_subject || ""
+          let body = intro.intro_body || ""
           this.setState({ 
             page: 'intro',
             email, subject, body, contact

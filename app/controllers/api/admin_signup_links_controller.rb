@@ -6,7 +6,9 @@ class Api::AdminSignupLinksController < ApiController
   # after_action :verify_authorized, except: :show
 
   def show
-    @admin_signup_link = AdminSignupLink.find_by(code: params[:code])
+    @admin_signup_link = AdminSignupLink.includes(:product).find_by(code: params[:code])
+
+    @sales_product = @admin_signup_link.product
     render :show
   end
 

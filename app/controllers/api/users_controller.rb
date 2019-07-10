@@ -36,8 +36,7 @@ class Api::UsersController < ApiController
     @currentUser = User.new(user_params)
 
     if @currentUser.save_new_admin_network(
-      domain_params, purchase_params, address_params, 
-      params[:admin_signup_link_id])
+      domain_params, purchase_params, address_params)
 
       #Get Tokens and track
       @token = get_login_token!(@currentUser)
@@ -208,7 +207,7 @@ class Api::UsersController < ApiController
     end
 
     def purchase_params
-      params.require(:purchase).permit(:duration, :renewal, :amount, :seats, :token_id)
+      params.require(:purchase).permit(:duration, :renewal, :product_id, :token_id)
     end
 
     def address_params

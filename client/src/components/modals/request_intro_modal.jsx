@@ -18,6 +18,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Capitalize from 'capitalize';
 
 import { connect } from 'react-redux';
 import { closeRequestIntro } from '../../actions/modal_actions';
@@ -57,7 +58,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.base3
   },
   container:{
-    padding: "30px 0px"
+    padding: "20px 0px"
   },
   listText:{ color: theme.palette.text.primary},
   requestHeader:{
@@ -75,13 +76,17 @@ class RequestIntroModal extends React.Component {
       message: '', 
       explaination: '',
       referralBonus: 0,
-      target: null
+      target: null,
+      introBody: '',
+      introSubject: ''
     };
 
     this.handleClose = this.handleClose.bind(this);
     this.getContent = this.getContent.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.changePage = this.changePage.bind(this);
+    this.handleChangeTarget = this.handleChangeTarget.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -112,31 +117,54 @@ class RequestIntroModal extends React.Component {
     }
   }
 
+  handleChangeTarget(e){
+    let target = e.target.value;
+    const { requestIntroModal, users } = this.props;
+    const { contact } = requestIntroModal;
+
+    let targetUser = users[target]
+    let introSubject = `I think you’ll appreciate this...`
+    let introBody = `Hi ${Capitalize(targetUser.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(targetUser.fname)}`
+
+    this.setState({ introSubject, introBody, target })
+  }
+
   handleSubmit(){
     const { contact } = this.props.requestIntroModal
     const { message, explaination, referralBonus,
-    target } = this.state;
+    target, page } = this.state;
 
     let payload = {message, explaination, referralBonus,
       contactId: contact.id,
       targetId: target
     }
 
+    if(page === 'custom'){
+
+    }
+
     this.props.createSalesIntro(payload)
     .then(() => this.setState({ page: 'response'}) )
+  }
+
+  changePage(page){
+    return e => {
+      this.setState({ page })
+    }
   }
 
   getContent(){
     const { classes, currentUser, friendMap, 
       requestIntroModal, users } = this.props;
     const { page, message, explaination, 
-      referralBonus, target } = this.state;
+      referralBonus, target, introSubject,
+      introBody } = this.state;
     const { contact } = requestIntroModal;
 
     if (!requestIntroModal.open){
       return <div></div>
     }
-    
+
     switch(page){
       case 'request':
         let header = <Grid container
@@ -182,7 +210,7 @@ class RequestIntroModal extends React.Component {
           <Select fullWidth
             value={target}
             onClick={(e) => e.stopPropagation()}
-            onChange={this.handleChange("target")}>
+            onChange={this.handleChangeTarget}>
             {friendMap[contact.id].map(id => {
               let user = users[id];
               return <MenuItem value={user.id}>{`${user.fname} ${user.lname}`}</MenuItem>
@@ -221,16 +249,71 @@ class RequestIntroModal extends React.Component {
             {referralBonus}
           </Grid>
           {introResponses}
-          <Grid container justify='flex-end'>
+          <Grid container justify="space-between"
+            style={{ marginTop: 15 }}>
+            <Button color='default'
+              disabled={!target}
+              onClick={this.changePage("custom")}>
+              {`Customize Introduction Email`}
+            </Button>
+
             <Button variant='contained' color='primary'
             disabled={!target}
-              onClick={this.handleSubmit}>
-              {`Send Request`}
+            onClick={this.handleSubmit}>
+            {`Send Request`}
             </Button>
           </Grid>
         </Grid>
 
         return content
+      case "custom":
+        let custom = <Grid item xs={10}>
+          <Typography fullWidth color='textPrimary'
+          gutterBottom align='center'
+          style={{ fontSize: 24 }}>
+            {`Customize Introduction Email`}
+          </Typography>
+          <Typography fullWidth color='textSecondary'
+            gutterBottom align='center'
+            style={{ fontSize: 12, marginBottom: 20}}>
+            {`Customize the email template that your teammate will send to their contact. Note* Your teammate will still be able to make further changes to this template later`}
+          </Typography>
+          <TextField
+            fullWidth
+            label = "Subject"
+            variant = 'outlined'
+            value = {introSubject}
+            margin="normal"
+            onChange = {this.handleChange('introSubject') }
+          />
+          {/* <Typography gutterBottom
+            style={{ fontSize: 14, margin: "20px 0px 10px" }}>
+            {`Suggested Text (Feel free to edit)`}
+          </Typography> */}
+          <TextField
+            fullWidth
+            multiline
+            rows="12"
+            label="Body"
+            margin="normal"
+            variant='outlined'
+            value={introBody}
+            onChange={this.handleChange('introBody')}
+          />
+          <Grid container justify="space-between"
+            style={{ marginTop: 15 }}>
+            <Button variant='contained' color='default'
+              onClick={this.changePage("request")}>
+              {`Back`}
+            </Button>
+
+            <Button variant='contained' color='primary'
+              onClick={this.handleSubmit}>
+              {`Send`}
+            </Button>
+          </Grid>
+        </Grid>
+        return custom
       default:
         let requestIntroErrors = this.props.requestIntroErrors.map(error => {
           error = error.replace(/(Fname|Lname)/g, (ex) => {

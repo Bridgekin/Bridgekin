@@ -4,10 +4,9 @@ class AdminSignupLink< ApplicationRecord
 
   after_initialize :ensure_referral_code
 
-  belongs_to :network,
-    foreign_key: :network_id,
-    class_name: :Network,
-    optional: :true
+  belongs_to :product,
+    foreign_key: :product_id,
+    class_name: :SalesProduct
 
   def ensure_referral_code
     self.code ||= generate_referral_code

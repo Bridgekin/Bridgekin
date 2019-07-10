@@ -74,7 +74,6 @@ class SalesLogin extends React.Component {
     this.handleSignup = this.handleSignup.bind(this);
     this.backPage = this.backPage.bind(this);
     this.getLoginInfo = this.getLoginInfo.bind(this);
-    this.loadUserNetworks = this.loadUserNetworks.bind(this);
   }
 
   handleChange(field){
@@ -120,7 +119,7 @@ class SalesLogin extends React.Component {
     this.props.login(user)
     .then(() => {
       if(this.props.currentUser){
-        this.loadUserNetworks()
+        this.props.loadUserNetworks()
       } else {
         this.props.openLogin({ page: "response"})
       }
@@ -142,7 +141,7 @@ class SalesLogin extends React.Component {
     .then(() => {
       const { currentUser } = this.props;
       if (currentUser) {
-        this.loadUserNetworks()
+        this.props.loadUserNetworks()
       } else {
         this.props.openLogin({ page: "response" })
       }

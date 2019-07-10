@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_09_182942) do
+ActiveRecord::Schema.define(version: 2019_07_10_165938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,13 +52,9 @@ ActiveRecord::Schema.define(version: 2019_07_09_182942) do
 
   create_table "admin_signup_links", force: :cascade do |t|
     t.string "code", null: false
-    t.integer "network_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "duration"
-    t.boolean "renewal"
-    t.integer "seats"
-    t.integer "amount"
+    t.integer "product_id"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -398,6 +394,8 @@ ActiveRecord::Schema.define(version: 2019_07_09_182942) do
     t.string "deal_status", default: "open"
     t.string "location", default: ""
     t.string "request_status", default: "open"
+    t.string "intro_subject"
+    t.string "intro_body"
     t.index ["recipient_id"], name: "index_sales_intros_on_recipient_id"
     t.index ["requestor_id"], name: "index_sales_intros_on_requestor_id"
   end
@@ -408,6 +406,14 @@ ActiveRecord::Schema.define(version: 2019_07_09_182942) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "current_sub_id"
+  end
+
+  create_table "sales_products", force: :cascade do |t|
+    t.integer "seats"
+    t.integer "monthly_amount"
+    t.integer "yearly_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sales_user_contacts", force: :cascade do |t|
@@ -471,14 +477,12 @@ ActiveRecord::Schema.define(version: 2019_07_09_182942) do
     t.integer "transaction_id"
     t.integer "user_id"
     t.integer "network_id"
-    t.integer "subscription"
     t.integer "sub_id"
-    t.integer "seats"
-    t.integer "amount"
     t.string "duration"
     t.datetime "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "product_id"
     t.index ["network_id"], name: "index_stripe_payments_on_network_id"
     t.index ["sub_id"], name: "index_stripe_payments_on_sub_id"
     t.index ["user_id"], name: "index_stripe_payments_on_user_id"
@@ -486,10 +490,8 @@ ActiveRecord::Schema.define(version: 2019_07_09_182942) do
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer "payer_id"
-    t.integer "amount"
-    t.string "cadence"
-    t.boolean "renew"
-    t.integer "seats"
+    t.string "duration"
+    t.boolean "renewal"
     t.datetime "end_date"
     t.string "status", default: "active"
     t.datetime "created_at", null: false
@@ -497,6 +499,7 @@ ActiveRecord::Schema.define(version: 2019_07_09_182942) do
     t.string "targetable_type"
     t.bigint "targetable_id"
     t.string "sub_type"
+    t.integer "product_id"
     t.index ["payer_id"], name: "index_subscriptions_on_payer_id"
     t.index ["targetable_type", "targetable_id"], name: "index_subscriptions_on_targetable_type_and_targetable_id"
   end
