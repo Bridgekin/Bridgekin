@@ -173,7 +173,7 @@ class User < ApplicationRecord
     through: :sales_admin_networks,
     source: :network
 
-  has_many :stripe_details,
+  has_one :stripe_details,
     foreign_key: :user_id,
     class_name: :StripeDetail
   
@@ -202,7 +202,7 @@ class User < ApplicationRecord
     #   end_date = DateTime.now + 1.year
     # end
     end_date = User.determine_end_date(1.week)
-
+    
     ActiveRecord::Base.transaction do
       self.save!
       @sales_network.save!

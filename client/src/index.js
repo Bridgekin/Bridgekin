@@ -20,7 +20,8 @@ import ReactPixel from 'react-facebook-pixel';
 import amplitude from 'amplitude-js';
 window.amplitudeInstance = amplitude.getInstance();
 const prod = process.env.NODE_ENV === 'production';
-
+const dev = process.env.NODE_ENV === 'development';
+debugger
 // Set Amplitude Instance
 getPublicEnv()
 .then(handleAuthErrors)
@@ -34,10 +35,10 @@ getPublicEnv()
   }
 })
 
-if(prod){
-  window.stripe_pk = "pk_live_KBOOb3gd0eyjOvMKvybvFHt000XIfMTNna"
-} else {
+if(dev){
   window.stripe_pk = "pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL"
+} else {
+  window.stripe_pk = "pk_live_KBOOb3gd0eyjOvMKvybvFHt000XIfMTNna"
 }
 
 // Set Facebook Pixel Instance

@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import ImportGoogle from '../google/import_contacts';
+import Capitalize from 'capitalize';
 import { searchNetworks } from '../../actions/sales_network_actions';
 import { salesSignup, googleSalesLogin } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
@@ -54,6 +55,13 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'flex'
     },
+  },
+  result: {
+    margin: "5px 0px"
+  },
+  resultContainer:{
+    overflow: 'scroll',
+    height: 300
   }
 })
 
@@ -120,7 +128,7 @@ class SalesLogin extends React.Component {
     this.props.login(user)
     .then(() => {
       if(this.props.currentUser){
-        this.props.loadUserNetworks()
+        this.loadUserNetworks()
       } else {
         this.props.openLogin({ page: "response"})
       }
@@ -153,7 +161,7 @@ class SalesLogin extends React.Component {
     .then(() => {
       const { currentUser } = this.props;
       if (currentUser) {
-        this.props.loadUserNetworks()
+        this.loadUserNetworks()
       } else {
         this.props.openLogin({ page: "response" })
       }
@@ -260,8 +268,9 @@ class SalesLogin extends React.Component {
         
         let results = Object.values(resultNetworks)
 
-        let findCompany = <Grid container justify='space-between' alignItems='flex-start'
-        style={{ marginTop: 30}}>
+        let findCompany = <Grid container spacing={2} 
+          justify='space-between' alignItems='flex-start'
+          style={{ marginTop: 30}}>
           <Grid item xs={6} container justify='center'>
             <Typography align='center' gutterBottom
             style={{ fontSize: 16, fontWeight: 600}}>
@@ -294,21 +303,29 @@ class SalesLogin extends React.Component {
             </Grid>
           </Grid>
 
-          <Grid item xs={5} container justify='center'>
-            {results.length > 0 && <Grid container
-            style={{ marginTop: 30}}>
-              <Typography color='textSecondary' align='center'
-              stlye={{ fontWeight: 600, fontWeight: 18}}>
+          <Grid item xs={6}>
+            {results.length > 0 && <Grid container justify='center'
+            style={{ padding: "0px 10px", borderBottom: `1px solid grey`}}>
+              <Typography color='textPrimary' 
+                align='center' fullWidth
+                style={{fontSize: 16, fontWeight: 600}}>
                 {`Results`}
               </Typography>
-              <Grid container direction='column'>
+              <Grid container>
+                <Typography color='textSecondary'
+                  style={{fontSize: 16, textTransform:'italic'}}>
+                  {`Network Title`}
+                </Typography>
+              </Grid> 
+              <Grid container
+                className={classes.resultContainer}>
                 {results.map(network => {
                   let detail = networkDetails[network.id]
                   return <Grid item container justify='space-between' 
                   className={classes.result}>
-                    <Typography color='textSecondary'
+                    <Typography color='textPrimary'
                     style={{ fontSize: 14}}>
-                      {`${network.title}`}
+                      {`${Capitalize(network.title)}`}
                     </Typography>
                     <Button variant='contained' color='primary'
                     disabled={this.isDisabled(detail)}
