@@ -22,6 +22,10 @@ class SalesNetwork < ApplicationRecord
   has_many :subscriptions,
     as: :targetable
 
+  has_many :subscribed_products,
+    through: :subscriptions,
+    source: :product
+
   has_many :sales_admin_networks,
     foreign_key: :network_id,
     class_name: :SalesAdminNetwork
@@ -34,8 +38,10 @@ class SalesNetwork < ApplicationRecord
     sales_networks.reduce({}) do |acc, network|
       current_sub = network.current_subscription
       details = {
-        member_count: network.members.count,
-        current_sub_end: current_sub.nil? ? "no sub" : current_sub.end_date
+        memberCount: network.members.count,
+        currentSubEnd: current_sub.nil? ? "no sub" : current_sub.end_date,
+        maxSeats: current_sub.nil? ? "no sub" : network.subscribed_products
+        .where(id: current_sub.product_id).first.seats
       }
       acc[network.id] = details
       acc

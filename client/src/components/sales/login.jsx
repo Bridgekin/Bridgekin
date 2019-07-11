@@ -20,6 +20,7 @@ const mapStateToProps = (state, ownProps) => ({
   resultNetworks: state.entities.sales.searchNetworks,
   userErrors: state.errors.users,
   salesUserNetworks: state.entities.sales.salesUserNetworks,
+  networkDetails: state.entities.sales.networkDetails,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -126,6 +127,17 @@ class SalesLogin extends React.Component {
     })
   }
 
+  isDisabled(detail){
+    const { currentSubEnd, maxSeats, memberCount } = detail
+    if (currentSubEnd === "no sub" || maxSeats === "no sub" ){ return true }
+    let jsDate = new Date(currentSubEnd)
+    let now = new Date()
+    if(memberCount >= maxSeats || jsDate < now){
+      return true
+    }
+    return false
+  }
+
   retrieveNetworks(){
     const { networkTitle } = this.state;
     // debugger
@@ -149,7 +161,7 @@ class SalesLogin extends React.Component {
   }
 
   getContent(){
-    const { classes, dimensions, resultNetworks } = this.props;
+    const { classes, dimensions, resultNetworks, networkDetails } = this.props;
     const { email, password, networkTitle, page, fname, lname, target } = this.state;
 
     switch(page){
@@ -291,6 +303,7 @@ class SalesLogin extends React.Component {
               </Typography>
               <Grid container direction='column'>
                 {results.map(network => {
+                  let detail = networkDetails[network.id]
                   return <Grid item container justify='space-between' 
                   className={classes.result}>
                     <Typography color='textSecondary'
@@ -298,6 +311,7 @@ class SalesLogin extends React.Component {
                       {`${network.title}`}
                     </Typography>
                     <Button variant='contained' color='primary'
+                    disabled={this.isDisabled(detail)}
                     onClick={this.handlePage(network)}>
                       {`Select`}
                     </Button>
