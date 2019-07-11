@@ -19,9 +19,8 @@ import ReactPixel from 'react-facebook-pixel';
 
 import amplitude from 'amplitude-js';
 window.amplitudeInstance = amplitude.getInstance();
-const prod = process.env.NODE_ENV === 'production';
+
 const dev = process.env.NODE_ENV === 'development';
-debugger
 // Set Amplitude Instance
 getPublicEnv()
 .then(handleAuthErrors)

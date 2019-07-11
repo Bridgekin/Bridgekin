@@ -6,6 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 
+import Img from 'react-image'
+import StripeBadge from '../../../static/Stripe badge/Outline Dark/powered_by_stripe.png';
+
 class CheckoutForm extends Component {
   constructor(props) {
     super(props);
@@ -33,8 +36,11 @@ class CheckoutForm extends Component {
         fullWidth
           disabled={this.props.canSubmit()}
           onClick={this.submit}>
-          Send
+          {`Start Free 7 Day Trial`}
         </Button>
+        <Grid container justify='center' style={{ marginBottom: 10 }}>
+          <Img src={StripeBadge} />
+        </Grid>
       </div>
     );
   }

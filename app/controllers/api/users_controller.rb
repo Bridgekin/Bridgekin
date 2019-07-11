@@ -54,11 +54,12 @@ class Api::UsersController < ApiController
     @currentUser = User.new(user_params)
     network = SalesNetwork.find_by(domain: params[:user][:domain])
 
-    providedDomain = params[:user][:email].split('@').last
+    provided_domain = params[:user][:email].split('@').last.downcase
+    network_domain = network.domain.downcase
     # debugger
-    if providedDomain != network.domain
+    if provided_domain != network_domain
       render json: ["Domain does not match chosen network"], status: 422
-    elsif providedDomain == network.domain && @currentUser.save
+    elsif provided_domain == network_domain && @currentUser.save
       #Attach to existing network
       @currentUser.sales_user_networks.create(network: network)
 

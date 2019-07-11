@@ -23,6 +23,7 @@ import { openSignup } from '../../actions/modal_actions';
 import Capitalize from 'capitalize';
 import SignupPic from '../../static/signup_pic.png';
 import Img from 'react-image'
+import StripeBadge from '../../static/Stripe badge/Solid Dark/powered_by_stripe.png';
 
 import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_network_actions'
 
@@ -60,7 +61,7 @@ const styles = theme => ({
   },
   signupPic:{
     width: '100%',
-    maxWidth: 300,
+    maxWidth: 500,
     height: 'auto'
   },
   paymentDivider: {
@@ -79,12 +80,12 @@ class AdminSignup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      fname: '',
-      lname: '',
-      email: '',
-      password: '',
-      domain: '',
-      title: '',
+      fname: 'asd',
+      lname: 'asdf',
+      email: 'asdfsaf@asdfasdf.com',
+      password: 'password',
+      domain: 'asdfsadf2',
+      title: 'asdfsadf2.com',
       loaded: false,
       validTitle: true,
       validDomain: true,
@@ -268,7 +269,7 @@ class AdminSignup extends React.Component {
             </Typography>
             <Typography color='textSecondary'
               className={classes.subDetail}>
-              {`Amount: ${duration === 'monthly' ? product.monthlyAmount : product.yearlyAmount}`}
+              {`Amount: $${duration === 'monthly' ? product.monthlyAmount : product.yearlyAmount}`}
             </Typography>
           </Grid>
           <Typography color='textSecondary'
@@ -366,10 +367,10 @@ class AdminSignup extends React.Component {
             <Typography color='textPrimary' gutterBottom className={classes.paymentCallout}>
               {`Unlimited contacts uploaded`}
             </Typography>
-            <Typography color='textPrimary' gutterBottom className={classes.paymentCallout}>
+            <Typography color='textPrimary' className={classes.paymentCallout}>
               {`Unlimited introductions received`}
             </Typography>
-            <Typography gutterBottom
+            {/* <Typography gutterBottom
               style={{ fontSize: 15}}>
               <Checkbox
                 checked={renewal}
@@ -377,7 +378,7 @@ class AdminSignup extends React.Component {
                 value="renewal"
               />
               {`Automatically renew subscription`}
-            </Typography>
+            </Typography> */}
           </Grid>
 
           <Grid container style={{ marginTop: 20}}>
@@ -480,7 +481,7 @@ class AdminSignup extends React.Component {
           </Typography>
           <TextField fullWidth
             variant="outlined"
-            label='Company Title'
+            label='Company Name'
             margin='dense'
             placeholder='Eg: Bridgekin'
             onChange={this.handleValidateChange('title', 'titleError')}
