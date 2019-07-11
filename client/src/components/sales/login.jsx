@@ -154,6 +154,7 @@ class SalesLogin extends React.Component {
   retrieveNetworks(){
     const { networkTitle } = this.state;
     // debugger
+    this.props.clearSearchResults();
     this.props.searchNetworks(networkTitle)
   }
 
