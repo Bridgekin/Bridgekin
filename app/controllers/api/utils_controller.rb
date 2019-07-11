@@ -33,6 +33,10 @@ class Api::UtilsController < ApiController
     render json: valid, status: 200
   end
 
+  def public_env_variables
+    render json: [Rails.env], status: 200
+  end
+
   private
 
   def request_demo_params

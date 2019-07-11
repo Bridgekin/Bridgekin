@@ -25,8 +25,7 @@ const dev = process.env.NODE_ENV === 'development';
 getPublicEnv()
 .then(handleAuthErrors)
 .then((env) => {
-  window.publicEnv = env;
-  
+  window.publicEnv = env[0];
   if(window.publicEnv.railsEnv === 'production'){
     window.amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
   } else {

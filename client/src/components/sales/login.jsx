@@ -13,7 +13,7 @@ import { searchNetworks } from '../../actions/sales_network_actions';
 import { salesSignup, googleSalesLogin } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
-import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_network_actions'
+import { fetchUserNetworks, setCurrentNetwork, clearSearchResults } from '../../actions/sales_network_actions'
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -32,7 +32,8 @@ const mapDispatchToProps = dispatch => ({
   openLogin: (payload) => dispatch(openLogin(payload)),
   googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload)),
   fetchUserNetworks: () => dispatch(fetchUserNetworks()),
-  setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId))
+  setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId)),
+  clearSearchResults: () => dispatch(clearSearchResults())
 });
 
 const styles = theme => ({
@@ -61,7 +62,7 @@ const styles = theme => ({
   },
   resultContainer:{
     overflow: 'scroll',
-    height: 300
+    maxHeight: 300
   }
 })
 
@@ -83,6 +84,10 @@ class SalesLogin extends React.Component {
     this.handleSignup = this.handleSignup.bind(this);
     this.backPage = this.backPage.bind(this);
     this.getLoginInfo = this.getLoginInfo.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.clearSearchResults();
   }
 
   handleChange(field){
@@ -361,8 +366,8 @@ class SalesLogin extends React.Component {
 
         return <Grid item xs={10} sm={8}>
           {loginComp}
-          {divider}
-          {loginCompany}
+          {/* {divider}
+          {loginCompany} */}
           {divider}
           {findCompany}
         </Grid>

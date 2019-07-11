@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    get "public_env_variables", :to => 'utils#public_env_variables'
     get "search_sales_networks", :to => 'sales_networks#search_networks'
     post 'validate_unique', :to => "utils#validate_unique"
     post "charge", :to => "stripe#charge"
