@@ -24,21 +24,18 @@ class SalesContact < ApplicationRecord
   }
 
   def self.search_contacts(current_user, network, filter='', social_params ={})
-    sales_contacts = SalesContact.includes(:friends)
-      .joins("INNER JOIN sales_user_contacts ON sales_user_contacts.contact_id = sales_contacts.id ")
-      .joins("INNER JOIN users ON sales_user_contacts.user_id = users.id ")
-      .joins("INNER JOIN sales_user_networks ON sales_user_networks.user_id = users.id ")
-      .joins("INNER JOIN sales_networks ON sales_user_networks.network_id = sales_networks.id ")
-      .where(sales_networks:{id: network.id})
+    sales_contacts = network.member_contacts
       .where.not(fname: '')
-
+      .distinct
     # Filter back setting
     sales_contacts = case filter
     when "teammates"
-      user_contacts = SalesContact.joins("INNER JOIN sales_user_contacts ON sales_user_contacts.contact_id = sales_contacts.id ")
-      .joins("INNER JOIN users ON sales_user_contacts.user_id = users.id ")
-      .where(users: {id: current_user})
-      sales_contacts.left_outer_joins(user_contacts)
+      sales_contacts.where.not(id: current_user.sales_contacts)
+    when "teammates1"
+      sales_contacts = network.member_contacts
+      .where.not(fname: '')
+
+      sales_contacts.where.not(id: current_user.sales_contacts)
     when "mine"
       current_user.sales_contacts
     when "linkedIn"

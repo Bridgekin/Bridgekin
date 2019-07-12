@@ -33,9 +33,9 @@ class CheckoutForm extends Component {
           <CardElement />
         </div>
         <Button color='primary' variant='contained'
-        fullWidth
           disabled={this.props.canSubmit()}
-          onClick={this.submit}>
+          onClick={this.submit} fullWidth
+          style={{textTransform: 'capitalize'}}>
           {`Start Free 7 Day Trial`}
         </Button>
         <Grid container justify='center' style={{ marginTop: 10 }}>
