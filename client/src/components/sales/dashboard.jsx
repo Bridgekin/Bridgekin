@@ -99,11 +99,18 @@ class SalesDashboard extends React.Component {
   }
 
   componentDidMount() {
-    const { userFeature } = this.props;
-    if (!userFeature.importedSocial) {
-      this.props.history.push('/sales/connect_social')
+    const { userFeature, currentSalesNetworkId } = this.props;
+
+    if (!currentSalesNetworkId) {
+      this.setState({ unconnectedUser: true })
+    } else if (this.isExpiredSub()) {
+      this.setState({ subscriptionExpired: true })
+    } else {
+      if (!userFeature.importedSocial) {
+        this.props.history.push('/sales/connect_social')
+      }
+      this.searchData();
     }
-    this.searchData();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -150,8 +157,9 @@ class SalesDashboard extends React.Component {
 
   isExpiredSub(){
     const { networkDetails, currentSalesNetworkId } = this.props;
+    let detail = networkDetails[currentSalesNetworkId];
 
-    return networkDetails[currentSalesNetworkId].current_sub_end === "no sub" || Date.parse(networkDetails[currentSalesNetworkId].current_sub_end) < Date.now()
+    return !detail || detail.current_sub_end === "no sub" || Date.parse(detail.current_sub_end) < Date.now()
   }
 
   async searchData(payload = {}){

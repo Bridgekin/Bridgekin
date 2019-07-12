@@ -13,7 +13,13 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
 
       redirect_to "#{root_url}accountconfirmed"
     else
-      redirect_to "#{root_url}confirmationerror"
+      #Check if its already confirmed
+      debugger
+      if resource.id.nil?
+        redirect_to "#{root_url}confirmationerror"
+      else
+        redirect_to "#{root_url}sales/login"
+      end
     end
   end
 

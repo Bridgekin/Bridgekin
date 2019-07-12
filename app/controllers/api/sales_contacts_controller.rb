@@ -22,6 +22,7 @@ class Api::SalesContactsController < ApiController
       .joins("INNER JOIN sales_user_networks ON sales_user_networks.user_id = users.id ")
       .joins("INNER JOIN sales_networks ON sales_user_networks.network_id = sales_networks.id ")
       .where(sales_networks:{id: network.id})
+      .where.not(fname: '')
     
     # Filter back setting
     @sales_contacts = case social_params[:filter]
@@ -50,6 +51,7 @@ class Api::SalesContactsController < ApiController
     end
 
     #Filter Results
+    @sales_contacts = @sales_contacts.distinct
     @total = @sales_contacts.count #Fine for memory
     offset, limit = social_params[:offset], social_params[:limit]
     @sales_contacts = @sales_contacts.offset(offset)     

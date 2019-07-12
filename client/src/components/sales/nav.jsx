@@ -26,7 +26,9 @@ const mapStateToProps = (state, ownProps) => {
   return {
   currentUser: state.users[state.session.id],
   siteTemplate: state.siteTemplate,
-  onHomePage
+  onHomePage,
+  networkDetails: state.entities.sales.networkDetails,
+  currentSalesNetworkId: state.entities.sales.currentSalesNetwork
 }};
 
 const mapDispatchToProps = dispatch => ({
@@ -134,6 +136,7 @@ class SalesNav extends React.Component {
       isTop: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.isExpiredSub = this.isExpiredSub.bind(this);
   }
 
   componentDidMount() {
@@ -167,8 +170,16 @@ class SalesNav extends React.Component {
     }
   }
 
+  isExpiredSub(){
+    const { networkDetails, currentSalesNetworkId } = this.props;
+    let detail = networkDetails[currentSalesNetworkId];
+
+    return !detail || detail.current_sub_end === "no sub" || Date.parse(detail.current_sub_end) < Date.now()
+  }
+
   render() {
-    const { classes, siteTemplate, currentUser } = this.props;
+    const { classes, siteTemplate, currentUser,
+    networkDetails, currentSalesNetworkId } = this.props;
     const { isTop } = this.state;
 
     const logoComp = <div
@@ -188,7 +199,8 @@ class SalesNav extends React.Component {
           {`My Dashboard`}
         </Typography>
       </Button>}
-      {currentUser && <Button style={{ textTransform: 'capitalize' }}
+      {currentUser &&
+        !this.isExpiredSub() && <Button style={{ textTransform: 'capitalize' }}
         onClick={() => this.props.history.push('/sales/stats')}>
         <Typography color='textSecondary'
           className={classes.navItem}>
