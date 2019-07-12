@@ -128,7 +128,7 @@ class PasswordReset extends React.Component {
         <Grid item xs={12}>
           <Button variant="contained" color='primary'
             style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose('/login')}>
+            onClick={this.handleClose('/sales/login')}>
             Back to login
           </Button>
         </Grid>

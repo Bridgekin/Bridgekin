@@ -65,8 +65,8 @@ export const fetchUserNetworks = () => dispatch => (
     })
 );
 
-export const searchNetworks = (title) => dispatch => (
-  SalesApiUtil.searchNetworks(title)
+export const searchNetworks = (domain) => dispatch => (
+  SalesApiUtil.searchNetworks(domain)
     .then(handleErrors)
     .then(data => {
       dispatch(retrieveNetworkDetails(data.networkDetails))

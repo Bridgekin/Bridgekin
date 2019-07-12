@@ -136,7 +136,7 @@ class PasswordReset extends React.Component {
         </Typography>
         <Grid item xs={12}>
           <Button variant="contained" style={{margin: '0 auto', marginTop: 30}}
-            onClick={this.handleClose('/login')} color='secondary'>
+            onClick={this.handleClose('/sales/login')} color='secondary'>
             Back to login
           </Button>
         </Grid>
@@ -156,7 +156,7 @@ class PasswordReset extends React.Component {
         </List>
         <Grid item xs={12}>
           <Button variant="contained" style={{ marginTop: 30 }}
-            onClick={this.handleClose('/login')} color='primary'>
+            onClick={this.handleClose('/sales/login')} color='primary'>
             Back to login
           </Button>
         </Grid>

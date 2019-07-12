@@ -38,7 +38,7 @@ class CheckoutForm extends Component {
           onClick={this.submit}>
           {`Start Free 7 Day Trial`}
         </Button>
-        <Grid container justify='center' style={{ marginBottom: 10 }}>
+        <Grid container justify='center' style={{ marginTop: 10 }}>
           <Img src={StripeBadge} />
         </Grid>
       </div>

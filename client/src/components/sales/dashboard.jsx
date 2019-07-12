@@ -429,7 +429,7 @@ class SalesDashboard extends React.Component {
                   horizontal: 'center',
                 }}
                 getContentAnchorEl={null}>
-                {["", "teammates", "mine", "investor", "linkedIn", "google"].map(choice => {
+                {["", "teammates", "mine", "linkedIn", "google"].map(choice => {
                   return <MenuItem onClick={this.handleMenuChange(choice)}>
                     <Typography style={{ fontSize: 14}}>
                       {filterValues[choice]}

@@ -135,9 +135,9 @@ class GoogleContacts extends React.Component {
 
     if(connectSocial){
       let isAuthorized = user.hasGrantedScopes(this.scope);
-      let token = user.Zi.access_token
       
-      if(isAuthorized && token){
+      if(isAuthorized && user.Zi){
+        let token = user.Zi.access_token
         this.getAllContactsRequest(token)
       }
     } else if (asLogin && !loginRequestSent){

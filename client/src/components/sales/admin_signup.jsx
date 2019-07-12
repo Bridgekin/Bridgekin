@@ -23,7 +23,6 @@ import { openSignup } from '../../actions/modal_actions';
 import Capitalize from 'capitalize';
 import SignupPic from '../../static/signup_pic.png';
 import Img from 'react-image'
-import StripeBadge from '../../static/Stripe badge/Solid Dark/powered_by_stripe.png';
 
 import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_network_actions'
 

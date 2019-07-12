@@ -60,7 +60,7 @@ class SalesMailer < ApplicationMailer
     @reason = reason
     @details = details
 
-    subject = "Request Denied - | #{@contact.fname.capitalize} #{@contact.lname.capitalize}"
+    subject = "Request Denied - #{@contact.fname.capitalize} <> #{@contact.lname.capitalize}"
 
     mail(to: @requestor.email, subject: subject)
 
@@ -78,7 +78,7 @@ class SalesMailer < ApplicationMailer
     @requestor = @sales_intro.requestor
     @recipient = @sales_intro.recipient
 
-    subject = "Request Declined - | #{@contact.fname.capitalize} #{@contact.lname.capitalize}"
+    subject = "Request Declined - #{@contact.fname.capitalize} <> #{@contact.lname.capitalize}"
 
     mail(to: @requestor.email, subject: subject)
 

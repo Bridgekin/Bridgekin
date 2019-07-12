@@ -114,22 +114,20 @@ class RespondIntroModal extends React.Component {
     const nextModal = nextProps.respondToRequestModal;
     const currentModal = this.props.respondToRequestModal;
     if (nextModal.open && currentModal.open !== nextModal.open) {
-      let contact;
+      const { salesIntros, salesContacts } = this.props;
+      let intro = salesIntros[nextModal.introId]
+      let contact = salesContacts[intro.contactId]
       switch(nextModal.decision){
         case "intro":
-          const { salesContacts, salesIntros } = nextProps;
-          let intro = salesIntros[nextModal.introId]
-          contact = salesContacts[intro.contactId]
           let email = contact.email
-          let subject = intro.intro_subject || ""
-          let body = intro.intro_body || ""
+          let subject = intro.introSubject || ""
+          let body = intro.introBody || ""
           this.setState({ 
             page: 'intro',
             email, subject, body, contact
           })
           break;
         case "prefer not":
-          contact = salesContacts[salesIntros[nextModal.introId].contactId]
           this.setState({ page: "prefer not", contact })
           break;
         case "don't know": 

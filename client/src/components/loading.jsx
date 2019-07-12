@@ -16,7 +16,7 @@ const styles = theme => ({
   homeGrid:{
     flexGrow: 1,
     paddingTop: 0,
-    marginBottom: 50
+    // marginBottom: 50
   },
   progress: {
     fontSize: 48,

@@ -3,14 +3,14 @@ class Api::SalesNetworksController < ApiController
 
   def index
     @sales_networks = @current_user.sales_networks
-    
+
     @network_details = SalesNetwork.generate_network_details(@sales_networks)
 
     render :index
   end
 
   def search_networks
-    @sales_networks = SalesNetwork.includes(:members, :subscriptions, :subscribed_products).where("LOWER(title) LIKE ?" , "%" + params[:title].downcase + "%")
+    @sales_networks = SalesNetwork.includes(:members, :subscriptions, :subscribed_products).where("LOWER(domain) LIKE ?" , "%" + params[:domain].downcase + "%")
 
     @network_details = SalesNetwork.generate_network_details(@sales_networks)
 

@@ -19,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Capitalize from 'capitalize';
+import Switch from '@material-ui/core/Switch';
 
 import { connect } from 'react-redux';
 import { closeRequestIntro } from '../../actions/modal_actions';
@@ -76,6 +77,7 @@ class RequestIntroModal extends React.Component {
       message: '', 
       explaination: '',
       referralBonus: 0,
+      referralUnit: "$",
       target: null,
       introBody: '',
       introSubject: ''
@@ -117,6 +119,13 @@ class RequestIntroModal extends React.Component {
     }
   }
 
+  handleCheckedChange(field) {
+    return e => {
+      let checked = e.target.checked;
+      this.setState({ [field]: checked ? '%' : '$' })
+    }
+  }
+
   handleChangeTarget(e){
     let target = e.target.value;
     const { requestIntroModal, users } = this.props;
@@ -132,15 +141,13 @@ class RequestIntroModal extends React.Component {
   handleSubmit(){
     const { contact } = this.props.requestIntroModal
     const { message, explaination, referralBonus,
-    target, page } = this.state;
+      target, page, introBody, introSubject,
+      referralUnit } = this.state;
 
-    let payload = {message, explaination, referralBonus,
+    let payload = {
+      message, explaination, referralBonus, introBody, introSubject, referralUnit,
       contactId: contact.id,
-      targetId: target
-    }
-
-    if(page === 'custom'){
-
+      targetId: target,
     }
 
     this.props.createSalesIntro(payload)
@@ -158,7 +165,7 @@ class RequestIntroModal extends React.Component {
       requestIntroModal, users } = this.props;
     const { page, message, explaination, 
       referralBonus, target, introSubject,
-      introBody } = this.state;
+      introBody, referralUnit } = this.state;
     const { contact } = requestIntroModal;
 
     if (!requestIntroModal.open){
@@ -175,8 +182,8 @@ class RequestIntroModal extends React.Component {
         </Grid>
 
         let referralBonus = <Grid item xs={12} sm={5} container>
-          <Typography fullWidth align='left'
-          color='textSecondary'>
+          <Typography align='left'color='textSecondary'  
+            style={{ fontSize: 14 }}>
             {`Referral Bonus (Optional)`}
           </Typography>
           <Grid container alignItems='center'>
@@ -184,7 +191,7 @@ class RequestIntroModal extends React.Component {
               <Input type='number'
                 value={referralBonus}
                 onChange={this.handleChange('referralBonus')}
-                startAdornment={<InputAdornment position="start">%</InputAdornment>}
+                startAdornment={<InputAdornment position="start">{referralUnit}</InputAdornment>}
               />
             </FormControl>
           </Grid>
@@ -247,6 +254,21 @@ class RequestIntroModal extends React.Component {
           <Grid container justify='space-around'>
             {chooseContact}
             {referralBonus}
+          </Grid>
+          <Grid container justify='flex-end' alignItems='center'>
+              <Typography color='textSecondary'
+                style={{ fontSize: 12 }}>
+                {`Base Dollar`}
+              </Typography>
+              <Switch
+                checked={referralUnit === '%'}
+                onChange={this.handleCheckedChange('referralUnit')}
+                value="referralUnit"
+              />
+              <Typography color='textSecondary'
+                style={{ fontSize: 12 }}>
+                {`Percentage`}
+              </Typography>
           </Grid>
           {introResponses}
           <Grid container justify="space-between"

@@ -128,7 +128,7 @@ class RespondToIntro extends React.Component {
       if (decision === "don't know"){
         this.props.respondToRequest(response)
         .then(() => {
-          this.props.openRespondToRequest({ decision: 'response'})
+          this.props.openRespondToRequest(response)
         })
       } else {
         this.props.openRespondToRequest(response)

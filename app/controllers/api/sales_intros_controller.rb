@@ -55,7 +55,7 @@ class Api::SalesIntrosController < ApiController
   def respond_intro_request
     response = params[:response]
     sales_intro = SalesIntro.find(response[:intro_id])
-    debugger
+
     decision = response[:decision]
     if sales_intro.update(request_status: decision)
       case response[:decision]
@@ -93,7 +93,7 @@ class Api::SalesIntrosController < ApiController
     params.require(:sales_intro).permit(:contact_id, 
       :recipient_id, :message, :explaination,
       :referral_bonus, :deal_status, :request_status,
-      :intro_subject, :intro_body)
+      :intro_subject, :intro_body, :referral_unit)
   end
 
   def set_sales_intro

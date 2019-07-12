@@ -72,7 +72,7 @@ class SalesLogin extends React.Component {
     this.state = {
       email: '',
       password: '',
-      networkTitle: '',
+      networkDomainUrl: '',
       page: 'login',
       target: {}
     }
@@ -141,6 +141,7 @@ class SalesLogin extends React.Component {
   }
 
   isDisabled(detail){
+    if (!detail){ return true }
     const { currentSubEnd, maxSeats, memberCount } = detail
     if (currentSubEnd === "no sub" || maxSeats === "no sub" ){ return true }
     let jsDate = new Date(currentSubEnd)
@@ -152,10 +153,10 @@ class SalesLogin extends React.Component {
   }
 
   retrieveNetworks(){
-    const { networkTitle } = this.state;
+    const { networkDomainUrl } = this.state;
     // debugger
     this.props.clearSearchResults();
-    this.props.searchNetworks(networkTitle)
+    this.props.searchNetworks(networkDomainUrl)
   }
 
   backPage(){
@@ -176,7 +177,7 @@ class SalesLogin extends React.Component {
 
   getContent(){
     const { classes, dimensions, resultNetworks, networkDetails } = this.props;
-    const { email, password, networkTitle, page, fname, lname, target } = this.state;
+    const { email, password, networkDomainUrl, page, fname, lname, target } = this.state;
 
     switch(page){
       case 'signup':
@@ -290,13 +291,13 @@ class SalesLogin extends React.Component {
               <Grid item xs={8}>
                 <TextField margin='dense' fullWidth
                   required
-                  label="Company Name"
+                  label="Company Domain URL"
                   placeholder='Eg: Bridgekin'
                   className={classes.textField}
                   variant='outlined'
-                  value={networkTitle}
-                  onChange={this.handleChange('networkTitle')}
-                  onMouseUp={this.handleChange('networkTitle')} />
+                  value={networkDomainUrl}
+                  onChange={this.handleChange('networkDomainUrl')}
+                  onMouseUp={this.handleChange('networkDomainUrl')} />
               </Grid>
               <Grid item xs={4} container justify='center' alignItems='center'>
                 <div>
@@ -377,7 +378,7 @@ class SalesLogin extends React.Component {
 
   render() {
     const { classes, dimensions, searchNetworks } = this.props;
-    const { email, password, networkTitle } = this.state;
+    const { email, password, networkDomainUrl } = this.state;
 
     
     return (

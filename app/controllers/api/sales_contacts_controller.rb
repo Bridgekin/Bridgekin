@@ -10,32 +10,36 @@ class Api::SalesContactsController < ApiController
     "company" => :company
   }
   def search
-    # #Check if network is active
-    # network = SalesNetwork.find(params[:current_network_id])
-    # if network.current_subscription.nil?
-    #   render 
     filter = social_params[:filter]
-    # network = @current_user.sales_networks.first
     network = SalesNetwork.find(params[:current_sales_network_id])
-    @sales_contacts = network.member_contacts
-      .includes(:friends)
-      .where.not(fname: '')
+    # @sales_contacts = network.member_contacts
+    #   .includes(:friends)
+    #   .where.not(fname: '')
+    #   .distinct
+    @sales_contacts = SalesContact.includes(:friends)
+      .joins("INNER JOIN sales_user_contacts ON sales_user_contacts.contact_id = sales_contacts.id ")
+      .joins("INNER JOIN users ON sales_user_contacts.user_id = users.id ")
+      .joins("INNER JOIN sales_user_networks ON sales_user_networks.user_id = users.id ")
+      .joins("INNER JOIN sales_networks ON sales_user_networks.network_id = sales_networks.id ")
+      .where(sales_networks:{id: network.id})
     
     # Filter back setting
-    case social_params[:filter]
+    @sales_contacts = case social_params[:filter]
     when "teammates"
       user_contacts = SalesContact.joins("INNER JOIN sales_user_contacts ON sales_user_contacts.contact_id = sales_contacts.id ")
       .joins("INNER JOIN users ON sales_user_contacts.user_id = users.id ")
       .where(users: {id: @current_user})
-
-      @sales_contacts = @sales_contacts.left_outer_joins(user_contacts)
+      # s = @sales_contacts.left_outer_joins(user_contacts).to_sql
+      # @sales_contacts.where.not(users: {id: @current_user.id})
+      @sales_contacts.left_outer_joins(user_contacts)
     when "mine"
-      @sales_contacts = @current_user.sales_contacts
+      @current_user.sales_contacts
     when "linkedIn"
-      @sales_contacts = @sales_contacts.where(linked_in: true)
+      @sales_contacts.where(linked_in: true)
     when "google"
-      @sales_contacts = @sales_contacts.where(google: true)
+      @sales_contacts.where(google: true)
     else
+      @sales_contacts
     end
 
     #Parse Results from user entry
@@ -49,11 +53,7 @@ class Api::SalesContactsController < ApiController
     @total = @sales_contacts.count #Fine for memory
     offset, limit = social_params[:offset], social_params[:limit]
     @sales_contacts = @sales_contacts.offset(offset)     
-      .limit(limit)
-
-    # new_var = @sales_contacts
-    # example = @sales_contacts.joins(new_var, "ON new_var.friends == @sales_contacts.id")
-    #   .where
+      .limit(limit) 
 
     #Get Companion information
     friends = Set.new()

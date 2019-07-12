@@ -213,11 +213,16 @@ class ConnectSocial extends React.Component {
       // debugger
       if(type === "linkedIn"){
         if (linkedInKey){
-          return <Typography>
+          return <Typography align='center' 
+          color='textSecondary'
+          style={{ marginTop: 15, fontSize: 16}}>
             {`Ready for upload`}
           </Typography>
         } else if (linkedInUploading) {
-          return <Loading />
+          return <Grid container alignItems='center'
+          style={{ marginTop: 15}}>
+              <Loading />
+            </Grid>
         } else {
           return <Grid container justify='center'>
             {linkedInUploadUrl ? (
@@ -281,7 +286,8 @@ class ConnectSocial extends React.Component {
       <Paper>
         <Grid container justify='center'
           className={classes.socialComp}>
-          <Grid item xs={10} container justify='center'>
+          <Grid item xs={10} container justify='center'
+          direction='column'>
             <Typography color='textSecondary' 
             align='center' fullWidth
             className={classes.importHeader}>

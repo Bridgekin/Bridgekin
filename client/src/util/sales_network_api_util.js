@@ -8,8 +8,8 @@ export const fetchUserNetworks= () => (
   })
 )
 
-export const searchNetworks = (title) => (
-  fetch(`${window.location.origin}/api/search_sales_networks?title=${title}`, {
+export const searchNetworks = (domain) => (
+  fetch(`${window.location.origin}/api/search_sales_networks?domain=${domain}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -122,7 +122,10 @@ export const updateSalesIntro = (payload) => dispatch => (
 export const deleteSalesIntro = (salesIntroId) => dispatch => (
   SalesIntrosApiUtil.deleteSalesIntro(salesIntroId)
     .then(handleErrors)
-    .then(data => dispatch(removeSalesIntro(salesIntroId)))
+    .then(data => {
+      dispatch(removeSentRequest(salesIntroId))
+      dispatch(removeSalesIntro(salesIntroId))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];

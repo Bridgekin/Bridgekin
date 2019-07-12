@@ -29,14 +29,6 @@ import { updateSalesIntro, deleteSalesIntro} from '../../actions/sales_intro_act
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
-  // userFeature: state.entities.userFeature,
-  page: ownProps.match.params.page,
-  refOpps: state.entities.hiring.refOpps,
-  ownedOpps: state.entities.hiring.ownedOpps,
-  refApps: state.entities.hiring.refApps,
-  ownedApps: state.entities.hiring.ownedApps,
-  submittedApps: state.entities.hiring.submittedApps,
-  //
   salesIntros: state.entities.sales.salesIntros,
   receivedRequests: state.entities.sales.receivedRequests,
   sentRequests: state.entities.sales.sentRequests,
@@ -152,7 +144,7 @@ class HiringDashboard extends React.Component {
     let phrase, rows, headerCells, tableBody;
     switch(page){
       case 'intros':
-        phrase = `Intro Made` // sentRequests
+        phrase = `Intros Made` // sentRequests
         headerCells = ["First Name", "Last Name",
           "Title", "Company", "Employee Referrer",
           "Request Status", "Deal Status"] //"Options"]
@@ -223,10 +215,11 @@ class HiringDashboard extends React.Component {
         </TableBody>
         break;
       default:
-        phrase = `Intro Requested` // sentRequests
+        phrase = `Intros Requested` // sentRequests
         headerCells = ["First Name", "Last Name",
           "Title", "Company", "Employee Referrer", "Request Status", "Deal Status", "Options"]
         rows = [...sentRequests].map(id => salesIntros[id]);
+
         tableBody = <TableBody>
           {rows.map(row => {
             let contact = salesContacts[row.contactId]
@@ -348,7 +341,7 @@ class HiringDashboard extends React.Component {
         style={{ height: dimensions.height - 64, borderRight: `1px solid grey`, paddingBottom: 50}}>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/leads`)}>
-            {`Intro Requested`}
+            {`Intros Requested`}
           </Button>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/intros`)}>
