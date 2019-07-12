@@ -1,7 +1,3 @@
-# require 'open-uri'
-# require 'down'
-# require 'mime/types'
-
 class SalesContact < ApplicationRecord
   has_many :sales_user_contacts,
     foreign_key: :contact_id,
@@ -19,17 +15,67 @@ class SalesContact < ApplicationRecord
 
   has_one_attached :avatar
 
-  def self.test_stripe
-    Stripe.api_key = Rails.application.credentials.stripe[:test][:secret_key]
+  SEARCH_MAP = {
+    "fname" => :fname,
+    "lname" => :lname,
+    "position" => :position,
+    "location" => :location,
+    "company" => :company
+  }
 
-    charge = Stripe::Charge.create({
-      amount: 999,
-      currency: 'usd',
-      source: 'tok_visa',
-      receipt_email: 'jenny.rosen@example.com',
-    })
-    debugger
+  def self.search_contacts(current_user, network, filter='', social_params ={})
+    sales_contacts = SalesContact.includes(:friends)
+      .joins("INNER JOIN sales_user_contacts ON sales_user_contacts.contact_id = sales_contacts.id ")
+      .joins("INNER JOIN users ON sales_user_contacts.user_id = users.id ")
+      .joins("INNER JOIN sales_user_networks ON sales_user_networks.user_id = users.id ")
+      .joins("INNER JOIN sales_networks ON sales_user_networks.network_id = sales_networks.id ")
+      .where(sales_networks:{id: network.id})
+      .where.not(fname: '')
 
+    # Filter back setting
+    sales_contacts = case filter
+    when "teammates"
+      user_contacts = SalesContact.joins("INNER JOIN sales_user_contacts ON sales_user_contacts.contact_id = sales_contacts.id ")
+      .joins("INNER JOIN users ON sales_user_contacts.user_id = users.id ")
+      .where(users: {id: current_user})
+      sales_contacts.left_outer_joins(user_contacts)
+    when "mine"
+      current_user.sales_contacts
+    when "linkedIn"
+      sales_contacts.where(linked_in: true)
+    when "google"
+      sales_contacts.where(google: true)
+    else
+      sales_contacts
+    end
+
+    #Parse Results from user entry
+    SEARCH_MAP.each do |key, value|
+      if social_params[value].present?
+        sales_contacts = sales_contacts.where("LOWER(sales_contacts.#{key}) LIKE LOWER(?)", "%#{social_params[value]}%") 
+      end
+    end
+    sales_contacts
+  end
+
+  def self.prep_search_data(sales_contacts, offset, limit, current_user)
+    #Filter Results
+    sales_contacts = sales_contacts.distinct
+    total = sales_contacts.count #Fine for memory
+    sales_contacts = sales_contacts.offset(offset)
+      .limit(limit) 
+    #Get Companion information
+    friends = Set.new()
+    friend_map = sales_contacts.reduce({}) do |acc, contact|friends
+      contact_friends = contact.friends
+        .where.not(users: {id: current_user.id})
+      friends.merge(contact_friends)
+      acc[contact.id] = contact_friends.pluck(:id)
+      acc
+    end
+    friend_users = friends.to_a
+
+    return sales_contacts, total, friend_map, friend_users
   end
 
   def setSource(source)
