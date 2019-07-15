@@ -61,7 +61,13 @@ const styles = theme => ({
   modalPaper:{
     margin: 15,
     backgroundColor: theme.palette.base3,
-    minWidth: '40%'
+    minWidth: 400,
+    [theme.breakpoints.down('sm')]: {
+      minWidth: `60%`
+    },
+    [theme.breakpoints.down('xs')]: {
+      minWidth: `90%`
+    },
   },
   badge: {
     top: 19,

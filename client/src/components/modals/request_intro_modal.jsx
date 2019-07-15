@@ -66,6 +66,9 @@ const styles = theme => ({
     paddingBottom: 25,
     borderBottom: `1px solid grey`,
     marginBottom: 25
+  },
+  actionComp:{
+    margin: "10px 0px"
   }
 });
 
@@ -181,13 +184,13 @@ class RequestIntroModal extends React.Component {
           </Typography>
         </Grid>
 
-        let referralBonusComp = <Grid item xs={12} sm={5} container>
+        let referralBonusComp = <Grid item xs={12} sm={5} container className={classes.actionComp}>
           <Typography align='left'color='textSecondary'  
             style={{ fontSize: 14 }}>
             {`Referral Bonus (Optional)`}
           </Typography>
           <Grid container alignItems='center'>
-            <FormControl className={classes.margin}>
+            <FormControl className={classes.margin} fullWidth>
               <Input type='number'
                 value={referralBonus}
                 onChange={this.handleChange('referralBonus')}
@@ -197,7 +200,7 @@ class RequestIntroModal extends React.Component {
           </Grid>
         </Grid>
 
-        let chooseContact = <Grid item xs={12} sm={5} container>
+        let chooseContact = <Grid item xs={12} sm={5} container className={classes.actionComp}>
           {/*friendMap[contact.id].length > 2 ?
           <Select fullWidth
             value={target}

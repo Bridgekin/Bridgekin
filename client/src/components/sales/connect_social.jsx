@@ -269,7 +269,7 @@ class ConnectSocial extends React.Component {
 
     let header = <Grid container justify='center'
     style={{ marginTop: 30}}>
-      <Grid item xs={10}>
+      <Grid item xs={12} sm={10}>
         <Typography fullWidth gutterBottom
         align='center'
         style={{ fontSize: 24}}>

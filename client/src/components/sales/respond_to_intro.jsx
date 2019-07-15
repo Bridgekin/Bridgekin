@@ -42,7 +42,8 @@ const styles = theme => ({
     paddingBottom: '10%'
   },
   actionButton:{
-    padding: "5px 15px"
+    padding: "5px 15px",
+    margin: "10px 0px"
   },
   defaultProfilePic: {
     height: 'auto',
@@ -242,24 +243,33 @@ class RespondToIntro extends React.Component {
           </Grid>
 
           <Grid container justify='center'>
-            <Grid item xs={8} container justify='center'>
-              <Button color='primary' variant='contained'
-                onClick={this.respondToRequest("intro")}
-                className={classes.actionButton}
-                style={{ marginRight: 20}}>
-                {`Intro`}
-              </Button>
-              <Button color='primary' variant='contained'
-                onClick={this.respondToRequest("don't know")}
-                className={classes.actionButton}
-                style={{ marginRight: 20 }}>
-                {`Don't know`}
-              </Button>
-              <Button color='primary' variant='contained'
-                onClick={this.respondToRequest("prefer not")}
-                className={classes.actionButton}>
-                {`I'd prefer not to reach out`}
-              </Button>
+            <Grid item xs={10} sm={8} container justify='space-around'>
+              <Grid item xs={12} md={3}>
+                <Button color='primary' fullWidth
+                variant='contained'
+                  onClick={this.respondToRequest("intro")}
+                  className={classes.actionButton}
+                  style={{ marginRight: 20}}>
+                  {`Intro`}
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Button color='primary' fullWidth
+                variant='contained'
+                  onClick={this.respondToRequest("don't know")}
+                  className={classes.actionButton}
+                  style={{ marginRight: 20 }}>
+                  {`Don't know`}
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <Button color='primary' fullWidth
+                variant='contained'
+                  onClick={this.respondToRequest("prefer not")}
+                  className={classes.actionButton}>
+                  {`I'd prefer not to reach out`}
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

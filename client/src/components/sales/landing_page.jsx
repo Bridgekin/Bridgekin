@@ -77,6 +77,12 @@ const styles = theme => ({
   s2Text: { fontSize: 20 },
   factsSection:{
     margin: '10px 0px'
+  },
+  sendButton: {
+    marginTop: 20,
+    [theme.breakpoints.up('sm')]: {
+      marginTop: 0
+    },
   }
 })
 
@@ -135,9 +141,10 @@ class LandingPage extends React.Component {
       {`Login`}
     </Button>
 
-    let demoWelcome = <Grid item xs={12} sm={6}container justify='center'
+    let demoWelcome = <Grid item xs={12} sm={6}
+      container justify='center'
       className={classes.demoComponent}>
-      <Grid item xs={8}>
+      <Grid item xs={10} sm={8}>
         <Typography gutterBottom
           style={{ fontSize: 38, fontWeight: 600 }}>
           {`Close more B2B deals with warm introductions`}
@@ -149,7 +156,7 @@ class LandingPage extends React.Component {
 
         <Grid container justify='space-between'
           style={{ marginTop: 30 }}>
-          <Grid item xs={5}>
+          <Grid item xs={6} sm={5}>
             <TextField
               required
               label="First Name"
@@ -196,7 +203,7 @@ class LandingPage extends React.Component {
         </div>
       </Grid>
 
-      <Grid item xs={2} />
+      <Grid item xs={0} sm={2}/>
     </Grid>
 
     let benefitsOfBridgekin = (<div className={classes.section}
@@ -371,7 +378,7 @@ class LandingPage extends React.Component {
               onChange={this.handleChange('email')}
               onMouseUp={this.handleChange('email')}
             />
-            <div>
+            <div className={classes.sendButton}>
               {requestSent ? <Typography
                 style={{ fontSize: 16 }}>
                 {`We'll be in touch within 48 hours!`}

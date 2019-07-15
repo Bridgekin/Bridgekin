@@ -241,17 +241,18 @@ class SalesLogin extends React.Component {
             {`Login`}
           </Typography>
           <Grid container spacing={2}>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4}>
               <TextField margin='dense' fullWidth
                 required
                 label="Work Email"
                 className={classes.textField}
                 variant='outlined'
                 value={email}
+                margin='dense'
                 onChange={this.handleChange('email')}
                 onMouseUp={this.handleChange('email')}/>
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={4}>
               <TextField margin='dense' fullWidth
                 required
                 label="Password"
@@ -259,6 +260,7 @@ class SalesLogin extends React.Component {
                 variant='outlined'
                 value={password}
                 type='password'
+                margin='dense'
                 onChange={this.handleChange('password')}
                 onMouseUp={this.handleChange('password')} />
             </Grid>
@@ -278,7 +280,7 @@ class SalesLogin extends React.Component {
         let findCompany = <Grid container spacing={2} 
           justify='space-between' alignItems='flex-start'
           style={{ marginTop: 30}}>
-          <Grid item xs={6} container justify='center'>
+          <Grid item xs={12} sm={6} container justify='center'>
             <Typography align='center' gutterBottom
             style={{ fontSize: 16, fontWeight: 600}}>
               {`Looking to find your company? `}
@@ -310,7 +312,7 @@ class SalesLogin extends React.Component {
             </Grid>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             {results.length > 0 && <Grid container justify='center'
             style={{ padding: "0px 10px", borderBottom: `1px solid grey`}}>
               <Typography color='textPrimary' 

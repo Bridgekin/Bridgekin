@@ -61,9 +61,19 @@ const styles = theme => ({
   },
   iconCredit: {
     position: "absolute", 
-    bottom: 0,
-    margin: 10,
-    fontSize: 11
+    bottom: 35, right:0,
+    margin: 0,
+    fontSize: 11,
+    [theme.breakpoints.up('sm')]: {
+      bottom: 0,
+      left: 0
+    },
+  },
+  orDivider:{
+    margin: "15px 0px",
+    [theme.breakpoints.up('sm')]: {
+      margin: 0
+    },
   }
 })
 
@@ -231,7 +241,7 @@ class SalesDashboard extends React.Component {
     ))
 
     let resultsComponent = <Grid container justify='center'>
-      <Grid item xs={9} container spacing={2}
+      <Grid item xs={12} sm={9} container spacing={2}
       justify='flex-start'
         style={{ margin: "20px 0px" }}>
         {(resultArray.length > 0) ? (
@@ -278,7 +288,7 @@ class SalesDashboard extends React.Component {
 
     if (subscriptionExpired){
       return <Grid container justify='center' style={{ minHeight: dimensions.height }}>
-        <Grid item xs={6} sm={5} md={4}
+        <Grid item xs={10} sm={7} md={5}
           container direction='column' justify='center' alignItems='center'>
           <Typography align='center' gutterBottom
             color='textPrimary'
@@ -294,7 +304,7 @@ class SalesDashboard extends React.Component {
       </Grid>
     } else if (unconnectedUser) {
       return <Grid container justify='center' style={{ minHeight: dimensions.height }}>
-        <Grid item xs={6} sm={5} md={4}
+        <Grid item xs={10} sm={7} md={5}
           container direction='column' justify='center' alignItems='center'>
           <Typography align='center' gutterBottom
             color='textPrimary'
@@ -318,11 +328,10 @@ class SalesDashboard extends React.Component {
       </Grid>
     } else {
       let searchComponent = <Paper>
-          <Grid container justify='center'
-        style={{ marginBottom: 30, padding: "20px 0px"}}>
+        <Grid container justify='center'
+        style={{ marginBottom: 30, padding:"20px 0px"}}>
           <Grid container item xs={10} justify='space-around'>
-            <Grid item container xs={4} direction='column' justify='space-around'
-            style={{ height: "100%"}}>
+            <Grid item container xs={12} sm={4}direction='column' justify='space-around'>
               <Typography align='center' gutterBottom 
               color='textSecondary'
               style={{ fontSize: 16 }}>
@@ -337,7 +346,6 @@ class SalesDashboard extends React.Component {
                 onChange={this.handleChange('position')}
                 onMouseUp={this.handleChange('position')}
               />
-
               <TextField
                 label="Company"
                 className={classes.textField}
@@ -367,15 +375,15 @@ class SalesDashboard extends React.Component {
               </Grid>
             </Grid>
 
-            <Grid item xs={2} container alignItems='center' justify='center'>
+            <Grid item xs={12} sm={2} container alignItems='center' justify='center'
+            className={classes.orDivider}>
               <Typography>
                 {`OR`}
               </Typography>
             </Grid>
 
-            <Grid item container xs={4}
-              direction='column' justify='space-between'
-              style={{ height: "100%" }}>
+            <Grid item container xs={12} sm={4}
+              direction='column' justify='space-between'>
               <Grid container direction='column'>
                 <Typography align='center' gutterBottom color='textSecondary'
                   style={{ fontSize: 16 }}>
@@ -390,7 +398,6 @@ class SalesDashboard extends React.Component {
                   onChange={this.handleChange('fname')}
                   onMouseUp={this.handleChange('fname')}
                 />
-
                 <TextField
                   label="Last Name"
                   className={classes.textField}
@@ -416,9 +423,9 @@ class SalesDashboard extends React.Component {
       return <div style={{ minHeight: dimensions.height}}>
         <Grid container justify='center'
           className={classes.grid}>
-          <Grid item xs={10}>
+          <Grid item xs={12} sm={10}>
             <Grid container justify='space-between'
-            style={{ marginBottom: 30}}>
+            style={{ marginBottom: 30, padding: "0px 15px"}}>
               <Button onClick={this.handleMenuClick('filterAnchorEl')}
               style={{ textTransform: 'none'}}>
                 <Typography color='textPrimary'
@@ -453,7 +460,6 @@ class SalesDashboard extends React.Component {
                 {`Connect Your Networks`}
               </Button>
             </Grid>
-
             {searchComponent}
             <Paper>
               <Grid container justify='center'>
@@ -467,9 +473,9 @@ class SalesDashboard extends React.Component {
           </Grid>
         </Grid>
 
-        <div className={classes.iconCredit}>
+        {/* <div className={classes.iconCredit}>
           Icons made by <a href="https://www.flaticon.com/authors/elegant-themes" title="Elegant Themes">Elegant Themes</a> and <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
-        </div>
+        </div> */}
       </div>
     }
   }

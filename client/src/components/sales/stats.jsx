@@ -57,8 +57,26 @@ const styles = theme => ({
     overflowX: 'auto',
     // marginBottom: theme.spacing(2),
   },
-  navButton: { margin: '10px 0px'},
-  tableCell: { textTransform: 'capitalize' }
+  navButton: { 
+    margin: '10px 0px', 
+    cursor: 'pointer'
+  },
+  tableCell: { textTransform: 'capitalize' },
+  desktopNav:{
+    borderRight: `1px solid grey`, 
+    paddingBottom: 50,
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex'
+    },
+  },
+  mobileNav:{
+    padding: "0px 15px",
+    display: 'flex',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    },
+  }
 })
 
 class HiringDashboard extends React.Component {
@@ -338,14 +356,27 @@ class HiringDashboard extends React.Component {
     return <div style={{ minHeight: dimensions.height}}>
       <Grid container justify='center'
       className={classes.grid}>
-        <Grid item xs={2} container justify='center' alignItems='center' direction='column'
-        style={{ height: dimensions.height - 64, borderRight: `1px solid grey`, paddingBottom: 50}}>
+        <Grid item xs={0} sm={2} container justify='center' alignItems='center' direction='column'
+        className={classes.desktopNav}
+        style={{ height: dimensions.height - 64}}>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/leads`)}>
             {`Intros Requested`}
           </Button>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/intros`)}>
+            {`Intros Made`}
+          </Button>
+        </Grid>
+
+        <Grid item xs={12} sm={0}
+          className={classes.mobileNav}>
+          <Button className={classes.navButton}
+            onClick={() => this.props.history.push(`/sales/stats/leads`)}>
+            {`Intros Requested`}
+          </Button>
+          <Button className={classes.navButton}
+            onClick={() => this.props.history.push(`/sales/stats/intros`)}>
             {`Intros Made`}
           </Button>
         </Grid>
