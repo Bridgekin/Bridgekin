@@ -170,11 +170,10 @@ class SalesNav extends React.Component {
     }
   }
 
-  isExpiredSub(){
+  isExpiredSub() {
     const { networkDetails, currentSalesNetworkId } = this.props;
     let detail = networkDetails[currentSalesNetworkId];
-
-    return !detail || detail.current_sub_end === "no sub" || Date.parse(detail.current_sub_end) < Date.now()
+    return !detail || detail.currentSubEnd === "no sub" || Date.parse(detail.currentSubEnd) < Date.now()
   }
 
   render() {

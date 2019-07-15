@@ -64,6 +64,7 @@ class Api::SalesIntrosController < ApiController
         email = response[:email]
         body = response[:body]
         SalesMailer.make_intro(subject, email, body, sales_intro, @current_user).deliver_later
+        SalesMailer.notify_requestor_intro_sent(sales_intro, @current_user).deliver_later
       when "prefer not" #"I'd prefer not to reach out"
         reason = response[:reason]
         details = response[:details]

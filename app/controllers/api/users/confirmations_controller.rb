@@ -8,13 +8,13 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
     # yield resource if block_given?
     if resource.errors.empty?
       @user = resource
-      @token = get_login_token!(@user)
-      # render json: ['Account confirmed! Navigate back to the home page to login.'], status: 200
+      #Get Tokens and track
+      @token = get_login_token!(@currentUser)
+      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
 
       redirect_to "#{root_url}accountconfirmed"
     else
       #Check if its already confirmed
-      debugger
       if resource.id.nil?
         redirect_to "#{root_url}confirmationerror"
       else

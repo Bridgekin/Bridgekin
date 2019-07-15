@@ -33,7 +33,8 @@ const mapStateToProps = (state, ownProps) => ({
   receivedRequests: state.entities.sales.receivedRequests,
   sentRequests: state.entities.sales.sentRequests,
   users: state.users,
-  salesContacts: state.entities.sales.salesContacts
+  salesContacts: state.entities.sales.salesContacts,
+  page: ownProps.match.params.page
 });
 
 const mapDispatchToProps = dispatch => ({

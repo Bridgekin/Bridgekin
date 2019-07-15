@@ -181,7 +181,7 @@ class RequestIntroModal extends React.Component {
           </Typography>
         </Grid>
 
-        let referralBonus = <Grid item xs={12} sm={5} container>
+        let referralBonusComp = <Grid item xs={12} sm={5} container>
           <Typography align='left'color='textSecondary'  
             style={{ fontSize: 14 }}>
             {`Referral Bonus (Optional)`}
@@ -253,7 +253,7 @@ class RequestIntroModal extends React.Component {
           {header}
           <Grid container justify='space-around'>
             {chooseContact}
-            {referralBonus}
+            {referralBonusComp}
           </Grid>
           <Grid container justify='flex-end' alignItems='center'>
               <Typography color='textSecondary'
@@ -356,14 +356,14 @@ class RequestIntroModal extends React.Component {
             color='textPrimary' align='left'
             gutterBottom
             className={classes.thanksHeader}>
-            {`Request Sent`}
+            {`Introduction Request Sent`}
           </Typography>
           <Typography variant="body1" 
             id="simple-modal-description"
             data-cy='waitlist-success'
             gutterBottom
             align='left' color='textPrimary'>
-            {`We've sent an introduction request to your teammate on behalf of this contact!`}
+            {`We’ve sent an introduction request to your teammate! You’ll be notified once your teammate responds.`}
           </Typography>
           <Grid item xs={12}>
             <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
@@ -378,13 +378,13 @@ class RequestIntroModal extends React.Component {
             color='textPrimary' align='left'
             gutterBottom
             className={classes.thanksHeader} >
-            {`Thanks for referring your trusted contact!`}
+            {`Request Wasn't Sent`}
           </Typography>
           <Typography variant="body1" align='left'
             id="simple-modal-description"
             gutterBottom
             color='textPrimary'>
-            {`It looks like we were unable to add them to the waitlist because:`}
+            {`It looks like we were unable to send your introduction request because:`}
           </Typography>
           <List data-cy='waitlist-errors'>
               {requestIntroErrors}

@@ -159,6 +159,7 @@ class RespondToIntro extends React.Component {
           style={{ fontSize: 24, fontWeight: 600}}>
             {`Make warm introductions and help you and your company grow`}
           </Typography>
+
           {intro.explaination && <Grid container direction='column' alignItems='center'>
             <Typography align='center'
               style={{ fontSize: 16, fontWeight: 600 }}>
@@ -169,6 +170,12 @@ class RespondToIntro extends React.Component {
               {`${intro.explaination}`}
             </Typography>
           </Grid>}
+
+          {intro.referralBonus && 
+            <Typography align='center'
+              style={{ fontSize: 16 }}>
+            {`Referral Amount:`}<b>{` ${intro.referralUnit}${intro.referralBonus}`}</b>
+            </Typography>}
 
           <Grid container justify='center'
           style={{ margin: "20px 0px"}}>

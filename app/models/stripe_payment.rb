@@ -1,6 +1,6 @@
 class StripePayment < ApplicationRecord
-  validates :transaction_id, :user_id, :network_id,
-  :sub_id, :amount, :duration, presence: true
+  validates :transaction_id, :user_id,
+  :sub_id, :duration, presence: true
   validates :transaction_id, uniqueness: true
 
   belongs_to :customer,

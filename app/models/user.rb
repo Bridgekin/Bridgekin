@@ -196,11 +196,6 @@ class User < ApplicationRecord
   def save_new_admin_network(domain_params, purchase_params, address_params)
     return false if invalid?
     @sales_network = SalesNetwork.new(domain_params)
-    # if purchase_params[:duration] == "month"
-    #   end_date = DateTime.now + 1.month
-    # elsif purchase_params[:duration] === "year"
-    #   end_date = DateTime.now + 1.year
-    # end
     end_date = User.determine_end_date(1.week)
     
     ActiveRecord::Base.transaction do
@@ -237,31 +232,57 @@ class User < ApplicationRecord
         end_date: end_date,
         sub_type: "trial"
       })
-      #Make Payment
-      # charge = Stripe::Charge.create({
-      #   amount: purchase_params[:amount],
-      #   currency: 'usd',
-      #   customer: customerId,
-      #   receipt_email: 'jenny.rosen@example.com'
-      # })
-      #Track Payment
-      # StripePayment.create!({
-      #   transaction_id: charge,
-      #   user_id: self,
-      #   network_id: @sales_network,
-      #   sub_id: subscription,
-      #   seats: purchase_params[:seats],
-      #   duration: purchase_params[:duration],
-      #   amount: charge.amount
-      # })
     end
 
     true
-  rescue ActiveRecord::StatementInvalid => e
-    # e.message and e.cause.message can be helpful
+  rescue Stripe::CardError => e
+    # Since it's a decline, Stripe::CardError will be caught
+    body = e.json_body
+    err  = body[:error]
+    logger.error "Status is: #{e.http_status}"
+    logger.error "Type is: #{err[:type]}"
+    logger.error "Charge ID is: #{err[:charge]}"
+
     errors.add(:base, e.message)
-    logger.error("Sales admin creation failed. Customer ID: #{customer.id if customer}, current_user: #{self.id}. Errors: #{errors.full_messages.to_s}")
-    false
+    logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
+    return false
+  rescue Stripe::RateLimitError => e
+    # Too many requests made to the API too quickly
+    logger.error "Rate Limit Reached"
+    errors.add(:base, e.message)
+    logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
+    return false
+  rescue Stripe::InvalidRequestError => e
+    # Invalid parameters were supplied to Stripe's API
+    logger.error "Invalid params"
+    errors.add(:base, e.message)
+    logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
+    return false
+  rescue Stripe::AuthenticationError => e
+    # Authentication with Stripe's API failed
+    # (maybe you changed API keys recently)
+    logger.error "Authentication error (probably because of API key)"
+    errors.add(:base, e.message)
+    logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
+    return false
+  rescue Stripe::APIConnectionError => e
+    # Network communication with Stripe failed
+    logger.error "Network comms error with Stripe"
+    errors.add(:base, e.message)
+    logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
+    return false
+  rescue Stripe::StripeError => e
+    # Display a very generic error to the user, and maybe send yourself an email
+    logger.error "Authentication error (probably because of API key)"
+    errors.add(:base, e.message)
+    logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
+    return false
+  rescue => e
+    # Something else happened, completely unrelated to Stripe
+    logger.error "Something else happened: #{e.message}"
+    errors.add(:base, e.message)
+    logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
+    return false
   end
 
   def post_login_setup

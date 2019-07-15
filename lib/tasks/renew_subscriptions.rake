@@ -4,7 +4,7 @@ namespace :renew_subscriptions do
     Subscription.includes(:payer, :product, :targetable).all.each do |sub|
       sub_date = sub.end_date
       tomorrow = DateTime.now.beginning_of_day + 1.day
-      if sub.renewal && sub_date < tomorrow
+      if sub.renewal && sub_date < tomorrow && sub.failed_renewal.nil?
         Subscription.renew_subscription
       end
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_11_232332) do
+ActiveRecord::Schema.define(version: 2019_07_12_214144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -499,6 +499,7 @@ ActiveRecord::Schema.define(version: 2019_07_11_232332) do
     t.bigint "targetable_id"
     t.string "sub_type"
     t.integer "product_id"
+    t.datetime "failed_renewal"
     t.index ["payer_id"], name: "index_subscriptions_on_payer_id"
     t.index ["targetable_type", "targetable_id"], name: "index_subscriptions_on_targetable_type_and_targetable_id"
   end

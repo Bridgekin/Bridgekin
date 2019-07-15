@@ -31,23 +31,23 @@ class SalesMailer < ApplicationMailer
   end
 
   def make_intro(subject, email, body, sales_intro, current_user)
-    # @sales_intro = sales_intro.includes(:contact, :requestor, :recipient)
-    # @contact = @sales_intro.contact
-    # @requestor = @ales_intro.requestor
-    # @recipient = @ales_intro.recipient
-    # sales_intro.update()
+    @sales_intro = SalesIntro.includes(:contact, :requestor, :recipient)
+    .find(sales_intro.id)
+    @contact = @sales_intro.contact
+    @requestor = @sales_intro.requestor
+    @recipient = @sales_intro.recipient
 
     @current_user = current_user
     @email = email
     @body = body
 
-    mail(to: @email, subject: subject)
+    mail(to: @email, subject: subject, cc: [@requestor.email, @recipient.email])
 
     EmailLog.create(
       recipient_id: @recipient.id,
       email_type: 'request_sales_intro'
     )
-    sales_intro.update(email_sent: Datetime.now)
+    sales_intro.update(email_sent: DateTime.now)
   end
 
   def refuse_intro(reason, details, sales_intro)
@@ -87,6 +87,23 @@ class SalesMailer < ApplicationMailer
       email_type: 'decline_intro'
     )
     sales_intro.update(email_sent: DateTime.now)
+  end
+
+  def notify_requestor_intro_sent(sales_intro, current_user)
+    @sales_intro = SalesIntro.includes(:contact, :requestor, :recipient)
+    .find(sales_intro.id)
+    @contact = @sales_intro.contact
+    @requestor = @sales_intro.requestor
+    @recipient = @sales_intro.recipient
+
+    subject = "Warm Introduction in Progress - #{@contact.fname.capitalize} <> #{@contact.lname.capitalize}"
+
+    mail(to: @requestor.email, subject: subject, cc: @recipient.email)
+
+    EmailLog.create(
+      recipient_id: @requestor.id,
+      email_type: 'notify_requestor_intro_sent'
+    )
   end
   
 end

@@ -62,7 +62,7 @@ const styles = theme => ({
     border: `1px solid ${theme.palette.border.secondary}`
   }
 })
-// var GoogleAuth;
+
 class GoogleContacts extends React.Component {
   constructor(props){
     super(props)

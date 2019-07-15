@@ -127,8 +127,9 @@ class ConnectSocial extends React.Component {
 
   isExpiredSub() {
     const { networkDetails, currentSalesNetworkId } = this.props;
-
-    return networkDetails[currentSalesNetworkId].current_sub_end === "no sub" || Date.parse(networkDetails[currentSalesNetworkId].current_sub_end) < Date.now()
+    let detail = networkDetails[currentSalesNetworkId];
+    // debugger
+    return !detail || detail.currentSubEnd === "no sub" || Date.parse(detail.currentSubEnd) < Date.now()
   }
 
   handleFile(upload, uploadUrl) {

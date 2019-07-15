@@ -100,7 +100,7 @@ class SalesDashboard extends React.Component {
 
   componentDidMount() {
     const { userFeature, currentSalesNetworkId } = this.props;
-
+    // debugger  
     if (!currentSalesNetworkId) {
       this.setState({ unconnectedUser: true })
     } else if (this.isExpiredSub()) {
@@ -158,8 +158,8 @@ class SalesDashboard extends React.Component {
   isExpiredSub(){
     const { networkDetails, currentSalesNetworkId } = this.props;
     let detail = networkDetails[currentSalesNetworkId];
-
-    return !detail || detail.current_sub_end === "no sub" || Date.parse(detail.current_sub_end) < Date.now()
+    // debugger
+    return !detail || detail.currentSubEnd === "no sub" || Date.parse(detail.currentSubEnd) < Date.now()
   }
 
   async searchData(payload = {}){
@@ -288,7 +288,7 @@ class SalesDashboard extends React.Component {
           <Typography align='center'
             color='textSecondary'
             style={{ fontSize: 18 }}>
-            {`In order to continue using Bridgekin, please contact your network admin to continue your subscription. Thanks!`}
+            {`In order to continue using Bridgekin, please contact your network admin to continue your subscription. You can also reach out to `}<a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a>{` for any additional questions.`} <br /><br />{`Thanks!`}
           </Typography>
         </Grid>
       </Grid>
@@ -304,7 +304,10 @@ class SalesDashboard extends React.Component {
           <Typography align='center'
             color='textSecondary'
             style={{ fontSize: 18 }}>
-            {`We're building this feature out right now, so check back in shortly to experience our new dashboard.`}
+            {`We're in the process of building out this feature, so please check back in shortly. You can also reach out to `} 
+            <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a>
+            {` for any additional questions.`} <br /><br />
+            {`Thanks!`}
           </Typography>
         </Grid>
       </Grid>

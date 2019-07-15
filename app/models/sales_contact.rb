@@ -31,13 +31,8 @@ class SalesContact < ApplicationRecord
     sales_contacts = case filter
     when "teammates"
       sales_contacts.where.not(id: current_user.sales_contacts)
-    when "teammates1"
-      sales_contacts = network.member_contacts
-      .where.not(fname: '')
-
-      sales_contacts.where.not(id: current_user.sales_contacts)
     when "mine"
-      current_user.sales_contacts
+      sales_contacts.where(id: current_user.sales_contacts)
     when "linkedIn"
       sales_contacts.where(linked_in: true)
     when "google"
@@ -57,7 +52,6 @@ class SalesContact < ApplicationRecord
 
   def self.prep_search_data(sales_contacts, offset, limit, current_user)
     #Filter Results
-    sales_contacts = sales_contacts.distinct
     total = sales_contacts.count #Fine for memory
     sales_contacts = sales_contacts.offset(offset)
       .limit(limit) 

@@ -10,25 +10,17 @@ class Api::Users::SessionsController < ApiController
       .find_by(email: sign_in_params[:email].downcase)
 
     if @currentUser && @currentUser.valid_password?(sign_in_params[:password]) && @currentUser.confirmed?
-      #Setup
+      #Get Tokens and track
       @token = get_login_token!(@currentUser)
-      @site_template, @user_feature = @currentUser.post_login_setup
-
-      if @user_feature.tutorial_tour_session
-        @user_feature.tutorial_tour_session = nil
-        @user_feature.save
-      end
-
-      @users = [@currentUser]
-      @connections = @currentUser.connections
-      @connections.each do |connection|
-        @users << connection.requestor
-        @users << connection.recipient
-      end
+      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
 
       render :create
-    elsif @user && !@user.confirmed?
+    elsif @currentUser && !@currentUser.confirmed?
       render json: ['You need to confirm your account before logging in.'], status: 404
+    # elsif @currentUser && !@currentUser.valid_password?
+    #   render json: ['You need to confirm your account before logging in.'], status: 404
+    # elsif @currentUser.nil?
+    #   render json: ['No account associated with that email'], status: 404
     else
       render json: ['Email or password is invalid'], status: 404
     end

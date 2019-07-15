@@ -111,6 +111,7 @@ class LoginModal extends React.Component {
   }
 
   handleSubmit(e){
+    this.props.clearSessionErrors();
     e.preventDefault();
     let credentials = {
       email: this.state.email,
@@ -161,7 +162,8 @@ class LoginModal extends React.Component {
   }
 
   backToLogin(){
-    this.setState({ page: `login`, email: '', password:''})
+    this.props.history.push('/sales/login')
+    this.handleClose();
   }
 
   render () {
@@ -201,13 +203,13 @@ class LoginModal extends React.Component {
           </Button>
         </Grid>
 
-        <Grid container justify='center'>
+        {/* <Grid container justify='center'>
           <Button className={classes.loginButton}
           autoFocus color='secondary'
-          onClick={this.backToLogin}>
+          onClick={(this.backToLogin)}>
             {`Retry?`}
           </Button>
-        </Grid>
+        </Grid> */}
 
         <Typography color='textSecondary' align='center'
         className={classes.forgotPassword}
