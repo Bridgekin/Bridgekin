@@ -79,12 +79,12 @@ class AdminSignup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      fname: 'asd',
-      lname: 'asdf',
-      email: 'asdfsaf@asdfasdf.com',
-      password: 'password',
-      domain: 'asdfsadf2',
-      title: 'asdfsadf2.com',
+      fname: '',
+      lname: '',
+      email: '',
+      password: '',
+      domain: '',
+      title: '',
       loaded: false,
       validTitle: true,
       validDomain: true,
