@@ -71,6 +71,9 @@ export const RECEIVE_SALES_ADMIN_SIGNUP_ERRORS = 'RECEIVE_SALES_ADMIN_SIGNUP_ERR
 export const CLEAR_SALES_ADMIN_SIGNUP_ERRORS = 'CLEAR_SALES_ADMIN_SIGNUP_ERRORS';
 export const RECEIVE_SALES_PRODUCT_ERRORS = 'RECEIVE_SALES_PRODUCT_ERRORS';
 export const CLEAR_SALES_PRODUCT_ERRORS = 'CLEAR_SALES_PRODUCT_ERRORS';
+export const RECEIVE_SALES_NETWORK_INVITE_ERRORS = 'RECEIVE_SALES_NETWORK_INVITE_ERRORS';
+export const CLEAR_SALES_NETWORK_INVITE_ERRORS = 'CLEAR_SALES_NETWORK_INVITE_ERRORS';
+
 
 export const RECEIVE_UTIL_ERRORS = 'RECEIVE_UTIL_ERRORS';
 export const CLEAR_UTIL_ERRORS = 'CLEAR_UTIL_ERRORS';
@@ -371,4 +374,13 @@ export const receiveSalesProductErrors = errors => ({
 
 export const clearSalesProductErrors = () => ({
   type: CLEAR_SALES_PRODUCT_ERRORS,
+});
+
+export const receiveSalesNetworkInviteErrors = errors => ({
+  type: RECEIVE_SALES_NETWORK_INVITE_ERRORS,
+  errors
+});
+
+export const clearSalesNetworkInviteErrors = () => ({
+  type: CLEAR_SALES_NETWORK_INVITE_ERRORS,
 });

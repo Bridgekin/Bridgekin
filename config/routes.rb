@@ -39,6 +39,7 @@ Rails.application.routes.draw do
     resources :sales_networks, only: [:index]
     resources :sales_intros
     resource :admin_signup_links, only: [:show]
+    resources :sales_network_invites
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end

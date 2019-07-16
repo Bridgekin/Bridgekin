@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_12_214144) do
+ActiveRecord::Schema.define(version: 2019_07_15_190928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -399,6 +399,17 @@ ActiveRecord::Schema.define(version: 2019_07_12_214144) do
     t.string "referral_unit"
     t.index ["recipient_id"], name: "index_sales_intros_on_recipient_id"
     t.index ["requestor_id"], name: "index_sales_intros_on_requestor_id"
+  end
+
+  create_table "sales_network_invites", force: :cascade do |t|
+    t.string "email"
+    t.string "fname"
+    t.string "lname"
+    t.integer "sender_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "network_id"
+    t.index ["sender_id"], name: "index_sales_network_invites_on_sender_id"
   end
 
   create_table "sales_networks", force: :cascade do |t|

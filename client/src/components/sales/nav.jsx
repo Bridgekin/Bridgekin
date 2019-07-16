@@ -206,6 +206,14 @@ class SalesNav extends React.Component {
           {`My Stats`}
         </Typography>
       </Button>}
+      {currentUser &&
+        !this.isExpiredSub() && <Button style={{ textTransform: 'capitalize' }}
+        onClick={() => this.props.history.push(`/sales/invite_external/${currentSalesNetworkId}`)}>
+          <Typography color='textSecondary'
+            className={classes.navItem}>
+            {`Invite`}
+          </Typography>
+        </Button>}
       {currentUser && 
         <Button style={{ textTransform: 'capitalize' }}
           onClick={this.handleSubmit}>

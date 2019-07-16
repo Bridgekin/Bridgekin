@@ -136,7 +136,7 @@ class RequestIntroModal extends React.Component {
 
     let targetUser = users[target]
     let introSubject = `I think you’ll appreciate this...`
-    let introBody = `Hi ${Capitalize(targetUser.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(targetUser.fname)}`
+    let introBody = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(targetUser.fname)}`
 
     this.setState({ introSubject, introBody, target })
   }

@@ -52,7 +52,7 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.take(25).each do |entry|
+    google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].nil?
  
@@ -102,7 +102,7 @@ class ConnectSocialJob < ApplicationJob
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
     
-    parsed_file.take(25).each do |entry|
+    parsed_file.each do |entry|
       contact = SalesContact.find_or_initialize_by(
         fname: entry["First Name"],
         lname: entry["Last Name"],
@@ -122,31 +122,31 @@ class ConnectSocialJob < ApplicationJob
         unless current_user.sales_contacts.include?(contact)
           current_user.sales_user_contacts.create(contact: contact)
         end
-        company = SalesCompany.find_or_initialize_by(title: contact.company)
+        # company = SalesCompany.find_or_initialize_by(title: contact.company)
 
-        response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
+        # response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
 
-        parsed = JSON.parse(response.body)
-        answer = parsed.reduce({}) do |acc, entry|
-          if entry["name"].downcase == company.title.downcase
-            acc = entry
-          end
-          acc
-        end
+        # parsed = JSON.parse(response.body)
+        # answer = parsed.reduce({}) do |acc, entry|
+        #   if entry["name"].downcase == company.title.downcase
+        #     acc = entry
+        #   end
+        #   acc
+        # end
 
-        if answer.present?
-          # debugger
-          company.domain = answer["domain"]
-          company.logo_url = answer["logo"]
-          company.grab_logo_image(answer["logo"]) if answer["logo"].present?
-        end
+        # if answer.present?
+        #   # debugger
+        #   company.domain = answer["domain"]
+        #   company.logo_url = answer["logo"]
+        #   company.grab_logo_image(answer["logo"]) if answer["logo"].present?
+        # end
         
-        if company.save
-          #Turning off for the moment
-          # HunterJob.perform_later(company, contact) if company.domain.present?
-        else
-          logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
-        end
+        # if company.save
+        #   #Turning off for the moment
+        #   # HunterJob.perform_later(company, contact) if company.domain.present?
+        # else
+        #   logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
+        # end
       else
         #Save failed contact if needed
         failed_saved_contacts << {
