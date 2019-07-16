@@ -8,9 +8,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import Loading from '../../loading';
-import { fetchNetworkInvites } from '../../../actions/sales_network_invites_actions';
+import { fetchNetworkInvites, createNetworkInvites } from '../../../actions/sales_network_invites_actions';
 import Capitalize from 'capitalize';
 import NetworkInviteCard from './network_invite_card';
+import uniqId from 'uniqid';
+import merge from 'lodash/merge';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -21,7 +23,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchNetworkInvites: (networkId) => dispatch(fetchNetworkInvites(networkId))
+  fetchNetworkInvites: (networkId) => dispatch(fetchNetworkInvites(networkId)),
+  createNetworkInvites: (payload) => dispatch(createNetworkInvites(payload))
 });
 
 const styles = theme => ({
@@ -31,20 +34,26 @@ const styles = theme => ({
   grid: {
     paddingTop: 64 + 15,
     paddingBottom: '10%'
-  },
+  }, 
 })
 
 class NetworkInvite extends React.Component {
   constructor(props) {
     super(props)
+    let newId = uniqId();
     this.state = {
       loaded: false,
       isAdmin: false,
-      newInvites: { 
-        0: {email: '', password: ''}
+      newInvites: {
+        [newId]: { id: newId, email: '', fname: '', lname: '', userType: 'full'}
       },
       lastAddedIdx: 0
     }
+
+    this.updateVariable  = this.updateVariable.bind(this)
+    this.addAnotherUser = this.addAnotherUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.readyToSubmit = this.readyToSubmit.bind(this);
   }
 
   componentDidMount(){
@@ -62,14 +71,45 @@ class NetworkInvite extends React.Component {
     })
   }
 
-  addAnotherUser(){
-    const { numOfUsers } = this.state;
-    this.setState({ numOfUsers: numOfUsers+1})
+  updateVariable(payload){
+    const { newInvites } = this.state;
+    let newData = merge({}, newInvites[payload.id])
+    newData[payload.field] = payload.value
+    newInvites[payload.id] = newData
+    this.setState({ newInvites })
   }
 
-  deleteUser(){
-    const { numOfUsers } = this.props;
-    this.setState({ numOfUsers: numOfUsers+1 })
+  addAnotherUser(){
+    const { newInvites } = this.state;
+    let newId = uniqId();
+    newInvites[newId] = {id: newId, email: '', fname: '', lname: '', userType: 'full'}
+    this.setState({ newInvites })
+  }
+
+  deleteUser(id){
+    const { newInvites } = this.state;
+    delete newInvites[id]
+    this.setState({ newInvites })
+  }
+
+  readyToSubmit(){
+    const { newInvites } = this.state;
+    let arr = Object.values(newInvites)
+    for(let i = 0; i < arr.length; i++){
+      let {email, fname, lname, userType} = arr[i];
+      if (!email || !fname || !lname || !userType){
+        return false
+      }
+    }
+    return  true
+  }
+
+  handleSubmit(){
+    const { networkId } = this.props;
+    const { newInvites } = this.state;
+    let payload = { networkId, newInvites }
+    this.props.createNetworkInvites(payload)
+    .then()
   }
 
   render() {
@@ -80,37 +120,35 @@ class NetworkInvite extends React.Component {
       let network = salesUserNetworks[networkId];
       let header = <Grid container justify='center'>
         <Typography color='textPrimary'
-        style={{ fontSize: 40}}>
+        style={{ fontSize: 40, marginBottom: 50}}>
           {`Invite Folks To ${Capitalize(network.title)}`}
         </Typography>
       </Grid>
-      let inviteCards = Object.values(newInvites).map(vars => {
-        return <NetworkInviteCard idx={i}
+      let inviteCards = Object.values(newInvites).map(data => {
+        return <NetworkInviteCard idx={data.id} data={data} updateVariable={this.updateVariable} deleteUser={this.deleteUser}/>
       })
-      // for(let i = 0; i<numOfUsers; i++){
-      //   inviteCards.push(<NetworkInviteCard idx={i} handleChange={this.updateInviteCard} />)
-      // }
-      return <div style={{minHeight: dimensions.height }}>
-        <Grid container justify='center' 
-          alignItems='center'
-          className={classes.grid}>
-          <Grid item xs={10} sm={8}>
-            {header}
-            {inviteCards}
-            <Grid container>
-              <Button variant='contained' color='primary'
-              onClick={this.addAnotherUser}>
-                {`Add Another User`}
-              </Button>
-            </Grid>
-            <div>
-              <Button variant='contained' color='primary' style={{textTrasform: 'none'}}>
-                {`Send Invitations`}
-              </Button>
-            </div>
+      return <Grid container justify='center' 
+        alignItems='center'
+        style={{ minHeight: dimensions.height }}>
+        <Grid item xs={10} sm={8}>
+          {header}
+          {inviteCards}
+          <Grid container style={{ margin: "15px 0px"}}>
+            <Button variant='contained' color='primary'
+            onClick={this.addAnotherUser}>
+              {`Add Another User`}
+            </Button>
           </Grid>
+          <div>
+            <Button variant='contained' color='primary'
+              disabled={!this.readyToSubmit()} 
+              onClick={this.handleSubmit}
+              style={{textTrasform: 'none'}}>
+              {`Send Invitations`}
+            </Button>
+          </div>
         </Grid>
-      </div>
+      </Grid>
     } else if (loaded && !isAdmin){
       return <Grid container justify='center' alignItems='center' style={{ minHeight: dimensions.height }}>
         <Grid item xs={10} sm={6}>

@@ -66,6 +66,7 @@
     "save-file": "^2.2.1",
     "styled-components": "^4.3.2",
     "time-between-dates": "^1.0.4",
+    "uniqid": "^5.0.3",
     "window-size": "^1.1.1"
   },
   "scripts": {

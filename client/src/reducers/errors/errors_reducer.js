@@ -11,6 +11,7 @@ import emailTemplateErrorsReducer from './email_template_errors_reducer';
 import directLinkErrorsReducer from './direct_link_errors_reducer';
 import refApplicationErrorsReducer from './ref_application_errors_reducer';
 import salesIntroErrorsReducer from './sales_intro_errors_reducer';
+import salesNetworkInviteErrorsReducer from './sales_network_invite_errors_reducer';
 
 export default combineReducers({
   login: loginErrorsReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
   emailTemplate: emailTemplateErrorsReducer,
   directLink: directLinkErrorsReducer,
   refApplication: refApplicationErrorsReducer,
-  salesIntro: salesIntroErrorsReducer
+  salesIntro: salesIntroErrorsReducer,
+  salesNetworkInvite: salesNetworkInviteErrorsReducer
 });

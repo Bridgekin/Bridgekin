@@ -34,12 +34,25 @@ export const removeSalesNetworkInvite = networkInviteId => ({
 });
 
 export const fetchNetworkInvites = (networkId) => dispatch => (
-  SalesNetworkInviteApiUtil.fetchAdminSignupLink(networkId)
+  SalesNetworkInviteApiUtil.fetchNetworkInvites(networkId)
     .then(handleErrors)
     .then(data => {
       dispatch(retrieveNetworkAdminMap(data.adminMap))
       dispatch(receiveUserNetwork(data.salesNetwork))
     })
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveSalesNetworkInviteErrors(errors))
+    })
+);
+
+
+export const createNetworkInvites = (payload) => dispatch => (
+  SalesNetworkInviteApiUtil.createNetworkInvites(payload)
+    .then(handleErrors)
+    .then(data => data)
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
