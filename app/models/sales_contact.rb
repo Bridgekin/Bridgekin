@@ -25,7 +25,7 @@ class SalesContact < ApplicationRecord
 
   def self.search_contacts(current_user, network, filter='', social_params ={})
     sales_contacts = network.member_contacts
-      .where.not(fname: '')
+      .where.not(fname: '', company: '', position: '')
       .distinct
     # Filter back setting
     sales_contacts = case filter

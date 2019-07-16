@@ -11,7 +11,7 @@ export const fetchNetworkInvites = (networkId) => (
 export const createNetworkInvites = (payload) => (
   fetch(`${window.location.origin}/api/sales_network_invites`, {
     method: 'POST',
-    body: JSON.stringify({ payload }),
+    body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')

@@ -21,9 +21,8 @@ class Api::SalesContactsController < ApiController
       case key
       when "linked_in_key"
         import_hash[key] = upload
-      when "google_users_array"
-        parsed_array = JSON.parse(upload)
-        import_hash[key] = parsed_array
+      when "google_key"
+        import_hash[key] = upload
       else
       end
     end
@@ -55,7 +54,7 @@ class Api::SalesContactsController < ApiController
       key: key,
       content_type: params[:filetype]
     )
-    data = { url: ps_url, key: key }
+    data = { url: ps_url, s3Key: key }
     render json: data, status: 200
   end
 

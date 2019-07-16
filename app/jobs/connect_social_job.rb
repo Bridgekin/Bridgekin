@@ -30,8 +30,12 @@ class ConnectSocialJob < ApplicationJob
           .remove("\r"),
           headers: true)
         ingestLinkedIn(parsedFile, current_user)
-      when "google_users_array"
-        ingestGoogle(upload, current_user)
+      when "google_key"
+        resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
+        parsedFile = JSON.parse(resp.body.read
+          .remove("\r")
+          .split("\n")[3])
+        ingestGoogle(parsedFile, current_user)
       else
         logger.debug "Unsupported key provided"
       end
@@ -52,10 +56,9 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.each do |entry|
+    google_contacts.take(25).each do |entry|
       #Skip any cases without emails
       next if entry['email'].nil?
- 
       contact = SalesContact.find_or_initialize_by(email: entry['email'])
       #Set Contact's Name
       if entry['name'].present?
@@ -75,9 +78,9 @@ class ConnectSocialJob < ApplicationJob
           )
         end
         # Kickoff Full Contact
-        if contact.email.present? # && contact.last_full_contact_lookup.nil?
-          FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
-        end
+        # if contact.email.present? # && contact.last_full_contact_lookup.nil?
+        #   FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
+        # end
       else
         #Save failed contact if needed
         failed_saved_contacts << {
@@ -124,28 +127,32 @@ class ConnectSocialJob < ApplicationJob
         end
         # company = SalesCompany.find_or_initialize_by(title: contact.company)
 
-        # response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
+        # begin
+        #   response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
 
-        # parsed = JSON.parse(response.body)
-        # answer = parsed.reduce({}) do |acc, entry|
-        #   if entry["name"].downcase == company.title.downcase
-        #     acc = entry
+        #   parsed = JSON.parse(response.body)
+        #   answer = parsed.reduce({}) do |acc, entry|
+        #     if entry["name"].downcase == company.title.downcase
+        #       acc = entry
+        #     end
+        #     acc
         #   end
-        #   acc
-        # end
 
-        # if answer.present?
-        #   # debugger
-        #   company.domain = answer["domain"]
-        #   company.logo_url = answer["logo"]
-        #   company.grab_logo_image(answer["logo"]) if answer["logo"].present?
-        # end
-        
-        # if company.save
-        #   #Turning off for the moment
-        #   # HunterJob.perform_later(company, contact) if company.domain.present?
-        # else
-        #   logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
+        #   if answer.present?
+        #     # debugger
+        #     company.domain = answer["domain"]
+        #     company.logo_url = answer["logo"]
+        #     company.grab_logo_image(answer["logo"]) if answer["logo"].present?
+        #   end
+          
+        #   if company.save
+        #     #Turning off for the moment
+        #     # HunterJob.perform_later(company, contact) if company.domain.present?
+        #   else
+        #     logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
+        #   end
+        # rescue => e
+        #   logger.error "Error getting and saving company, detailed here: #{e.errors}"
         # end
       else
         #Save failed contact if needed

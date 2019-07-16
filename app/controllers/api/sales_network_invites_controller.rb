@@ -16,12 +16,10 @@ class Api::SalesNetworkInvitesController < ApiController
     render :index
   end
 
-  def search_networks
-    @sales_networks = SalesNetwork.includes(:members, :subscriptions, :subscribed_products).where("LOWER(domain) LIKE ?" , "%" + params[:domain].downcase + "%")
+  def create
+    debugger
 
-    @network_details = SalesNetwork.generate_network_details(@sales_networks)
-
-    render :index
+    render 
   end
 
   private

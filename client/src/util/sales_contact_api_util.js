@@ -28,12 +28,12 @@ export const presignedUrl = (filename, filetype) => (
   })
 )
 
-export const uploadToS3 = (response, formData) => (
-  fetch(`${response.url}`, {
+export const uploadToS3 = ({ url, formData, fileType }) => (
+  fetch(`${url}`, {
     method: 'PUT',
     body: formData,
     headers: {
-      "Content-Type": "text/csv"
+      "Content-Type": fileType
     }
   })
 )

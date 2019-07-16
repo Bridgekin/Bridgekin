@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 
 import Loading from '../../loading';
 import { fetchNetworkInvites, createNetworkInvites } from '../../../actions/sales_network_invites_actions';
+import { openSalesNetworkInvite } from '../../../actions/modal_actions'
 import Capitalize from 'capitalize';
 import NetworkInviteCard from './network_invite_card';
 import uniqId from 'uniqid';
@@ -24,7 +25,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchNetworkInvites: (networkId) => dispatch(fetchNetworkInvites(networkId)),
-  createNetworkInvites: (payload) => dispatch(createNetworkInvites(payload))
+  createNetworkInvites: (payload) => dispatch(createNetworkInvites(payload)),
+  openSalesNetworkInvite: (payload) => dispatch(openSalesNetworkInvite(payload))
 });
 
 const styles = theme => ({
@@ -54,6 +56,7 @@ class NetworkInvite extends React.Component {
     this.addAnotherUser = this.addAnotherUser.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
     this.readyToSubmit = this.readyToSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount(){
@@ -107,9 +110,9 @@ class NetworkInvite extends React.Component {
   handleSubmit(){
     const { networkId } = this.props;
     const { newInvites } = this.state;
-    let payload = { networkId, newInvites }
+    let payload = { networkId, newInvites: Object.values(newInvites) }
     this.props.createNetworkInvites(payload)
-    .then()
+      .then(() => this.props.openSalesNetworkInvite({ page: 'response' }))
   }
 
   render() {

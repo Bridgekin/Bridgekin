@@ -87,8 +87,8 @@ export const presignedUrl = (filename, fileType) => dispatch => (
     })
 );
 
-export const uploadToS3 = (response, formData) => dispatch => (
-  SalesContactsApiUtil.uploadToS3(response, formData)
+export const uploadToS3 = (payload) => dispatch => (
+  SalesContactsApiUtil.uploadToS3(payload)
     .then(response => {
       return response.url
     })

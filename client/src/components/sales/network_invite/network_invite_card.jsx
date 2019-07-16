@@ -53,7 +53,7 @@ class NetworkInviteCard extends React.Component {
     // const { email, fname, lname } = this.props;
     return <Grid container justify='space-between'
     spacing={1} className={classes.inviteRow}>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={3}>
         <TextField fullWidth
           label="Email"
           className={classes.textField}
@@ -64,7 +64,7 @@ class NetworkInviteCard extends React.Component {
           onMouseUp={this.handleChange('email')}
         />
       </Grid>
-      <Grid item xs={12} sm={2}>
+      <Grid item xs={12} sm={3}>
         <TextField fullWidth
           label="First Name"
           className={classes.textField}

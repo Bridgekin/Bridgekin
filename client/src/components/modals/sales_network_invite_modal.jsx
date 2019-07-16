@@ -144,7 +144,7 @@ class SalesNetworkInviteModal extends React.Component {
             <Typography variant="body1" id="simple-modal-description"
               data-cy='signup-success'
               color='textPrimary' align='left'>
-              {`We've sent email requests to the teammembers and partners you've requested. Once they click the link, they'll be able to signup or upload their contacts, depending on what type of user they are.`}
+              {`We've sent email requests to the team members and partners you've requested. Once they click the link, they'll be able to signup or upload their contacts, depending on what type of user they are.`}
             </Typography>
             <Grid item xs={12}>
               <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}

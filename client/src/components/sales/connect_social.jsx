@@ -21,6 +21,7 @@ import { openConnectSocial } from '../../actions/modal_actions';
 import ImportGoogle from '../google/import_contacts';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Loading from '../loading';
+// import writeJsonFile from 'write-json-file'
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -36,7 +37,7 @@ const mapDispatchToProps = dispatch => ({
   connectSocial: (payload) => dispatch(connectSocial(payload)),
   openConnectSocial: (payload) => dispatch(openConnectSocial(payload)),
   presignedUrl: (filename, fileType) => dispatch(presignedUrl(filename, fileType)),
-  uploadToS3: (response, formData) => dispatch(uploadToS3(response, formData))
+  uploadToS3: (payload) => dispatch(uploadToS3(payload))
 });
 
 const styles = theme => ({
@@ -81,9 +82,10 @@ class ConnectSocial extends React.Component {
     super(props)
     this.state = {
       linkedInUpload: null,
-      linkedInUploadUrl: '',
+      linkedInKey: '',
       linkedInUploading: false,
       googleUsersArray: null,
+      googleKey: '',
       googleUploading: false,
       facebookUpload: null,
       facebookUploadUrl: '',
@@ -96,6 +98,7 @@ class ConnectSocial extends React.Component {
     this.receiveGoogleUsers = this.receiveGoogleUsers.bind(this);
     this.getContent = this.getContent.bind(this);
     this.isExpiredSub = this.isExpiredSub.bind(this);
+    this.getPresignedUrl = this.getPresignedUrl.bind(this);
   }
 
   componentDidMount(){
@@ -138,12 +141,10 @@ class ConnectSocial extends React.Component {
       if (file.name.split(".").pop() === 'csv'){
         let fileReader = new FileReader();
     
-        fileReader.onloadend = () => {
-          this.processFile(file, "linkedInUploading", "linkedInKey", "text/csv")
-          // this.setState({
-          //   [upload]: file,
-          //   [uploadUrl]: fileReader.result
-          // })
+        fileReader.onloadend = async () => {
+          let fileType = "text/csv"
+          let urlResponse = await this.getPresignedUrl(file.name, fileType)
+          await this.processFile(file, "linkedInUploading", "linkedInKey", fileType, urlResponse)
         }
         if (file) {
           fileReader.readAsDataURL(file)
@@ -155,26 +156,34 @@ class ConnectSocial extends React.Component {
     }
   }
 
-  receiveGoogleUsers(googleUsersArray) {
-    this.setState({ googleUsersArray },
-      () => {
-        // Turn into a json object with type
+  async receiveGoogleUsers(googleUsersArray) {
+    this.setState({ googleUsersArray })
+    // Turn into a json object with type
         // application/json
-
-      })
+    let fileType = "application/json"
+    // let file = await writeJsonFile("google_upload", googleUsersArray)
+    let file = JSON.stringify(googleUsersArray)
+    let urlResponse = await this.getPresignedUrl("google_upload", fileType)
+    await this.processFile(file, "googleUploading", "googleKey", fileType, urlResponse)
   }
 
-  async processFile(file, loading, dest_key, fileType){
-    this.setState({ [loading]: true})
-    let urlResponse = await this.props.presignedUrl(file.name, fileType)
+  async getPresignedUrl(name, fileType){
+    let urlResponse = this.props.presignedUrl(name, fileType)
+    return urlResponse
+  }
 
+  async processFile(file, loading, dest_key, fileType, urlResponse){
+    this.setState({ [loading]: true})
+    // let { url, s3Key } = this.getPresignedUrl(file.name, fileType);
+    let { url, s3Key } = urlResponse;
     const formData = await new FormData();
     await formData.append(`file`, file)
-    let awsResponse = await this.props.uploadToS3(urlResponse, formData)
+    let payload = { url, formData, fileType }
+    let awsResponse = await this.props.uploadToS3(payload)
     if(awsResponse){
       await this.setState({ 
         [loading]: false,
-        [dest_key]: urlResponse.key
+        [dest_key]: s3Key
       })
     } else {
       await this.setState({ [loading]: false })
@@ -187,13 +196,9 @@ class ConnectSocial extends React.Component {
         const { currentUser } = this.props;
         const formData = new FormData();
     
-        ['linkedInKey', 'googleUsersArray', 'facebookUpload'].map(upload => {
+        ['linkedInKey', 'googleKey'].map(upload => {
           if (this.state[upload]) {
-            if (upload === 'googleUsersArray') {
-              formData.append(`connectSocial[${upload}]`, JSON.stringify(this.state[upload]))
-            } else {
-              formData.append(`connectSocial[${upload}]`, this.state[upload])
-            }
+            formData.append(`connectSocial[${upload}]`, this.state[upload])
           }
         })
         this.props.connectSocial(formData)
@@ -211,7 +216,7 @@ class ConnectSocial extends React.Component {
         googleUsersArray, facebookUploadUrl, facebookUpload, loading,
         linkedInWarning, linkedInKey,
         linkedInUploading } = this.state;
-      // debugger
+
       if(type === "linkedIn"){
         if (linkedInKey){
           return <Typography align='center' 

@@ -95,7 +95,7 @@ class ConnectSocialModal extends React.Component {
             <Typography variant="body1" align='center'
               color="textSecondary" gutterBottom
               style={{ fontSize: 14, margin: 10, maxWidth: 350 }}>
-              {`We’re in the process of uploading your contacts. This may take a few minutes.`}
+              {`We’re in the process of uploading your contacts. This may take up to an hour.`}
             </Typography>
             <Grid container justify='center'>
               <Button autoFocus variant='contained' color='primary'
