@@ -105,5 +105,19 @@ class SalesMailer < ApplicationMailer
       email_type: 'notify_requestor_intro_sent'
     )
   end
+
+  def send_network_invitation_email(network_invite, current_user)
+    @network_invite = network_invite
+    @current_user = current_user
+
+    subject = "Bridgekin Network Invitation - From #{@current_user.fname.capitalize}"
+
+    mail(to: @network_invite.email, subject: subject)
+
+    EmailLog.create(
+      email: @network_invite.email,
+      email_type: 'send_network_invitation_email'
+    )
+  end
   
 end

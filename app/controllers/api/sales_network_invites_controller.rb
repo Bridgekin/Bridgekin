@@ -16,10 +16,21 @@ class Api::SalesNetworkInvitesController < ApiController
     render :index
   end
 
-  def create
-    debugger
+  def show_by_referral_code
+    @sales_network_invite = SalesNetworkInvite.find_by(link_code: params[:code])
+    render :show
+  end
 
-    render 
+  def create
+    new_invites = SalesNetworkInvite.prep_batch_create(params[:new_invites], @current_user.id, params[:network_id])
+    begin
+      @invites = SalesNetworkInvite.create!(new_invites)
+      @invites.each{|invite| SalesMailer.send_network_invitation_email(invite, @current_user).deliver_later}
+
+      render json: ["Success"], status: 200
+    rescue => exception
+      render json: exception.record.errors.full_messages, status: 422
+    end
   end
 
   private
@@ -27,4 +38,8 @@ class Api::SalesNetworkInvitesController < ApiController
   def set_network
     @sales_network = SalesNetwork.find(params[:network_id])
   end
+
+  # def network_invite_params
+  #   @passed_invites = params.require(:new_invites).permit(:email, :fname, :lname,
+  # end
 end

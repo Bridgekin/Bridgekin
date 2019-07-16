@@ -6,11 +6,9 @@ class Api::SalesContactsController < ApiController
     filter = social_params[:filter]
     network = SalesNetwork.find(params[:current_sales_network_id])
     @sales_contacts = SalesContact.search_contacts(@current_user, network, filter, social_params)
-
     #Prep Search Data
     offset, limit = social_params[:offset], social_params[:limit]
     @sales_contacts, @total, @friend_map, @friend_users = SalesContact.prep_search_data(@sales_contacts, offset, limit, @current_user)
-   
     render :index
   end
 
