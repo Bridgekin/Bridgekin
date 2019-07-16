@@ -56,7 +56,7 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.take(25).each do |entry|
+    google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].nil?
       contact = SalesContact.find_or_initialize_by(email: entry['email'])
