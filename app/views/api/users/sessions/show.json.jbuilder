@@ -1,7 +1,9 @@
 json.partial! 'api/users/sessions/session',
 variables: {
-  user: @user,
+  currentUser: @current_user,
+  users: @users,
   token: @token,
   site_template: @site_template,
-  user_feature: @user_feature
+  user_feature: @user_feature,
+  connections: @connections
 }

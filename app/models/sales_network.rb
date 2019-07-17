@@ -41,11 +41,21 @@ class SalesNetwork < ApplicationRecord
         memberCount: network.members.count,
         currentSubEnd: current_sub.nil? ? "no sub" : current_sub.end_date,
         maxSeats: current_sub.nil? ? "no sub" : network.subscribed_products
-        .where(id: current_sub.product_id).first.seats
+        .where(id: current_sub.product_id).first.seats,
       }
       acc[network.id] = details
       acc
     end
+  end
+
+  def self.get_network_info(current_user)
+    sales_networks = current_user.sales_networks
+    sales_user_networks = current_user.sales_user_networks
+    sales_admin_networks = current_user.sales_admin_networks
+    current_network_id = sales_networks.first.id
+    network_details = SalesNetwork.includes(:members, :admins, :subscribed_products).generate_network_details(sales_networks)
+
+    return sales_networks, sales_user_networks, sales_admin_networks, current_network_id, network_details
   end
 
   def current_subscription

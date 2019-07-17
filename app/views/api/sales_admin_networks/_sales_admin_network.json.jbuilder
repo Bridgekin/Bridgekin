@@ -1,0 +1,1 @@
+json.extract! sales_admin_network, :id, :network_id, :admin_id

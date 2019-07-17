@@ -35,7 +35,6 @@ const mapStateToProps = (state, ownProps) => {
   code: values.code,
   adminSignupLink: state.entities.sales.adminSignupLink,
   salesProducts: state.entities.sales.salesProducts,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
 }};
 
 const mapDispatchToProps = dispatch => ({
@@ -129,18 +128,6 @@ class AdminSignup extends React.Component {
       }
     })
   }
-  
-  loadUserNetworks() {
-    this.props.fetchUserNetworks()
-      .then(() => {
-        let userNetworks = Object.values(this.props.salesUserNetworks)
-        if (userNetworks.length > 0) {
-          let currentNetworkId = userNetworks[0].id
-          this.props.setCurrentNetwork(currentNetworkId)
-        }
-        this.props.history.push('/sales/dashboard')
-      })
-  }
 
   changePage(url){
     return e => {
@@ -220,7 +207,8 @@ class AdminSignup extends React.Component {
     this.props.adminSignup(payload)
     .then(() => {
       if(this.props.currentUser){
-        this.loadUserNetworks()
+        // this.loadUserNetworks()
+        this.props.history.push('/sales/dashboard')
       } else {
         this.props.openSignup({ page: "response" })
       }

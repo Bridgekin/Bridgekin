@@ -67,8 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (token){
     getAuthUserId(token)
     .then(handleAuthErrors)
-    .then( ({currentUser, token, siteTemplate, workspaces,
-      userFeature, users, connections }) => {
+    .then( ({currentUser, token, siteTemplate, 
+      workspaces, userFeature, users, connections }) => {
       let preloadedState = {
         users: users,
         session: { id: currentUser.id},

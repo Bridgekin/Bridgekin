@@ -1,8 +1,8 @@
 import {
-  RECEIVE_USER_SALES_NETWORKS,
-  RECEIVE_USER_SALES_NETWORK,
-  REMOVE_USER_SALES_NETWORK
-} from '../../../actions/sales_network_actions';
+  RECEIVE_SALES_USER_NETWORKS,
+  RECEIVE_SALES_USER_NETWORK,
+  REMOVE_SALES_USER_NETWORK
+} from '../../../actions/sales_user_network_actions';
 import merge from 'lodash/merge';
 
 export default (state = {}, action) => {
@@ -10,11 +10,11 @@ export default (state = {}, action) => {
   let newState = merge({}, state);
 
   switch (action.type) {
-    case RECEIVE_USER_SALES_NETWORKS:
-      return merge({}, action.networks);
-    case RECEIVE_USER_SALES_NETWORK:
-      return merge({}, state, {[action.network.id]: action.network })
-    case REMOVE_USER_SALES_NETWORK:
+    case RECEIVE_SALES_USER_NETWORKS:
+      return merge({}, action.userNetworks);
+    case RECEIVE_SALES_USER_NETWORK:
+      return merge({}, state, {[action.userNetwork.id]: action.userNetwork })
+    case REMOVE_SALES_USER_NETWORK:
       return {};
     default:
       return state;

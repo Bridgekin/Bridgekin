@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     #   resource :user, only: [:update, :destroy]
     # end
     # resource :session, only: [:create, :destroy]
+    post "network_invite_signup", :to => 'users#network_invite_signup'
     get "get_network_invite_code", :to => 'sales_network_invites#show_by_referral_code'
     get "public_env_variables", :to => 'utils#public_env_variables'
     get "search_sales_networks", :to => 'sales_networks#search_networks'

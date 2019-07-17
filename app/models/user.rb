@@ -193,6 +193,17 @@ class User < ApplicationRecord
     rounded + time
   end
 
+  def save_to_network(network, user_type)
+    ActiveRecord::Base.transaction do
+      self.save!
+      self.sales_user_networks.create(network: network, member_type: user_type)
+    rescue => e
+      logger.error "Error saving to network:#{e.message}"
+      errors.add(:base, e.message)
+      return false
+    end
+  end
+
   def save_new_admin_network(domain_params, purchase_params, address_params)
     return false if invalid?
     @sales_network = SalesNetwork.new(domain_params)

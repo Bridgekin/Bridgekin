@@ -1,6 +1,8 @@
 import * as SalesApiUtil from '../util/sales_network_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveSalesNetworkErrors } from './error_actions';
+import { receiveSalesUserNetworks } from './sales_user_network_actions'
+import { receiveSalesAdminNetworks } from './sales_admin_network_actions'
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
@@ -74,7 +76,10 @@ export const fetchUserNetworks = () => dispatch => (
     .then(handleErrors)
     .then(data => {
       dispatch(retrieveNetworkDetails(data.networkDetails))
-      dispatch(receiveUserNetworks(data.salesNetworks))
+      dispatch(receiveSalesNetworks(data.salesNetworks))
+      dispatch(setCurrentNetwork(data.currentNetworkId))
+      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
     })
     .catch(errors => {
       if (!(errors instanceof Array)) {

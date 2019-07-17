@@ -28,7 +28,6 @@ import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_networ
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
   networkDetails: state.entities.sales.networkDetails
 });
 
@@ -74,11 +73,6 @@ class SalesRouter extends React.Component {
   loadUserNetworks() {
     this.props.fetchUserNetworks()
       .then(() => {
-        let userNetworks = Object.values(this.props.salesUserNetworks)
-        if (userNetworks.length > 0) {
-          let currentNetworkId = userNetworks[0].id
-          this.props.setCurrentNetwork(currentNetworkId)
-        }
         this.setState({ loaded: true })
       })
   }

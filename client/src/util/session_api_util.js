@@ -38,6 +38,16 @@ export const adminSignup = (user) => (
   })
 )
 
+export const networkInviteSignup = (user) => (
+  fetch(`${window.location.origin}/api/network_invite_signup`, {
+    method: 'POST',
+    body: JSON.stringify({ user }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+)
+
 export const googleSalesLogin = (user) => (
   fetch(`${window.location.origin}/api/google_sales_signup`, {
     method: 'POST',

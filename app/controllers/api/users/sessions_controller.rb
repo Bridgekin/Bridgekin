@@ -6,53 +6,39 @@ class Api::Users::SessionsController < ApiController
   # acts_as_token_authentication_handler_for User, only: [:destroy]
 
   def create
-    @currentUser = User.includes(:notifications)
+    @current_user = User.includes(:notifications)
       .find_by(email: sign_in_params[:email].downcase)
 
-    if @currentUser && @currentUser.valid_password?(sign_in_params[:password]) && @currentUser.confirmed?
+    if @current_user && @current_user.valid_password?(sign_in_params[:password]) && @current_user.confirmed?
       #Get Tokens and track
-      @token = get_login_token!(@currentUser)
-      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
+      @token = get_login_token!(@current_user)
+      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+      #Load User Networks
+      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
 
       render :create
-    elsif @currentUser && !@currentUser.confirmed?
+    elsif @current_user && !@current_user.confirmed?
       render json: ['You need to confirm your account before logging in.'], status: 404
-    # elsif @currentUser && !@currentUser.valid_password?
+    # elsif @current_user && !@current_user.valid_password?
     #   render json: ['You need to confirm your account before logging in.'], status: 404
-    # elsif @currentUser.nil?
+    # elsif @current_user.nil?
     #   render json: ['No account associated with that email'], status: 404
     else
       render json: ['Email or password is invalid'], status: 404
     end
   end
 
-  def show
-    #Not a working route at the moment
-    @token = get_login_token!(@user)
-    @site_template = @user.get_template
-    @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
-    render :show
-  end
-
   def authorize
-    @token = get_login_token!(@user)
-    @site_template = @user.get_template
-    @user_feature = @user.user_feature || UserFeature.create(user_id: @user.id)
+    #Get Tokens and track
+    @token = get_login_token!(@current_user)
+    @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
 
-    @currentUser = @user
-    @users = [@user]
-    @connections = @user.connections
-    @connections.each do |connection|
-      @users << connection.requestor
-      @users << connection.recipient
-    end
-    render :create
+    render :show
   end
 
   def destroy
     render json: ["You've successfully signed out"], status: 200
   end
-
 
   private
 

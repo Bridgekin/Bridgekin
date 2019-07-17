@@ -27,7 +27,6 @@ const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
   userFeature: state.entities.userFeature,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
   networkDetails: state.entities.sales.networkDetails,
   currentSalesNetworkId: state.entities.sales.currentSalesNetwork
 });
@@ -115,17 +114,6 @@ class ConnectSocial extends React.Component {
     // if(!currentSalesNetworkId || this.isExpiredSub()){
     //   this.props.history.push('/sales/dashboard')
     // }
-
-    // this.props.fetchUserNetworks()
-    //   .then(() => {
-    //     let userNetworks = Object.values(this.props.salesUserNetworks)
-    //     if (userNetworks.length > 0) {
-    //       let currentNetworkId = userNetworks.shift().id
-    //       this.setState({ currentNetworkId })
-    //     } else {
-    //       this.props.history.push('/sales/dashboard')
-    //     }
-    //   })
   }
 
   isExpiredSub() {

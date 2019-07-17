@@ -20,7 +20,7 @@ const mapStateToProps = (state, ownProps) => ({
   dimensions: state.util.window,
   networkId: ownProps.match.params.networkId,
   networkAdminMap: state.entities.sales.networkAdminMap,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
+  salesNetworks: state.entities.sales.salesNetworks,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -116,11 +116,11 @@ class NetworkInvite extends React.Component {
   }
 
   render() {
-    const { dimensions, classes, salesUserNetworks, networkId } = this.props;
+    const { dimensions, classes, salesNetworks, networkId } = this.props;
     const { loaded, isAdmin, newInvites } = this.state;
 
     if (loaded && isAdmin){
-      let network = salesUserNetworks[networkId];
+      let network = salesNetworks[networkId];
       let header = <Grid container justify='center'>
         <Typography color='textPrimary'
         style={{ fontSize: 40, marginBottom: 50}}>
@@ -137,7 +137,7 @@ class NetworkInvite extends React.Component {
           {header}
           {inviteCards}
           <Grid container style={{ margin: "15px 0px"}}>
-            <Button variant='contained' color='primary'
+            <Button color='primary'
             onClick={this.addAnotherUser}>
               {`Add Another User`}
             </Button>

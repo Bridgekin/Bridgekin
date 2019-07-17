@@ -8,13 +8,14 @@ import receivedRequestsReducer from './received_request_reducer.js';
 import sentRequestsReducer from './sent_request_reducer.js';
 import friendMapReducer from './friend_map_reducer.js'
 import adminSignupLinkReducer from './admin_signup_link_reducer.js'
-import salesUserNetworksReducer from './sales_user_network_reducer.js'
 import networkDetailsReducer from './network_detail_reducer.js'
 import currentSalesNetworkReducer from './current_sales_network_reducer.js'
 import salesProductReducer from './sales_product_reducer.js'
 import salesNetworkInvitesReducer from './sales_network_invite_reducer.js'
 import networkAdminMapReducer from './sales_network_admin_reducer.js'
 import salesNetworksReducer from './sales_network_reducer.js'
+import salesUserNetworksReducer from './sales_user_network_reducer.js'
+import salesAdminNetworksReducer from './sales_admin_network_reducer.js'
 
 export default combineReducers({
   searchNetworks: searchNetworksReducer,
@@ -25,11 +26,12 @@ export default combineReducers({
   sentRequests: sentRequestsReducer,
   friendMap: friendMapReducer,
   adminSignupLink: adminSignupLinkReducer,
-  salesUserNetworks: salesUserNetworksReducer,
   networkDetails: networkDetailsReducer,
   currentSalesNetwork: currentSalesNetworkReducer,
   salesProducts: salesProductReducer,
   salesNetworkInvites: salesNetworkInvitesReducer,
   networkAdminMap: networkAdminMapReducer,
-  salesNetworks: salesNetworksReducer
+  salesNetworks: salesNetworksReducer,
+  salesUserNetworks: salesUserNetworksReducer,
+  salesAdminNetworks: salesAdminNetworksReducer
 })

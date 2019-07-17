@@ -2,7 +2,7 @@ require_relative '../concerns/devise_controller_patch.rb'
 require 'nameable'
 class Api::UsersController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup, :google_sales_signup, :admin_signup]
+  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup, :google_sales_signup, :admin_signup, :network_invite_signup]
 
   after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
@@ -33,70 +33,87 @@ class Api::UsersController < ApiController
   end
 
   def admin_signup
-    @currentUser = User.new(user_params)
+    @current_user = User.new(user_params)
 
-    if @currentUser.save_new_admin_network(
+    if @current_user.save_new_admin_network(
       domain_params, purchase_params, address_params)
-
-      #Get Tokens and track
-      @token = get_login_token!(@currentUser)
-      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
+#Get Tokens and track
+      @token = get_login_token!(@current_user)
+      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup      
+      #Load User Networks
+      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
-      @currentUser.update(confirmed_at: DateTime.now)
+      @current_user.update(confirmed_at: DateTime.now)
 
-      render :hire_signup
+      render :sales_loaded_signup
     else
-      render json: @currentUser.errors.full_messages, status: 422
+      render json: @current_user.errors.full_messages, status: 422
+    end
+  end
+
+  def network_invite_signup
+    @current_user = User.new(user_params)
+    @sales_network_invite = SalesNetworkInvite.includes(:network).find_by(link_code: params[:user][:code])
+    network = @sales_network_invite.network
+
+    if @current_user.save_to_network(network, @sales_network_invite.user_type)
+      #Get Tokens and track
+      @token = get_login_token!(@current_user)
+      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+      #Load User Networks
+      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
+      #Set as confirmed
+      @current_user.update(confirmed_at: DateTime.now)
+
+      render :sales_loaded_signup
+    else
+      render json: @current_user.errors.full_messages, status: 422
     end
   end
 
   def sales_signup
-    @currentUser = User.new(user_params)
+    @current_user = User.new(user_params)
     network = SalesNetwork.find_by(domain: params[:user][:domain])
 
     provided_domain = params[:user][:email].split('@').last.downcase
     network_domain = network.domain.downcase
-    # debugger
     if provided_domain != network_domain
       render json: ["Domain does not match chosen network"], status: 422
-    elsif provided_domain == network_domain && @currentUser.save
+    elsif provided_domain == network_domain && @current_user.save
       #Attach to existing network
-      @currentUser.sales_user_networks.create(network: network)
+      @current_user.sales_user_networks.create(network: network)
 
-      #Get Tokens and track
-      # @token = get_login_token!(@currentUser)
-      # @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
-
-      # render :hire_signup
       render json: ["Successful"], status: 200
     else
-      render json: @currentUser.errors.full_messages, status: 422
+      render json: @current_user.errors.full_messages, status: 422
     end
   end
 
   def google_sales_signup
     domain = params[:user][:email].split('@').last
     network = SalesNetwork.find_by(domain: domain)
-    @currentUser = User.find_by(email: params[:user][:email])
+    @current_user = User.find_by(email: params[:user][:email])
 
-    if @currentUser.present?
+    if @current_user.present?
       #Get Tokens and track
-      @token = get_login_token!(@currentUser)
-      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
+      @token = get_login_token!(@current_user)
+      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
 
       render :hire_signup
     elsif network.present?
-      @currentUser = User.new(user_params)
-      if @currentUser.save
+      @current_user = User.new(user_params)
+      if @current_user.save
         #Attach to existing network
-        @currentUser.sales_user_networks.create(network: network)
+        @current_user.sales_user_networks.create(network: network)
         #Get Tokens and track
-        @token = get_login_token!(@currentUser)
-        @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
+        @token = get_login_token!(@current_user)
+        @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+        #Load User Networks
+        @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
 
-        render :hire_signup
+        render :sales_loaded_signup
       else
-        render json: @user.errors.full_messages, status: 422
+        render json: @current_user.errors.full_messages, status: 422
       end
     else
       render json: ["Could't find a network with that domain"], status: 422

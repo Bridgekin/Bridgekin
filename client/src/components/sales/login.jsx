@@ -10,12 +10,14 @@ import Button from '@material-ui/core/Button';
 import ImportGoogle from '../google/import_contacts';
 import Capitalize from 'capitalize';
 import { searchNetworks } from '../../actions/sales_network_actions';
-import { salesSignup, googleSalesLogin } from '../../actions/session_actions';
+import { salesSignup, googleSalesLogin, networkInviteSignup } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
 import { fetchUserNetworks, setCurrentNetwork, clearSearchResults } from '../../actions/sales_network_actions'
 import { fetchNetworkInviteByCode } from '../../actions/sales_network_invites_actions';
 import queryString from 'query-string';
+import SignupPic from '../../static/signup_pic.png';
+import Img from 'react-image'
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -24,7 +26,6 @@ const mapStateToProps = (state, ownProps) => {
   dimensions: state.util.window,
   resultNetworks: state.entities.sales.searchNetworks,
   userErrors: state.errors.users,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
   networkDetails: state.entities.sales.networkDetails,
   page: ownProps.match.params.page,
   salesNetworks: state.entities.sales.salesNetworks,
@@ -42,7 +43,8 @@ const mapDispatchToProps = dispatch => ({
   fetchUserNetworks: () => dispatch(fetchUserNetworks()),
   setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId)),
   clearSearchResults: () => dispatch(clearSearchResults()),
-  fetchNetworkInviteByCode: code => dispatch(fetchNetworkInviteByCode(code))
+  fetchNetworkInviteByCode: code => dispatch(fetchNetworkInviteByCode(code)),
+  networkInviteSignup: payload => dispatch(networkInviteSignup(payload))
 });
 
 const styles = theme => ({
@@ -72,7 +74,12 @@ const styles = theme => ({
   resultContainer:{
     overflow: 'scroll',
     maxHeight: 300
-  }
+  },
+  signupPic: {
+    width: '100%',
+    maxWidth: 400,
+    height: 'auto'
+  },
 })
 
 class SalesLogin extends React.Component {
@@ -97,7 +104,8 @@ class SalesLogin extends React.Component {
   componentDidMount(){
     this.props.clearSearchResults();
 
-    const { code } = this.props;
+    const { code, page } = this.props;
+
     if(code){
       this.props.fetchNetworkInviteByCode(code)
       .then(() => {
@@ -108,6 +116,7 @@ class SalesLogin extends React.Component {
             invite = result;
           }
         })
+        debugger
         this.setState({ invite,
           fname: invite.fname,
           lname: invite.lname,
@@ -115,6 +124,8 @@ class SalesLogin extends React.Component {
           target: salesNetworks[invite.networkId]
         })
       })
+    } else if(page === "signup" && !code){
+      this.props.history.push('/sales/login')
     }
   }
 
@@ -124,34 +135,30 @@ class SalesLogin extends React.Component {
     }
   }
 
-  handlePage(network){
-    return e => {
-      this.setState({ target: network },
-        () => this.props.history.push('/sales/login'))
+  handlePage(page = "", network = {}){
+    return async e => {
+      this.setState({ target: network, email: '', fname: '', lname: '', password: '' });
+      await this.props.history.push(`/sales/login/${page}`)
     }
-  }
-
-  loadUserNetworks() {
-    this.props.fetchUserNetworks()
-      .then(() => {
-        let userNetworks = Object.values(this.props.salesUserNetworks)
-        if (userNetworks.length > 0) {
-          let currentNetworkId = userNetworks[0].id
-          this.props.setCurrentNetwork(currentNetworkId)
-        }
-        this.props.history.push('/sales/dashboard')
-      })
   }
 
   handleSignup(e){
     const { code } = this.props;
     const { email, password, fname, lname, target } = this.state;
     let payload = { email, password, fname, lname,
-      domain: target.domain
+      domain: target.domain, code
     }
 
     if(code){
-
+      this.props.networkInviteSignup(payload)
+        .then(() => {
+          const { currentUser } = this.props;
+          if(currentUser){
+            this.props.history.push('/sales/connect_social')
+          } else {
+            this.props.openSignup({ page: 'response' });
+          }
+        })
     } else {
       this.props.salesSignup(payload)
       .then(() => { 
@@ -168,7 +175,7 @@ class SalesLogin extends React.Component {
     this.props.login(user)
     .then(() => {
       if(this.props.currentUser){
-        this.loadUserNetworks()
+        this.props.history.push('/sales/dashboard')
       } else {
         this.props.openLogin({ page: "response"})
       }
@@ -199,7 +206,7 @@ class SalesLogin extends React.Component {
     .then(() => {
       const { currentUser } = this.props;
       if (currentUser) {
-        this.loadUserNetworks()
+        this.props.history.push('/sales/dashboard')
       } else {
         this.props.openLogin({ page: "response" })
       }
@@ -211,17 +218,18 @@ class SalesLogin extends React.Component {
     const { email, password, networkDomainUrl, fname, lname, target } = this.state;
 
     switch(page){
-      case "invite":
-        return 'invite'
       case 'signup':
+        if(Object.values(target).length === 0){
+          return <div></div>
+        }
         let signupComp = <Grid item xs={8} sm={6} md={4}container direction='column'>
           <div style={{ marginBottom: 25 }}>
-            <Button onClick={()=> this.props.history('/sales/login')}>
+            <Button onClick={this.handlePage()}>
               {`Back`}
             </Button>
           </div>
           <Typography>
-            {`Company: ${target.title}`}
+            {`Company: ${Capitalize(target.title)}`}
           </Typography>
           <TextField margin='dense'
             required
@@ -266,6 +274,10 @@ class SalesLogin extends React.Component {
 
         return <Grid item xs={8} container>
           {signupComp}
+          <Grid item xs={4} sm={6} md={8} container justify='flex-end' alignItems='center'>
+            <Img src={SignupPic}
+              className={classes.signupPic} />
+          </Grid>
         </Grid>
       default:
         let loginComp = <Grid container
@@ -371,7 +383,7 @@ class SalesLogin extends React.Component {
                     </Typography>
                     <Button variant='contained' color='primary'
                     disabled={this.isDisabled(detail)}
-                    onClick={this.handlePage(network)}>
+                    onClick={this.handlePage('signup',network)}>
                       {`Select`}
                     </Button>
                   </Grid>

@@ -6,6 +6,9 @@ import {removeSiteTemplate} from './site_template_actions';
 import {receiveUserFeature} from './user_feature_actions';
 import {receiveConnections} from './connection_actions';
 import {receiveSessionErrors, receiveUserErrors} from './error_actions';
+import { retrieveNetworkDetails, receiveSalesNetworks, setCurrentNetwork } from './sales_network_actions';
+import { receiveSalesUserNetworks } from './sales_user_network_actions'
+import { receiveSalesAdminNetworks } from './sales_admin_network_actions'
 import { handleErrors } from './fetch_error_handler';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
@@ -83,6 +86,39 @@ export const adminSignup = (formUser) => dispatch => (
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
+
+      dispatch(retrieveNetworkDetails(data.networkDetails))
+      dispatch(receiveSalesNetworks(data.salesNetworks))
+      dispatch(setCurrentNetwork(data.currentNetworkId))
+
+      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
+    })
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveUserErrors(errors));
+    })
+);
+
+export const networkInviteSignup = (formUser) => dispatch => (
+  SessionApiUtil.networkInviteSignup(formUser)
+    .then(handleErrors)
+    .then(data => {
+      localStorage.setItem('bridgekinToken', data.token);
+      dispatch(receiveUsers(data.users));
+      dispatch(receiveCurrentUser(data.currentUser));
+      dispatch(receiveSiteTemplate(data.siteTemplate));
+      dispatch(receiveWorkspaces(data.workspaces));
+      dispatch(receiveUserFeature(data.userFeature));
+
+      dispatch(retrieveNetworkDetails(data.networkDetails))
+      dispatch(receiveSalesNetworks(data.salesNetworks))
+      dispatch(setCurrentNetwork(data.currentNetworkId))
+
+      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
     })
     .catch(errors => {
       if (!(errors instanceof Array)) {
@@ -102,6 +138,13 @@ export const googleSalesLogin = (formUser) => dispatch => (
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
       localStorage.setItem('bridgekinToken', data.token);
+
+      dispatch(retrieveNetworkDetails(data.networkDetails))
+      dispatch(receiveSalesNetworks(data.salesNetworks))
+      dispatch(setCurrentNetwork(data.currentNetworkId))
+
+      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
     })
     .catch(errors => {
       if (!(errors instanceof Array)) {
@@ -123,6 +166,13 @@ export const login = formUser => dispatch => (
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
       dispatch(receiveConnections(data.connections));
+
+      dispatch(retrieveNetworkDetails(data.networkDetails))
+      dispatch(receiveSalesNetworks(data.salesNetworks))
+      dispatch(setCurrentNetwork(data.currentNetworkId))
+
+      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
       return data.user
     })
     .catch(errors => {

@@ -40,9 +40,11 @@ const mapStateToProps = (state, ownProps) => ({
   dimensions: state.util.window,
   userFeature: state.entities.userFeature,
   results: state.entities.sales.searchContacts,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
   networkDetails: state.entities.sales.networkDetails,
-  currentSalesNetworkId: state.entities.sales.currentSalesNetwork
+  currentSalesNetworkId: state.entities.sales.currentSalesNetwork,
+  salesUserNetworks: state.entities.sales.salesUserNetworks,
+  salesAdminNetworks: state.entities.sales.salesAdminNetworks,
+  salesNetworks: state.entities.sales.salesNetworks
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -94,6 +96,7 @@ class SalesDashboard extends React.Component {
       filter: '',
       filterAnchorEl: null,
       unconnectedUser: false,
+      limitedUser: false,
       subscriptionExpired: false
     }
 
@@ -109,12 +112,14 @@ class SalesDashboard extends React.Component {
   }
 
   componentDidMount() {
-    const { userFeature, currentSalesNetworkId } = this.props;
-    // debugger  
+    const { userFeature, currentSalesNetworkId, salesUserNetworks, salesNetworks } = this.props;
+    // debugger
     if (!currentSalesNetworkId) {
       this.setState({ unconnectedUser: true })
     } else if (this.isExpiredSub()) {
       this.setState({ subscriptionExpired: true })
+    } else if (salesUserNetworks[currentSalesNetworkId] && salesUserNetworks[currentSalesNetworkId].memberType !== "full"){
+      this.setState({ limitedUser: true })
     } else {
       if (!userFeature.importedSocial) {
         this.props.history.push('/sales/connect_social')
@@ -275,7 +280,7 @@ class SalesDashboard extends React.Component {
       fname, lname, search,
       filter, filterAnchorEl,
       loaded, unconnectedUser,
-      subscriptionExpired } = this.state;
+      subscriptionExpired, limitedUser } = this.state;
 
     let filterValues = {
       "": "All",
@@ -317,6 +322,25 @@ class SalesDashboard extends React.Component {
             {`We're in the process of building out this feature, so please check back in shortly. You can also reach out to `} 
             <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a>
             {` for any additional questions.`} <br /><br />
+            {`Thanks!`}
+          </Typography>
+        </Grid>
+      </Grid>
+    } else if (limitedUser){
+      return <Grid container justify='center' style={{ minHeight: dimensions.height }}>
+        <Grid item xs={10} sm={7} md={5}
+          container direction='column' justify='center' alignItems='center'>
+          <Typography align='center' gutterBottom
+            color='textPrimary'
+            style={{ fontSize: 38, fontWeight: 600 }}>
+            {`Limited Access`}
+          </Typography>
+          <Typography align='center'
+            color='textSecondary'
+            style={{ fontSize: 18 }}>
+            {`You don't have access to this feature today. While we're working on a feature for users granted limited-functionality, today, your access is limited to uploading contacts and receiving introduction requests.`}<br /><br /> {`If you're having issues, please reach out to `}
+            <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a>
+            {` for support.`} <br /><br />
             {`Thanks!`}
           </Typography>
         </Grid>
