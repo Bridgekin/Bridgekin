@@ -1,0 +1,1 @@
+json.extract! sales_network_invite, :id, :sender_id, :network_id, :email, :fname, :lname, :user_type, :link_code

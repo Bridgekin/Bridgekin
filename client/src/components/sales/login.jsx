@@ -14,15 +14,23 @@ import { salesSignup, googleSalesLogin } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
 import { fetchUserNetworks, setCurrentNetwork, clearSearchResults } from '../../actions/sales_network_actions'
+import { fetchNetworkInviteByCode } from '../../actions/sales_network_invites_actions';
+import queryString from 'query-string';
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state, ownProps) => {
+  const values = queryString.parse(ownProps.location.search)
+  return {
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
   resultNetworks: state.entities.sales.searchNetworks,
   userErrors: state.errors.users,
   salesUserNetworks: state.entities.sales.salesUserNetworks,
   networkDetails: state.entities.sales.networkDetails,
-});
+  page: ownProps.match.params.page,
+  salesNetworks: state.entities.sales.salesNetworks,
+  salesNetworkInvites: state.entities.sales.salesNetworkInvites,
+  code: values.code
+}};
 
 const mapDispatchToProps = dispatch => ({
   searchNetworks: title => dispatch(searchNetworks(title)),
@@ -33,7 +41,8 @@ const mapDispatchToProps = dispatch => ({
   googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload)),
   fetchUserNetworks: () => dispatch(fetchUserNetworks()),
   setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId)),
-  clearSearchResults: () => dispatch(clearSearchResults())
+  clearSearchResults: () => dispatch(clearSearchResults()),
+  fetchNetworkInviteByCode: code => dispatch(fetchNetworkInviteByCode(code))
 });
 
 const styles = theme => ({
@@ -82,12 +91,31 @@ class SalesLogin extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.retrieveNetworks = this.retrieveNetworks.bind(this);
     this.handleSignup = this.handleSignup.bind(this);
-    this.backPage = this.backPage.bind(this);
     this.getLoginInfo = this.getLoginInfo.bind(this);
   }
 
   componentDidMount(){
     this.props.clearSearchResults();
+
+    const { code } = this.props;
+    if(code){
+      this.props.fetchNetworkInviteByCode(code)
+      .then(() => {
+        const { salesNetworkInvites, salesNetworks } = this.props;
+        let invite;
+        Object.values(salesNetworkInvites).forEach(result => {
+          if(result.linkCode === code){
+            invite = result;
+          }
+        })
+        this.setState({ invite,
+          fname: invite.fname,
+          lname: invite.lname,
+          email: invite.email,
+          target: salesNetworks[invite.networkId]
+        })
+      })
+    }
   }
 
   handleChange(field){
@@ -98,7 +126,8 @@ class SalesLogin extends React.Component {
 
   handlePage(network){
     return e => {
-      this.setState({ target: network, page: 'signup'})
+      this.setState({ target: network },
+        () => this.props.history.push('/sales/login'))
     }
   }
 
@@ -115,14 +144,20 @@ class SalesLogin extends React.Component {
   }
 
   handleSignup(e){
+    const { code } = this.props;
     const { email, password, fname, lname, target } = this.state;
     let payload = { email, password, fname, lname,
       domain: target.domain
     }
-    this.props.salesSignup(payload)
-    .then(() => { 
-      this.props.openSignup({ page: 'response' });
-    })
+
+    if(code){
+
+    } else {
+      this.props.salesSignup(payload)
+      .then(() => { 
+        this.props.openSignup({ page: 'response' });
+      })
+    }
   }
 
   handleLogin(){
@@ -159,10 +194,6 @@ class SalesLogin extends React.Component {
     this.props.searchNetworks(networkDomainUrl)
   }
 
-  backPage(){
-    this.setState({ page: 'login'})
-  }
-
   getLoginInfo(payload){
     this.props.googleSalesLogin(payload)
     .then(() => {
@@ -176,14 +207,16 @@ class SalesLogin extends React.Component {
   }
 
   getContent(){
-    const { classes, dimensions, resultNetworks, networkDetails } = this.props;
-    const { email, password, networkDomainUrl, page, fname, lname, target } = this.state;
+    const { classes, dimensions, resultNetworks, networkDetails, page } = this.props;
+    const { email, password, networkDomainUrl, fname, lname, target } = this.state;
 
     switch(page){
+      case "invite":
+        return 'invite'
       case 'signup':
         let signupComp = <Grid item xs={8} sm={6} md={4}container direction='column'>
           <div style={{ marginBottom: 25 }}>
-            <Button onClick={this.backPage}>
+            <Button onClick={()=> this.props.history('/sales/login')}>
               {`Back`}
             </Button>
           </div>

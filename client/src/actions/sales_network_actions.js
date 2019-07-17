@@ -14,6 +14,10 @@ export const CLEAR_SALES_NETWORK_DETAILS = 'CLEAR_SALES_NETWORK_DETAILS';
 
 export const SET_CURRENT_SALES_NETWORK = 'SET_CURRENT_SALES_NETWORK';
 
+export const RECEIVE_SALES_NETWORKS = 'RECEIVE_SALES_NETWORKS';
+export const RECEIVE_SALES_NETWORK = 'RECEIVE_SALES_NETWORK';
+export const REMOVE_SALES_NETWORK = "REMOVE_SALES_NETWORK";
+
 export const retrieveSearchResults = salesNetworks => ({
   type: RECEIVE_SEARCH_NETWORKS,
   salesNetworks,
@@ -49,6 +53,21 @@ export const setCurrentNetwork = (networkId) => ({
   type: SET_CURRENT_SALES_NETWORK,
   networkId
 })
+
+export const receiveSalesNetworks = networks => ({
+  type: RECEIVE_SALES_NETWORKS,
+  networks,
+});
+
+export const receiveSalesNetwork = network => ({
+  type: RECEIVE_SALES_NETWORK,
+  network,
+});
+
+export const removeSalesNetwork = (networkId) => ({
+  type: REMOVE_SALES_NETWORK,
+  networkId
+});
 
 export const fetchUserNetworks = () => dispatch => (
   SalesApiUtil.fetchUserNetworks()

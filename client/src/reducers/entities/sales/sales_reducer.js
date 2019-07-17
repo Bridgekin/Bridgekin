@@ -14,6 +14,7 @@ import currentSalesNetworkReducer from './current_sales_network_reducer.js'
 import salesProductReducer from './sales_product_reducer.js'
 import salesNetworkInvitesReducer from './sales_network_invite_reducer.js'
 import networkAdminMapReducer from './sales_network_admin_reducer.js'
+import salesNetworksReducer from './sales_network_reducer.js'
 
 export default combineReducers({
   searchNetworks: searchNetworksReducer,
@@ -29,5 +30,6 @@ export default combineReducers({
   currentSalesNetwork: currentSalesNetworkReducer,
   salesProducts: salesProductReducer,
   salesNetworkInvites: salesNetworkInvitesReducer,
-  networkAdminMap: networkAdminMapReducer
+  networkAdminMap: networkAdminMapReducer,
+  salesNetworks: salesNetworksReducer
 })

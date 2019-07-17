@@ -20,7 +20,7 @@ const mapStateToProps = (state, ownProps) => ({
   dimensions: state.util.window,
   networkId: ownProps.match.params.networkId,
   networkAdminMap: state.entities.sales.networkAdminMap,
-  salesUserNetworks: state.entities.sales.salesUserNetworks
+  salesUserNetworks: state.entities.sales.salesUserNetworks,
 });
 
 const mapDispatchToProps = dispatch => ({

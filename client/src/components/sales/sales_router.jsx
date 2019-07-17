@@ -97,7 +97,7 @@ class SalesRouter extends React.Component {
           <Route path="/sales/admin_signup/:page" 
             render={(props) => <SalesAdminSignup {...props} loadUserNetworks={this.loadUserNetworks} />}/>
           {/* SalesLogin should stay a normal routes so that we don't load the next pages too quickly - think componentDidMount on Dashboard */}
-          <Route path="/sales/login"
+          <Route path="/sales/login/:page?"
             render={(props) => <SalesLogin {...props} loadUserNetworks={this.loadUserNetworks} />} />
           <SalesAuthRoute path="/" component={SalesLandingPage} />
         </Switch>

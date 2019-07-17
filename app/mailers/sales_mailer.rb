@@ -108,6 +108,7 @@ class SalesMailer < ApplicationMailer
 
   def send_network_invitation_email(network_invite, current_user)
     @network_invite = network_invite
+    @sales_network = network_invite.network
     @current_user = current_user
 
     subject = "Bridgekin Network Invitation - From #{@current_user.fname.capitalize}"

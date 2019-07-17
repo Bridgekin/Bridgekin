@@ -1,6 +1,6 @@
 class Api::SalesNetworkInvitesController < ApiController
-  before_action :authenticate_user
-  before_action :set_network
+  before_action :authenticate_user, except: [:show_by_referral_code]
+  before_action :set_network, except: [:show_by_referral_code]
   # before_action :confirm_is_network_admin
   before_action :get_network_admins
 
@@ -17,7 +17,9 @@ class Api::SalesNetworkInvitesController < ApiController
   end
 
   def show_by_referral_code
-    @sales_network_invite = SalesNetworkInvite.find_by(link_code: params[:code])
+    @sales_network_invite = SalesNetworkInvite.includes(:network).find_by(link_code: params[:link_code])
+
+    @sales_network = @sales_network_invite.network
     render :show
   end
 

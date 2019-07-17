@@ -1,7 +1,7 @@
 import * as SalesNetworkInviteApiUtil from '../util/sales_network_invite_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveSalesNetworkInviteErrors } from './error_actions';
-import { receiveUserNetwork } from './sales_network_actions';
+import { receiveUserNetwork, receiveSalesNetwork } from './sales_network_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 
@@ -53,6 +53,21 @@ export const createNetworkInvites = (payload) => dispatch => (
   SalesNetworkInviteApiUtil.createNetworkInvites(payload)
     .then(handleErrors)
     .then(data => data)
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      dispatch(receiveSalesNetworkInviteErrors(errors))
+    })
+);
+
+export const fetchNetworkInviteByCode = (code) => dispatch => (
+  SalesNetworkInviteApiUtil.fetchNetworkInviteByCode(code)
+    .then(handleErrors)
+    .then(data => {
+      dispatch(receiveSalesNetworkInvite(data.salesNetworkInvite))
+      dispatch(receiveSalesNetwork(data.salesNetwork))
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
