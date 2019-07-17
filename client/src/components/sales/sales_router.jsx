@@ -20,6 +20,7 @@ import { AuthRoute,
 } from '../../util/route_util';
 
 import Loading from '../loading';
+import NotFound from '../not_found';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
@@ -93,7 +94,8 @@ class SalesRouter extends React.Component {
           {/* SalesLogin should stay a normal routes so that we don't load the next pages too quickly - think componentDidMount on Dashboard */}
           <Route path="/sales/login/:page?"
             render={(props) => <SalesLogin {...props} loadUserNetworks={this.loadUserNetworks} />} />
-          <SalesAuthRoute path="/" component={SalesLandingPage} />
+          <SalesAuthRoute path="/sales" component={SalesLandingPage} />
+          <Route component={NotFound} />
         </Switch>
       </div>
     } else {

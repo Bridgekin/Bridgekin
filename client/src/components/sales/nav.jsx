@@ -76,8 +76,8 @@ const styles = theme => ({
   },
   topNav:{
     // backgroundImage: "linear-gradient(rgb(255, 255, 255, 0), rgb(255, 255, 255, 1))",
-    backgroundColor: 'white',
-    color: 'black',
+    backgroundColor: 'none',
+    // color: 'black',
     width: '100%',
     boxShadow: 'none',
     position: 'fixed',
@@ -86,6 +86,10 @@ const styles = theme => ({
   navHome:{
     backgroundColor: 'rgb(255, 255, 255, 0)',
     transition: '0.2s',
+    width: '100%',
+    boxShadow: 'none',
+    position: 'fixed',
+    top: 0
   },
   nav: {
     backgroundColor: 'white',
@@ -133,7 +137,7 @@ class SalesNav extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isTop: false
+      isTop: true
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.isExpiredSub = this.isExpiredSub.bind(this);
@@ -178,7 +182,8 @@ class SalesNav extends React.Component {
 
   render() {
     const { classes, siteTemplate, currentUser,
-    networkDetails, currentSalesNetworkId } = this.props;
+    networkDetails, currentSalesNetworkId,
+      onHomePage } = this.props;
     const { isTop } = this.state;
 
     const logoComp = <div
@@ -226,7 +231,7 @@ class SalesNav extends React.Component {
 
     return <div>
       <AppBar position="static" 
-        className={isTop ? classes.topNav : classes.nav}>
+        className={(isTop && onHomePage) ? classes.navHome : classes.nav}>
         <Toolbar className={classes.toolbar}>
           <Grid container alignItems='center' justify='space-between'>
             {logoComp}

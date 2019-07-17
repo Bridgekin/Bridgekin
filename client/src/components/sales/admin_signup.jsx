@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -501,11 +502,14 @@ class AdminSignup extends React.Component {
               value="msa"
               style={{ marginRight: 5}}
             />
-            {`I agree to the Master Service Agreement.`}
+            {`I agree to the `}
+            <Link to="/masterserviceagreement">Master Service Agreement.</Link>
           </Typography>
-          <Typography gutterBottom
-            style={{ fontSize: 12 }}>
-            {`By registering I confirm that I have read and agree to the Privacy Statement.`}
+          <Typography color='textSecondary'
+            style={{ fontSize: 12, margin: "15px 0px" }}>
+            {`By registering, I confirm that I have read and agree to the `}
+            <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
+            <Link to="/useragreement">Terms Of Use.</Link>
           </Typography>
           <Grid container justify='center'>
             <Button color='primary' variant='contained'

@@ -1,7 +1,8 @@
 <p>Hi <%= @requestor.fname.capitalize %>,</p>
 
-<p>We've reached out to <%= @recipient.fname.capitalize %> about their contact <%= @contact.fname.capitalize %>, but declined because:<br><br>
-Reason: <%= @reason || "" %></p>
+<p>We've reached out to <%= @recipient.fname.capitalize %> about their contact <%= @contact.fname.capitalize %>, but declined because:</p>
+<p>Reason: <%= @reason || "" %></p>
+<p>Additional Details: <%= @details || "" %></p>
 
 <p>Cheers,<br>
 The Bridgekin Team</p>

@@ -52,7 +52,7 @@ class SalesNetwork < ApplicationRecord
     sales_networks = current_user.sales_networks
     sales_user_networks = current_user.sales_user_networks
     sales_admin_networks = current_user.sales_admin_networks
-    current_network_id = sales_networks.first.id
+    current_network_id = sales_networks.first.id if sales_networks.first
     network_details = SalesNetwork.includes(:members, :admins, :subscribed_products).generate_network_details(sales_networks)
 
     return sales_networks, sales_user_networks, sales_admin_networks, current_network_id, network_details

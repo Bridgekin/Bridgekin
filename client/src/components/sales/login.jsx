@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -264,6 +265,12 @@ class SalesLogin extends React.Component {
             type='password'
             onChange={this.handleChange('password')}
             onMouseUp={this.handleChange('password')} />
+          <Typography color='textSecondary'
+          style={{ fontSize: 12, margin: "15px 0px"}}>
+            {`By registering, I confirm that I have read and agree to the `}
+            <Link to="/privacypolicy">Privacy Policy</Link> {` and `} 
+            <Link to="/useragreement">Terms Of Use.</Link>
+          </Typography>
           <div style={{ marginTop: 20}}>
             <Button color='primary' variant='contained'
             onClick={this.handleSignup}>

@@ -175,7 +175,7 @@ class RespondToIntro extends React.Component {
           {intro.referralBonus && 
             <Typography align='center'
               style={{ fontSize: 16 }}>
-            {`Referral Amount:`}<b>{` ${intro.referralUnit}${intro.referralBonus}`}</b>
+            {`Referral Amount: `}<b>{intro.referralUnit === '$' ? `$${intro.referralBonus}` : `${intro.referralBonus}%`}</b>
             </Typography>}
 
           <Grid container justify='center'

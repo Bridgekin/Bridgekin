@@ -136,6 +136,7 @@ class ResultCard extends React.Component {
                   </Typography>
                 </Grid>}
               </Grid>
+
               <Grid item xs={9}
               style={{ padding: 16}}>
                 <div style={{ height: 64 }}>
@@ -143,21 +144,21 @@ class ResultCard extends React.Component {
                   style={{ fontSize: 18, textTransform: 'capitalize'}}>
                     {`${contact.fname} ${contact.lname}`}
                   </Typography>
-                  <Typography color='textPrimary' noWrap
+                  <Typography color={contact.position ? 'textPrimary':'textSecondary'} noWrap
                     style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                    {`${contact.position || "Position: N/A"}`}
+                    {`${contact.position || "Contact Data Not Available"}`}
                   </Typography>
-                  <Typography color='textPrimary' noWrap
+                  <Typography color={contact.company ? 'textPrimary':'textSecondary'} noWrap
                     style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                    {`${contact.company || "Company: N/A"}`}
+                    {`${contact.company || "Contact Data Not Available"}`}
                   </Typography>
                 </div>
                 
                 <div className={classes.nameDivider}/>
 
-                <Typography color='textPrimary' noWrap
+                <Typography color={contact.location ? 'textPrimary':'textSecondary'} noWrap
                   style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                  {`${contact.location || "Location: N/A"}`}
+                  {`${contact.location || "Contact Data Not Available"}`}
                 </Typography>
 
                 <Grid container style={{ marginTop: 5}}>

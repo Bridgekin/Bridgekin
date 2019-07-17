@@ -36,6 +36,7 @@ import NetworkAdmin from './components/networks/network_admin';
 
 import UserAgreement from './components/terms/user_agreement';
 import PrivacyPolicy from './components/terms/privacy_policy';
+import MasterServiceAgreement from './components/terms/master_service_agreement';
 
 import NotFound from './components/not_found';
 import ConfirmationError from './components/confirmation_error';
@@ -49,7 +50,6 @@ import HiringNav from './components/hiring/nav.jsx'
 import SalesRouter from './components/sales/sales_router.jsx'
 import SalesNav from './components/sales/nav.jsx'
 import SalesLandingPage from './components/sales/landing_page.jsx'
-
 
 export default ()=> (
   <div>
@@ -86,10 +86,11 @@ export default ()=> (
 
       <Route path="/useragreement" component={UserAgreement} />
       <Route path="/privacypolicy" component={PrivacyPolicy} />
+      <Route path="/masterserviceagreement" component={MasterServiceAgreement} />
       {/* <Route path="/shareopportunities/:linkCode" component={DirectLinkPage} /> */}
 
       {/* <AuthRoute path="/platform" component={HomePage} /> */}
-      <SalesAuthRoute path="/" component={SalesLandingPage} />
+      {/* <SalesAuthRoute path="/" component={SalesLandingPage} /> */}
 
       <Route component={NotFound} />
     </Switch>
