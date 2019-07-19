@@ -56,7 +56,7 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.take(100).each do |entry|
+    google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].nil? || entry['name'].blank?
       debugger
@@ -106,7 +106,7 @@ class ConnectSocialJob < ApplicationJob
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
     
-    parsed_file.take(100).each do |entry|
+    parsed_file.each do |entry|
       contact = SalesContact.find_similar_or_initialize_by("linkedin", current_user, {
         fname: entry["First Name"],
         lname: entry["Last Name"],
@@ -121,7 +121,8 @@ class ConnectSocialJob < ApplicationJob
         unless current_user.sales_contacts.include?(contact)
           current_user.sales_user_contacts.create(contact: contact)
         end
-        company = SalesCompany.find_by(title: contact.company)
+        # company = SalesCompany.find_by(title: contact.company)
+        company = SalesCompany.build_sales_company(contact.company)
 
         unless company.nil?
           HunterJob.perform_later(company, contact) if company.domain.present?

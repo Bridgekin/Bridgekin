@@ -10,6 +10,7 @@ class SalesCompany < ApplicationRecord
 
   def self.build_sales_company(title)
     company = SalesCompany.find_or_initialize_by(title: title)
+    return company unless company.id.nil?
 
     begin
       response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
@@ -30,14 +31,14 @@ class SalesCompany < ApplicationRecord
       end
       
       if company.save
-        #Turning off for the moment
-        # HunterJob.perform_later(company, contact) if company.domain.present?
+        return company
       else
         logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
       end
     rescue => e
       logger.error "Error getting and saving company, detailed here: #{e.errors}"
     end
+    nil
   end
 
   def grab_logo_image(url)
