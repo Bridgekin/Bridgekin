@@ -1,7 +1,7 @@
 require_relative '../../concerns/devise_controller_patch.rb'
 class Api::Users::ConfirmationsController < Devise::ConfirmationsController
   skip_before_action :verify_authenticity_token
-  # include DeviseControllerPatch
+  include DeviseControllerPatch
 
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])

@@ -8,27 +8,27 @@ module DeviseControllerPatch
     JwtService.encode(payload)
   end
 
-  def authenticate_user
-    if request.headers['Authorization']
-      begin
-        token = request.headers['Authorization'].split('"').last
-        jwt_decoded = JwtService.decode(token)
-        user_id = jwt_decoded['sub']
-        @user = User.includes(:notifications).find(user_id)
+  # def authenticate_user
+  #   if request.headers['Authorization']
+  #     begin
+  #       token = request.headers['Authorization'].split('"').last
+  #       jwt_decoded = JwtService.decode(token)
+  #       user_id = jwt_decoded['sub']
+  #       @user = User.includes(:notifications).find(user_id)
 
-        #set current_user
-        # @current_user = @user
-        #create new token
-        # @token = get_login_token!(@user)
+  #       #set current_user
+  #       # @current_user = @user
+  #       #create new token
+  #       # @token = get_login_token!(@user)
 
-      rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
-        head :unauthorized
-      end
+  #     rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+  #       head :unauthorized
+  #     end
 
-    else
-      head :unauthorized
-    end
-  end
+  #   else
+  #     head :unauthorized
+  #   end
+  # end
 
   def pundit_user
     @user
