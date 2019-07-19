@@ -448,7 +448,7 @@ class SalesDashboard extends React.Component {
         <Grid container justify='center'
           className={classes.grid}>
           <Grid item xs={12} sm={10}>
-            <Grid container justify='space-between'
+            <Grid container justify='flex-start'
             style={{ marginBottom: 30, padding: "0px 15px"}}>
               <Button onClick={this.handleMenuClick('filterAnchorEl')}
               style={{ textTransform: 'none'}}>
@@ -479,10 +479,6 @@ class SalesDashboard extends React.Component {
                   </MenuItem>
                 })}
               </Menu>
-              <Button color='primary' variant='contained'
-                onClick={this.connectNetworks}>
-                {`Connect Your Networks`}
-              </Button>
             </Grid>
             {searchComponent}
             <Paper>
