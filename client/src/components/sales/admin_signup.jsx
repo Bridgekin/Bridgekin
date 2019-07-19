@@ -494,23 +494,6 @@ class AdminSignup extends React.Component {
         </div>
 
         let submit = <div style={{ marginTop: 20}}>
-          <Typography gutterBottom 
-          style={{ fontSize: 12}}>
-            <Checkbox
-              checked={msa}
-              onChange={this.handleCheckedChange('msa')}
-              value="msa"
-              style={{ marginRight: 5}}
-            />
-            {`I agree to the `}
-            <Link to="/masterserviceagreement">Master Service Agreement.</Link>
-          </Typography>
-          <Typography color='textSecondary'
-            style={{ fontSize: 12, margin: "15px 0px" }}>
-            {`By registering, I confirm that I have read and agree to the `}
-            <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
-            <Link to="/useragreement">Terms Of Use.</Link>
-          </Typography>
           <Grid container justify='center'>
             <Button color='primary' variant='contained'
               disabled={this.isDisabledSubmit() || checkingValid}

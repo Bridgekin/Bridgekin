@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import {CardElement, injectStripe} from 'react-stripe-elements';
 import { Link } from 'react-router-dom';
 
@@ -7,20 +8,32 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { receiveUserErrors } from '../../../actions/error_actions';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+import { receiveUserErrors } from '../../../actions/error_actions';
+import { openSignup } from '../../../actions/modal_actions'
+
 import Img from 'react-image'
 import StripeBadge from '../../../static/Stripe badge/Outline Dark/powered_by_stripe.png';
+
+const mapStateToProps = (state, ownProps) => {
+};
+
+const mapDispatchToProps = dispatch => ({
+  receiveUserErrors: (errors) => dispatch(receiveUserErrors(errors)),
+  openSignup: payload => dispatch(openSignup(payload))
+});
 
 class CheckoutForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       complete: false,
-      submitting: false
+      submitting: false,
+      msa: false,
+      termsAgreement: false
     };
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -40,7 +53,7 @@ class CheckoutForm extends Component {
   }
 
   handleChange(field){
-    return e => this.setState({ [field]: this.setState({ [field]: e.target.checked})})
+    return e => this.setState({ [field]:  e.target.checked })
   }
 
   render() {
@@ -104,4 +117,4 @@ class CheckoutForm extends Component {
   }
 }
 
-export default injectStripe(CheckoutForm);
+export default connect(mapStateToProps, mapDispatchToProps)(injectStripe(CheckoutForm));
