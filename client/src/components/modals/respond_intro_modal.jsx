@@ -125,9 +125,17 @@ class RespondIntroModal extends React.Component {
       let contact = salesContacts[intro.contactId]
       switch(nextModal.decision){
         case "intro":
+          this.props.respondToRequest({
+            decision: nextModal.decision,
+            introId: nextModal.introId
+          })
           let email = contact.email
           let subject = intro.introSubject || ""
           let body = intro.introBody || ""
+
+          // OPEN EMAIL HERE
+          window.open(`mailto:${email}?subject=${subject}&body=${body}`)
+          
           this.setState({ 
             page: 'intro',
             email, subject, body, contact
@@ -136,7 +144,11 @@ class RespondIntroModal extends React.Component {
         case "prefer not":
           this.setState({ page: "prefer not", contact })
           break;
-        case "don't know": 
+        case "don't know":
+          this.props.respondToRequest({
+            decision: nextModal.decision,
+            introId: nextModal.introId
+          })
           this.setState({ page: "don't know"})
           break;
         case "response":
@@ -196,53 +208,23 @@ class RespondIntroModal extends React.Component {
 
     switch(page){
       case "intro":  
-        let intro = <Grid item xs={10} container direction='column'>
+        let intro = <Grid item xs={10} container>
           <Typography gutterBottom
-            style={{ fontSize: 16, fontWeight: 600 }}>
-            {`Message to Candidate`}
+            style={{ fontSize: 20, fontWeight: 600 }}>
+            {`Thanks for moving forward with this Introduction Request!`}
           </Typography>
-          <TextField 
-            fullWidth
-            label="Email"
-            variant='outlined'
-            value={email}
-            onChange={this.handleChange('email')}
-            style={{ marginBottom: 10}}
-          />
-          <TextField
-            fullWidth
-            label="Subject"
-            variant='outlined'
-            value={subject}
-            onChange={this.handleChange('subject')}
-          />
           <Typography gutterBottom
-            style={{ fontSize: 14, margin: "20px 0px 10px" }}>
-            {`Suggested Text (Feel free to edit)`}
+            style={{ fontSize: 16 }}>
+            {`We've opened your native email client and pre-filled the note to your contact. The rest is in your hands!`}
           </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows="12"
-            label="Body"
-            variant='outlined'
-            value={body}
-            onChange={this.handleChange('body')}
-          />
-          <Grid container justify="space-between"
-          style={{ marginTop: 15}}>
-            <Button variant='contained' color='default'
-            onClick={this.handleClose}>
-              {`Cancel`}
-            </Button>
-
-            <Button variant='contained' color='primary'
-            disabled={!email}
-              onClick={this.handleSubmit}>
-              {`Send`}
+          <Grid item xs={12}>
+            <Button style={{ margin: '0 auto', marginTop: 30 }}
+              onClick={this.redirectToStats} color='primary'>
+              {`Back to Stats`}
             </Button>
           </Grid>
         </Grid>
+
         return intro;
       case "prefer not":
         let refuse = <Grid item xs={10} container direction='column'>

@@ -56,16 +56,17 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.each do |entry|
+    google_contacts.take(100).each do |entry|
       #Skip any cases without emails
-      next if entry['email'].nil?
-      contact = SalesContact.find_or_initialize_by(email: entry['email'])
+      next if entry['email'].nil? || entry['name'].blank?
+      debugger
       #Set Contact's Name
-      if entry['name'].present?
-        name = Nameable.parse(entry['name'])
-        contact.fname = name.first
-        contact.lname = name.last
-      end
+      name = Nameable.parse(entry['name'])
+      contact = SalesContact.find_similar_or_initialize_by("google", current_user, {
+        email: entry['email'],
+        fname: name.first,
+        lname: name.last
+      })
       #Set Source
       contact.setSource(:google_upload)
       #Save Contact
@@ -105,19 +106,14 @@ class ConnectSocialJob < ApplicationJob
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
     
-    parsed_file.each do |entry|
-      contact = SalesContact.find_or_initialize_by(
+    parsed_file.take(100).each do |entry|
+      contact = SalesContact.find_similar_or_initialize_by("linkedin", current_user, {
         fname: entry["First Name"],
         lname: entry["Last Name"],
         company: entry["Company"],
         position: entry["Position"]
-      )
+      })
       contact.email = entry["Email Address"] if entry["Email Address"].present? && contact.email.blank?
-      # parsed_file.headers.each do |header|
-      #   if HEADERMAPPING[header].present? && contact[HEADERMAPPING[header]].blank?
-      #     contact[HEADERMAPPING[header]] = entry[header]
-      #   end
-      # end
       #Set Source
       contact.setSource(:linked_in_upload)
       if contact.save
@@ -125,35 +121,11 @@ class ConnectSocialJob < ApplicationJob
         unless current_user.sales_contacts.include?(contact)
           current_user.sales_user_contacts.create(contact: contact)
         end
-        # company = SalesCompany.find_or_initialize_by(title: contact.company)
+        company = SalesCompany.find_by(title: contact.company)
 
-        # begin
-        #   response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
-
-        #   parsed = JSON.parse(response.body)
-        #   answer = parsed.reduce({}) do |acc, entry|
-        #     if entry["name"].downcase == company.title.downcase
-        #       acc = entry
-        #     end
-        #     acc
-        #   end
-
-        #   if answer.present?
-        #     # debugger
-        #     company.domain = answer["domain"]
-        #     company.logo_url = answer["logo"]
-        #     company.grab_logo_image(answer["logo"]) if answer["logo"].present?
-        #   end
-          
-        #   if company.save
-        #     #Turning off for the moment
-        #     # HunterJob.perform_later(company, contact) if company.domain.present?
-        #   else
-        #     logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
-        #   end
-        # rescue => e
-        #   logger.error "Error getting and saving company, detailed here: #{e.errors}"
-        # end
+        unless company.nil?
+          HunterJob.perform_later(company, contact) if company.domain.present?
+        end
       else
         #Save failed contact if needed
         failed_saved_contacts << {

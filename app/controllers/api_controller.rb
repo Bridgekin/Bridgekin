@@ -18,7 +18,7 @@ class ApiController < ActionController::API
   def get_login_token!(user)
     payload = {
       "sub": user.id,
-      "exp": 14.days.from_now.to_i
+      "exp": 7.days.from_now.to_i
     }
     JwtService.encode(payload)
   end

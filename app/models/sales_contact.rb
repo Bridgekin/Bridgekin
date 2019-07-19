@@ -23,10 +23,17 @@ class SalesContact < ApplicationRecord
     "company" => :company
   }
 
+  EXCLUDE_CITIES = ["Cuba", "Iran", "North Korea", "Sudan", "Syria", "Crimea", "Russia", "Ukraine", "France", "Spain", "Sweden", "Norway", "Germany", "Finland", "Poland", "Italy", "United Kingdom", "Romania", "Belarus", "Kazakhstan", "Greece", "Bulgaria", "Iceland", "Hungary", "Portugal", "Austria", "Czech Republic", "Serbia", "Ireland", "Lithuania", "Latvia", "Croatia", "Bosnia", "Herzegovina", "Slovakia", "Estonia", "Denmark", "Switzerland", "Netherlands", "Moldova", "Belgium", "Albania", "North Macedonia", "Turkey", "Slovenia", "Montenegro", "Kosovo", "Cyprus", "Azerbaijan", "Luxembourg", "Georgia", "Andorra", "Malta", "Liechtenstein", "San Marino", "Monaco", "Vatican City"]
+
   def self.search_contacts(current_user, network, filter='', social_params ={})
     sales_contacts = network.member_contacts
-      .where.not(fname: '') #, company: '', position: '')
+      .where.not(fname: '') #, last_full_contact_lookup: nil)
       .distinct
+      # .where(google: true)
+      # .or(network.member_contacts
+      #   .where.not(fname: '', google: true)
+      #   .distinct)
+
     # Filter back setting
     sales_contacts = case filter
     when "teammates"
@@ -67,6 +74,58 @@ class SalesContact < ApplicationRecord
     friend_users = friends.to_a
 
     return sales_contacts, total, friend_map, friend_users
+  end
+
+  def self.find_similar_or_initialize_by(type, current_user, payload)
+    return SalesContact.find_or_initialize_by(payload)
+
+    case type
+    when "google"
+      contact = SalesContact.find_by(fname: payload[:fname], lname: payload[:lname]) || SalesContact.find_by(email: payload[:email])
+    when "linkedin"
+      company = SalesCompany.build_sales_company(payload[:company])
+      domain = company.domain unless company.nil?
+    else
+    end
+    contact
+  end
+
+  def self.delete_unauth_location?(location)
+    EXCLUDE_CITIES.each do |country|
+      return true if location.downcase.include?(country.downcase)
+    end
+    false
+  end
+
+  def normalize_location_and_delete?(location)
+    geocoder_results = Geocoder.search(location)
+
+    unless geocoder_results.empty?
+      address_obj = geocoder_results.first.data["address"]
+      return true if SalesContact.delete_unauth_location?(address_obj["country"])
+      self.location = geocoder_results.first.address
+      false
+    else
+      begin
+        response = RestClient.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/json",
+        { params: {
+          "input" => location,
+          "inputtype" => "textquery",
+          "key" => Rails.application.credentials.google_places[:api_key],
+          "fields" => "photos,formatted_address,name,rating,opening_hours,geometry"
+        }})
+        parsed = JSON.parse(response.body)
+        unless parsed["candidates"].empty?
+          location = parsed["candidates"].first["formatted_address"]
+          return true if SalesContact.delete_unauth_location?(location)
+          self.location = location
+        end
+        false
+      rescue => exception
+        logger.error "places api call failed for contact: #{self.id}"
+        false
+      end
+    end
   end
 
   def setSource(source)

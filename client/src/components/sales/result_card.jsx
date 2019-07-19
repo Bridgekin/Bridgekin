@@ -146,11 +146,11 @@ class ResultCard extends React.Component {
                   </Typography>
                   <Typography color={contact.position ? 'textPrimary':'textSecondary'} noWrap
                     style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                    {`${contact.position || "Contact Data Not Available"}`}
+                    {`${contact.position || "Position: N/A"}`}
                   </Typography>
                   <Typography color={contact.company ? 'textPrimary':'textSecondary'} noWrap
                     style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                    {`${contact.company || "Contact Data Not Available"}`}
+                    {`${contact.company || "Company: N/A"}`}
                   </Typography>
                 </div>
                 
@@ -158,7 +158,7 @@ class ResultCard extends React.Component {
 
                 <Typography color={contact.location ? 'textPrimary':'textSecondary'} noWrap
                   style={{ fontSize: 13, textTransform: 'capitalize' }}>
-                  {`${contact.location || "Contact Data Not Available"}`}
+                  {`${contact.location || "Location: N/A"}`}
                 </Typography>
 
                 <Grid container style={{ marginTop: 5}}>

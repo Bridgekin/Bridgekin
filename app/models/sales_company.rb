@@ -8,6 +8,38 @@ class SalesCompany < ApplicationRecord
   #   self.logo.attach(io: downloaded_image, filename: "cb_logo")
   # end
 
+  def self.build_sales_company(title)
+    company = SalesCompany.find_or_initialize_by(title: title)
+
+    begin
+      response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
+
+      parsed = JSON.parse(response.body)
+      answer = parsed.reduce({}) do |acc, entry|
+        if entry["name"].downcase == company.title.downcase
+          acc = entry
+        end
+        acc
+      end
+
+      if answer.present?
+        # debugger
+        company.domain = answer["domain"]
+        company.logo_url = answer["logo"]
+        company.grab_logo_image(answer["logo"]) if answer["logo"].present?
+      end
+      
+      if company.save
+        #Turning off for the moment
+        # HunterJob.perform_later(company, contact) if company.domain.present?
+      else
+        logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
+      end
+    rescue => e
+      logger.error "Error getting and saving company, detailed here: #{e.errors}"
+    end
+  end
+
   def grab_logo_image(url)
     begin
       tempfile = Down.download(url)
