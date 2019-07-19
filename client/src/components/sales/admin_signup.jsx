@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Loading from '../loading';
 import queryString from 'query-string'
@@ -97,6 +98,7 @@ class AdminSignup extends React.Component {
       state: '',
       zipcode: '',
       msa: false,
+      termsAgreement: false,
       duration: "monthly",
       renewal: true,
     }
@@ -220,10 +222,10 @@ class AdminSignup extends React.Component {
     const { page } = this.props;
     const { fname, lname, email, password,
       line1, city, state, zipcode,
-      title, domain} = this.state;
+      title, domain, termsAgreement} = this.state;
     
     if(page === "signup"){
-      return !fname || !lname || !email || !password || !title || !domain
+      return !fname || !lname || !email || !password || !title || !domain || !termsAgreement
     } else if (page === 'payment'){
       return !line1 || !city || !state || !zipcode
     }
@@ -237,7 +239,7 @@ class AdminSignup extends React.Component {
       title, domain, titleError,
       line1, city, state, zipcode,
       domainError, emailError, checkingValid,
-      msa } = this.state;
+      msa, termsAgreement } = this.state;
 
     let product = salesProducts[adminSignupLink.productId]
 
@@ -495,6 +497,41 @@ class AdminSignup extends React.Component {
 
         let submit = <div style={{ marginTop: 20}}>
           <Grid container justify='center'>
+            {/* <FormControlLabel
+              control={
+                <Checkbox
+                  checked={msa}
+                  data-cy='terms-checkbox'
+                  onChange={this.handleChange('msa')}
+                  value="msa"
+                />
+              }
+              label={
+                <Typography color='textSecondary'
+                  style={{ fontSize: 12, margin: "5px 0px" }}>
+                  {`I agree to the `}
+                  <Link to="/masterserviceagreement">Master Service Agreement.</Link>
+                </Typography>
+              }
+            /> */}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={termsAgreement}
+                  data-cy='terms-checkbox'
+                  onChange={this.handleCheckedChange('termsAgreement')}
+                  value="termsAgreement"
+                />
+              }
+              label={
+                <Typography color='textSecondary'
+                  style={{ fontSize: 12, margin: "5px 0px" }}>
+                  {`By registering, I confirm that I have read and agree to the `}
+                  <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
+                  <Link to="/useragreement">Terms Of Use.</Link>
+                </Typography>
+              }
+            />
             <Button color='primary' variant='contained'
               disabled={this.isDisabledSubmit() || checkingValid}
               onClick={this.handleChangePage('payment')}

@@ -65,41 +65,6 @@ class CheckoutForm extends Component {
         <div style={{ margin: "20px 0px"}}>
           <CardElement />
         </div>
-        {/* <FormControlLabel
-          control={
-            <Checkbox
-              checked={msa}
-              data-cy='terms-checkbox'
-              onChange={this.handleChange('msa')}
-              value="msa"
-            />
-          }
-          label={
-            <Typography color='textSecondary'
-              style={{ fontSize: 12, margin: "5px 0px" }}>
-              {`I agree to the `}
-              <Link to="/masterserviceagreement">Master Service Agreement.</Link>
-            </Typography>
-          }
-        /> */}
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={termsAgreement}
-              data-cy='terms-checkbox'
-              onChange={this.handleChange('termsAgreement')}
-              value="termsAgreement"
-            />
-          }
-          label={
-            <Typography color='textSecondary'
-              style={{ fontSize: 12, margin: "5px 0px" }}>
-              {`By registering, I confirm that I have read and agree to the `}
-              <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
-              <Link to="/useragreement">Terms Of Use.</Link>
-            </Typography>
-          }
-        />
 
         <Button color='primary' variant='contained'
           disabled={this.props.canSubmit() || submitting || !termsAgreement}
