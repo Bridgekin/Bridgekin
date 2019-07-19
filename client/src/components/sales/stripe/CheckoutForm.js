@@ -65,7 +65,7 @@ class CheckoutForm extends Component {
         <div style={{ margin: "20px 0px"}}>
           <CardElement />
         </div>
-        <FormControlLabel
+        {/* <FormControlLabel
           control={
             <Checkbox
               checked={msa}
@@ -81,7 +81,7 @@ class CheckoutForm extends Component {
               <Link to="/masterserviceagreement">Master Service Agreement.</Link>
             </Typography>
           }
-        />
+        /> */}
         <FormControlLabel
           control={
             <Checkbox
@@ -102,7 +102,7 @@ class CheckoutForm extends Component {
         />
 
         <Button color='primary' variant='contained'
-          disabled={this.props.canSubmit() || submitting || !msa || !termsAgreement}
+          disabled={this.props.canSubmit() || submitting || !termsAgreement}
           onClick={this.submit} fullWidth
           style={{textTransform: 'capitalize', marginTop: 10}}>
           {`Start Free 7 Day Trial`}

@@ -163,7 +163,7 @@ class NetworkInvite extends React.Component {
           <Typography align='center' gutterBottom
             color='textSecondary'
             style={{ fontSize: 18 }}>
-            {`Inviting more people is a great way to increase visibility and get more introductions! However, you admin is currently the only one who can access this feature. `}
+            {`Inviting more people is a great way to increase visibility and get more introductions! However, your admin is currently the only one who can access this feature. `}
           </Typography>
           <Typography align='center'
             color='textSecondary'

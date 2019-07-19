@@ -38,6 +38,7 @@ class Api::SalesIntrosController < ApiController
     if @sales_intro.save
       @sales_contact = @sales_intro.contact
       SalesMailer.request_sales_intro(@sales_intro).deliver_later
+      @actors = [@sales_intro.requestor, @sales_intro.recipient]
       render :show
     else
       render json: @sales_intro.errors.full_messages, status: 422
@@ -47,6 +48,7 @@ class Api::SalesIntrosController < ApiController
   def update
     if @sales_intro.update(intro_params)
       @sales_contact = @sales_intro.contact
+      @actors = [@sales_intro.requestor, @sales_intro.recipient]
       render :show
     else
       render json: @sales_intro.errors.full_messages, status: 422

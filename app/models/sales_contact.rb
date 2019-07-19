@@ -86,9 +86,9 @@ class SalesContact < ApplicationRecord
       contact = SalesContact.find_by(email:payload[:email])
       unless contact 
         contact = SalesContact.find_by(fname: payload[:fname],lname: payload[:lname])
-        company = SalesCompany.find_by(title: contact.company)
         import_domain = payload[:email].split('@').last
 
+        company = SalesCompany.find_by(title: contact.company)
         unless company && import_domain == company.domain
           contact = nil
         end

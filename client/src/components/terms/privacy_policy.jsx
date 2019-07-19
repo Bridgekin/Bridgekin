@@ -71,7 +71,7 @@ class TermsAndConditions extends Component {
                   gutterBottom className={classes.header}>
                   Bridgekin Privacy Policy
                 </Typography>
-                <Typography variant="body2" align='center' color='textPrimary'
+                <Typography variant="body2" align='left' color='textPrimary'
                   gutterBottom style={{ marginBottom: 30}}>
                   <PrivacyPolicyText />
                 </Typography>

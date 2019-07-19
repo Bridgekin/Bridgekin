@@ -6,8 +6,7 @@ class Api::Users::SessionsController < ApiController
   # acts_as_token_authentication_handler_for User, only: [:destroy]
 
   def create
-    @current_user = User.includes(:notifications)
-      .find_by(email: sign_in_params[:email].downcase)
+    @current_user = User.find_by(email: sign_in_params[:email].downcase)
 
     if @current_user && @current_user.valid_password?(sign_in_params[:password]) && @current_user.confirmed?
       #Get Tokens and track

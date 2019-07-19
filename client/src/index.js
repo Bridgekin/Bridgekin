@@ -32,6 +32,7 @@ getPublicEnv()
     window.amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
   }
 })
+.catch(error => error)
 
 if(dev){
   window.stripe_pk = "pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL"

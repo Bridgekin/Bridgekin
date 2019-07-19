@@ -224,7 +224,7 @@ class SalesNav extends React.Component {
           onClick={() => this.props.history.push(`/sales/connect_social`)}>
           <Typography color='textSecondary'
             className={classes.navItem}>
-            {`Connect`}
+            {`Import Contacts`}
           </Typography>
         </Button>}
       {currentUser && 

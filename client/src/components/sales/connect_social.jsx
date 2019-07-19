@@ -271,7 +271,7 @@ class ConnectSocial extends React.Component {
         <Typography fullWidth gutterBottom
         align='center'
         style={{ fontSize: 16}}>
-          {`Nobody will be able to reach out to your contacts without your permission on a case by case basis.`}
+          {`Nobody will be able to reach out to your contacts on the platform, without your permission, through an introduction request`}
         </Typography>
       </Grid>
     </Grid>
@@ -313,6 +313,7 @@ class ConnectSocial extends React.Component {
                 {`3) On the left of the page click “How LinkedIn uses your data”. Once it directs you to that section click the second line item that says “Download your data`} <br /><br/>
                 {`4) Under “Pick and choose” click the checkbox next to “Connections” and press download. It may take about 10-15 minutes, at which point you’ll get notified via email by LinkedIn.`}<br/><br/>
                 {`5) Once downloaded, unzip the file. You should see a "connections.csv" file. Upload the "connections.csv" file (Not the entire folder or any other files in that folder)`}<br /><br />
+                {`Note: Upon upload, your company and/or any contacts you allow, will be able to see your LinkedIn connections. Nobody will be able to reach out to your contacts on the platform, without your permission, through an introduction request. Your imported contacts can be removed at any time and deleted from Bridgekin upon your request.`}
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
@@ -364,7 +365,7 @@ class ConnectSocial extends React.Component {
                 {`1) Click the button above and select the Google account you’d like to sign in with`} <br/><br/>
                 {`2) Grant Bridgekin permission to see and download your contacts`} <br/><br/>
                 {`3) If you have more than one Google account you can sync your contacts across multiple accounts`} <br/><br/>
-                {`Note: We only access your Google contacts and sender, receiver and date on your emails and are in no way able to read the email body of any messages you’ve sent (or will send) or send emails on your behalf.`}
+                {`Note: Upon login, your company users and/or any contacts you allow, will be able to see your Google contacts. Nobody will be able to reach out to your contacts on the platform, without your permission, through an introduction request. Your imported contacts can be removed at any time and deleted from Bridgekin upon your request. We only access your Google contacts and sender, receiver and date on your emails and are in no way able to read the email body of any messages you’ve sent (or will send) or send emails on your behalf. `}
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
