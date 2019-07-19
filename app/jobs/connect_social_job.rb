@@ -56,7 +56,7 @@ class ConnectSocialJob < ApplicationJob
 
   def ingestGoogle(google_contacts, current_user)    
     failed_saved_contacts = Array.new
-    google_contacts.take(100).each do |entry|
+    google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].blank? || entry['name'].blank?
       #Set Contact's Name & Get Contact
@@ -105,7 +105,7 @@ class ConnectSocialJob < ApplicationJob
   def ingestLinkedIn(parsed_file, current_user)
     failed_saved_contacts = Array.new
     
-    parsed_file.take(100).each do |entry|
+    parsed_file.each do |entry|
       #Skip any cases without emails
       next if entry["First Name"].blank? || entry["Company"].blank?
       #Get Contact
