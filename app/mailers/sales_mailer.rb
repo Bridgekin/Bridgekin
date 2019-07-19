@@ -96,7 +96,7 @@ class SalesMailer < ApplicationMailer
     @requestor = @sales_intro.requestor
     @recipient = @sales_intro.recipient
 
-    subject = "Warm Introduction in Progress - #{@contact.fname.capitalize} <> #{@contact.lname.capitalize}"
+    subject = "Warm Introduction Update - #{@contact.fname.capitalize} <> #{@contact.lname.capitalize}"
 
     mail(to: @requestor.email, subject: subject, cc: @recipient.email)
 

@@ -163,15 +163,13 @@ class NetworkInvite extends React.Component {
           <Typography align='center' gutterBottom
             color='textSecondary'
             style={{ fontSize: 18 }}>
-            {`Inviting more people is a great way to increase value from your team's social graph. However, only a network admin is allowed to send invitations `}
+            {`Inviting more people is a great way to increase visibility and get more introductions! However, you admin is currently the only one who can access this feature. `}
           </Typography>
           <Typography align='center'
             color='textSecondary'
             style={{ fontSize: 18 }}>
-            {`Please reach out to your network admin to invite users. If you need any help, reach out to us at `}
-            <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a>
-            {` for any additional questions.`} <br /><br />
-            {`Thanks!`}
+            {`Please reach out to your network admin to invite additional users. If you need help or have any questions you can email us at `}
+            <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a> {`.`}
           </Typography>
         </Grid>
       </Grid>

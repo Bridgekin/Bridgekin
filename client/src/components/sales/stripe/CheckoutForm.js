@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {CardElement, injectStripe} from 'react-stripe-elements';
+import { Link } from 'react-router-dom';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -7,6 +8,9 @@ import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { receiveUserErrors } from '../../../actions/error_actions';
+import Typography from '@material-ui/core/Typography';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Img from 'react-image'
 import StripeBadge from '../../../static/Stripe badge/Outline Dark/powered_by_stripe.png';
@@ -19,6 +23,7 @@ class CheckoutForm extends Component {
       submitting: false
     };
     this.submit = this.submit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   async submit(ev) {
@@ -34,8 +39,12 @@ class CheckoutForm extends Component {
     }
   }
 
+  handleChange(field){
+    return e => this.setState({ [field]: this.setState({ [field]: e.target.checked})})
+  }
+
   render() {
-    const { submitting } = this.state;
+    const { submitting, msa, termsAgreement } = this.state;
     if (this.state.complete) return <h1>Purchase Complete</h1>;
     
     return (
@@ -43,10 +52,46 @@ class CheckoutForm extends Component {
         <div style={{ margin: "20px 0px"}}>
           <CardElement />
         </div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={msa}
+              data-cy='terms-checkbox'
+              onChange={this.handleChange('msa')}
+              value="msa"
+            />
+          }
+          label={
+            <Typography color='textSecondary'
+              style={{ fontSize: 12, margin: "5px 0px" }}>
+              {`I agree to the `}
+              <Link to="/masterserviceagreement">Master Service Agreement.</Link>
+            </Typography>
+          }
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={termsAgreement}
+              data-cy='terms-checkbox'
+              onChange={this.handleChange('termsAgreement')}
+              value="termsAgreement"
+            />
+          }
+          label={
+            <Typography color='textSecondary'
+              style={{ fontSize: 12, margin: "5px 0px" }}>
+              {`By registering, I confirm that I have read and agree to the `}
+              <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
+              <Link to="/useragreement">Terms Of Use.</Link>
+            </Typography>
+          }
+        />
+
         <Button color='primary' variant='contained'
-          disabled={this.props.canSubmit() || submitting}
+          disabled={this.props.canSubmit() || submitting || !msa || !termsAgreement}
           onClick={this.submit} fullWidth
-          style={{textTransform: 'capitalize'}}>
+          style={{textTransform: 'capitalize', marginTop: 10}}>
           {`Start Free 7 Day Trial`}
           {submitting  && <CircularProgress size={34}
           style={{ position: 'absolute', top: 0, color: 'grey'}}/>}

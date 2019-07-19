@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import ImportGoogle from '../google/import_contacts';
 import Capitalize from 'capitalize';
@@ -91,7 +93,8 @@ class SalesLogin extends React.Component {
       password: '',
       networkDomainUrl: '',
       page: 'login',
-      target: {}
+      target: {},
+      termsAgreement: false
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -117,7 +120,7 @@ class SalesLogin extends React.Component {
             invite = result;
           }
         })
-        debugger
+
         this.setState({ invite,
           fname: invite.fname,
           lname: invite.lname,
@@ -132,12 +135,18 @@ class SalesLogin extends React.Component {
 
   handleChange(field){
     return e => {
-      this.setState({ [field]: e.target.value})
+      if (field === 'termsAgreement') {
+        this.setState({ [field]: e.target.checked });
+      }
+      else {
+        this.setState({ [field]: e.target.value });
+      }
     }
   }
 
   handlePage(page = "", network = {}){
     return async e => {
+      this.props.clearSearchResults();
       this.setState({ target: network, email: '', fname: '', lname: '', password: '' });
       await this.props.history.push(`/sales/login/${page}`)
     }
@@ -216,7 +225,7 @@ class SalesLogin extends React.Component {
 
   getContent(){
     const { classes, dimensions, resultNetworks, networkDetails, page } = this.props;
-    const { email, password, networkDomainUrl, fname, lname, target } = this.state;
+    const { email, password, networkDomainUrl, fname, lname, target, termsAgreement } = this.state;
 
     switch(page){
       case 'signup':
@@ -265,14 +274,27 @@ class SalesLogin extends React.Component {
             type='password'
             onChange={this.handleChange('password')}
             onMouseUp={this.handleChange('password')} />
-          <Typography color='textSecondary'
-          style={{ fontSize: 12, margin: "15px 0px"}}>
-            {`By registering, I confirm that I have read and agree to the `}
-            <Link to="/privacypolicy">Privacy Policy</Link> {` and `} 
-            <Link to="/useragreement">Terms Of Use.</Link>
-          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={termsAgreement}
+                data-cy='terms-checkbox'
+                onChange={this.handleChange('termsAgreement')}
+                value="termsAgreement"
+              />
+            }
+            label={
+              <Typography color='textSecondary'
+                style={{ fontSize: 12, margin: "15px 0px" }}>
+                {`By registering, I confirm that I have read and agree to the `}
+                <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
+                <Link to="/useragreement">Terms Of Use.</Link>
+              </Typography>
+            }
+          />
           <div style={{ marginTop: 20}}>
             <Button color='primary' variant='contained'
+            disabled={!termsAgreement}
             onClick={this.handleSignup}>
               {`Signup`}
             </Button>

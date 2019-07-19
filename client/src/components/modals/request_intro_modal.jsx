@@ -98,7 +98,7 @@ class RequestIntroModal extends React.Component {
     const nextModal = nextProps.requestIntroModal;
     const currentModal = this.props.requestIntroModal;
     if (nextModal.open && currentModal.open !== nextModal.open) {
-      this.setState({ page: nextModal.page })
+      this.setState({ page: nextModal.page, target: null })
     }
     return true;
   }

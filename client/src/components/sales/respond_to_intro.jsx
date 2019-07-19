@@ -100,7 +100,7 @@ class RespondToIntro extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    if (nextProps.currentUser && nextProps.currentUser !== this.props.currentUser){
+    if (nextProps.currentUser && !this.props.currentUser){
       this.loadIntro()
     }
     return true

@@ -58,9 +58,8 @@ class ConnectSocialJob < ApplicationJob
     failed_saved_contacts = Array.new
     google_contacts.each do |entry|
       #Skip any cases without emails
-      next if entry['email'].nil? || entry['name'].blank?
-      debugger
-      #Set Contact's Name
+      next if entry['email'].blank? || entry['name'].blank?
+      #Set Contact's Name & Get Contact
       name = Nameable.parse(entry['name'])
       contact = SalesContact.find_similar_or_initialize_by("google", current_user, {
         email: entry['email'],
@@ -107,6 +106,9 @@ class ConnectSocialJob < ApplicationJob
     failed_saved_contacts = Array.new
     
     parsed_file.each do |entry|
+      #Skip any cases without emails
+      next if entry["First Name"].blank? || entry["Company"].blank?
+      #Get Contact
       contact = SalesContact.find_similar_or_initialize_by("linkedin", current_user, {
         fname: entry["First Name"],
         lname: entry["Last Name"],
@@ -121,11 +123,9 @@ class ConnectSocialJob < ApplicationJob
         unless current_user.sales_contacts.include?(contact)
           current_user.sales_user_contacts.create(contact: contact)
         end
-        # company = SalesCompany.find_by(title: contact.company)
-        company = SalesCompany.build_sales_company(contact.company)
-
+        # company = contact.sales_company
         unless company.nil?
-          HunterJob.perform_later(company, contact) if company.domain.present?
+          # HunterJob.perform_later(company, contact) if company.domain.present?
         end
       else
         #Save failed contact if needed

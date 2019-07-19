@@ -21,6 +21,7 @@ class Api::SalesIntrosController < ApiController
 
   def show
     @sales_contact = @sales_intro.contact
+    @actors = [@sales_intro.requestor, @sales_intro.recipient]
     render :show
   end
 
@@ -98,7 +99,7 @@ class Api::SalesIntrosController < ApiController
   end
 
   def set_sales_intro
-    @sales_intro = SalesIntro.includes(:contact)
+    @sales_intro = SalesIntro.includes(:contact, :requestor, :recipient)
       .find(params[:id])
   end
 end

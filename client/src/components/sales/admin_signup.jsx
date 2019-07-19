@@ -220,10 +220,10 @@ class AdminSignup extends React.Component {
     const { page } = this.props;
     const { fname, lname, email, password,
       line1, city, state, zipcode,
-      title, domain, msa} = this.state;
+      title, domain} = this.state;
     
     if(page === "signup"){
-      return !fname || !lname || !email || !password || !title || !domain || !msa
+      return !fname || !lname || !email || !password || !title || !domain
     } else if (page === 'payment'){
       return !line1 || !city || !state || !zipcode
     }

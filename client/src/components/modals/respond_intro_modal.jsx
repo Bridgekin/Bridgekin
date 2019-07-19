@@ -35,7 +35,8 @@ const mapStateToProps = state => ({
   respondToRequestModal: state.modals.respondToRequest,
   salesIntroErrors: state.errors.salesIntro,
   salesIntros: state.entities.sales.salesIntros,
-  salesContacts: state.entities.sales.salesContacts
+  salesContacts: state.entities.sales.salesContacts,
+  users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -134,22 +135,26 @@ class RespondIntroModal extends React.Component {
           let body = intro.introBody || ""
 
           // OPEN EMAIL HERE
-          window.open(`mailto:${email}?subject=${subject}&body=${body}`)
-          
-          this.setState({ 
-            page: 'intro',
-            email, subject, body, contact
-          })
+          window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self')
+          this.handleClose()
+          this.setState({ sales_intro: intro })
           break;
         case "prefer not":
-          this.setState({ page: "prefer not", contact })
+          this.setState({ 
+            page: "prefer not", 
+            sales_intro: intro,
+            contact
+          })
           break;
         case "don't know":
           this.props.respondToRequest({
             decision: nextModal.decision,
             introId: nextModal.introId
           })
-          this.setState({ page: "don't know"})
+          this.setState({ 
+            page: "don't know",
+            sales_intro: intro
+          })
           break;
         case "response":
           this.setState({ page: 'response' })
@@ -202,9 +207,10 @@ class RespondIntroModal extends React.Component {
 
   getContent(){
     const { classes, respondToRequestModal, 
-      salesIntros, salesContacts } = this.props;
+      salesIntros, salesContacts, users } = this.props;
     const { page, reason, details, email, 
-      subject, body, contact } = this.state;
+      subject, body, contact, sales_intro } = this.state;
+    let requestor;
 
     switch(page){
       case "intro":  
@@ -227,6 +233,8 @@ class RespondIntroModal extends React.Component {
 
         return intro;
       case "prefer not":
+        requestor = users[sales_intro.requestorId]
+        this.reasons[0] = `I’d rather ${Capitalize(requestor.fname)} reach out and use my name`
         let refuse = <Grid item xs={10} container direction='column'>
           <Typography gutterBottom
             style={{ fontSize: 16, fontWeight: 600 }}>
@@ -280,6 +288,7 @@ class RespondIntroModal extends React.Component {
         </Grid>
         return refuse;
       case "don't know":
+        requestor = users[sales_intro.requestorId]
         let unknown = <Grid item xs={10} container>
           <Typography gutterBottom
             style={{ fontSize: 20, fontWeight: 600 }}>
@@ -287,14 +296,14 @@ class RespondIntroModal extends React.Component {
           </Typography>
           <Typography gutterBottom
             style={{ fontSize: 16 }}>
-            {`That's alright. Determining whether a contact is the right fit for your company is a careful process.\n\nReturn to this flow once if you'd like to change your answer`}
+            {`Thanks for letting us know. We’ve let ${Capitalize(requestor.fname)} know you don’t know them.`}
           </Typography>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
               onClick={this.redirectToStats} color='primary'>
               {`Back to Stats`}
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
         return unknown
       case 'response':
@@ -320,7 +329,7 @@ class RespondIntroModal extends React.Component {
             <Typography variant="body1" id="simple-modal-description"
               data-cy='signup-success'
               color='textPrimary' align='left'>
-              {`You've responed to this introduction request. You can see your other introduction requests and their status on your stats page.`}
+              {`Thanks for letting us know. We’ve let the introduction requestor know you’d prefer not to reach out.`}
             </Typography>
             <Grid item xs={12}>
               <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
@@ -334,11 +343,11 @@ class RespondIntroModal extends React.Component {
             <Typography variant="h2" id="modal-title"
               color='textPrimary' align='left'
               className={classes.thanksHeader}>
-              Thanks for your interest in Bridgekin!
+              {`Response Error!`}
           </Typography>
             <Typography variant="body1" id="simple-modal-description"
               color='textPrimary' align='left'>
-              Unfortunately, we weren't able to sign you up because:
+              {`Unfortunately, we weren't able to respond to this introduction request because:`}
           </Typography>
             <List data-cy='signup-errors'>
               {salesIntroErrors}

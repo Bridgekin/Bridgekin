@@ -1,16 +1,16 @@
 require_relative '../../concerns/devise_controller_patch.rb'
 class Api::Users::ConfirmationsController < Devise::ConfirmationsController
   skip_before_action :verify_authenticity_token
-  include DeviseControllerPatch
+  # include DeviseControllerPatch
 
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
     # yield resource if block_given?
     if resource.errors.empty?
-      @user = resource
+      @current_user = resource
       #Get Tokens and track
-      @token = get_login_token!(@currentUser)
-      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
+      @token = get_login_token!(@current_user)
+      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
 
       redirect_to "#{root_url}accountconfirmed"
     else

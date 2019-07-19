@@ -14,10 +14,7 @@ import SalesStats from './stats.jsx'
 import SalesAdminSignup from './admin_signup.jsx'
 import SalesExternalInvite from './network_invite/network_invite'
 
-import { AuthRoute,
-  SalesAuthRoute,
-  SalesProtectedRoute,
-} from '../../util/route_util';
+import { AuthRoute, ProtectedRoute } from '../../util/route_util';
 
 import Loading from '../loading';
 import NotFound from '../not_found';
@@ -84,17 +81,17 @@ class SalesRouter extends React.Component {
     if (loaded){
       return <div>
         <Switch>
-          <SalesProtectedRoute path="/sales/dashboard" component={SalesDashboard} />
-          <SalesProtectedRoute path="/sales/connect_social" component={SalesConnectSocial}/>
-          <SalesProtectedRoute path="/sales/invite_external/:networkId" component={SalesExternalInvite}/>
+          <ProtectedRoute path="/sales/dashboard" component={SalesDashboard} />
+          <ProtectedRoute path="/sales/connect_social" component={SalesConnectSocial}/>
+          <ProtectedRoute path="/sales/invite_external/:networkId" component={SalesExternalInvite}/>
           <Route path="/sales/respond_to_intro/:introId" component={SalesRespondToIntro} />
-          <SalesProtectedRoute path="/sales/stats/:page?" component={SalesStats} />
+          <ProtectedRoute path="/sales/stats/:page?" component={SalesStats} />
           <Route path="/sales/admin_signup/:page" 
             render={(props) => <SalesAdminSignup {...props} loadUserNetworks={this.loadUserNetworks} />}/>
           {/* SalesLogin should stay a normal routes so that we don't load the next pages too quickly - think componentDidMount on Dashboard */}
           <Route path="/sales/login/:page?"
             render={(props) => <SalesLogin {...props} loadUserNetworks={this.loadUserNetworks} />} />
-          <SalesAuthRoute path="/sales" component={SalesLandingPage} />
+          <AuthRoute path="/sales" component={SalesLandingPage} />
           <Route component={NotFound} />
         </Switch>
       </div>

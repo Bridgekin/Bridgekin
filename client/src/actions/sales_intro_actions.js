@@ -71,6 +71,7 @@ export const fetchSalesIntro = (introId) => dispatch => (
     .then(data => {
       dispatch(receiveSalesIntro(data.salesIntro))
       dispatch(receiveSalesContact(data.salesContact))
+      dispatch(receiveUsers(data.actors))
     })
     .catch(errors => {
       if (!(errors instanceof Array)) {

@@ -1,6 +1,6 @@
 <p>Hi <%= @recipient.fname.capitalize %>,</p>
 
-<p><%= @requestor.fname.capitalize%> is requesting an introduction to <%= @contact.fname.capitalize %> <%= @contact.lname.capitalize %>.</p>
+<p><%= @requestor.fname.capitalize%> is requesting an introduction to <%= @contact.fname.capitalize || ""%> <%= @contact.lname.capitalize || ""%>.</p>
 
 <% if @sales_intro.message.present? %>
   <p><%= @sales_intro.message %></p>

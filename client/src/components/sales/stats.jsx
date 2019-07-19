@@ -79,13 +79,13 @@ const styles = theme => ({
   }
 })
 
-class HiringDashboard extends React.Component {
+class SalesStats extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       loaded: false,
       rowsPerPage: 10,
-      tablePage: 1,
+      tablePage: 0,
       actionAnchorEl: null,
       statusAnchorEl: null
     }
@@ -155,7 +155,8 @@ class HiringDashboard extends React.Component {
       ownedApps, currentUser, refOpps, refApps,
       salesIntros, receivedRequests, sentRequests,
       salesContacts, users} = this.props;
-    const { actionAnchorEl, statusAnchorEl, loaded } = this.state;
+    const { actionAnchorEl, statusAnchorEl, loaded,
+      tablePage, rowsPerPage } = this.state;
 
     if(!loaded){
       return <Loading />
@@ -165,11 +166,14 @@ class HiringDashboard extends React.Component {
       case 'intros':
         phrase = `Intros Made` // sentRequests
         headerCells = ["First Name", "Last Name",
-          "Title", "Company", "Employee Referrer",
+          "Title", "Company", "Intro Requester",
           "Request Status", "Deal Status"] //"Options"]
-        rows = [...receivedRequests].map(id => salesIntros[id]);
+        rows = [...receivedRequests]
+
         tableBody = <TableBody>
-          {rows.map(row => {
+          {rows.slice(tablePage * rowsPerPage, tablePage * rowsPerPage + rowsPerPage)
+          .map(id => salesIntros[id])
+          .map(row => {
             let contact = salesContacts[row.contactId]
             let requestor = users[row.requestorId]
             return (
@@ -178,8 +182,8 @@ class HiringDashboard extends React.Component {
                   className={classes.tableCell}>
                   {contact.fname}
                 </TableCell>
-                {['lname', 'position', "company", "employee referral", "requestStatus", "dealStatus"].map(field => {
-                  if (field === "employee referral") {
+                {['lname', 'position', "company", "intro requester", "requestStatus", "dealStatus"].map(field => {
+                  if (field === "intro requester") {
                     return <TableCell align="right"
                       className={classes.tableCell}>{`${Capitalize(requestor.fname)} ${Capitalize(requestor.lname)}`}
                       </TableCell>
@@ -203,30 +207,6 @@ class HiringDashboard extends React.Component {
                       className={classes.tableCell}>{contact[field]}</TableCell>
                   }
                 })}
-                {/* <TableCell>
-                  <IconButton
-                    onClick={this.handleMenuClick('actionAnchorEl')}>
-                    <MenuIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={actionAnchorEl}
-                    open={Boolean(actionAnchorEl)}
-                    onClose={this.handleMenuClick('actionAnchorEl')}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}
-                    getContentAnchorEl={null}>
-                    <MenuItem onClick={this.handleDelete(row.id)}>
-                      {`Delete`}
-                    </MenuItem>
-                  </Menu>
-                </TableCell> */}
               </TableRow>
             )
           }
@@ -236,11 +216,13 @@ class HiringDashboard extends React.Component {
       default:
         phrase = `Intros Requested` // sentRequests
         headerCells = ["First Name", "Last Name",
-          "Title", "Company", "Employee Referrer", "Request Status", "Deal Status", "Options"]
-        rows = [...sentRequests].map(id => salesIntros[id]);
+          "Title", "Company", "Intro Requester", "Request Status", "Deal Status", "Options"]
+        rows = [...sentRequests]
 
         tableBody = <TableBody>
-          {rows.map(row => {
+          {rows.slice(tablePage * rowsPerPage, tablePage * rowsPerPage + rowsPerPage)
+          .map(id => salesIntros[id])
+          .map(row => {
             let contact = salesContacts[row.contactId]
             let recipient = users[row.recipientId]
 
@@ -250,8 +232,8 @@ class HiringDashboard extends React.Component {
                 className={classes.tableCell}>
                   {contact.fname}
                 </TableCell>
-                {['lname', 'position', "company", "employee referral", "requestStatus", "dealStatus"].map(field => {
-                  if (field === "employee referral"){
+                {['lname', 'position', "company", "intro requester", "requestStatus", "dealStatus"].map(field => {
+                  if (field === "intro requester"){
                     return <TableCell align="right"
                       className={classes.tableCell}>{`${Capitalize(recipient.fname)} ${Capitalize(recipient.lname)}`}</TableCell>
                   } else if (field === "dealStatus"){
@@ -332,7 +314,7 @@ class HiringDashboard extends React.Component {
           {tableBody}
         </Table>
         <TablePagination
-          rowsPerPageOptions={[10, 25]}
+          rowsPerPageOptions={[10,25]}
           component="div"
           count={rows.length}
           rowsPerPage={this.state.rowsPerPage}
@@ -382,7 +364,7 @@ class HiringDashboard extends React.Component {
         </Grid>
 
         <Grid item xs={12} sm={10} container justify='center' alignItems='flex-start'
-        style={{ paddingTop: 50 }}>
+        style={{ padding: "50px 0px" }}>
           {this.getContent()}
         </Grid>
       </Grid>
@@ -390,4 +372,4 @@ class HiringDashboard extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(HiringDashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SalesStats));

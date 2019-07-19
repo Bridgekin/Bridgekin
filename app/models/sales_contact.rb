@@ -15,6 +15,10 @@ class SalesContact < ApplicationRecord
 
   has_one_attached :avatar
 
+  def sales_company
+    SalesCompany.find_by(title: self.company)
+  end
+
   SEARCH_MAP = {
     "fname" => :fname,
     "lname" => :lname,
@@ -77,17 +81,34 @@ class SalesContact < ApplicationRecord
   end
 
   def self.find_similar_or_initialize_by(type, current_user, payload)
-    return SalesContact.find_or_initialize_by(payload)
-
     case type
     when "google"
-      contact = SalesContact.find_by(fname: payload[:fname], lname: payload[:lname]) || SalesContact.find_by(email: payload[:email])
+      contact = SalesContact.find_by(email:payload[:email])
+      unless contact 
+        contact = SalesContact.find_by(fname: payload[:fname],lname: payload[:lname])
+        company = SalesCompany.find_by(title: contact.company)
+        import_domain = payload[:email].split('@').last
+
+        unless company && import_domain == company.domain
+          contact = nil
+        end
+      end
     when "linkedin"
       company = SalesCompany.build_sales_company(payload[:company])
-      domain = company.domain unless company.nil?
+
+      contact = SalesContact.find_by(fname: payload[:fname],lname: payload[:lname]) 
+      if contact.present?
+        #Confirm this is actually the same contact
+        contact_domain = contact.email.split('@').last
+        contact.email.present?
+        unless (contact.company == payload[:company] && contact.position == payload[:position]) || contact_domain == company.domain
+          contact = nil
+        end
+      end
     else
     end
-    contact
+
+    contact || SalesContact.find_or_initialize_by(payload)
   end
 
   def self.delete_unauth_location?(location)

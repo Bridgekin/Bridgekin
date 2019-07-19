@@ -14,17 +14,12 @@ class SalesCompany < ApplicationRecord
 
     begin
       response = RestClient.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{company.title}")
-
       parsed = JSON.parse(response.body)
       answer = parsed.reduce({}) do |acc, entry|
-        if entry["name"].downcase == company.title.downcase
-          acc = entry
-        end
+        acc = entry if entry["name"].downcase == company.title.downcase
         acc
       end
-
       if answer.present?
-        # debugger
         company.domain = answer["domain"]
         company.logo_url = answer["logo"]
         company.grab_logo_image(answer["logo"]) if answer["logo"].present?
@@ -36,7 +31,7 @@ class SalesCompany < ApplicationRecord
         logger.error "Failed to save company #{company.title} because of #{company.errors.full_messages.join(" ")}"
       end
     rescue => e
-      logger.error "Error getting and saving company, detailed here: #{e.errors}"
+      logger.error "Error getting and saving company, detailed here: #{e.message}"
     end
     nil
   end

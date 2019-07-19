@@ -19,7 +19,7 @@ const Auth = ({ currentUser, path, component: Component}) => (
   <Route
     path={path}
     render={props => (
-      currentUser ? <Redirect to="/findandconnect" /> :
+      currentUser ? <Redirect to="/sales/dashboard" /> :
       <Component{...props} />
     )}
   />
