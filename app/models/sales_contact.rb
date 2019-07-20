@@ -84,13 +84,14 @@ class SalesContact < ApplicationRecord
     case type
     when "google"
       contact = SalesContact.find_by(email:payload[:email])
-      unless contact 
+      unless contact
         contact = SalesContact.find_by(fname: payload[:fname],lname: payload[:lname])
-        import_domain = payload[:email].split('@').last
-
-        company = SalesCompany.find_by(title: contact.company)
-        unless company && import_domain == company.domain
-          contact = nil
+        if contact.present?
+          import_domain = payload[:email].split('@').last
+          company = SalesCompany.find_by(title: contact.company) if contact.company.present?
+          unless company && import_domain == company.domain
+            contact = nil
+          end
         end
       end
     when "linkedin"
