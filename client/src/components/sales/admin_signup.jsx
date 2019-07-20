@@ -389,7 +389,7 @@ class AdminSignup extends React.Component {
               <Typography align='center'
               className={duration === 'yearly' ? classes.renewBold : classes.renewOther}>
                 {`Annual Billing`} <br/>
-                {`Save 20%`}
+                {`Save ${Math.ceil((1 - (product.yearlyAmount / 12 / product.seats)/ (product.monthlyAmount / product.seats)) * 100)}%`}
               </Typography>
             </Grid>
           </Grid>
@@ -527,8 +527,8 @@ class AdminSignup extends React.Component {
                 <Typography color='textSecondary'
                   style={{ fontSize: 12, margin: "5px 0px" }}>
                   {`By registering, I confirm that I have read and agree to the `}
-                  <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
-                  <Link to="/useragreement">Terms Of Use.</Link>
+                  <Link to="/privacypolicy" target="_blank">Privacy Policy</Link> {` and `}
+                  <Link to="/useragreement" target="_blank">Terms Of Use.</Link>
                 </Typography>
               }
             />

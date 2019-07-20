@@ -287,8 +287,8 @@ class SalesLogin extends React.Component {
               <Typography color='textSecondary'
                 style={{ fontSize: 12, margin: "15px 0px" }}>
                 {`By registering, I confirm that I have read and agree to the `}
-                <Link to="/privacypolicy">Privacy Policy</Link> {` and `}
-                <Link to="/useragreement">Terms Of Use.</Link>
+                <Link to="/privacypolicy" target="_blank">Privacy Policy</Link> {` and `}
+                <Link to="/useragreement" target="_blank">Terms Of Use.</Link>
               </Typography>
             }
           />

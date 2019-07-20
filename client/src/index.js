@@ -26,7 +26,7 @@ getPublicEnv()
 .then(handleAuthErrors)
 .then((env) => {
   window.publicEnv = env[0];
-  if(window.publicEnv.railsEnv === 'production'){
+  if(window.publicEnv === 'production'){
     window.amplitudeInstance.init('dbbaed2ca7e91621e7f89e6b872947c4');
   } else {
     window.amplitudeInstance.init('36ef97cd7f0c786ba501c0a558c783c3');
