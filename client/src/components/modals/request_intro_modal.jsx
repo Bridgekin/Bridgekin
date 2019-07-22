@@ -364,7 +364,7 @@ class RequestIntroModal extends React.Component {
             style={{ fontSize: 12, marginBottom: 20}}>
             {`Customize the email template that your teammate will send to their contact. Note* Your teammate will still be able to make further changes to this template later`}
           </Typography>
-          {false && <Grid container justify='space-between'>
+          {window.publicEnv !== 'production' && <Grid container justify='space-between'>
             <Grid item xs={12} sm={6}>
               <Button style={{ fontSize: 14, textTransform: 'none'}}
                 onClick={this.changePage("new template")}>
