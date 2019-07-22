@@ -58,7 +58,8 @@ class Api::SalesIntrosController < ApiController
   def respond_intro_request
     response = params[:response]
     sales_intro = SalesIntro.find(response[:intro_id])
-
+    prev_decision = sales_intro.request_status
+    
     decision = response[:decision]
     if sales_intro.update(request_status: decision)
       case response[:decision]
@@ -74,7 +75,7 @@ class Api::SalesIntrosController < ApiController
       when "don't know" #Don't Know
         SalesMailer.decline_intro(sales_intro).deliver_later
       else
-      end
+      end if prev_decision == "open"
       render json: ["Success"], status: 200
     else
       render json: sales_intro.errors.full_messages, status: 422

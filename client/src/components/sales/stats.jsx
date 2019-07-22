@@ -164,7 +164,7 @@ class SalesStats extends React.Component {
     let phrase, rows, headerCells, tableBody;
     switch(page){
       case 'intros':
-        phrase = `Intros Made` // sentRequests
+        phrase = `Intro Requests Received` // sentRequests
         headerCells = ["First Name", "Last Name",
           "Title", "Company", "Intro Requester",
           "Request Status", "Deal Status"] //"Options"]
@@ -347,7 +347,7 @@ class SalesStats extends React.Component {
           </Button>
           <Button className={classes.navButton}
           onClick={() => this.props.history.push(`/sales/stats/intros`)}>
-            {`Intros Made`}
+            {`Intro Requests Received`}
           </Button>
         </Grid>
 

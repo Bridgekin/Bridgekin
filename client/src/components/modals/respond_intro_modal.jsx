@@ -266,7 +266,7 @@ class RespondIntroModal extends React.Component {
           </Typography>
           <Typography 
           style={{ fontSize: 14, margin: "15px 0px"}}>
-            {`Copy the subject and email for your own email client, below:`}
+            {`Below are the suggested subject and email. Feel free to copy both and send through your email`}
           </Typography>
           {/* <TextField
             fullWidth

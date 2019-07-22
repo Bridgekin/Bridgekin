@@ -24,7 +24,7 @@ class ConnectSocialJob < ApplicationJob
       google_url: import_hash["google_key"]
     )
 
-    # begin
+    begin
       import_hash.each do |key, upload|
         case key
         when "linked_in_key"
@@ -46,14 +46,13 @@ class ConnectSocialJob < ApplicationJob
           logger.debug "Unsupported key provided"
         end
       end
-    #   #When complete, send an email letting user know that the import is finished
-    #   SalesMailer.notify_contacts_imported(current_user)
-    #   stat.update(status: "finished")
-    # rescue => e
-    #   debugger
-    #   stat.update(status: "failed", retry_count: stat.retry_count + 1) 
-    #   logger.error "Connect Social Upload failed. Stat id: #{stat.id}, user_id: #{current_user.id}, errors: #{e.message}"
-    # end
+      #When complete, send an email letting user know that the import is finished
+      SalesMailer.notify_contacts_imported(current_user)
+      stat.update(status: "finished")
+    rescue => e
+      stat.update(status: "failed", retry_count: stat.retry_count + 1) 
+      logger.error "Connect Social Upload failed. Stat id: #{stat.id}, user_id: #{current_user.id}, errors: #{e.message}"
+    end
   end
 
   FCVARS = {
@@ -75,9 +74,13 @@ class ConnectSocialJob < ApplicationJob
   end
   
   def ingestLinkedIn(parsed_file, current_user)
-    parsed_file.take(25).each do |entry|
+    parsed_file.each do |entry|
       #Skip any cases without emails
-      next if entry["First Name"].blank? || entry["Company"].blank?
+
+      if entry["First Name"].blank? || entry["Company"].blank?
+        logger.error "Skipping linkedin entry: fname:#{entry["First Name"]} company: #{entry["Company"]}"
+        next
+      end
       LinkedInUploadJob.perform_later(entry.to_hash, current_user)
     end
   end
