@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import { Link } from 'react-router-dom';
 
 export default () => {
   return (
@@ -137,7 +138,7 @@ export default () => {
       <ul>
         <li>To comply with any court order, law, or legal process, including to respond to any government or regulatory request.</li>
         <li>To respond to your requests.</li>
-        <li>To enforce or apply our terms and conditions in the <u>user agreement</u>, this privacy policy, the Master Subscription Agreement and other agreements, including for billing and collection purposes.</li>
+        <li>To enforce or apply our terms and conditions in the <Link to="/useragreement" target="_blank">user agreement</Link>, this privacy policy, the Master Subscription Agreement and other agreements, including for billing and collection purposes.</li>
         <li>If we believe disclosure is necessary or appropriate to protect the rights, property, or safety of Bridgekin, our Users, our customers, or others. This includes exchanging information with other companies and organizations for the purposes of fraud protection and credit risk reduction.</li>
         <li>If we, in good faith, believe that disclosure is otherwise necessary or advisable. </li>
       </ul >

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_16_232140) do
+ActiveRecord::Schema.define(version: 2019_07_22_154229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,17 @@ ActiveRecord::Schema.define(version: 2019_07_16_232140) do
     t.index ["owner_id"], name: "index_circles_on_owner_id"
   end
 
+  create_table "connect_social_stats", force: :cascade do |t|
+    t.integer "uploader_id"
+    t.string "linked_in_url"
+    t.string "google_url"
+    t.string "status", default: "started"
+    t.integer "retry_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uploader_id"], name: "index_connect_social_stats_on_uploader_id"
+  end
+
   create_table "connected_opportunities", force: :cascade do |t|
     t.integer "opportunity_id", null: false
     t.integer "user_id"
@@ -159,6 +170,19 @@ ActiveRecord::Schema.define(version: 2019_07_16_232140) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["template_type"], name: "index_email_templates_on_template_type"
+  end
+
+  create_table "failed_uploads", force: :cascade do |t|
+    t.string "uploader_id"
+    t.string "source"
+    t.string "fname"
+    t.string "lname"
+    t.string "email"
+    t.string "company"
+    t.string "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uploader_id"], name: "index_failed_uploads_on_uploader_id"
   end
 
   create_table "finalized_opportunities", force: :cascade do |t|

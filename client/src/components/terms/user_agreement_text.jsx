@@ -4,8 +4,7 @@ import Typography from '@material-ui/core/Typography';
 export default () => {
   return (
     <div>
-      <p>Last modified: July 19, 2019</p>
-      
+
       <p>This User Agreement and all policies and additional terms posted on and in our sites, applications, tools and services (collectively “Services”) set out the terms on which Bridgekin offers you access to and use of our Services. All policies and additional terms posted on and in our sites, applications, tools, and services are incorporated into this User Agreement. You agree to comply with all of the terms of this User Agreement when accessing or using our Services. If you do not agree, you should not use our Services.</p>
 
       <p>The entity you are contracting with is Bridgekin Inc., 2694 Sacramento St. Apt. 6, San Francisco CA 94115 which is referred to as “<strong>Bridgekin</strong>,” “<strong>we</strong>,” or “<strong>us</strong>.”</p>

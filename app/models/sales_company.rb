@@ -19,6 +19,7 @@ class SalesCompany < ApplicationRecord
         acc = entry if entry["name"].downcase == company.title.downcase
         acc
       end
+      
       if answer.present?
         company.domain = answer["domain"]
         company.logo_url = answer["logo"]
