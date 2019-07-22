@@ -47,6 +47,15 @@ export const removeReceivedRequest = introId => ({
   introId
 });
 
+export const CREATE_SALES_INTRO = 'CREATE_SALES_INTRO';
+export const CUSTOMIZE_INTRO_EMAIL = 'CUSTOMIZE_INTRO_EMAIL';
+export const trackSalesIntro = () => ({
+  type: CREATE_SALES_INTRO
+});
+export const customizeIntroEmail = () => ({
+  type: CUSTOMIZE_INTRO_EMAIL
+});
+
 export const fetchSalesIntros = () => dispatch => (
   SalesIntrosApiUtil.fetchSalesIntros()
     .then(handleErrors)
@@ -84,7 +93,10 @@ export const fetchSalesIntro = (introId) => dispatch => (
 export const createSalesIntro = (salesIntro) => dispatch => (
   SalesIntrosApiUtil.createSalesIntro(salesIntro)
     .then(handleErrors)
-    .then(data => data)
+    .then(data => {
+      dispatch(trackSalesIntro())
+      return data
+    })
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];

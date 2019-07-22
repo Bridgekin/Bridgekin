@@ -24,7 +24,7 @@ import Switch from '@material-ui/core/Switch';
 import { connect } from 'react-redux';
 import { closeRequestIntro } from '../../actions/modal_actions';
 import { clearSalesIntroErrors } from '../../actions/error_actions';
-import { createSalesIntro } from '../../actions/sales_intro_actions.js';
+import { createSalesIntro, customizeIntroEmail } from '../../actions/sales_intro_actions.js';
 // import theme from './theme';
 
 const mapStateToProps = state => ({
@@ -38,7 +38,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   closeRequestIntro: () => dispatch(closeRequestIntro()),
   clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors()),
-  createSalesIntro: salesIntro => dispatch(createSalesIntro(salesIntro))
+  createSalesIntro: salesIntro => dispatch(createSalesIntro(salesIntro)),
+  customizeIntroEmail: () => dispatch(customizeIntroEmail())
 });
 
 const styles = theme => ({
@@ -159,6 +160,9 @@ class RequestIntroModal extends React.Component {
 
   changePage(page){
     return e => {
+      if (page === 'custom'){
+        this.props.customizeIntroEmail()
+      }
       this.setState({ page })
     }
   }
