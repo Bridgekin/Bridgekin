@@ -44,6 +44,18 @@ export const clearFriendMap = () => ({
   type: CLEAR_FRIEND_MAP,
 });
 
+export const CLICK_LINKED_IN_UPLOAD = 'CLICK_LINKED_IN_UPLOAD';
+export const CLICK_GOOGLE_UPLOAD = 'CLICK_GOOGLE_UPLOAD';
+export const CLICK_VIEW_BY_FILTER = 'CLICK_VIEW_BY_FILTER';
+export const trackLinkedInUploadClick = () => ({
+  type: CLICK_LINKED_IN_UPLOAD
+});
+export const trackGoogleUploadClick = () => ({
+  type: CLICK_GOOGLE_UPLOAD
+});
+export const trackViewByClick = () => ({
+  type: CLICK_VIEW_BY_FILTER
+});
 
 export const searchContacts = (search) => dispatch => (
   SalesContactsApiUtil.searchContacts(search)

@@ -15,6 +15,7 @@ import GoogleLogo from './google-favicon-logo.png';
 
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { fetchGoogleMatchedContacts } from '../../actions/google_import_actions';
+import { trackGoogleUploadClick } from '../../actions/sales_contacts_actions';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
@@ -24,7 +25,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchGoogleMatchedContacts: (contacts) => dispatch(fetchGoogleMatchedContacts(contacts))
+  fetchGoogleMatchedContacts: (contacts) => dispatch(fetchGoogleMatchedContacts(contacts)),
+  trackGoogleUploadClick: () => dispatch(trackGoogleUploadClick())
 });
 
 const styles = theme => ({
@@ -121,6 +123,7 @@ class GoogleContacts extends React.Component {
   }
 
   googleSignIn(){
+    this.props.trackGoogleUploadClick()
     window.googleAuth.signIn();
   }
 

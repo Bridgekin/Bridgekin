@@ -20,7 +20,7 @@ import merge from 'lodash/merge';
 import Loading from '../loading';
 import Capitalize from 'capitalize';
 
-import { searchContacts, clearContactResults } from '../../actions/sales_contacts_actions';
+import { searchContacts, clearContactResults, trackViewByClick } from '../../actions/sales_contacts_actions';
 import { fetchUserNetworks } from '../../actions/sales_network_actions'
 // require("bootstrap/less/bootstrap.less");
 
@@ -50,7 +50,8 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   searchContacts: search => dispatch(searchContacts(search)),
   clearContactResults: () => dispatch(clearContactResults()),
-  fetchUserNetworks: () => dispatch(fetchUserNetworks())
+  fetchUserNetworks: () => dispatch(fetchUserNetworks()),
+  trackViewByClick: () => dispatch(trackViewByClick())
 });
 
 const styles = theme => ({
@@ -153,6 +154,10 @@ class SalesDashboard extends React.Component {
       e.stopPropagation();
       const selectedEl = this.state[anchor];
       this.setState({ [anchor]: (selectedEl ? null : e.currentTarget) })
+      //Track click
+      if (anchor === 'filterAnchorEl'){
+        this.props.trackViewByClick()
+      }
     }
   }
 

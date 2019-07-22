@@ -56,6 +56,18 @@ export const customizeIntroEmail = () => ({
   type: CUSTOMIZE_INTRO_EMAIL
 });
 
+export const RESPOND_YES_INTRO = 'RESPOND_YES_INTRO';
+export const RESPOND_DONT_KNOW_INTRO = 'RESPOND_DONT_KNOW_INTRO';
+export const RESPOND_NO_INTRO = 'RESPOND_NO_INTRO';
+export const trackRespondIntro = (type) => {
+  switch(type){
+    case "intro": return { type: RESPOND_YES_INTRO }
+    case "prefer not": return { type: RESPOND_NO_INTRO }
+    case "don't know": return { type: RESPOND_DONT_KNOW_INTRO }
+    default: return {}
+  }
+};
+
 export const fetchSalesIntros = () => dispatch => (
   SalesIntrosApiUtil.fetchSalesIntros()
     .then(handleErrors)

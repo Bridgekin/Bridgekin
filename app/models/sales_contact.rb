@@ -51,13 +51,17 @@ class SalesContact < ApplicationRecord
     else
       sales_contacts
     end
-
+    # Track search terms
+    trackTerm = TrackSearchTerm.new(user_id: current_user.id)
     #Parse Results from user entry
     SEARCH_MAP.each do |key, value|
       if social_params[value].present?
+        trackTerm[value] = social_params[value];
         sales_contacts = sales_contacts.where("LOWER(sales_contacts.#{key}) LIKE LOWER(?)", "%#{social_params[value]}%") 
       end
     end
+    #Save search term
+    trackTerm.save
     sales_contacts
   end
 

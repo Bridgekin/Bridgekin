@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_22_154229) do
+ActiveRecord::Schema.define(version: 2019_07_22_170238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -540,6 +540,18 @@ ActiveRecord::Schema.define(version: 2019_07_22_154229) do
     t.datetime "failed_renewal"
     t.index ["payer_id"], name: "index_subscriptions_on_payer_id"
     t.index ["targetable_type", "targetable_id"], name: "index_subscriptions_on_targetable_type_and_targetable_id"
+  end
+
+  create_table "track_search_terms", force: :cascade do |t|
+    t.string "user_id"
+    t.string "fname"
+    t.string "lname"
+    t.string "company"
+    t.string "position"
+    t.string "location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_track_search_terms_on_user_id"
   end
 
   create_table "user_features", force: :cascade do |t|

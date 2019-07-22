@@ -16,7 +16,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Paper from '@material-ui/core/Paper';
 
 import { updateUserFeature } from '../../actions/user_feature_actions';
-import { connectSocial, presignedUrl, uploadToS3 } from '../../actions/sales_contacts_actions';
+import { connectSocial, presignedUrl, uploadToS3, trackLinkedInUploadClick } from '../../actions/sales_contacts_actions';
 import { openConnectSocial } from '../../actions/modal_actions';
 import ImportGoogle from '../google/import_contacts';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -36,7 +36,8 @@ const mapDispatchToProps = dispatch => ({
   connectSocial: (payload) => dispatch(connectSocial(payload)),
   openConnectSocial: (payload) => dispatch(openConnectSocial(payload)),
   presignedUrl: (filename, fileType) => dispatch(presignedUrl(filename, fileType)),
-  uploadToS3: (payload) => dispatch(uploadToS3(payload))
+  uploadToS3: (payload) => dispatch(uploadToS3(payload)),
+  trackLinkedInUploadClick: () => dispatch(trackLinkedInUploadClick())
 });
 
 const styles = theme => ({
@@ -228,6 +229,7 @@ class ConnectSocial extends React.Component {
                   type="file"
                   onChange={this.handleFile('linkedInUpload', 'linkedInUploadUrl').bind(this)}
                   onClick={(event) => {
+                    this.props.trackLinkedInUploadClick()
                     event.target.value = null
                   }}
                 />

@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { fetchUserOpportunities,
   deleteOpportunity } from '../../actions/opportunity_actions';
 import { closeRespondToRequest } from '../../actions/modal_actions';
-import { respondToRequest } from '../../actions/sales_intro_actions';
+import { respondToRequest, trackRespondIntro } from '../../actions/sales_intro_actions';
 import { clearSalesIntroErrors } from '../../actions/error_actions';
 // import theme from './theme';
 
@@ -44,7 +44,8 @@ const mapDispatchToProps = dispatch => ({
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   respondToRequest: response => dispatch(respondToRequest(response)),
-  clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors())
+  clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors()),
+  trackRespondIntro: type => dispatch(trackRespondIntro(type))
 });
 
 const styles = theme => ({
@@ -162,6 +163,8 @@ class RespondIntroModal extends React.Component {
         default:
           break;
       }
+
+      this.props.trackRespondIntro(nextModal.decision)
     }
     return true;
   }
