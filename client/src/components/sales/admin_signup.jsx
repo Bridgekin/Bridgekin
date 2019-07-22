@@ -223,7 +223,7 @@ class AdminSignup extends React.Component {
     const { fname, lname, email, password,
       line1, city, state, zipcode,
       title, domain, termsAgreement} = this.state;
-    
+    debugger
     if(page === "signup"){
       return !fname || !lname || !email || !password || !title || !domain || !termsAgreement
     } else if (page === 'payment'){
@@ -324,7 +324,7 @@ class AdminSignup extends React.Component {
           <StripeProvider apiKey={window.stripe_pk}>
             <Elements>
               <CheckoutForm
-                canSubmit={this.isDisabledSubmit}
+                canSubmit={this.isDisabledSubmit()}
                 handleSubmit={this.handleSubmit} />
             </Elements>
           </StripeProvider>

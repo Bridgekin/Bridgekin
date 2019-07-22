@@ -65,9 +65,8 @@ class CheckoutForm extends Component {
         <div style={{ margin: "20px 0px"}}>
           <CardElement />
         </div>
-
         <Button color='primary' variant='contained'
-          disabled={this.props.canSubmit() || submitting || !termsAgreement}
+          disabled={this.props.canSubmit || submitting }
           onClick={this.submit} fullWidth
           style={{textTransform: 'capitalize', marginTop: 10}}>
           {`Start Free 7 Day Trial`}
