@@ -18,14 +18,13 @@ class ConnectSocialJob < ApplicationJob
       access_key_id: Rails.application.credentials[aws_env][:access_key_id],
       secret_access_key: Rails.application.credentials[aws_env][:secret_access_key]
     )
-    
     stat = ConnectSocialStat.find_or_create_by(
       uploader_id: current_user.id,
       linked_in_url: import_hash["linked_in_key"],
       google_url: import_hash["google_key"]
     )
 
-    begin
+    # begin
       import_hash.each do |key, upload|
         case key
         when "linked_in_key"
@@ -47,13 +46,14 @@ class ConnectSocialJob < ApplicationJob
           logger.debug "Unsupported key provided"
         end
       end
-      #When complete, send an email letting user know that the import is finished
-      SalesMailer.notify_contacts_imported(current_user)
-      stat.update(status: "finished")
-    rescue => exception
-      stat.update(status: "failed", retry_count: stat.retry_count + 1) 
-      logger.error "Connect Social Upload failed. Stat id: #{stat.id}, user_id: #{current_user.id}"
-    end
+    #   #When complete, send an email letting user know that the import is finished
+    #   SalesMailer.notify_contacts_imported(current_user)
+    #   stat.update(status: "finished")
+    # rescue => e
+    #   debugger
+    #   stat.update(status: "failed", retry_count: stat.retry_count + 1) 
+    #   logger.error "Connect Social Upload failed. Stat id: #{stat.id}, user_id: #{current_user.id}, errors: #{e.message}"
+    # end
   end
 
   FCVARS = {
@@ -75,10 +75,10 @@ class ConnectSocialJob < ApplicationJob
   end
   
   def ingestLinkedIn(parsed_file, current_user)
-    parsed_file.each do |entry|
+    parsed_file.take(25).each do |entry|
       #Skip any cases without emails
       next if entry["First Name"].blank? || entry["Company"].blank?
-      LinkedInUploadJob.perform_later(entry, current_user)
+      LinkedInUploadJob.perform_later(entry.to_hash, current_user)
     end
   end
 
