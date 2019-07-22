@@ -164,7 +164,7 @@ class RespondToIntro extends React.Component {
             </Typography>
           </Grid>}
 
-          {intro.referralBonus !== null  && 
+          {Boolean(!!intro.referralBonus) && 
             <Typography align='center'
               style={{ fontSize: 16 }}>
             {`Referral Amount: `}<b>{intro.referralUnit === '$' ? `$${intro.referralBonus}` : `${intro.referralBonus}%`}</b>
