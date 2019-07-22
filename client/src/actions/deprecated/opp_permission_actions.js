@@ -1,10 +1,10 @@
-import * as OppPermissionApiUtil from '../util/opp_permissions_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveOppPermissionErrors } from './error_actions';
+import * as OppPermissionApiUtil from '../../util/deprecated/opp_permissions_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveOppPermissionErrors } from '../error_actions';
 import { receiveNetworks } from './network_actions';
 import { receiveConnections } from './connection_actions';
 import { receiveCircles } from './circle_actions';
-import { receiveUsers } from './user_actions';
+import { receiveUsers } from '../user_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

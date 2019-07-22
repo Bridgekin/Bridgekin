@@ -1,6 +1,6 @@
-import * as RefOpportunityApiUtil from '../util/ref_opps_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveRefOppErrors } from './error_actions';
+import * as RefOpportunityApiUtil from '../../util/deprecated/ref_opps_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveRefOppErrors } from '../error_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

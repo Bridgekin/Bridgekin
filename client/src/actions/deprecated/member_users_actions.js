@@ -1,7 +1,7 @@
-import * as MemberUsersApiUtil from '../util/member_users_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveMemberUserErrors } from './error_actions';
-import { receiveUsers, receiveUser } from './user_actions';
+import * as MemberUsersApiUtil from '../../util/deprecated/member_users_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveMemberUserErrors } from '../error_actions';
+import { receiveUsers, receiveUser } from '../user_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

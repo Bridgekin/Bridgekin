@@ -1,6 +1,6 @@
-import * as ReferralApiUtil from '../util/referrals_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveReferralErrors } from './error_actions';
+import * as ReferralApiUtil from '../../util/deprecated/referrals_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveReferralErrors } from '../error_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

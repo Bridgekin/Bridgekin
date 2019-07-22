@@ -1,6 +1,6 @@
-import * as PassedOpportunityApiUtil from '../util/passed_opportunities_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receivePassedOpportunityErrors } from './error_actions';
+import * as PassedOpportunityApiUtil from '../../util/deprecated/passed_opportunities_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receivePassedOpportunityErrors } from '../error_actions';
 import { receiveOpportunities, receiveOpportunity } from './opportunity_actions';
 import { removeNetworkOppId } from './network_opp_actions';
 

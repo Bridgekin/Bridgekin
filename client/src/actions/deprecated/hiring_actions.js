@@ -1,5 +1,5 @@
-import * as RefApplicationApiUtil from '../util/ref_applications_api_util';
-import { handleErrors } from './fetch_error_handler';
+import * as RefApplicationApiUtil from '../../util/deprecated/ref_applications_api_util';
+import { handleErrors } from '../fetch_error_handler';
 // import { receiveUserFeatureErrors } from './error_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';

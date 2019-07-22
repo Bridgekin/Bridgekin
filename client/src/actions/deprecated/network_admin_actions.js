@@ -1,7 +1,7 @@
-import * as NetworkAdminApiUtil from '../util/network_admins_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveManagedNetworkErrors } from './error_actions';
-import { receiveUsers } from './user_actions';
+import * as NetworkAdminApiUtil from '../../util/deprecated/network_admins_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveManagedNetworkErrors } from '../error_actions';
+import { receiveUsers } from '../user_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

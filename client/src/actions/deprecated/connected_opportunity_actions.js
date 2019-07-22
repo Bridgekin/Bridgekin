@@ -1,9 +1,9 @@
-import * as ConnectedOpportunityApiUtil from '../util/connected_opportunities_api_util';
-import { handleErrors } from './fetch_error_handler';
+import * as ConnectedOpportunityApiUtil from '../../util/deprecated/connected_opportunities_api_util';
+import { handleErrors } from '../fetch_error_handler';
 import { receiveFacilitatedOpportunities,
   receiveFacilitatedOpportunity } from './facilitated_opportunity_actions';
 import { receiveOpportunities } from './opportunity_actions';
-import { receiveConnectedOpportunityErrors } from './error_actions';
+import { receiveConnectedOpportunityErrors } from '../error_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

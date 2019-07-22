@@ -24,7 +24,7 @@ import ConnectIcon from '../../static/opp_feed_icons/share-link.svg'
 import ReferIcon from '../../static/opp_feed_icons/refer.png'
 import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/EditSharp';
-import { openOppCard } from '../../actions/modal_actions';
+import { openOppCard } from '../../../actions/modal_actions';
 
 import Img from 'react-image';
 import ExamplePicture from '../../static/opportunity_images/Professional_business_services.jpg';

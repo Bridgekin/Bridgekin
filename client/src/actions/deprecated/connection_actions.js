@@ -1,7 +1,7 @@
-import * as ConnectionApiUtil from '../util/connections_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveConnectionErrors } from './error_actions';
-import { receiveUsers } from './user_actions';
+import * as ConnectionApiUtil from '../../util/deprecated/connections_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveConnectionErrors } from '../error_actions';
+import { receiveUsers } from '../user_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

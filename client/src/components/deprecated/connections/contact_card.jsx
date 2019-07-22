@@ -27,8 +27,8 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { updateConnection, deleteConnection }
   from '../../actions/connection_actions';
-import { openInvite, openExternalInvite } from '../../actions/modal_actions';
-import { openCreateCircle, openCircle } from '../../actions/modal_actions';
+import { openInvite, openExternalInvite } from '../../../actions/modal_actions';
+import { openCreateCircle, openCircle } from '../../../actions/modal_actions';
 import { addMember, removeMember } from '../../actions/circle_actions';
 import { createConnection } from '../../actions/connection_actions';
 

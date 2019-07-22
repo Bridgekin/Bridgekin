@@ -1,8 +1,8 @@
-import * as DirectLinkApiUtil from '../util/direct_links_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveDirectLinkErrors } from './error_actions';
+import * as DirectLinkApiUtil from '../../util/deprecated/direct_links_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveDirectLinkErrors } from '../error_actions';
 import { receiveOpportunities } from './opportunity_actions';
-import { receiveUser } from './user_actions';
+import { receiveUser } from '../user_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

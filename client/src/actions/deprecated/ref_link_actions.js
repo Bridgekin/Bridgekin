@@ -1,6 +1,6 @@
-import * as RefLinkApiUtil from '../util/ref_link_api_util';
-import { handleErrors } from './fetch_error_handler';
-import { receiveRefLinkErrors } from './error_actions';
+import * as RefLinkApiUtil from '../../util/deprecated/ref_link_api_util';
+import { handleErrors } from '../fetch_error_handler';
+import { receiveRefLinkErrors } from '../error_actions';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
 

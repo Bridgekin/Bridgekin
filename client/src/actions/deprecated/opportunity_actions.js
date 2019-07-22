@@ -1,5 +1,5 @@
-import * as OpportunityApiUtil from '../util/opportunities_api_util';
-import { handleErrors } from './fetch_error_handler';
+import * as OpportunityApiUtil from '../../util/deprecated/opportunities_api_util';
+import { handleErrors } from '../fetch_error_handler';
 import { receiveNetworks } from './network_actions';
 // import { receiveNetworkOpps } from './network_opp_actions';
 import { receiveOppPermissions,
@@ -8,9 +8,9 @@ import { receiveOppPermissions,
   removeNetworkOppPermission,
   receiveUserOppPermissions,
   receiveProfileOppPermissions } from './opp_permission_actions';
-import { receiveUserOpportunities } from './user_opportunity_actions';
+import { receiveUserOpportunities } from '../user_opportunity_actions';
 import { receiveProfileOpportunities } from './profile_opportunity_actions';
-import { receiveOpportunityErrors } from './error_actions';
+import { receiveOpportunityErrors } from '../error_actions';
 
 import { receiveConnectedOpportunities } from './connected_opportunity_actions';
 import { receiveFacilitatedOpportunities } from './facilitated_opportunity_actions';
