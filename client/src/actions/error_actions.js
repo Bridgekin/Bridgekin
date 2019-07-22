@@ -74,6 +74,8 @@ export const CLEAR_SALES_PRODUCT_ERRORS = 'CLEAR_SALES_PRODUCT_ERRORS';
 export const RECEIVE_SALES_NETWORK_INVITE_ERRORS = 'RECEIVE_SALES_NETWORK_INVITE_ERRORS';
 export const CLEAR_SALES_NETWORK_INVITE_ERRORS = 'CLEAR_SALES_NETWORK_INVITE_ERRORS';
 
+export const RECEIVE_REQUEST_TEMPLATE_ERRORS = 'RECEIVE_REQUEST_TEMPLATE_ERRORS';
+export const CLEAR_REQUEST_TEMPLATE_ERRORS = 'CLEAR_REQUEST_TEMPLATE_ERRORS';
 
 export const RECEIVE_UTIL_ERRORS = 'RECEIVE_UTIL_ERRORS';
 export const CLEAR_UTIL_ERRORS = 'CLEAR_UTIL_ERRORS';
@@ -383,4 +385,13 @@ export const receiveSalesNetworkInviteErrors = errors => ({
 
 export const clearSalesNetworkInviteErrors = () => ({
   type: CLEAR_SALES_NETWORK_INVITE_ERRORS,
+});
+
+export const receiveRequestTemplateErrors = errors => ({
+  type: RECEIVE_REQUEST_TEMPLATE_ERRORS,
+  errors
+});
+
+export const clearRequestTemplateErrors = () => ({
+  type: CLEAR_REQUEST_TEMPLATE_ERRORS,
 });

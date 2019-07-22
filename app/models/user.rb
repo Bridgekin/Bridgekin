@@ -176,6 +176,10 @@ class User < ApplicationRecord
   has_one :stripe_details,
     foreign_key: :user_id,
     class_name: :StripeDetail
+
+  has_many :request_templates,
+    foreign_key: :user_id,
+    class_name: :RequestTemplate
   
   # def contacts_from_requests
   #   SalesIntro.includes(:contact).where("requestor_id = ? OR recipient_id = ?", self.id, self.id).pluck(:contact_id)

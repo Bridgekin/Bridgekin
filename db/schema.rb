@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_22_170238) do
+ActiveRecord::Schema.define(version: 2019_07_22_202131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -369,6 +369,16 @@ ActiveRecord::Schema.define(version: 2019_07_22_170238) do
     t.index ["member_id"], name: "index_referral_links_on_member_id"
     t.index ["recipient_id"], name: "index_referral_links_on_recipient_id"
     t.index ["referral_code"], name: "index_referral_links_on_referral_code"
+  end
+
+  create_table "request_templates", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name"
+    t.string "subject"
+    t.string "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_request_templates_on_user_id"
   end
 
   create_table "sales_admin_networks", force: :cascade do |t|

@@ -1,0 +1,1 @@
+json.extract! request_template, :id, :name, :subject, :body

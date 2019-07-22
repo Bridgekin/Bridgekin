@@ -22,9 +22,9 @@ class GoogleUploadJob < ApplicationJob
           )
         end
         # # Kickoff Full Contact
-        # if contact.email.present? && contact.last_full_contact_lookup.nil?
-        #   FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
-        # end
+        if contact.email.present? && contact.last_full_contact_lookup.nil?
+          FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
+        end
       end
     rescue => exception
       #save failed upload
