@@ -49,3 +49,15 @@ export const createRequestTemplate = (payload) => dispatch => (
       dispatch(receiveRequestTemplateErrors(errors))
     })
 );
+
+export const deleteRequestTemplate = (templateId) => dispatch => (
+  RequestTemplateApiUtil.deleteRequestTemplate(templateId)
+    .then(handleErrors)
+    .then(() => dispatch(removeRequestTemplate(templateId)))
+    .catch(errors => {
+      if (!(errors instanceof Array)) {
+        errors = [genericError];
+      }
+      // dispatch(receiveRequestTemplateErrors(errors))
+    })
+);

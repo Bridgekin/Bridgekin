@@ -25,7 +25,7 @@ import { connect } from 'react-redux';
 import { closeRequestIntro } from '../../actions/modal_actions';
 import { clearSalesIntroErrors } from '../../actions/error_actions';
 import { createSalesIntro, customizeIntroEmail } from '../../actions/sales_intro_actions.js';
-import { fetchRequestTemplates, createRequestTemplate } from '../../actions/request_templates_actions';
+import { fetchRequestTemplates, createRequestTemplate, deleteRequestTemplate } from '../../actions/request_templates_actions';
 import { clearRequestTemplateErrors } from '../../actions/error_actions'
 // import theme from './theme';
 
@@ -46,7 +46,8 @@ const mapDispatchToProps = dispatch => ({
   customizeIntroEmail: () => dispatch(customizeIntroEmail()),
   createRequestTemplate: payload => dispatch(createRequestTemplate(payload)),
   fetchRequestTemplates: () => dispatch(fetchRequestTemplates()),
-  clearRequestTemplateErrors: () => dispatch(clearRequestTemplateErrors())
+  clearRequestTemplateErrors: () => dispatch(clearRequestTemplateErrors()),
+  deleteRequestTemplate: (id) => dispatch(deleteRequestTemplate(id))
 });
 
 const styles = theme => ({
@@ -95,7 +96,8 @@ class RequestIntroModal extends React.Component {
       newTemplateSubject: '',
       newTemplateBody: '',
       newTemplateName: '',
-      savingTemplate: false
+      savingTemplate: false,
+      templateId: 'default'
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -106,6 +108,8 @@ class RequestIntroModal extends React.Component {
     this.handleChangeTarget = this.handleChangeTarget.bind(this);
     this.handleSaveTemplate = this.handleSaveTemplate.bind(this)
     this.handleChangeTemplate = this.handleChangeTemplate.bind(this);
+    this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
+    this.resetCustomEmail = this.resetCustomEmail.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -142,9 +146,22 @@ class RequestIntroModal extends React.Component {
   handleChangeTemplate(e){
     const { requestTemplates } = this.props;
     let templateId = e.target.value;
-    let { subject, body } = requestTemplates[templateId]
+    if (templateId === 'default'){
+      this.resetCustomEmail(templateId)
+    } else {
+      let { subject, body } = requestTemplates[templateId]
+      this.setState({ introSubject: subject, introBody: body, templateId })
+    }
+  }
 
-    this.setState({ introSubject: subject, introBody: body, templateId })
+  resetCustomEmail(templateId){
+    const { target } = this.state
+    const { requestIntroModal, users } = this.props;
+    const { contact } = requestIntroModal;
+    let targetUser = users[target]
+    let introSubject = `I think you’ll appreciate this...`
+    let introBody = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(targetUser.fname)}`
+    this.setState({ introSubject, introBody, templateId })
   }
 
   handleCheckedChange(field) {
@@ -180,6 +197,11 @@ class RequestIntroModal extends React.Component {
 
     this.props.createSalesIntro(payload)
     .then(() => this.setState({ page: 'response'}) )
+  }
+
+  handleDeleteTemplate(){
+    this.props.deleteRequestTemplate(this.state.templateId)
+    .then(() => this.resetCustomEmail('default'))
   }
 
   handleSaveTemplate(){
@@ -365,8 +387,9 @@ class RequestIntroModal extends React.Component {
             {`Customize the email template that your teammate will send to their contact. Note* Your teammate will still be able to make further changes to this template later`}
           </Typography>
           {window.publicEnv !== 'production' && <Grid container justify='space-between'>
-            <Grid item xs={12} sm={6}>
-              <Button style={{ fontSize: 14, textTransform: 'none'}}
+            <Grid item xs={12} sm={6}
+            alignItems='flex-end'>
+              <Button style={{ fontSize: 14, fontWeight: 400, textTransform: 'none'}}
                 onClick={this.changePage("new template")}>
                 {`Add Custom Template`}
               </Button>
@@ -380,12 +403,22 @@ class RequestIntroModal extends React.Component {
                   <Select value={templateId} fullWidth
                     onClick={(e) => e.stopPropagation()}
                     onChange={this.handleChangeTemplate}>
+                    <MenuItem value={'default'}>{`Default`}</MenuItem>
                     {Object.values(requestTemplates).map(template => {
                       return <MenuItem value={template.id}>{template.name}</MenuItem>
                     })}
                   </Select>
                 </FormControl>}
             </Grid>
+          </Grid>}
+          {window.publicEnv !== 'production' && 
+          templateId !== 'default' &&
+          <Grid container justify='flex-end'>
+            <Button color='default'
+              onClick={this.handleDeleteTemplate}
+            style={{ textTransform: 'none', fontWeight: 400, fontSize: 13}}>
+              {`Delete Template`}
+            </Button>
           </Grid>}
           <TextField
             fullWidth
@@ -467,7 +500,12 @@ class RequestIntroModal extends React.Component {
             value={newTemplateBody}
             onChange={this.handleChange('newTemplateBody')}
           />
-          <Grid container justify='flex-end'>
+          <Grid container justify='space-between'>
+            <Button variant='contained' color='default'
+              onClick={this.changePage("custom")}>
+              {`Back`}
+            </Button>
+
             <Button color='primary' variant='contained'
               disabled={!newTemplateSubject || !newTemplateBody || !newTemplateName || savingTemplate}
               onClick={this.handleSaveTemplate}>

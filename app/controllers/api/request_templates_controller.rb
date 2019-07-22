@@ -15,6 +15,16 @@ class Api::RequestTemplatesController < ApiController
     end
   end
 
+  def destroy
+    @request_template = @current_user.request_templates
+      .where(id: params[:template_id]).first
+    if @request_template && @request_template.destroy
+      render json: ['Success'], status: 200
+    else
+      render json: @request_template.errors.full_messages, status: 422
+    end
+  end
+
   private
 
   def request_template_params

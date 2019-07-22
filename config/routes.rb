@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     resources :sales_intros
     resource :admin_signup_links, only: [:show]
     resources :sales_network_invites
-    resources :request_templates, only: [:index, :create]
+    resources :request_templates, only: [:index, :create, :destroy]
     # resource :users, only: [] do
     #   resource :user, only: [:update, :destroy]
     # end
