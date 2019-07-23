@@ -23,8 +23,6 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 import Capitalize from 'capitalize';
 
 import { connect } from 'react-redux';
-import { fetchUserOpportunities,
-  deleteOpportunity } from '../../actions/opportunity_actions';
 import { closeSalesNetworkInvite } from '../../actions/modal_actions';
 import { clearSalesNetworkInviteErrors } from '../../actions/error_actions';
 // import theme from './theme';

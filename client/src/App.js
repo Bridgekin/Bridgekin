@@ -5,34 +5,13 @@ import { AuthRoute,
   ProtectedRoute,
   AdminProtectedRoute,
   TemplateProtectedRoute,
-  ReferralProtectedRoute,
   SalesAuthRoute } from './util/route_util';
 import './App.css';
 
-// import { MuiThemeProvider } from '@material-ui/core/styles';
-// import getTheme from './components/theme';
-
-import HomeNav from './components/nav/home_nav';
 import Footer from './components/nav/footer';
-
-import OpportunityHome from './components/opportunity/opportunity_home';
-import DirectLinkPage from './components/opportunity/direct_link_page';
-import HomePage from './components/home/home_page';
-// // import AccountRoute from './components/account/account_route';
-import AccountMain from './components/account/account_main';
-// // import OpportunityCreate from './components/post_opportunity/opportunity_create';
-// // import OpportunityEdit from './components/post_opportunity/opportunity_edit';
-import SignupPage from './components/home/signup_page';
 import AccountConfirmed from './components/account/account_confirmed';
-// import ConnectionsHome from './components/connections/connections_home';
-import MyTrustedNetwork from './components/connections/my_trusted_network';
-
-import Login from './components/home/login_page';
 import PasswordReset from './components/home/password_reset';
 import PasswordUpdate from './components/home/password_update';
-// // import ConnectionsHome from './components/wip';
-import TestFeature from './components/nav/test_feature';
-import NetworkAdmin from './components/networks/network_admin';
 
 import UserAgreement from './components/terms/user_agreement';
 import PrivacyPolicy from './components/terms/privacy_policy';
@@ -44,9 +23,6 @@ import ScrollToTop from './components/scroll_to_top';
 
 import ImportContacts from './components/google/import_contacts';
 
-import HiringRouter from './components/hiring/hiring_router.jsx'
-import HiringNav from './components/hiring/nav.jsx'
-
 import SalesRouter from './components/sales/sales_router.jsx'
 import SalesNav from './components/sales/nav.jsx'
 import SalesLandingPage from './components/sales/landing_page.jsx'
@@ -56,29 +32,16 @@ export default ()=> (
     <ScrollToTop />
 
     <Switch>
-      <Route path="/hiring" component={HiringNav} />
       <Route path="/" component={SalesNav} />
-      {/* <Route exact path="/" component={SalesNav} /> */}
-      {/* <Route path="/" component={HomeNav} /> */}
     </Switch>
 
     {/* General Modals */}
     <Switch>
       <Route path="/sales" component={SalesRouter} />
       <AuthRoute exact path="/" component={SalesLandingPage} />
-      <Route path="/hiring" component={HiringRouter} />
-
-      {/* <ProtectedRoute path="/account" component={AccountMain} /> */}
-      {/* <ProtectedRoute path="/importcontacts" component={ImportContacts} />
-      <ProtectedRoute path="/findandconnect/:source?" component={OpportunityHome} />
-      <ProtectedRoute path="/mynetwork" component={MyTrustedNetwork} /> */}
-
-      {/* <AdminProtectedRoute path="/managenetworks" component={NetworkAdmin} />
-      <TemplateProtectedRoute path="/testfeature" component={TestFeature} name='testFeature'/>
-      <ReferralProtectedRoute path="/signup/:code" component={SignupPage} /> */}
 
       <AuthRoute path="/accountconfirmed" component={AccountConfirmed} />
-      <AuthRoute path="/login" component={Login}/>
+      {/* <AuthRoute path="/login" component={Login}/> */}
       <AuthRoute path="/passwordreset" component={PasswordReset}/>
       <AuthRoute path="/passwordupdate/:resetToken" component={PasswordUpdate}/>
       <AuthRoute path="/confirmationerror" component={ConfirmationError}/>
@@ -87,17 +50,12 @@ export default ()=> (
       <Route path="/useragreement" component={UserAgreement} />
       <Route path="/privacypolicy" component={PrivacyPolicy} />
       <Route path="/masterserviceagreement" component={MasterServiceAgreement} />
-      {/* <Route path="/shareopportunities/:linkCode" component={DirectLinkPage} /> */}
-
-      {/* <AuthRoute path="/platform" component={HomePage} /> */}
-      {/* <SalesAuthRoute path="/" component={SalesLandingPage} /> */}
-
+    
       <Route component={NotFound} />
     </Switch>
 
     {/* Footer */}
     <Route path="/" component={Footer} />
-
   </div>
 )
 

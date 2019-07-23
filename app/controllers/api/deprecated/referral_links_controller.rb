@@ -1,49 +1,49 @@
-require_relative '../concerns/devise_controller_patch.rb'
-class Api::ReferralLinksController < ApiController
-  include DeviseControllerPatch
-  before_action :authenticate_user
+# require_relative '../concerns/devise_controller_patch.rb'
+# class Api::ReferralLinksController < ApiController
+#   include DeviseControllerPatch
+#   before_action :authenticate_user
 
-  after_action :verify_authorized, except: :index
-  # after_action :verify_policy_scoped, only: :index
+#   after_action :verify_authorized, except: :index
+#   # after_action :verify_policy_scoped, only: :index
 
-  def create
-    # @link = ReferralLink.where(
-    #   member_id: @user.id,
-    #   network_id: params[:referral][:network_id]
-    # ).first
+#   def create
+#     # @link = ReferralLink.where(
+#     #   member_id: @user.id,
+#     #   network_id: params[:referral][:network_id]
+#     # ).first
 
-    # if @link
-    #   authorize @link
-    #   render :show
-    # else
-    @link = ReferralLink.new(
-      member_id: @user.id,
-      network_id: params[:referral][:network_id],
-      is_friendable: params[:referral][:is_friendable],
-      usage_type: params[:referral][:usage_type]
-    )
-    authorize @link
-    if @link.save
-      render :show
-    else
-      render json: @link.errors.full_messages, status: 422
-    end
-    # end
-  end
+#     # if @link
+#     #   authorize @link
+#     #   render :show
+#     # else
+#     @link = ReferralLink.new(
+#       member_id: @user.id,
+#       network_id: params[:referral][:network_id],
+#       is_friendable: params[:referral][:is_friendable],
+#       usage_type: params[:referral][:usage_type]
+#     )
+#     authorize @link
+#     if @link.save
+#       render :show
+#     else
+#       render json: @link.errors.full_messages, status: 422
+#     end
+#     # end
+#   end
 
-  def reveal
-    @link = ReferralLink.find_by(referral_code: params[:referral_code])
+#   def reveal
+#     @link = ReferralLink.find_by(referral_code: params[:referral_code])
 
-    if @link
-      render :reveal
-    else
-      ender json: ['invalid referral link'], status: :unprocessable_entity
-    end
-  end
+#     if @link
+#       render :reveal
+#     else
+#       ender json: ['invalid referral link'], status: :unprocessable_entity
+#     end
+#   end
 
-  private
+#   private
 
-  def referral_params
-    params.permit(:member_id, :network_id, :referral_code, :is_friendable)
-  end
-end
+#   def referral_params
+#     params.permit(:member_id, :network_id, :referral_code, :is_friendable)
+#   end
+# end

@@ -1,35 +1,26 @@
 FactoryBot.define do
-  factory :user, aliases: [:owner, :recipient,
-    :reipient, :member, :admin, :facilitator] do
-    fname { "John" }
-    sequence :lname do |n|
-      "Doe#{n}@example.com"
-    end
+  factory :user, aliases: [:owner, :recipient, :member, :admin, :facilitator, :payer] do
+    fname { Faker::Name.first_name }
+    lname { Faker::Name.unique.last_name }
+    email { Faker::Internet.unique.email}
+    
+    Faker::Config.locale = 'en-US'
 
-    sequence :email do |n|
-      "person#{n}@example.com"
-    end
+    phone_number { Faker::PhoneNumber.phone_number }
+    city { Faker::Address.city}
+    state { Faker::Address.state }
+    country { Faker::Address.country_by_code }
 
-    phone { '4101234567'}
-    city { 'San Francisco'}
-    state { 'California' }
-    country { 'USA' }
-
-    password { '12345678' }
-    password_confirmation { '12345678' }
+    faker_pass = Faker::Internet.password 
+    password { faker_pass }
+    password_confirmation { faker_pass }
 
     confirmed_at { DateTime.now}
     email_confirmed_at { DateTime.now }
 
-    invites_remaining { 3 } #Old
-
-    trait :with_networks do
-      transient do
-        networks { [] }
-      end
-
-      after(:create) do |user, evaluator|
-        networks.each{|network| user.member_networks << network}
+    trait :with_sales_network do
+      after(:create) do |user|
+        create_list(:sales_network, 3, member: user)
       end
     end
 

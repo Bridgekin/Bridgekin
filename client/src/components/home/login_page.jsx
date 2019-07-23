@@ -10,7 +10,7 @@ import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 
 import { login } from '../../actions/session_actions';
-import { addUserByReferral } from '../../actions/member_users_actions';
+// import { addUserByReferral } from '../../actions/member_users_actions';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -22,7 +22,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   login: (user) => dispatch(login(user)),
-  addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
+  // addUserByReferral: (referralCode, userId) => dispatch(addUserByReferral(referralCode, userId))
 });
 
 const styles = theme => ({
@@ -81,13 +81,13 @@ class AccountHome extends React.Component {
       password: this.state.password
     };
 
-    this.props.login(credentials)
-    .then((user) => {
-      let lastElement = path.pop();
-      if(lastElement !== 'login' && user){
-        this.props.addUserByReferral(lastElement, user.id)
-      }
-    })
+    // this.props.login(credentials)
+    // .then((user) => {
+    //   let lastElement = path.pop();
+    //   if(lastElement !== 'login' && user){
+    //     this.props.addUserByReferral(lastElement, user.id)
+    //   }
+    // })
 
   }
 

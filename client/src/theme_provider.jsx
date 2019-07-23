@@ -9,23 +9,23 @@ import getTheme from './components/theme';
 import { receiveDimensions } from './actions/util_actions';
 import debounce from 'lodash/debounce';
 
-import InviteModal from './components/modals/invite_modal';
-import CreateCircleModal from './components/modals/create_circle_modal';
-import CircleModal from './components/modals/circle_modal';
-import CustomEmailModal from './components/modals/custom_email_modal';
+// import InviteModal from './components/modals/invite_modal';
+// import CreateCircleModal from './components/modals/create_circle_modal';
+// import CircleModal from './components/modals/circle_modal';
+// import CustomEmailModal from './components/modals/custom_email_modal';
 import WaitlistModal from './components/modals/waitlist_modal';
-import OppCardModal from './components/modals/card_modal';
+// import OppCardModal from './components/modals/card_modal';
 import UpdateUserModal from './components/modals/update_user_modal';
-import DirectLinkModal from './components/modals/direct_link_modal';
-import OppChangeModal from './components/modals/opportunity_change_modal';
+// import DirectLinkModal from './components/modals/direct_link_modal';
+// import OppChangeModal from './components/modals/opportunity_change_modal';
 import ImageCropModal from './components/modals/image_upload_modal';
-import SubmitOppModal from './components/modals/submit_opp_modal';
-import DeleteOppModal from './components/modals/delete_opp_modal';
-import ExternalInviteModal from './components/modals/external_invite_modal';
+// import SubmitOppModal from './components/modals/submit_opp_modal';
+// import DeleteOppModal from './components/modals/delete_opp_modal';
+// import ExternalInviteModal from './components/modals/external_invite_modal';
 import SignupModal from './components/modals/signup_modal';
 import LoginModal from './components/modals/login_modal';
-import RefApplicationModal from './components/modals/ref_application_modal';
-import RefAppStatusModal from './components/modals/ref_app_status_modal';
+// import RefApplicationModal from './components/modals/ref_application_modal';
+// import RefAppStatusModal from './components/modals/ref_app_status_modal';
 import RequestIntroModal from './components/modals/request_intro_modal';
 import ConnectSocialModal from './components/modals/connect_social_modal';
 import RespondToRequestModal from './components/modals/respond_intro_modal';
@@ -73,27 +73,15 @@ class ThemeProvider extends React.Component{
 
             {/* MODALS */}
             {currentUser && <div>
-              <InviteModal/>
-              <CreateCircleModal/>
-              <CircleModal/>
-              <CustomEmailModal/>
               <UpdateUserModal/>
-              <DirectLinkModal/>
-              <OppChangeModal/>
               <ImageCropModal />
-              <SubmitOppModal />
-              <DeleteOppModal />
-              <ExternalInviteModal/>
-              <RefAppStatusModal />
               <ConnectSocialModal />
               <RespondToRequestModal />
               <SalesNetworkInviteModal />
             </div>}
             <SignupModal />
-            <OppCardModal/>
             <WaitlistModal/>
             <LoginModal />
-            <RefApplicationModal />
             <RequestIntroModal />
 
           </GAListener>

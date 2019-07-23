@@ -4,7 +4,7 @@ import {receiveSiteTemplate} from './site_template_actions';
 import {receiveWorkspaces} from './workspace_actions';
 import {removeSiteTemplate} from './site_template_actions';
 import {receiveUserFeature} from './user_feature_actions';
-import {receiveConnections} from './connection_actions';
+// import {receiveConnections} from './connection_actions';
 import {receiveSessionErrors, receiveUserErrors} from './error_actions';
 import { retrieveNetworkDetails, receiveSalesNetworks, setCurrentNetwork } from './sales_network_actions';
 import { receiveSalesUserNetworks } from './sales_user_network_actions'
@@ -35,7 +35,7 @@ export const refSignup = (formUser, code) => dispatch => (
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
-      dispatch(receiveConnections(data.connections));
+      // dispatch(receiveConnections(data.connections));
     })
     .catch(errors => {
       if (!(errors instanceof Array)){
@@ -165,7 +165,7 @@ export const login = formUser => dispatch => (
       dispatch(receiveSiteTemplate(data.siteTemplate));
       dispatch(receiveWorkspaces(data.workspaces));
       dispatch(receiveUserFeature(data.userFeature));
-      dispatch(receiveConnections(data.connections));
+      // dispatch(receiveConnections(data.connections));
 
       dispatch(retrieveNetworkDetails(data.networkDetails))
       dispatch(receiveSalesNetworks(data.salesNetworks))

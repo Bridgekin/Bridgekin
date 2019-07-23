@@ -20,8 +20,9 @@ DatabaseCleaner.strategy = :truncation
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
 
-  config.include ApiHelper, type: :api
+  # config.include ApiHelper, type: :api
   config.include Requests::JsonHelpers, type: :api
+  config.use_transactional_fixtures = false
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

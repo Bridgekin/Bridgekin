@@ -10,75 +10,70 @@ class User < ApplicationRecord
   validates :email, uniqueness: { case_sensitive: false }
   validates :phone_number, uniqueness: { allow_blank: :true}
 
-  has_many :opportunities,
-    foreign_key: :owner_id,
-    class_name: :Opportunity
+  # has_many :opportunities,
+  #   foreign_key: :owner_id,
+  #   class_name: :Opportunity
 
-  has_many :connected_opportunities,
-    foreign_key: :user_id,
-    class_name: :ConnectedOpportunity
+  # has_many :connected_opportunities,
+  #   foreign_key: :user_id,
+  #   class_name: :ConnectedOpportunity
 
-  has_many :opportunity_connections,
-    through: :connected_opportunities,
-    source: :opportunity
+  # has_many :opportunity_connections,
+  #   through: :connected_opportunities,
+  #   source: :opportunity
 
-  has_many :finalized_opportunities,
-    foreign_key: :user_id,
-    class_name: :FinalizedOpportunity
+  # has_many :finalized_opportunities,
+  #   foreign_key: :user_id,
+  #   class_name: :FinalizedOpportunity
 
-  has_many :saved_opportunities,
-    foreign_key: :user_id,
-    class_name: :SavedOpportunity
+  # has_many :saved_opportunities,
+  #   foreign_key: :user_id,
+  #   class_name: :SavedOpportunity
 
-  has_many :facilitated_opportunities,
-    foreign_key: :facilitator_id,
-    class_name: :ConnectedOpportunity
+  # has_many :facilitated_opportunities,
+  #   foreign_key: :facilitator_id,
+  #   class_name: :ConnectedOpportunity
 
-  has_many :opportunity_connections_facilitated,
-    through: :facilitated_opportunities,
-    source: :opportunity
+  # has_many :opportunity_connections_facilitated,
+  #   through: :facilitated_opportunities,
+  #   source: :opportunity
 
-  has_many :facilitated_deals,
-    foreign_key: :facilitator_id,
-    class_name: :FinalizedOpportunity
+  # has_many :facilitated_deals,
+  #   foreign_key: :facilitator_id,
+  #   class_name: :FinalizedOpportunity
 
-  has_many :user_networks,
-    foreign_key: :member_id,
-    class_name: :UserNetwork
+  # has_many :user_networks,
+  #   foreign_key: :member_id,
+  #   class_name: :UserNetwork
 
-  has_many :member_networks,
-    through: :user_networks,
-    source: :network
+  # has_many :member_networks,
+  #   through: :user_networks,
+  #   source: :network
 
-  has_many :network_admins,
-    foreign_key: :admin_id,
-    class_name: :NetworkAdmin
+  # has_many :network_admins,
+  #   foreign_key: :admin_id,
+  #   class_name: :NetworkAdmin
 
-  has_many :managed_networks,
-    through: :network_admins,
-    source: :network
+  # has_many :managed_networks,
+  #   through: :network_admins,
+  #   source: :network
 
-  has_many :referral_links,
-    foreign_key: :member_id,
-    class_name: :ReferralLink
+  # has_many :referral_links,
+  #   foreign_key: :member_id,
+  #   class_name: :ReferralLink
 
-  has_one :recieved_referral,
-    foreign_key: :recipient_id,
-    class_name: :ReferralLink
-
-  has_one :notification_setting,
-    foreign_key: :user_id,
-    class_name: :EmailNotification
-    # dependent: :destroy
-
-  has_many :requested_connections,
-    foreign_key: :user_id,
-    class_name: :Connection
-
-  has_many :received_connections,
-    foreign_key: :friend_id,
-    class_name: :Connection
-
+  # has_one :recieved_referral,
+  #   foreign_key: :recipient_id,
+  #   class_name: :ReferralLink
+  
+  # has_many :requested_connections,
+  #   foreign_key: :user_id,
+  #   class_name: :Connection
+  
+  # has_many :received_connections,
+  #   foreign_key: :friend_id,
+  #   class_name: :Connection
+  
   # has_many :user_circles,
   #   foreign_key: :member_id,
   #   class_name: :UserCircle
@@ -86,49 +81,54 @@ class User < ApplicationRecord
   # has_many :member_circles,
   #   through: :user_circles,
   #   source: :circle
-
-  has_many :circles,
-    foreign_key: :owner_id,
-    class_name: :Circle,
-    dependent: :destroy
-
-  has_many :circle_connections,
-    through: :circles,
-    source: :circle_connections
-
-  has_many :connections_for_circles,
-    through: :circle_connections,
-    source: :connection
-
+  
+  # has_many :circles,
+  #   foreign_key: :owner_id,
+  #   class_name: :Circle,
+  #   dependent: :destroy
+  
+  # has_many :circle_connections,
+  #   through: :circles,
+  #   source: :circle_connections
+  
+  # has_many :connections_for_circles,
+  #   through: :circle_connections,
+  #   source: :connection
+  
   has_one_attached :profile_pic
-
-  has_many :notifications,
-    foreign_key: :recipient_id,
-    class_name: :Notification
-
-  has_many :notifications_acted,
-    foreign_key: :actor_id,
-    class_name: :Notification
-
-  has_one :notification_setting,
-    foreign_key: :user_id,
-    class_name: :NotificationSetting
-
-  has_many :passed_opportunities,
-    foreign_key: :user_id,
-    class_name: :PassedOpportunity
+  
+  # has_many :notifications,
+  #   foreign_key: :recipient_id,
+  #   class_name: :Notification
+  
+  # has_many :notifications_acted,
+  #   foreign_key: :actor_id,
+  #   class_name: :Notification
+  
+  # has_one :notification_setting,
+  #   foreign_key: :user_id,
+  #   class_name: :NotificationSetting
+  
+    # has_one :notification_setting,
+    #   foreign_key: :user_id,
+    #   class_name: :EmailNotification
+    #   # dependent: :destroy
+  
+  # has_many :passed_opportunities,
+  #   foreign_key: :user_id,
+  #   class_name: :PassedOpportunity
 
   has_one :user_feature,
     foreign_key: :user_id,
     class_name: :UserFeature
 
-  has_many :ref_opportunities,
-    foreign_key: :owner_id,
-    class_name: :RefOpportunity
+  # has_many :ref_opportunities,
+  #   foreign_key: :owner_id,
+  #   class_name: :RefOpportunity
 
-  has_many :ref_opp_links,
-    foreign_key: :owner_id,
-    class_name: :RefOppLink
+  # has_many :ref_opp_links,
+  #   foreign_key: :owner_id,
+  #   class_name: :RefOppLink
 
   has_many :sales_user_networks,
     foreign_key: :user_id,
@@ -186,6 +186,7 @@ class User < ApplicationRecord
   # end
 
   def self.determine_end_date(time)
+    return nil unless time.is_a?(ActiveSupport::Duration)
     now = DateTime.now
     rounded = now.beginning_of_hour + 1.hour
     if rounded.hour > 17
@@ -197,18 +198,19 @@ class User < ApplicationRecord
     rounded + time
   end
 
-  def save_to_network(network, user_type)
+  def save_to_network(network, user_type = 'full')
     ActiveRecord::Base.transaction do
       self.save!
-      self.sales_user_networks.create(network: network, member_type: user_type)
-    rescue => e
-      logger.error "Error saving to network:#{e.message}"
-      errors.add(:base, e.message)
-      return false
+      self.sales_user_networks.create!(network: network, member_type: user_type)
     end
+    true
+  rescue => e
+    logger.error "Error saving to network:#{e.message}"
+    errors.add(:base, e.message)
+    false
   end
 
-  def save_new_admin_network(domain_params, purchase_params, address_params)
+  def save_new_admin_network(domain_params, purchase_params) # address_params)
     return false if invalid?
     @sales_network = SalesNetwork.new(domain_params)
     end_date = User.determine_end_date(1.week)
@@ -252,6 +254,7 @@ class User < ApplicationRecord
     true
   rescue Stripe::CardError => e
     # Since it's a decline, Stripe::CardError will be caught
+    debugger
     body = e.json_body
     err  = body[:error]
     logger.error "Status is: #{e.http_status}"
@@ -263,12 +266,14 @@ class User < ApplicationRecord
     return false
   rescue Stripe::RateLimitError => e
     # Too many requests made to the API too quickly
+    debugger
     logger.error "Rate Limit Reached"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue Stripe::InvalidRequestError => e
     # Invalid parameters were supplied to Stripe's API
+    debugger
     logger.error "Invalid params"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
@@ -276,24 +281,28 @@ class User < ApplicationRecord
   rescue Stripe::AuthenticationError => e
     # Authentication with Stripe's API failed
     # (maybe you changed API keys recently)
+    debugger
     logger.error "Authentication error (probably because of API key)"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue Stripe::APIConnectionError => e
     # Network communication with Stripe failed
+    debugger
     logger.error "Network comms error with Stripe"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue Stripe::StripeError => e
     # Display a very generic error to the user, and maybe send yourself an email
+    debugger
     logger.error "Authentication error (probably because of API key)"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue => e
     # Something else happened, completely unrelated to Stripe
+    debugger
     logger.error "Something else happened: #{e.message}"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")

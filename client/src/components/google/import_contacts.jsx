@@ -9,7 +9,7 @@ import BridgekinLogo from '../../static/Bridgekin_Logo.png'
 import FeedContainer from '../feed_container';
 import Loading from '../loading';
 import Img from 'react-image'
-import ContactCard from '../connections/contact_card';
+// import ContactCard from '../connections/contact_card';
 import FeedCard from '../feed_card';
 import GoogleLogo from './google-favicon-logo.png';
 
@@ -236,7 +236,7 @@ class GoogleContacts extends React.Component {
     ))
     let nonBIDCards = nonBIDUsers.map(importedUser => {
       return <FeedCard
-        contents={<ContactCard importedUser={importedUser} imported external />}
+        // contents={<ContactCard importedUser={importedUser} imported external />}
       />
     })
 
@@ -246,7 +246,7 @@ class GoogleContacts extends React.Component {
     ))
     let unconnectedBIDCards = unconnectedBIDs.map(contactId => (
       <FeedCard
-        contents={<ContactCard contactId={contactId} imported internal />}
+        // contents={<ContactCard contactId={contactId} imported internal />}
       />
     ))
     // debugger

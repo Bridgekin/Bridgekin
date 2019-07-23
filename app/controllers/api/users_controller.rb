@@ -36,7 +36,7 @@ class Api::UsersController < ApiController
     @current_user = User.new(user_params)
 
     if @current_user.save_new_admin_network(
-      domain_params, purchase_params, address_params)
+      domain_params, purchase_params) #address_params)
 #Get Tokens and track
       @token = get_login_token!(@current_user)
       @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup      

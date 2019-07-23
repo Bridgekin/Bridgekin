@@ -92,7 +92,7 @@ class NetworkInviteCard extends React.Component {
           onClick={(e) => e.stopPropagation()}
           onChange={this.handleChange('userType')}>
             <MenuItem value={'full'}>{`Full User - Seat`}</MenuItem>
-            <MenuItem value={'external'}>{`External User - Upload Only`}</MenuItem>
+            <MenuItem value={'limited'}>{`External User - Upload Only`}</MenuItem>
         </Select>
       </Grid>
       <Grid item xs={1} container alignItems='center'>
