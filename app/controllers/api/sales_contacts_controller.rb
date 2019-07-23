@@ -15,16 +15,18 @@ class Api::SalesContactsController < ApiController
   def connect_social
     inputs = params[:connect_social] 
     import_hash = {}
-    inputs.each do |key, upload|
-      case key
-      when "linked_in_key"
-        import_hash[key] = upload
-      when "google_key"
-        import_hash[key] = upload
-      else
+    unless inputs.nil?
+      inputs.each do |key, upload|
+        case key
+        when "linked_in_key"
+          import_hash[key] = upload
+        when "google_key"
+          import_hash[key] = upload
+        else
+        end
       end
+      ConnectSocialJob.perform_later(import_hash, @current_user)
     end
-    ConnectSocialJob.perform_later(import_hash, @current_user)
     render json: ["Parsing Results"], status: 201
   end
 

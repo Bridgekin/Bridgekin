@@ -41,9 +41,9 @@ class SalesContact < ApplicationRecord
     # Filter back setting
     sales_contacts = case filter
     when "teammates"
-      sales_contacts.where.not(id: current_user.sales_contacts)
+      sales_contacts.where.not(sales_user_contacts: {user: current_user })
     when "mine"
-      sales_contacts.where(id: current_user.sales_contacts)
+      sales_contacts.where(sales_user_contacts: {user: current_user })
     when "linkedIn"
       sales_contacts.where(linked_in: true)
     when "google"
@@ -51,13 +51,17 @@ class SalesContact < ApplicationRecord
     else
       sales_contacts
     end
-
+    # Track search terms
+    trackTerm = TrackSearchTerm.new(user_id: current_user.id)
     #Parse Results from user entry
     SEARCH_MAP.each do |key, value|
       if social_params[value].present?
+        trackTerm[value] = social_params[value];
         sales_contacts = sales_contacts.where("LOWER(sales_contacts.#{key}) LIKE LOWER(?)", "%#{social_params[value]}%") 
       end
     end
+    #Save search term
+    trackTerm.save
     sales_contacts
   end
 
@@ -100,9 +104,9 @@ class SalesContact < ApplicationRecord
       contact = SalesContact.find_by(fname: payload[:fname],lname: payload[:lname]) 
       if contact.present?
         #Confirm this is actually the same contact
-        contact_domain = contact.email.split('@').last
-        contact.email.present?
-        unless (contact.company == payload[:company] && contact.position == payload[:position]) || contact_domain == company.domain
+        contact_domain = contact.email.split('@').last if contact.email.present?
+
+        unless (contact.company == payload[:company] && contact.position == payload[:position]) || (company.present? && contact_domain == company.domain)
           contact = nil
         end
       end
@@ -164,12 +168,16 @@ class SalesContact < ApplicationRecord
 
   def grab_avatar_image(url)
     # downloaded_image = open(url)
-    tempfile = Down.download(url)
-    mimetext = MIME::Types[tempfile.content_type].first
-    extension = mimetext.preferred_extension
-
-    if extension.present?
-      self.avatar.attach(io: tempfile, filename: "full_contact_avatar-#{self.id}.#{extension}")
+    begin
+      tempfile = Down.download(url)
+      mimetext = MIME::Types[tempfile.content_type].first
+      extension = mimetext.preferred_extension
+  
+      if extension.present?
+        self.avatar.attach(io: tempfile, filename: "full_contact_avatar-#{self.id}.#{extension}")
+      end
+    rescue => e
+      logger.error "Error downloading avatar image for contact #{self.id}: #{e.messsage}"
     end
   end
 end

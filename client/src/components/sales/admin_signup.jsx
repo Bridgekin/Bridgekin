@@ -528,7 +528,7 @@ class AdminSignup extends React.Component {
                   style={{ fontSize: 12, margin: "5px 0px" }}>
                   {`By registering, I confirm that I have read and agree to the `}
                   <Link to="/privacypolicy" target="_blank">Privacy Policy</Link> {` and `}
-                  <Link to="/useragreement" target="_blank">Terms Of Use.</Link>
+                  <Link to="/useragreement" target="_blank">User Agreement.</Link>
                 </Typography>
               }
             />

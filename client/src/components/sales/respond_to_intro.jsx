@@ -141,11 +141,10 @@ class RespondToIntro extends React.Component {
       dimensions, salesIntros, salesContacts,
       introId } = this.props
     const { loaded } = this.state;
-
     if (currentUser && loaded){
       let intro = salesIntros[introId];
       let contact = salesContacts[intro.contactId];
-
+      
       let contactComp = <Grid container justify='center'>
         <Grid item xs={10} sm={8}
         style={{ marginTop: 30}}>
@@ -165,7 +164,7 @@ class RespondToIntro extends React.Component {
             </Typography>
           </Grid>}
 
-          {intro.referralBonus && 
+          {Boolean(!!intro.referralBonus) && 
             <Typography align='center'
               style={{ fontSize: 16 }}>
             {`Referral Amount: `}<b>{intro.referralUnit === '$' ? `$${intro.referralBonus}` : `${intro.referralBonus}%`}</b>

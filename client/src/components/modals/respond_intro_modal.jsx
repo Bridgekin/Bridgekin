@@ -26,9 +26,10 @@ import { connect } from 'react-redux';
 import { fetchUserOpportunities,
   deleteOpportunity } from '../../actions/opportunity_actions';
 import { closeRespondToRequest } from '../../actions/modal_actions';
-import { respondToRequest } from '../../actions/sales_intro_actions';
+import { respondToRequest, trackRespondIntro } from '../../actions/sales_intro_actions';
 import { clearSalesIntroErrors } from '../../actions/error_actions';
 // import theme from './theme';
+import copy from 'copy-to-clipboard';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
@@ -44,7 +45,8 @@ const mapDispatchToProps = dispatch => ({
   fetchUserOpportunities: () => dispatch(fetchUserOpportunities()),
   deleteOpportunity: (id) => dispatch(deleteOpportunity(id)),
   respondToRequest: response => dispatch(respondToRequest(response)),
-  clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors())
+  clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors()),
+  trackRespondIntro: type => dispatch(trackRespondIntro(type))
 });
 
 const styles = theme => ({
@@ -103,7 +105,9 @@ class RespondIntroModal extends React.Component {
       open: false,
       page: 'response',
       reason: '',
-      details: ''
+      details: '',
+      copiedSubject: false,
+      copiedBody: false
     };
 
     this.reasons = [
@@ -115,6 +119,7 @@ class RespondIntroModal extends React.Component {
     this.handleCheckbox = this.handleCheckbox.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.redirectToStats = this.redirectToStats.bind(this);
+    this.handleCopy = this.handleCopy.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -134,10 +139,15 @@ class RespondIntroModal extends React.Component {
           let subject = intro.introSubject || ""
           let body = intro.introBody || ""
 
+          this.setState({
+            page: 'intro',
+            email, subject, body, contact
+          })
+
           // OPEN EMAIL HERE
-          window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self')
-          this.handleClose()
-          this.setState({ sales_intro: intro })
+          // window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self')
+          // this.handleClose()
+          // this.setState({ sales_intro: intro })
           break;
         case "prefer not":
           this.setState({ 
@@ -162,6 +172,8 @@ class RespondIntroModal extends React.Component {
         default:
           break;
       }
+
+      this.props.trackRespondIntro(nextModal.decision)
     }
     return true;
   }
@@ -186,6 +198,21 @@ class RespondIntroModal extends React.Component {
       () => this.props.closeRespondToRequest());
   };
 
+  handleCopy(link, field) {
+    return () => {
+      copy(link);
+      switch(field){
+        case "subject": 
+          this.setState({ copiedSubject: true })
+          return
+        case "body": 
+          this.setState({ copiedBody: true })
+          return
+        default: return
+      }
+    }
+  }
+
   handleSubmit(){
     const { respondToRequestModal } = this.props;
     const { email, subject, body, reason, details} = this.state;
@@ -209,21 +236,78 @@ class RespondIntroModal extends React.Component {
     const { classes, respondToRequestModal, 
       salesIntros, salesContacts, users } = this.props;
     const { page, reason, details, email, 
-      subject, body, contact, sales_intro } = this.state;
+      subject, body, contact, sales_intro,
+      copiedSubject, copiedBody } = this.state;
     let requestor;
 
     switch(page){
       case "intro":  
-        let intro = <Grid item xs={10} container>
-          <Typography gutterBottom
-            style={{ fontSize: 20, fontWeight: 600 }}>
-            {`Thanks for moving forward with this Introduction Request!`}
+        // let intro = <Grid item xs={10} container>
+        //   <Typography gutterBottom
+        //     style={{ fontSize: 20, fontWeight: 600 }}>
+        //     {`Thanks for moving forward with this Introduction Request!`}
+        //   </Typography>
+        //   <Typography gutterBottom
+        //     style={{ fontSize: 16 }}>
+        //     {`We've opened your native email client and pre-filled the note to your contact. The rest is in your hands!`}
+        //   </Typography>
+        //   <Grid item xs={12}>
+        //     <Button style={{ margin: '0 auto', marginTop: 30 }}
+        //       onClick={this.redirectToStats} color='primary'>
+        //       {`Back to Stats`}
+        //     </Button>
+        //   </Grid>
+        // </Grid>
+
+        let intro = <Grid item xs={10} container direction='column'>
+          <Typography gutterBottom align='center'
+            style={{ fontSize: 18, fontWeight: 600 }}>
+            {`Message to Candidate`}
           </Typography>
-          <Typography gutterBottom
-            style={{ fontSize: 16 }}>
-            {`We've opened your native email client and pre-filled the note to your contact. The rest is in your hands!`}
+          <Typography 
+          style={{ fontSize: 14, margin: "15px 0px"}}>
+            {`Below are the suggested subject and email. Feel free to copy both and send through your email`}
           </Typography>
-          <Grid item xs={12}>
+          {/* <TextField
+            fullWidth
+            label="Email"
+            variant='outlined'
+            value={email}
+            onChange={this.handleChange('email')}
+            style={{ marginBottom: 10 }}
+          /> */}
+          <TextField
+            fullWidth
+            label="Subject"
+            variant='outlined'
+            value={subject}
+            onChange={this.handleChange('subject')}
+          />
+          <Grid container justify='flex-start'>
+            <Button onClick={this.handleCopy(subject, "subject")}
+              color='default' variant='contained'
+              style={{ margin: "20px 0px" }}>
+              {copiedSubject ? `Copied` : `Copy Subject`}
+            </Button>
+          </Grid>
+          <TextField
+            fullWidth
+            multiline
+            rows="12"
+            label="Body"
+            variant='outlined'
+            value={body}
+            onChange={this.handleChange('body')}
+          />
+          <Grid container justify='flex-start'>
+            <Button onClick={this.handleCopy(subject, "body")}
+              color='default' variant='contained'
+              style={{ margin: "20px 0px" }}>
+              {copiedBody ? `Copied` :`Copy Body`}
+            </Button>
+          </Grid>
+          <Grid container justify="center"
+            style={{ marginTop: 15 }}>
             <Button style={{ margin: '0 auto', marginTop: 30 }}
               onClick={this.redirectToStats} color='primary'>
               {`Back to Stats`}

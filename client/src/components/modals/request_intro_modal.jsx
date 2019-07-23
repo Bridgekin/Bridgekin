@@ -24,7 +24,9 @@ import Switch from '@material-ui/core/Switch';
 import { connect } from 'react-redux';
 import { closeRequestIntro } from '../../actions/modal_actions';
 import { clearSalesIntroErrors } from '../../actions/error_actions';
-import { createSalesIntro } from '../../actions/sales_intro_actions.js';
+import { createSalesIntro, customizeIntroEmail } from '../../actions/sales_intro_actions.js';
+import { fetchRequestTemplates, createRequestTemplate, deleteRequestTemplate } from '../../actions/request_templates_actions';
+import { clearRequestTemplateErrors } from '../../actions/error_actions'
 // import theme from './theme';
 
 const mapStateToProps = state => ({
@@ -32,13 +34,20 @@ const mapStateToProps = state => ({
   requestIntroErrors: state.errors.salesIntro,
   requestIntroModal: state.modals.requestIntro,
   friendMap: state.entities.sales.friendMap,
-  users: state.users
+  users: state.users,
+  requestTemplates: state.entities.sales.requestTemplates,
+  requestTemplateErrors: state.errors.requestTemplate
 });
 
 const mapDispatchToProps = dispatch => ({
   closeRequestIntro: () => dispatch(closeRequestIntro()),
   clearSalesIntroErrors: () => dispatch(clearSalesIntroErrors()),
-  createSalesIntro: salesIntro => dispatch(createSalesIntro(salesIntro))
+  createSalesIntro: salesIntro => dispatch(createSalesIntro(salesIntro)),
+  customizeIntroEmail: () => dispatch(customizeIntroEmail()),
+  createRequestTemplate: payload => dispatch(createRequestTemplate(payload)),
+  fetchRequestTemplates: () => dispatch(fetchRequestTemplates()),
+  clearRequestTemplateErrors: () => dispatch(clearRequestTemplateErrors()),
+  deleteRequestTemplate: (id) => dispatch(deleteRequestTemplate(id))
 });
 
 const styles = theme => ({
@@ -83,7 +92,12 @@ class RequestIntroModal extends React.Component {
       referralUnit: "$",
       target: null,
       introBody: '',
-      introSubject: ''
+      introSubject: '',
+      newTemplateSubject: '',
+      newTemplateBody: '',
+      newTemplateName: '',
+      savingTemplate: false,
+      templateId: 'default'
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -92,13 +106,20 @@ class RequestIntroModal extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.changePage = this.changePage.bind(this);
     this.handleChangeTarget = this.handleChangeTarget.bind(this);
+    this.handleSaveTemplate = this.handleSaveTemplate.bind(this)
+    this.handleChangeTemplate = this.handleChangeTemplate.bind(this);
+    this.handleDeleteTemplate = this.handleDeleteTemplate.bind(this);
+    this.resetCustomEmail = this.resetCustomEmail.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const nextModal = nextProps.requestIntroModal;
     const currentModal = this.props.requestIntroModal;
     if (nextModal.open && currentModal.open !== nextModal.open) {
-      this.setState({ page: nextModal.page, target: null })
+      this.props.fetchRequestTemplates()
+      .then(() => {
+        this.setState({ page: nextModal.page, target: null })
+      })
     }
     return true;
   }
@@ -120,6 +141,27 @@ class RequestIntroModal extends React.Component {
       e.preventDefault();
       this.setState({ [field]: e.target.value });
     }
+  }
+
+  handleChangeTemplate(e){
+    const { requestTemplates } = this.props;
+    let templateId = e.target.value;
+    if (templateId === 'default'){
+      this.resetCustomEmail(templateId)
+    } else {
+      let { subject, body } = requestTemplates[templateId]
+      this.setState({ introSubject: subject, introBody: body, templateId })
+    }
+  }
+
+  resetCustomEmail(templateId){
+    const { target } = this.state
+    const { requestIntroModal, users } = this.props;
+    const { contact } = requestIntroModal;
+    let targetUser = users[target]
+    let introSubject = `I think you’ll appreciate this...`
+    let introBody = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(targetUser.fname)}`
+    this.setState({ introSubject, introBody, templateId })
   }
 
   handleCheckedChange(field) {
@@ -157,18 +199,59 @@ class RequestIntroModal extends React.Component {
     .then(() => this.setState({ page: 'response'}) )
   }
 
+  handleDeleteTemplate(){
+    this.props.deleteRequestTemplate(this.state.templateId)
+    .then(() => this.resetCustomEmail('default'))
+  }
+
+  handleSaveTemplate(){
+    this.props.clearRequestTemplateErrors()
+    this.setState({ savingTemplate: true},
+      () => {
+        const { newTemplateSubject, newTemplateBody, newTemplateName} = this.state;
+        let payload = {
+          name: newTemplateName,
+          subject: newTemplateSubject,
+          body: newTemplateBody
+        }
+        // debugger
+        this.props.createRequestTemplate(payload)
+          .then((newTemplate) => {
+          if (this.props.requestTemplateErrors.length > 0){
+            this.setState({
+              savingTemplate: false,
+            })
+          } else {
+            this.setState({ 
+              savingTemplate: false,
+              page: "custom",
+              templateId: newTemplate.id,
+              subject: newTemplate.subject,
+              body: newTemplate.body
+            })
+          }
+        })
+      })
+  }
+
   changePage(page){
     return e => {
+      if (page === 'custom'){
+        this.props.customizeIntroEmail()
+      }
       this.setState({ page })
     }
   }
 
   getContent(){
     const { classes, currentUser, friendMap, 
-      requestIntroModal, users } = this.props;
+      requestIntroModal, users,
+      requestTemplates} = this.props;
     const { page, message, explaination, 
       referralBonus, target, introSubject,
-      introBody, referralUnit } = this.state;
+      introBody, referralUnit, templateId,
+      newTemplateSubject, newTemplateBody,
+      newTemplateName, savingTemplate } = this.state;
     const { contact } = requestIntroModal;
 
     if (!requestIntroModal.open){
@@ -303,6 +386,40 @@ class RequestIntroModal extends React.Component {
             style={{ fontSize: 12, marginBottom: 20}}>
             {`Customize the email template that your teammate will send to their contact. Note* Your teammate will still be able to make further changes to this template later`}
           </Typography>
+          {window.publicEnv !== 'production' && <Grid container justify='space-between'>
+            <Grid item xs={12} sm={6}
+            alignItems='flex-end'>
+              <Button style={{ fontSize: 14, fontWeight: 400, textTransform: 'none'}}
+                onClick={this.changePage("new template")}>
+                {`Add Custom Template`}
+              </Button>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              {Object.values(requestTemplates).length > 0 &&
+                <FormControl fullWidth 
+                className={classes.formControl}>
+                  <InputLabel>{`Choose Template`}</InputLabel>
+                  <Select value={templateId} fullWidth
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={this.handleChangeTemplate}>
+                    <MenuItem value={'default'}>{`Default`}</MenuItem>
+                    {Object.values(requestTemplates).map(template => {
+                      return <MenuItem value={template.id}>{template.name}</MenuItem>
+                    })}
+                  </Select>
+                </FormControl>}
+            </Grid>
+          </Grid>}
+          {window.publicEnv !== 'production' && 
+          templateId !== 'default' &&
+          <Grid container justify='flex-end'>
+            <Button color='default'
+              onClick={this.handleDeleteTemplate}
+            style={{ textTransform: 'none', fontWeight: 400, fontSize: 13}}>
+              {`Delete Template`}
+            </Button>
+          </Grid>}
           <TextField
             fullWidth
             label = "Subject"
@@ -339,6 +456,64 @@ class RequestIntroModal extends React.Component {
           </Grid>
         </Grid>
         return custom
+      case "new template":
+        let newTemplate = <Grid item xs={10}>
+          <Typography fullWidth color='textPrimary'
+            gutterBottom align='center'
+            style={{ fontSize: 24 }}>
+            {`Create Custom Template`}
+          </Typography>
+          <Typography fullWidth color='textSecondary'
+            gutterBottom align='center'
+            style={{ fontSize: 12, marginBottom: 20 }}>
+            {`Use this template in any future requests`}
+          </Typography>
+          {this.props.requestTemplateErrors.length > 0 && <Typography style={{ fontSize: 13, color: 'red'}}>
+            {`Errors:`} <br/>
+            <ul>
+            {this.props.requestTemplateErrors.map(error => <li>{error}</li> )}
+            </ul>
+          </Typography>}
+          <TextField
+            fullWidth
+            label="Custom Template Name"
+            variant='outlined'
+            value={newTemplateName}
+            margin="normal"
+            onChange={this.handleChange('newTemplateName')}
+          />
+          <TextField
+            fullWidth
+            label="Subject"
+            variant='outlined'
+            value={newTemplateSubject}
+            margin="normal"
+            onChange={this.handleChange('newTemplateSubject')}
+          />
+          <TextField
+            fullWidth
+            multiline
+            rows="12"
+            label="Body"
+            margin="normal"
+            variant='outlined'
+            value={newTemplateBody}
+            onChange={this.handleChange('newTemplateBody')}
+          />
+          <Grid container justify='space-between'>
+            <Button variant='contained' color='default'
+              onClick={this.changePage("custom")}>
+              {`Back`}
+            </Button>
+
+            <Button color='primary' variant='contained'
+              disabled={!newTemplateSubject || !newTemplateBody || !newTemplateName || savingTemplate}
+              onClick={this.handleSaveTemplate}>
+              {`Save New Template`}
+            </Button>
+          </Grid>
+        </Grid>
+        return newTemplate
       default:
         let requestIntroErrors = this.props.requestIntroErrors.map(error => {
           error = error.replace(/(Fname|Lname)/g, (ex) => {

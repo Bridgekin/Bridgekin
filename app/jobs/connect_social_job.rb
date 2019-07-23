@@ -18,30 +18,41 @@ class ConnectSocialJob < ApplicationJob
       access_key_id: Rails.application.credentials[aws_env][:access_key_id],
       secret_access_key: Rails.application.credentials[aws_env][:secret_access_key]
     )
-    # debugger
-    import_hash.each do |key, upload|
-      case key
-      when "linked_in_key"
-        resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
-        parsedFile = CSV.parse(resp.body.read.split("\n")
-          .drop(4)
-          .tap(&:pop)
-          .join("\n")
-          .remove("\r"),
-          headers: true)
-        ingestLinkedIn(parsedFile, current_user)
-      when "google_key"
-        resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
-        parsedFile = JSON.parse(resp.body.read
-          .remove("\r")
-          .split("\n")[3])
-        ingestGoogle(parsedFile, current_user)
-      else
-        logger.debug "Unsupported key provided"
+    stat = ConnectSocialStat.find_or_create_by(
+      uploader_id: current_user.id,
+      linked_in_url: import_hash["linked_in_key"],
+      google_url: import_hash["google_key"]
+    )
+
+    begin
+      import_hash.each do |key, upload|
+        case key
+        when "linked_in_key"
+          resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
+          parsedFile = CSV.parse(resp.body.read.split("\n")
+            .drop(4)
+            .tap(&:pop)
+            .join("\n")
+            .remove("\r"),
+            headers: true)
+          ingestLinkedIn(parsedFile, current_user)
+        when "google_key"
+          resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
+          parsedFile = JSON.parse(resp.body.read
+            .remove("\r")
+            .split("\n")[3])
+          ingestGoogle(parsedFile, current_user)
+        else
+          logger.debug "Unsupported key provided"
+        end
       end
+      #When complete, send an email letting user know that the import is finished
+      SalesMailer.notify_contacts_imported(current_user)
+      stat.update(status: "finished")
+    rescue => e
+      stat.update(status: "failed", retry_count: stat.retry_count + 1) 
+      logger.error "Connect Social Upload failed. Stat id: #{stat.id}, user_id: #{current_user.id}, errors: #{e.message}"
     end
-    #When complete, send an email letting user know that the import is finished
-    SalesMailer.notify_contacts_imported(current_user)
   end
 
   FCVARS = {
@@ -55,45 +66,24 @@ class ConnectSocialJob < ApplicationJob
   }
 
   def ingestGoogle(google_contacts, current_user)    
-    failed_saved_contacts = Array.new
     google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].blank? || entry['name'].blank?
-      #Set Contact's Name & Get Contact
-      name = Nameable.parse(entry['name'])
-      contact = SalesContact.find_similar_or_initialize_by("google", current_user, {
-        email: entry['email'],
-        fname: name.first,
-        lname: name.last
-      })
-      #Set Source
-      contact.setSource(:google_upload)
-      #Save Contact
-      if contact.save
-        #Check if contact and user are already friends
-        unless current_user.sales_contacts.include?(contact)
-          SalesUserContact.create(
-            user_id: current_user.id,
-            contact_id: contact.id
-          )
-        end
-        # # Kickoff Full Contact
-        if contact.email.present? && contact.last_full_contact_lookup.nil?
-          FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
-        end
-      else
-        #Save failed contact if needed
-        failed_saved_contacts << {
-          contact: entry, source: :linked_in_upload
-        }
-      end
-    end
-
-    if failed_saved_contacts.length > 0
-      logger.error "Google: Failed to sync following contacts for user id #{@user.id.to_s}:" + failed_saved_contacts.to_s
+      GoogleUploadJob.perform_later(entry, current_user)
     end
   end
   
+  def ingestLinkedIn(parsed_file, current_user)
+    parsed_file.each do |entry|
+      #Skip any cases without emails
+      if entry["First Name"].blank? || entry["Company"].blank?
+        logger.error "Skipping linkedin entry: fname:#{entry["First Name"]} company: #{entry["Company"]}"
+        next
+      end
+      LinkedInUploadJob.perform_later(entry.to_hash, current_user)
+    end
+  end
+
   HEADERMAPPING = {
     "Email Address" => :email,
     "First Name" => :fname,
@@ -102,41 +92,4 @@ class ConnectSocialJob < ApplicationJob
     "Position" => :position
   }
 
-  def ingestLinkedIn(parsed_file, current_user)
-    failed_saved_contacts = Array.new
-    
-    parsed_file.each do |entry|
-      #Skip any cases without emails
-      next if entry["First Name"].blank? || entry["Company"].blank?
-      #Get Contact
-      contact = SalesContact.find_similar_or_initialize_by("linkedin", current_user, {
-        fname: entry["First Name"],
-        lname: entry["Last Name"],
-        company: entry["Company"],
-        position: entry["Position"]
-      })
-      contact.email = entry["Email Address"] if entry["Email Address"].present? && contact.email.blank?
-      #Set Source
-      contact.setSource(:linked_in_upload)
-      if contact.save
-        #Check if contact and user are already friends
-        unless current_user.sales_contacts.include?(contact)
-          current_user.sales_user_contacts.create(contact: contact)
-        end
-        # company = contact.sales_company
-        # unless company.nil?
-          # HunterJob.perform_later(company, contact) if company.domain.present?
-        # end
-      else
-        #Save failed contact if needed
-        failed_saved_contacts << {
-          contact: entry, source: :linked_in_upload
-        }
-      end
-    end
-
-    if failed_saved_contacts.length > 0
-      logger.error "LinkedIn: Failed to sync following contacts for user id #{@user.id.to_s}:" + failed_saved_contacts.to_s
-    end
-  end
 end
