@@ -41,9 +41,9 @@ class SalesContact < ApplicationRecord
     # Filter back setting
     sales_contacts = case filter
     when "teammates"
-      sales_contacts.where.not(id: current_user.sales_contacts)
+      sales_contacts.where.not(sales_user_contacts: {user: current_user })
     when "mine"
-      sales_contacts.where(id: current_user.sales_contacts)
+      sales_contacts.where(sales_user_contacts: {user: current_user })
     when "linkedIn"
       sales_contacts.where(linked_in: true)
     when "google"

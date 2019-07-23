@@ -21,8 +21,11 @@ class GoogleUploadJob < ApplicationJob
             contact_id: contact.id
           )
         end
-        # # Kickoff Full Contact
-        if contact.email.present? && contact.last_full_contact_lookup.nil?
+        # Kickoff Full Contact
+        if contact.email.present? && 
+          contact.last_full_contact_lookup.nil? &&
+          Rails.env == "production"
+
           FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
         end
       end
