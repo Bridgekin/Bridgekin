@@ -66,7 +66,7 @@ class ConnectSocialJob < ApplicationJob
   }
 
   def ingestGoogle(google_contacts, current_user)    
-    google_contacts.take(100).each do |entry|
+    google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].blank? || entry['name'].blank?
       GoogleUploadJob.perform_later(entry, current_user)
