@@ -58,6 +58,13 @@ class SalesNetwork < ApplicationRecord
     return sales_networks, sales_user_networks, sales_admin_networks, current_network_id, network_details
   end
 
+  def get_member_type(current_user)
+    user_network = self.user_networks
+      .where(user: current_user)
+      .first
+    user_network.member_type
+  end
+
   def current_subscription
     self.subscriptions
       .order(:created_at)

@@ -111,7 +111,7 @@ class SalesMailer < ApplicationMailer
     @sales_network = network_invite.network
     @current_user = current_user
 
-    subject = "Bridgekin Network Invitation - From #{@current_user.fname.capitalize}"
+    subject = "#{@current_user.fname.capitalize}’s invited you to join #{@sales_network.title.capitalize} on Bridgekin"
 
     mail(to: @network_invite.email, subject: subject)
 

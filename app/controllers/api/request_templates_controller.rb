@@ -17,7 +17,7 @@ class Api::RequestTemplatesController < ApiController
 
   def destroy
     @request_template = @current_user.request_templates
-      .where(id: params[:template_id]).first
+      .where(id: params[:id]).first
     if @request_template && @request_template.destroy
       render json: ['Success'], status: 200
     else

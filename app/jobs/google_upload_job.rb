@@ -2,9 +2,12 @@ class GoogleUploadJob < ApplicationJob
   queue_as :default
 
   def perform(entry, current_user)
+    #Set Contact's Name
     name = Nameable.parse(entry['name'])
     begin
-      #Set Contact's Name & Get Contact
+      #Raise error if no contact
+      raise 'Fname or Lname not provided' if name.last.nil? || name.first.nil?
+      #Get Contact
       contact = SalesContact.find_similar_or_initialize_by("google", current_user, {
         email: entry['email'],
         fname: name.first,
@@ -29,7 +32,8 @@ class GoogleUploadJob < ApplicationJob
           FullContactJob.perform_later("people", email: contact.email, contact_id: contact.id)
         end
       end
-    rescue => exception
+    rescue => e
+      logger.error "Couldn't save record because #{e.message}"
       #save failed upload
       FailedUpload.create(
         uploader_id: current_user.id,

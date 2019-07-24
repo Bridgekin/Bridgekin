@@ -19,8 +19,8 @@ export const createRequestTemplate = (payload) => (
   })
 )
 
-export const deleteRequestTemplate = (templateId) => (
-  fetch(`${window.location.origin}/api/request_templates?templateId=${templateId}`, {
+export const deleteRequestTemplate = (id) => (
+  fetch(`${window.location.origin}/api/request_templates/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

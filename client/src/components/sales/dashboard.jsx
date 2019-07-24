@@ -119,8 +119,8 @@ class SalesDashboard extends React.Component {
       this.setState({ unconnectedUser: true })
     } else if (this.isExpiredSub()) {
       this.setState({ subscriptionExpired: true })
-    } else if (salesUserNetworks[currentSalesNetworkId] && salesUserNetworks[currentSalesNetworkId].memberType !== "full"){
-      this.setState({ limitedUser: true })
+    // } else if (salesUserNetworks[currentSalesNetworkId] && salesUserNetworks[currentSalesNetworkId].memberType !== "full"){
+    //   this.setState({ limitedUser: true })
     } else {
       if (!userFeature.importedSocial) {
         this.props.history.push('/sales/connect_social')
@@ -133,6 +133,7 @@ class SalesDashboard extends React.Component {
     let thisCurrent = this.props.currentUser;
     let nextCurrent = nextProps.currentUser;
     if (nextCurrent && !thisCurrent && thisCurrent !== nextCurrent) {
+      debugger
       this.searchData();
     }
     return true
@@ -280,12 +281,15 @@ class SalesDashboard extends React.Component {
 
   render() {
     const { classes, dimensions, resultNodes,
-      searchContacts } = this.props;
+      searchContacts, salesUserNetworks,
+      currentSalesNetworkId } = this.props;
     const { position, company, location,
       fname, lname, search,
       filter, filterAnchorEl,
       loaded, unconnectedUser,
       subscriptionExpired, limitedUser } = this.state;
+    
+    let memberType = salesUserNetworks[currentSalesNetworkId] ? salesUserNetworks[currentSalesNetworkId].memberType : ""
 
     let filterValues = {
       "": "All",
@@ -477,7 +481,8 @@ class SalesDashboard extends React.Component {
                 }}
                 getContentAnchorEl={null}>
                 {["", "teammates", "mine", "linkedIn", "google"].map(choice => {
-                  return <MenuItem onClick={this.handleMenuChange(choice)}>
+                  return <MenuItem onClick={this.handleMenuChange(choice)}
+                  disabled={memberType !== "full" &&choice === "teammates"}>
                     <Typography style={{ fontSize: 14}}>
                       {filterValues[choice]}
                     </Typography>
