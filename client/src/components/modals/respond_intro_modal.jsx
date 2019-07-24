@@ -300,7 +300,7 @@ class RespondIntroModal extends React.Component {
             onChange={this.handleChange('body')}
           />
           <Grid container justify='flex-start'>
-            <Button onClick={this.handleCopy(subject, "body")}
+            <Button onClick={this.handleCopy(body, "body")}
               color='default' variant='contained'
               style={{ margin: "20px 0px" }}>
               {copiedBody ? `Copied` :`Copy Body`}

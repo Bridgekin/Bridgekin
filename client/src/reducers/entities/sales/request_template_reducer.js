@@ -15,7 +15,8 @@ export default (state = {}, action) => {
     case RECEIVE_REQUEST_TEMPLATE:
       return merge({}, state, {[action.requestTemplate.id]: action.requestTemplate })
     case REMOVE_REQUEST_TEMPLATE:
-      return {}; 
+      delete newState[action.requestTemplateId]
+      return newState;
     default:
       return state;
   }

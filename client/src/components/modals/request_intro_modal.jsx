@@ -147,21 +147,22 @@ class RequestIntroModal extends React.Component {
     const { requestTemplates } = this.props;
     let templateId = e.target.value;
     if (templateId === 'default'){
-      this.resetCustomEmail(templateId)
+      this.resetCustomEmail()
     } else {
       let { subject, body } = requestTemplates[templateId]
       this.setState({ introSubject: subject, introBody: body, templateId })
     }
   }
 
-  resetCustomEmail(templateId){
+  resetCustomEmail(){
     const { target } = this.state
     const { requestIntroModal, users } = this.props;
     const { contact } = requestIntroModal;
+
     let targetUser = users[target]
     let introSubject = `I think you’ll appreciate this...`
     let introBody = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(targetUser.fname)}`
-    this.setState({ introSubject, introBody, templateId })
+    this.setState({ introSubject, introBody, templateId: 'default' })
   }
 
   handleCheckedChange(field) {
@@ -173,14 +174,17 @@ class RequestIntroModal extends React.Component {
 
   handleChangeTarget(e){
     let target = e.target.value;
-    const { requestIntroModal, users } = this.props;
-    const { contact } = requestIntroModal;
-
-    let targetUser = users[target]
-    let introSubject = `I think you’ll appreciate this...`
-    let introBody = `Hi ${Capitalize(contact.fname)}, \n\nThought of you today and I see you’re still working at ${contact.company || "**Insert Company Name**"}. I think you’d appreciate how we help sales people get into their target accounts through warm introductions. It would be fun to set you up with my friend on the client side who would love your feedback on the product. \n\nLet me know and I’ll make the intro!\n\nCheers,\n${Capitalize(targetUser.fname)}`
-
-    this.setState({ introSubject, introBody, target })
+    this.setState({ target },
+      () => {
+        const { requestTemplates } = this.props;
+        const { templateId } = this.state;
+        if (templateId === 'default') {
+          this.resetCustomEmail(templateId)
+        } else {
+          let { subject, body } = requestTemplates[templateId]
+          this.setState({ introSubject: subject, introBody: body })
+        }
+      })
   }
 
   handleSubmit(){
@@ -227,7 +231,10 @@ class RequestIntroModal extends React.Component {
               page: "custom",
               templateId: newTemplate.id,
               subject: newTemplate.subject,
-              body: newTemplate.body
+              body: newTemplate.body,
+              newTemplateSubject: '',
+              newTemplateBody: '',
+              newTemplateName: '',
             })
           }
         })

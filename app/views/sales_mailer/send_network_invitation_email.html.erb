@@ -1,11 +1,11 @@
 <p>Hi <%= @network_invite.fname.capitalize %>,</p>
 
 <% if @network_invite.user_type === 'full' %>
-  <p><%= @current_user.fname.capitalize %> <%= @current_user.lname.capitalize %> wants to add you to <%= @sales_network.title.capitalize %>'s network, a social contact graph on Bridgekin. Once you create an account, you'll be able to access, search, and request introductions from any contacts within <%= @sales_network.title.capitalize %>'s network.</p>
+  <p><%= @current_user.fname.capitalize %> <%= @current_user.lname.capitalize %> wants you to join <%= @sales_network.title.capitalize %> on Bridgekin, where you’ll be able to upload your own contacts, as well as search and request warm introductions from contacts within <%= @sales_network.title.capitalize %>.</p>
   
   <p>Click <%= link_to 'here', "#{root_url}sales/login/signup?code=#{@network_invite.link_code}" %> to get started!</p>
 <% else %>
-  <p><%= @current_user.fname.capitalize %> <%= @current_user.lname.capitalize %> wants to team up with you to boost <%= @sales_network.title.capitalize %>'s social graph. </p>
+  <p><%= @current_user.fname.capitalize %> <%= @current_user.lname.capitalize %> wants you to join <%= @sales_network.title.capitalize %> on Bridgekin, where you’ll be able to upload your own contacts and receive introduction requests from contacts within <%= @sales_network.title.capitalize %>.</p>
   
   <p>Click <%= link_to 'here', "#{root_url}sales/login/signup?code=#{@network_invite.link_code}" %> to upload your contacts!</p>
 <% end %>
