@@ -254,7 +254,6 @@ class User < ApplicationRecord
     true
   rescue Stripe::CardError => e
     # Since it's a decline, Stripe::CardError will be caught
-    debugger
     body = e.json_body
     err  = body[:error]
     logger.error "Status is: #{e.http_status}"
@@ -266,14 +265,12 @@ class User < ApplicationRecord
     return false
   rescue Stripe::RateLimitError => e
     # Too many requests made to the API too quickly
-    debugger
     logger.error "Rate Limit Reached"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue Stripe::InvalidRequestError => e
     # Invalid parameters were supplied to Stripe's API
-    debugger
     logger.error "Invalid params"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
@@ -281,58 +278,41 @@ class User < ApplicationRecord
   rescue Stripe::AuthenticationError => e
     # Authentication with Stripe's API failed
     # (maybe you changed API keys recently)
-    debugger
     logger.error "Authentication error (probably because of API key)"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue Stripe::APIConnectionError => e
     # Network communication with Stripe failed
-    debugger
     logger.error "Network comms error with Stripe"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue Stripe::StripeError => e
     # Display a very generic error to the user, and maybe send yourself an email
-    debugger
     logger.error "Authentication error (probably because of API key)"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   rescue => e
     # Something else happened, completely unrelated to Stripe
-    debugger
     logger.error "Something else happened: #{e.message}"
     errors.add(:base, e.message)
     logger.error("Sales admin creation failed. current_user: #{self.id}, Errors: #{errors.full_messages.to_s}")
     return false
   end
 
-  def post_login_setup
+  def post_auth_setup
     implement_trackable
-    @site_template = get_template
-    #Get User feature set
-    @user_feature = self.user_feature ||
-      UserFeature.create(user_id: self.id)
-
-    return @site_template, @user_feature
-  end
-
-  def post_signup_setup
-    implement_trackable
-    site_template = get_template
+    # site_template = get_template
     #Get User feature set
     user_feature = self.user_feature ||
       UserFeature.create(user_id: self.id)
     #Remove waitlist user from waitlist by changing status
     update_waitlist
-    #No friends yet = Empty object to fill connections
-    connections = {}
     #Create array of user info
     users = [self]
-
-    return site_template, user_feature, connections, users
+    return user_feature, users
   end
 
   def submitted_apps
@@ -381,34 +361,10 @@ class User < ApplicationRecord
   end
 
   def get_template
-    networks = self.member_networks.where(parent_id: nil)
+    return {}
     bridgekin_template = Network.find_by(title: 'Bridgekin').site_template
 
     return bridgekin_template
-    # if networks.length == 0
-    #   return bridgekin_template
-    # elsif self.default_network_id.nil?
-    #   return networks.last.site_template || bridgekin_template
-    # else
-    #   return Network.find(self.default_network_id).site_template || bridgekin_template
-    # end
-
-    # if self.default_network_id.nil?
-    #   networks.last.site_template #|| {network_id: networks.last.id}
-    # else
-    #   Network.find(self.default_network_id).site_template #|| {network_id: self.default_network_id}
-    # end
-  end
-
-  def set_networks(network)
-    if network.title != 'Bridgekin'
-      UserNetwork.create(network_id: network.id, member_id: self.id)
-      self.default_network_id = network.id
-      self.save
-    end
-    #Create Bridgekin Connection
-    bridgekin = Network.find_by(title: 'Bridgekin')
-    UserNetwork.create(network_id: bridgekin.id, member_id: self.id)
   end
 
   def update_waitlist
@@ -419,68 +375,18 @@ class User < ApplicationRecord
     end
   end
 
-  def set_connections(referral_link)
-    waitlist_user = WaitlistUser.includes(:referrals)
-      .find_by(email: self.email)
-
-    if waitlist_user
-      referral_ids = waitlist_user.referrals.pluck(:from_referral_id)
-      connection_array = referral_ids.map do |referral_id|
-        { user_id: referral_id, friend_id: self.id, status: 'Accepted'}
-      end
-      Connection.create(connection_array)
-    end
-
-    if referral_link.is_friendable
-      admin = User.find_by(email: 'joe@bridgekin.com')
-      if admin
-        # Connection.create( user_id: self.id, status: 'Accepted',
-        #   friend_id: referral_link.member_id )
-        Connection.create( user_id: self.id, status: 'Accepted',
-          friend_id: admin.id )
-      end
-    end
-  end
-
   def decrement_invite_count
     self.invites_remaining -= 1
     self.save
   end
 
-  def opportunities_received
-    connections = self.requested_connections.includes(:opportunities) +
-      self.received_connections.includes(:opportunities)
-    networks = self.member_networks
-
-    opps_from_networks = Opportunity.includes(:owner)
-      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Network'")
-      .where(opp_permissions: { shareable_id: networks.pluck(:id)})
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted', owner_id: self.id)
-
-    opps_from_connections = Opportunity.includes(:owner)
-      .joins("INNER JOIN opp_permissions on opp_permissions.opportunity_id = opportunities.id AND opp_permissions.shareable_type = 'Connection'")
-      .where(opp_permissions: { shareable_id: connections.pluck(:id)})
-      .where(status: 'Approved')
-      .where.not(deal_status: 'Deleted', owner_id: self.id)
-
-    opps_from_networks + opps_from_connections
-  end
-
-  def opportunities_connected
-    ConnectedOpportunity.where(user_id: self.id)
-      .or(ConnectedOpportunity.where(facilitator_id: self.id))
-      .or(ConnectedOpportunity.where(opportunity_id: self.opportunities.pluck(:id)))
-  end
-
-  #notifications
-  def send_weekly_email
-    seven_days_ago = DateTime.now - 7
-    new_opportunities = Opportunity.joins(:opp_permissions)
-      .where(opp_permissions: {
-        shareable_id: self.member_networks.pluck(:id),
-        shareable_type: "Network" })
-      .where("opportunities.created_at >= ?", seven_days_ago )
-    NotificationMailer.weekly_update(self, new_opportunities.count).deliver_now
-  end
+  # def send_weekly_email
+  #   seven_days_ago = DateTime.now - 7
+  #   new_opportunities = Opportunity.joins(:opp_permissions)
+  #     .where(opp_permissions: {
+  #       shareable_id: self.member_networks.pluck(:id),
+  #       shareable_type: "Network" })
+  #     .where("opportunities.created_at >= ?", seven_days_ago )
+  #   NotificationMailer.weekly_update(self, new_opportunities.count).deliver_now
+  # end
 end

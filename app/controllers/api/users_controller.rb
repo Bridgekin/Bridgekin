@@ -13,25 +13,6 @@ class Api::UsersController < ApiController
     render :show
   end
 
-  def hire_signup
-    @currentUser = User.new(user_params)
-    @currentUser.phone_number = @currentUser.phone_number
-
-    if @currentUser.save
-      # Setup post_signup_setup
-      @token = get_login_token!(@currentUser)
-      @site_template, @user_feature, @connections, @users = @currentUser.post_signup_setup
-
-      #Set hire user setting
-      @user_feature.hire_user = true
-      @user_feature.save
-
-      render :hire_signup
-    else
-      render json: @currentUser.errors.full_messages, status: 422
-    end
-  end
-
   def admin_signup
     @current_user = User.new(user_params)
 
@@ -39,13 +20,13 @@ class Api::UsersController < ApiController
       domain_params, purchase_params) #address_params)
 #Get Tokens and track
       @token = get_login_token!(@current_user)
-      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup      
+      @user_feature, @users = @current_user.post_auth_setup   
       #Load User Networks
       @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
-      render :sales_loaded_signup
+      render :signup_confirmed
     else
       render json: @current_user.errors.full_messages, status: 422
     end
@@ -59,13 +40,13 @@ class Api::UsersController < ApiController
     if @current_user.save_to_network(network, @sales_network_invite.user_type)
       #Get Tokens and track
       @token = get_login_token!(@current_user)
-      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+      @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
       @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
-      render :sales_loaded_signup
+      render :signup_confirmed
     else
       render json: @current_user.errors.full_messages, status: 422
     end
@@ -94,12 +75,16 @@ class Api::UsersController < ApiController
     network = SalesNetwork.find_by(domain: domain)
     @current_user = User.find_by(email: params[:user][:email])
 
-    if @current_user.present?
+    if @current_user.present? && @current_user.confirmed?
       #Get Tokens and track
       @token = get_login_token!(@current_user)
-      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+      @user_feature, @users = @current_user.post_auth_setup
+      #Load User Networks
+      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
 
-      render :hire_signup
+      render :signup_confirmed
+    elsif @current_user.present? && !@current_user.confirmed?
+      render json: ['You must to confirm your account before logging in.'], status: 404
     elsif network.present?
       @current_user = User.new(user_params)
       if @current_user.save
@@ -107,11 +92,11 @@ class Api::UsersController < ApiController
         @current_user.sales_user_networks.create(network: network)
         #Get Tokens and track
         @token = get_login_token!(@current_user)
-        @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+        @user_feature, @users = @current_user.post_auth_setup
         #Load User Networks
         @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
 
-        render :sales_loaded_signup
+        render :signup_confirmed
       else
         render json: @current_user.errors.full_messages, status: 422
       end

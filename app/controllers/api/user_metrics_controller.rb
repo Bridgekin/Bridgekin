@@ -6,9 +6,10 @@ class Api::UserMetricsController < ApiController
   # after_action :verify_authorized, except: :show
 
   def index
-    @received_opps = @user.opportunities_received.length
-    @connected_opps = @user.opportunities_connected.length
-    render :index
+    # @received_opps = @user.opportunities_received.length
+    # @connected_opps = @user.opportunities_connected.length
+    # render :index
+    render json: ["Success"], status: 200
   end
 
 

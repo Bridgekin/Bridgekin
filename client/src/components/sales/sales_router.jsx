@@ -43,36 +43,12 @@ const styles = theme => ({
 class SalesRouter extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      loaded: false
-    }
+    this.state = { loaded: false }
     this.loadUserNetworks = this.loadUserNetworks.bind(this);
-    // this.isActiveSub = this.isActiveSub.bind(this);
   }
 
   componentDidMount(){
-    if(this.props.currentUser){
-      this.loadUserNetworks()
-    } else {
-      this.setState({ loaded: true })
-    }
-  }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   let thisCurrent = this.props.currentUser;
-  //   let nextCurrent = nextProps.currentUser;
-  
-  //   if (nextCurrent && thisCurrent !== nextCurrent){
-  //     this.loadUserNetworks()
-  //   }
-  //   return true
-  // }
-
-  loadUserNetworks() {
-    this.props.fetchUserNetworks()
-      .then(() => {
-        this.setState({ loaded: true })
-      })
+    this.setState({ loaded: true })
   }
 
   render() {

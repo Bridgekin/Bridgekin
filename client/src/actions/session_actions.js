@@ -25,44 +25,20 @@ export const logoutCurrentUser = () => ({
   type: LOGOUT_CURRENT_USER,
 });
 
-export const refSignup = (formUser, code) => dispatch => (
-  SessionApiUtil.refSignup(formUser, code)
-    .then(handleErrors)
-    .then(data => {
-      localStorage.setItem('bridgekinToken', data.token);
-      dispatch(receiveUsers(data.users));
-      dispatch(receiveCurrentUser(data.currentUser));
-      dispatch(receiveSiteTemplate(data.siteTemplate));
-      dispatch(receiveWorkspaces(data.workspaces));
-      dispatch(receiveUserFeature(data.userFeature));
-      // dispatch(receiveConnections(data.connections));
-    })
-    .catch(errors => {
-      if (!(errors instanceof Array)){
-        errors = [genericError];
-      }
-      dispatch(receiveUserErrors(errors));
-    })
-);
+export const setAuth = (data) => dispatch => {
+  localStorage.setItem('bridgekinToken', data.token);
+  dispatch(receiveUsers(data.users));
+  dispatch(receiveCurrentUser(data.currentUser));
+  dispatch(receiveSiteTemplate(data.siteTemplate));
+  dispatch(receiveWorkspaces(data.workspaces));
+  dispatch(receiveUserFeature(data.userFeature));
 
-export const hireSignup = (formUser) => dispatch => (
-  SessionApiUtil.hireSignup(formUser)
-    .then(handleErrors)
-    .then(data => {
-      localStorage.setItem('bridgekinToken', data.token);
-      dispatch(receiveUsers(data.users));
-      dispatch(receiveCurrentUser(data.currentUser));
-      dispatch(receiveSiteTemplate(data.siteTemplate));
-      dispatch(receiveWorkspaces(data.workspaces));
-      dispatch(receiveUserFeature(data.userFeature));
-    })
-    .catch(errors => {
-      if (!(errors instanceof Array)){
-        errors = [genericError];
-      }
-      dispatch(receiveUserErrors(errors));
-    })
-);
+  dispatch(retrieveNetworkDetails(data.networkDetails))
+  dispatch(receiveSalesNetworks(data.salesNetworks))
+  dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+  dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
+  dispatch(setCurrentNetwork(data.currentNetworkId))
+}
 
 export const salesSignup = (formUser) => dispatch => (
   SessionApiUtil.salesSignup(formUser)
@@ -79,21 +55,7 @@ export const salesSignup = (formUser) => dispatch => (
 export const adminSignup = (formUser) => dispatch => (
   SessionApiUtil.adminSignup(formUser)
     .then(handleErrors)
-    .then(data => {
-      localStorage.setItem('bridgekinToken', data.token);
-      dispatch(receiveUsers(data.users));
-      dispatch(receiveCurrentUser(data.currentUser));
-      dispatch(receiveSiteTemplate(data.siteTemplate));
-      dispatch(receiveWorkspaces(data.workspaces));
-      dispatch(receiveUserFeature(data.userFeature));
-
-      dispatch(retrieveNetworkDetails(data.networkDetails))
-      dispatch(receiveSalesNetworks(data.salesNetworks))
-      dispatch(setCurrentNetwork(data.currentNetworkId))
-
-      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
-      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
-    })
+    .then(data => setAuth(data)(dispatch))
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
@@ -105,21 +67,7 @@ export const adminSignup = (formUser) => dispatch => (
 export const networkInviteSignup = (formUser) => dispatch => (
   SessionApiUtil.networkInviteSignup(formUser)
     .then(handleErrors)
-    .then(data => {
-      localStorage.setItem('bridgekinToken', data.token);
-      dispatch(receiveUsers(data.users));
-      dispatch(receiveCurrentUser(data.currentUser));
-      dispatch(receiveSiteTemplate(data.siteTemplate));
-      dispatch(receiveWorkspaces(data.workspaces));
-      dispatch(receiveUserFeature(data.userFeature));
-
-      dispatch(retrieveNetworkDetails(data.networkDetails))
-      dispatch(receiveSalesNetworks(data.salesNetworks))
-      dispatch(setCurrentNetwork(data.currentNetworkId))
-
-      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
-      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
-    })
+    .then(data => setAuth(data)(dispatch))
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
@@ -131,21 +79,7 @@ export const networkInviteSignup = (formUser) => dispatch => (
 export const googleSalesLogin = (formUser) => dispatch => (
   SessionApiUtil.googleSalesLogin(formUser)
     .then(handleErrors)
-    .then(data => {
-      dispatch(receiveUsers(data.users));
-      dispatch(receiveCurrentUser(data.currentUser));
-      dispatch(receiveSiteTemplate(data.siteTemplate));
-      dispatch(receiveWorkspaces(data.workspaces));
-      dispatch(receiveUserFeature(data.userFeature));
-      localStorage.setItem('bridgekinToken', data.token);
-
-      dispatch(retrieveNetworkDetails(data.networkDetails))
-      dispatch(receiveSalesNetworks(data.salesNetworks))
-      dispatch(setCurrentNetwork(data.currentNetworkId))
-
-      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
-      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
-    })
+    .then(data => setAuth(data)(dispatch))
     .catch(errors => {
       if (!(errors instanceof Array)) {
         errors = [genericError];
@@ -158,23 +92,7 @@ export const googleSalesLogin = (formUser) => dispatch => (
 export const login = formUser => dispatch => (
   SessionApiUtil.login(formUser)
     .then(handleErrors)
-    .then(data => {
-      localStorage.setItem('bridgekinToken', data.token);
-      dispatch(receiveUsers(data.users));
-      dispatch(receiveCurrentUser(data.currentUser));
-      dispatch(receiveSiteTemplate(data.siteTemplate));
-      dispatch(receiveWorkspaces(data.workspaces));
-      dispatch(receiveUserFeature(data.userFeature));
-      // dispatch(receiveConnections(data.connections));
-
-      dispatch(retrieveNetworkDetails(data.networkDetails))
-      dispatch(receiveSalesNetworks(data.salesNetworks))
-      dispatch(setCurrentNetwork(data.currentNetworkId))
-
-      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
-      dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
-      return data.user
-    })
+    .then(data => setAuth(data)(dispatch))
     .catch(errors => {
       if (!(errors instanceof Array)){
         errors = [genericError];

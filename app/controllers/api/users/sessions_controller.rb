@@ -11,13 +11,13 @@ class Api::Users::SessionsController < ApiController
     if @current_user && @current_user.valid_password?(sign_in_params[:password]) && @current_user.confirmed?
       #Get Tokens and track
       @token = get_login_token!(@current_user)
-      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+      @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
       @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
 
       render :create
     elsif @current_user && !@current_user.confirmed?
-      render json: ['You need to confirm your account before logging in.'], status: 404
+      render json: ['You must to confirm your account before logging in.'], status: 404
     # elsif @current_user && !@current_user.valid_password?
     #   render json: ['You need to confirm your account before logging in.'], status: 404
     # elsif @current_user.nil?
@@ -29,10 +29,12 @@ class Api::Users::SessionsController < ApiController
 
   def authorize
     #Get Tokens and track
-    @token = get_login_token!(@current_user)
-    @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+      @token = get_login_token!(@current_user)
+      @user_feature, @users = @current_user.post_auth_setup
+      #Load User Networks
+      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
 
-    render :show
+    render :create
   end
 
   def destroy

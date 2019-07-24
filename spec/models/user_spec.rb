@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'stripe_mock'
 
 RSpec.describe User, type: :model do
   # pending "add some examples to (or delete) #{__FILE__}"
@@ -66,20 +67,30 @@ RSpec.describe User, type: :model do
     end
 
     describe 'save_new_admin_network' do
+      before { StripeMock.start }
+      after { StripeMock.stop }
+
       before(:each) do
         @new_user = build(:user)
         @sales_product = create(:sales_product)
-        @sales_network = create(:sales_network, :with_subscription)
+        # @sales_network = build(:sales_network, :with_subscription)
 
         @domain_params = { 
           title: Faker::Company.name,
           domain: Faker::Internet.domain_name
         }
+        token = Stripe::Token.create({
+          card: {
+            number: '4242424242424242',
+            exp_month: 7,
+            exp_year: 2020,
+            cvc: '314' }
+        })
         @purchase_params = {
           duration: "monthly",
           renewal: true,
           product_id: @sales_product.id,
-          token_id: "123456"
+          token_id: token["id"]
         }
         # @address_params = {
         #   line1: Faker::Address.street_address,
@@ -89,13 +100,56 @@ RSpec.describe User, type: :model do
         # }
       end
 
-      # it 'saves all appropriate records' do
-      #   @new_user.save_new_admin_network(@domain_params, @purchase_params)
-      #   debugger
-      #   expect(@new_user.id).to be_truthy
-      #   # expect(@new_user.stripe_details).to be_trut
-      # end
+      it 'saves all appropriate records' do
+        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+        
+        expect(@new_user.id).to be_truthy
+        sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])
+        expect(sales_network).to be_truthy
+        stripe_detail = StripeDetail.find_by(user_id: @new_user.id)
+        expect(stripe_detail).to be_truthy
+        # expect(@new_user.stripe_details).to be_trut
+      end
 
+      it "fails if the domain params are incorrect" do
+        @domain_params = @domain_params.merge({ title: '', domain: '' })
+        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+
+        expect(@new_user.id).to be_nil
+        sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])
+        expect(sales_network).to be_nil
+      end
+
+      it "fails if the purchase params are incorrect" do
+        @purchase_params = @purchase_params.merge({ product_id: 'a' })
+        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+
+        expect(@new_user.id).to be_nil
+        sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])
+        expect(sales_network).to be_nil
+      end
+
+      it "fails if a valid token isn't passed" do
+        @purchase_params = @purchase_params.merge({ token_id: '1234'})
+        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+
+        expect(@new_user.id).to be_nil
+        sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])
+        expect(sales_network).to be_nil
+      end
+    end
+
+    describe ".post_auth_setup" do
+      before(:each) do
+        @new_user = create(:user)
+      end
+
+      it "it returns valid answers for all return values" do
+        site_template, user_feature, connections, users = @new_user.post_auth_setup()
+        expect(site_template).to be_truthy
+        expect(user_feature).to be_truthy
+        expect(users.length).to eq(1)
+      end
     end
 
     describe '.confirmed' do

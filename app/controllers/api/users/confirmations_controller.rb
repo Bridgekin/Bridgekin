@@ -10,7 +10,7 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
       @current_user = resource
       #Get Tokens and track
       @token = get_login_token!(@current_user)
-      @site_template, @user_feature, @connections, @users = @current_user.post_signup_setup
+      @site_template, @user_feature, @connections, @users = @current_user.post_auth_setup
 
       redirect_to "#{root_url}accountconfirmed"
     else

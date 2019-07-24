@@ -21,7 +21,6 @@ import { connect } from 'react-redux';
 import { clearUserErrors } from '../../actions/error_actions';
 import { closeSignup } from '../../actions/modal_actions';
 import TextField from '@material-ui/core/TextField';
-import { hireSignup } from '../../actions/session_actions';
 import { openRefAppModal, openLogin } from '../../actions/modal_actions';
 import MaskedInput from 'react-text-mask';
 
@@ -33,7 +32,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   openLogin: payload => dispatch(openLogin(payload)),
-  hireSignup: user => dispatch(hireSignup(user)),
   clearUserErrors: () => dispatch(clearUserErrors()),
   closeSignup: () => dispatch(closeSignup()),
   openRefAppModal: (payload) => dispatch(openRefAppModal(payload)),

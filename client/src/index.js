@@ -9,7 +9,7 @@ import dotenv from 'dotenv'
 
 import { handleAuthErrors } from './actions/fetch_error_handler';
 import { getAuthUserId, getPublicEnv } from './util/session_api_util';
-import { receiveCurrentUser } from './actions/session_actions';
+import { receiveCurrentUser, setAuth } from './actions/session_actions';
 import { receiveUser } from './actions/user_actions';
 import getTheme from './components/theme.js';
 import BridgekinLogo from './static/Bridgekin_Logo.png';
@@ -67,31 +67,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (token){
     getAuthUserId(token)
-    .then(handleAuthErrors)
-    .then( ({currentUser, token, siteTemplate, 
-      workspaces, userFeature, users, connections }) => {
-      let preloadedState = {
-        users: users,
-        session: { id: currentUser.id},
-        siteTemplate,
-        workspaces,
-        entities:{
-          userFeature,
-          connections
-        }
-        // theme: getTheme(siteTemplate)
-      };
-      let store = configureStore(preloadedState);
-      // console.log('Rendering site');
-      ReactDOM.render(
+      .then(handleAuthErrors)
+      .then((data) => {
+        let preloadedState = {};
+        let store = configureStore(preloadedState);
+        setAuth(data)(store.dispatch)
+        ReactDOM.render(
         <Root store={store}/>, root);
-    })
-    .catch(() => {
-      localStorage.removeItem('bridgekinToken');
-      let store = configureStore(preloadedState);
-      ReactDOM.render(
-        <Root store={store}/>, root);
-    })
+      })
+      .catch(() => {
+        localStorage.removeItem('bridgekinToken');
+        let store = configureStore(preloadedState);
+        ReactDOM.render(
+          <Root store={store}/>, root);
+      })
   } else {
     let store = configureStore(preloadedState);
     // console.log('Rendering site');

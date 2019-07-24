@@ -12,28 +12,35 @@ end
 
 json.token variables[:token]
 
-json.siteTemplate do
-  json.partial! 'api/site_templates/site_template',
-  site_template: variables[:site_template]
-end if variables[:site_template]
-
-json.workspaces do
-  variables[:currentUser].member_networks.where(parent_id: nil).each do |network|
-    json.set! network.id do
-      json.partial! 'api/networks/network', network: network
-    end
-  end
-end
-
 json.user_feature do
   json.partial! 'api/user_features/user_feature',
   user_feature: variables[:user_feature]
 end if variables[:user_feature]
 
-json.connections do
-  variables[:connections].each do |connection|
-    json.set! connection.id do
-      json.partial! 'api/connections/connection', connection: connection
+json.sales_networks do
+  variables[:sales_networks].each do |sales_network|
+    json.set! sales_network.id do
+      json.partial! 'api/sales_networks/sales_network', sales_network: sales_network
+    end
+  end
+end
+
+json.network_details variables[:network_details]
+
+json.current_network_id variables[:current_network_id]
+
+json.sales_user_networks do
+  variables[:sales_user_networks].each do |sales_user_network|
+    json.set! sales_user_network.network_id do
+      json.partial! 'api/sales_user_networks/sales_user_network', sales_user_network: sales_user_network
+    end
+  end
+end
+
+json.sales_admin_networks do
+  variables[:sales_admin_networks].each do |sales_admin_network|
+    json.set! sales_admin_network.network_id do
+      json.partial! 'api/sales_admin_networks/sales_admin_network', sales_admin_network: sales_admin_network
     end
   end
 end

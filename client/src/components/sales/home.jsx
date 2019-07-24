@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import { hireSignup } from '../../actions/session_actions';
 import { openSignup } from '../../actions/modal_actions';
 import { requestDemo } from '../../actions/util_actions';
 import MaskedInput from 'react-text-mask';
@@ -19,7 +18,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hireSignup: user => dispatch(hireSignup(user)),
   openSignup: (payload) => dispatch(openSignup(payload)),
   requestDemo: user => dispatch(requestDemo(user))
 });
