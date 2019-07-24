@@ -393,7 +393,7 @@ class RequestIntroModal extends React.Component {
             style={{ fontSize: 12, marginBottom: 20}}>
             {`Customize the email template that your teammate will send to their contact. Note* Your teammate will still be able to make further changes to this template later`}
           </Typography>
-          {window.publicEnv !== 'production' && <Grid container justify='space-between'>
+          <Grid container justify='space-between'>
             <Grid item xs={12} sm={6}
             alignItems='flex-end'>
               <Button style={{ fontSize: 14, fontWeight: 400, textTransform: 'none'}}
@@ -417,9 +417,9 @@ class RequestIntroModal extends React.Component {
                   </Select>
                 </FormControl>}
             </Grid>
-          </Grid>}
-          {window.publicEnv !== 'production' && 
-          templateId !== 'default' &&
+          </Grid>
+          
+          { templateId !== 'default' &&
           <Grid container justify='flex-end'>
             <Button color='default'
               onClick={this.handleDeleteTemplate}
@@ -427,6 +427,7 @@ class RequestIntroModal extends React.Component {
               {`Delete Template`}
             </Button>
           </Grid>}
+
           <TextField
             fullWidth
             label = "Subject"

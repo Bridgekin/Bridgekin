@@ -289,8 +289,8 @@ class SalesDashboard extends React.Component {
       loaded, unconnectedUser,
       subscriptionExpired, limitedUser } = this.state;
     
-    let memberType = salesUserNetworks[currentSalesNetworkId] ? salesUserNetworks[currentSalesNetworkId].member_type : ""
-    
+    let memberType = salesUserNetworks[currentSalesNetworkId] ? salesUserNetworks[currentSalesNetworkId].memberType : ""
+
     let filterValues = {
       "": "All",
       "teammates": "My Team's Contacts",
