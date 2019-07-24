@@ -66,7 +66,7 @@ class ConnectSocialJob < ApplicationJob
   }
 
   def ingestGoogle(google_contacts, current_user)    
-    google_contacts.take(25).each do |entry|
+    google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].blank? || entry['name'].blank?
       GoogleUploadJob.perform_later(entry, current_user)
@@ -74,7 +74,7 @@ class ConnectSocialJob < ApplicationJob
   end
   
   def ingestLinkedIn(parsed_file, current_user)
-    parsed_file.take(25).each do |entry|
+    parsed_file.each do |entry|
       #Skip any cases without emails
       if entry["First Name"].blank? || entry["Company"].blank?
         logger.error "Skipping linkedin entry: fname:#{entry["First Name"]} company: #{entry["Company"]}"
