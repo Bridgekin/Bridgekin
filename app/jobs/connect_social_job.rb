@@ -74,7 +74,7 @@ class ConnectSocialJob < ApplicationJob
   end
   
   def ingestLinkedIn(parsed_file, current_user)
-    parsed_file.each do |entry|
+    parsed_file.take(100).each do |entry|
       #Skip any cases without emails
       if entry["First Name"].blank? || entry["Company"].blank?
         logger.error "Skipping linkedin entry: fname:#{entry["First Name"]} company: #{entry["Company"]}"

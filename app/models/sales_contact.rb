@@ -30,9 +30,13 @@ class SalesContact < ApplicationRecord
   EXCLUDE_CITIES = ["Cuba", "Iran", "North Korea", "Sudan", "Syria", "Crimea", "Russia", "Ukraine", "France", "Spain", "Sweden", "Norway", "Germany", "Finland", "Poland", "Italy", "United Kingdom", "Romania", "Belarus", "Kazakhstan", "Greece", "Bulgaria", "Iceland", "Hungary", "Portugal", "Austria", "Czech Republic", "Serbia", "Ireland", "Lithuania", "Latvia", "Croatia", "Bosnia", "Herzegovina", "Slovakia", "Estonia", "Denmark", "Switzerland", "Netherlands", "Moldova", "Belgium", "Albania", "North Macedonia", "Turkey", "Slovenia", "Montenegro", "Kosovo", "Cyprus", "Azerbaijan", "Luxembourg", "Georgia", "Andorra", "Malta", "Liechtenstein", "San Marino", "Monaco", "Vatican City"]
 
   def self.search_contacts(current_user, network, filter='', social_params ={})
-    sales_contacts = network.member_contacts
-      .where.not(fname: '')
-      .distinct
+    #Determine relationship
+    member_type = network.get_member_type(current_user)
+    if member_type == 'full'
+      sales_contacts = network.member_contacts
+    else
+      sales_contacts = current_user.sales_contacts
+    end
 
     # Filter back setting
     sales_contacts = case filter
@@ -58,7 +62,8 @@ class SalesContact < ApplicationRecord
     end
     #Save search term
     trackTerm.save
-    sales_contacts
+    sales_contacts.where.not(fname: '')
+        .distinct
   end
 
   def self.prep_search_data(sales_contacts, offset, limit, current_user)
