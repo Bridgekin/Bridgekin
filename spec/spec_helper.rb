@@ -19,7 +19,7 @@ DatabaseCleaner.strategy = :truncation
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
-
+  Faker::Config.locale = 'en-US'
   # config.include ApiHelper, type: :api
   config.include Requests::JsonHelpers, type: :api
   config.use_transactional_fixtures = false

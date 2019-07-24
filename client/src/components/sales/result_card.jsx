@@ -20,7 +20,9 @@ import { openRequestIntro } from '../../actions/modal_actions';
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   networkMembers: {},
-  friendMap: state.entities.sales.friendMap
+  friendMap: state.entities.sales.friendMap,
+  currentSalesNetworkId: state.entities.sales.currentSalesNetwork,
+  salesUserNetworks: state.entities.sales.salesUserNetworks,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -111,10 +113,14 @@ class ResultCard extends React.Component {
 
   render(){
     const { classes, contact, networkMembers,
-      friendMap, idx } = this.props;
+      friendMap, idx,
+      salesUserNetworks, currentSalesNetworkId } = this.props;
     
     if (Object.keys(friendMap).length > 0){
       let otherFriendsCount = friendMap[contact.id].length || 0
+
+      let memberType = salesUserNetworks[currentSalesNetworkId] ? salesUserNetworks[currentSalesNetworkId].memberType : ""
+
       return <Grid item xs={12} sm={6}>
         <Paper>
           <Grid container 
@@ -194,12 +200,12 @@ class ResultCard extends React.Component {
               }) */}
               <Typography color='textPrimary'
               style={{ fontSize: 12, marginRight: 10}}>
-                {`Known Teammates: ${otherFriendsCount || "N/A"}`}
+                {memberType === 'full' && `Known Teammates: ${otherFriendsCount || "N/A"}`}
               </Typography>
               <Button color='primary' variant='contained'
-              onClick={this.requestIntro}
-                disabled={otherFriendsCount === 0}
-              style={{ textTransform: 'capitalize'}}>
+                onClick={this.requestIntro}
+                disabled={memberType !== 'full' || otherFriendsCount === 0}
+                style={{ textTransform: 'capitalize'}}>
                 {`Request a warm intro`}
               </Button>
             </Grid>

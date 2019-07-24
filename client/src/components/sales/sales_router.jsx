@@ -44,7 +44,6 @@ class SalesRouter extends React.Component {
   constructor(props) {
     super(props)
     this.state = { loaded: false }
-    this.loadUserNetworks = this.loadUserNetworks.bind(this);
   }
 
   componentDidMount(){

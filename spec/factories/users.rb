@@ -3,8 +3,6 @@ FactoryBot.define do
     fname { Faker::Name.first_name }
     lname { Faker::Name.unique.last_name }
     email { Faker::Internet.unique.email}
-    
-    Faker::Config.locale = 'en-US'
 
     phone_number { Faker::PhoneNumber.phone_number }
     city { Faker::Address.city}

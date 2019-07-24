@@ -304,48 +304,12 @@ class User < ApplicationRecord
 
   def post_auth_setup
     implement_trackable
-    # site_template = get_template
     #Get User feature set
     user_feature = self.user_feature ||
       UserFeature.create(user_id: self.id)
-    #Remove waitlist user from waitlist by changing status
-    update_waitlist
     #Create array of user info
     users = [self]
     return user_feature, users
-  end
-
-  def submitted_apps
-    RefApplication.where("candidate_id = ? OR direct_referrer_id = ?", self.id, self.id)
-  end
-
-  def connections
-    Connection.includes(:requestor, :recipient)
-    .where("user_id = ? OR friend_id = ?", self.id, self.id)
-  end
-
-  def friends
-    self.connections.where(status: 'Accepted')
-    .reduce([]) do |arr, connection|
-      if connection.requestor.id == self.id
-        arr << connection.recipient
-      else
-        arr << connection.requestor
-      end
-    end
-  end
-
-  def circles_with_at_least_one_member
-    circles_hash = self.circle_connections.reduce({}) do |acc, circle_connection|
-      circle_id = circle_connection.circle_id
-      unless acc[circle_id]
-        acc[circle_id] = Array.new
-      end
-      acc[circle_id] << circle_connection.connection_id
-      acc
-    end
-
-    self.circles.where(id: circles_hash.keys)
   end
 
   def confirmed?
@@ -358,21 +322,6 @@ class User < ApplicationRecord
 
     self[:sign_in_count] += 1
     self.save
-  end
-
-  def get_template
-    return {}
-    bridgekin_template = Network.find_by(title: 'Bridgekin').site_template
-
-    return bridgekin_template
-  end
-
-  def update_waitlist
-    waitlist_user = WaitlistUser.find_by(email: self.email)
-    if waitlist_user
-      waitlist_user[:status] = 'Full'
-      waitlist_user.save
-    end
   end
 
   def decrement_invite_count

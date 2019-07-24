@@ -145,8 +145,7 @@ RSpec.describe User, type: :model do
       end
 
       it "it returns valid answers for all return values" do
-        site_template, user_feature, connections, users = @new_user.post_auth_setup()
-        expect(site_template).to be_truthy
+        user_feature, users = @new_user.post_auth_setup()
         expect(user_feature).to be_truthy
         expect(users.length).to eq(1)
       end
@@ -162,17 +161,6 @@ RSpec.describe User, type: :model do
       it 'is valid  ' do
         subject.profile_pic.attach(io: File.open(Rails.root.join('client/src/static/castle.jpg')), filename: 'castle.jpg', content_type: 'image/jpg')
         expect(subject.profile_pic).to be_attached
-      end
-    end
-
-    describe 'update_waitlist' do
-      before do
-        waitlist_user = create(:waitlist_user, email: subject.email)
-      end
-
-      it "should change wailist status to full" do
-        subject.update_waitlist
-        expect(WaitlistUser.find_by(email: subject.email).status).to eq 'Full'
       end
     end
 
