@@ -24,12 +24,17 @@ class Api::SalesNetworkInvitesController < ApiController
   end
 
   def create
-    new_invites = SalesNetworkInvite.prep_batch_create(params[:new_invites], @current_user.id, params[:network_id])
+    formatted_invites = params[:new_invites].reduce([]){|acc, invite| acc << invite.permit(:email, :fname,:lname, :user_type).to_h}
+
+    new_invites = SalesNetworkInvite.prep_batch_create(formatted_invites, @current_user.id, params[:network_id])
     begin
+      raise ArgumentError if new_invites.nil?
       @invites = SalesNetworkInvite.create!(new_invites)
       @invites.each{|invite| SalesMailer.send_network_invitation_email(invite, @current_user).deliver_later}
 
       render json: ["Success"], status: 200
+    rescue ArgumentError => e
+      render json: ["No invites created"], status: 404
     rescue => exception
       render json: exception.record.errors.full_messages, status: 422
     end

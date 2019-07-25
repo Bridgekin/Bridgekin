@@ -16,12 +16,47 @@ FactoryBot.define do
     confirmed_at { DateTime.now}
     email_confirmed_at { DateTime.now }
 
-    trait :with_sales_network do
-      after(:create) do |user|
-        create_list(:sales_network, 3, member: user)
+    trait :with_sales_contacts do
+      transient do
+        contact_count { 25 }
+        google { false }
+        linked_in { false }
+      end
+
+      after(:create) do |user, opts|
+        sales_contacts = create_list(:sales_contact, opts.contact_count, google: opts.google, linked_in: opts.linked_in)
+
+        sales_contacts.each do |sales_contact|
+          create(:sales_user_contact, contact: sales_contact, user: user)
+        end
       end
     end
 
+    trait :with_sales_networks do
+      transient do
+        network_count { 3 }
+      end
+      after(:create) do |user, opts|
+        sales_networks = create_list(:sales_network, opts.network_count, :with_subscription)
+        
+        sales_networks.each do |sales_network|
+          create(:sales_user_network, user: user, network: sales_network)
+        end
+      end
+    end
+
+    trait :with_sales_networks_limited do
+      transient do
+        network_count { 3 }
+      end
+      after(:create) do |user|
+        sales_networks = create_list(:sales_network, network_count, :with_subscription)
+        sales_networks.each do |sales_network|
+          create(:sales_user_network, user: user, network: sales_network, member_type: 'limited')
+        end
+      end
+    end
+    
     trait :not_confirmed do
       confirmed_at { nil }
       email_confirmed_at { nil }

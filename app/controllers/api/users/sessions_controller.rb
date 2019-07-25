@@ -29,10 +29,10 @@ class Api::Users::SessionsController < ApiController
 
   def authorize
     #Get Tokens and track
-      @token = get_login_token!(@current_user)
-      @user_feature, @users = @current_user.post_auth_setup
-      #Load User Networks
-      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
+    @token = get_login_token!(@current_user)
+    @user_feature, @users = @current_user.post_auth_setup
+    #Load User Networks
+    @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
 
     render :create
   end

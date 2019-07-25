@@ -2,13 +2,13 @@ class SalesNetwork < ApplicationRecord
   validates :title, :domain, presence: :true
   validates :title, :domain, uniqueness: :true
 
-  has_many :user_networks,
+  has_many :sales_user_networks,
     foreign_key: :network_id,
     class_name: :SalesUserNetwork,
     dependent: :destroy
 
   has_many :members,
-    through: :user_networks,
+    through: :sales_user_networks,
     source: :user
 
   has_many :member_contacts,
@@ -40,15 +40,20 @@ class SalesNetwork < ApplicationRecord
       details = {
         memberCount: network.members.count,
         currentSubEnd: current_sub.nil? ? "no sub" : current_sub.end_date,
-        maxSeats: current_sub.nil? ? "no sub" : network.subscribed_products
-        .where(id: current_sub.product_id).first.seats,
+        maxSeats: current_sub.nil? ? "no sub" :
+          network.subscribed_products
+            .where(id: current_sub.product_id)
+            .first.seats
       }
       acc[network.id] = details
       acc
     end
   end
 
-  def self.get_network_info(current_user)
+  def self.get_network_info(current_user = nil)
+    return nil unless current_user.is_a?(User)
+    return nil if current_user.nil? || current_user.sales_networks.empty?
+
     sales_networks = current_user.sales_networks
     sales_user_networks = current_user.sales_user_networks
     sales_admin_networks = current_user.sales_admin_networks
@@ -58,11 +63,12 @@ class SalesNetwork < ApplicationRecord
     return sales_networks, sales_user_networks, sales_admin_networks, current_network_id, network_details
   end
 
-  def get_member_type(current_user)
-    user_network = self.user_networks
+  def get_member_type(current_user = nil)
+    return nil if current_user.nil? || !current_user.is_a?(User)
+    user_network = self.sales_user_networks
       .where(user: current_user)
       .first
-    user_network.member_type
+    return user_network.member_type if user_network
   end
 
   def current_subscription

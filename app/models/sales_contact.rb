@@ -29,7 +29,8 @@ class SalesContact < ApplicationRecord
 
   EXCLUDE_CITIES = ["Cuba", "Iran", "North Korea", "Sudan", "Syria", "Crimea", "Russia", "Ukraine", "France", "Spain", "Sweden", "Norway", "Germany", "Finland", "Poland", "Italy", "United Kingdom", "Romania", "Belarus", "Kazakhstan", "Greece", "Bulgaria", "Iceland", "Hungary", "Portugal", "Austria", "Czech Republic", "Serbia", "Ireland", "Lithuania", "Latvia", "Croatia", "Bosnia", "Herzegovina", "Slovakia", "Estonia", "Denmark", "Switzerland", "Netherlands", "Moldova", "Belgium", "Albania", "North Macedonia", "Turkey", "Slovenia", "Montenegro", "Kosovo", "Cyprus", "Azerbaijan", "Luxembourg", "Georgia", "Andorra", "Malta", "Liechtenstein", "San Marino", "Monaco", "Vatican City"]
 
-  def self.search_contacts(current_user, network, filter='', social_params ={})
+  def self.search_contacts(current_user = nil, network = nil, filter='', social_params ={})
+    return nil if current_user.nil? || network.nil? || !current_user.is_a?(User)
     #Determine relationship
     member_type = network.get_member_type(current_user)
     if member_type == 'full'
