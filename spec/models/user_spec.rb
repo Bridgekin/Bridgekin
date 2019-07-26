@@ -29,7 +29,19 @@ RSpec.describe User, type: :model do
 
     describe '.determine_end_date' do
       it "should return date" do
-        time = DateTime.now.beginning_of_day + 17.hour
+        expect(User.determine_end_date(1.week)).to be_a(DateTime)
+      end
+
+      it "should return the right date" do
+        time = DateTime.now
+        rounded = time.beginning_of_hour + 1.hour
+        if rounded.hour > 17
+          rounded = rounded.beginning_of_day + 1.day + 17.hour
+        else
+          diff = 17 - rounded.hour
+          rounded += diff.hour
+        end
+        time = rounded
         expect(User.determine_end_date(1.week)).to eq(time + 1.week)
         expect(User.determine_end_date(1.month)).to eq(time + 1.month)
       end

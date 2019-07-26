@@ -4,7 +4,7 @@ class LinkedInUploadJob < ApplicationJob
   def perform(entry, current_user)
     begin
       #Get Contact
-      contact = SalesContact.find_similar_or_initialize_by("linkedin", current_user, {
+      contact = SalesContact.find_similar_or_initialize_by("linked_in", {
         fname: entry["First Name"],
         lname: entry["Last Name"],
         company: entry["Company"],

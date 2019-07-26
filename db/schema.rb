@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_22_202131) do
+ActiveRecord::Schema.define(version: 2019_07_26_170642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,8 +96,8 @@ ActiveRecord::Schema.define(version: 2019_07_22_202131) do
 
   create_table "connect_social_stats", force: :cascade do |t|
     t.integer "uploader_id"
-    t.string "linked_in_url"
-    t.string "google_url"
+    t.string "linked_in_key"
+    t.string "google_key"
     t.string "status", default: "started"
     t.integer "retry_count", default: 0
     t.datetime "created_at", null: false

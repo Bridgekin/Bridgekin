@@ -20,8 +20,8 @@ class ConnectSocialJob < ApplicationJob
     )
     stat = ConnectSocialStat.find_or_create_by(
       uploader_id: current_user.id,
-      linked_in_url: import_hash["linked_in_key"],
-      google_url: import_hash["google_key"]
+      linked_in_key: import_hash["linked_in_key"],
+      google_key: import_hash["google_key"]
     )
 
     begin
@@ -35,19 +35,22 @@ class ConnectSocialJob < ApplicationJob
             .join("\n")
             .remove("\r"),
             headers: true)
+
           ingestLinkedIn(parsedFile, current_user)
         when "google_key"
           resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
           parsedFile = JSON.parse(resp.body.read
             .remove("\r")
             .split("\n")[3])
+
           ingestGoogle(parsedFile, current_user)
         else
           logger.debug "Unsupported key provided"
         end
       end
       #When complete, send an email letting user know that the import is finished
-      SalesMailer.notify_contacts_imported(current_user)
+      SalesMailer.notify_contacts_imported(current_user).deliver_later
+      #Update stat
       stat.update(status: "finished")
     rescue => e
       stat.update(status: "failed", retry_count: stat.retry_count + 1) 
@@ -65,7 +68,7 @@ class ConnectSocialJob < ApplicationJob
     "facebook" => :facebook_url
   }
 
-  def ingestGoogle(google_contacts, current_user)    
+  def ingestGoogle(google_contacts, current_user)   
     google_contacts.each do |entry|
       #Skip any cases without emails
       next if entry['email'].blank? || entry['name'].blank?

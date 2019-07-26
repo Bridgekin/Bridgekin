@@ -2,13 +2,16 @@ class GoogleUploadJob < ApplicationJob
   queue_as :default
 
   def perform(entry, current_user)
+    if entry["name"].blank?
+      debugger
+    end
     #Set Contact's Name
     name = Nameable.parse(entry['name'])
     begin
       #Raise error if no contact
       raise 'Fname or Lname not provided' if name.last.nil? || name.first.nil?
       #Get Contact
-      contact = SalesContact.find_similar_or_initialize_by("google", current_user, {
+      contact = SalesContact.find_similar_or_initialize_by("google", {
         email: entry['email'],
         fname: name.first,
         lname: name.last

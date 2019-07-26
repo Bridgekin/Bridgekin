@@ -49,10 +49,9 @@ class SalesNetwork < ApplicationRecord
       acc
     end
   end
-
+   
   def self.get_network_info(current_user = nil)
-    return nil unless current_user.is_a?(User)
-    return nil if current_user.nil? || current_user.sales_networks.empty?
+    return nil if !current_user.is_a?(User) || current_user.sales_networks.empty?
 
     sales_networks = current_user.sales_networks
     sales_user_networks = current_user.sales_user_networks
@@ -64,7 +63,8 @@ class SalesNetwork < ApplicationRecord
   end
 
   def get_member_type(current_user = nil)
-    return nil if current_user.nil? || !current_user.is_a?(User)
+    return nil unless current_user.is_a?(User)
+
     user_network = self.sales_user_networks
       .where(user: current_user)
       .first

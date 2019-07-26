@@ -13,5 +13,16 @@ FactoryBot.define do
     trait :fc_lookup do
       last_full_contact_lookup { DateTime.now}
     end
+
+    factory :google_contact do
+      company { nil }
+      position { nil }
+      google { true }
+    end
+
+    factory :linked_in_contact do
+      email { nil }
+      linked_in { true }
+    end
   end
 end
