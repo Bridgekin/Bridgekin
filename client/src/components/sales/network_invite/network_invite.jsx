@@ -115,6 +115,10 @@ class NetworkInvite extends React.Component {
       .then(() => this.props.openSalesNetworkInvite({ page: 'response' }))
   }
 
+  capitalize(title){
+    return title.split(" ").map(word => Capitalize(word)).join(" ")
+  }
+
   render() {
     const { dimensions, classes, salesNetworks, networkId } = this.props;
     const { loaded, isAdmin, newInvites } = this.state;
@@ -123,8 +127,9 @@ class NetworkInvite extends React.Component {
       let network = salesNetworks[networkId];
       let header = <Grid container justify='center'>
         <Typography color='textPrimary'
+          data-cy='invite-header'
         style={{ fontSize: 40, marginBottom: 50}}>
-          {`Invite Folks To ${Capitalize(network.title)}`}
+          {`Invite Folks To ${this.capitalize(network.title)}`}
         </Typography>
       </Grid>
       let inviteCards = Object.values(newInvites).map(data => {
@@ -138,6 +143,7 @@ class NetworkInvite extends React.Component {
           {inviteCards}
           <Grid container style={{ margin: "15px 0px"}}>
             <Button color='primary'
+              data-cy='add-another-user'
             onClick={this.addAnotherUser}>
               {`Add Another User`}
             </Button>
@@ -145,6 +151,7 @@ class NetworkInvite extends React.Component {
           <div>
             <Button variant='contained' color='primary'
               disabled={!this.readyToSubmit()} 
+              data-cy='submit-button'
               onClick={this.handleSubmit}
               style={{textTrasform: 'none'}}>
               {`Send Invitations`}

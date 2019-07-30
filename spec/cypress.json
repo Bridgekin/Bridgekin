@@ -1,5 +1,6 @@
 {
   "baseUrl": "http://localhost:5000",
   "defaultCommandTimeout": 10000,
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "projectId": "qb1v7b"
 }

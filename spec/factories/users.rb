@@ -38,6 +38,34 @@ FactoryBot.define do
       end
     end
 
+    trait :with_owned_sales_network do
+      after(:create) do |user, opts|
+        sales_network = create(:sales_network,  :with_subscription)
+        create(:sales_user_network, user: user, network: sales_network)
+        create(:sales_admin_network, admin: user, network: sales_network)
+      end
+    end
+
+    trait :with_team_loaded_network_with_intro do
+      transient do
+        message { "Example message" }
+        explaination { "Example explaination" }
+        referral_bonus { 23 }
+        referral_unit { "$" }
+        intro_subject { "Example intro subject" }
+        intro_body { "Example intro body" }
+      end
+      
+      after(:create) do |user, opts|
+        sales_network = create(:sales_network, :with_connected_members, :with_subscription)
+        requestor = sales_network.members.first
+        contact = requestor.sales_contacts.first
+        create(:sales_user_network, user: user, network: sales_network)
+        create(:sales_intro, contact: contact, requestor: requestor, recipient: user, message: opts.message,
+        explaination: opts.explaination, referral_bonus: opts.referral_bonus, referral_unit: opts.referral_unit, intro_subject: opts.intro_subject, intro_body: opts.intro_body)
+      end
+    end
+
     trait :with_team_loaded_network do
       after(:create) do |user, opts|
         sales_network = create(:sales_network, :with_connected_members, :with_subscription)

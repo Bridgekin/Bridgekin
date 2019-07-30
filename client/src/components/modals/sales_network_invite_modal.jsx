@@ -136,6 +136,7 @@ class SalesNetworkInviteModal extends React.Component {
           <Grid item xs={10}>
             <Typography variant="h2" id="modal-title"
               color='textPrimary' align='left'
+              data-cy='invite-response-header'
               className={classes.thanksHeader} >
               {`Your Invites Have Been Sent`}
             </Typography>

@@ -269,7 +269,8 @@ class RequestIntroModal extends React.Component {
       case 'request':
         let header = <Grid container
         className={classes.requestHeader}>
-          <Typography style={{ fontSize: 18}}>
+          <Typography style={{ fontSize: 18}}
+            data-cy='request-intro-header'>
             {`Intro Details`}
           </Typography>
         </Grid>
@@ -282,6 +283,7 @@ class RequestIntroModal extends React.Component {
           <Grid container alignItems='center'>
             <FormControl className={classes.margin} fullWidth>
               <Input type='number'
+                data-cy='referral-bonus-input'
                 value={referralBonus}
                 onChange={this.handleChange('referralBonus')}
                 startAdornment={<InputAdornment position="start">{referralUnit}</InputAdornment>}
@@ -291,29 +293,21 @@ class RequestIntroModal extends React.Component {
         </Grid>
 
         let chooseContact = <Grid item xs={12} sm={5} container className={classes.actionComp}>
-          {/*friendMap[contact.id].length > 2 ?
-          <Select fullWidth
-            value={target}
-            onClick={(e) => e.stopPropagation()}
-            onChange={this.handleChange("target")}>
-            {friendMap[contact.id].map(id => {
-              let user = users[id];
-              return <MenuItem value={user.id}>{`${user.fname} ${user.lname}`}</MenuItem>
-            })}
-          </Select> : 
-          `${users[friendMap[contact.id][0]].fname} ${users[friendMap[contact.id][0]].lname}`
-          */}
           <Typography color='textSecondary'
           style={{ fontSize: 14}}>
             {`Select teammate to request intro`}
           </Typography>
           <Select fullWidth
             value={target}
+            data-cy='select-target-button'
             onClick={(e) => e.stopPropagation()}
             onChange={this.handleChangeTarget}>
             {friendMap[contact.id].map(id => {
               let user = users[id];
-              return <MenuItem value={user.id}>{`${user.fname} ${user.lname}`}</MenuItem>
+              return <MenuItem value={user.id}
+              data-cy='select-target-option'>
+                {`${user.fname} ${user.lname}`}
+              </MenuItem>
             })}
           </Select>
         </Grid>
@@ -321,6 +315,7 @@ class RequestIntroModal extends React.Component {
         let introResponses = <Grid container>
           <TextField multiline
             rows={5} fullWidth
+            data-cy='message-input'
             placeholder={`Message to teammate (optional)`}
             className={classes.textField}
             margin="normal"
@@ -331,6 +326,7 @@ class RequestIntroModal extends React.Component {
           />
           <TextField multiline
             rows={5} fullWidth
+            data-cy='explaination-input'
             placeholder={`Why our solution would be a good fit for them (optional)`}
             className={classes.textField}
             margin="normal"
@@ -354,6 +350,7 @@ class RequestIntroModal extends React.Component {
                 {`Base Dollar`}
               </Typography>
               <Switch
+                data-cy='toggle-referral-type'
                 checked={referralUnit === '%'}
                 onChange={this.handleCheckedChange('referralUnit')}
                 value="referralUnit"
@@ -368,14 +365,16 @@ class RequestIntroModal extends React.Component {
             style={{ marginTop: 15 }}>
             <Button color='default'
               disabled={!target}
+              data-cy='custom-page-button'
               onClick={this.changePage("custom")}>
               {`Customize Introduction Email`}
             </Button>
 
             <Button variant='contained' color='primary'
-            disabled={!target}
-            onClick={this.handleSubmit}>
-            {`Send Request`}
+              disabled={!target}
+              data-cy='submit-request'
+              onClick={this.handleSubmit}>
+              {`Send Request`}
             </Button>
           </Grid>
         </Grid>
@@ -396,7 +395,8 @@ class RequestIntroModal extends React.Component {
           <Grid container justify='space-between'>
             <Grid item xs={12} sm={6}
             alignItems='flex-end'>
-              <Button style={{ fontSize: 14, fontWeight: 400, textTransform: 'none'}}
+              <Button data-cy='add-template-button'
+              style={{ fontSize: 14, fontWeight: 400, textTransform: 'none'}}
                 onClick={this.changePage("new template")}>
                 {`Add Custom Template`}
               </Button>
@@ -408,11 +408,14 @@ class RequestIntroModal extends React.Component {
                 className={classes.formControl}>
                   <InputLabel>{`Choose Template`}</InputLabel>
                   <Select value={templateId} fullWidth
+                    data-cy='choose-template-button'
                     onClick={(e) => e.stopPropagation()}
                     onChange={this.handleChangeTemplate}>
                     <MenuItem value={'default'}>{`Default`}</MenuItem>
                     {Object.values(requestTemplates).map(template => {
-                      return <MenuItem value={template.id}>{template.name}</MenuItem>
+                      return <MenuItem 
+                        data-cy='template-option'
+                        value={template.id}>{template.name}</MenuItem>
                     })}
                   </Select>
                 </FormControl>}
@@ -458,6 +461,7 @@ class RequestIntroModal extends React.Component {
             </Button>
 
             <Button variant='contained' color='primary'
+              data-cy='submit-request'
               onClick={this.handleSubmit}>
               {`Send`}
             </Button>
@@ -483,6 +487,7 @@ class RequestIntroModal extends React.Component {
             </ul>
           </Typography>}
           <TextField
+            data-cy='template-name-input'
             fullWidth
             label="Custom Template Name"
             variant='outlined'
@@ -491,6 +496,7 @@ class RequestIntroModal extends React.Component {
             onChange={this.handleChange('newTemplateName')}
           />
           <TextField
+            data-cy='template-subject-input'
             fullWidth
             label="Subject"
             variant='outlined'
@@ -499,6 +505,7 @@ class RequestIntroModal extends React.Component {
             onChange={this.handleChange('newTemplateSubject')}
           />
           <TextField
+            data-cy='template-body-input'
             fullWidth
             multiline
             rows="12"
@@ -516,6 +523,7 @@ class RequestIntroModal extends React.Component {
 
             <Button color='primary' variant='contained'
               disabled={!newTemplateSubject || !newTemplateBody || !newTemplateName || savingTemplate}
+              data-cy='save-template'
               onClick={this.handleSaveTemplate}>
               {`Save New Template`}
             </Button>
@@ -541,6 +549,7 @@ class RequestIntroModal extends React.Component {
           <Typography variant="h2" id="modal-title" 
             color='textPrimary' align='left'
             gutterBottom
+            data-cy='success-response-header'
             className={classes.thanksHeader}>
             {`Introduction Request Sent`}
           </Typography>

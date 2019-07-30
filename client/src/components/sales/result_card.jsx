@@ -204,6 +204,7 @@ class ResultCard extends React.Component {
               </Typography>
               <Button color='primary' variant='contained'
                 onClick={this.requestIntro}
+                data-cy='request-intro-button'
                 disabled={memberType !== 'full' || otherFriendsCount === 0}
                 style={{ textTransform: 'capitalize'}}>
                 {`Request a warm intro`}

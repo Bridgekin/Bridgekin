@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     
     #Cypress testing hooks
     get "cypress/first_five_contacts", :to => "cypress_tests#first_five_contacts"
+    get "cypress/first_managed_network", :to => "cypress_tests#first_managed_network"
+    get "cypress/received_intro_request", :to => "cypress_tests#received_intro_request"
 
     #Signup Hooks
     post "network_invite_signup", :to => 'users#network_invite_signup'

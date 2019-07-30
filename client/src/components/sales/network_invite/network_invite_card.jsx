@@ -52,9 +52,11 @@ class NetworkInviteCard extends React.Component {
     const { classes, data } = this.props;
     // const { email, fname, lname } = this.props;
     return <Grid container justify='space-between'
-    spacing={1} className={classes.inviteRow}>
+      data-cy='network-invite-card'
+      spacing={1} className={classes.inviteRow}>
       <Grid item xs={12} sm={3}>
         <TextField fullWidth
+          data-cy='invite-email-input'
           label="Email"
           className={classes.textField}
           margin="dense"
@@ -66,6 +68,7 @@ class NetworkInviteCard extends React.Component {
       </Grid>
       <Grid item xs={12} sm={3}>
         <TextField fullWidth
+          data-cy='invite-fname-input'
           label="First Name"
           className={classes.textField}
           margin="dense"
@@ -77,6 +80,7 @@ class NetworkInviteCard extends React.Component {
       </Grid>
       <Grid item xs={12} sm={3}>
         <TextField fullWidth
+          data-cy='invite-lname-input'
           label="Last Name"
           className={classes.textField}
           margin="dense"
@@ -88,11 +92,14 @@ class NetworkInviteCard extends React.Component {
       </Grid>
       <Grid item xs={2} container alignItems='center'>
         <Select fullWidth
+          data-cy='invite-member_type'
           value={data.userType}
           onClick={(e) => e.stopPropagation()}
           onChange={this.handleChange('userType')}>
-            <MenuItem value={'full'}>{`Full User - Seat`}</MenuItem>
-            <MenuItem value={'limited'}>{`External User - Upload Only`}</MenuItem>
+          <MenuItem data-cy='full-member_type'
+            value={'full'}>{`Full User - Seat`}</MenuItem>
+          <MenuItem data-cy='limited-member_type'
+          value={'limited'}>{`External User - Upload Only`}</MenuItem>
         </Select>
       </Grid>
       <Grid item xs={1} container alignItems='center'>

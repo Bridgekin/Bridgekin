@@ -38,6 +38,31 @@ Cypress.Commands.add("get_sample_contacts", () => {
   })
     .then(data => data.body)
 })
+
+Cypress.Commands.add("get_managed_network", () => {
+  cy.request({
+    method: 'GET',
+    url: "http://localhost:3000/api/cypress/first_managed_network",
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+    }
+  })
+    .then(data => data.body)
+})
+
+Cypress.Commands.add("get_received_request", () => {
+  cy.request({
+    method: 'GET',
+    url: "http://localhost:3000/api/cypress/received_intro_request",
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": localStorage.getItem('bridgekinToken')
+    }
+  })
+    .then(data => data.body)
+})
+
 //
 //
 // -- This is a child command --

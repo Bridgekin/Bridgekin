@@ -214,7 +214,9 @@ class SalesNav extends React.Component {
       {currentUser && (window.publicEnv !== 'production' 
       || currentUser.email === 'joe@bridgekin.com' 
       || currentUser.email === 'admin@bridgekin.com') &&
-        !this.isExpiredSub() && <Button style={{ textTransform: 'capitalize' }}
+        !this.isExpiredSub() && <Button 
+        data-cy='invite-button'
+        style={{ textTransform: 'capitalize' }}
         onClick={() => this.props.history.push(`/sales/invite_external/${currentSalesNetworkId}`)}>
           <Typography color='textSecondary'
             className={classes.navItem}>

@@ -238,25 +238,9 @@ class RespondIntroModal extends React.Component {
 
     switch(page){
       case "intro":  
-        // let intro = <Grid item xs={10} container>
-        //   <Typography gutterBottom
-        //     style={{ fontSize: 20, fontWeight: 600 }}>
-        //     {`Thanks for moving forward with this Introduction Request!`}
-        //   </Typography>
-        //   <Typography gutterBottom
-        //     style={{ fontSize: 16 }}>
-        //     {`We've opened your native email client and pre-filled the note to your contact. The rest is in your hands!`}
-        //   </Typography>
-        //   <Grid item xs={12}>
-        //     <Button style={{ margin: '0 auto', marginTop: 30 }}
-        //       onClick={this.redirectToStats} color='primary'>
-        //       {`Back to Stats`}
-        //     </Button>
-        //   </Grid>
-        // </Grid>
-
         let intro = <Grid item xs={10} container direction='column'>
           <Typography gutterBottom align='center'
+            data-cy='intro-header'
             style={{ fontSize: 18, fontWeight: 600 }}>
             {`Message to Candidate`}
           </Typography>
@@ -264,15 +248,8 @@ class RespondIntroModal extends React.Component {
           style={{ fontSize: 14, margin: "15px 0px"}}>
             {`Below are the suggested subject and email. Feel free to copy both and send through your email`}
           </Typography>
-          {/* <TextField
-            fullWidth
-            label="Email"
-            variant='outlined'
-            value={email}
-            onChange={this.handleChange('email')}
-            style={{ marginBottom: 10 }}
-          /> */}
           <TextField
+            data-cy='intro-subject'
             fullWidth
             label="Subject"
             variant='outlined'
@@ -287,6 +264,7 @@ class RespondIntroModal extends React.Component {
             </Button>
           </Grid>
           <TextField
+            data-cy='intro-body'
             fullWidth
             multiline
             rows="12"
@@ -317,12 +295,14 @@ class RespondIntroModal extends React.Component {
         this.reasons[0] = `I’d rather ${Capitalize(requestor.fname)} reach out and use my name`
         let refuse = <Grid item xs={10} container direction='column'>
           <Typography gutterBottom
+            data-cy='decline-response'
             style={{ fontSize: 16, fontWeight: 600 }}>
             {`Tell us why ${Capitalize(contact.fname)} ${Capitalize(contact.lname)} isn’t a good fit `}
           </Typography>
           <FormControlLabel
             control={
               <Checkbox
+                data-cy='reason1-checkbox'
                 checked={reason === this.reasons[0]}
                 onChange={this.handleCheckbox('reason', 0)}
                 color="primary"
@@ -332,6 +312,7 @@ class RespondIntroModal extends React.Component {
           <FormControlLabel
             control={
               <Checkbox
+                data-cy='reason2-checkbox'
                 checked={reason === this.reasons[1]}
                 onChange={this.handleCheckbox('reason', 1)}
                 color="primary"
@@ -344,6 +325,7 @@ class RespondIntroModal extends React.Component {
           </Typography>
           <TextField
             multiline
+            data-cy='details-input'
             fullWidth
             rows="6"
             variant='outlined'
@@ -361,6 +343,7 @@ class RespondIntroModal extends React.Component {
 
             <Button variant='contained' color='primary'
               disabled={!reason}
+              data-cy='respond-intro-submit'
               onClick={this.handleSubmit}>
               {`Send`}
             </Button>
@@ -371,6 +354,7 @@ class RespondIntroModal extends React.Component {
         requestor = users[sales_intro.requestorId]
         let unknown = <Grid item xs={10} container>
           <Typography gutterBottom
+            data-cy='dont-know-response'
             style={{ fontSize: 20, fontWeight: 600 }}>
             {`No Problem!`}
           </Typography>
@@ -378,12 +362,6 @@ class RespondIntroModal extends React.Component {
             style={{ fontSize: 16 }}>
             {`Thanks for letting us know. We’ve let ${Capitalize(requestor.fname)} know you don’t know them.`}
           </Typography>
-          {/* <Grid item xs={12}>
-            <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
-              onClick={this.redirectToStats} color='primary'>
-              {`Back to Stats`}
-            </Button>
-          </Grid> */}
         </Grid>
         return unknown
       case 'response':
@@ -403,6 +381,7 @@ class RespondIntroModal extends React.Component {
           <Grid item xs={10}>
             <Typography variant="h2" id="modal-title"
               color='textPrimary' align='left'
+              data-cy='response-header'
               className={classes.thanksHeader} >
               {`Thanks for responding`}
             </Typography>

@@ -149,7 +149,8 @@ class RespondToIntro extends React.Component {
         <Grid item xs={10} sm={8}
         style={{ marginTop: 30}}>
           <Typography align='center' gutterBottom
-          style={{ fontSize: 24, fontWeight: 600}}>
+            data-cy='request-intro-header'
+            style={{ fontSize: 24, fontWeight: 600}}>
             {`Make warm introductions and help you and your company grow`}
           </Typography>
 
@@ -159,6 +160,7 @@ class RespondToIntro extends React.Component {
               {`Why would this be a good fit?`}
             </Typography>
             <Typography align='center' gutterBottom
+              data-cy='intro-explaination'
             style={{ fontSize: 16 }}>
               {`${intro.explaination}`}
             </Typography>
@@ -166,6 +168,7 @@ class RespondToIntro extends React.Component {
 
           {Boolean(!!intro.referralBonus) && 
             <Typography align='center'
+            data-cy='intro-referral-bonus'
               style={{ fontSize: 16 }}>
             {`Referral Amount: `}<b>{intro.referralUnit === '$' ? `$${intro.referralBonus}` : `${intro.referralBonus}%`}</b>
             </Typography>}
@@ -238,7 +241,8 @@ class RespondToIntro extends React.Component {
             <Grid item xs={10} sm={8} container justify='space-around'>
               <Grid item xs={12} md={3}>
                 <Button color='primary' fullWidth
-                variant='contained'
+                  variant='contained' 
+                  data-cy='intro-button'
                   onClick={this.respondToRequest("intro")}
                   className={classes.actionButton}
                   style={{ marginRight: 20}}>
@@ -247,7 +251,8 @@ class RespondToIntro extends React.Component {
               </Grid>
               <Grid item xs={12} md={3}>
                 <Button color='primary' fullWidth
-                variant='contained'
+                  variant='contained'
+                  data-cy='dont-know-button'
                   onClick={this.respondToRequest("don't know")}
                   className={classes.actionButton}
                   style={{ marginRight: 20 }}>
@@ -256,7 +261,8 @@ class RespondToIntro extends React.Component {
               </Grid>
               <Grid item xs={12} md={5}>
                 <Button color='primary' fullWidth
-                variant='contained'
+                  variant='contained'
+                  data-cy='decline-button'
                   onClick={this.respondToRequest("prefer not")}
                   className={classes.actionButton}>
                   {`I'd prefer not to reach out`}
