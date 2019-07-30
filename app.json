@@ -1,6 +1,11 @@
 {
   "environments": {
     "test": {
+      "formation": {
+        "test": {
+          "quantity": 32
+        }
+      },
       "addons": [
         "heroku-postgresql:in-dyno",
         "heroku-redis:in-dyno"
