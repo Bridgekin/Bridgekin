@@ -23,5 +23,8 @@
     "url": "https://github.com/jmlopardo/Bridgekin/issues"
   },
   "homepage": "https://github.com/jmlopardo/Bridgekin#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "cypress": "3.4.1"
+  }
 }

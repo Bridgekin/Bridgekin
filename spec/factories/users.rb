@@ -16,6 +16,12 @@ FactoryBot.define do
     confirmed_at { DateTime.now}
     email_confirmed_at { DateTime.now }
 
+    trait :uploaded do
+      after(:create) do |user, opts|
+        create(:user_feature, user: user)
+      end
+    end
+
     trait :with_sales_contacts do
       transient do
         contact_count { 25 }
@@ -29,6 +35,13 @@ FactoryBot.define do
         sales_contacts.each do |sales_contact|
           create(:sales_user_contact, contact: sales_contact, user: user)
         end
+      end
+    end
+
+    trait :with_team_loaded_network do
+      after(:create) do |user, opts|
+        sales_network = create(:sales_network, :with_connected_members, :with_subscription)
+        create(:sales_user_network, user: user, network: sales_network)
       end
     end
 

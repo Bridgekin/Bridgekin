@@ -253,7 +253,8 @@ class SalesDashboard extends React.Component {
 
     let resultsComponent = <Grid container justify='center'>
       <Grid item xs={12} sm={9} container spacing={2}
-      justify='flex-start'
+        data-cy='search-results'
+        justify='flex-start'
         style={{ margin: "20px 0px" }}>
         {(resultArray.length > 0) ? (
           resultCards
@@ -371,6 +372,7 @@ class SalesDashboard extends React.Component {
                 {`Search by Feature`}
               </Typography>
               <TextField
+                data-cy='position-input'
                 label="Title/Position"
                 className={classes.textField}
                 margin="dense"
@@ -380,6 +382,7 @@ class SalesDashboard extends React.Component {
                 onMouseUp={this.handleChange('position')}
               />
               <TextField
+                data-cy='company-input'
                 label="Company"
                 className={classes.textField}
                 margin="dense"
@@ -390,6 +393,7 @@ class SalesDashboard extends React.Component {
               />
 
               <TextField
+                data-cy='location-input'
                 label="Location"
                 className={classes.textField}
                 margin="dense"
@@ -402,6 +406,7 @@ class SalesDashboard extends React.Component {
               <Grid container justify='center'
               style={{ marginTop: 10}}>
                 <Button variant='contained' color='primary'
+                  data-cy='search-feature-submit'
                   onClick={this.searchByCharacteristic}>
                   {`Search by Feature`}
                 </Button>
@@ -423,6 +428,7 @@ class SalesDashboard extends React.Component {
                   {`Search by Name`}
                 </Typography>
                 <TextField
+                  data-cy='fname-input'
                   label="First Name"
                   className={classes.textField}
                   margin="dense"
@@ -432,6 +438,7 @@ class SalesDashboard extends React.Component {
                   onMouseUp={this.handleChange('fname')}
                 />
                 <TextField
+                  data-cy='lname-input'
                   label="Last Name"
                   className={classes.textField}
                   margin="dense"
@@ -444,6 +451,7 @@ class SalesDashboard extends React.Component {
               <Grid container justify='center'
                 style={{ marginTop: 40 }}>
                 <Button variant='contained' color='primary'
+                  data-cy='search-name-submit'
                 onClick={this.searchByName}>
                   {`Search By Name`}
                 </Button>
@@ -460,6 +468,7 @@ class SalesDashboard extends React.Component {
             <Grid container justify='flex-start'
             style={{ marginBottom: 30, padding: "0px 15px"}}>
               <Button onClick={this.handleMenuClick('filterAnchorEl')}
+                data-cy='view-by-button'
               style={{ textTransform: 'none'}}>
                 <Typography color='textPrimary'
                 style={{ fontSize: 14}}>
@@ -482,6 +491,7 @@ class SalesDashboard extends React.Component {
                 getContentAnchorEl={null}>
                 {["", "teammates", "mine", "linkedIn", "google"].map(choice => {
                   return <MenuItem onClick={this.handleMenuChange(choice)}
+                  data-cy={`view-option-${choice}`}
                   disabled={memberType !== "full" &&choice === "teammates"}>
                     <Typography style={{ fontSize: 14}}>
                       {filterValues[choice]}

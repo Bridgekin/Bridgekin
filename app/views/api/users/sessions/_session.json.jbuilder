@@ -23,7 +23,7 @@ json.sales_networks do
       json.partial! 'api/sales_networks/sales_network', sales_network: sales_network
     end
   end
-end
+end if variables[:sales_networks]
 
 json.network_details variables[:network_details]
 
@@ -35,7 +35,7 @@ json.sales_user_networks do
       json.partial! 'api/sales_user_networks/sales_user_network', sales_user_network: sales_user_network
     end
   end
-end
+end if variables[:sales_user_networks]
 
 json.sales_admin_networks do
   variables[:sales_admin_networks].each do |sales_admin_network|
@@ -43,4 +43,4 @@ json.sales_admin_networks do
       json.partial! 'api/sales_admin_networks/sales_admin_network', sales_admin_network: sales_admin_network
     end
   end
-end
+end if variables[:sales_admin_networks]

@@ -264,7 +264,7 @@ class SignupModal extends React.Component {
         })
     
         let modalText = this.props.userErrors.length === 0 ? (
-          <Grid>
+          <Grid data-cy='success-message'>
             <Typography variant="h2" id="modal-title"
               color='textPrimary' align='left'
               className={classes.thanksHeader} >

@@ -149,6 +149,8 @@ GEM
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
     crass (1.0.4)
+    cypress-on-rails (1.4.1)
+      rack
     dalli (2.7.10)
     dante (0.2.0)
     database_cleaner (1.7.0)
@@ -481,6 +483,7 @@ DEPENDENCIES
   chromedriver-helper
   clearbit
   coffee-rails (~> 5.0.0)
+  cypress-on-rails (~> 1.0)
   database_cleaner
   devise
   devise-jwt

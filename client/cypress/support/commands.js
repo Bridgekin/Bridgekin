@@ -27,7 +27,7 @@
 Cypress.Commands.add("login" , (email) => {
   cy.request({
     method: 'POST',
-    url: "http://localhost:5000/api/login",
+    url: "http://localhost:3000/api/login",
     body: {
       user: {
         email: email,
@@ -47,7 +47,7 @@ Cypress.Commands.add("logout" , () => {
 Cypress.Commands.add("delete_waitlist_user" , (email) => {
   cy.request({
     method: 'DELETE',
-    url: "http://localhost:5000/api/waitlist_user",
+    url: "http://localhost:3000/api/waitlist_user",
     body: {
       email: email
     }
@@ -57,7 +57,7 @@ Cypress.Commands.add("delete_waitlist_user" , (email) => {
 Cypress.Commands.add("delete_user" , (email) => {
   cy.request({
     method: 'DELETE',
-    url: "http://localhost:5000/api/destroy_user_by_email",
+    url: "http://localhost:3000/api/destroy_user_by_email",
     body: {
       email: email
     }
@@ -67,7 +67,7 @@ Cypress.Commands.add("delete_user" , (email) => {
 Cypress.Commands.add("destroy_all_user_opps" , () => {
   cy.request({
     method: 'DELETE',
-    url: "http://localhost:5000/api/destroy_all_user_opps",
+    url: "http://localhost:3000/api/destroy_all_user_opps",
     headers:{
     	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
@@ -78,7 +78,7 @@ Cypress.Commands.add("destroy_all_user_opps" , () => {
 Cypress.Commands.add("destroy_user_connected_opps" , () => {
   cy.request({
     method: 'DELETE',
-    url: "http://localhost:5000/api/destroy_user_connected_opps",
+    url: "http://localhost:3000/api/destroy_user_connected_opps",
     headers:{
     	'Content-Type': 'application/json',
       "Authorization": localStorage.getItem('bridgekinToken')
@@ -89,7 +89,7 @@ Cypress.Commands.add("destroy_user_connected_opps" , () => {
 Cypress.Commands.add("get_referral_link" , () => {
   cy.request({
     method: 'POST',
-    url: "http://localhost:5000/api/referral_links",
+    url: "http://localhost:3000/api/referral_links",
     body: {
       referral:{
         network_id: 1,

@@ -124,11 +124,7 @@ class AdminSignup extends React.Component {
     this.props.fetchAdminSignupLink(code)
     .then(() => {
       const { adminSignupLink } = this.props;
-      if(adminSignupLink.id){
-        this.setState({ loaded: true })
-      } else {
-        // this.setState({ loaded: true})
-      }
+      this.setState({ loaded: true })
     })
   }
 
@@ -223,12 +219,11 @@ class AdminSignup extends React.Component {
     const { fname, lname, email, password,
       line1, city, state, zipcode,
       title, domain, termsAgreement} = this.state;
-    debugger
+
     if(page === "signup"){
       return !fname || !lname || !email || !password || !title || !domain || !termsAgreement
-    } else if (page === 'payment'){
-      return !line1 || !city || !state || !zipcode
     }
+    return false
   }
 
   getContent(){
@@ -253,11 +248,13 @@ class AdminSignup extends React.Component {
           </Typography>
           <Grid container>
             <Typography color='textSecondary'
+              data-cy="seats-count"
               className={classes.subDetail}
               style={{ marginRight: 10}}>
               {`Seats: ${product.seats}`}
             </Typography>
             <Typography color='textSecondary'
+              data-cy="period-amount"
               className={classes.subDetail}>
               {`Amount: $${duration === 'monthly' ? product.monthlyAmount : product.yearlyAmount}`}
             </Typography>
@@ -268,52 +265,52 @@ class AdminSignup extends React.Component {
           </Typography>
         </div>
 
-        let billingInfo = <Grid container>
-          <Typography fullWidth gutterBottom
-            color="textPrimary"
-            style={{ marginTop: 20 }}>
-            {`Your Billing address`}
-          </Typography>
-          <TextField fullWidth required
-            variant="outlined"
-            label='Address'
-            margin='dense'
-            placeholder='Eg: 1234 San Francisco St'
-            onChange={this.handleChange('line1')}
-            value={line1}
-          />
-          <TextField fullWidth required
-            variant="outlined"
-            label='City'
-            margin='dense'
-            placeholder='Eg: San Francisco'
-            onChange={this.handleChange('city')}
-            value={city}
-          />
-          <Grid container justify='space-between'
-            spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth required
-                variant="outlined"
-                label='State'
-                margin='dense'
-                placeholder='Eg: CA'
-                onChange={this.handleChange('state')}
-                value={state}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth required
-                variant="outlined"
-                label='Zipcode'
-                margin='dense'
-                placeholder='Eg: 98765'
-                onChange={this.handleChange('zipcode')}
-                value={zipcode}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+        // let billingInfo = <Grid container>
+        //   <Typography fullWidth gutterBottom
+        //     color="textPrimary"
+        //     style={{ marginTop: 20 }}>
+        //     {`Your Billing address`}
+        //   </Typography>
+        //   <TextField fullWidth required
+        //     variant="outlined"
+        //     label='Address'
+        //     margin='dense'
+        //     placeholder='Eg: 1234 San Francisco St'
+        //     onChange={this.handleChange('line1')}
+        //     value={line1}
+        //   />
+        //   <TextField fullWidth required
+        //     variant="outlined"
+        //     label='City'
+        //     margin='dense'
+        //     placeholder='Eg: San Francisco'
+        //     onChange={this.handleChange('city')}
+        //     value={city}
+        //   />
+        //   <Grid container justify='space-between'
+        //     spacing={2}>
+        //     <Grid item xs={12} sm={6}>
+        //       <TextField fullWidth required
+        //         variant="outlined"
+        //         label='State'
+        //         margin='dense'
+        //         placeholder='Eg: CA'
+        //         onChange={this.handleChange('state')}
+        //         value={state}
+        //       />
+        //     </Grid>
+        //     <Grid item xs={12} sm={6}>
+        //       <TextField fullWidth required
+        //         variant="outlined"
+        //         label='Zipcode'
+        //         margin='dense'
+        //         placeholder='Eg: 98765'
+        //         onChange={this.handleChange('zipcode')}
+        //         value={zipcode}
+        //       />
+        //     </Grid>
+        //   </Grid>
+        // </Grid>
         
         let ccInfo = <div>
           <Typography fullWidth gutterBottom
@@ -332,7 +329,7 @@ class AdminSignup extends React.Component {
 
         let paymentInfo = <Grid item md={5} sm={6} xs={10}>
           {yourSub}
-          {billingInfo}
+          {/* {billingInfo} */}
           {ccInfo}
         </Grid>
 
@@ -380,6 +377,7 @@ class AdminSignup extends React.Component {
             </Grid>
             <Grid item xs={2}>
               <Switch
+                data-cy="toggle-period"
                 checked={duration === 'yearly'}
                 onChange={this.handleCheckedChange('duration')}
                 value="duration"
@@ -420,11 +418,13 @@ class AdminSignup extends React.Component {
       case "signup":
         let createAccount = <div>
           <Typography color="textPrimary" gutterBottom
+            data-cy='signup-header'
             align='center'
             style={{ fontSize: 18, fontWeight: 600 }}>
             {`Create Your Account`}
           </Typography>
           <TextField fullWidth
+            data-cy="fname-input"
             variant="outlined"
             label='First Name'
             margin='dense'
@@ -433,6 +433,7 @@ class AdminSignup extends React.Component {
             value={fname}
           />
           <TextField fullWidth
+            data-cy="lname-input"
             variant="outlined"
             label='Last Name'
             margin='dense'
@@ -441,6 +442,7 @@ class AdminSignup extends React.Component {
             value={lname}
           />
           <TextField fullWidth
+            data-cy="email-input"
             variant="outlined"
             label='Email Name'
             margin='dense'
@@ -453,6 +455,7 @@ class AdminSignup extends React.Component {
             {emailError}
           </Typography>}
           <TextField fullWidth
+            data-cy="password-input"
             variant="outlined"
             label='Password'
             margin='dense'
@@ -470,6 +473,7 @@ class AdminSignup extends React.Component {
             {`My Company`}
           </Typography>
           <TextField fullWidth
+            data-cy="company-title-input"
             variant="outlined"
             label='Company Name'
             margin='dense'
@@ -482,6 +486,7 @@ class AdminSignup extends React.Component {
             {titleError}
           </Typography>}
           <TextField fullWidth
+            data-cy="company-domain-input"
             variant="outlined"
             label='Company Domain'
             margin='dense'
@@ -497,23 +502,6 @@ class AdminSignup extends React.Component {
 
         let submit = <div style={{ marginTop: 20}}>
           <Grid container justify='center'>
-            {/* <FormControlLabel
-              control={
-                <Checkbox
-                  checked={msa}
-                  data-cy='terms-checkbox'
-                  onChange={this.handleChange('msa')}
-                  value="msa"
-                />
-              }
-              label={
-                <Typography color='textSecondary'
-                  style={{ fontSize: 12, margin: "5px 0px" }}>
-                  {`I agree to the `}
-                  <Link to="/masterserviceagreement">Master Service Agreement.</Link>
-                </Typography>
-              }
-            /> */}
             <FormControlLabel
               control={
                 <Checkbox
@@ -533,6 +521,7 @@ class AdminSignup extends React.Component {
               }
             />
             <Button color='primary' variant='contained'
+              data-cy="next-button"
               disabled={this.isDisabledSubmit() || checkingValid}
               onClick={this.handleChangePage('payment')}
             style={{ marginTop: 15}}>
@@ -581,19 +570,25 @@ class AdminSignup extends React.Component {
         </Grid>
       </div>
     } else if (loaded && !adminSignupLink.id){
-      return <Grid container justify='center'
-        alignItems='center' direction='column'
-        style={{ minHeight: dimensions.height }}>
-        <Typography gutterBottom style={{ fontSize: 36}}>
-          {`We weren't able to find the signup link you provided`}
-        </Typography>
-        <Typography gutterBottom style={{ fontSize: 18 }}>
-          {`As a result, we can't sign you up for an admin account yet. If you'd like to learn more,please reach out to us at admin@bridgekin.com or joe@bridgekin.com.`}
-        </Typography>
-        <Button variant='contained' color='primary'
-        onClick={() => this.props.history.push('//')}>
-          {`Back home`}
-        </Button>
+      return <Grid container justify='center'>
+        <Grid item xs={10} sm={6} container justify='center'
+          alignItems='center' direction='column'
+          data-cy='no-link-response'
+          style={{ minHeight: dimensions.height }}>
+          <Typography gutterBottom align='center'
+          style={{ fontSize: 36}}>
+            {`Signup Link Not Found`}
+          </Typography>
+          <Typography gutterBottom align='center'
+          style={{ fontSize: 18 }}>
+            {`As a result, we can't sign you up for an admin account yet. If you'd like to learn more,please reach out to us at admin@bridgekin.com or joe@bridgekin.com.`}
+          </Typography>
+          <Button variant='contained' color='primary'
+          style={{ marginTop: 30}}
+          onClick={() => this.props.history.push('//')}>
+            {`Back home`}
+          </Button>
+        </Grid>
       </Grid>
     } else {
       return <Grid container justify='center' 

@@ -19,6 +19,9 @@ Rails.application.routes.draw do
     resource :admin_signup_links, only: [:show]
     resources :sales_network_invites
     resources :request_templates, only: [:index, :create, :destroy]
+    
+    #Cypress testing hooks
+    get "cypress/first_five_contacts", :to => "cypress_tests#first_five_contacts"
 
     #Signup Hooks
     post "network_invite_signup", :to => 'users#network_invite_signup'

@@ -231,6 +231,7 @@ class SalesNav extends React.Component {
         </Button>}
       {currentUser && 
         <Button style={{ textTransform: 'capitalize' }}
+          data-cy='logout-button'
           onClick={this.handleSubmit}>
           <Typography color='textSecondary'
             className={classes.navItem}>

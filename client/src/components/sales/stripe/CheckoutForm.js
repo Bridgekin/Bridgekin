@@ -33,10 +33,19 @@ class CheckoutForm extends Component {
       complete: false,
       submitting: false,
       msa: false,
-      termsAgreement: false
+      termsAgreement: false,
+      canMakePayment: false
     };
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.validateInput = this.validateInput.bind(this);
+
+    // card.addEventListener('change', ({ error }) => {
+    //   const displayError = document.getElementById('payment-errors');
+    //   if (error) {
+    //     displayError.textContent = error.message;
+    //   }
+    // });
   }
 
   async submit(ev) {
@@ -52,21 +61,26 @@ class CheckoutForm extends Component {
     }
   }
 
+  validateInput(obj){
+    this.setState({ canMakePayment: obj.complete })
+  }
+
   handleChange(field){
     return e => this.setState({ [field]:  e.target.checked })
   }
 
   render() {
-    const { submitting, msa, termsAgreement } = this.state;
+    const { submitting, msa, termsAgreement, canMakePayment } = this.state;
     if (this.state.complete) return <h1>Purchase Complete</h1>;
-    
+
     return (
       <div className="checkout">
         <div style={{ margin: "20px 0px"}}>
-          <CardElement />
+          <CardElement onChange={this.validateInput}/>
         </div>
         <Button color='primary' variant='contained'
-          disabled={this.props.canSubmit || submitting }
+          data-cy="signup-button"
+          disabled={submitting || !canMakePayment}
           onClick={this.submit} fullWidth
           style={{textTransform: 'capitalize', marginTop: 10}}>
           {`Start Free 7 Day Trial`}

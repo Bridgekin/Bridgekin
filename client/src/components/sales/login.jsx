@@ -242,6 +242,7 @@ class SalesLogin extends React.Component {
             {`Company: ${Capitalize(target.title)}`}
           </Typography>
           <TextField margin='dense'
+            data-cy='fname-input'
             required
             label="First Name"
             className={classes.textField}
@@ -250,6 +251,7 @@ class SalesLogin extends React.Component {
             onChange={this.handleChange('fname')}
             onMouseUp={this.handleChange('fname')} />
           <TextField margin='dense'
+            data-cy='lname-input'
             required
             label="Last Name"
             className={classes.textField}
@@ -258,6 +260,7 @@ class SalesLogin extends React.Component {
             onChange={this.handleChange('lname')}
             onMouseUp={this.handleChange('lname')} />
           <TextField margin='dense'
+            data-cy='email-input'
             required
             label="Work Email"
             className={classes.textField}
@@ -266,6 +269,7 @@ class SalesLogin extends React.Component {
             onChange={this.handleChange('email')}
             onMouseUp={this.handleChange('email')} />
           <TextField margin='dense'
+            data-cy='password-input'
             required
             label="Password"
             className={classes.textField}
@@ -295,6 +299,7 @@ class SalesLogin extends React.Component {
           <div style={{ marginTop: 20}}>
             <Button color='primary' variant='contained'
             disabled={!termsAgreement}
+            data-cy='submit-button'
             onClick={this.handleSignup}>
               {`Signup`}
             </Button>
@@ -317,6 +322,7 @@ class SalesLogin extends React.Component {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <TextField margin='dense' fullWidth
+                data-cy='email-login' 
                 required
                 label="Work Email"
                 className={classes.textField}
@@ -328,6 +334,7 @@ class SalesLogin extends React.Component {
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField margin='dense' fullWidth
+                data-cy='password-login'
                 required
                 label="Password"
                 className={classes.textField}
@@ -341,7 +348,8 @@ class SalesLogin extends React.Component {
             <Grid item xs={12} sm={2} container justify='center' alignItems='center'>
               <div>
                 <Button color='primary' variant='contained'
-                onClick={this.handleLogin}>
+                  data-cy='submit-button'
+                  onClick={this.handleLogin}>
                   {`Login`}
                 </Button>
               </div>
@@ -366,6 +374,7 @@ class SalesLogin extends React.Component {
             <Grid container spacing={2}>
               <Grid item xs={8}>
                 <TextField margin='dense' fullWidth
+                  data-cy='domain-input'
                   required
                   label="Company Domain URL"
                   placeholder='Eg: Bridgekin'
@@ -378,6 +387,7 @@ class SalesLogin extends React.Component {
               <Grid item xs={4} container justify='center' alignItems='center'>
                 <div>
                   <Button color='primary' variant='contained'
+                    data-cy='search-networks-button'
                   onClick={this.retrieveNetworks}>
                     {`Find`}
                   </Button>
@@ -404,13 +414,16 @@ class SalesLogin extends React.Component {
                 className={classes.resultContainer}>
                 {results.map(network => {
                   let detail = networkDetails[network.id]
-                  return <Grid item container justify='space-between' 
+                  return <Grid item container
+                  data-cy='domain-result'
+                  justify='space-between' 
                   className={classes.result}>
                     <Typography color='textPrimary'
                     style={{ fontSize: 14}}>
                       {`${Capitalize(network.title)}`}
                     </Typography>
                     <Button variant='contained' color='primary'
+                      data-cy='choose-network-button'
                     disabled={this.isDisabled(detail)}
                     onClick={this.handlePage('signup',network)}>
                       {`Select`}

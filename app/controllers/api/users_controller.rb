@@ -56,8 +56,11 @@ class Api::UsersController < ApiController
     @current_user = User.new(user_params)
     network = SalesNetwork.find_by(domain: params[:user][:domain])
 
-    provided_domain = params[:user][:email].split('@').last.downcase
-    network_domain = network.domain.downcase
+    provided_email = params[:user][:email].split('@')
+    provided_domain = provided_email.last.downcase unless provided_email.empty?
+    
+    network_domain = network.domain.downcase unless network.nil?
+
     if provided_domain != network_domain
       render json: ["Domain does not match chosen network"], status: 422
     elsif provided_domain == network_domain && @current_user.save
