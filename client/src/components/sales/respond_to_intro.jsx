@@ -82,7 +82,8 @@ class RespondToIntro extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loaded: false
+      loaded: false,
+      introNotFound: false
     }
     this.loadIntro = this.loadIntro.bind(this);
   }
@@ -90,6 +91,7 @@ class RespondToIntro extends React.Component {
   componentDidMount(){
     const { introId, currentUser } = this.props;
     this.loadIntro();
+
     if (!currentUser) {
       this.props.openLogin({
         page: 'login',
@@ -99,8 +101,11 @@ class RespondToIntro extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    if (nextProps.currentUser && !this.props.currentUser){
+
+  componentDidUpdate(prevProps, prevState){
+    let thisCurrent = this.props.currentUser;
+    let prevCurrent = prevProps.currentUser;
+    if (!prevCurrent && thisCurrent && thisCurrent !== prevCurrent) {
       this.loadIntro()
     }
     return true
@@ -108,12 +113,15 @@ class RespondToIntro extends React.Component {
 
   async loadIntro(){
     const { introId } = this.props;
-    if(this.props.currentUser){
+
+    if (this.props.currentUser){
       this.props.fetchSalesIntro(introId)
       .then(() => {
         const { salesIntros, currentUser } = this.props;
         let intro = salesIntros[introId];
-        if(intro.recipientId === currentUser.id){
+        if(!intro){
+          this.setState({ loaded: true, introNotFound: true })
+        } else if(intro.recipientId === currentUser.id){
           this.setState({ loaded: true })
         } else {
           this.props.history.push('/sales/stats')
@@ -140,8 +148,25 @@ class RespondToIntro extends React.Component {
     const { classes, currentUser, 
       dimensions, salesIntros, salesContacts,
       introId } = this.props
-    const { loaded } = this.state;
-    if (currentUser && loaded){
+    const { loaded, introNotFound } = this.state;
+
+    if(currentUser && introNotFound){
+      return <Grid container justify='center' style={{ minHeight: dimensions.height }}>
+        <Grid item xs={10} sm={7} md={5}
+          container direction='column' justify='center' alignItems='center'>
+          <Typography align='center' gutterBottom
+            color='textPrimary'
+            style={{ fontSize: 38, fontWeight: 600 }}>
+            {`Introduction Request Not Found`}
+          </Typography>
+          <Typography align='center'
+            color='textSecondary'
+            style={{ fontSize: 18 }}>
+            {`We weren't able to find the introduction request you're looking for. The request may have been deleted by the requestor. Feel free to reach out to us at `}<a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a>{` if you have any questions or concerns.`} <br /><br />{`Thanks!`}
+          </Typography>
+        </Grid>
+      </Grid>
+    } else if (currentUser && loaded){
       let intro = salesIntros[introId];
       let contact = salesContacts[intro.contactId];
       
