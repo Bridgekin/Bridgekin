@@ -180,6 +180,14 @@ class User < ApplicationRecord
   has_many :request_templates,
     foreign_key: :user_id,
     class_name: :RequestTemplate
+
+  has_many :sent_network_invites,
+    foreign_key: :sender_id,
+    class_name: :User
+  
+  has_many :received_network_invites,
+    foreign_key: :recipient_id,
+    class_name: :User
   
   # def contacts_from_requests
   #   SalesIntro.includes(:contact).where("requestor_id = ? OR recipient_id = ?", self.id, self.id).pluck(:contact_id)
@@ -198,10 +206,14 @@ class User < ApplicationRecord
     rounded + time
   end
 
-  def save_to_network(network, user_type = 'full')
+  def save_from_network_invite(sales_user_network)
+    network = sales_user_network.network
+    user_type = sales_user_network.user_type
     ActiveRecord::Base.transaction do
       self.save!
-      self.sales_user_networks.create!(network: network, member_type: user_type)
+      self.sales_user_networks.
+      sales_user_network = SalesUserNetwork.create!(user: self, network: network, member_type: user_type)
+      sales_user_network.update(recipient: self, recipient_user_network: sales_user_network)
     end
     true
   rescue => e

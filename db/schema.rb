@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_26_170642) do
+ActiveRecord::Schema.define(version: 2019_07_31_171418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -446,6 +446,8 @@ ActiveRecord::Schema.define(version: 2019_07_26_170642) do
     t.integer "network_id"
     t.string "user_type", default: "full"
     t.string "link_code"
+    t.integer "recipient_id"
+    t.integer "recipient_user_network_id"
     t.index ["sender_id"], name: "index_sales_network_invites_on_sender_id"
   end
 

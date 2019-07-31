@@ -12,6 +12,14 @@ class SalesNetworkInvite < ApplicationRecord
     foreign_key: :sender_id,
     class_name: :User
 
+  belongs_to :recipient,
+    foreign_key: :recipient_id,
+    class_name: :User
+
+  belongs_to :recipient_user_network,
+    foreign_key: :recipient_user_network_id,
+    class_name: :SalesUserNetwork
+
   def self.prep_batch_create(new_invites = nil, sender_id = nil, network_id = nil)
     return nil if [new_invites, sender_id, network_id].any?{|val| val.nil?}
 

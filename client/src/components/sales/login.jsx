@@ -94,7 +94,8 @@ class SalesLogin extends React.Component {
       networkDomainUrl: '',
       page: 'login',
       target: {},
-      termsAgreement: false
+      termsAgreement: false,
+      invite: null
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -126,6 +127,10 @@ class SalesLogin extends React.Component {
           lname: invite.lname,
           email: invite.email,
           target: salesNetworks[invite.networkId]
+        },() => {
+          if (page === "login"){
+            this.props.history.push(`sales/signup?code=${code}`)
+          }
         })
       })
     } else if(page === "signup" && !code){

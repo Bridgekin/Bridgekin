@@ -52,28 +52,32 @@ RSpec.describe User, type: :model do
       end
     end
 
-    describe '.save_to_network' do
+    describe '.save_from_network_invite' do
       before(:each) do
+        @sender = build(:user)
         @new_user = build(:user)
         @sales_network = create(:sales_network, :with_subscription)
+        @sales_network_invite = create(:sales_network_invite, sender: @sender, network: @sales_network)
       end
 
       it 'should save to a network' do
-        @new_user.save_to_network(@sales_network, "full")
+        @new_user.save_from_network_invite(@sales_network_invite)
         expect(@new_user.id).to be_truthy
       end
 
       it 'should save different types of users' do
-        @new_user.save_to_network(@sales_network, "limited")
+        @sales_network_invite = create(:sales_network_invite, sender: @sender, network: @sales_network, user_type: 'limited')
+
+        @new_user.save_from_network_invite(@sales_network_invite)
         sales_user_network = @new_user.sales_user_networks.where(network_id: @sales_network.id).first
         expect(sales_user_network.member_type).to eq("limited")
       end
       
 
       it 'should throw an error if given incorrect network values' do
-        @new_user.save_to_network(1)
+        @new_user.save_from_network_invite(1)
         expect(@new_user.id).to be_nil
-        @new_user.save_to_network('places')
+        @new_user.save_from_network_invite('places')
         expect(@new_user.id).to be_nil
       end
     end

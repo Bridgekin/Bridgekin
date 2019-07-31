@@ -10,6 +10,14 @@
         "heroku-postgresql:in-dyno",
         "heroku-redis:in-dyno"
       ],
+      "buildpacks":[
+        {
+          "url": "heroku/nodejs"
+        },
+        {
+          "url": "heroku/ruby"
+        }
+      ],
       "scripts": {
         "test-setup": "",
         "test": "bundle exec rspec"
