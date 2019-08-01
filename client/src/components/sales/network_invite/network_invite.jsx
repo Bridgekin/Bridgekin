@@ -62,21 +62,34 @@ class NetworkInvite extends React.Component {
   }
 
   componentDidMount(){
+    this.loadInvites()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let thisDashTarget = this.props.currentDashboardTarget;
+    let prevDashTarget = prevProps.currentDashboardTarget;
+    if (thisDashTarget !== prevDashTarget) {
+      this.loadInvites()
+    }
+    return true
+  }
+
+  loadInvites(){
     const { currentDashboardTarget } = this.props;
-    //Confirm that the user is an admin for this network
-    if (isEmpty(currentDashboardTarget) || currentDashboardTarget.permissable_type === "User"){
+    
+    if (isEmpty(currentDashboardTarget) || currentDashboardTarget.permissable_type === "User") {
       this.setState({ loaded: true, validTarget: true })
     } else {
       this.props.fetchNetworkInvites(currentDashboardTarget.permissableId)
-      .then(() => {
-        const { networkAdminMap, currentUser } = this.props;
-        let admins = new Set(networkAdminMap[currentDashboardTarget.permissableId] || []);
-        if (admins.has(currentUser.id)){
-          this.setState({ loaded: true, validTarget: true })
-        } else {
-          this.setState({ loaded: true, validTarget: false })
-        }
-      })
+        .then(() => {
+          const { networkAdminMap, currentUser } = this.props;
+          let admins = new Set(networkAdminMap[currentDashboardTarget.permissableId] || []);
+          if (admins.has(currentUser.id)) {
+            this.setState({ loaded: true, validTarget: true })
+          } else {
+            this.setState({ loaded: true, validTarget: false })
+          }
+        })
     }
   }
 
@@ -116,8 +129,8 @@ class NetworkInvite extends React.Component {
   handleSubmit(){
     const { currentDashboardTarget } = this.props;
     const { newInvites } = this.state;
-    let payload = { 
-      networkId: currentDashboardTarget.permissableId, newInvites: Object.values(newInvites) }
+    let payload = { currentDashboardTarget, 
+      newInvites: Object.values(newInvites) }
     this.props.createNetworkInvites(payload)
       .then(() => this.props.openSalesNetworkInvite({ page: 'response' }))
   }
@@ -129,14 +142,16 @@ class NetworkInvite extends React.Component {
   render() {
     const { dimensions, classes, salesNetworks, currentDashboardTarget } = this.props;
     const { loaded, validTarget, newInvites } = this.state;
-
+    
     if (loaded && validTarget){
+      let pType = currentDashboardTarget.permissableType
       let network = salesNetworks[currentDashboardTarget.permissableId];
+
       let header = <Grid container justify='center'>
         <Typography color='textPrimary'
           data-cy='invite-header'
-        style={{ fontSize: 40, marginBottom: 50}}>
-          {`Invite Folks To ${this.capitalize(network.title)}`}
+        style={{ fontSize: 34, marginBottom: 50}}>
+          {`Invite Folks To Access ${pType === "SalesNetworks" ? this.capitalize(network.title) : `Your Personal Contacts`}`}
         </Typography>
       </Grid>
       let inviteCards = Object.values(newInvites).map(data => {

@@ -1,12 +1,13 @@
 class SalesNetworkInvite < ApplicationRecord
-  validates :link_code, :network_id, presence: :true
+  validates :link_code, presence: :true
   validates :link_code, uniqueness: true
 
   after_initialize :ensure_link_code
 
   belongs_to :network,
     foreign_key: :network_id,
-    class_name: :SalesNetwork
+    class_name: :SalesNetwork,
+    optional: true
 
   belongs_to :sender,
     foreign_key: :sender_id,
@@ -21,14 +22,18 @@ class SalesNetworkInvite < ApplicationRecord
     polymorphic: true,
     optional: true
 
-  def self.prep_batch_create(new_invites = nil, sender_id = nil, network_id = nil)
-    return nil if [new_invites, sender_id, network_id].any?{|val| val.nil?}
-
+  def self.prep_batch_create(new_invites = nil, sender = nil, current_dashboard_target = nil)
+    return nil if [new_invites, sender].any?{|val| val.nil?}
     new_invites.map do |invite|
-      invite.merge({
-        network_id: network_id, 
-        sender_id: sender_id
-      })
+      if current_dashboard_target[:permissable_type] == "SalesNetwork"
+        network_id = current_dashboard_target[:permissable_id]
+        invite.merge({
+          network_id: network_id, 
+          sender_id: sender.id
+        })
+      else
+        invite.merge({ sender_id: sender.id })
+      end
     end
   end
 

@@ -1,6 +1,6 @@
 class Api::SalesNetworkInvitesController < ApiController
   before_action :authenticate_user, except: [:show_by_referral_code]
-  before_action :set_network, except: [:show_by_referral_code]
+  before_action :set_network, only: [:index]
   # before_action :confirm_is_network_admin
   before_action :get_network_admins
 
@@ -25,8 +25,9 @@ class Api::SalesNetworkInvitesController < ApiController
 
   def create
     formatted_invites = params[:new_invites].reduce([]){|acc, invite| acc << invite.permit(:email, :fname,:lname, :user_type).to_h}
+    current_dashboard_target = params[:current_dashboard_target]
 
-    new_invites = SalesNetworkInvite.prep_batch_create(formatted_invites, @current_user.id, params[:network_id])
+    new_invites = SalesNetworkInvite.prep_batch_create(formatted_invites, @current_user, current_dashboard_target)
     begin
       raise ArgumentError if new_invites.nil?
       @invites = SalesNetworkInvite.create!(new_invites)
