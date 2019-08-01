@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user, aliases: [:owner, :recipient, :member, :admin, :facilitator, :payer] do
     fname { Faker::Name.first_name }
-    lname { Faker::Name.unique.last_name }
+    lname { Faker::Name.last_name }
     email { Faker::Internet.unique.email}
 
     phone_number { Faker::PhoneNumber.phone_number }
@@ -41,7 +41,7 @@ FactoryBot.define do
     trait :with_owned_sales_network do
       after(:create) do |user, opts|
         sales_network = create(:sales_network,  :with_subscription)
-        create(:sales_user_network, user: user, network: sales_network)
+        create(:sales_user_permission, user: user, permissable: sales_network)
         create(:sales_admin_network, admin: user, network: sales_network)
       end
     end
@@ -60,7 +60,9 @@ FactoryBot.define do
         sales_network = create(:sales_network, :with_connected_members, :with_subscription)
         requestor = sales_network.members.first
         contact = requestor.sales_contacts.first
-        create(:sales_user_network, user: user, network: sales_network)
+
+        create(:sales_user_permission, user: user, permissable: sales_network)
+        
         create(:sales_intro, contact: contact, requestor: requestor, recipient: user, message: opts.message,
         explaination: opts.explaination, referral_bonus: opts.referral_bonus, referral_unit: opts.referral_unit, intro_subject: opts.intro_subject, intro_body: opts.intro_body)
       end
@@ -69,7 +71,8 @@ FactoryBot.define do
     trait :with_team_loaded_network do
       after(:create) do |user, opts|
         sales_network = create(:sales_network, :with_connected_members, :with_subscription)
-        create(:sales_user_network, user: user, network: sales_network)
+        
+        create(:sales_user_permission, user: user, permissable: sales_network)
       end
     end
 
@@ -81,7 +84,7 @@ FactoryBot.define do
         sales_networks = create_list(:sales_network, opts.network_count, :with_subscription)
         
         sales_networks.each do |sales_network|
-          create(:sales_user_network, user: user, network: sales_network)
+          create(:sales_user_permission, user: user, permissable: sales_network)
         end
       end
     end
@@ -93,7 +96,7 @@ FactoryBot.define do
       after(:create) do |user|
         sales_networks = create_list(:sales_network, network_count, :with_subscription)
         sales_networks.each do |sales_network|
-          create(:sales_user_network, user: user, network: sales_network, member_type: 'limited')
+          create(:sales_user_permission, user: user, permissable: sales_network, member_type: 'limited')
         end
       end
     end

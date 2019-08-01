@@ -1,4 +1,4 @@
-describe('Admin signbup spec', function () {
+describe('Admin signup spec', function () {
   let email = 'test@tester.com'
   let password = 'password'
   let domain = 'tester.com'

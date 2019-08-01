@@ -1,4 +1,4 @@
-describe('Bridgekin signup specs', function () {
+describe('Signup specs', function () {
   let email = 'test@tester.com'
   let password = 'password'
   let domain = 'tester.com'

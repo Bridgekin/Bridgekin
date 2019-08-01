@@ -1,8 +1,7 @@
 class Api::SalesNetworksController < ApiController
   before_action :authenticate_user, except: [:search_networks] 
-
   def index
-    @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
+    @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
 
     render :index
   end

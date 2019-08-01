@@ -1,0 +1,1 @@
+json.extract! sales_user_permission, :id, :permissable_id, :permissable_type, :user_id, :member_type

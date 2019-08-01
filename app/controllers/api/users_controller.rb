@@ -22,7 +22,7 @@ class Api::UsersController < ApiController
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup   
       #Load User Networks
-      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
@@ -37,12 +37,12 @@ class Api::UsersController < ApiController
     @sales_network_invite = SalesNetworkInvite.includes(:network).find_by(link_code: params[:user][:code])
     network = @sales_network_invite.network
 
-    if @current_user.save_to_network(network, @sales_network_invite.user_type)
+    if @current_user.save_from_network_invite( @sales_network_invite)
       #Get Tokens and track
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
-      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
@@ -65,7 +65,7 @@ class Api::UsersController < ApiController
       render json: ["Domain does not match chosen network"], status: 422
     elsif provided_domain == network_domain && @current_user.save
       #Attach to existing network
-      @current_user.sales_user_networks.create(network: network)
+      @current_user.sales_user_permissions.create(permissable: network)
 
       render json: ["Successful"], status: 200
     else
@@ -83,7 +83,7 @@ class Api::UsersController < ApiController
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
-      @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
 
       render :signup_confirmed
     elsif @current_user.present? && !@current_user.confirmed?
@@ -92,12 +92,12 @@ class Api::UsersController < ApiController
       @current_user = User.new(user_params)
       if @current_user.save
         #Attach to existing network
-        @current_user.sales_user_networks.create(network: network)
+        @current_user.sales_user_permissions.create(permissable: network)
         #Get Tokens and track
         @token = get_login_token!(@current_user)
         @user_feature, @users = @current_user.post_auth_setup
         #Load User Networks
-        @sales_networks, @sales_user_networks, @sales_admin_networks, @current_network_id, @network_details = SalesNetwork.get_network_info(@current_user)
+        @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
 
         render :signup_confirmed
       else

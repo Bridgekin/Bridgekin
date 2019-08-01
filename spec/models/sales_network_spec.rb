@@ -26,10 +26,9 @@ RSpec.describe SalesNetwork, type: :model do
       context "with full user" do
         it "should get all values" do
           @user = create(:user, :with_sales_networks)
-          sales_networks, sales_user_networks, sales_admin_networks, current_network_id, network_details = SalesNetwork.get_network_info(@user)
+          sales_networks, sales_user_permissions, sales_admin_networks, network_details = SalesNetwork.get_network_info(@user)
           expect(sales_networks.length).to be > 0
-          expect(sales_user_networks.length).to be > 0
-          expect(current_network_id).to be_an(Integer)
+          expect(sales_user_permissions.length).to be > 0
         end
 
         it "should handle cases for users without networks" do
@@ -52,10 +51,9 @@ RSpec.describe SalesNetwork, type: :model do
       context "with limited user" do
         it "should get all values" do
           @user = create(:user, :with_sales_networks)
-          sales_networks, sales_user_networks, sales_admin_networks, current_network_id, network_details = SalesNetwork.get_network_info(@user)
+          sales_networks, sales_user_permissions, sales_admin_networks, network_details = SalesNetwork.get_network_info(@user)
           expect(sales_networks.length).to be > 0
-          expect(sales_user_networks.length).to be > 0
-          expect(current_network_id).to be_an(Integer)
+          expect(sales_user_permissions.length).to be > 0
         end
       end
 
@@ -65,7 +63,7 @@ RSpec.describe SalesNetwork, type: :model do
       before(:each) do
         @user = create(:user)
         @sales_network = create(:sales_network, :with_subscription)
-        @sales_user_network = create(:sales_user_network, network: @sales_network, user: @user)
+        @sales_user_permission = create(:sales_user_permission, permissable: @sales_network, user: @user)
       end
 
       it "should return member type when passed a user" do

@@ -2,13 +2,20 @@ class SalesNetwork < ApplicationRecord
   validates :title, :domain, presence: :true
   validates :title, :domain, uniqueness: :true
 
-  has_many :sales_user_networks,
-    foreign_key: :network_id,
-    class_name: :SalesUserNetwork,
-    dependent: :destroy
+  # has_many :sales_user_networks,
+  #   foreign_key: :network_id,
+  #   class_name: :SalesUserNetwork,
+  #   dependent: :destroy
+
+  has_many :sales_user_permissions,
+    as: :permissable
+
+  # has_many :members,
+  #   through: :sales_user_networks,
+  #   source: :user
 
   has_many :members,
-    through: :sales_user_networks,
+    through: :sales_user_permissions,
     source: :user
 
   has_many :member_contacts,
@@ -54,18 +61,18 @@ class SalesNetwork < ApplicationRecord
     return nil if !current_user.is_a?(User) || current_user.sales_networks.empty?
 
     sales_networks = current_user.sales_networks
-    sales_user_networks = current_user.sales_user_networks
+    sales_user_permissions = current_user.sales_user_permissions
     sales_admin_networks = current_user.sales_admin_networks
-    current_network_id = sales_networks.first.id if sales_networks.first
+    # current_network_id = sales_networks.first.id if sales_networks.first
     network_details = SalesNetwork.includes(:members, :admins, :subscribed_products).generate_network_details(sales_networks)
 
-    return sales_networks, sales_user_networks, sales_admin_networks, current_network_id, network_details
+    return sales_networks, sales_user_permissions, sales_admin_networks, network_details
   end
 
   def get_member_type(current_user = nil)
     return nil unless current_user.is_a?(User)
 
-    user_network = self.sales_user_networks
+    user_network = self.sales_user_permissions
       .where(user: current_user)
       .first
     return user_network.member_type if user_network

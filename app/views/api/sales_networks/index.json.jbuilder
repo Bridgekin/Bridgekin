@@ -8,12 +8,10 @@ end
 
 json.network_details @network_details
 
-json.current_network_id @current_network_id
-
-json.sales_user_networks do
-  @sales_user_networks.each do |sales_user_network|
-    json.set! sales_user_network.network_id do
-      json.partial! 'api/sales_user_networks/sales_user_network', sales_user_network: sales_user_network
+json.sales_user_permissions do
+  @sales_user_permissions.each do |sales_user_permission|
+    json.set! sales_user_permission.id do
+      json.partial! 'api/sales_user_permissions/sales_user_permission', sales_user_permission: sales_user_permission
     end
   end
 end

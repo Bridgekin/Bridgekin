@@ -9,4 +9,7 @@ class SalesUserNetwork < ApplicationRecord
   belongs_to :network,
     foreign_key: :network_id,
     class_name: :SalesNetwork
+
+  has_one :network_invite,
+    as: :inviteable
 end

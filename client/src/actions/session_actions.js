@@ -6,8 +6,8 @@ import {removeSiteTemplate} from './site_template_actions';
 import {receiveUserFeature} from './user_feature_actions';
 // import {receiveConnections} from './connection_actions';
 import {receiveSessionErrors, receiveUserErrors} from './error_actions';
-import { retrieveNetworkDetails, receiveSalesNetworks, setCurrentNetwork } from './sales_network_actions';
-import { receiveSalesUserNetworks } from './sales_user_network_actions'
+import { retrieveNetworkDetails, receiveSalesNetworks, setDashboardTarget } from './sales_network_actions';
+import { receiveSalesUserPermissions } from './sales_user_permission_actions'
 import { receiveSalesAdminNetworks } from './sales_admin_network_actions'
 import { handleErrors } from './fetch_error_handler';
 
@@ -35,9 +35,14 @@ export const setAuth = (data) => dispatch => {
 
   dispatch(retrieveNetworkDetails(data.networkDetails))
   dispatch(receiveSalesNetworks(data.salesNetworks))
-  dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+  dispatch(receiveSalesUserPermissions(data.salesUserPermissions))
   dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
-  dispatch(setCurrentNetwork(data.currentNetworkId))
+
+  let permissions = Object.values(data.salesUserPermissions)
+  if(permissions.length > 0){
+    let { permissableId, permissableType, memberType } = permissions[0]
+    dispatch(setDashboardTarget({ permissableId, permissableType, memberType }))
+  }
 }
 
 export const salesSignup = (formUser) => dispatch => (

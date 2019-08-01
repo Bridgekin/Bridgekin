@@ -21,8 +21,9 @@ const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   networkMembers: {},
   friendMap: state.entities.sales.friendMap,
-  currentSalesNetworkId: state.entities.sales.currentSalesNetwork,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
+  // currentSalesNetworkId: state.entities.sales.currentSalesNetwork,
+  salesUserPermissions: state.entities.sales.salesUserPermissions,
+  currentDashboardTarget: state.entities.sales.currentDashboardTarget,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -114,12 +115,15 @@ class ResultCard extends React.Component {
   render(){
     const { classes, contact, networkMembers,
       friendMap, idx,
-      salesUserNetworks, currentSalesNetworkId } = this.props;
+      salesUserPermissions, currentDashboardTarget } = this.props;
     
     if (Object.keys(friendMap).length > 0){
       let otherFriendsCount = friendMap[contact.id].length || 0
 
-      let memberType = salesUserNetworks[currentSalesNetworkId] ? salesUserNetworks[currentSalesNetworkId].memberType : ""
+      // let user_permission = Object.values(salesUserPermissions).find(perm => perm.permissableId === currentDashboardTarget.permissableId && perm.permissableType === "Network")
+
+      // let memberType = user_permission ? user_permission.memberType : ""
+      let { memberType }= currentDashboardTarget
 
       return <Grid item xs={12} sm={6}>
         <Paper>

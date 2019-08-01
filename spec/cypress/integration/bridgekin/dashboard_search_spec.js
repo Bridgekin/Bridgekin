@@ -1,4 +1,4 @@
-describe('Bridgekin login specs', function () {
+describe('Dashboard search spec', function () {
   let email = 'test@email.com'
   let password = 'password'
   
@@ -31,7 +31,7 @@ describe('Bridgekin login specs', function () {
         .should('have.value', target.position)
       cy.get('[data-cy=search-feature-submit]').click()
       cy.get('[data-cy=search-results]').children()
-        .should('have.length', 1)
+        .should('have.length.of.at.least', 1)
     })
   })
 

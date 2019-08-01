@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_26_170642) do
+ActiveRecord::Schema.define(version: 2019_07_31_230101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -446,6 +446,10 @@ ActiveRecord::Schema.define(version: 2019_07_26_170642) do
     t.integer "network_id"
     t.string "user_type", default: "full"
     t.string "link_code"
+    t.integer "recipient_id"
+    t.string "inviteable_type"
+    t.bigint "inviteable_id"
+    t.index ["inviteable_id", "inviteable_type"], name: "index_sales_network_invites_on_inviteable_type_and_id"
     t.index ["sender_id"], name: "index_sales_network_invites_on_sender_id"
   end
 
@@ -480,6 +484,16 @@ ActiveRecord::Schema.define(version: 2019_07_26_170642) do
     t.datetime "updated_at", null: false
     t.string "member_type", default: "full"
     t.index ["network_id", "user_id"], name: "index_sales_user_networks_on_network_id_and_user_id"
+  end
+
+  create_table "sales_user_permissions", force: :cascade do |t|
+    t.bigint "permissable_id"
+    t.string "permissable_type"
+    t.integer "user_id"
+    t.string "member_type", default: "full"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "permissable_type", "permissable_id"], name: "index_sales_user_permissions_on_permissable_type_and_id"
   end
 
   create_table "saved_opportunities", force: :cascade do |t|
