@@ -322,7 +322,7 @@ class SalesNav extends React.Component {
         !this.isExpiredSub() && <Button 
         data-cy='invite-button'
         style={{ textTransform: 'capitalize' }}
-        onClick={() => this.props.history.push(`/sales/invite_external/${currentSalesNetworkId}`)}>
+        onClick={() => this.props.history.push(`/sales/invite_external`)}>
           <Typography color='textSecondary'
             className={classes.navItem}>
             {`Invite`}
@@ -354,7 +354,7 @@ class SalesNav extends React.Component {
           <Grid container alignItems='center' justify='space-between'>
             {logoComp}
             <div style={{ flexGrow: 1 }} />
-            {dashboardSpace}
+            {currentUser && dashboardSpace}
             <div style={{ flexGrow: 1 }} />
             {session}
           </Grid>

@@ -14,13 +14,15 @@ import Capitalize from 'capitalize';
 import NetworkInviteCard from './network_invite_card';
 import uniqId from 'uniqid';
 import merge from 'lodash/merge';
+import isEmpty from 'lodash/isEmpty';
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
-  networkId: ownProps.match.params.networkId,
   networkAdminMap: state.entities.sales.networkAdminMap,
   salesNetworks: state.entities.sales.salesNetworks,
+  currentDashboardTarget: state.entities.sales.currentDashboardTarget,
+  salesUserPermissions: state.entities.sales.salesUserPermissions,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -45,7 +47,7 @@ class NetworkInvite extends React.Component {
     let newId = uniqId();
     this.state = {
       loaded: false,
-      isAdmin: false,
+      validTarget: false,
       newInvites: {
         [newId]: { id: newId, email: '', fname: '', lname: '', userType: 'full'}
       },
@@ -60,18 +62,22 @@ class NetworkInvite extends React.Component {
   }
 
   componentDidMount(){
-    const { networkId } = this.props;
+    const { currentDashboardTarget } = this.props;
     //Confirm that the user is an admin for this network
-    this.props.fetchNetworkInvites(networkId)
-    .then(() => {
-      const { networkAdminMap, networkId, currentUser } = this.props;
-      let admins = new Set(networkAdminMap[networkId] || []);
-      if (admins.has(currentUser.id)){
-        this.setState({ loaded: true, isAdmin: true })
-      } else {
-        this.setState({ loaded: true, isAdmin: false })
-      }
-    })
+    if (isEmpty(currentDashboardTarget) || currentDashboardTarget.permissable_type === "User"){
+      this.setState({ loaded: true, validTarget: true })
+    } else {
+      this.props.fetchNetworkInvites(currentDashboardTarget.permissableId)
+      .then(() => {
+        const { networkAdminMap, currentUser } = this.props;
+        let admins = new Set(networkAdminMap[currentDashboardTarget.permissableId] || []);
+        if (admins.has(currentUser.id)){
+          this.setState({ loaded: true, validTarget: true })
+        } else {
+          this.setState({ loaded: true, validTarget: false })
+        }
+      })
+    }
   }
 
   updateVariable(payload){
@@ -108,9 +114,10 @@ class NetworkInvite extends React.Component {
   }
 
   handleSubmit(){
-    const { networkId } = this.props;
+    const { currentDashboardTarget } = this.props;
     const { newInvites } = this.state;
-    let payload = { networkId, newInvites: Object.values(newInvites) }
+    let payload = { 
+      networkId: currentDashboardTarget.permissableId, newInvites: Object.values(newInvites) }
     this.props.createNetworkInvites(payload)
       .then(() => this.props.openSalesNetworkInvite({ page: 'response' }))
   }
@@ -120,11 +127,11 @@ class NetworkInvite extends React.Component {
   }
 
   render() {
-    const { dimensions, classes, salesNetworks, networkId } = this.props;
-    const { loaded, isAdmin, newInvites } = this.state;
+    const { dimensions, classes, salesNetworks, currentDashboardTarget } = this.props;
+    const { loaded, validTarget, newInvites } = this.state;
 
-    if (loaded && isAdmin){
-      let network = salesNetworks[networkId];
+    if (loaded && validTarget){
+      let network = salesNetworks[currentDashboardTarget.permissableId];
       let header = <Grid container justify='center'>
         <Typography color='textPrimary'
           data-cy='invite-header'
@@ -159,7 +166,7 @@ class NetworkInvite extends React.Component {
           </div>
         </Grid>
       </Grid>
-    } else if (loaded && !isAdmin){
+    } else if (loaded && !validTarget){
       return <Grid container justify='center' alignItems='center' style={{ minHeight: dimensions.height }}>
         <Grid item xs={10} sm={6}>
           <Typography align='center' gutterBottom

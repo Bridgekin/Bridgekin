@@ -8,7 +8,7 @@ describe('Invite User Specs', function () {
       ['create', 'user', 'uploaded', 'with_owned_sales_network', { email: email, password: password, password_confirmation: password }]
     ])
     cy.login(email, password)
-    cy.get_managed_network().then(data => data.salesNetwork)  .as('network')
+    cy.get_managed_network().then(data => data.salesNetwork).as('network')
   })
 
   it("load invite page on click", function () {
@@ -19,7 +19,7 @@ describe('Invite User Specs', function () {
   })
 
   it("should be disabled if all fields on all available invites aren't full", function () {
-    cy.visit(`/sales/invite_external/${this.network.id}`)
+    cy.visit(`/sales/invite_external`)
     cy.get('[data-cy=submit-button]')
       .should('be.disabled')
     cy.get('[data-cy=invite-email-input] input')
@@ -33,7 +33,7 @@ describe('Invite User Specs', function () {
   })
 
   it("should fill fields", function () {
-    cy.visit(`/sales/invite_external/${this.network.id}`)
+    cy.visit(`/sales/invite_external`)
     cy.get('[data-cy=submit-button]')
       .should('be.disabled')
     cy.get('[data-cy=invite-email-input] input')
@@ -48,7 +48,7 @@ describe('Invite User Specs', function () {
   })
 
   it("should submit with full fields", function () {
-    cy.visit(`/sales/invite_external/${this.network.id}`)
+    cy.visit(`/sales/invite_external`)
     cy.get('[data-cy=submit-button]')
       .should('be.disabled')
     cy.get('[data-cy=invite-email-input] input')
@@ -69,7 +69,7 @@ describe('Invite User Specs', function () {
   })
 
   it("should add an additional invite slot", function () {
-    cy.visit(`/sales/invite_external/${this.network.id}`)
+    cy.visit(`/sales/invite_external`)
     cy.get('[data-cy=add-another-user]').click()
     cy.get('[data-cy=network-invite-card]')
       .should('be.length', 2)

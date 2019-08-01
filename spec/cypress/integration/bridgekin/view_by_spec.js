@@ -1,4 +1,4 @@
-describe('Bridgekin login specs', function () {
+describe('View By Specs', function () {
   let email = 'test@email.com'
   let password = 'password'
   
