@@ -21,8 +21,6 @@ import NotFound from '../not_found';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_network_actions'
-
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
   dimensions: state.util.window,
@@ -30,8 +28,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchUserNetworks: () => dispatch(fetchUserNetworks()),
-  setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId))
 });
 
 const styles = theme => ({

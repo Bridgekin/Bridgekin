@@ -1,1 +1,0 @@
-json.extract! sales_user_network, :id, :network_id, :user_id, :member_type

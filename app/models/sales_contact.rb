@@ -30,25 +30,43 @@ class SalesContact < ApplicationRecord
   EXCLUDE_CITIES = ["Cuba", "Iran", "North Korea", "Sudan", "Syria", "Crimea", "Russia", "Ukraine", "France", "Spain", "Sweden", "Norway", "Germany", "Finland", "Poland", "Italy", "United Kingdom", "Romania", "Belarus", "Kazakhstan", "Greece", "Bulgaria", "Iceland", "Hungary", "Portugal", "Austria", "Czech Republic", "Serbia", "Ireland", "Lithuania", "Latvia", "Croatia", "Bosnia", "Herzegovina", "Slovakia", "Estonia", "Denmark", "Switzerland", "Netherlands", "Moldova", "Belgium", "Albania", "North Macedonia", "Turkey", "Slovenia", "Montenegro", "Kosovo", "Cyprus", "Azerbaijan", "Luxembourg", "Georgia", "Andorra", "Malta", "Liechtenstein", "San Marino", "Monaco", "Vatican City"]
   
   class << self 
-    def search_contacts(current_user = nil, network = nil, filter='', social_params ={})
-      return nil if current_user.nil? || network.nil? || !current_user.is_a?(User)
-      #Determine relationship
-      sales_contacts = determine_relationship(current_user, network)
+    def search_contacts(current_user = nil, target_params = {}, filter='', social_params ={})
+
+      return nil if current_user.nil? || !current_user.is_a?(User)
+      #Get unfiltered contacts
+      sales_contacts = get_unfiltered_contacts(current_user, target_params)
       #Filter back setting
       sales_contacts = filter_sales_contacts(sales_contacts,current_user, filter)
       # Track & save search terms, filter sales_contacts
       sales_contacts = filter_by_search_input(sales_contacts, current_user, social_params)
     end
 
-    def determine_relationship(current_user, network)
-      member_type = network.get_member_type(current_user)
-      if member_type == 'full'
-        sales_contacts = network.member_contacts
-      else
-        sales_contacts = current_user.sales_contacts
+    def get_unfiltered_contacts(current_user, target_params)
+      return current_user.sales_contacts if target_params.empty?
+
+      if target_params[:permissable_type] == "User"
+
+      elsif target_params[:permissable_type] == "SalesNetwork"
+        network = SalesNetwork.find(target_params[:permissable_id])
+        member_type = network.get_member_type(current_user)
+        if member_type == 'full'
+          sales_contacts = network.member_contacts
+        else
+          sales_contacts = current_user.sales_contacts
+        end
       end
       sales_contacts
     end
+
+    # def determine_relationship(current_user, network)
+    #   member_type = network.get_member_type(current_user)
+    #   if member_type == 'full'
+    #     sales_contacts = network.member_contacts
+    #   else
+    #     sales_contacts = current_user.sales_contacts
+    #   end
+    #   sales_contacts
+    # end
 
     def filter_sales_contacts(sales_contacts, current_user, filter)
       case filter

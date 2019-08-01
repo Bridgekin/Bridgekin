@@ -22,7 +22,7 @@ const mapStateToProps = (state, ownProps) => ({
   networkMembers: {},
   friendMap: state.entities.sales.friendMap,
   currentSalesNetworkId: state.entities.sales.currentSalesNetwork,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
+  salesUserPermissions: state.entities.sales.salesUserPermissions,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -114,12 +114,14 @@ class ResultCard extends React.Component {
   render(){
     const { classes, contact, networkMembers,
       friendMap, idx,
-      salesUserNetworks, currentSalesNetworkId } = this.props;
+      salesUserPermissions, currentSalesNetworkId } = this.props;
     
     if (Object.keys(friendMap).length > 0){
       let otherFriendsCount = friendMap[contact.id].length || 0
 
-      let memberType = salesUserNetworks[currentSalesNetworkId] ? salesUserNetworks[currentSalesNetworkId].memberType : ""
+      let user_permission = Object.values(salesUserPermissions).find(perm => perm.permissableId === currentSalesNetworkId && perm.permissableType === "Network")
+      
+      let memberType = user_permission ? user_permission.memberType : ""
 
       return <Grid item xs={12} sm={6}>
         <Paper>

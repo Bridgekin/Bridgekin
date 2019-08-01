@@ -4,8 +4,8 @@ class Api::SalesContactsController < ApiController
 
   def search
     filter = social_params[:filter]
-    network = SalesNetwork.find(params[:current_sales_network_id])
-    @sales_contacts = SalesContact.search_contacts(@current_user, network, filter, social_params)
+    # network = SalesNetwork.find(params[:current_sales_network_id])
+    @sales_contacts = SalesContact.search_contacts(@current_user, target_params, filter, social_params)
     #Prep Search Data
     offset, limit = social_params[:offset], social_params[:limit]
     @sales_contacts, @total, @friend_map, @friend_users = SalesContact.prep_search_data(@sales_contacts, @current_user, offset, limit)
@@ -62,5 +62,9 @@ class Api::SalesContactsController < ApiController
 
   def social_params
     params.permit(:location, :company, :position, :fname, :lname, :offset, :limit, :filter)
+  end
+
+  def target_params
+    params.permit(:permissable_id, :permissable_type)
   end
 end

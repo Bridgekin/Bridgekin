@@ -130,13 +130,38 @@ class User < ApplicationRecord
   #   foreign_key: :owner_id,
   #   class_name: :RefOppLink
 
-  has_many :sales_user_networks,
-    foreign_key: :user_id,
-    class_name: :SalesUserNetwork
+  # has_many :sales_user_networks,
+  #   foreign_key: :user_id,
+  #   class_name: :SalesUserNetwork
 
+  has_many :sales_user_permissions,
+    foreign_key: :user_id,
+    class_name: :SalesUserPermission
+
+  # has_many :sales_networks,
+  #   through: :sales_user_networks,
+  #   source: :network
+
+  #Networks I have access to
   has_many :sales_networks,
-    through: :sales_user_networks,
-    source: :network
+    through: :sales_user_permissions,
+    source: :permissable,
+    source_type: "SalesNetwork"
+
+  #Users I have access to
+  has_many :accessable_users,
+    through: :sales_user_permissions,
+    source: :permissable,
+    source_type: "User"
+
+  #People who I've given access to
+  has_many :shared_with_permissions,
+    as: :permissable
+
+  has_many :shared_with_users,
+    through: :shared_with_permissions,
+    source: :user
+
 
   has_many :sales_user_contacts,
     foreign_key: :user_id,
@@ -206,14 +231,13 @@ class User < ApplicationRecord
     rounded + time
   end
 
-  def save_from_network_invite(sales_user_network)
-    network = sales_user_network.network
-    user_type = sales_user_network.user_type
+  def save_from_network_invite(sales_user_permissions)
+    network = sales_user_permissions.network
+    user_type = sales_user_permissions.user_type
     ActiveRecord::Base.transaction do
       self.save!
-      self.sales_user_networks.
-      sales_user_network = SalesUserNetwork.create!(user: self, network: network, member_type: user_type)
-      sales_user_network.update(recipient: self, recipient_user_network: sales_user_network)
+      sales_user_permissions = SalesUserPermission.create!(user: self, permissable: network, member_type: user_type)
+      sales_user_permissions.update(recipient: self, recipient_user_network: sales_user_permissions)
     end
     true
   rescue => e
@@ -231,7 +255,7 @@ class User < ApplicationRecord
       self.save!
       @sales_network.save!
       #Attach to existing network
-      self.sales_user_networks.create!(network: @sales_network)
+      self.sales_user_permissions.create!(permissable: @sales_network)
       #Attach admin user
       self.sales_admin_networks.create!(network: @sales_network)
       #Create a customer

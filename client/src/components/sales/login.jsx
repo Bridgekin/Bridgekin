@@ -16,7 +16,7 @@ import { searchNetworks } from '../../actions/sales_network_actions';
 import { salesSignup, googleSalesLogin, networkInviteSignup } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
-import { fetchUserNetworks, setCurrentNetwork, clearSearchResults } from '../../actions/sales_network_actions'
+import { clearSearchResults } from '../../actions/sales_network_actions'
 import { fetchNetworkInviteByCode } from '../../actions/sales_network_invites_actions';
 import queryString from 'query-string';
 import SignupPic from '../../static/signup_pic.png';
@@ -43,8 +43,6 @@ const mapDispatchToProps = dispatch => ({
   openSignup: (payload) => dispatch(openSignup(payload)),
   openLogin: (payload) => dispatch(openLogin(payload)),
   googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload)),
-  fetchUserNetworks: () => dispatch(fetchUserNetworks()),
-  setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId)),
   clearSearchResults: () => dispatch(clearSearchResults()),
   fetchNetworkInviteByCode: code => dispatch(fetchNetworkInviteByCode(code)),
   networkInviteSignup: payload => dispatch(networkInviteSignup(payload))

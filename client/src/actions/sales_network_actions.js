@@ -1,7 +1,7 @@
 import * as SalesApiUtil from '../util/sales_network_api_util';
 import { handleErrors } from './fetch_error_handler';
 import { receiveSalesNetworkErrors } from './error_actions';
-import { receiveSalesUserNetworks } from './sales_user_network_actions'
+import { receiveSalesUserPermissions } from './sales_user_permission_actions'
 import { receiveSalesAdminNetworks } from './sales_admin_network_actions'
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';
@@ -14,7 +14,7 @@ export const REMOVE_USER_SALES_NETWORK = "REMOVE_USER_SALES_NETWORK";
 export const RECEIVE_SALES_NETWORK_DETAILS = 'RECEIVE_SALES_NETWORK_DETAILS';
 export const CLEAR_SALES_NETWORK_DETAILS = 'CLEAR_SALES_NETWORK_DETAILS';
 
-export const SET_CURRENT_SALES_NETWORK = 'SET_CURRENT_SALES_NETWORK';
+export const SET_CURRENT_DASHBOARD_TARGET = 'SET_CURRENT_DASHBOARD_TARGET';
 
 export const RECEIVE_SALES_NETWORKS = 'RECEIVE_SALES_NETWORKS';
 export const RECEIVE_SALES_NETWORK = 'RECEIVE_SALES_NETWORK';
@@ -51,9 +51,9 @@ export const clearNetworkDetails = () => ({
   type: CLEAR_SALES_NETWORK_DETAILS,
 });
 
-export const setCurrentNetwork = (networkId) => ({
-  type: SET_CURRENT_SALES_NETWORK,
-  networkId
+export const setDashboardTarget = (target) => ({
+  type: SET_CURRENT_DASHBOARD_TARGET,
+  target
 })
 
 export const receiveSalesNetworks = networks => ({
@@ -77,8 +77,8 @@ export const fetchUserNetworks = () => dispatch => (
     .then(data => {
       dispatch(retrieveNetworkDetails(data.networkDetails))
       dispatch(receiveSalesNetworks(data.salesNetworks))
-      dispatch(setCurrentNetwork(data.currentNetworkId))
-      dispatch(receiveSalesUserNetworks(data.salesUserNetworks))
+      // dispatch(setDashboardTarget(data.currentNetworkId))
+      dispatch(receiveSalesUserPermissions(data.salesUserPermissions))
       dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
     })
     .catch(errors => {

@@ -19,9 +19,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import merge from 'lodash/merge';
 import Loading from '../loading';
 import Capitalize from 'capitalize';
+import isEmpty from 'lodash/isEmpty';
 
 import { searchContacts, clearContactResults, trackViewByClick } from '../../actions/sales_contacts_actions';
-import { fetchUserNetworks } from '../../actions/sales_network_actions'
 // require("bootstrap/less/bootstrap.less");
 
 const EXAMPLE = {
@@ -41,8 +41,8 @@ const mapStateToProps = (state, ownProps) => ({
   userFeature: state.entities.userFeature,
   results: state.entities.sales.searchContacts,
   networkDetails: state.entities.sales.networkDetails,
-  currentSalesNetworkId: state.entities.sales.currentSalesNetwork,
-  salesUserNetworks: state.entities.sales.salesUserNetworks,
+  currentDashboardTarget: state.entities.sales.currentDashboardTarget,
+  salesUserPermissions: state.entities.sales.salesUserPermissions,
   salesAdminNetworks: state.entities.sales.salesAdminNetworks,
   salesNetworks: state.entities.sales.salesNetworks
 });
@@ -50,8 +50,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   searchContacts: search => dispatch(searchContacts(search)),
   clearContactResults: () => dispatch(clearContactResults()),
-  fetchUserNetworks: () => dispatch(fetchUserNetworks()),
-  trackViewByClick: () => dispatch(trackViewByClick())
+  trackViewByClick: () => dispatch(trackViewByClick()),
 });
 
 const styles = theme => ({
@@ -109,23 +108,21 @@ class SalesDashboard extends React.Component {
     this.getResults = this.getResults.bind(this);
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleDashSpaceChange = this.handleDashSpaceChange.bind(this);
     this.isExpiredSub = this.isExpiredSub.bind(this);
   }
 
   componentDidMount() {
-    const { userFeature, currentSalesNetworkId, salesUserNetworks, salesNetworks } = this.props;
-    // debugger
-    if (!currentSalesNetworkId) {
+    const { userFeature, currentDashboardTarget, salesUserPermissions, salesNetworks } = this.props;
+    
+    if (isEmpty(salesUserPermissions)) {
       this.setState({ unconnectedUser: true })
-    } else if (this.isExpiredSub()) {
-      this.setState({ subscriptionExpired: true })
-    // } else if (salesUserNetworks[currentSalesNetworkId] && salesUserNetworks[currentSalesNetworkId].memberType !== "full"){
-    //   this.setState({ limitedUser: true })
-    } else {
-      if (!userFeature.importedSocial) {
-        this.props.history.push('/sales/connect_social')
-      }
-      this.searchData();
+    } else if (!isEmpty(currentDashboardTarget)) {
+      this.searchData()
+    }
+
+    if (!userFeature.importedSocial && !isEmpty(salesUserPermissions)) {
+      this.props.history.push('/sales/connect_social')
     }
   }
 
@@ -133,12 +130,59 @@ class SalesDashboard extends React.Component {
     let thisCurrent = this.props.currentUser;
     let nextCurrent = nextProps.currentUser;
     if (nextCurrent && !thisCurrent && thisCurrent !== nextCurrent) {
-      debugger
       this.searchData();
     }
     return true
   }
 
+  componentDidUpdate(prevProps, prevState){
+    let thisDashTarget = this.props.currentDashboardTarget;
+    let prevDashTarget = prevProps.currentDashboardTarget;
+    if (thisDashTarget !== prevDashTarget) {
+      // debugger
+      this.searchData();
+    }
+    return true
+  }
+
+  isExpiredSub(){
+    const { networkDetails, currentDashboardTarget } = this.props;
+
+    if (isEmpty(currentDashboardTarget) ||currentDashboardTarget.permissableType === "User"){ return false }
+
+    let detail = networkDetails[currentDashboardTarget.permissableId];
+    return !detail || detail.currentSubEnd === "no sub" || Date.parse(detail.currentSubEnd) < Date.now()
+  }
+
+  async searchData(){
+    const { offset, limit, filter, fname, lname, position, company, location } = this.state;
+    const { networkDetails, currentDashboardTarget, salesUserPermissions } = this.props;
+
+    
+    if (isEmpty(salesUserPermissions)) {
+      this.setState({ unconnectedUser: true })
+    } else {
+      if (this.isExpiredSub()) {
+        this.setState({ subscriptionExpired: true })
+      } else {
+        this.setState({ loaded: false });
+        this.props.clearContactResults();
+        let payload = await merge({}, {fname, lname, position, company, location}, { offset, limit, filter }, currentDashboardTarget)
+        let total = await this.props.searchContacts(payload)
+        await this.setState({ total, loaded: true, unconnectedUser: false, subscriptionExpired: false})
+      }
+    }
+  }
+
+  searchByCharacteristic(){
+    this.setState({ offset: 0, fname: '', lname: ''},
+      () => this.searchData())
+  }
+
+  searchByName(){
+    this.setState({ offset: 0, position: '', company: '', location: '' },
+      () => this.searchData())
+  }
 
   handlePageChange(offset) {
     console.log(`active page is ${offset}`);
@@ -156,74 +200,36 @@ class SalesDashboard extends React.Component {
       const selectedEl = this.state[anchor];
       this.setState({ [anchor]: (selectedEl ? null : e.currentTarget) })
       //Track click
-      if (anchor === 'filterAnchorEl'){
+      if (anchor === 'filterAnchorEl') {
         this.props.trackViewByClick()
       }
     }
   }
 
-  handleMenuChange(value){
+  handleMenuChange(value) {
     return e => {
-      this.setState({ 
-        filter: value, 
+      this.setState({
+        filter: value,
         filterAnchorEl: null,
         offset: 0
       }, () => {
-          const { position, company, location, fname, lname } = this.state;
-          let search = { position, company, location, fname, lname  }
-          this.searchData(search)
-        })
-    }
-  }
-
-  isExpiredSub(){
-    const { networkDetails, currentSalesNetworkId } = this.props;
-    let detail = networkDetails[currentSalesNetworkId];
-    // debugger
-    return !detail || detail.currentSubEnd === "no sub" || Date.parse(detail.currentSubEnd) < Date.now()
-  }
-
-  async searchData(payload = {}){
-    const { offset, limit, filter } = this.state;
-    const { networkDetails, currentSalesNetworkId } = this.props;
-
-    if(!currentSalesNetworkId){
-      this.setState({ unconnectedUser: true })
-    } else if(this.isExpiredSub()){
-      this.setState({ subscriptionExpired: true})
-    } else {
-      this.setState({ loaded: false });
-      this.props.clearContactResults();
-      payload = await merge({}, payload, { offset, limit, filter, currentSalesNetworkId })
-      let total = await this.props.searchContacts(payload)
-      await this.setState({ total, loaded: true })
-    }
-  }
-
-  searchByCharacteristic(){
-    const { fname, lname, position, company, location } = this.state;
-    let search = { position, company, location}
-
-    this.setState({ offset: 0 },
-      () => {
+        const { position, company, location, fname, lname } = this.state;
+        let search = { position, company, location, fname, lname }
         this.searchData(search)
-        .then(() => {
-          this.setState({ fname: '', lname: '' })
-        })
       })
+    }
   }
 
-  searchByName(){
-    const { fname, lname, position, company, location } = this.state;
-    let search = { fname, lname }
-
-    this.setState({ offset: 0 },
-      () => {
-        this.searchData(search)
-          .then(() => {
-            this.setState({ position: '', company: '', location: '' })
-          })
-        })
+  handleDashSpaceChange(choice){
+    return e => {
+      if(choice){
+        let { permissableId, permissableType, memberType } = choice
+        this.props.setDashboardTarget({ permissableId, permissableType, memberType })
+      } else {
+        this.props.setDashboardTarget({})
+      }
+      this.setState({ dashboardSpaceAnchorEl: null })
+    }
   }
 
   handleChange(field) {
@@ -282,15 +288,25 @@ class SalesDashboard extends React.Component {
 
   render() {
     const { classes, dimensions, resultNodes,
-      searchContacts, salesUserNetworks,
-      currentSalesNetworkId } = this.props;
+      searchContacts, salesUserPermissions,
+      salesNetworks,
+      currentDashboardTarget } = this.props;
     const { position, company, location,
       fname, lname, search,
-      filter, filterAnchorEl,
+      filter, filterAnchorEl, dashboardSpaceAnchorEl,
       loaded, unconnectedUser,
       subscriptionExpired, limitedUser } = this.state;
-    
-    let memberType = salesUserNetworks[currentSalesNetworkId] ? salesUserNetworks[currentSalesNetworkId].memberType : ""
+
+    let memberType = currentDashboardTarget.memberType || ""
+
+    let dashboardSpaceValues = {
+      "": "All",
+      "teammates": "My Team's Contacts",
+      "mine": "My Contacts",
+      "investor": "Investor Contacts",
+      "linkedIn": "Contacts From LinkedIn",
+      "google": "Contacts From Google"
+    }
 
     let filterValues = {
       "": "All",
@@ -492,7 +508,7 @@ class SalesDashboard extends React.Component {
                 {["", "teammates", "mine", "linkedIn", "google"].map(choice => {
                   return <MenuItem onClick={this.handleMenuChange(choice)}
                   data-cy={`view-option-${choice}`}
-                  disabled={memberType !== "full" &&choice === "teammates"}>
+                  disabled={memberType !== "full" && choice === "teammates"}>
                     <Typography style={{ fontSize: 14}}>
                       {filterValues[choice]}
                     </Typography>

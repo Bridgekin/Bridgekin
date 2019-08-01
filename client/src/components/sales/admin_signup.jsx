@@ -26,8 +26,6 @@ import Capitalize from 'capitalize';
 import SignupPic from '../../static/signup_pic.png';
 import Img from 'react-image'
 
-import { fetchUserNetworks, setCurrentNetwork } from '../../actions/sales_network_actions'
-
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
   return {
@@ -43,9 +41,7 @@ const mapDispatchToProps = dispatch => ({
   fetchAdminSignupLink: (code) => dispatch(fetchAdminSignupLink(code)),
   validateUnique: payload => dispatch(validateUnique(payload)),
   adminSignup: payload => dispatch(adminSignup(payload)),
-  openSignup: () => dispatch(openSignup()),
-  fetchUserNetworks: () => dispatch(fetchUserNetworks()),
-  setCurrentNetwork: (networkId) => dispatch(setCurrentNetwork(networkId))
+  openSignup: () => dispatch(openSignup())
 });
 
 const styles = theme => ({
