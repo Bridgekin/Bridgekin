@@ -4,6 +4,11 @@ RSpec.describe SalesNetworkInvite, type: :model do
   # pending "add some examples to (or delete) #{__FILE__}"
   describe "sales_network_invite" do
     describe ".prep_batch_create" do
+      before(:each) do
+        @user = create(:user)
+        @sales_network = create(:sales_network)
+      end
+
       it "return an array of objects" do
         invites = []
         3.times do
@@ -13,10 +18,14 @@ RSpec.describe SalesNetworkInvite, type: :model do
             lname: Faker::Name.unique.last_name
           }
         end
-        result = SalesNetworkInvite.prep_batch_create(invites, 1, 2)
+        params = {
+          permissable_type: "SalesNetwork",
+          permissable_id: @sales_network.id
+        }
+        result = SalesNetworkInvite.prep_batch_create(invites, @user, params)
         expect(result).to be_truthy
-        expect(result.first[:sender_id]).to eq(1)
-        expect(result.first[:network_id]).to eq(2)
+        expect(result.first[:sender_id]).to eq(@user.id)
+        expect(result.first[:network_id]).to eq(@sales_network.id)
       end
 
       it "return nil if any variables aren't passed" do
