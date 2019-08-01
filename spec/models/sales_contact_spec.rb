@@ -12,7 +12,8 @@ RSpec.describe SalesContact, type: :model do
       end
 
       it "should return all members with no search" do
-        result = SalesContact.search_contacts(@user, @sales_network)
+        result = SalesContact.search_contacts(@user,
+        {permissable_id: @sales_network.id, permissable_type: 'SalesNetwork'})
         expect(result.count).to eq(@member_count * @contact_count)
       end
 
@@ -27,7 +28,8 @@ RSpec.describe SalesContact, type: :model do
         contact_count = 20
         user = create(:user, :with_sales_contacts, contact_count: contact_count)
         
-        result = SalesContact.search_contacts(user, sales_network)
+        result = SalesContact.search_contacts(user,
+        {permissable_id: sales_network.id, permissable_type: 'SalesNetwork'})
         expect(result.count).to eq(20)
       end
     
@@ -88,15 +90,17 @@ RSpec.describe SalesContact, type: :model do
 
       it "should search by fname" do
         contact = @user.sales_contacts.first
-        params = { fname: contact.fname }
-        result = SalesContact.search_contacts(@user, @sales_network, "", params)
+        social_params = { fname: contact.fname }
+        target_params = {permissable_id: @sales_network.id, permissable_type: 'SalesNetwork'}
+        result = SalesContact.search_contacts(@user, target_params, "", social_params)
         expect(result.include?(contact)).to be_truthy
       end
 
       it "should search by lname" do
         contact = @user.sales_contacts.first
-        params = { lname: contact.lname }
-        result = SalesContact.search_contacts(@user, @sales_network, "", params)
+        social_params = { lname: contact.lname }
+        target_params = {permissable_id: @sales_network.id, permissable_type: 'SalesNetwork'}
+        result = SalesContact.search_contacts(@user, target_params, "", social_params)
         expect(result.include?(contact)).to be_truthy
       end
     end

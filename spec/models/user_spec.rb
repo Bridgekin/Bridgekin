@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
     it { should validate_uniqueness_of(:email).case_insensitive }
 
     it { should have_one(:user_feature) }
-    it { should have_many(:sales_user_networks) }
+    it { should have_many(:sales_user_permissions) }
     it { should have_many(:sales_networks) }
     it { should have_many(:sales_user_contacts) }
     it { should have_many(:sales_contacts) }
@@ -66,11 +66,12 @@ RSpec.describe User, type: :model do
       end
 
       it 'should save different types of users' do
+        @sender = build(:user)
         @sales_network_invite = create(:sales_network_invite, sender: @sender, network: @sales_network, user_type: 'limited')
 
         @new_user.save_from_network_invite(@sales_network_invite)
-        sales_user_network = @new_user.sales_user_networks.where(network_id: @sales_network.id).first
-        expect(sales_user_network.member_type).to eq("limited")
+        sales_user_permission = @new_user.sales_user_permissions.find_by(permissable_id: @sales_network.id, permissable_type: 'SalesNetwork')
+        expect(sales_user_permission.member_type).to eq("limited")
       end
       
 

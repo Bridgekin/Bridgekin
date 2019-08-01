@@ -1,5 +1,5 @@
 class SalesNetworkInvite < ApplicationRecord
-  validates :link_code, :network_id, :sender_id, presence: :true
+  validates :link_code, :network_id, presence: :true
   validates :link_code, uniqueness: true
 
   after_initialize :ensure_link_code
@@ -14,10 +14,12 @@ class SalesNetworkInvite < ApplicationRecord
 
   belongs_to :recipient,
     foreign_key: :recipient_id,
-    class_name: :User
+    class_name: :User,
+    optional: true
 
   belongs_to :inviteable, 
-    polymorphic: true
+    polymorphic: true,
+    optional: true
 
   def self.prep_batch_create(new_invites = nil, sender_id = nil, network_id = nil)
     return nil if [new_invites, sender_id, network_id].any?{|val| val.nil?}
