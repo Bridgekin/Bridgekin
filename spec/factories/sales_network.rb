@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :sales_network do
-    title { Faker::Company.name }
-    domain { Faker::Internet.domain_name }
+    title { Faker::Company.unique.name }
+    domain { Faker::Internet.unique.domain_name }
 
     trait :with_subscription do
       after(:create) do |sales_network|
