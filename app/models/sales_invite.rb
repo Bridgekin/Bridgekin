@@ -1,4 +1,4 @@
-class SalesNetworkInvite < ApplicationRecord
+class SalesInvite < ApplicationRecord
   validates :link_code, presence: :true
   validates :link_code, uniqueness: true
 
@@ -18,8 +18,9 @@ class SalesNetworkInvite < ApplicationRecord
     class_name: :User,
     optional: true
 
-  belongs_to :inviteable, 
-    polymorphic: true,
+  belongs_to :user_permission,
+    foreign_key: :user_permission_id,
+    class_name: :SalesUserPermission,
     optional: true
 
   def self.prep_batch_create(new_invites = nil, sender = nil, current_dashboard_target = nil)

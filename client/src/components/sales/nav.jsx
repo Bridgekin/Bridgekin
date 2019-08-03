@@ -322,7 +322,7 @@ class SalesNav extends React.Component {
         !this.isExpiredSub() && <Button 
         data-cy='invite-button'
         style={{ textTransform: 'capitalize' }}
-        onClick={() => this.props.history.push(`/sales/invite_external`)}>
+        onClick={() => this.props.history.push(`/sales/invite`)}>
           <Typography color='textSecondary'
             className={classes.navItem}>
             {`Invite`}

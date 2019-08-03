@@ -10,6 +10,10 @@ class SalesUserPermission < ApplicationRecord
   belongs_to :permissable,
     polymorphic: true
 
-  has_one :network_invite,
-    as: :inviteable
+  # has_one :network_invite,
+  #   as: :inviteable
+
+  has_one :sales_invite,
+    foreign_key: :user_permission_id,
+    class_name: :SalesInvite
 end

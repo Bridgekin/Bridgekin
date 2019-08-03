@@ -12,7 +12,7 @@ import SalesConnectSocial from './connect_social.jsx'
 import SalesRespondToIntro from './respond_to_intro.jsx'
 import SalesStats from './stats.jsx'
 import SalesAdminSignup from './admin_signup.jsx'
-import SalesExternalInvite from './network_invite/network_invite'
+import SalesInvite from './invite/invite'
 
 import { AuthRoute, ProtectedRoute } from '../../util/route_util';
 
@@ -54,7 +54,7 @@ class SalesRouter extends React.Component {
         <Switch>
           <ProtectedRoute path="/sales/dashboard" component={SalesDashboard} />
           <ProtectedRoute path="/sales/connect_social" component={SalesConnectSocial}/>
-          <ProtectedRoute path="/sales/invite_external" component={SalesExternalInvite}/>
+          <ProtectedRoute path="/sales/invite" component={SalesInvite}/>
           <Route path="/sales/respond_to_intro/:introId" component={SalesRespondToIntro} />
           <ProtectedRoute path="/sales/stats/:page?" component={SalesStats} />
           <Route path="/sales/admin_signup/:page" 

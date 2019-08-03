@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_31_230101) do
+ActiveRecord::Schema.define(version: 2019_08_02_215725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -436,7 +436,7 @@ ActiveRecord::Schema.define(version: 2019_07_31_230101) do
     t.index ["requestor_id"], name: "index_sales_intros_on_requestor_id"
   end
 
-  create_table "sales_network_invites", force: :cascade do |t|
+  create_table "sales_invites", force: :cascade do |t|
     t.string "email"
     t.string "fname"
     t.string "lname"
@@ -447,10 +447,8 @@ ActiveRecord::Schema.define(version: 2019_07_31_230101) do
     t.string "user_type", default: "full"
     t.string "link_code"
     t.integer "recipient_id"
-    t.string "inviteable_type"
-    t.bigint "inviteable_id"
-    t.index ["inviteable_id", "inviteable_type"], name: "index_sales_network_invites_on_inviteable_type_and_id"
-    t.index ["sender_id"], name: "index_sales_network_invites_on_sender_id"
+    t.integer "user_permission_id"
+    t.index ["sender_id"], name: "index_sales_invites_on_sender_id"
   end
 
   create_table "sales_networks", force: :cascade do |t|

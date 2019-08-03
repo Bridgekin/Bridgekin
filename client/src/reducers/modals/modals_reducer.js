@@ -19,7 +19,7 @@ import refAppStatusReducer from './ref_app_status_reducer';
 import requestIntroReducer from './request_intro_reducer';
 import connectSocialReducer from './connect_social_reducer';
 import respondToRequestReducer from './respond_to_request_reducer';
-import salesNetworkInviteReducer from './sales_network_invite_reducer';
+import salesInviteReducer from './sales_invite_reducer';
 
 export default combineReducers({
   invite: inviteReducer,
@@ -42,5 +42,5 @@ export default combineReducers({
   requestIntro: requestIntroReducer,
   connectSocial: connectSocialReducer,
   respondToRequest: respondToRequestReducer,
-  salesNetworkInvite: salesNetworkInviteReducer,
+  salesInvite: salesInviteReducer,
 });

@@ -17,7 +17,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-
 });
 
 const styles = theme => ({
@@ -99,7 +98,7 @@ class NetworkInviteCard extends React.Component {
           <MenuItem data-cy='full-member_type'
             value={'full'}>{`Full User - Seat`}</MenuItem>
           <MenuItem data-cy='limited-member_type'
-          value={'limited'}>{`External User - Upload Only`}</MenuItem>
+          value={'limited'}>{`Limited User - Upload Only`}</MenuItem>
         </Select>
       </Grid>
       <Grid item xs={1} container alignItems='center'>

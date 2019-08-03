@@ -57,19 +57,19 @@ RSpec.describe User, type: :model do
         @sender = build(:user)
         @new_user = build(:user)
         @sales_network = create(:sales_network, :with_subscription)
-        @sales_network_invite = create(:sales_network_invite, sender: @sender, network: @sales_network)
+        @sales_invite = create(:sales_invite, sender: @sender, network: @sales_network)
       end
 
       it 'should save to a network' do
-        @new_user.save_from_network_invite(@sales_network_invite)
+        @new_user.save_from_network_invite(@sales_invite)
         expect(@new_user.id).to be_truthy
       end
 
       it 'should save different types of users' do
         @sender = build(:user)
-        @sales_network_invite = create(:sales_network_invite, sender: @sender, network: @sales_network, user_type: 'limited')
+        @sales_invite = create(:sales_invite, sender: @sender, network: @sales_network, user_type: 'limited')
 
-        @new_user.save_from_network_invite(@sales_network_invite)
+        @new_user.save_from_network_invite(@sales_invite)
         sales_user_permission = @new_user.sales_user_permissions.find_by(permissable_id: @sales_network.id, permissable_type: 'SalesNetwork')
         expect(sales_user_permission.member_type).to eq("limited")
       end

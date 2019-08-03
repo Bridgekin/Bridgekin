@@ -17,7 +17,7 @@ import { salesSignup, googleSalesLogin, networkInviteSignup } from '../../action
 import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
 import { clearSearchResults } from '../../actions/sales_network_actions'
-import { fetchNetworkInviteByCode } from '../../actions/sales_network_invites_actions';
+import { fetchInviteByCode } from '../../actions/sales_invites_actions';
 import queryString from 'query-string';
 import SignupPic from '../../static/signup_pic.png';
 import Img from 'react-image'
@@ -32,7 +32,7 @@ const mapStateToProps = (state, ownProps) => {
   networkDetails: state.entities.sales.networkDetails,
   page: ownProps.match.params.page,
   salesNetworks: state.entities.sales.salesNetworks,
-  salesNetworkInvites: state.entities.sales.salesNetworkInvites,
+  salesInvites: state.entities.sales.salesInvites,
   code: values.code
 }};
 
@@ -44,7 +44,7 @@ const mapDispatchToProps = dispatch => ({
   openLogin: (payload) => dispatch(openLogin(payload)),
   googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload)),
   clearSearchResults: () => dispatch(clearSearchResults()),
-  fetchNetworkInviteByCode: code => dispatch(fetchNetworkInviteByCode(code)),
+  fetchInviteByCode: code => dispatch(fetchInviteByCode(code)),
   networkInviteSignup: payload => dispatch(networkInviteSignup(payload))
 });
 
@@ -110,11 +110,11 @@ class SalesLogin extends React.Component {
     const { code, page } = this.props;
 
     if(code){
-      this.props.fetchNetworkInviteByCode(code)
+      this.props.fetchInviteByCode(code)
       .then(() => {
-        const { salesNetworkInvites, salesNetworks } = this.props;
+        const { salesInvites, salesNetworks } = this.props;
         let invite;
-        Object.values(salesNetworkInvites).forEach(result => {
+        Object.values(salesInvites).forEach(result => {
           if(result.linkCode === code){
             invite = result;
           }

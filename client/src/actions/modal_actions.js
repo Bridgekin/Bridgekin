@@ -270,14 +270,14 @@ export const closeRespondToRequest = () => ({
 });
 
 // Open Resoond To Request
-export const OPEN_SALES_NETWORK_INVITE_MODAL = 'OPEN_SALES_NETWORK_INVITE_MODAL';
-export const CLOSE_SALES_NETWORK_INVITE_MODAL = "CLOSE_SALES_NETWORK_INVITE_MODAL";
+export const OPEN_SALES_INVITE_MODAL = 'OPEN_SALES_INVITE_MODAL';
+export const CLOSE_SALES_INVITE_MODAL = "CLOSE_SALES_INVITE_MODAL";
 
-export const openSalesNetworkInvite = (payload) => ({
-  type: OPEN_SALES_NETWORK_INVITE_MODAL,
+export const openSalesInvite = (payload) => ({
+  type: OPEN_SALES_INVITE_MODAL,
   payload
 });
 
-export const closeSalesNetworkInvite = () => ({
-  type: CLOSE_SALES_NETWORK_INVITE_MODAL,
+export const closeSalesInvite = () => ({
+  type: CLOSE_SALES_INVITE_MODAL,
 });

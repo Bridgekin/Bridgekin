@@ -231,13 +231,13 @@ class User < ApplicationRecord
     rounded + time
   end
 
-  def save_from_network_invite(sales_network_invite)
-    network = sales_network_invite.network
-    user_type = sales_network_invite.user_type
+  def save_from_network_invite(sales_invite)
+    network = sales_invite.network
+    user_type = sales_invite.user_type
     ActiveRecord::Base.transaction do
       self.save!
       sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, member_type: user_type)
-      sales_network_invite.update(recipient: self, inviteable: sales_user_permission)
+      sales_invite.update(recipient: self, inviteable: sales_user_permission)
     end
     true
   rescue => e

@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     resources :sales_networks, only: [:index]
     resources :sales_intros
     resource :admin_signup_links, only: [:show]
-    resources :sales_network_invites
+    resources :sales_invites
     resources :request_templates, only: [:index, :create, :destroy]
     
     #Cypress testing hooks
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     #Sales Feature
     get "sales_contacts/presigned_url", :to => 'sales_contacts#presigned_url'
     post "sales_contacts/connect_social", :to => 'sales_contacts#connect_social'
-    get "get_network_invite_code", :to => 'sales_network_invites#show_by_referral_code'
+    get "get_invite_code", :to => 'sales_invites#show_by_referral_code'
     get "search_sales_networks", :to => 'sales_networks#search_networks'
     patch "respond_intro_request", :to => 'sales_intros#respond_intro_request'
     post "sales_contacts/search", :to => 'sales_contacts#search'

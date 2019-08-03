@@ -29,7 +29,7 @@ import LoginModal from './components/modals/login_modal';
 import RequestIntroModal from './components/modals/request_intro_modal';
 import ConnectSocialModal from './components/modals/connect_social_modal';
 import RespondToRequestModal from './components/modals/respond_intro_modal';
-import SalesNetworkInviteModal from './components/modals/sales_network_invite_modal';
+import SalesInviteModal from './components/modals/sales_invite_modal';
 
 const mapStateToProps = state => ({
   siteTemplate: state.siteTemplate,
@@ -77,7 +77,7 @@ class ThemeProvider extends React.Component{
               <ImageCropModal />
               <ConnectSocialModal />
               <RespondToRequestModal />
-              <SalesNetworkInviteModal />
+              <SalesInviteModal />
             </div>}
             <SignupModal />
             <WaitlistModal/>

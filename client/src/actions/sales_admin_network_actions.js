@@ -1,4 +1,4 @@
-// import * as SalesNetworkInviteApiUtil from '../util/sales_network_invite_api_util';
+// import * as SalesInviteApiUtil from '../util/sales_invite_api_util';
 import { handleErrors } from './fetch_error_handler';
 
 const genericError = 'Something went wrong. Please try again in a bit or contact us at admin@bridgekin.com';

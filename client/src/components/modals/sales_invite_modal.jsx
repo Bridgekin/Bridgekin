@@ -23,20 +23,20 @@ import CloseIcon from '@material-ui/icons/CloseSharp';
 import Capitalize from 'capitalize';
 
 import { connect } from 'react-redux';
-import { closeSalesNetworkInvite } from '../../actions/modal_actions';
-import { clearSalesNetworkInviteErrors } from '../../actions/error_actions';
+import { closeSalesInvite } from '../../actions/modal_actions';
+import { clearSalesInviteErrors } from '../../actions/error_actions';
 // import theme from './theme';
 
 const mapStateToProps = state => ({
   currentUser: state.users[state.session.id],
-  salesNetworkInviteModal: state.modals.salesNetworkInvite,
-  salesNetworkInviteErrors: state.errors.salesNetworkInvite,
-  salesNetworkInvites: state.entities.sales.salesNetworkInvites,
+  salesInviteModal: state.modals.salesInvite,
+  salesInviteErrors: state.errors.salesInvite,
+  salesInvites: state.entities.sales.salesInvites,
 });
 
 const mapDispatchToProps = dispatch => ({
-  closeSalesNetworkInvite: () => dispatch(closeSalesNetworkInvite()),
-  clearSalesNetworkInviteErrors: () => dispatch(clearSalesNetworkInviteErrors())
+  closeSalesInvite: () => dispatch(closeSalesInvite()),
+  clearSalesInviteErrors: () => dispatch(clearSalesInviteErrors())
 });
 
 const styles = theme => ({
@@ -72,7 +72,7 @@ const styles = theme => ({
   },
 });
 
-class SalesNetworkInviteModal extends React.Component {
+class SalesInviteModal extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -93,8 +93,8 @@ class SalesNetworkInviteModal extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const nextModal = nextProps.salesNetworkInviteModal;
-    const currentModal = this.props.salesNetworkInviteModal;
+    const nextModal = nextProps.salesInviteModal;
+    const currentModal = this.props.salesInviteModal;
     if (nextModal.open && currentModal.open !== nextModal.open) {
       this.setState({ page: nextModal.page })
     }
@@ -102,25 +102,25 @@ class SalesNetworkInviteModal extends React.Component {
   }
 
   handleClose(){
-    if (this.props.salesNetworkInviteErrors.length > 0) {
-      this.props.clearSalesNetworkInviteErrors();
+    if (this.props.salesInviteErrors.length > 0) {
+      this.props.clearSalesInviteErrors();
     }
     this.setState({ loaded: false },
-      () => this.props.closeSalesNetworkInvite());
+      () => this.props.closeSalesInvite());
   };
 
   redirectToDashboard(){
-    this.props.closeSalesNetworkInvite()
+    this.props.closeSalesInvite()
     this.props.history.push('/sales/dashboard')
   }
 
   getContent(){
-    const { classes, salesNetworkInviteModal } = this.props;
+    const { classes, salesInviteModal } = this.props;
     const { page } = this.state;
 
     switch(page){
       case 'response':
-        let salesNetworkInviteErrors = this.props.salesNetworkInviteErrors.map(error => {
+        let salesInviteErrors = this.props.salesInviteErrors.map(error => {
           error = error.replace(/(Fname|Lname)/g, (ex) => {
             return ex === 'Fname' ? 'First name' : 'Last name';
           });
@@ -132,7 +132,7 @@ class SalesNetworkInviteModal extends React.Component {
           )
         })
 
-        let modalText = this.props.salesNetworkInviteErrors.length === 0 ? (
+        let modalText = this.props.salesInviteErrors.length === 0 ? (
           <Grid item xs={10}>
             <Typography variant="h2" id="modal-title"
               color='textPrimary' align='left'
@@ -164,7 +164,7 @@ class SalesNetworkInviteModal extends React.Component {
               {`Unfortunately, we weren't able to send your invites because:`}
           </Typography>
             <List data-cy='signup-errors'>
-              {salesNetworkInviteErrors}
+              {salesInviteErrors}
             </List>
             <Grid container justify='center'
               style={{ marginTop: 30 }}>
@@ -184,11 +184,11 @@ class SalesNetworkInviteModal extends React.Component {
   }
 
   render() {
-    const { classes, salesNetworkInviteModal } = this.props;
+    const { classes, salesInviteModal } = this.props;
 
     return (
       <Dialog
-        open={salesNetworkInviteModal.open}
+        open={salesInviteModal.open}
         onClose={this.handleClose}
         className={classes.cardModalWrapper}
         classes={{ paper: classes.modalPaper }}>
@@ -198,11 +198,11 @@ class SalesNetworkInviteModal extends React.Component {
             <CloseIcon onClick={this.handleClose}
               style={{ color: 'grey', pointer: 'cursor'}}/>
           </Grid>
-          {salesNetworkInviteModal.open && this.getContent()}
+          {salesInviteModal.open && this.getContent()}
         </Grid>
       </Dialog>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(SalesNetworkInviteModal)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(SalesInviteModal)));

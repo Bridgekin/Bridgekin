@@ -41,6 +41,10 @@ class SalesNetwork < ApplicationRecord
     through: :sales_admin_networks,
     source: :admin
 
+  has_many :sales_invites,
+    foreign_key: :network_id,
+    class_name: :SalesInvite
+
   def self.generate_network_details(sales_networks)
     sales_networks.reduce({}) do |acc, network|
       current_sub = network.current_subscription

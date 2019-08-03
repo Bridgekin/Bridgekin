@@ -71,8 +71,8 @@ export const RECEIVE_SALES_ADMIN_SIGNUP_ERRORS = 'RECEIVE_SALES_ADMIN_SIGNUP_ERR
 export const CLEAR_SALES_ADMIN_SIGNUP_ERRORS = 'CLEAR_SALES_ADMIN_SIGNUP_ERRORS';
 export const RECEIVE_SALES_PRODUCT_ERRORS = 'RECEIVE_SALES_PRODUCT_ERRORS';
 export const CLEAR_SALES_PRODUCT_ERRORS = 'CLEAR_SALES_PRODUCT_ERRORS';
-export const RECEIVE_SALES_NETWORK_INVITE_ERRORS = 'RECEIVE_SALES_NETWORK_INVITE_ERRORS';
-export const CLEAR_SALES_NETWORK_INVITE_ERRORS = 'CLEAR_SALES_NETWORK_INVITE_ERRORS';
+export const RECEIVE_SALES_INVITE_ERRORS = 'RECEIVE_SALES_INVITE_ERRORS';
+export const CLEAR_SALES_INVITE_ERRORS = 'CLEAR_SALES_INVITE_ERRORS';
 
 export const RECEIVE_REQUEST_TEMPLATE_ERRORS = 'RECEIVE_REQUEST_TEMPLATE_ERRORS';
 export const CLEAR_REQUEST_TEMPLATE_ERRORS = 'CLEAR_REQUEST_TEMPLATE_ERRORS';
@@ -378,13 +378,13 @@ export const clearSalesProductErrors = () => ({
   type: CLEAR_SALES_PRODUCT_ERRORS,
 });
 
-export const receiveSalesNetworkInviteErrors = errors => ({
-  type: RECEIVE_SALES_NETWORK_INVITE_ERRORS,
+export const receiveSalesInviteErrors = errors => ({
+  type: RECEIVE_SALES_INVITE_ERRORS,
   errors
 });
 
-export const clearSalesNetworkInviteErrors = () => ({
-  type: CLEAR_SALES_NETWORK_INVITE_ERRORS,
+export const clearSalesInviteErrors = () => ({
+  type: CLEAR_SALES_INVITE_ERRORS,
 });
 
 export const receiveRequestTemplateErrors = errors => ({

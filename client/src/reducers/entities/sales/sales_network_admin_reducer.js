@@ -1,7 +1,7 @@
 import {
   RECEIVE_NETWORK_ADMIN_MAP,
   CLEAR_NETWORK_ADMIN_MAP
-} from '../../../actions/sales_network_invites_actions';
+} from '../../../actions/sales_invites_actions';
 import merge from 'lodash/merge';
 
 export default (state = {}, action) => {
