@@ -43,7 +43,6 @@ export const setAuth = (data) => dispatch => {
 
     if(permissions.length > 0){
       let { permissableId, permissableType, memberType } = permissions[0]
-      debugger
       dispatch(setDashboardTarget({ permissableId, permissableType, memberType }))
     }
   }

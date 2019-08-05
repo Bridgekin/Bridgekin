@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 // import blackLogo from '../../static/Bridgekin_Logo.png';
 import blackLogo from '../../static/Bridgekin_Logo_fake_transp.png';
@@ -147,7 +148,7 @@ class SalesNav extends React.Component {
     super(props)
     this.state = {
       isTop: true,
-      dashboardSpaceAnchorEl: null
+      accountAnchorEl: null
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.isExpiredSub = this.isExpiredSub.bind(this);
@@ -177,12 +178,12 @@ class SalesNav extends React.Component {
   handleSubmit() {
     const { currentUser } = this.props;
     if (currentUser) {
+      this.setState({ accountAnchorEl: null })
       this.props.logout()
       .then(() => {
         this.props.history.push('/')
       })
     } else {
-      // this.props.openLogin({ page: 'login' });
       this.props.history.push('/sales/login')
     }
   }
@@ -192,14 +193,10 @@ class SalesNav extends React.Component {
       e.stopPropagation();
       const selectedEl = this.state[anchor];
       this.setState({ [anchor]: (selectedEl ? null : e.currentTarget) })
-      //Track click
-      if (anchor === 'filterAnchorEl') {
-        this.props.trackViewByClick()
-      }
     }
   }
 
-  handleDashSpaceChange(choice) {
+  handleDashSpaceChange(choice, anchor) {
     return e => {
       if (choice) {
         let { permissableId, permissableType, memberType } = choice
@@ -207,7 +204,7 @@ class SalesNav extends React.Component {
       } else {
         this.props.setDashboardTarget({})
       }
-      this.setState({ dashboardSpaceAnchorEl: null })
+      this.setState({ [anchor]: null })
     }
   }
 
@@ -235,7 +232,7 @@ class SalesNav extends React.Component {
     const { classes, siteTemplate, currentUser,
     networkDetails, currentSalesNetworkId,
       onHomePage, salesUserPermissions, salesNetworks } = this.props;
-    const { isTop, dashboardSpaceAnchorEl } = this.state;
+    const { isTop, accountAnchorEl } = this.state;
 
     const logo = <div
       className={classes.logoLink}
@@ -251,54 +248,6 @@ class SalesNav extends React.Component {
     </div>
 
     let dashboardSpaceName = this.getCurrentDashboardSpaceName()
-
-    const dashboardSpace = <div>
-      <Button variant='outlined' color='default'
-      onClick={this.handleMenuClick('dashboardSpaceAnchorEl')}
-        data-cy='choose-space-button'
-        style={{ textTransform: 'none' }}>
-        <Typography color='textPrimary'
-          style={{ fontSize: 14 }}>
-          {`Space: ${dashboardSpaceName}`}
-        </Typography>
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={dashboardSpaceAnchorEl}
-        open={Boolean(dashboardSpaceAnchorEl)}
-        onClose={this.handleMenuClick('dashboardSpaceAnchorEl')}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        getContentAnchorEl={null}>
-        {Object.values(salesUserPermissions).map(choice => {
-          let name = "";
-          if (choice.permissableType === 'User') {
-
-          } else if (choice.permissableType === 'SalesNetwork') {
-            let network = salesNetworks[choice.permissableId]
-            name = network ? network.title : "No Network Name Found"
-          }
-          return <MenuItem onClick={this.handleDashSpaceChange(choice)}
-            data-cy={`dashboard-option-${choice.permissionType}-${choice.permissionId}`}>
-            <Typography style={{ fontSize: 14 }}>
-              {name}
-            </Typography>
-          </MenuItem>
-        })}
-        <MenuItem onClick={this.handleDashSpaceChange("")}
-          data-cy={`dashboard-option-`}>
-          <Typography style={{ fontSize: 14 }}>
-            {`Personal`}
-          </Typography>
-        </MenuItem>
-      </Menu>
-    </div>
 
     const session = <Grid item style={{ display: 'flex'}}>
       {currentUser && <Button style={{ textTransform: 'capitalize' }}
@@ -336,15 +285,57 @@ class SalesNav extends React.Component {
             {`Import Contacts`}
           </Typography>
         </Button>}
-      {currentUser && 
-        <Button style={{ textTransform: 'capitalize' }}
-          data-cy='logout-button'
-          onClick={this.handleSubmit}>
-          <Typography color='textSecondary'
-            className={classes.navItem}>
+      {currentUser &&
+        <IconButton
+        onClick={this.handleMenuClick('accountAnchorEl')}
+          className={classes.navButtonText}>
+          <AccountCircle />
+        </IconButton>}
+      <Menu
+        id="simple-menu"
+        anchorEl={accountAnchorEl}
+        open={Boolean(accountAnchorEl)}
+        onClose={this.handleMenuClick('accountAnchorEl')}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        getContentAnchorEl={null}>
+        {!isEmpty(salesUserPermissions) && Object.values(salesUserPermissions).map(choice => {
+          let name = "";
+          if (choice.permissableType === 'User') {
+
+          } else if (choice.permissableType === 'SalesNetwork') {
+            let network = salesNetworks[choice.permissableId]
+            name = network ? network.title : "No Network Name Found"
+          }
+          return <MenuItem onClick={this.handleDashSpaceChange(choice, 'accountAnchorEl')}
+            data-cy={`dashboard-option-${choice.permissionType}-${choice.permissionId}`}>
+            <Typography style={{ fontSize: 14 }}>
+              {name}
+            </Typography>
+          </MenuItem>
+        })}
+
+        {!isEmpty(salesUserPermissions) && <MenuItem onClick={this.handleDashSpaceChange("", 'accountAnchorEl')}
+          data-cy={`dashboard-option-`}>
+          <Typography style={{ fontSize: 14 }}>
+            {`Personal`}
+          </Typography>
+        </MenuItem>}
+
+        <MenuItem onClick={this.handleSubmit}
+          data-cy={`logout-button`}>
+          <Typography style={{ fontSize: 14 }}>
             {`Logout`}
           </Typography>
-        </Button>}
+        </MenuItem>
+      </Menu>
+      
     </Grid>
 
     return <div>
@@ -353,8 +344,6 @@ class SalesNav extends React.Component {
         <Toolbar className={classes.toolbar}>
           <Grid container alignItems='center' justify='space-between'>
             {logoComp}
-            <div style={{ flexGrow: 1 }} />
-            {currentUser && dashboardSpace}
             <div style={{ flexGrow: 1 }} />
             {session}
           </Grid>
