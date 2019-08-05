@@ -2,7 +2,7 @@ json.admin_map @admin_map
 
 json.sales_network do
   json.partial! 'api/sales_networks/sales_network', sales_network: @sales_network
-end
+end unless @sales_network.nil?
 
 json.sales_invites do
   @sales_invites.each do |sales_invite|

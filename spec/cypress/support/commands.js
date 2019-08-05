@@ -23,6 +23,7 @@ Cypress.Commands.add("login", (email, password) => {
     }
   })
     .then((resp) => {
+      let token = resp.body.token
       window.localStorage.setItem('bridgekinToken', resp.body.token);
     })
 })
@@ -63,6 +64,9 @@ Cypress.Commands.add("get_received_request", () => {
     .then(data => data.body)
 })
 
+Cypress.Commands.add("logout", () => {
+  window.localStorage.removeItem('bridgekinToken')
+})
 //
 //
 // -- This is a child command --

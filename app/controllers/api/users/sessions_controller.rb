@@ -14,7 +14,7 @@ class Api::Users::SessionsController < ApiController
       @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
       @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
-
+      
       render :create
     elsif @current_user && !@current_user.confirmed?
       render json: ['You must to confirm your account before logging in.'], status: 404
@@ -33,7 +33,7 @@ class Api::Users::SessionsController < ApiController
     @user_feature, @users = @current_user.post_auth_setup
     #Load User Networks
     @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
-
+    
     render :create
   end
 

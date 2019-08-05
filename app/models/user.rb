@@ -206,11 +206,11 @@ class User < ApplicationRecord
     foreign_key: :user_id,
     class_name: :RequestTemplate
 
-  has_many :sent_network_invites,
+  has_many :sent_invites,
     foreign_key: :sender_id,
     class_name: :User
   
-  has_many :received_network_invites,
+  has_many :received_invites,
     foreign_key: :recipient_id,
     class_name: :User
   
@@ -231,13 +231,13 @@ class User < ApplicationRecord
     rounded + time
   end
 
-  def save_from_network_invite(sales_invite)
+  def save_from_invite(sales_invite)
     network = sales_invite.network
     user_type = sales_invite.user_type
     ActiveRecord::Base.transaction do
       self.save!
       sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, member_type: user_type)
-      sales_invite.update(recipient: self, inviteable: sales_user_permission)
+      sales_invite.update(recipient: self, user_permission: sales_user_permission)
     end
     true
   rescue => e

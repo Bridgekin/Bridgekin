@@ -38,10 +38,14 @@ export const setAuth = (data) => dispatch => {
   dispatch(receiveSalesUserPermissions(data.salesUserPermissions))
   dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
 
-  let permissions = Object.values(data.salesUserPermissions)
-  if(permissions.length > 0){
-    let { permissableId, permissableType, memberType } = permissions[0]
-    dispatch(setDashboardTarget({ permissableId, permissableType, memberType }))
+  if(data.salesUserPermissions){
+    let permissions = Object.values(data.salesUserPermissions)
+
+    if(permissions.length > 0){
+      let { permissableId, permissableType, memberType } = permissions[0]
+      debugger
+      dispatch(setDashboardTarget({ permissableId, permissableType, memberType }))
+    }
   }
 }
 

@@ -236,6 +236,7 @@ class NetworkInvite extends React.Component {
       return <Grid container justify='center' alignItems='center' style={{ minHeight: dimensions.height }}>
         <Grid item xs={10} sm={6}>
           <Typography align='center' gutterBottom
+            data-cy="progress-header"
             color='textPrimary'
             style={{ fontSize: 38, fontWeight: 600 }}>
             {`Feature in Progress`}

@@ -19,7 +19,7 @@ class Api::SalesInvitesController < ApiController
     if params[:permissable_type] == "SalesNetwork"
       @sales_invites = @sales_network.sales_invites
     else
-      @sales_invites = @current_user.sent_network_invites
+      @sales_invites = @current_user.sent_invites
     end
     render :index
   end
