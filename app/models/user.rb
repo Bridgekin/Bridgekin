@@ -233,10 +233,10 @@ class User < ApplicationRecord
 
   def save_from_invite(sales_invite)
     network = sales_invite.network
-    user_type = sales_invite.user_type
+    relationship = sales_invite.relationship
     ActiveRecord::Base.transaction do
       self.save!
-      sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, member_type: user_type)
+      sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, relationship: relationship)
       sales_invite.update(recipient: self, user_permission: sales_user_permission)
     end
     true
@@ -255,7 +255,7 @@ class User < ApplicationRecord
       self.save!
       @sales_network.save!
       #Attach to existing network
-      self.sales_user_permissions.create!(permissable: @sales_network)
+      self.sales_user_permissions.create!(permissable: @sales_network, relationship: "both")
       #Attach admin user
       self.sales_admin_networks.create!(network: @sales_network)
       #Create a customer

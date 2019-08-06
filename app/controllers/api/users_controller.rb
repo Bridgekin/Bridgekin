@@ -37,7 +37,7 @@ class Api::UsersController < ApiController
     @sales_invite = SalesInvite.includes(:network).find_by(link_code: params[:user][:code])
     network = @sales_invite.network
 
-    if @current_user.save_from_network_invite( @sales_invite)
+    if @current_user.save_from_invite( @sales_invite)
       #Get Tokens and track
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
@@ -65,7 +65,7 @@ class Api::UsersController < ApiController
       render json: ["Domain does not match chosen network"], status: 422
     elsif provided_domain == network_domain && @current_user.save
       #Attach to existing network
-      @current_user.sales_user_permissions.create(permissable: network)
+      @current_user.sales_user_permissions.create(permissable: network, relationship: "both")
 
       render json: ["Successful"], status: 200
     else
@@ -92,7 +92,7 @@ class Api::UsersController < ApiController
       @current_user = User.new(user_params)
       if @current_user.save
         #Attach to existing network
-        @current_user.sales_user_permissions.create(permissable: network)
+        @current_user.sales_user_permissions.create(permissable: network, relationship: "both")
         #Get Tokens and track
         @token = get_login_token!(@current_user)
         @user_feature, @users = @current_user.post_auth_setup

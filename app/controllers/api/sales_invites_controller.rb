@@ -51,9 +51,9 @@ class Api::SalesInvitesController < ApiController
 
   def update
     # debugger
-    @sales_invite.update!(user_type: params[:user_type])
+    @sales_invite.update!(relationship: params[:relationship])
     @sales_user_permission = @sales_invite.user_permission
-    @sales_user_permission.update!(member_type: params[:user_type]) if @sales_user_permission
+    @sales_user_permission.update!(relationship: params[:relationship]) if @sales_user_permission
     render :show
   rescue => e 
     render json: e.message, status: 404
