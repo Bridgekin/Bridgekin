@@ -37,7 +37,7 @@ class Api::UsersController < ApiController
     @sales_invite = SalesInvite.includes(:network).find_by(link_code: params[:user][:code])
     network = @sales_invite.network
 
-    if @current_user.save_from_network_invite( @sales_invite)
+    if @current_user.save_from_invite( @sales_invite)
       #Get Tokens and track
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
