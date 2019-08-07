@@ -37,7 +37,8 @@ Rails.application.routes.draw do
     post "webhooks/full_contact_people", :to => 'webhooks#full_contact_people'
 
     #Sales Feature
-    post "confirm_sales_invite", :to => 'sales_invites#confirm_sales_invite'
+    get "confirm_invite_update", :to => 'sales_invites#confirm_invite_update'
+    get "confirm_sales_invite", :to => 'sales_invites#confirm_sales_invite'
     get "sales_contacts/presigned_url", :to => 'sales_contacts#presigned_url'
     post "sales_contacts/connect_social", :to => 'sales_contacts#connect_social'
     get "get_invite_code", :to => 'sales_invites#show_by_referral_code'

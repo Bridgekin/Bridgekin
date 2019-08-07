@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_06_155340) do
+ActiveRecord::Schema.define(version: 2019_08_07_221923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -449,6 +449,7 @@ ActiveRecord::Schema.define(version: 2019_08_06_155340) do
     t.integer "recipient_id"
     t.integer "user_permission_id"
     t.string "relationship", default: ""
+    t.string "status", default: "pending"
     t.index ["sender_id"], name: "index_sales_invites_on_sender_id"
   end
 

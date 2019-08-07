@@ -110,12 +110,12 @@ class SalesMailer < ApplicationMailer
     @sales_invite = sales_invite
     @sales_network = sales_invite.network
     @current_user = current_user
-    @recipient = User.find(sales_invite[:recipient_id])||{}
-
-    @email = recipient[:email] || sales_invite.email
-    @fname = recipient[:fname] || sales_invite.fname
+    @recipient = sales_invite.recipient || {}
+    # debugger
+    @email = @recipient[:email] || @sales_invite.email
+    @fname = @recipient[:fname] || @sales_invite.fname
     subject = "#{@current_user.fname.capitalize} has invited you to connect to their network on Bridgekin"
-
+    # debugger
     mail(to: @email, subject: subject)
 
     EmailLog.create(
@@ -127,10 +127,10 @@ class SalesMailer < ApplicationMailer
   def send_user_invite_email(sales_invite, current_user)
     @sales_invite = sales_invite
     @current_user = current_user
-    @recipient = User.find(sales_invite[:recipient_id])||{}
+    @recipient = sales_invite.recipient || {}
 
-    @email = recipient[:email] || sales_invite.email
-    @fname = recipient[:fname] || sales_invite.fname
+    @email = @recipient[:email] || @sales_invite.email
+    @fname = @recipient[:fname] || @sales_invite.fname
     subject = "#{@current_user.fname.capitalize} has invited you to connect on Bridgekin"
 
     mail(to: @email, subject: subject)
@@ -141,8 +141,23 @@ class SalesMailer < ApplicationMailer
     )
   end
 
-  def confirm_permission_change_email(sales_invite, current_user)
-    
+  def confirm_permission_update_email(sales_invite, old_rel, new_rel, current_user)
+    @sales_invite = sales_invite
+    @origin = sales_invite.network || sales_invite.sender
+
+    @origin_name = @origin.is_a?(SalesNetwork) ? @origin[:title] : "#{@origin[:fname]} #{@origin[:lname]}"
+    @current_user = current_user
+    @recipient = sales_invite.recipient
+    @old_rel, @new_rel = old_rel, new_rel
+
+    subject = "#{@origin_name.capitalize} Access Change - #{@old_rel.capitalize} => #{@new_rel.capitalize}"
+
+    mail(to: @recipient.email, subject: subject)
+
+    EmailLog.create(
+      email: @recipient.email,
+      email_type: 'send_network_invitation_email'
+    )
   end
   
 end

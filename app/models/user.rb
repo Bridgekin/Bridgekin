@@ -234,11 +234,12 @@ class User < ApplicationRecord
   def save_from_invite(sales_invite)
     network = sales_invite.network
     relationship = sales_invite.relationship
+
     ActiveRecord::Base.transaction do
       self.save!
-      sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, relationship: relationship, status: "confirmed" last_confirmed: DateTime.now)
-
-      sales_invite.update!(recipient: self, user_permission: sales_user_permission)
+      sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, relationship: relationship, status: "confirmed", last_confirmed: DateTime.now)
+      sales_invite.update!(recipient: self, user_permission: sales_user_permission,
+      status: 'confirmed')
     end
     true
   rescue => e

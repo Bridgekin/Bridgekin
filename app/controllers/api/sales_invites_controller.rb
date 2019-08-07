@@ -1,5 +1,5 @@
 class Api::SalesInvitesController < ApiController
-  before_action :authenticate_user, except: [:show_by_referral_code]
+  before_action :authenticate_user, except: [:show_by_referral_code, :confirm_sales_invite, :confirm_invite_update]
   before_action :set_network, only: [:index]
   before_action :set_invite, only: [:update, :destroy]
   before_action :get_network_admins, only: [:index]
@@ -32,51 +32,23 @@ class Api::SalesInvitesController < ApiController
   end
 
   def create
-    formatted_invites = params[:new_invites].reduce([]){|acc, invite| acc << invite.permit(:email, :fname,:lname, :user_type).to_h}
+    formatted_invites = params[:new_invites].reduce([]){|acc, invite| acc << invite.permit(:email, :fname,:lname, :relationship).to_h}
     current_dashboard_target = params[:current_dashboard_target]
 
-    new_user_invites,  existing_user_invites = SalesInvite.prep_batch_create(formatted_invites, @current_user, current_dashboard_target)
-    begin
-      raise ArgumentError if new_user_invites.nil? ||  existing_user_invites.nil?
+    sales_invites = SalesInvite.prep_batch_create(formatted_invites, @current_user, current_dashboard_target)
 
-      #For new users
-      saved_new_user_invites = SalesInvite.create!(new_invites)
-      #For existing users
-      saved_existing_user_invites = SalesInvite.create!(new_invites)
+    @sales_invites = SalesInvite.save_batch(sales_invites, @current_user)
 
-      @sales_invites = saved_new_user_invites + saved_existing_user_invites
-      @sales_invites.each do |invite|
-        if invite[:network_id]
-          SalesMailer.send_network_invite_email(invite, @current_user).deliver_later
-        else
-          SalesMailer.send_user_invite_email(invite, @current_user).deliver_later
-        end
-      end
-
-      render :create, status: 200
-    rescue ArgumentError => e
-      render json: ["No invites created"], status: 404
-    rescue => exception
-      render json: exception.record.errors.full_messages, status: 422
-    end
+    render :create, status: 200
+  rescue => exception
+    render json: exception.record.errors.full_messages, status: 422
   end
 
   def confirm_sales_invite
-    @sales_invite = SalesInvite.includes(:network, :recipient, :sender).find_by(link_code: params[:code])
-    @sales_user_permission = @sales_invite.user_permission
+    @sales_invite = SalesInvite.includes(:network, :recipient, :sender, :user_permission).find_by(link_code: params[:code])
+    new_rel = @sales_invite.relationship
 
-    ActiveRecord::Base.transaction do
-      unless @sales_user_permission.nil?
-        permissable = sales_invite.network || sales_invite.sender
-        relationship = sales_invite.relationship
-        recipient = sales_invite.recipient
-
-        @sales_user_permission = SalesUserPermission.create!(user: recipient, permissable: permissable, relationship: relationship)
-
-        @sales_invite.update!(user_permission: @sales_user_permission)
-      end
-      @sales_user_permission.update!(status: "confirmed", last_confirmed: DateTime.now)
-    end
+    SalesInvite.confirm_invite(@sales_invite)
 
     redirect_to "#{root_url}sales/permission_confirmed?rel=#{new_rel}"
   rescue => e 
@@ -87,15 +59,11 @@ class Api::SalesInvitesController < ApiController
     old_rel = @sales_invite.relationship
     new_rel = params[:relationship]
     @sales_user_permission = @sales_invite.user_permission
-    
+
     if @sales_user_permission
-      ActiveRecord::Base.transaction do
-        @sales_invite.update!(relationship: new_rel)
-        #Change permission to pending
-        @sales_user_permission.update!(status: "pending")
-        #Notify user of change about to occur
-        SalesMailer.confirm_permission_change_email(@sales_invite, @current_use, old_rel, new_rel).deliver_later
-      end 
+      SalesInvite.update_invite(@sales_invite, @sales_user_permission, old_rel, new_rel, @current_user)
+    else
+      @sales_invite.update!(relationship: new_rel)
     end
   
     render :show
@@ -103,12 +71,11 @@ class Api::SalesInvitesController < ApiController
     render json: e.message, status: 404
   end
 
-  def confirm_invite_change
-    @sales_invite = SalesInvite.includes(:network, :recipient, :sender).find_by(link_code: params[:code])
+  def confirm_invite_update
+    @sales_invite = SalesInvite.includes(:network, :recipient, :sender, :user_permission).find_by(link_code: params[:code])
     new_rel = @sales_invite.relationship
-    @sales_user_permission = @sales_invite.user_permission
     
-    @sales_user_permission.update!(relationship: new_rel)
+    SalesInvite.confirm_invite_update(@sales_invite, new_rel)
 
     redirect_to "#{root_url}sales/permission_confirmed?rel=#{new_rel}"
   rescue => e 
@@ -135,7 +102,7 @@ class Api::SalesInvitesController < ApiController
   end
 
   def set_invite
-    @sales_invite = SalesInvite.find(params[:id]) if params[:id]
+    @sales_invite = SalesInvite.includes(:user_permission).find(params[:id]) if params[:id]
   end
 
   # def network_invite_params
