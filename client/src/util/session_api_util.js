@@ -38,8 +38,8 @@ export const adminSignup = (user) => (
   })
 )
 
-export const networkInviteSignup = (user) => (
-  fetch(`${window.location.origin}/api/network_invite_signup`, {
+export const salesInviteSignup = (user) => (
+  fetch(`${window.location.origin}/api/sales_invite_signup`, {
     method: 'POST',
     body: JSON.stringify({ user }),
     headers: {

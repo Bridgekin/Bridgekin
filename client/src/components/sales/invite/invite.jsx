@@ -66,7 +66,7 @@ class NetworkInvite extends React.Component {
       loaded: false,
       validTarget: false,
       newInvites: {
-        [newId]: { id: newId, email: '', fname: '', lname: '', userType: 'full'}
+        [newId]: { id: newId, email: '', fname: '', lname: '', relationship: 'both'}
       },
       lastAddedIdx: 0,
       rowsPerPage: 10,
@@ -293,7 +293,7 @@ class NetworkInvite extends React.Component {
       </Grid>
 
       let headerCells = ["First Name", "Last Name",
-        "Email", "User Type", "Status", "Options"]
+        "Email", "Relationship", "Status", "Options"]
 
       let rows = this.filterSalesInvites()
 
@@ -314,7 +314,7 @@ class NetworkInvite extends React.Component {
               className={classes.tableCell}>
               {row.fname}
             </TableCell>
-            {['lname', 'email', "userType", "status","options"].map(field => {
+            {['lname', 'email', "relationship", "status","options"].map(field => {
               if (field === "options") {
                 let uniqAnchor = actionAnchorEl + row.id
                 return <TableCell>
@@ -341,16 +341,19 @@ class NetworkInvite extends React.Component {
                     </MenuItem>
                   </Menu>
                 </TableCell>
-              } else if (field === "userType") {
+              } else if (field === "relationship") {
                 return <TableCell>
                   <Select fullWidth
-                    value={row.userType}
+                    value={row.relationship}
                     onClick={(e) => e.stopPropagation()}
                     onChange={this.handleUpdatePerms(row)}>
-                    <MenuItem
-                      value={'full'}>{`Full User - Seat`}</MenuItem>
-                    <MenuItem
-                      value={'limited'}>{`Limited User - Upload Only`}</MenuItem>
+                    <MenuItem data-cy='rel-both'
+                      value={'both'}>{`Request and grant access`}
+                    </MenuItem>
+                    <MenuItem data-cy='rel-request'
+                      value={'request'}>{`Request Access`}</MenuItem>
+                    <MenuItem data-cy='rel-give'
+                      value={'give'}>{`Grant Access`}</MenuItem>
                   </Select>
                 </TableCell>
               } else if (field === "status"){

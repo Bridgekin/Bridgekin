@@ -1,0 +1,18 @@
+<p>Hi <%= @fname.capitalize %>,</p>
+
+<% if @sales_invite.relationship == "give" %>
+  <p><%= @current_user.fname.capitalize %> <%= @current_user.lname.capitalize %> is granting access to their network, <%= @sales_network.title.capitalize %>, on Bridgekin, where you’ll be able to search and request warm introductions from contacts within <%= @sales_network.title.capitalize %>.</p>
+<% elsif @sales_invite.relationship == "request" %>
+  <p><%= @current_user.fname.capitalize %> <%= @current_user.lname.capitalize %> is requesting access to your social contacts. Then, members in their network, <%= @sales_network.title.capitalize %>, will be able to search and request warm introductions from you.</p>
+<% else %>
+  <p><%= @current_user.fname.capitalize %> <%= @current_user.lname.capitalize %> wants you to join their network, <%= @sales_network.title.capitalize %>, on Bridgekin, where you’ll be able to upload your own contacts, as well as search and request warm introductions from contacts within <%= @sales_network.title.capitalize %>.</p>
+<% end %>
+
+<% if @recipient.present? %>
+  <p>Click <%= link_to 'here', "#{root_url}sales/confirm_sales_invite?code=#{@sales_invite.link_code}" %> to confirm your access!</p>
+<% else %>
+  <p>Click <%= link_to 'here', "#{root_url}sales/login/signup?code=#{@sales_invite.link_code}" %> to get started!</p>
+<% end %>
+
+<p>Cheers,<br>
+The Bridgekin Team</p>

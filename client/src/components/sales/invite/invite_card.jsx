@@ -92,13 +92,16 @@ class NetworkInviteCard extends React.Component {
       <Grid item xs={2} container alignItems='center'>
         <Select fullWidth
           data-cy='invite-member_type'
-          value={data.userType}
+          value={data.relationship}
           onClick={(e) => e.stopPropagation()}
-          onChange={this.handleChange('userType')}>
-          <MenuItem data-cy='full-member_type'
-            value={'full'}>{`Full User - Seat`}</MenuItem>
-          <MenuItem data-cy='limited-member_type'
-          value={'limited'}>{`Limited User - Upload Only`}</MenuItem>
+          onChange={this.handleChange('relationship')}>
+          <MenuItem data-cy='rel-both'
+            value={'both'}>{`Request and grant access`}
+          </MenuItem>
+          <MenuItem data-cy='rel-request'
+          value={'request'}>{`Request Access`}</MenuItem>
+          <MenuItem data-cy='rel-give'
+            value={'give'}>{`Grant Access`}</MenuItem>
         </Select>
       </Grid>
       <Grid item xs={1} container alignItems='center'>

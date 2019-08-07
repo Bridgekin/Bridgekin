@@ -106,19 +106,43 @@ class SalesMailer < ApplicationMailer
     )
   end
 
-  def send_network_invitation_email(network_invite, current_user)
-    @network_invite = network_invite
-    @sales_network = network_invite.network
+  def send_network_invite_email(sales_invite, current_user)
+    @sales_invite = sales_invite
+    @sales_network = sales_invite.network
     @current_user = current_user
+    @recipient = User.find(sales_invite[:recipient_id])||{}
 
-    subject = "#{@current_user.fname.capitalize}’s invited you to join #{@sales_network.title.capitalize} on Bridgekin"
+    @email = recipient[:email] || sales_invite.email
+    @fname = recipient[:fname] || sales_invite.fname
+    subject = "#{@current_user.fname.capitalize} has invited you to connect to their network on Bridgekin"
 
-    mail(to: @network_invite.email, subject: subject)
+    mail(to: @email, subject: subject)
 
     EmailLog.create(
-      email: @network_invite.email,
+      email: @email,
       email_type: 'send_network_invitation_email'
     )
+  end
+
+  def send_user_invite_email(sales_invite, current_user)
+    @sales_invite = sales_invite
+    @current_user = current_user
+    @recipient = User.find(sales_invite[:recipient_id])||{}
+
+    @email = recipient[:email] || sales_invite.email
+    @fname = recipient[:fname] || sales_invite.fname
+    subject = "#{@current_user.fname.capitalize} has invited you to connect on Bridgekin"
+
+    mail(to: @email, subject: subject)
+
+    EmailLog.create(
+      email: @email,
+      email_type: 'send_network_invitation_email'
+    )
+  end
+
+  def confirm_permission_change_email(sales_invite, current_user)
+    
   end
   
 end

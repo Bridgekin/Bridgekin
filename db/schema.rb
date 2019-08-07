@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_05_215825) do
+ActiveRecord::Schema.define(version: 2019_08_06_155340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -493,6 +493,8 @@ ActiveRecord::Schema.define(version: 2019_08_05_215825) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "relationship", default: ""
+    t.string "status", default: "pending"
+    t.datetime "last_confirmed"
     t.index ["user_id", "permissable_type", "permissable_id"], name: "index_sales_user_permissions_on_permissable_type_and_id"
   end
 

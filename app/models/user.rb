@@ -236,8 +236,9 @@ class User < ApplicationRecord
     relationship = sales_invite.relationship
     ActiveRecord::Base.transaction do
       self.save!
-      sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, relationship: relationship)
-      sales_invite.update(recipient: self, user_permission: sales_user_permission)
+      sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, relationship: relationship, status: "confirmed" last_confirmed: DateTime.now)
+
+      sales_invite.update!(recipient: self, user_permission: sales_user_permission)
     end
     true
   rescue => e
@@ -255,7 +256,7 @@ class User < ApplicationRecord
       self.save!
       @sales_network.save!
       #Attach to existing network
-      self.sales_user_permissions.create!(permissable: @sales_network, relationship: "both")
+      self.sales_user_permissions.create!(permissable: @sales_network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
       #Attach admin user
       self.sales_admin_networks.create!(network: @sales_network)
       #Create a customer

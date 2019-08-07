@@ -25,17 +25,30 @@ class SalesInvite < ApplicationRecord
 
   def self.prep_batch_create(new_invites = nil, sender = nil, current_dashboard_target = nil)
     return nil if [new_invites, sender].any?{|val| val.nil?}
-    new_invites.map do |invite|
+    new_user_invites = []
+    existing_user_invites = []
+
+    new_invites.each do |invite|
+      invite.delete("id")
       if current_dashboard_target[:permissable_type] == "SalesNetwork"
-        network_id = current_dashboard_target[:permissable_id]
-        invite.merge({
-          network_id: network_id, 
+        prepped_invite << invite.merge({
+          network_id: current_dashboard_target[:permissable_id], 
           sender_id: sender.id
         })
       else
-        invite.merge({ sender_id: sender.id })
+        prepped_invite << invite.merge({ sender_id: sender.id })
+      end
+      
+      #Check if that user already exists
+      user = User.find_by(email: invite[:email])
+      if user
+        existing_user_invites << prepped_invite.merge({ recipient_id: user.id})
+      else
+        new_user_invites << prepped_invite
       end
     end
+
+    new_user_invites, existing_user_invites
   end
 
   def ensure_link_code

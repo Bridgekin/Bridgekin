@@ -13,7 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ImportGoogle from '../google/import_contacts';
 import Capitalize from 'capitalize';
 import { searchNetworks } from '../../actions/sales_network_actions';
-import { salesSignup, googleSalesLogin, networkInviteSignup } from '../../actions/session_actions';
+import { salesSignup, googleSalesLogin, salesInviteSignup } from '../../actions/session_actions';
 import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
 import { clearSearchResults } from '../../actions/sales_network_actions'
@@ -45,7 +45,7 @@ const mapDispatchToProps = dispatch => ({
   googleSalesLogin: (payload) => dispatch(googleSalesLogin(payload)),
   clearSearchResults: () => dispatch(clearSearchResults()),
   fetchInviteByCode: code => dispatch(fetchInviteByCode(code)),
-  networkInviteSignup: payload => dispatch(networkInviteSignup(payload))
+  salesInviteSignup: payload => dispatch(salesInviteSignup(payload))
 });
 
 const styles = theme => ({
@@ -163,7 +163,7 @@ class SalesLogin extends React.Component {
     }
 
     if(code){
-      this.props.networkInviteSignup(payload)
+      this.props.salesInviteSignup(payload)
         .then(() => {
           const { currentUser } = this.props;
           if(currentUser){

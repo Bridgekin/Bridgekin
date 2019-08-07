@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     get "cypress/received_intro_request", :to => "cypress_tests#received_intro_request"
 
     #Signup Hooks
-    post "network_invite_signup", :to => 'users#network_invite_signup'
+    post "sales_invite_signup", :to => 'users#sales_invite_signup'
     post "admin_signup", :to => 'users#admin_signup'
     post "google_sales_signup", :to => 'users#google_sales_signup'
     post "sales_signup", :to => 'users#sales_signup'
@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     post "webhooks/full_contact_people", :to => 'webhooks#full_contact_people'
 
     #Sales Feature
+    post "confirm_sales_invite", :to => 'sales_invites#confirm_sales_invite'
     get "sales_contacts/presigned_url", :to => 'sales_contacts#presigned_url'
     post "sales_contacts/connect_social", :to => 'sales_contacts#connect_social'
     get "get_invite_code", :to => 'sales_invites#show_by_referral_code'

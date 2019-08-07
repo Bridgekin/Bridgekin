@@ -32,7 +32,7 @@ class Api::UsersController < ApiController
     end
   end
 
-  def network_invite_signup
+  def sales_invite_signup
     @current_user = User.new(user_params)
     @sales_invite = SalesInvite.includes(:network).find_by(link_code: params[:user][:code])
     network = @sales_invite.network
@@ -65,7 +65,7 @@ class Api::UsersController < ApiController
       render json: ["Domain does not match chosen network"], status: 422
     elsif provided_domain == network_domain && @current_user.save
       #Attach to existing network
-      @current_user.sales_user_permissions.create(permissable: network, relationship: "both")
+      @current_user.sales_user_permissions.create(permissable: network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
 
       render json: ["Successful"], status: 200
     else
@@ -92,7 +92,7 @@ class Api::UsersController < ApiController
       @current_user = User.new(user_params)
       if @current_user.save
         #Attach to existing network
-        @current_user.sales_user_permissions.create(permissable: network, relationship: "both")
+        @current_user.sales_user_permissions.create(permissable: network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
         #Get Tokens and track
         @token = get_login_token!(@current_user)
         @user_feature, @users = @current_user.post_auth_setup
