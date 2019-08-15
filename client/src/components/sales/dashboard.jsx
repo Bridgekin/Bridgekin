@@ -115,11 +115,12 @@ class SalesDashboard extends React.Component {
   componentDidMount() {
     const { userFeature, currentDashboardTarget, salesUserPermissions, salesNetworks } = this.props;
     
-    if (isEmpty(salesUserPermissions)) {
-      this.setState({ unconnectedUser: true })
-    } else if (!isEmpty(currentDashboardTarget)) {
-      this.searchData()
-    }
+    // if (isEmpty(salesUserPermissions)) {
+    //   this.setState({ unconnectedUser: true })
+    // } else if (!isEmpty(currentDashboardTarget)) {
+    //   this.searchData()
+    // }
+    this.searchData()
 
     if (!userFeature.importedSocial && !isEmpty(salesUserPermissions)) {
       this.props.history.push('/sales/connect_social')
@@ -158,19 +159,14 @@ class SalesDashboard extends React.Component {
     const { offset, limit, filter, fname, lname, position, company, location } = this.state;
     const { networkDetails, currentDashboardTarget, salesUserPermissions } = this.props;
 
-    
-    if (isEmpty(salesUserPermissions)) {
-      this.setState({ unconnectedUser: true })
+    if (this.isExpiredSub()) {
+      this.setState({ subscriptionExpired: true })
     } else {
-      if (this.isExpiredSub()) {
-        this.setState({ subscriptionExpired: true })
-      } else {
-        this.setState({ loaded: false });
-        this.props.clearContactResults();
-        let payload = await merge({}, {fname, lname, position, company, location}, { offset, limit, filter }, currentDashboardTarget)
-        let total = await this.props.searchContacts(payload)
-        await this.setState({ total, loaded: true, unconnectedUser: false, subscriptionExpired: false})
-      }
+      this.setState({ loaded: false });
+      this.props.clearContactResults();
+      let payload = await merge({}, { fname, lname, position, company, location }, { offset, limit, filter }, currentDashboardTarget)
+      let total = await this.props.searchContacts(payload)
+      await this.setState({ total, loaded: true, unconnectedUser: false, subscriptionExpired: false })
     }
   }
 

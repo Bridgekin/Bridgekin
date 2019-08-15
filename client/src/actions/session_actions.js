@@ -72,8 +72,8 @@ export const adminSignup = (formUser) => dispatch => (
     })
 );
 
-export const networkInviteSignup = (formUser) => dispatch => (
-  SessionApiUtil.networkInviteSignup(formUser)
+export const salesInviteSignup = (formUser) => dispatch => (
+  SessionApiUtil.salesInviteSignup(formUser)
     .then(handleErrors)
     .then(data => setAuth(data)(dispatch))
     .catch(errors => {

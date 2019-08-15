@@ -39,13 +39,6 @@ class CheckoutForm extends Component {
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.validateInput = this.validateInput.bind(this);
-
-    // card.addEventListener('change', ({ error }) => {
-    //   const displayError = document.getElementById('payment-errors');
-    //   if (error) {
-    //     displayError.textContent = error.message;
-    //   }
-    // });
   }
 
   async submit(ev) {
@@ -53,7 +46,10 @@ class CheckoutForm extends Component {
     let {token} = await this.props.stripe.createToken({name: "Name"});
     
     if(token){
-      this.props.handleSubmit(token.id)
+      let boolResult = this.props.handleSubmit(token.id)
+      if (boolResult){
+        this.setState({ submitting: false})
+      }
     } else {
       this.props.receiveUserErrors(["Card information wasn't accepted"])
       this.props.openSignup({ page: 'response'})

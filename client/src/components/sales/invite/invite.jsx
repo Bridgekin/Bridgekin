@@ -66,7 +66,7 @@ class NetworkInvite extends React.Component {
       loaded: false,
       validTarget: false,
       newInvites: {
-        [newId]: { id: newId, email: '', fname: '', lname: '', userType: 'full'}
+        [newId]: { id: newId, email: '', fname: '', lname: '', relationship: 'both'}
       },
       lastAddedIdx: 0,
       rowsPerPage: 10,
@@ -109,8 +109,7 @@ class NetworkInvite extends React.Component {
         .then(() => {
           this.setState({ 
             loaded: true, 
-            validTarget: true,
-            personal: true })
+            validTarget: true})
         })
     } else {
       this.props.fetchInvites(currentDashboardTarget)
@@ -118,9 +117,9 @@ class NetworkInvite extends React.Component {
           const { networkAdminMap, currentUser } = this.props;
           let admins = new Set(networkAdminMap[currentDashboardTarget.permissableId] || []);
           if (admins.has(currentUser.id)) {
-            this.setState({ loaded: true, validTarget: true, personal: false})
+            this.setState({ loaded: true, validTarget: true })
           } else {
-            this.setState({ loaded: true, validTarget: false, personal: false })
+            this.setState({ loaded: true, validTarget: false  })
           }
         })
     }
@@ -137,7 +136,7 @@ class NetworkInvite extends React.Component {
   addAnotherUser(){
     const { newInvites } = this.state;
     let newId = uniqId();
-    newInvites[newId] = {id: newId, email: '', fname: '', lname: '', userType: 'full'}
+    newInvites[newId] = { id: newId, email: '', fname: '', lname: '', relationship: 'both'}
     this.setState({ newInvites })
   }
 
@@ -151,8 +150,8 @@ class NetworkInvite extends React.Component {
     const { newInvites } = this.state;
     let arr = Object.values(newInvites)
     for(let i = 0; i < arr.length; i++){
-      let {email, fname, lname, userType} = arr[i];
-      if (!email || !fname || !lname || !userType){
+      let {email, fname, lname, relationship} = arr[i];
+      if (!email || !fname || !lname || !relationship){
         return false
       }
     }
@@ -181,7 +180,7 @@ class NetworkInvite extends React.Component {
         if (this.props.salesInviteErrors === 0){
           let newId = uniqId();
           let newInvites = {
-            [newId]: { id: newId, email: '', fname: '', lname: '', userType: 'full' }
+            [newId]: { id: newId, email: '', fname: '', lname: '', relationship: 'both' }
           }
           this.setState({ newInvites })
         }
@@ -195,7 +194,7 @@ class NetworkInvite extends React.Component {
       let val = e.target.value
       let payload = {
         id: invite.id,
-        userType: val
+        relationship: val
       }
       this.props.updateInvite(payload)
     }
@@ -232,29 +231,30 @@ class NetworkInvite extends React.Component {
     const { dimensions, classes, salesNetworks, currentDashboardTarget, salesInvites } = this.props;
     const { loaded, validTarget, newInvites, tablePage, rowsPerPage, actionAnchorEl, personal } = this.state;
     
-    if (loaded && validTarget && personal) {
-      return <Grid container justify='center' alignItems='center' style={{ minHeight: dimensions.height }}>
-        <Grid item xs={10} sm={6}>
-          <Typography align='center' gutterBottom
-            data-cy="progress-header"
-            color='textPrimary'
-            style={{ fontSize: 38, fontWeight: 600 }}>
-            {`Feature in Progress`}
-          </Typography>
-          <Typography align='center' gutterBottom
-            color='textSecondary'
-            style={{ fontSize: 18 }}>
-            {`We're working on getting this feature production ready! Come back here soon to see what we've been working on!`}
-          </Typography>
-          <Typography align='center'
-            color='textSecondary'
-            style={{ fontSize: 18 }}>
-            {`If you have any questions, reach out to us at `}
-            <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a> {`.`}
-          </Typography>
-        </Grid>
-      </Grid>
-    } else if (loaded && validTarget && !personal){
+    // if (loaded && validTarget && personal) {
+    //   return <Grid container justify='center' alignItems='center' style={{ minHeight: dimensions.height }}>
+    //     <Grid item xs={10} sm={6}>
+    //       <Typography align='center' gutterBottom
+    //         data-cy="progress-header"
+    //         color='textPrimary'
+    //         style={{ fontSize: 38, fontWeight: 600 }}>
+    //         {`Feature in Progress`}
+    //       </Typography>
+    //       <Typography align='center' gutterBottom
+    //         color='textSecondary'
+    //         style={{ fontSize: 18 }}>
+    //         {`We're working on getting this feature production ready! Come back here soon to see what we've been working on!`}
+    //       </Typography>
+    //       <Typography align='center'
+    //         color='textSecondary'
+    //         style={{ fontSize: 18 }}>
+    //         {`If you have any questions, reach out to us at `}
+    //         <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a> {`.`}
+    //       </Typography>
+    //     </Grid>
+    //   </Grid>
+    // } else 
+    if (loaded && validTarget){
       let pType = currentDashboardTarget.permissableType
       let network = salesNetworks[currentDashboardTarget.permissableId];
       let targetName = pType === "SalesNetwork" ? this.capitalize(network.title) : `Your Personal Contacts`
@@ -270,7 +270,7 @@ class NetworkInvite extends React.Component {
         return <InviteCard idx={data.id} data={data} updateVariable={this.updateVariable} deleteUser={this.deleteUser}/>
       })
 
-      let inviteComp = <Grid item xs={10} sm={8}
+      let inviteComp = <Grid item xs={10}
       style={{ marginTop: 40 }}>
         {header}
         {inviteCards}
@@ -293,7 +293,7 @@ class NetworkInvite extends React.Component {
       </Grid>
 
       let headerCells = ["First Name", "Last Name",
-        "Email", "User Type", "Status", "Options"]
+        "Email", "Relationship", "Status", "User on Platform?", "Options"]
 
       let rows = this.filterSalesInvites()
 
@@ -314,7 +314,7 @@ class NetworkInvite extends React.Component {
               className={classes.tableCell}>
               {row.fname}
             </TableCell>
-            {['lname', 'email', "userType", "status","options"].map(field => {
+            {['lname', 'email', "relationship", "status", "user on platform?", "options"].map(field => {
               if (field === "options") {
                 let uniqAnchor = actionAnchorEl + row.id
                 return <TableCell>
@@ -341,21 +341,24 @@ class NetworkInvite extends React.Component {
                     </MenuItem>
                   </Menu>
                 </TableCell>
-              } else if (field === "userType") {
+              } else if (field === "relationship") {
                 return <TableCell>
                   <Select fullWidth
-                    value={row.userType}
+                    value={row.relationship}
                     onClick={(e) => e.stopPropagation()}
                     onChange={this.handleUpdatePerms(row)}>
-                    <MenuItem
-                      value={'full'}>{`Full User - Seat`}</MenuItem>
-                    <MenuItem
-                      value={'limited'}>{`Limited User - Upload Only`}</MenuItem>
+                    <MenuItem data-cy='rel-both'
+                      value={'both'}>{`Request and grant access`}
+                    </MenuItem>
+                    <MenuItem data-cy='rel-request'
+                      value={'request'}>{`Request Access`}</MenuItem>
+                    <MenuItem data-cy='rel-give'
+                      value={'give'}>{`Grant Access`}</MenuItem>
                   </Select>
                 </TableCell>
-              } else if (field === "status"){
+              } else if (field === "user on platform?"){
                 return <TableCell>
-                  {row.recipientId ? `Connected` : `Pending`}
+                  {row.recipientId ? `Yes` : `No`}
                 </TableCell>
               } else {
                 return <TableCell align="right"
@@ -366,7 +369,7 @@ class NetworkInvite extends React.Component {
         })}
       </TableBody>
 
-      let resultsComp = <Grid item xs={10} sm={8}>
+      let resultsComp = <Grid item xs={10}>
         <Typography gutterBottom align='left'
           style={{ fontSize: 28, margin: "30px 0px" }}>
           {`Manage Invites`}

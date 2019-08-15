@@ -42,31 +42,20 @@ class SalesContact < ApplicationRecord
     end
 
     def get_unfiltered_contacts(current_user, target_params)
-      return current_user.sales_contacts if target_params.empty?
+      if target_params[:permissable_type] == "SalesNetwork"
+        network = SalesNetwork.includes(:sales_user_permissions).find(target_params[:permissable_id])
+        user_permission = network.get_user_permission(current_user)
 
-      if target_params[:permissable_type] == "User"
-
-      elsif target_params[:permissable_type] == "SalesNetwork"
-        network = SalesNetwork.find(target_params[:permissable_id])
-        member_type = network.get_member_type(current_user)
-        if member_type == 'full'
+        if user_permission && user_permission.relationship != "request" && user_permission.status == "confirmed"
           sales_contacts = network.member_contacts
         else
           sales_contacts = current_user.sales_contacts
         end
+      else
+        sales_contacts = current_user.get_personal_contacts
       end
       sales_contacts
     end
-
-    # def determine_relationship(current_user, network)
-    #   member_type = network.get_member_type(current_user)
-    #   if member_type == 'full'
-    #     sales_contacts = network.member_contacts
-    #   else
-    #     sales_contacts = current_user.sales_contacts
-    #   end
-    #   sales_contacts
-    # end
 
     def filter_sales_contacts(sales_contacts, current_user, filter)
       case filter
