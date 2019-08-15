@@ -8,7 +8,8 @@ class SalesNetwork < ApplicationRecord
   #   dependent: :destroy
 
   has_many :sales_user_permissions,
-    as: :permissable
+    as: :permissable,
+    class_name: :SalesUserPermission
 
   # has_many :members,
   #   through: :sales_user_networks,
@@ -73,13 +74,12 @@ class SalesNetwork < ApplicationRecord
     return sales_networks, sales_user_permissions, sales_admin_networks, network_details
   end
 
-  def get_member_type(current_user = nil)
+  def get_user_permission(current_user = nil)
     return nil unless current_user.is_a?(User)
 
-    user_network = self.sales_user_permissions
+    self.sales_user_permissions
       .where(user: current_user)
       .first
-    return user_network.member_type if user_network
   end
 
   def current_subscription

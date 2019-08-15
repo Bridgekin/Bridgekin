@@ -8,6 +8,11 @@ class Api::AdminSignupLinksController < ApiController
   def show
     @admin_signup_link = AdminSignupLink.includes(:product).find_by(code: params[:code])
 
+    if @admin_signup_link.nil?
+      product = SalesProduct.find_by(seats: 1, monthly_amount: 49)
+      @admin_signup_link = AdminSignupLink.includes(:product).find_by(product: product)
+    end
+
     @sales_product = @admin_signup_link.product
     render :show
   end

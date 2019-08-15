@@ -15,10 +15,12 @@ class Api::UsersController < ApiController
 
   def admin_signup
     @current_user = User.new(user_params)
+    signup_type = params[:signup_type]
+    d_params = domain_params if signup_type == "network"
 
-    if @current_user.save_new_admin_network(
-      domain_params, purchase_params) #address_params)
-#Get Tokens and track
+    if @current_user.save_new_paying_user(
+      d_params, purchase_params, signup_type) #address_params)
+      #Get Tokens and track
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup   
       #Load User Networks
@@ -35,7 +37,6 @@ class Api::UsersController < ApiController
   def sales_invite_signup
     @current_user = User.new(user_params)
     @sales_invite = SalesInvite.includes(:network).find_by(link_code: params[:user][:code])
-    network = @sales_invite.network
 
     if @current_user.save_from_invite(@sales_invite)
       #Get Tokens and track

@@ -25,6 +25,7 @@ import { openSignup } from '../../actions/modal_actions';
 import Capitalize from 'capitalize';
 import SignupPic from '../../static/signup_pic.png';
 import Img from 'react-image'
+import merge from 'lodash/merge';
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -33,6 +34,7 @@ const mapStateToProps = (state, ownProps) => {
   dimensions: state.util.window,
   page: ownProps.match.params.page,
   code: values.code,
+  signupType: values.type || "network",
   adminSignupLink: state.entities.sales.adminSignupLink,
   salesProducts: state.entities.sales.salesProducts,
 }};
@@ -116,12 +118,20 @@ class AdminSignup extends React.Component {
   }
 
   componentDidMount(){
-    const { code } = this.props; 
+    const { code, signupType } = this.props; 
+
     this.props.fetchAdminSignupLink(code)
-    .then(() => {
-      const { adminSignupLink } = this.props;
-      this.setState({ loaded: true })
-    })
+      .then(() => {
+        const { adminSignupLink } = this.props;
+        this.setState({ loaded: true })
+      })
+    // if (signupType === "network" && code){
+    //   this.props.fetchAdminSignupLink(code)
+    //   .then(() => {
+    //     const { adminSignupLink } = this.props;
+    //     this.setState({ loaded: true })
+    //   })
+    // }
   }
 
   changePage(url){
@@ -177,54 +187,60 @@ class AdminSignup extends React.Component {
     }
   }
 
-  handleChangePage(target){
+  handleChangePage(page){
     return e => {
-      const { code} = this.props;
+      const { code, signupType } = this.props;
+      let ifCode = code ? "&code=${code}" : ""
       
-      if (target === 'payment'){
-        this.props.history.push(`/sales/admin_signup/payment?code=${code}`)
-      }
+      this.props.history.push(`/sales/admin_signup/${page}?type=${signupType}` + ifCode)
     }
   }
 
   async handleSubmit(tokenId){
-    const { adminSignupLink } = this.props
+    const { adminSignupLink, signupType } = this.props
     const { duration, renewal, amount, seats,
     fname, lname, email, password, title,
     domain, line1, city, state, zipcode } = this.state;
 
     let payload = { 
       user: { fname, lname, email, password },
-      domain: { title, domain },
       purchase: { duration, renewal, tokenId, productId: adminSignupLink.productId },
-      address: { line1, city, state, zipcode }
+      signupType
     }
+
+    if (signupType === "network"){
+      payload = merge({}, payload,{ title, domain })
+    }
+
     this.props.adminSignup(payload)
     .then(() => {
       if(this.props.currentUser){
-        // this.loadUserNetworks()
         this.props.history.push('/sales/dashboard')
+        return true
       } else {
         this.props.openSignup({ page: "response" })
+        return false
       }
     })
   }
 
   isDisabledSubmit(){
-    const { page } = this.props;
+    const { signupType } = this.props;
     const { fname, lname, email, password,
-      line1, city, state, zipcode,
-      title, domain, termsAgreement} = this.state;
+      title, domain, termsAgreement,
+      emailError } = this.state;
 
-    if(page === "signup"){
-      return !fname || !lname || !email || !password || !title || !domain || !termsAgreement
+    if (signupType === "user"){
+      return !fname || !lname || !email || !password || !termsAgreement || emailError
+    } else {
+      return !fname || !lname || !email || !password || !title || !domain || !termsAgreement || emailError
     }
-    return false
   }
 
   getContent(){
     const { classes, page, adminSignupLink, 
-      code, salesProducts } = this.props;
+      code, salesProducts, signupType } = this.props;
+
     const { duration, renewal,
       fname, lname, email, password,
       title, domain, titleError,
@@ -260,53 +276,6 @@ class AdminSignup extends React.Component {
             {`Length: ${Capitalize(duration)}`}
           </Typography>
         </div>
-
-        // let billingInfo = <Grid container>
-        //   <Typography fullWidth gutterBottom
-        //     color="textPrimary"
-        //     style={{ marginTop: 20 }}>
-        //     {`Your Billing address`}
-        //   </Typography>
-        //   <TextField fullWidth required
-        //     variant="outlined"
-        //     label='Address'
-        //     margin='dense'
-        //     placeholder='Eg: 1234 San Francisco St'
-        //     onChange={this.handleChange('line1')}
-        //     value={line1}
-        //   />
-        //   <TextField fullWidth required
-        //     variant="outlined"
-        //     label='City'
-        //     margin='dense'
-        //     placeholder='Eg: San Francisco'
-        //     onChange={this.handleChange('city')}
-        //     value={city}
-        //   />
-        //   <Grid container justify='space-between'
-        //     spacing={2}>
-        //     <Grid item xs={12} sm={6}>
-        //       <TextField fullWidth required
-        //         variant="outlined"
-        //         label='State'
-        //         margin='dense'
-        //         placeholder='Eg: CA'
-        //         onChange={this.handleChange('state')}
-        //         value={state}
-        //       />
-        //     </Grid>
-        //     <Grid item xs={12} sm={6}>
-        //       <TextField fullWidth required
-        //         variant="outlined"
-        //         label='Zipcode'
-        //         margin='dense'
-        //         placeholder='Eg: 98765'
-        //         onChange={this.handleChange('zipcode')}
-        //         value={zipcode}
-        //       />
-        //     </Grid>
-        //   </Grid>
-        // </Grid>
         
         let ccInfo = <div>
           <Typography fullWidth gutterBottom
@@ -325,7 +294,6 @@ class AdminSignup extends React.Component {
 
         let paymentInfo = <Grid item md={5} sm={6} xs={10}>
           {yourSub}
-          {/* {billingInfo} */}
           {ccInfo}
         </Grid>
 
@@ -338,7 +306,7 @@ class AdminSignup extends React.Component {
               </Typography>
               <Typography color='textSecondary'
                 style={{ fontSize: 18 }}>
-                {`User/Month`}
+                {signupType === "network" ? `User/Month` : `Month`}
               </Typography>
             </Grid>
             <Grid container>
@@ -353,15 +321,6 @@ class AdminSignup extends React.Component {
             <Typography color='textPrimary' className={classes.paymentCallout}>
               {`Unlimited introductions received`}
             </Typography>
-            {/* <Typography gutterBottom
-              style={{ fontSize: 15}}>
-              <Checkbox
-                checked={renewal}
-                onChange={this.handleCheckedChange('renewal')}
-                value="renewal"
-              />
-              {`Automatically renew subscription`}
-            </Typography> */}
           </Grid>
 
           <Grid container style={{ marginTop: 20}}>
@@ -397,6 +356,12 @@ class AdminSignup extends React.Component {
           <Grid item xs={11} sm={9} container justify='space-between' alignItems='flex-start'>
             {subCard}
             {paymentInfo}
+          </Grid>
+          <Grid item xs={11} sm={9} container>
+            <Button variant='contained' color='primary'
+              onClick={this.handleChangePage('signup')}>
+              {`Back`}
+            </Button>
           </Grid>
         </Grid>
 
@@ -520,7 +485,7 @@ class AdminSignup extends React.Component {
               data-cy="next-button"
               disabled={this.isDisabledSubmit() || checkingValid}
               onClick={this.handleChangePage('payment')}
-            style={{ marginTop: 15}}>
+              style={{ marginTop: 15}}>
               {`Next`}
             </Button>
           </Grid>
@@ -536,7 +501,7 @@ class AdminSignup extends React.Component {
             </Grid>
             <Grid item md={5} sm={6} xs={10} container justify='center'>
               {createAccount}
-              {createCompany}
+              {signupType === "network" && createCompany}
               {submit}
             </Grid>
 
@@ -555,17 +520,18 @@ class AdminSignup extends React.Component {
   }
 
   render() {
-    const { classes, dimensions, adminSignupLink } = this.props;
+    const { classes, dimensions, adminSignupLink,
+      signupType } = this.props;
     const { loaded } = this.state;
 
-    if(loaded && adminSignupLink.id){
+    if (loaded && (signupType === "user" || (signupType === "network" && adminSignupLink.id))){
       return <div style={{minHeight: dimensions.height}}>
         <Grid container justify='center'
           className={classes.grid}>
           {this.getContent()}
         </Grid>
       </div>
-    } else if (loaded && !adminSignupLink.id){
+    } else if (loaded && signupType === "network" && !adminSignupLink.id){
       return <Grid container justify='center'>
         <Grid item xs={10} sm={6} container justify='center'
           alignItems='center' direction='column'

@@ -16,10 +16,11 @@ class Api::SalesInvitesController < ApiController
   end
 
   def index
+    # debugger
     if params[:permissable_type] == "SalesNetwork"
       @sales_invites = @sales_network.sales_invites
     else
-      @sales_invites = @current_user.sent_invites
+      @sales_invites = @current_user.personal_invites
     end
     render :index
   end
@@ -39,9 +40,11 @@ class Api::SalesInvitesController < ApiController
 
     @sales_invites = SalesInvite.save_batch(sales_invites, @current_user)
 
-    render :create, status: 200
-  rescue => exception
-    render json: exception.record.errors.full_messages, status: 422
+    if @sales_invites.is_a?(String)
+      render json:[@sales_invites], status: 404
+    else
+      render :create, status: 200
+    end
   end
 
   def confirm_sales_invite

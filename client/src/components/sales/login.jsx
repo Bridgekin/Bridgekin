@@ -18,9 +18,12 @@ import { login } from '../../actions/session_actions';
 import { openSignup, openLogin } from '../../actions/modal_actions';
 import { clearSearchResults } from '../../actions/sales_network_actions'
 import { fetchInviteByCode } from '../../actions/sales_invites_actions';
+
 import queryString from 'query-string';
 import SignupPic from '../../static/signup_pic.png';
 import Img from 'react-image'
+import merge from 'lodash/merge';
+import isEmpty from 'lodash/isEmpty';
 
 const mapStateToProps = (state, ownProps) => {
   const values = queryString.parse(ownProps.location.search)
@@ -93,7 +96,8 @@ class SalesLogin extends React.Component {
       page: 'login',
       target: {},
       termsAgreement: false,
-      invite: null
+      invite: null,
+      signupType: "network"
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -114,17 +118,21 @@ class SalesLogin extends React.Component {
       .then(() => {
         const { salesInvites, salesNetworks } = this.props;
         let invite;
+        // Find the invite
         Object.values(salesInvites).forEach(result => {
           if(result.linkCode === code){
             invite = result;
           }
         })
+        // Set the invite type
+        let signupType = invite.networkId ? "network" : "user"
+        let target = invite.networkId ? salesNetworks[invite.networkId] : null
 
         this.setState({ invite,
           fname: invite.fname,
           lname: invite.lname,
           email: invite.email,
-          target: salesNetworks[invite.networkId]
+          signupType, target
         },() => {
           if (page === "login"){
             this.props.history.push(`sales/signup?code=${code}`)
@@ -157,9 +165,12 @@ class SalesLogin extends React.Component {
 
   handleSignup(e){
     const { code } = this.props;
-    const { email, password, fname, lname, target } = this.state;
+    const { email, password, fname, lname, target, signupType } = this.state;
     let payload = { email, password, fname, lname,
-      domain: target.domain, code
+      code }
+
+    if (signupType === "network"){
+      payload = merge({}, payload, { domain: target.domain })
     }
 
     if(code){
@@ -232,18 +243,15 @@ class SalesLogin extends React.Component {
 
     switch(page){
       case 'signup':
-        if(Object.values(target).length === 0){
-          return <div></div>
-        }
         let signupComp = <Grid item xs={8} sm={6} md={4}container direction='column'>
           <div style={{ marginBottom: 25 }}>
             <Button onClick={this.handlePage()}>
               {`Back`}
             </Button>
           </div>
-          <Typography>
+          {!isEmpty(target) && <Typography>
             {`Company: ${Capitalize(target.title)}`}
-          </Typography>
+          </Typography>}
           <TextField margin='dense'
             data-cy='fname-input'
             required

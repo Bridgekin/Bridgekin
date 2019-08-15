@@ -67,11 +67,11 @@ RSpec.describe User, type: :model do
 
       it 'should save different types of users' do
         @sender = build(:user)
-        @sales_invite = create(:sales_invite, sender: @sender, network: @sales_network, user_type: 'limited')
+        @sales_invite = create(:sales_invite, sender: @sender, network: @sales_network, relationship: 'request')
 
         @new_user.save_from_invite(@sales_invite)
         sales_user_permission = @new_user.sales_user_permissions.find_by(permissable_id: @sales_network.id, permissable_type: 'SalesNetwork')
-        expect(sales_user_permission.member_type).to eq("limited")
+        expect(sales_user_permission.relationship).to eq("request")
       end
       
 
@@ -118,7 +118,7 @@ RSpec.describe User, type: :model do
       end
 
       it 'saves all appropriate records' do
-        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+        @new_user.save_new_paying_user(@domain_params, @purchase_params, "network")
         
         expect(@new_user.id).to be_truthy
         sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])
@@ -130,7 +130,7 @@ RSpec.describe User, type: :model do
 
       it "fails if the domain params are incorrect" do
         @domain_params = @domain_params.merge({ title: '', domain: '' })
-        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+        @new_user.save_new_paying_user(@domain_params, @purchase_params, "network")
 
         expect(@new_user.id).to be_nil
         sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])
@@ -139,7 +139,7 @@ RSpec.describe User, type: :model do
 
       it "fails if the purchase params are incorrect" do
         @purchase_params = @purchase_params.merge({ product_id: 'a' })
-        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+        @new_user.save_new_paying_user(@domain_params, @purchase_params, "network")
 
         expect(@new_user.id).to be_nil
         sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])
@@ -148,7 +148,7 @@ RSpec.describe User, type: :model do
 
       it "fails if a valid token isn't passed" do
         @purchase_params = @purchase_params.merge({ token_id: '1234'})
-        @new_user.save_new_admin_network(@domain_params, @purchase_params)
+        @new_user.save_new_paying_user(@domain_params, @purchase_params, "network")
 
         expect(@new_user.id).to be_nil
         sales_network = SalesNetwork.find_by(domain: @domain_params[:domain])

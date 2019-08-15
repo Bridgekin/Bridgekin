@@ -109,8 +109,7 @@ class NetworkInvite extends React.Component {
         .then(() => {
           this.setState({ 
             loaded: true, 
-            validTarget: true,
-            personal: true })
+            validTarget: true})
         })
     } else {
       this.props.fetchInvites(currentDashboardTarget)
@@ -118,9 +117,9 @@ class NetworkInvite extends React.Component {
           const { networkAdminMap, currentUser } = this.props;
           let admins = new Set(networkAdminMap[currentDashboardTarget.permissableId] || []);
           if (admins.has(currentUser.id)) {
-            this.setState({ loaded: true, validTarget: true, personal: false})
+            this.setState({ loaded: true, validTarget: true })
           } else {
-            this.setState({ loaded: true, validTarget: false, personal: false })
+            this.setState({ loaded: true, validTarget: false  })
           }
         })
     }
@@ -232,29 +231,30 @@ class NetworkInvite extends React.Component {
     const { dimensions, classes, salesNetworks, currentDashboardTarget, salesInvites } = this.props;
     const { loaded, validTarget, newInvites, tablePage, rowsPerPage, actionAnchorEl, personal } = this.state;
     
-    if (loaded && validTarget && personal) {
-      return <Grid container justify='center' alignItems='center' style={{ minHeight: dimensions.height }}>
-        <Grid item xs={10} sm={6}>
-          <Typography align='center' gutterBottom
-            data-cy="progress-header"
-            color='textPrimary'
-            style={{ fontSize: 38, fontWeight: 600 }}>
-            {`Feature in Progress`}
-          </Typography>
-          <Typography align='center' gutterBottom
-            color='textSecondary'
-            style={{ fontSize: 18 }}>
-            {`We're working on getting this feature production ready! Come back here soon to see what we've been working on!`}
-          </Typography>
-          <Typography align='center'
-            color='textSecondary'
-            style={{ fontSize: 18 }}>
-            {`If you have any questions, reach out to us at `}
-            <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a> {`.`}
-          </Typography>
-        </Grid>
-      </Grid>
-    } else if (loaded && validTarget && !personal){
+    // if (loaded && validTarget && personal) {
+    //   return <Grid container justify='center' alignItems='center' style={{ minHeight: dimensions.height }}>
+    //     <Grid item xs={10} sm={6}>
+    //       <Typography align='center' gutterBottom
+    //         data-cy="progress-header"
+    //         color='textPrimary'
+    //         style={{ fontSize: 38, fontWeight: 600 }}>
+    //         {`Feature in Progress`}
+    //       </Typography>
+    //       <Typography align='center' gutterBottom
+    //         color='textSecondary'
+    //         style={{ fontSize: 18 }}>
+    //         {`We're working on getting this feature production ready! Come back here soon to see what we've been working on!`}
+    //       </Typography>
+    //       <Typography align='center'
+    //         color='textSecondary'
+    //         style={{ fontSize: 18 }}>
+    //         {`If you have any questions, reach out to us at `}
+    //         <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a> {`.`}
+    //       </Typography>
+    //     </Grid>
+    //   </Grid>
+    // } else 
+    if (loaded && validTarget){
       let pType = currentDashboardTarget.permissableType
       let network = salesNetworks[currentDashboardTarget.permissableId];
       let targetName = pType === "SalesNetwork" ? this.capitalize(network.title) : `Your Personal Contacts`
@@ -270,7 +270,7 @@ class NetworkInvite extends React.Component {
         return <InviteCard idx={data.id} data={data} updateVariable={this.updateVariable} deleteUser={this.deleteUser}/>
       })
 
-      let inviteComp = <Grid item xs={10} sm={8}
+      let inviteComp = <Grid item xs={10}
       style={{ marginTop: 40 }}>
         {header}
         {inviteCards}
@@ -369,7 +369,7 @@ class NetworkInvite extends React.Component {
         })}
       </TableBody>
 
-      let resultsComp = <Grid item xs={11}>
+      let resultsComp = <Grid item xs={10}>
         <Typography gutterBottom align='left'
           style={{ fontSize: 28, margin: "30px 0px" }}>
           {`Manage Invites`}

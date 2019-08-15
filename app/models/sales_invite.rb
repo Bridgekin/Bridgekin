@@ -51,8 +51,8 @@ class SalesInvite < ApplicationRecord
     return new_user_invites + existing_user_invites
   end
 
-  def self.save_batch(prepped_invites, current_user)
-    raise ArgumentError if prepped_invites.nil?
+  def self.save_batch(prepped_invites = nil, current_user = nil)
+    raise "Invites or user not provided" if prepped_invites.nil? || current_user.nil?
 
     ActiveRecord::Base.transaction do
       @saved_invites = SalesInvite.create!(prepped_invites)
@@ -67,6 +67,8 @@ class SalesInvite < ApplicationRecord
     end
     
     @saved_invites
+  rescue => e
+    e.message
   end
 
   def self.confirm_invite(sales_invite)

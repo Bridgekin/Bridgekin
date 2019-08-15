@@ -133,14 +133,14 @@ class User < ApplicationRecord
   # has_many :sales_user_networks,
   #   foreign_key: :user_id,
   #   class_name: :SalesUserNetwork
+  
+  # has_many :sales_networks,
+  #   through: :sales_user_networks,
+  #   source: :network
 
   has_many :sales_user_permissions,
     foreign_key: :user_id,
     class_name: :SalesUserPermission
-
-  # has_many :sales_networks,
-  #   through: :sales_user_networks,
-  #   source: :network
 
   #Networks I have access to
   has_many :sales_networks,
@@ -148,20 +148,28 @@ class User < ApplicationRecord
     source: :permissable,
     source_type: "SalesNetwork"
 
-  #Users I have access to
-  has_many :accessable_users,
+  #Users received connections from
+  has_many :connected_users,
     through: :sales_user_permissions,
     source: :permissable,
     source_type: "User"
 
-  #People who I've given access to
-  has_many :shared_with_permissions,
-    as: :permissable
+  #Contacts of users I'm connected to, but not all the 
+  #userful since we also need our own contacts and to
+  #and to filter with other search criteria
+  has_many :connected_user_contacts,
+    through: :connected_users,
+    source: :sales_contacts
 
+  #Permissions I initiated
+  has_many :shared_with_permissions,
+    as: :permissable,
+    class_name: :SalesUserPermission
+
+  #People with whom I've initiated a connection
   has_many :shared_with_users,
     through: :shared_with_permissions,
     source: :user
-
 
   has_many :sales_user_contacts,
     foreign_key: :user_id,
@@ -206,13 +214,13 @@ class User < ApplicationRecord
     foreign_key: :user_id,
     class_name: :RequestTemplate
 
-  has_many :sent_invites,
+  has_many :personal_invites,
     foreign_key: :sender_id,
-    class_name: :User
+    class_name: :SalesInvite
   
   has_many :received_invites,
     foreign_key: :recipient_id,
-    class_name: :User
+    class_name: :SalesInvite
   
   # def contacts_from_requests
   #   SalesIntro.includes(:contact).where("requestor_id = ? OR recipient_id = ?", self.id, self.id).pluck(:contact_id)
@@ -232,12 +240,12 @@ class User < ApplicationRecord
   end
 
   def save_from_invite(sales_invite)
-    network = sales_invite.network
+    permissable = sales_invite.network || sales_invite.sender
     relationship = sales_invite.relationship
 
     ActiveRecord::Base.transaction do
       self.save!
-      sales_user_permission = SalesUserPermission.create!(user: self, permissable: network, relationship: relationship, status: "confirmed", last_confirmed: DateTime.now)
+      sales_user_permission = SalesUserPermission.create!(user: self, permissable: permissable, relationship: relationship, status: "confirmed", last_confirmed: DateTime.now)
       sales_invite.update!(recipient: self, user_permission: sales_user_permission,
       status: 'confirmed')
     end
@@ -248,26 +256,22 @@ class User < ApplicationRecord
     false
   end
 
-  def save_new_admin_network(domain_params, purchase_params) # address_params)
+  def save_new_paying_user(domain_params, purchase_params, signup_type = "network") # address_params)
     return false if invalid?
-    @sales_network = SalesNetwork.new(domain_params)
     end_date = User.determine_end_date(1.week)
     
     ActiveRecord::Base.transaction do
       self.save!
-      @sales_network.save!
-      #Attach to existing network
-      self.sales_user_permissions.create!(permissable: @sales_network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
-      #Attach admin user
-      self.sales_admin_networks.create!(network: @sales_network)
+      if signup_type == "network"
+        @sales_network = SalesNetwork.new(domain_params)
+        @sales_network.save!
+        #Attach to existing network
+        self.sales_user_permissions.create!(permissable: @sales_network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
+        #Attach admin user
+        self.sales_admin_networks.create!(network: @sales_network)
+      end
       #Create a customer
       customer = Stripe::Customer.create({
-        # address: {
-        #   line1: address_params[:line1],
-        #   city: address_params[:city],
-        #   state: address_params[:state],
-        #   postal_code: address_params[:zipcode]
-        # },
         source: purchase_params[:token_id],
         email: self.email
       })
@@ -277,9 +281,10 @@ class User < ApplicationRecord
         customer_id: customerId,
         user: self,
       })
+      target = @sales_network || self
       #Track subscription
       subscription = Subscription.create!({
-        targetable: @sales_network,
+        targetable: target,
         payer: self,
         product_id: purchase_params[:product_id],
         duration: purchase_params[:duration],
@@ -348,6 +353,23 @@ class User < ApplicationRecord
     #Create array of user info
     users = [self]
     return user_feature, users
+  end
+
+  def accessible_users
+    connected = self.connected_users
+      .where.not(sales_user_permissions: { relationship: "request", status: "confirmed" })
+
+    shared_with = self.shared_with_users
+      .where.not(sales_user_permissions: { relationship: "give", status: "confirmed" })
+
+    connected + [self] + shared_with
+  end
+
+  def get_personal_contacts
+    accessible_users = self.accessible_users
+    sales_contacts = SalesContact.joins(:sales_user_contacts)
+      .where(sales_user_contacts: { user: accessible_users })
+      # .or(self.sales_contacts)
   end
 
   def confirmed?

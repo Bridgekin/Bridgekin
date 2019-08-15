@@ -59,7 +59,7 @@ RSpec.describe SalesNetwork, type: :model do
 
     end
 
-    describe "get_member_type" do
+    describe "get_user_permission" do
       before(:each) do
         @user = create(:user)
         @sales_network = create(:sales_network, :with_subscription)
@@ -67,20 +67,20 @@ RSpec.describe SalesNetwork, type: :model do
       end
 
       it "should return member type when passed a user" do
-        result = @sales_network.get_member_type(@user)
-        expect(result).to eq('full')
+        result = @sales_network.get_user_permission(@user)
+        expect(result.relationship).to eq('both')
       end
 
       it "should return nil if passed nil or something other than a user" do
-        result = @sales_network.get_member_type('hello')
+        result = @sales_network.get_user_permission('hello')
         expect(result).to be_nil
-        result = @sales_network.get_member_type
+        result = @sales_network.get_user_permission
         expect(result).to be_nil
       end
 
       it "should return nil if user isn't in network" do
         @user2 = create(:user)
-        result = @sales_network.get_member_type(@user2)
+        result = @sales_network.get_user_permission(@user2)
         expect(result).to be_nil
       end
     end

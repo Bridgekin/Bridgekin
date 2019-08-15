@@ -4,7 +4,7 @@ FactoryBot.define do
     lname { Faker::Name.unique.last_name }
     email { Faker::Internet.unique.email}
 
-    user_type { "full" }
+    relationship { "both" }
     link_code { Faker::Crypto.sha1 }
   end
 end
