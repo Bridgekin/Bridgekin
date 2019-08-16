@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_07_221923) do
+ActiveRecord::Schema.define(version: 2019_08_16_200636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -444,7 +444,6 @@ ActiveRecord::Schema.define(version: 2019_08_07_221923) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "network_id"
-    t.string "user_type", default: "full"
     t.string "link_code"
     t.integer "recipient_id"
     t.integer "user_permission_id"
@@ -490,7 +489,6 @@ ActiveRecord::Schema.define(version: 2019_08_07_221923) do
     t.bigint "permissable_id"
     t.string "permissable_type"
     t.integer "user_id"
-    t.string "member_type", default: "full"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "relationship", default: ""

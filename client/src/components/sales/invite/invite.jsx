@@ -428,6 +428,12 @@ class NetworkInvite extends React.Component {
             {`Please reach out to your network admin to invite additional users. If you need help or have any questions you can email us at `}
             <a href=" mailto:admin@bridgekin.com">admin@bridgekin.com</a> {`.`}
           </Typography>
+
+          <Typography align='center' gutterBottom
+            color='textSecondary'
+            style={{ fontSize: 18, marginTop: 100}}>
+            {`To connect with users outside of a network, switch to your personal space by going to Account (Circle) >> Select Personal`}
+          </Typography>
         </Grid>
       </Grid>
     } else {
