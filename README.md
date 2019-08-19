@@ -21,7 +21,7 @@ B. Run Repo
 This app is build with 2 servers in development: 1) the frontend server, in the ```client``` folder and 2) the backend server
 1. First, setup your databased by running ```rails db:setup```. This will create development and test databases, seed the databases, and create "schema_migrations" tables for each.
 2. Next, run your backend server by running ```rails s```
-3. In a seperate terminal tab, ```cd client``
+3. In a seperate terminal tab, ```cd client```
 4. Start server: ``` npm run start ```
 
 ## V1
