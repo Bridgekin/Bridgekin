@@ -9,6 +9,8 @@ Sales teams don't have a easy way to tell who their teammates know. Understandin
 Build a social graph of a team's contacts by enriching contact upload from sources like LinkedIn, Gmail, etc (future).
 
 ## Getting Started
+Before setting up the repo, make you've installed the latest versions of ruby and rails for backend, and npm (or yarn) for frontend, locally.
+
 A. Setup Repo
 1. Download the repo at the top right
 2. Unzip and save the repo
@@ -17,9 +19,9 @@ A. Setup Repo
 
 B. Run Repo
 This app is build with 2 servers in development: 1) the frontend server, in the ```client``` folder and 2) the backend server
-1. First, run your backend server by running ```rails s```
-2. Next a seperate terminal tab
-3. ```cd client```
+1. First, setup your databased by running ```rails db:setup```. This will create development and test databases, seed the databases, and create "schema_migrations" tables for each.
+2. Next, run your backend server by running ```rails s```
+3. In a seperate terminal tab, ```cd client``
 4. Start server: ``` npm run start ```
 
 ## V1
