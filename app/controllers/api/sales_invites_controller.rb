@@ -74,7 +74,9 @@ class Api::SalesInvitesController < ApiController
   end
 
   def confirm_invite_update
-    @sales_invite = SalesInvite.includes(:network, :recipient, :sender, :user_permission).find_by(link_code: params[:code])
+    @sales_invite = SalesInvite.includes(:network, :recipient, :sender, 
+      :user_permission)
+      .find_by(link_code: params[:code])
     new_rel = @sales_invite.relationship
     
     SalesInvite.confirm_invite_update(@sales_invite, new_rel)
@@ -102,7 +104,8 @@ class Api::SalesInvitesController < ApiController
   end
 
   def set_invite
-    @sales_invite = SalesInvite.includes(:user_permission).find(params[:id]) if params[:id]
+    @sales_invite = SalesInvite.includes(:user_permission)
+      .find(params[:id]) if params[:id]
   end
 
   # def network_invite_params

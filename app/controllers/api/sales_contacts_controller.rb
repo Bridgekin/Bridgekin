@@ -8,7 +8,9 @@ class Api::SalesContactsController < ApiController
     @sales_contacts = SalesContact.search_contacts(@current_user, target_params, social_params)
     #Prep Search Data
     offset, limit = social_params[:offset], social_params[:limit]
-    @sales_contacts, @total, @friend_map, @friend_users = SalesContact.prep_search_data(@sales_contacts, @current_user, offset, limit)
+    @sales_contacts, @total, @friend_map, 
+    @friend_users = SalesContact.prep_search_data(@sales_contacts, 
+      @current_user, offset, limit)
     render :index
   end
 
@@ -61,7 +63,8 @@ class Api::SalesContactsController < ApiController
   private
 
   def social_params
-    params.permit(:location, :company, :position, :fname, :lname, :offset, :limit, :filter)
+    params.permit(:location, :company, :position, :fname, :lname, :offset, 
+    :limit, :filter)
   end
 
   def target_params

@@ -35,7 +35,8 @@ class Api::WaitlistUsersController < ApiController
             from_referral_id: @user.id
           )
           # Send email to joe
-          WaitlistUserMailer.flag_waitlist_referral(@user, existing_waitlist_user, true).deliver_later
+          WaitlistUserMailer.flag_waitlist_referral(@user, existing_waitlist_user, true)
+            .deliver_later
 
           #Send Email
           if params[:user][:subject]
@@ -65,7 +66,8 @@ class Api::WaitlistUsersController < ApiController
             from_referral_id: @user.id
           )
           # Send email to joe
-          WaitlistUserMailer.flag_waitlist_referral(@user, waitlist_user, false).deliver_later
+          WaitlistUserMailer.flag_waitlist_referral(@user, waitlist_user, false)
+            .deliver_later
 
           #Send Email
           if params[:user][:subject]

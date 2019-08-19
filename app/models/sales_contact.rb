@@ -27,27 +27,52 @@ class SalesContact < ApplicationRecord
     "company" => :company
   }
 
-  EXCLUDE_CITIES = ["Cuba", "Iran", "North Korea", "Sudan", "Syria", "Crimea", "Russia", "Ukraine", "France", "Spain", "Sweden", "Norway", "Germany", "Finland", "Poland", "Italy", "United Kingdom", "Romania", "Belarus", "Kazakhstan", "Greece", "Bulgaria", "Iceland", "Hungary", "Portugal", "Austria", "Czech Republic", "Serbia", "Ireland", "Lithuania", "Latvia", "Croatia", "Bosnia", "Herzegovina", "Slovakia", "Estonia", "Denmark", "Switzerland", "Netherlands", "Moldova", "Belgium", "Albania", "North Macedonia", "Turkey", "Slovenia", "Montenegro", "Kosovo", "Cyprus", "Azerbaijan", "Luxembourg", "Georgia", "Andorra", "Malta", "Liechtenstein", "San Marino", "Monaco", "Vatican City"]
+  EXCLUDE_CITIES = ["Cuba", "Iran", "North Korea", "Sudan", "Syria", "Crimea", 
+  "Russia", "Ukraine", "France", "Spain", "Sweden", "Norway", "Germany", 
+  "Finland", "Poland", "Italy", "United Kingdom", "Romania", "Belarus", 
+  "Kazakhstan", "Greece", "Bulgaria", "Iceland", "Hungary", "Portugal", 
+  "Austria", "Czech Republic", "Serbia", "Ireland", "Lithuania", "Latvia", 
+  "Croatia", "Bosnia", "Herzegovina", "Slovakia", "Estonia", "Denmark", 
+  "Switzerland", "Netherlands", "Moldova", "Belgium", "Albania", 
+  "North Macedonia", "Turkey", "Slovenia", "Montenegro", "Kosovo", "Cyprus", 
+  "Azerbaijan", "Luxembourg", "Georgia", "Andorra", "Malta", "Liechtenstein", 
+  "San Marino", "Monaco", "Vatican City"]
   
   class << self 
     def search_contacts(current_user = nil, target_params = {}, social_params ={})
 
       return nil if current_user.nil? || !current_user.is_a?(User)
       #Get unfiltered contacts
-      sales_contacts = get_unfiltered_contacts(current_user, target_params)
+      sales_contacts = get_unfiltered_contacts(
+        current_user, 
+        target_params
+      )
       #Filter back setting
-      sales_contacts = filter_sales_contacts(sales_contacts, current_user,social_params[:filter])
-      # debugger
+      sales_contacts = filter_sales_contacts(
+        sales_contacts, 
+        current_user,
+        social_params[:filter]
+      )
       # Track & save search terms, filter sales_contacts
-      sales_contacts = filter_by_search_input(sales_contacts, current_user, social_params)
+      sales_contacts = filter_by_search_input(
+        sales_contacts, 
+        current_user, 
+        social_params
+      )
     end
 
     def get_unfiltered_contacts(current_user, target_params)
       if target_params[:permissable_type] == "SalesNetwork"
-        sales_contacts = SalesContact.get_network_contacts(target_params[:permissable_id], current_user)
+        sales_contacts = SalesContact.get_network_contacts(
+          target_params[:permissable_id], 
+          current_user
+        )
       else
         if target_params[:focused_contact_perm]
-          sales_contacts = SalesContact.get_focused_permission_contacts(target_params[:focused_contact_perm], current_user)
+          sales_contacts = SalesContact.get_focused_permission_contacts(
+            target_params[:focused_contact_perm], 
+            current_user
+          )
         else
           sales_contacts = current_user.get_personal_contacts
         end
@@ -67,7 +92,8 @@ class SalesContact < ApplicationRecord
     end
 
     def get_focused_permission_contacts(focused_contact_perm_id, current_user)
-      focused_permission = SalesUserPermission.includes(:user, :permissable).find(focused_contact_perm_id)
+      focused_permission = SalesUserPermission.includes(:user, :permissable)
+        .find(focused_contact_perm_id)
       if focused_permission.user_id === current_user.id
         focused_user = focused_permission.permissable
       else
@@ -98,7 +124,10 @@ class SalesContact < ApplicationRecord
       SEARCH_MAP.each do |key, value|
         if social_params[value].present?
           trackTerm[value] = social_params[value];
-          sales_contacts = sales_contacts.where("LOWER(sales_contacts.#{key}) LIKE LOWER(?)", "%#{social_params[value]}%") 
+          sales_contacts = sales_contacts.where(
+            "LOWER(sales_contacts.#{key}) LIKE LOWER(?)", 
+            "%#{social_params[value]}%"
+          ) 
         end
       end
       #Save search term

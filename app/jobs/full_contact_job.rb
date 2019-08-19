@@ -45,7 +45,10 @@ class FullContactJob < ApplicationJob
         end
           
       when "company"
-        response = RestClient.post("https://api.fullcontact.com/v2/company/search.json",{ "companyName" => "#{opts.company}"}.to_json,{:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"})
+        response = RestClient.post("https://api.fullcontact.com/v2/company/search.json",
+          { "companyName" => "#{opts.company}"}.to_json,
+          {:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"}
+        )
       else
         logger.debug "No supported type provided"
       end

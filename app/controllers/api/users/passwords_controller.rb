@@ -10,7 +10,8 @@ class Api::Users::PasswordsController < Devise::PasswordsController
     if user
       user.send_reset_password_instructions()
       render json: ["Sent out password reset"]
-      # respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
+      # respond_with({}, 
+      #location: after_sending_reset_password_instructions_path_for(resource_name))
     else
       render json: ["Not a valid email address"], status: 401
     end
@@ -32,7 +33,8 @@ class Api::Users::PasswordsController < Devise::PasswordsController
     # if resource.errors.empty?
     #   resource.unlock_access! if unlockable?(resource)
     #   if Devise.sign_in_after_reset_password
-    #     flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
+    #     flash_message = resource.active_for_authentication? ? :updated : 
+    #       :updated_not_active
     #     set_flash_message!(:notice, flash_message)
     #     resource.after_database_authentication
     #     sign_in(resource_name, resource)

@@ -28,7 +28,10 @@ class ConnectSocialJob < ApplicationJob
       import_hash.each do |key, upload|
         case key
         when "linked_in_key"
-          resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
+          resp = s3.get_object(
+            bucket:Rails.application.credentials[aws_env][:bucket], 
+            key: upload
+          )
           parsedFile = CSV.parse(resp.body.read.split("\n")
             .drop(4)
             .tap(&:pop)
@@ -38,7 +41,10 @@ class ConnectSocialJob < ApplicationJob
 
           ingestLinkedIn(parsedFile, current_user)
         when "google_key"
-          resp = s3.get_object(bucket:Rails.application.credentials[aws_env][:bucket], key: upload)
+          resp = s3.get_object(
+            bucket:Rails.application.credentials[aws_env][:bucket], 
+            key: upload
+          )
           parsedFile = JSON.parse(resp.body.read
             .remove("\r")
             .split("\n")[3])

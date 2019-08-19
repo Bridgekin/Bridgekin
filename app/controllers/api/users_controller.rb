@@ -2,7 +2,8 @@ require_relative '../concerns/devise_controller_patch.rb'
 require 'nameable'
 class Api::UsersController < ApiController
   include DeviseControllerPatch
-  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, :sales_signup, :google_sales_signup, :admin_signup, :sales_invite_signup]
+  before_action :authenticate_user, except: [:destroy_by_email, :hire_signup, 
+  :sales_signup, :google_sales_signup, :admin_signup, :sales_invite_signup]
 
   after_action :verify_authorized, only: [:update, :destroy]
   # after_action :verify_policy_scoped, only: :index
@@ -24,7 +25,8 @@ class Api::UsersController < ApiController
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup   
       #Load User Networks
-      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, 
+      @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
@@ -36,14 +38,16 @@ class Api::UsersController < ApiController
 
   def sales_invite_signup
     @current_user = User.new(user_params)
-    @sales_invite = SalesInvite.includes(:network).find_by(link_code: params[:user][:code])
+    @sales_invite = SalesInvite.includes(:network)
+      .find_by(link_code: params[:user][:code])
 
     if @current_user.save_from_invite(@sales_invite)
       #Get Tokens and track
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
-      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, 
+      @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
@@ -66,7 +70,8 @@ class Api::UsersController < ApiController
       render json: ["Domain does not match chosen network"], status: 422
     elsif provided_domain == network_domain && @current_user.save
       #Attach to existing network
-      @current_user.sales_user_permissions.create(permissable: network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
+      @current_user.sales_user_permissions.create(permissable: network, 
+      relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
 
       render json: ["Successful"], status: 200
     else
@@ -84,7 +89,8 @@ class Api::UsersController < ApiController
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
-      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, 
+      @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
 
       render :signup_confirmed
     elsif @current_user.present? && !@current_user.confirmed?
@@ -93,12 +99,14 @@ class Api::UsersController < ApiController
       @current_user = User.new(user_params)
       if @current_user.save
         #Attach to existing network
-        @current_user.sales_user_permissions.create(permissable: network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
+        @current_user.sales_user_permissions.create(permissable: network, 
+        relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
         #Get Tokens and track
         @token = get_login_token!(@current_user)
         @user_feature, @users = @current_user.post_auth_setup
         #Load User Networks
-        @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
+        @sales_networks, @sales_user_permissions, @sales_admin_networks, 
+        @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
 
         render :signup_confirmed
       else
@@ -131,7 +139,8 @@ class Api::UsersController < ApiController
       network_id: Network.find_by(title: 'Bridgekin').id,
     )
     if @link.save
-      InviteMailer.invite_external_user(email, fname, @link.referral_code, @user).deliver_later
+      InviteMailer.invite_external_user(email, fname, @link.referral_code, @user)
+        .deliver_later
       render json: ['Link made, invite sent'], status: 200
     else
       render json: @link.errors.full_messages, status: 422

@@ -245,9 +245,14 @@ class User < ApplicationRecord
 
     ActiveRecord::Base.transaction do
       self.save!
-      sales_user_permission = SalesUserPermission.create!(user: self, permissable: permissable, relationship: relationship, status: "confirmed", last_confirmed: DateTime.now)
-      sales_invite.update!(recipient: self, user_permission: sales_user_permission,
-      status: 'confirmed')
+      sales_user_permission = SalesUserPermission.create!(
+        user: self, permissable: permissable, relationship: relationship, 
+        status: "confirmed", last_confirmed: DateTime.now
+      )
+      sales_invite.update!(
+        recipient: self, user_permission: sales_user_permission,
+        status: 'confirmed'
+      )
     end
     true
   rescue => e
@@ -266,7 +271,10 @@ class User < ApplicationRecord
         @sales_network = SalesNetwork.new(domain_params)
         @sales_network.save!
         #Attach to existing network
-        self.sales_user_permissions.create!(permissable: @sales_network, relationship: "both", status: "confirmed", last_confirmed: DateTime.now)
+        self.sales_user_permissions.create!(
+          permissable: @sales_network, relationship: "both", 
+          status: "confirmed", last_confirmed: DateTime.now
+        )
         #Attach admin user
         self.sales_admin_networks.create!(network: @sales_network)
       end

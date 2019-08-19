@@ -10,7 +10,8 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
       @current_user = resource
       #Get Tokens and track
       @token = get_login_token!(@current_user)
-      @site_template, @user_feature, @connections, @users = @current_user.post_auth_setup
+      @site_template, @user_feature, @connections, 
+      @users = @current_user.post_auth_setup
 
       redirect_to "#{root_url}accountconfirmed"
     else
@@ -30,7 +31,8 @@ class Api::Users::ConfirmationsController < Devise::ConfirmationsController
       AuthMailer.email_changed(resource).deliver_now
       @user = resource
       @token = get_login_token!(@user)
-      # render json: ['Account confirmed! Navigate back to the home page to login.'], status: 200
+      # render json: ['Account confirmed! Navigate back to the home page to 
+      #login.'], status: 200
 
       redirect_to "#{root_url}accountconfirmed"
     else
