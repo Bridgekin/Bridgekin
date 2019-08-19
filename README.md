@@ -14,8 +14,8 @@ Before setting up the repo, make you've installed the latest versions of ruby an
 A. Setup Repo
 1. Download the repo at the top right
 2. Unzip and save the repo
-3. Get the master keycode. You can get it from the Bridgekin admin (either Joe or Lead engineer)
-4. Once repo is open in an ide, update the config >> master.key file with the actual master keycode
+3. Get the master key. You can get it from the Bridgekin admin (either Joe or Lead engineer)
+4. Once repo is open in an ide, create a ```master.key``` directly within ```config```, with the actual master key
 
 B. Run Repo
 This app is build with 2 servers in development: 1) the frontend server, in the ```client``` folder and 2) the backend server
