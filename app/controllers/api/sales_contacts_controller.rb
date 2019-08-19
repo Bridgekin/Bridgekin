@@ -3,9 +3,9 @@ class Api::SalesContactsController < ApiController
   # before_action :set_ref_opp, only: [:show]
 
   def search
-    filter = social_params[:filter]
+    filter = social_params[:filter], 
     # network = SalesNetwork.find(params[:current_sales_network_id])
-    @sales_contacts = SalesContact.search_contacts(@current_user, target_params, filter, social_params)
+    @sales_contacts = SalesContact.search_contacts(@current_user, target_params, social_params)
     #Prep Search Data
     offset, limit = social_params[:offset], social_params[:limit]
     @sales_contacts, @total, @friend_map, @friend_users = SalesContact.prep_search_data(@sales_contacts, @current_user, offset, limit)
@@ -65,6 +65,6 @@ class Api::SalesContactsController < ApiController
   end
 
   def target_params
-    params.permit(:permissable_id, :permissable_type)
+    params.permit(:permissable_id, :permissable_type, :focused_contact_perm)
   end
 end

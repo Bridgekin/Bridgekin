@@ -66,6 +66,67 @@ RSpec.describe SalesInvite, type: :model do
         }.to have_enqueued_job.on_queue('mailers')
       end
     end
-  end
 
+    describe ".confirm_invite" do
+      before(:each) do
+        @user = create(:user, :with_owned_sales_network)
+        @sales_invite = create(:sales_invite, sender: @user)
+      end
+
+      it "confirm an invite, given a sales_invite" do
+        expect{SalesInvite.confirm_invite(@sales_invite)}
+      end
+
+      it "should save if a user has user_permission" do
+        @sales_invite2 = create(:sales_invite, :with_user_permission, sender: @user)
+        expect{SalesInvite.confirm_invite(@sales_invite2)}
+      end
+
+      it "should raise error if sales_invite isn't found" do
+        expect{SalesInvite.confirm_invite}.to raise_error
+      end
+    end
+
+    describe ".update_invite" do
+      before(:each) do
+        @current_user = create(:user, :with_owned_sales_network)
+        @sales_invite = create(:sales_invite, :with_user_permission, sender: @current_user)
+      end
+
+      it "update an invite relationship" do
+        sales_invite = SalesInvite.update_invite(@sales_invite, "give", @current_user)
+        user_permission = sales_invite.user_permission
+        expect(sales_invite.relationship).to eq("give") 
+      end
+
+      it "should queue an email" do
+        expect {
+          SalesInvite.update_invite(@sales_invite, "give", @current_user)
+        }.to have_enqueued_job.on_queue('mailers')
+      end
+
+      it "should raise error if sales_invite isn't found" do
+        expect{SalesInvite.confirm_invite}.to raise_error
+      end
+    end
+
+    describe ".confirm_invite_update" do
+      before(:each) do
+        @current_user = create(:user, :with_owned_sales_network)
+        @sales_invite = create(:sales_invite, :with_user_permission, sender: @current_user, relationship: "request")
+      end
+
+      it "confirm invite update" do
+        sales_invite = SalesInvite.confirm_invite_update(@sales_invite, "request")
+        user_permission = sales_invite.user_permission
+        expect(user_permission.relationship).to eq("request") 
+        expect(user_permission.status).to eq("confirmed") 
+      end
+
+      it "should raise error if sales_invite isn't found" do
+        expect{SalesInvite.confirm_invite_update}.to raise_error
+      end
+    end
+
+  end
 end

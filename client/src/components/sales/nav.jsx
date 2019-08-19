@@ -230,8 +230,9 @@ class SalesNav extends React.Component {
 
   render() {
     const { classes, siteTemplate, currentUser,
-    networkDetails, currentSalesNetworkId,
-      onHomePage, salesUserPermissions, salesNetworks } = this.props;
+      networkDetails, currentSalesNetworkId,
+      onHomePage, salesUserPermissions, salesNetworks,
+      currentDashboardTarget } = this.props;
     const { isTop, accountAnchorEl } = this.state;
 
     const logo = <div
@@ -305,17 +306,18 @@ class SalesNav extends React.Component {
           horizontal: 'center',
         }}
         getContentAnchorEl={null}>
-        {!isEmpty(salesUserPermissions) && Object.values(salesUserPermissions).map(choice => {
+        {!isEmpty(salesUserPermissions) && Object.values(salesUserPermissions).filter(choice => choice.permissableType === "SalesNetwork")
+        .map(choice => {
           let name = "";
-          if (choice.permissableType === 'User') {
+          // Only looking at sales networks now
+          let network = salesNetworks[choice.permissableId]
+          name = network ? network.title : "No Network Name Found"
 
-          } else if (choice.permissableType === 'SalesNetwork') {
-            let network = salesNetworks[choice.permissableId]
-            name = network ? network.title : "No Network Name Found"
-          }
+          let makeBold = (currentDashboardTarget.permissableId === choice.permissableId && currentDashboardTarget.permissableType === "SalesNetwork") ? true : false
+          
           return <MenuItem onClick={this.handleDashSpaceChange(choice, 'accountAnchorEl')}
             data-cy={`dashboard-option-${choice.permissionType}-${choice.permissionId}`}>
-            <Typography style={{ fontSize: 14 }}>
+            <Typography style={{ fontSize: 14, fontWeight: makeBold ? 600 : 400}}>
               {name}
             </Typography>
           </MenuItem>
@@ -323,7 +325,7 @@ class SalesNav extends React.Component {
 
         {!isEmpty(salesUserPermissions) && <MenuItem onClick={this.handleDashSpaceChange("", 'accountAnchorEl')}
           data-cy={`dashboard-option-`}>
-          <Typography style={{ fontSize: 14 }}>
+          <Typography style={{ fontWeight: isEmpty(currentDashboardTarget) ? 600 : 400, fontSize: 14 }}>
             {`Personal`}
           </Typography>
         </MenuItem>}

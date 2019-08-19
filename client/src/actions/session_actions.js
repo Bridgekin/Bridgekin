@@ -35,15 +35,16 @@ export const setAuth = (data) => dispatch => {
 
   dispatch(retrieveNetworkDetails(data.networkDetails))
   dispatch(receiveSalesNetworks(data.salesNetworks))
+  dispatch(receiveUsers(data.connectedUsers))
   dispatch(receiveSalesUserPermissions(data.salesUserPermissions))
   dispatch(receiveSalesAdminNetworks(data.salesAdminNetworks))
 
   if(data.salesUserPermissions){
-    let permissions = Object.values(data.salesUserPermissions)
+    let permissions = Object.values(data.salesUserPermissions).filter(perm => perm.permissableType === "SalesNetwork")
 
     if(permissions.length > 0){
-      let { permissableId, permissableType, memberType } = permissions[0]
-      dispatch(setDashboardTarget({ permissableId, permissableType, memberType }))
+      let { permissableId, permissableType, relationship } = permissions[0]
+      dispatch(setDashboardTarget({ permissableId, permissableType, relationship }))
     }
   }
 }

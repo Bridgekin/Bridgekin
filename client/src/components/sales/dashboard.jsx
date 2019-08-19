@@ -37,6 +37,7 @@ const EXAMPLE = {
 
 const mapStateToProps = (state, ownProps) => ({
   currentUser: state.users[state.session.id],
+  users: state.users,
   dimensions: state.util.window,
   userFeature: state.entities.userFeature,
   results: state.entities.sales.searchContacts,
@@ -97,7 +98,9 @@ class SalesDashboard extends React.Component {
       filterAnchorEl: null,
       unconnectedUser: false,
       limitedUser: false,
-      subscriptionExpired: false
+      subscriptionExpired: false,
+      focusedContactPerm: null,
+      focusedContactAnchorEl: null
     }
 
     this.connectNetworks = this.connectNetworks.bind(this);
@@ -110,6 +113,7 @@ class SalesDashboard extends React.Component {
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleDashSpaceChange = this.handleDashSpaceChange.bind(this);
     this.isExpiredSub = this.isExpiredSub.bind(this);
+    this.getFocusedContactName = this.getFocusedContactName.bind(this);
   }
 
   componentDidMount() {
@@ -156,7 +160,7 @@ class SalesDashboard extends React.Component {
   }
 
   async searchData(){
-    const { offset, limit, filter, fname, lname, position, company, location } = this.state;
+    const { offset, limit, filter, fname, lname, position, company, location, focusedContactPerm } = this.state;
     const { networkDetails, currentDashboardTarget, salesUserPermissions } = this.props;
 
     if (this.isExpiredSub()) {
@@ -164,7 +168,7 @@ class SalesDashboard extends React.Component {
     } else {
       this.setState({ loaded: false });
       this.props.clearContactResults();
-      let payload = await merge({}, { fname, lname, position, company, location }, { offset, limit, filter }, currentDashboardTarget)
+      let payload = await merge({}, { fname, lname, position, company, location }, { offset, limit, filter }, currentDashboardTarget, { focusedContactPerm } )
       let total = await this.props.searchContacts(payload)
       await this.setState({ total, loaded: true, unconnectedUser: false, subscriptionExpired: false })
     }
@@ -183,11 +187,7 @@ class SalesDashboard extends React.Component {
   handlePageChange(offset) {
     console.log(`active page is ${offset}`);
     this.setState({ offset },
-      () => {
-        const { fname, lname, position, company, location } = this.state;
-        let search = { fname, lname, position, company, location }
-        this.searchData(search)
-      })
+      () => this.searchData())
   }
 
   handleMenuClick(anchor) {
@@ -202,17 +202,13 @@ class SalesDashboard extends React.Component {
     }
   }
 
-  handleMenuChange(value) {
+  handleMenuChange(field, anchor, value) {
     return e => {
       this.setState({
-        filter: value,
-        filterAnchorEl: null,
+        [field]: value,
+        [anchor]: null,
         offset: 0
-      }, () => {
-        const { position, company, location, fname, lname } = this.state;
-        let search = { position, company, location, fname, lname }
-        this.searchData(search)
-      })
+      }, () => this.searchData())
     }
   }
 
@@ -236,6 +232,23 @@ class SalesDashboard extends React.Component {
 
   connectNetworks() {
     this.props.history.push('/sales/connect_social')
+  }
+
+  getFocusedContactName(permId){
+    const { currentUser, salesUserPermissions, users } = this.props;
+
+    let permission = salesUserPermissions[permId]
+    if (permission){
+      let user;
+      if(permission.userId === currentUser.id){
+        user = users[permission.permissableId];
+      } else {
+        user = users[permission.userId];
+      }
+      return `${Capitalize(user.fname)} ${Capitalize(user.lname)}`
+    } else {
+      return "All"
+    }
   }
 
   getResults(){
@@ -285,15 +298,16 @@ class SalesDashboard extends React.Component {
   render() {
     const { classes, dimensions, resultNodes,
       searchContacts, salesUserPermissions,
-      salesNetworks,
+      salesNetworks, users,
       currentDashboardTarget } = this.props;
     const { position, company, location,
       fname, lname, search,
       filter, filterAnchorEl, dashboardSpaceAnchorEl,
-      loaded, unconnectedUser,
-      subscriptionExpired, limitedUser } = this.state;
+      focusedContactAnchorEl, loaded, unconnectedUser,
+      subscriptionExpired, limitedUser,
+      focusedContactPerm } = this.state;
 
-    let memberType = currentDashboardTarget.memberType || ""
+    let relationship = currentDashboardTarget.relationship || ""
 
     let dashboardSpaceValues = {
       "": "All",
@@ -306,7 +320,7 @@ class SalesDashboard extends React.Component {
 
     let filterValues = {
       "": "All",
-      "teammates": "My Team's Contacts",
+      "teammates": isEmpty(currentDashboardTarget) ? "My Friends' Contacts" : "My Team's Contacts",
       "mine": "My Contacts",
       "investor": "Investor Contacts",
       "linkedIn": "Contacts From LinkedIn",
@@ -473,11 +487,13 @@ class SalesDashboard extends React.Component {
         </Grid>
       </Paper>
 
+      let filteredUserToUserPermissions = Object.values(salesUserPermissions).filter(choice => choice.permissableType === "User")
+
       return <div style={{ minHeight: dimensions.height}}>
         <Grid container justify='center'
           className={classes.grid}>
           <Grid item xs={12} sm={10}>
-            <Grid container justify='flex-start'
+            <Grid container justify='space-between'
             style={{ marginBottom: 30, padding: "0px 15px"}}>
               <Button onClick={this.handleMenuClick('filterAnchorEl')}
                 data-cy='view-by-button'
@@ -502,15 +518,54 @@ class SalesDashboard extends React.Component {
                 }}
                 getContentAnchorEl={null}>
                 {["", "teammates", "mine", "linkedIn", "google"].map(choice => {
-                  return <MenuItem onClick={this.handleMenuChange(choice)}
+                  return <MenuItem onClick={this.handleMenuChange("filter", 'filterAnchorEl', choice)}
                   data-cy={`view-option-${choice}`}
-                  disabled={memberType !== "full" && choice === "teammates"}>
+                    disabled={relationship === "give" && choice === "teammates"}>
                     <Typography style={{ fontSize: 14}}>
                       {filterValues[choice]}
                     </Typography>
                   </MenuItem>
                 })}
               </Menu>
+              
+              {filteredUserToUserPermissions.length > 0 && isEmpty(currentDashboardTarget) && <Button onClick={this.handleMenuClick('focusedContactAnchorEl')}
+                data-cy='view-by-button'
+                style={{ textTransform: 'none' }}>
+                <Typography color='textPrimary'
+                  style={{ fontSize: 14 }}>
+                  {`Specify contact: ${this.getFocusedContactName(focusedContactPerm)}`}
+                </Typography>
+              </Button>}
+              {filteredUserToUserPermissions.length > 0 &&
+                isEmpty(currentDashboardTarget) && <Menu
+                id="simple-menu"
+                anchorEl={focusedContactAnchorEl}
+                open={Boolean(focusedContactAnchorEl)}
+                onClose={this.handleMenuClick('focusedContactAnchorEl')}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+                getContentAnchorEl={null}>
+                <MenuItem onClick={this.handleMenuChange('focusedContactPerm', 'focusedContactAnchorEl', null)}
+                  data-cy={`focused-contact-option-`}>
+                  <Typography style={{ fontSize: 14 }}>
+                    {"All"}
+                  </Typography>
+                </MenuItem>
+                {filteredUserToUserPermissions.map(perm => {
+                  return <MenuItem onClick={this.handleMenuChange('focusedContactPerm', 'focusedContactAnchorEl', perm.id)}
+                    data-cy={`focused-contact-option-${perm.id}`}>
+                    <Typography style={{ fontSize: 14 }}>
+                      {this.getFocusedContactName(perm.id)}
+                    </Typography>
+                  </MenuItem>
+                })}
+              </Menu>}
             </Grid>
             {searchComponent}
             <Paper>

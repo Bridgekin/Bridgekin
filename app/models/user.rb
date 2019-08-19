@@ -357,10 +357,12 @@ class User < ApplicationRecord
 
   def accessible_users
     connected = self.connected_users
-      .where.not(sales_user_permissions: { relationship: "request", status: "confirmed" })
+      .where.not(sales_user_permissions: { relationship: "request" })
+      .where(sales_user_permissions: {status: "confirmed"})
 
     shared_with = self.shared_with_users
-      .where.not(sales_user_permissions: { relationship: "give", status: "confirmed" })
+      .where.not(sales_user_permissions: { relationship: "give" })
+      .where(sales_user_permissions: {status: "confirmed"})
 
     connected + [self] + shared_with
   end

@@ -30,31 +30,50 @@ class SalesContact < ApplicationRecord
   EXCLUDE_CITIES = ["Cuba", "Iran", "North Korea", "Sudan", "Syria", "Crimea", "Russia", "Ukraine", "France", "Spain", "Sweden", "Norway", "Germany", "Finland", "Poland", "Italy", "United Kingdom", "Romania", "Belarus", "Kazakhstan", "Greece", "Bulgaria", "Iceland", "Hungary", "Portugal", "Austria", "Czech Republic", "Serbia", "Ireland", "Lithuania", "Latvia", "Croatia", "Bosnia", "Herzegovina", "Slovakia", "Estonia", "Denmark", "Switzerland", "Netherlands", "Moldova", "Belgium", "Albania", "North Macedonia", "Turkey", "Slovenia", "Montenegro", "Kosovo", "Cyprus", "Azerbaijan", "Luxembourg", "Georgia", "Andorra", "Malta", "Liechtenstein", "San Marino", "Monaco", "Vatican City"]
   
   class << self 
-    def search_contacts(current_user = nil, target_params = {}, filter='', social_params ={})
+    def search_contacts(current_user = nil, target_params = {}, social_params ={})
 
       return nil if current_user.nil? || !current_user.is_a?(User)
       #Get unfiltered contacts
       sales_contacts = get_unfiltered_contacts(current_user, target_params)
       #Filter back setting
-      sales_contacts = filter_sales_contacts(sales_contacts,current_user, filter)
+      sales_contacts = filter_sales_contacts(sales_contacts, current_user,social_params[:filter])
+      # debugger
       # Track & save search terms, filter sales_contacts
       sales_contacts = filter_by_search_input(sales_contacts, current_user, social_params)
     end
 
     def get_unfiltered_contacts(current_user, target_params)
       if target_params[:permissable_type] == "SalesNetwork"
-        network = SalesNetwork.includes(:sales_user_permissions).find(target_params[:permissable_id])
-        user_permission = network.get_user_permission(current_user)
-
-        if user_permission && user_permission.relationship != "request" && user_permission.status == "confirmed"
-          sales_contacts = network.member_contacts
-        else
-          sales_contacts = current_user.sales_contacts
-        end
+        sales_contacts = SalesContact.get_network_contacts(target_params[:permissable_id], current_user)
       else
-        sales_contacts = current_user.get_personal_contacts
+        if target_params[:focused_contact_perm]
+          sales_contacts = SalesContact.get_focused_permission_contacts(target_params[:focused_contact_perm], current_user)
+        else
+          sales_contacts = current_user.get_personal_contacts
+        end
       end
       sales_contacts
+    end
+
+    def get_network_contacts(network_id, current_user)
+      network = SalesNetwork.includes(:sales_user_permissions).find(network_id)
+      user_permission = network.get_user_permission(current_user)
+
+      if user_permission && user_permission.relationship != "request" && user_permission.status == "confirmed"
+        sales_contacts = network.member_contacts
+      else
+        sales_contacts = current_user.sales_contacts
+      end
+    end
+
+    def get_focused_permission_contacts(focused_contact_perm_id, current_user)
+      focused_permission = SalesUserPermission.includes(:user, :permissable).find(focused_contact_perm_id)
+      if focused_permission.user_id === current_user.id
+        focused_user = focused_permission.permissable
+      else
+        focused_user = focused_permission.user
+      end
+      focused_user.sales_contacts
     end
 
     def filter_sales_contacts(sales_contacts, current_user, filter)
@@ -84,8 +103,8 @@ class SalesContact < ApplicationRecord
       end
       #Save search term
       trackTerm.save
-      sales_contacts.where.not(fname: '')
-          .distinct
+      # debugger
+      sales_contacts.where.not(fname: '').distinct
     end
 
     def prep_search_data(sales_contacts, current_user, offset = 0, limit = 10)

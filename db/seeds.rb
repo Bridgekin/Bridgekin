@@ -34,18 +34,18 @@ User.create!(
   is_admin: true
 )
 
-Network.create!(
-  title: 'Bridgekin'
-)
+# Network.create!(
+#   title: 'Bridgekin'
+# )
 
 # Network.create!(
 #   title: 'Ideate'
 # )
 
-UserNetwork.create!(
-  network_id: 1,
-  member_id: 1,
-)
+# UserNetwork.create!(
+#   network_id: 1,
+#   member_id: 1,
+# )
 
 # UserNetwork.create!(
 #   network_id: 2,
@@ -65,10 +65,10 @@ User.create!(
   is_admin: true
 )
 
-UserNetwork.create!(
-  network_id: 1,
-  member_id: 2,
-)
+# UserNetwork.create!(
+#   network_id: 1,
+#   member_id: 2,
+# )
 
 # UserNetwork.create!(
 #   network_id: 2,

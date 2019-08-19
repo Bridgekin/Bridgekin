@@ -92,7 +92,7 @@ RSpec.describe SalesContact, type: :model do
         contact = @user.sales_contacts.first
         social_params = { fname: contact.fname }
         target_params = {permissable_id: @sales_network.id, permissable_type: 'SalesNetwork'}
-        result = SalesContact.search_contacts(@user, target_params, "", social_params)
+        result = SalesContact.search_contacts(@user, target_params, social_params)
         expect(result.include?(contact)).to be_truthy
       end
 
@@ -100,7 +100,7 @@ RSpec.describe SalesContact, type: :model do
         contact = @user.sales_contacts.first
         social_params = { lname: contact.lname }
         target_params = {permissable_id: @sales_network.id, permissable_type: 'SalesNetwork'}
-        result = SalesContact.search_contacts(@user, target_params, "", social_params)
+        result = SalesContact.search_contacts(@user, target_params, social_params)
         expect(result.include?(contact)).to be_truthy
       end
     end

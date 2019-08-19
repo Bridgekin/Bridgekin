@@ -66,12 +66,15 @@ class SalesNetwork < ApplicationRecord
     return nil if !current_user.is_a?(User) || current_user.sales_networks.empty?
 
     sales_networks = current_user.sales_networks
+    connected_users = current_user.connected_users + current_user.shared_with_users
+
     sales_user_permissions = current_user.sales_user_permissions
     sales_admin_networks = current_user.sales_admin_networks
+
     # current_network_id = sales_networks.first.id if sales_networks.first
     network_details = SalesNetwork.includes(:members, :admins, :subscribed_products).generate_network_details(sales_networks)
 
-    return sales_networks, sales_user_permissions, sales_admin_networks, network_details
+    return sales_networks, sales_user_permissions, sales_admin_networks, network_details, connected_users
   end
 
   def get_user_permission(current_user = nil)

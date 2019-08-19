@@ -24,7 +24,7 @@ class Api::UsersController < ApiController
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup   
       #Load User Networks
-      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
@@ -43,7 +43,7 @@ class Api::UsersController < ApiController
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
-      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
       #Set as confirmed
       @current_user.update(confirmed_at: DateTime.now)
 
@@ -84,7 +84,7 @@ class Api::UsersController < ApiController
       @token = get_login_token!(@current_user)
       @user_feature, @users = @current_user.post_auth_setup
       #Load User Networks
-      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
+      @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
 
       render :signup_confirmed
     elsif @current_user.present? && !@current_user.confirmed?
@@ -98,7 +98,7 @@ class Api::UsersController < ApiController
         @token = get_login_token!(@current_user)
         @user_feature, @users = @current_user.post_auth_setup
         #Load User Networks
-        @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details = SalesNetwork.get_network_info(@current_user)
+        @sales_networks, @sales_user_permissions, @sales_admin_networks, @network_details, @connected_users = SalesNetwork.get_network_info(@current_user)
 
         render :signup_confirmed
       else

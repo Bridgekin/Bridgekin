@@ -8,4 +8,5 @@ variables: {
   network_details: @network_details,
   sales_user_permissions: @sales_user_permissions,
   sales_admin_networks: @sales_admin_networks
+  connected_users: @connected_users
 }

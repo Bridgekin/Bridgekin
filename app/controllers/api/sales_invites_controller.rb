@@ -59,12 +59,11 @@ class Api::SalesInvitesController < ApiController
   end
 
   def update
-    old_rel = @sales_invite.relationship
     new_rel = params[:relationship]
-    @sales_user_permission = @sales_invite.user_permission
+    sales_user_permission = @sales_invite.user_permission
 
-    if @sales_user_permission
-      SalesInvite.update_invite(@sales_invite, @sales_user_permission, old_rel, new_rel, @current_user)
+    if sales_user_permission
+      SalesInvite.update_invite(@sales_invite, new_rel, @current_user)
     else
       @sales_invite.update!(relationship: new_rel)
     end
@@ -87,9 +86,7 @@ class Api::SalesInvitesController < ApiController
 
   def destroy
     # debugger
-    @sales_user_permission = @sales_invite.user_permission
-    @sales_invite.destroy!
-    @sales_user_permission.destroy! if @sales_user_permission
+    SalesInvite.delete_invite(@sales_invite)
     render json: ["Success"]
   rescue => e
     # debugger

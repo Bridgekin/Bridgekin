@@ -42,3 +42,11 @@ json.sales_admin_networks do
     end
   end
 end if variables[:sales_admin_networks]
+
+json.connected_users do
+  variables[:connected_users].each do |connected_user|
+    json.set! connected_user.id do
+      json.partial! 'api/users/user', user: connected_user
+    end
+  end
+end if variables[:connected_users]

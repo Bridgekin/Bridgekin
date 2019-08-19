@@ -146,9 +146,14 @@ class SalesInviteModal extends React.Component {
               {`We've sent email requests to the contacts you've requested. Once they click the link, they'll be able to signup!`}
             </Typography>
             <Grid item xs={12}>
-              <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
+              {/* <Button variant="contained" style={{ margin: '0 auto', marginTop: 30 }}
                 onClick={this.redirectToDashboard} color='primary'>
                 {`Back to Dashboard`}
+              </Button> */}
+              <Button variant="contained"
+                onClick={this.handleClose} color='primary'
+                style={{ marginTop: 30 }}>
+                Close
               </Button>
             </Grid>
           </Grid>
@@ -169,9 +174,10 @@ class SalesInviteModal extends React.Component {
             <Grid container justify='center'
               style={{ marginTop: 30 }}>
               <Button variant="contained"
-                onClick={this.handleClose} color='primary'>
+                onClick={this.handleClose} color='primary'
+                style={{ marginTop: 30 }}>
                 Close
-            </Button>
+              </Button>
             </Grid>
           </Grid>
         )

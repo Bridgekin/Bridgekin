@@ -71,7 +71,8 @@ class SalesInvite < ApplicationRecord
     e.message
   end
 
-  def self.confirm_invite(sales_invite)
+  def self.confirm_invite(sales_invite = nil)
+    raise if sales_invite.nil?
     sales_user_permission = sales_invite.user_permission
     ActiveRecord::Base.transaction do
       if sales_user_permission.nil?
@@ -84,25 +85,42 @@ class SalesInvite < ApplicationRecord
       sales_invite.update!(user_permission: sales_user_permission, status: "confirmed")
       sales_user_permission.update!(status: "confirmed", last_confirmed: DateTime.now)
     end
+    true
   end
 
-  def self.update_invite(sales_invite, sales_user_permission, old_rel, new_rel, current_user)
+  def self.update_invite(sales_invite = nil, new_rel = nil, current_user = nil)
+    raise if sales_invite.nil? || current_user.nil? || new_rel.nil?
+    #using includes in the controller, so this user_permission call isn't actually being made twice
+    sales_user_permission = sales_invite.user_permission
+    old_rel = sales_invite.relationship
     ActiveRecord::Base.transaction do
-      sales_invite.update!(relationship: new_rel, 
-      status: "pending")
+      sales_invite.update!(relationship: new_rel)
       #Change permission to pending
       sales_user_permission.update!(status: "pending")
       #Notify user of change about to occur
       SalesMailer.confirm_permission_update_email(sales_invite, old_rel, new_rel, current_user).deliver_later
-    end 
+    end
+    sales_invite 
   end
 
-  def self.confirm_invite_update(sales_invite, new_rel)
+  def self.confirm_invite_update(sales_invite = nil, new_rel = nil)
+    raise if sales_invite.nil?
     sales_user_permission = sales_invite.user_permission
     ActiveRecord::Base.transaction do
       sales_invite.update!(status: "confirmed")
-      sales_user_permission.update!(relationship: new_rel)
+      sales_user_permission.update!(relationship: new_rel, status: "confirmed")
     end
+    sales_invite
+  end
+
+  def self.delete_invite(sales_invite = nil)
+    raise if sales_invite.nil?
+    ActiveRecord::Base.transaction do
+      sales_user_permission = sales_invite.user_permission
+      sales_invite.destroy!
+      sales_user_permission.destroy! if sales_user_permission
+    end
+    true
   end
 
   def ensure_link_code
