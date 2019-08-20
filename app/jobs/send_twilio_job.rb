@@ -3,13 +3,13 @@ class SendTwilioJob < ApplicationJob
 
   def perform(to, message)
     client = Twilio::REST::Client.new(
-      Rails.application.credentials.twilio[:account_sid],
-      Rails.application.credentials.twilio[:auth_token]
+      Rails.application.credentials.twilio[Rails.env.to_sym][:account_sid],
+      Rails.application.credentials.twilio[Rails.env.to_sym][:auth_token]
     )
 
     begin
       client.messages.create(
-        from: Rails.application.credentials.twilio[:phone_number],
+        from: Rails.application.credentials.twilio[Rails.env.to_sym][:phone_number],
         to: "+1" + to,
         body: message
       )

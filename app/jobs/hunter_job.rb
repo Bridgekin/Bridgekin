@@ -3,7 +3,7 @@ class HunterJob < ApplicationJob
 
   def perform(company, contact)
     begin
-      response = RestClient.get "https://api.hunter.io/v2/email-finder?domain=#{company.domain}&first_name=#{contact.fname}&last_name=#{contact.lname}&api_key=#{Rails.application.credentials.hunter[:api_key]}"
+      response = RestClient.get "https://api.hunter.io/v2/email-finder?domain=#{company.domain}&first_name=#{contact.fname}&last_name=#{contact.lname}&api_key=#{Rails.application.credentials.hunter[Rails.env.to_sym]}"
 
       parsed = JSON.parse(response.body)
       email = parsed["data"]["email"]

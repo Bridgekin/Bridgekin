@@ -34,7 +34,7 @@ class FullContactJob < ApplicationJob
             "email" => "#{opts[:email]}",
             "webhookUrl" => "#{webhook_url}/api/webhooks/full_contact_people?contact_id=#{opts[:contact_id]}"
           }.to_json,
-          {:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"})
+          {:authorization => "Bearer #{Rails.application.credentials.full_contact[Rails.env.to_sym]}"})
         rescue StandardError => e
           error = JSON.parse(e.response)
           logger.error "Failed Lookup (FC) - email: #{opts[:email]}, status: #{error["status"]}, msg: #{error["message"]}"
@@ -47,7 +47,7 @@ class FullContactJob < ApplicationJob
       when "company"
         response = RestClient.post("https://api.fullcontact.com/v2/company/search.json",
           { "companyName" => "#{opts.company}"}.to_json,
-          {:authorization => "Bearer #{Rails.application.credentials.full_contact[:api_key]}"}
+          {:authorization => "Bearer #{Rails.application.credentials.full_contact[Rails.env.to_sym]}"}
         )
       else
         logger.debug "No supported type provided"
