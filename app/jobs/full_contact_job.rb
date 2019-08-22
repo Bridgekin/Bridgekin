@@ -29,12 +29,14 @@ class FullContactJob < ApplicationJob
       when "people"
         logger.debug "Starting Lookup"
         begin
+          api_key = Rails.env === "production" ? ENV['FC_API_KEY'] : Rails.application.credentials.full_contact[Rails.env.to_sym]
+
           response = RestClient.post("https://api.fullcontact.com/v3/person.enrich",
           { 
             "email" => "#{opts[:email]}",
             "webhookUrl" => "#{webhook_url}/api/webhooks/full_contact_people?contact_id=#{opts[:contact_id]}"
           }.to_json,
-          {:authorization => "Bearer #{Rails.application.credentials.full_contact[Rails.env.to_sym]}"})
+          {:authorization => "Bearer #{api_key}"})
         rescue StandardError => e
           error = JSON.parse(e.response)
           logger.error "Failed Lookup (FC) - email: #{opts[:email]}, status: #{error["status"]}, msg: #{error["message"]}"

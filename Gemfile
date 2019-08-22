@@ -90,6 +90,7 @@ gem "down", "~> 4.4"
 gem 'mime-types'
 
 gem "geocoder"
+gem 'r_creds'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

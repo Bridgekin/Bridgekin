@@ -3,7 +3,7 @@ class Api::StripeController < ApiController
   def charge
     begin
       # debugger
-      Stripe.api_key = Rails.application.credentials.stripe[:test][:secret_key]
+      Stripe.api_key = Rails.env === "development" ?  Rails.application.credentials.full_contact[Rails.env.to_sym] : ENV['STRIPE_SECRET_KEY_SK']
 
       charge = Stripe::Charge.create({
         amount: 999,
@@ -13,9 +13,8 @@ class Api::StripeController < ApiController
         receipt_email: "#{@current_user.email}",
         source: params[:token_id]
       })
-      debugger
+
       parsed = JSON.parse(charge.body)
-      debugger
       render json: parsed, status: 200
     rescue => exception
       render json: ["Failed"], status: 500
