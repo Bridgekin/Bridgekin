@@ -3,7 +3,7 @@ class Api::StripeController < ApiController
   def charge
     begin
       # debugger
-      Stripe.api_key = Rails.env === "development" ?  Rails.application.credentials.full_contact[Rails.env.to_sym] : ENV['STRIPE_SECRET_KEY_SK']
+      Stripe.api_key = Rails.env === "development" ?  Rails.application.credentials.stripe[Rails.env.to_sym] : ENV['STRIPE_SECRET_KEY_SK']
 
       charge = Stripe::Charge.create({
         amount: 999,

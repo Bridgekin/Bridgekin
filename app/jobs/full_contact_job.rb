@@ -29,7 +29,8 @@ class FullContactJob < ApplicationJob
       when "people"
         logger.debug "Starting Lookup"
         begin
-          api_key = Rails.env === "production" ? ENV['FC_API_KEY'] : Rails.application.credentials.full_contact[Rails.env.to_sym]
+          # api_key = Rails.env === "production" ? ENV['FC_API_KEY'] : Rails.application.credentials.full_contact[Rails.env.to_sym]
+          api_key = Rails.application.credentials.full_contact[Rails.env.to_sym]
 
           response = RestClient.post("https://api.fullcontact.com/v3/person.enrich",
           { 
