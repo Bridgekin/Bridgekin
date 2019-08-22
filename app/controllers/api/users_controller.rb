@@ -132,20 +132,20 @@ class Api::UsersController < ApiController
     end
   end
 
-  def add_external_user
-    email, fname = params[:user][:email], params[:user][:fname]
-    @link = ReferralLink.new(
-      member_id: @user.id,
-      network_id: Network.find_by(title: 'Bridgekin').id,
-    )
-    if @link.save
-      InviteMailer.invite_external_user(email, fname, @link.referral_code, @user)
-        .deliver_later
-      render json: ['Link made, invite sent'], status: 200
-    else
-      render json: @link.errors.full_messages, status: 422
-    end
-  end
+  # def add_external_user
+  #   email, fname = params[:user][:email], params[:user][:fname]
+  #   @link = ReferralLink.new(
+  #     member_id: @user.id,
+  #     network_id: Network.find_by(title: 'Bridgekin').id,
+  #   )
+  #   if @link.save
+  #     InviteMailer.invite_external_user(email, fname, @link.referral_code, @user)
+  #       .deliver_later
+  #     render json: ['Link made, invite sent'], status: 200
+  #   else
+  #     render json: @link.errors.full_messages, status: 422
+  #   end
+  # end
 
   def destroy
     authorize @user
@@ -168,33 +168,33 @@ class Api::UsersController < ApiController
     end
   end
 
-  def search_bar
-    input = params[:search_input].split(' ');
-    @users = []
+  # def search_bar
+  #   input = params[:search_input].split(' ');
+  #   @users = []
 
-    if (input.length > 1)
-      fname = input[0]
-      lname = input[1]
-      @users = User.where("LOWER(fname) LIKE ?" , "%" + fname.downcase + "%")
-        .where("LOWER(lname) LIKE ?" , "%" + lname.downcase + "%")
-        .where(searchable: true)
-        .where.not(id: @user)
-        .or(User.where("LOWER(fname) LIKE ?" , "%" + lname.downcase + "%")
-          .where("LOWER(lname) LIKE ?" , "%" + fname.downcase + "%")
-          .where(searchable: true)
-          .where.not(id: @user))
-    else
-      # debugger
-      @users = User.where("LOWER(fname) LIKE ?" , "%" + input[0].downcase + "%")
-        .where(searchable: true)
-        .or(User.where("LOWER(lname) LIKE ?" , "%" + input[0].downcase + "%")
-          .where(searchable: true))
-    end
+  #   if (input.length > 1)
+  #     fname = input[0]
+  #     lname = input[1]
+  #     @users = User.where("LOWER(fname) LIKE ?" , "%" + fname.downcase + "%")
+  #       .where("LOWER(lname) LIKE ?" , "%" + lname.downcase + "%")
+  #       .where(searchable: true)
+  #       .where.not(id: @user)
+  #       .or(User.where("LOWER(fname) LIKE ?" , "%" + lname.downcase + "%")
+  #         .where("LOWER(lname) LIKE ?" , "%" + fname.downcase + "%")
+  #         .where(searchable: true)
+  #         .where.not(id: @user))
+  #   else
+  #     # debugger
+  #     @users = User.where("LOWER(fname) LIKE ?" , "%" + input[0].downcase + "%")
+  #       .where(searchable: true)
+  #       .or(User.where("LOWER(lname) LIKE ?" , "%" + input[0].downcase + "%")
+  #         .where(searchable: true))
+  #   end
 
-    @search_users = @users.pluck(:id)
-    # @search_users = @opportunities.pluck(:id)
-    render :searchBar
-  end
+  #   @search_users = @users.pluck(:id)
+  #   # @search_users = @opportunities.pluck(:id)
+  #   render :searchBar
+  # end
 
   # def profile
   #   @user = User.find(params[:id])

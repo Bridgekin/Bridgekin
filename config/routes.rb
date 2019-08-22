@@ -8,17 +8,17 @@ Rails.application.routes.draw do
 
   # namespace :api, default: {format: :json} do
   namespace :api, format: :json do
-    resource :waitlist_user, only: [:create, :destroy]
     resources :users, only: [:show, :update, :destroy]
-    resources :notifications, only: [:index]
-    resource :notification_settings, only: [:show, :update]
-    resources :user_metrics, only: [:index]
     resources :user_features, only: [:update]
     resources :sales_networks, only: [:index]
     resources :sales_intros
     resource :admin_signup_links, only: [:show]
     resources :sales_invites
     resources :request_templates, only: [:index, :create, :destroy]
+    # resources :user_metrics, only: [:index]
+    # resource :waitlist_user, only: [:create, :destroy]
+    # resources :notifications, only: [:index]
+    # resource :notification_settings, only: [:show, :update]
     
     #Cypress testing hooks
     get "cypress/first_five_contacts", :to => "cypress_tests#first_five_contacts"
@@ -53,7 +53,6 @@ Rails.application.routes.draw do
     post 'notify_request_demo', :to => "utils#request_demo"
 
     #Other
-    post 'add_external_user', :to => 'users#add_external_user'
     get 'third_parties/google_contacts', :to => 'third_parties#google_contacts'
     delete 'destroy_user_by_email', :to => 'users#destroy_by_email'
     patch 'read_all', :to => 'notifications#read_all'

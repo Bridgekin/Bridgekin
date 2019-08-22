@@ -1,13 +1,13 @@
-export const addExternalUser = user => (
-  fetch(`${window.location.origin}/api/add_external_user`, {
-    method: 'POST',
-    body: JSON.stringify({ user }),
-    headers:{
-    	'Content-Type': 'application/json',
-      "Authorization": localStorage.getItem('bridgekinToken')
-  	}
-  })
-)
+// export const addExternalUser = user => (
+//   fetch(`${window.location.origin}/api/add_external_user`, {
+//     method: 'POST',
+//     body: JSON.stringify({ user }),
+//     headers:{
+//     	'Content-Type': 'application/json',
+//       "Authorization": localStorage.getItem('bridgekinToken')
+//   	}
+//   })
+// )
 
 export const fetchSearchResults = searchInput => (
   fetch(`${window.location.origin}/api/search_bar?searchInput=${searchInput}`, {

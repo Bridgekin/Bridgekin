@@ -34,24 +34,6 @@ User.create!(
   is_admin: true
 )
 
-# Network.create!(
-#   title: 'Bridgekin'
-# )
-
-# Network.create!(
-#   title: 'Ideate'
-# )
-
-# UserNetwork.create!(
-#   network_id: 1,
-#   member_id: 1,
-# )
-
-# UserNetwork.create!(
-#   network_id: 2,
-#   member_id: 1,
-# )
-
 User.create!(
   email: 'eric@bridgekin.com',
   password: 'bridgekindemo',
@@ -65,58 +47,10 @@ User.create!(
   is_admin: true
 )
 
-# UserNetwork.create!(
-#   network_id: 1,
-#   member_id: 2,
-# )
-
-# UserNetwork.create!(
-#   network_id: 2,
-#   member_id: 2,
-# )
-
-
-# Opportunity.create!(
-#   owner_id: 1,
-#   title: 'Test - Amazing castle opportunity in France',
-#   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
-#   opportunity_need: "Raise Capital",
-#   industries: ["Education", "Technology", "Internet"],
-#   geography: ["Worldwide"],
-#   value:  "$1M - $5M",
-#   status: "Approved",
-# )
-
-# OpportunityNetwork.create!(
-#   network_id: 1,
-#   opportunity_id: 1
-# )
-#
-# OpportunityNetwork.create!(
-#   network_id: 2,
-#   opportunity_id: 1
-# )
-
-# Opportunity.create!(
-#   owner_id: 1,
-#   title: 'Test - Amazing castle opportunity in Czech',
-#   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras placerat orci sit amet neque consectetur imperdiet. Duis augue libero, eleifend ut tristique sit amet, volutpat in nisl.',
-#   opportunity_need: "Raise Capital",
-#   industries: ["Education", "Technology", "Internet"],
-#   geography: ["Worldwide"],
-#   value:  "$1M - $5M",
-#   status: "Approved"
-# )
-
-# OpportunityNetwork.create!(
-#   network_id: 1,
-#   opportunity_id: 2
-# )
-
 User.create!(
-  email: 'try4@email.com',
-  password: 'password',
-  password_confirmation: 'password',
+  email: 'try@email.com',
+  password: 'bridgekindemo',
+  password_confirmation: 'bridgekindemo',
   confirmed_at: DateTime.now,
   confirmation_sent_at: DateTime.now,
   fname: 'Test',
@@ -125,3 +59,61 @@ User.create!(
   company: "Bridgekin Analytics",
   is_admin: true
 )
+
+# 1
+SalesNetwork.create!(
+  title: "Bridgekin",
+  domain: "bridgekin.com"
+)
+
+#1
+SalesProduct.create!(
+  seats: 5,
+  monthly_amount: 245,
+  yearly_amount: 2340
+)
+#2
+SalesProduct.create!(
+  seats: 1,
+  monthly_amount: 49,
+  yearly_amount: 468
+)
+
+Subscription.create!(
+  payer_id: 3,
+  duration: "monthly",
+  renewal: true,
+  end_date: DateTime.now + 1.month,
+  targetable_type: "SalesNetwork",
+  targetable_id: 1,
+  sub_type: "trial",
+  product_id: 1
+)
+
+SalesUserPermission.create!(
+  permissable_id: 1,
+  permissable_type: "SalesNetwork",
+  user_id: 1,
+  status: "confirmed"
+)
+
+SalesUserPermission.create!(
+  permissable_id: 1,
+  permissable_type: "SalesNetwork",
+  user_id: 2,
+  status: "confirmed"
+)
+
+SalesUserPermission.create!(
+  permissable_id: 1,
+  permissable_type: "SalesNetwork",
+  user_id: 3,
+  status: "confirmed"
+)
+
+SalesAdminNetwork.create!(
+  network_id: 1,
+  admin_id: 3
+)
+
+
