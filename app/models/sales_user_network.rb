@@ -1,0 +1,3 @@
+class SalesUserNetwork < ApplicationRecord
+
+end
