@@ -199,8 +199,8 @@ class SalesNav extends React.Component {
   handleDashSpaceChange(choice, anchor) {
     return e => {
       if (choice) {
-        let { permissableId, permissableType, memberType } = choice
-        this.props.setDashboardTarget({ permissableId, permissableType, memberType })
+        let { permissableId, permissableType, relationship } = choice
+        this.props.setDashboardTarget({ permissableId, permissableType, relationship })
       } else {
         this.props.setDashboardTarget({})
       }
@@ -287,8 +287,8 @@ class SalesNav extends React.Component {
           </Typography>
         </Button>}
       {currentUser &&
-        <IconButton
-        onClick={this.handleMenuClick('accountAnchorEl')}
+        <IconButton data-cy='nav-avatar'
+          onClick={this.handleMenuClick('accountAnchorEl')}
           className={classes.navButtonText}>
           <AccountCircle />
         </IconButton>}
@@ -316,7 +316,7 @@ class SalesNav extends React.Component {
           let makeBold = (currentDashboardTarget.permissableId === choice.permissableId && currentDashboardTarget.permissableType === "SalesNetwork") ? true : false
           
           return <MenuItem onClick={this.handleDashSpaceChange(choice, 'accountAnchorEl')}
-            data-cy={`dashboard-option-${choice.permissionType}-${choice.permissionId}`}>
+            data-cy={`${choice.permissionType}-${choice.permissionId}-space-option`}>
             <Typography style={{ fontSize: 14, fontWeight: makeBold ? 600 : 400}}>
               {name}
             </Typography>
@@ -324,7 +324,7 @@ class SalesNav extends React.Component {
         })}
 
         {!isEmpty(salesUserPermissions) && <MenuItem onClick={this.handleDashSpaceChange("", 'accountAnchorEl')}
-          data-cy={`dashboard-option-`}>
+          data-cy={`personal-space-option`}>
           <Typography style={{ fontWeight: isEmpty(currentDashboardTarget) ? 600 : 400, fontSize: 14 }}>
             {`Personal`}
           </Typography>

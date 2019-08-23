@@ -91,7 +91,7 @@ class NetworkInviteCard extends React.Component {
       </Grid>
       <Grid item xs={2} container alignItems='center'>
         <Select fullWidth
-          data-cy='invite-member_type'
+          data-cy='invite-relationship'
           value={data.relationship}
           onClick={(e) => e.stopPropagation()}
           onChange={this.handleChange('relationship')}>

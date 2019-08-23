@@ -122,7 +122,6 @@ class ResultCard extends React.Component {
 
       // let user_permission = Object.values(salesUserPermissions).find(perm => perm.permissableId === currentDashboardTarget.permissableId && perm.permissableType === "Network")
 
-      // let memberType = user_permission ? user_permission.memberType : ""
       let { relationship }= currentDashboardTarget
 
       return <Grid item xs={12} sm={6}>
@@ -204,7 +203,7 @@ class ResultCard extends React.Component {
               }) */}
               <Typography color='textPrimary'
               style={{ fontSize: 12, marginRight: 10}}>
-                {relationship !== 'request'  && `Known Teammates: ${otherFriendsCount || "N/A"}`}
+                {`Known Teammates: ${otherFriendsCount || "N/A"}`}
               </Typography>
               <Button color='primary' variant='contained'
                 onClick={this.requestIntro}

@@ -111,7 +111,6 @@ class SalesDashboard extends React.Component {
     this.getResults = this.getResults.bind(this);
     this.handleMenuChange = this.handleMenuChange.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
-    this.handleDashSpaceChange = this.handleDashSpaceChange.bind(this);
     this.isExpiredSub = this.isExpiredSub.bind(this);
     this.getFocusedContactName = this.getFocusedContactName.bind(this);
   }
@@ -209,18 +208,6 @@ class SalesDashboard extends React.Component {
         [anchor]: null,
         offset: 0
       }, () => this.searchData())
-    }
-  }
-
-  handleDashSpaceChange(choice){
-    return e => {
-      if(choice){
-        let { permissableId, permissableType, memberType } = choice
-        this.props.setDashboardTarget({ permissableId, permissableType, memberType })
-      } else {
-        this.props.setDashboardTarget({})
-      }
-      this.setState({ dashboardSpaceAnchorEl: null })
     }
   }
 

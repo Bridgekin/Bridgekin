@@ -44,6 +44,7 @@ export const setAuth = (data) => dispatch => {
 
     if(permissions.length > 0){
       let { permissableId, permissableType, relationship } = permissions[0]
+
       dispatch(setDashboardTarget({ permissableId, permissableType, relationship }))
     }
   }

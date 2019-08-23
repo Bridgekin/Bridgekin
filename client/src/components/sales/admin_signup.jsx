@@ -209,7 +209,7 @@ class AdminSignup extends React.Component {
     }
 
     if (signupType === "network"){
-      payload = merge({}, payload,{ title, domain })
+      payload = merge({}, payload,{ domain: {title, domain}})
     }
 
     this.props.adminSignup(payload)

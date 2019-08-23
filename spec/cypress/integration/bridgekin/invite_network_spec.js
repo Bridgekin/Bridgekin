@@ -60,8 +60,8 @@ describe('Invite User Specs', function () {
     cy.get('[data-cy=invite-lname-input] input')
       .type('user')
       .should('have.value', 'user')
-    cy.get('[data-cy=invite-member_type]').click()
-    cy.get('[data-cy=limited-member_type]').click()
+    cy.get('[data-cy=invite-relationship]').click()
+    cy.get('[data-cy=rel-request]').click()
 
     cy.get('[data-cy=submit-button]').click()
     cy.get('[data-cy=invite-response-header]')
@@ -75,10 +75,10 @@ describe('Invite User Specs', function () {
       .should('be.length', 2)
   })
 
-  it("should add an additional invite slot", function () {
+  it("should change version to personal", function () {
     cy.visit(`/sales/invite`)
-    cy.get('[data-cy=choose-space-button]').click()
-    cy.get('[data-cy=dashboard-option-]').click()
+    cy.get('[data-cy=nav-avatar]').click()
+    cy.get('[data-cy=personal-space-option]').click()
     cy.get('[data-cy=invite-header]')
       .should('contain', 'Your Personal Contacts')
   })

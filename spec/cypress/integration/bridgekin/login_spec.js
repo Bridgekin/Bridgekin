@@ -89,6 +89,7 @@ describe('Bridgekin login specs', function () {
     cy.login(email, password)
     cy.visit('/sales/connect_social')
 
+    cy.get('[data-cy=nav-avatar]').click()
     cy.get('[data-cy=logout-button]').click()
     cy.contains('Login').should('be.visible')
   })

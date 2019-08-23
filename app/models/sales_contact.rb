@@ -158,7 +158,7 @@ class SalesContact < ApplicationRecord
     def find_similar_or_initialize_by(type, payload)
       case type
       when "google"
-        contact = SalesContact.find_by(email:payload[:email])
+        contact = SalesContact.find_by(email: payload[:email])
         unless contact
           contact = SalesContact.find_by(fname: payload[:fname],lname: payload[:lname])
           if contact.present?

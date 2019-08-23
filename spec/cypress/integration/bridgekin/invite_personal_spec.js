@@ -12,7 +12,7 @@ describe('Invite User Specs', function () {
 
   it("should show personal if no networks", function () {
     cy.visit(`/sales/invite`)
-    cy.get('[data-cy=progress-header]')
-      .should('contain', 'Feature in Progress')
+    cy.get('[data-cy=invite-header]')
+      .should('contain', 'Your Personal Contacts')
   })
 })
