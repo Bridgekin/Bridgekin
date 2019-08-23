@@ -41,7 +41,7 @@ FactoryBot.define do
     trait :with_owned_sales_network do
       after(:create) do |user, opts|
         sales_network = create(:sales_network,  :with_subscription)
-        create(:sales_user_permission, user: user, permissable: sales_network)
+        create(:sales_user_permission, user: user, permissable: sales_network, status: 'confirmed')
         create(:sales_admin_network, admin: user, network: sales_network)
       end
     end
@@ -61,7 +61,7 @@ FactoryBot.define do
         requestor = sales_network.members.first
         contact = requestor.sales_contacts.first
 
-        create(:sales_user_permission, user: user, permissable: sales_network)
+        create(:sales_user_permission, user: user, permissable: sales_network, status: 'confirmed')
         
         create(:sales_intro, contact: contact, requestor: requestor, recipient: user, message: opts.message,
         explaination: opts.explaination, referral_bonus: opts.referral_bonus, referral_unit: opts.referral_unit, intro_subject: opts.intro_subject, intro_body: opts.intro_body)
@@ -72,22 +72,37 @@ FactoryBot.define do
       after(:create) do |user, opts|
         sales_network = create(:sales_network, :with_connected_members, :with_subscription)
         
-        create(:sales_user_permission, user: user, permissable: sales_network)
+        create(:sales_user_permission, user: user, permissable: sales_network, status: 'confirmed')
       end
     end
 
     trait :with_sales_networks do
       transient do
-        network_count { 3 }
+        network_count { 1 }
       end
       after(:create) do |user, opts|
         sales_networks = create_list(:sales_network, opts.network_count, :with_subscription)
         
         sales_networks.each do |sales_network|
-          create(:sales_user_permission, user: user, permissable: sales_network)
+          create(:sales_user_permission, user: user, permissable: sales_network, status: 'confirmed')
         end
       end
     end
+
+    # trait :with_contacts_sales_network do
+    #   transient do
+    #     network_count { 1 }
+    #   end
+    #   after(:create) do |user, opts|
+    #     sales_networks = create_list(:sales_network, opts.network_count, :with_subscription)
+    #     teammate = create(:user, :with_sales_contacts)
+        
+    #     sales_networks.each do |sales_network|
+    #       create(:sales_user_permission, user: user, permissable: sales_network, status: 'confirmed')
+    #       create(:sales_user_permission, user: teammate, permissable: sales_network, status: 'confirmed')
+    #     end
+    #   end
+    # end
 
     trait :with_sales_networks_limited do
       transient do
@@ -96,7 +111,7 @@ FactoryBot.define do
       after(:create) do |user|
         sales_networks = create_list(:sales_network, network_count, :with_subscription)
         sales_networks.each do |sales_network|
-          create(:sales_user_permission, user: user, permissable: sales_network, member_type: 'limited')
+          create(:sales_user_permission, user: user, permissable: sales_network, relationship: 'request', status: 'confirmed')
         end
       end
     end

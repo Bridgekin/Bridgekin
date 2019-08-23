@@ -57,7 +57,7 @@ describe('View By Specs', function () {
       .should('contain', 'Use the form ')
   })
 
-  it("should filter using view by - my contacts", function () {
+  it("should filter using view by - my teammates", function () {
     cy.appFactories([
       ['create', 'user', 'uploaded', 'with_team_loaded_network', { email: email, password: password, password_confirmation: password }]
     ])
