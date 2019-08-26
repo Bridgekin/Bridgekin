@@ -20,7 +20,8 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
   #
   #STRIPE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Stripe.api_key = Rails.application.credentials.stripe[:staging][:secret_key]
+  # Stripe.api_key = Rails.application.credentials.stripe[:staging][:secret_key]
+  Stripe.api_key = ENV['STRIPE_SECRET_KEY_SK']
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).

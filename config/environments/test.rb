@@ -47,6 +47,6 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   #STRIPE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Stripe.api_key = Rails.application.credentials.stripe[:development][:secret_key]
+  Stripe.api_key = Rails.application.credentials.stripe[:test][:secret_key]
   
 end
