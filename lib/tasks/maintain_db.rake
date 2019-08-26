@@ -5,6 +5,20 @@ end
 
 namespace :maintain_db do
   desc "Update email templates with new info"
+  task reset_db: :environment do
+    SalesContact.all.destroy_all
+    SalesUserContact.all.destroy_all
+
+    SalesInvite.all.destroy_all
+    SalesNetwork.all.destroy_all
+    SalesIntro.all.destroy_all
+
+    SalesUserPermission.all.destroy_all
+    # Keep SalesProducts
+  end
+
+
+  desc "Update email templates with new info"
   task update_email_templates: :environment do
     # Your code goes here
     # log('Updating database with new email templates')
