@@ -228,12 +228,22 @@ class SalesNav extends React.Component {
     }
   }
 
+  showPersonal(){
+    const { currentDashboardTarget } = this.props;
+    if (window.publicEnv === "production" && isEmpty(currentDashboardTarget)){ 
+      return false
+    } 
+    return true
+  }
+
   render() {
     const { classes, siteTemplate, currentUser,
       networkDetails, currentSalesNetworkId,
       onHomePage, salesUserPermissions, salesNetworks,
       currentDashboardTarget } = this.props;
     const { isTop, accountAnchorEl } = this.state;
+
+    const showPersonal = this.showPersonal()
 
     const logo = <div
       className={classes.logoLink}
@@ -258,7 +268,7 @@ class SalesNav extends React.Component {
           {`My Dashboard`}
         </Typography>
       </Button>}
-      {currentUser &&
+      {currentUser && showPersonal &&
         !this.isExpiredSub() && <Button style={{ textTransform: 'capitalize' }}
         onClick={() => this.props.history.push('/sales/stats')}>
         <Typography color='textSecondary'
@@ -278,7 +288,7 @@ class SalesNav extends React.Component {
             {`Invite`}
           </Typography>
         </Button>}
-      {currentUser &&
+      {currentUser && showPersonal &&
         !this.isExpiredSub() && <Button style={{ textTransform: 'capitalize' }}
           onClick={() => this.props.history.push(`/sales/connect_social`)}>
           <Typography color='textSecondary'
@@ -286,7 +296,7 @@ class SalesNav extends React.Component {
             {`Import Contacts`}
           </Typography>
         </Button>}
-      {currentUser &&
+      {currentUser && 
         <IconButton data-cy='nav-avatar'
           onClick={this.handleMenuClick('accountAnchorEl')}
           className={classes.navButtonText}>
@@ -323,7 +333,9 @@ class SalesNav extends React.Component {
           </MenuItem>
         })}
 
-        {!isEmpty(salesUserPermissions) && <MenuItem onClick={this.handleDashSpaceChange("", 'accountAnchorEl')}
+        {!isEmpty(salesUserPermissions) && 
+        window.publicEnv !== "production" && 
+        <MenuItem onClick={this.handleDashSpaceChange("", 'accountAnchorEl')}
           data-cy={`personal-space-option`}>
           <Typography style={{ fontWeight: isEmpty(currentDashboardTarget) ? 600 : 400, fontSize: 14 }}>
             {`Personal`}

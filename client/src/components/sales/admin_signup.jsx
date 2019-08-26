@@ -115,6 +115,7 @@ class AdminSignup extends React.Component {
     this.handleValidateChange = this.handleValidateChange.bind(this);
     this.isDisabledSubmit = this.isDisabledSubmit.bind(this);
     this.handleCheckedChange = this.handleCheckedChange.bind(this);
+    this.backToHome = this.backToHome.bind(this);
   }
 
   componentDidMount(){
@@ -132,6 +133,10 @@ class AdminSignup extends React.Component {
     //     this.setState({ loaded: true })
     //   })
     // }
+  }
+
+  backToHome(){
+    this.props.history.push('/')
   }
 
   changePage(url){
@@ -511,7 +516,7 @@ class AdminSignup extends React.Component {
       default:
         let backToHome = <Grid container justify='center'>
           <Button color='primary' variant='contained'
-          onClick={() => this.props.history.push('/')}>
+          onClick={this.backToHome}>
             {`Back to landing page`}
           </Button>
         </Grid>
@@ -547,7 +552,7 @@ class AdminSignup extends React.Component {
           </Typography>
           <Button variant='contained' color='primary'
           style={{ marginTop: 30}}
-          onClick={() => this.props.history.push('//')}>
+          onClick={() => this.props.history.push('/')}>
             {`Back home`}
           </Button>
         </Grid>

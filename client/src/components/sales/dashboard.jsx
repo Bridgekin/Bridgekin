@@ -330,7 +330,7 @@ class SalesDashboard extends React.Component {
           </Typography>
         </Grid>
       </Grid>
-    } else if (unconnectedUser) {
+    } else if (isEmpty(currentDashboardTarget)) {
       return <Grid container justify='center' style={{ minHeight: dimensions.height }}>
         <Grid item xs={10} sm={7} md={5}
           container direction='column' justify='center' alignItems='center'>

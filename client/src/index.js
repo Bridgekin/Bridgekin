@@ -37,7 +37,7 @@ getPublicEnv()
 if(dev){
   window.stripe_pk = "pk_test_JpU6aXRHvBJwtouW85ahDYEQ003JUvFNHL"
 } else {
-  window.stripe_pk = "pk_live_KBOOb3gd0eyjOvMKvybvFHt000XIfMTNna"
+  window.stripe_pk = "pk_live_lSxTKaNhV8eGkG76GvlTewth00PZm6xN3e"
 }
 
 // Set Facebook Pixel Instance
