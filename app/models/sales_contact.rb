@@ -145,7 +145,7 @@ class SalesContact < ApplicationRecord
       friends = Set.new()
       friend_map = sales_contacts.reduce({}) do |acc, contact|
         contact_friends = contact.friends
-          .where.not(users: {id: current_user.id})
+          # .where.not(users: {id: current_user.id})
         friends.merge(contact_friends)
         acc[contact.id] = contact_friends.pluck(:id)
         acc

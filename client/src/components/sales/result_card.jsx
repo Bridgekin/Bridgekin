@@ -94,6 +94,7 @@ class ResultCard extends React.Component {
     this.state = {}
 
     this.requestIntro = this.requestIntro.bind(this);
+    this.getFriendCount = this.getFriendCount.bind(this);
   }
 
   requestIntro(){
@@ -112,13 +113,24 @@ class ResultCard extends React.Component {
     }
   }
 
+  getFriendCount(){
+    const { friendMap, contact, currentUser } = this.props;
+    let friendArray = friendMap[contact.id]
+
+    if(!friendArray){ return 0}
+
+    friendArray = friendArray.filter(x => x !== currentUser.id)
+    return friendArray.length
+  }
+
   render(){
     const { classes, contact, networkMembers,
-      friendMap, idx,
+      friendMap, idx, currentUser,
       salesUserPermissions, currentDashboardTarget } = this.props;
     
     if (Object.keys(friendMap).length > 0){
-      let otherFriendsCount = friendMap[contact.id].length || 0
+      let friends = friendMap[contact.id]
+      let otherFriendsCount = this.getFriendCount()
 
       // let user_permission = Object.values(salesUserPermissions).find(perm => perm.permissableId === currentDashboardTarget.permissableId && perm.permissableType === "Network")
 
@@ -203,12 +215,12 @@ class ResultCard extends React.Component {
               }) */}
               <Typography color='textPrimary'
               style={{ fontSize: 12, marginRight: 10}}>
-                {`Known Teammates: ${otherFriendsCount || "N/A"}`}
+                {`Known Teammates: ${otherFriendsCount}`}
               </Typography>
               <Button color='primary' variant='contained'
                 onClick={this.requestIntro}
                 data-cy='request-intro-button'
-                disabled={otherFriendsCount === 0}
+                disabled={friends.includes(currentUser.id) || otherFriendsCount === 0}
                 style={{ textTransform: 'capitalize'}}>
                 {`Request a warm intro`}
               </Button>
