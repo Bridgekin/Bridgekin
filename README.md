@@ -18,13 +18,15 @@ A. Setup Repo
 4. Once repo is open in your preferred IDE of choice, create a ```master.key``` directly within ```config```, with the actual master key
 
 B. Run Repo
+
 This app is build with 2 servers in development: 1) the frontend server, in the ```client``` folder and 2) the backend server
 1. First, setup your databased by running ```rails db:setup```. This will create development and test databases, seed the databases, and create "schema_migrations" tables for each.
 2. Next, run your backend server by running ```rails s```
 3. In a seperate terminal tab, ```cd client```
 4. Start server: ``` npm run start ```
 
-C. More setup
+C. More Setup
+
 To continue running the app, you'll need to get Redis running, local cache, to house Sidekiq, job-scheduler which works on top of ActiveJob. Aside from basic installationof Redis/Sidekiq, there shouldn't be too many hiccups, but let me know if you have any questions.
 
 You'll also need to setup ngrok, a program which exposes a public endpoint (locally), for our enrichment services like Full-Contact and Hunter. Both of these services use webhooks to relay data back. So, on the first call, you'll request information, and will get a response (200) which means they're processing this request. They'll then send the response (with requested information) back to the address you've specified (locally, this is an ngrok endpoint), for you us to then process.
