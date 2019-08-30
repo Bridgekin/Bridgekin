@@ -24,6 +24,11 @@ This app is build with 2 servers in development: 1) the frontend server, in the 
 3. In a seperate terminal tab, ```cd client```
 4. Start server: ``` npm run start ```
 
+C. More setup
+To continue running the app, you'll need to get Redis running, local cache, to house Sidekiq, job-scheduler which works on top of ActiveJob. Aside from basic installationof Redis/Sidekiq, there shouldn't be too many hiccups, but let me know if you have any questions.
+
+You'll also need to setup ngrok, a program which exposes a public endpoint (locally), for our enrichment services like Full-Contact and Hunter. Both of these services use webhooks to relay data back. So, on the first call, you'll request information, and will get a response (200) which means they're processing this request. They'll then send the response (with requested information) back to the address you've specified (locally, this is an ngrok endpoint), for you us to then process.
+
 ## V1
 ## Problem
 Business professionals have no transparency into the opportunities and trusted peers in their network
